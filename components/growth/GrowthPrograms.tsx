@@ -178,17 +178,18 @@ export default function GrowthPrograms() {
     return (
         <section id="growth-programs" className="scroll-mt-28 py-10 md:py-14" aria-labelledby="growth-programs-title">
             <div className="mx-auto max-w-[1400px] px-4 sm:px-6">
-                <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+                {/* 웹 매일 댕생활 꾸밈(2026-10-22) — 가운데 제목 + 아래 "전 프로그램 준비 중" 쪽지, 카드는 파스텔 크레파스 칠. CSS 는 app/daily-web.css */}
+                <div className="dw-section-head flex flex-col items-center gap-4">
                     <div>
-                        <p className="ddb-crayon-kicker text-xs">GROWTH PROGRAMS</p>
-                        <h2 id="growth-programs-title" className="ddb-crayon-title ddb-crayon-underline mt-2 text-3xl text-neutral-950 md:text-4xl">다음 보물은 함께 검증해요</h2>
-                        <p className="mt-3 max-w-3xl text-sm font-bold leading-6 text-neutral-600">
+                        <p className="ddb-crayon-kicker dw-kicker">GROWTH PROGRAMS</p>
+                        <h2 id="growth-programs-title" className="ddb-crayon-title ddb-crayon-underline dw-h2">다음 보물은 함께 검증해요</h2>
+                        <p className="dw-sub">
                             아직 판매·예약 가능한 서비스가 아닙니다. 관심 수요를 확인한 뒤 운영 조건과 시작 일정을 별도로 안내하며, 등록은 이 화면에서 언제든 취소할 수 있어요.
                         </p>
                     </div>
                     <div
                         ref={preparationRef}
-                        className={`ddb-treasure-prep-scene w-fit${preparationMotionActive ? " ddb-treasure-prep-scene--animate" : ""}`}
+                        className={`ddb-treasure-prep-scene dw-prep w-fit${preparationMotionActive ? " ddb-treasure-prep-scene--animate" : ""}`}
                         data-treasure-preparing-visual
                         aria-label="전 프로그램 준비 중"
                     >
@@ -208,10 +209,10 @@ export default function GrowthPrograms() {
                 </div>
 
                 <div className="mt-7 grid gap-4 lg:grid-cols-2">
-                    {GROWTH_PROGRAM_CARDS.map((program) => (
-                        <article key={program.id} className="ddb-crayon-paper flex h-full flex-col rounded-[28px] border p-5 sm:p-6">
+                    {GROWTH_PROGRAM_CARDS.map((program, index) => (
+                        <article key={program.id} className={`dw-program ${["dw-tint-pink", "dw-tint-sky", "dw-tint-mint", "dw-tint-yellow"][index % 4]} flex h-full flex-col rounded-[30px] p-5 sm:p-7`}>
                             <div className="flex items-start gap-4">
-                                <span className="ddb-crayon-icon grid h-12 w-12 shrink-0 place-items-center rounded-2xl text-lg" data-crayon-tone={program.tone}>
+                                <span className="ddb-crayon-icon dw-icon-lg grid shrink-0 place-items-center text-xl" data-crayon-tone={program.tone}>
                                     <i className={`fa-solid ${program.icon}`} aria-hidden="true" />
                                 </span>
                                 <div className="min-w-0 flex-1">
@@ -235,7 +236,7 @@ export default function GrowthPrograms() {
                             </ul>
 
                             {program.existingFeature ? (
-                                <div className="mt-4 rounded-2xl border border-sky-100 bg-sky-50/80 p-3">
+                                <div className="dw-note mt-4">
                                     <Link href={program.existingFeature.href} className="inline-flex min-h-10 items-center gap-2 text-xs font-black text-sky-900 underline decoration-sky-300 underline-offset-4">
                                         <i className="fa-solid fa-location-crosshairs" aria-hidden="true" />
                                         {program.existingFeature.label}

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import GrowthHub from "@/components/growth/GrowthHub";
 // 앱에서는 새 앱 화면(페이지 안 탭), 웹에서는 기존 화면 — 로컬 시안
 import DailyLifeSwitch from "@/components/daily-life/DailyLifeSwitch";
+// 웹 매일 댕생활 꾸밈(2026-10-22) — 웹에서만 적용(data-daily-web 범위)
+import "../daily-web.css";
 
 export const metadata: Metadata = {
     title: "댕다방 보물광산 | 매일 돌봄과 성장 프로그램",

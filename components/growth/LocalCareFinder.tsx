@@ -205,22 +205,21 @@ export default function LocalCareFinder() {
     return (
         <section id="local-care-finder" className="scroll-mt-28 py-10 md:py-14" aria-labelledby="local-care-title" data-local-care-finder>
             <div className="mx-auto max-w-[1400px] px-4 sm:px-6">
-                <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-                    <div>
-                        <div className="flex flex-wrap items-center gap-2">
-                            <p className="ddb-crayon-kicker text-xs">LOCAL CARE NOW</p>
-                            <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-[10px] font-black text-emerald-800">오늘 바로 사용</span>
-                        </div>
-                        <h2 id="local-care-title" className="ddb-crayon-title ddb-crayon-underline mt-2 text-3xl text-neutral-950 md:text-4xl">필요할 때, 동네 돌봄부터 찾아요</h2>
-                        <p className="mt-3 max-w-3xl text-sm font-bold leading-6 text-neutral-600">
-                            병원·미용·호텔·데이케어 중 필요한 곳을 고르면 현재 위치 주변의 공개 지도 후보를 찾아드려요.
-                        </p>
+                {/* 웹 매일 댕생활 꾸밈(2026-10-22) — 가운데 제목, 칩 두 개는 제목 아래 한 줄. 꾸밈 CSS 는 app/daily-web.css */}
+                <div className="dw-section-head mb-7">
+                    <p className="ddb-crayon-kicker dw-kicker">LOCAL CARE NOW</p>
+                    <h2 id="local-care-title" className="ddb-crayon-title ddb-crayon-underline dw-h2">필요할 때, 동네 돌봄부터 찾아요</h2>
+                    <p className="dw-sub">
+                        병원·미용·호텔·데이케어 중 필요한 곳을 고르면 현재 위치 주변의 공개 지도 후보를 찾아드려요.
+                    </p>
+                    <div className="mt-4 flex flex-wrap justify-center gap-2">
+                        <span className="dw-chip dw-chip-mint">오늘 바로 사용</span>
+                        <span className="dw-chip dw-chip-plain">예약·제휴 표시가 아닌 위치 검색</span>
                     </div>
-                    <span className="w-fit rounded-full border border-sky-200 bg-white px-4 py-2 text-[10px] font-black text-sky-900">예약·제휴 표시가 아닌 위치 검색</span>
                 </div>
 
-                <div className="ddb-crayon-paper overflow-hidden rounded-[32px] border" data-local-care-panel>
-                    <div className="grid gap-2 border-b border-neutral-200 bg-white/70 p-3 sm:grid-cols-2 sm:p-4 lg:grid-cols-4" role="tablist" aria-label="동네 돌봄 종류">
+                <div className="ddb-crayon-paper dw-local overflow-hidden rounded-[32px] border" data-local-care-panel>
+                    <div className="dw-local-tabs grid gap-3 p-4 sm:grid-cols-2 sm:p-5 lg:grid-cols-4" role="tablist" aria-label="동네 돌봄 종류">
                         {CATEGORIES.map((category) => {
                             const active = category.id === selected.id;
                             return (
@@ -230,7 +229,7 @@ export default function LocalCareFinder() {
                                     role="tab"
                                     aria-selected={active}
                                     onClick={() => selectCategory(category.id)}
-                                    className={`ddb-motion-lift flex min-h-16 items-center gap-3 rounded-[20px] border px-3 text-left transition ${active ? "border-indigo-400 bg-indigo-50 text-indigo-950 shadow-[2px_3px_0_rgba(79,70,229,0.12)]" : "border-neutral-200 bg-white text-neutral-700 hover:border-cyan-300"}`}
+                                    className={`ddb-motion-lift dw-local-tab ${active ? "is-on" : ""}`}
                                 >
                                     <span className="ddb-crayon-icon grid h-10 w-10 shrink-0 place-items-center rounded-xl text-sm" data-crayon-tone={category.tone}>
                                         <i className={`fa-solid ${category.icon}`} aria-hidden="true" />
@@ -245,7 +244,7 @@ export default function LocalCareFinder() {
                     </div>
 
                     <div className="grid gap-5 p-4 sm:p-6 lg:grid-cols-[minmax(280px,0.72fr)_minmax(0,1.28fr)] lg:p-7">
-                        <div className="ddb-crayon-banner rounded-[26px] border border-sky-100 p-5">
+                        <div className="dw-local-side dw-tint-sky rounded-[26px] p-5">
                             <span className="ddb-crayon-icon grid h-12 w-12 place-items-center rounded-2xl text-lg" data-crayon-tone={selected.tone}>
                                 <i className={`fa-solid ${selected.icon}`} aria-hidden="true" />
                             </span>

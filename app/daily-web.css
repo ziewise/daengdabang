@@ -1,0 +1,826 @@
+/*
+ * daily-web.css — 웹 "매일 댕생활" 페이지 꾸밈(보물광산 · 굿즈 공모전 · 우리 아이 기록 · 커뮤니티) (2026-10-22 사용자 결정)
+ * ---------------------------------------------------------------------
+ * 웹 크레파스 컨셉(스티커 요소 없음): 파스텔 크레파스 칠 판(연노랑 · 연민트 · 연분홍 · 연하늘 · 연보라, 옅은 사선 결),
+ * 흰 크레파스 종이 카드(옅은 회색 점선 · 청록/분홍 엇갈린 그림자), 카페24 제목 + 세 색 크레파스 밑줄,
+ * 분홍 알약 주 버튼 · 흰 점선 알약 보조 버튼, 웹 3D 색연필 그림.
+ * 범위: 웹에서만(html:not(.ddb-app-mode)) · data-daily-web 을 붙인 페이지 안에서만 — 사이트 공용 .ddb-crayon-* 는 다른 페이지 그대로.
+ * 각 페이지(page.tsx)가 이 파일을 불러옴. 문구 · 링크 · 버튼 동작은 부품 그대로, 배치 · 카드 모양 · 크기만.
+ */
+
+html:not(.ddb-app-mode) [data-daily-web] {
+    /* 색 · 판 변수 */
+    --dw-ink: #1e293b;
+    --dw-text: #475569;
+    --dw-soft: #64748b;
+    --dw-pink: #e9789a;
+    --dw-pink-deep: #e26690;
+    --dw-line: rgb(100 116 139 / 26%);
+    --dw-shadow: 2px 3px 0 rgb(8 145 178 / 8%), -1px -1px 0 rgb(239 71 111 / 5%), 0 16px 34px -20px rgb(15 23 42 / 22%);
+    --dw-underline: repeating-linear-gradient(94deg, rgb(8 145 178 / 62%) 0 14px, rgb(239 71 111 / 58%) 14px 28px, rgb(245 158 11 / 62%) 28px 42px);
+
+    color: var(--dw-text);
+
+    /* ── 공용 글자: 제목은 카페24(손글씨 대신 또렷하게) ── */
+    & .ddb-crayon-title {
+        color: var(--dw-ink) !important;
+        font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif !important;
+        font-weight: 400 !important;
+        letter-spacing: -0.02em !important;
+        filter: none !important;
+        -webkit-text-stroke: 0 !important;
+    }
+
+    & h2.ddb-crayon-title {
+        font-size: clamp(24px, 2.4vw, 32px) !important;
+        line-height: 1.3 !important;
+    }
+
+    & h3.ddb-crayon-title {
+        font-size: 20px !important;
+        line-height: 1.35 !important;
+    }
+
+    /* 밑줄은 글자 길이만큼 */
+    & h2.ddb-crayon-underline,
+    & h3.ddb-crayon-underline {
+        display: inline-block;
+    }
+
+    & .ddb-crayon-underline::after {
+        bottom: -0.06em;
+        height: 0.2em;
+        opacity: 0.6;
+    }
+
+    & .ddb-crayon-kicker {
+        font-size: 14px !important;
+        letter-spacing: 0.05em !important;
+    }
+
+    /* ── 공용 판: 흰 크레파스 종이(협업자 부품 안의 .ddb-crayon-paper 포함) ── */
+    & .ddb-crayon-paper {
+        border: 1.5px dashed var(--dw-line) !important;
+        background: #fff !important;
+        box-shadow: var(--dw-shadow) !important;
+    }
+
+    & .ddb-crayon-banner {
+        background: #fff !important;
+        border-bottom-color: rgb(100 116 139 / 18%) !important;
+    }
+
+    /* ── 공용 버튼: 주 버튼 분홍 알약(협업자 .ddb-crayon-link 도), 보조 흰 점선 알약 ── */
+    & .ddb-crayon-link {
+        border: 0 !important;
+        background: var(--dw-pink) !important;
+        color: #fff !important;
+        font-family: var(--font-wanted-sans), sans-serif !important;
+        font-weight: 800 !important;
+        box-shadow: 0 8px 18px -10px rgb(200 80 120 / 60%) !important;
+    }
+
+    & .ddb-crayon-link:hover {
+        background: var(--dw-pink-deep) !important;
+        color: #fff !important;
+        transform: translateY(-2px) !important;
+    }
+
+    /* ── 공용 아이콘 동그라미: 납작한 줄무늬 네모 → 파스텔 동그라미 ── */
+    & .ddb-crayon-icon {
+        border: 0 !important;
+        border-radius: 999px !important;
+        box-shadow: none !important;
+        filter: none !important;
+    }
+
+    & .ddb-crayon-icon[data-crayon-tone="teal"] {
+        background: #e3f6f8 !important;
+        color: #0e8aa0 !important;
+    }
+
+    & .ddb-crayon-icon[data-crayon-tone="coral"] {
+        background: #ffe8ee !important;
+        color: #e2557a !important;
+    }
+
+    & .ddb-crayon-icon[data-crayon-tone="orange"] {
+        background: #fff1db !important;
+        color: #e08a16 !important;
+    }
+
+    /* ── 크레파스 칠 판(옅은 사선 결) ── */
+    & .dw-tint-yellow {
+        border: 1.5px dashed rgb(217 150 20 / 32%);
+        background: #fff8e3 repeating-linear-gradient(168deg, rgb(245 158 11 / 6%) 0 3px, transparent 3px 7px);
+    }
+
+    & .dw-tint-mint {
+        border: 1.5px dashed rgb(16 160 110 / 28%);
+        background: #eaf8f2 repeating-linear-gradient(168deg, rgb(16 185 129 / 7%) 0 3px, transparent 3px 7px);
+    }
+
+    & .dw-tint-pink {
+        border: 1.5px dashed rgb(239 71 111 / 26%);
+        background: #ffeef3 repeating-linear-gradient(168deg, rgb(239 71 111 / 6%) 0 3px, transparent 3px 7px);
+    }
+
+    & .dw-tint-sky {
+        border: 1.5px dashed rgb(8 145 178 / 28%);
+        background: #eaf5fb repeating-linear-gradient(168deg, rgb(8 145 178 / 6%) 0 3px, transparent 3px 7px);
+    }
+
+    & .dw-tint-lavender {
+        border: 1.5px dashed rgb(124 98 214 / 28%);
+        background: #f3f0fe repeating-linear-gradient(168deg, rgb(124 98 214 / 6%) 0 3px, transparent 3px 7px);
+    }
+
+    /* ── 글자 크기 ── */
+    & .dw-kicker {
+        margin: 0;
+    }
+
+    & .dw-h1 {
+        margin-top: 14px;
+        font-size: clamp(30px, 3.4vw, 46px) !important;
+        line-height: 1.25 !important;
+        word-break: keep-all;
+    }
+
+    & .dw-h2 {
+        margin-top: 8px;
+    }
+
+    & .dw-h3 {
+        margin: 0;
+    }
+
+    & .dw-lead {
+        max-width: 640px;
+        margin-top: 16px;
+        color: var(--dw-text);
+        font-size: 15px;
+        font-weight: 600;
+        line-height: 1.75;
+        word-break: keep-all;
+    }
+
+    & .dw-sub {
+        max-width: 680px;
+        margin: 10px auto 0;
+        color: var(--dw-soft);
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1.7;
+        word-break: keep-all;
+    }
+
+    & .dw-card-title {
+        color: var(--dw-ink);
+        font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif;
+        font-size: 18px;
+        line-height: 1.4;
+        word-break: keep-all;
+    }
+
+    & .dw-card-body {
+        margin-top: 8px;
+        color: var(--dw-soft);
+        font-size: 13.5px;
+        font-weight: 600;
+        line-height: 1.65;
+        word-break: keep-all;
+    }
+
+    /* 구역 제목 — 가운데 정렬 */
+    & .dw-section-head {
+        text-align: center;
+    }
+
+    /* ── 칩 · 알약 ── */
+    & .dw-chip {
+        display: inline-flex;
+        align-items: center;
+        padding: 5px 12px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 800;
+        white-space: nowrap;
+    }
+
+    & .dw-chip-lg {
+        min-height: 44px;
+        padding: 0 16px;
+        font-size: 13px;
+    }
+
+    & .dw-chip-mint {
+        border: 1.5px dashed rgb(16 160 110 / 35%);
+        background: #fff;
+        color: #0f7a55;
+    }
+
+    & .dw-chip-violet {
+        border: 1.5px dashed rgb(124 98 214 / 38%);
+        background: #fff;
+        color: #5b45b0;
+    }
+
+    & .dw-pill {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 46px;
+        padding: 0 20px;
+        border: 1.5px dashed rgb(100 116 139 / 34%);
+        border-radius: 999px;
+        background: #fff;
+        color: #334155;
+        font-size: 14px;
+        font-weight: 800;
+        white-space: nowrap;
+        transition: transform 0.18s ease, border-color 0.18s ease;
+    }
+
+    & .dw-pill:hover {
+        border-color: rgb(239 71 111 / 45%);
+        transform: translateY(-2px);
+    }
+
+    & .dw-pill-sm {
+        min-height: 40px;
+        padding: 0 16px;
+        font-size: 13px;
+    }
+
+    /* ── ① 머리 판 ── */
+    & .dw-hero {
+        position: relative;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 340px;
+        align-items: center;
+        gap: 32px;
+        padding: 44px 48px;
+        border-radius: 38px;
+        box-shadow: 3px 4px 0 rgb(245 158 11 / 12%), 0 22px 44px -26px rgb(120 80 20 / 30%);
+    }
+
+    & .dw-hero-nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 26px;
+    }
+
+    & .dw-hero-art {
+        position: relative;
+        width: 340px;
+        height: 280px;
+    }
+
+    /* 그림 받침 — 흰 동그라미 종이(점선) */
+    & .dw-hero-plate {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 240px;
+        height: 240px;
+        border: 2px dashed rgb(217 150 20 / 35%);
+        border-radius: 999px;
+        background: rgb(255 255 255 / 80%);
+        transform: translate(-50%, -50%);
+    }
+
+    & .dw-hero-main {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 210px;
+        height: 210px;
+        object-fit: contain;
+        transform: translate(-50%, -52%);
+    }
+
+    & .dw-hero-float {
+        position: absolute;
+        object-fit: contain;
+        filter: drop-shadow(0 8px 10px rgb(120 80 40 / 18%));
+        animation: dw-float 4.8s ease-in-out infinite;
+    }
+
+    & .dw-f1 {
+        top: 4px;
+        left: 0;
+        width: 92px;
+        height: 92px;
+    }
+
+    & .dw-f2 {
+        right: 0;
+        bottom: 6px;
+        width: 84px;
+        height: 84px;
+        animation-delay: -1.6s;
+    }
+
+    & .dw-f3 {
+        top: 0;
+        right: 14px;
+        width: 78px;
+        height: 78px;
+        animation-delay: -3.1s;
+    }
+
+    /* ── ② 하루 보물 길(비회원) ── */
+    & .dw-steps {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 42px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    & .dw-step {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 30px 24px 28px;
+        border-radius: 30px;
+        text-align: center;
+        box-shadow: var(--dw-shadow);
+    }
+
+    & .dw-step-orange {
+        border: 1.5px dashed rgb(217 150 20 / 32%);
+        background: #fff8e3 repeating-linear-gradient(168deg, rgb(245 158 11 / 6%) 0 3px, transparent 3px 7px);
+    }
+
+    & .dw-step-teal {
+        border: 1.5px dashed rgb(16 160 110 / 28%);
+        background: #eaf8f2 repeating-linear-gradient(168deg, rgb(16 185 129 / 7%) 0 3px, transparent 3px 7px);
+    }
+
+    & .dw-step-coral {
+        border: 1.5px dashed rgb(239 71 111 / 26%);
+        background: #ffeef3 repeating-linear-gradient(168deg, rgb(239 71 111 / 6%) 0 3px, transparent 3px 7px);
+    }
+
+    /* 카드 사이 크레파스 점선 화살표(→) */
+    & .dw-step:not(:last-child)::after {
+        position: absolute;
+        top: 50%;
+        right: -38px;
+        width: 34px;
+        height: 0;
+        border-top: 3px dashed rgb(239 71 111 / 45%);
+        content: "";
+    }
+
+    & .dw-step:not(:last-child)::before {
+        position: absolute;
+        top: calc(50% - 6px);
+        right: -40px;
+        width: 10px;
+        height: 10px;
+        border-top: 3px solid rgb(239 71 111 / 55%);
+        border-right: 3px solid rgb(239 71 111 / 55%);
+        content: "";
+        transform: rotate(45deg);
+    }
+
+    /* 순서 동그라미 — 세 색 크레파스 */
+    & .dw-step-num {
+        position: absolute;
+        top: -16px;
+        left: 50%;
+        display: grid;
+        width: 36px;
+        height: 36px;
+        place-items: center;
+        border: 2.5px solid #fff;
+        border-radius: 999px;
+        color: #fff;
+        font-family: "Cafe24Ssurround", sans-serif;
+        font-size: 17px;
+        box-shadow: 0 6px 12px -6px rgb(15 23 42 / 35%);
+        transform: translateX(-50%);
+    }
+
+    & .dw-step-orange .dw-step-num {
+        background: #f0a020;
+    }
+
+    & .dw-step-teal .dw-step-num {
+        background: #12a17a;
+    }
+
+    & .dw-step-coral .dw-step-num {
+        background: #ec5c80;
+    }
+
+    & .dw-step-art {
+        width: 120px;
+        height: 120px;
+        margin-bottom: 10px;
+        object-fit: contain;
+    }
+
+    /* 로그인 안내 — 위로 꼬리 달린 흰 말풍선 종이 */
+    & .dw-login-bubble {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 18px;
+        max-width: 760px;
+        margin: 34px auto 0;
+        padding: 26px 28px;
+        border: 1.5px dashed var(--dw-line);
+        border-radius: 28px;
+        background: #fff;
+        text-align: center;
+        box-shadow: var(--dw-shadow);
+    }
+
+    & .dw-login-bubble::before {
+        position: absolute;
+        top: -11px;
+        left: 50%;
+        width: 20px;
+        height: 20px;
+        border-top: 1.5px dashed var(--dw-line);
+        border-left: 1.5px dashed var(--dw-line);
+        background: #fff;
+        content: "";
+        transform: translateX(-50%) rotate(45deg);
+    }
+
+    /* ── ③ 안전 공유 · 쇼핑으로 잇기 나란히 ── */
+    & .dw-pair {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 320px;
+        align-items: stretch;
+        gap: 18px;
+    }
+
+    & .dw-bridge {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 26px 22px 24px;
+        border-radius: 30px;
+        text-align: center;
+        box-shadow: var(--dw-shadow);
+    }
+
+    & .dw-bridge-art {
+        width: 72px;
+        height: 72px;
+        margin-bottom: 8px;
+        object-fit: contain;
+    }
+
+    /* 공유 판(협업자 GrowthShareCard) — 두 공유 버튼을 흰 알약 카드로 */
+    & section[aria-labelledby="growth-share-title"] {
+        border-radius: 30px !important;
+        padding: 26px 28px !important;
+    }
+
+    & section[aria-labelledby="growth-share-title"] .ddb-motion-lift {
+        border-style: dashed !important;
+        border-width: 1.5px !important;
+        border-radius: 999px !important;
+        min-height: 52px !important;
+    }
+
+    /* ── ④ 굿즈 공모전 미리보기 ── */
+    & .dw-goods {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(320px, 0.8fr);
+        align-items: center;
+        gap: 28px;
+        padding: 36px;
+        border-radius: 38px;
+        box-shadow: 3px 4px 0 rgb(124 98 214 / 12%), 0 22px 44px -26px rgb(60 40 120 / 28%);
+    }
+
+    & .dw-goods-photo {
+        position: relative;
+        display: block;
+    }
+
+    /* 굿즈 사진 — 흰 크레파스 종이 액자 */
+    & .dw-goods-frame {
+        position: relative;
+        display: block;
+        min-height: 300px;
+        overflow: hidden;
+        border: 1.5px dashed rgb(124 98 214 / 30%);
+        border-radius: 28px;
+        background: #fffaf2;
+    }
+
+    & .dw-goods-count {
+        position: absolute;
+        right: 14px;
+        bottom: 14px;
+        padding: 8px 14px;
+        border-radius: 999px;
+        background: var(--dw-pink);
+        color: #fff;
+        font-size: 12px;
+        font-weight: 800;
+        box-shadow: 0 8px 16px -9px rgb(200 80 120 / 60%);
+    }
+}
+
+/* 둥실 — 움직임 줄이기 설정이면 멈춤 */
+@keyframes dw-float {
+    0%,
+    100% {
+        transform: translateY(0) rotate(-2deg);
+    }
+
+    50% {
+        transform: translateY(-8px) rotate(2deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html:not(.ddb-app-mode) [data-daily-web] .dw-hero-float {
+        animation: none;
+    }
+}
+
+/* ── 좁은 화면 ── */
+@media (max-width: 1023px) {
+    html:not(.ddb-app-mode) [data-daily-web] {
+        & .dw-hero {
+            grid-template-columns: 1fr;
+            padding: 30px 24px;
+        }
+
+        & .dw-hero-art {
+            order: -1;
+            margin: 0 auto;
+            transform: scale(0.82);
+            transform-origin: center bottom;
+            height: 240px;
+        }
+
+        & .dw-steps {
+            grid-template-columns: 1fr;
+            gap: 34px;
+        }
+
+        /* 세로로 쌓이면 점선 화살표는 아래 방향으로 */
+        & .dw-step:not(:last-child)::after {
+            top: auto;
+            right: auto;
+            bottom: -32px;
+            left: 50%;
+            width: 0;
+            height: 28px;
+            border-top: 0;
+            border-left: 3px dashed rgb(239 71 111 / 45%);
+        }
+
+        & .dw-step:not(:last-child)::before {
+            top: auto;
+            right: auto;
+            bottom: -34px;
+            left: calc(50% - 5px);
+            transform: rotate(135deg);
+        }
+
+        & .dw-pair,
+        & .dw-goods {
+            grid-template-columns: 1fr;
+        }
+
+        & .dw-goods {
+            padding: 26px 22px;
+        }
+    }
+}
+
+/* ───────── 보물광산 아래 구역(커뮤니티 확장 · 동네 돌봄 · 준비 중 혜택 · 안심 안내) + 공용 조각 ───────── */
+html:not(.ddb-app-mode) [data-daily-web] {
+    /* 구역 제목: 작은 영문 글씨는 제목 위 한 줄 */
+    & .dw-section-head .dw-kicker {
+        display: block;
+    }
+
+    & .dw-chip-plain {
+        border: 1.5px dashed rgb(100 116 139 / 30%);
+        background: #fff;
+        color: var(--dw-text);
+    }
+
+    & .dw-eyebrow {
+        color: var(--dw-soft);
+        font-size: 10.5px;
+        font-weight: 800;
+        letter-spacing: 0.14em;
+    }
+
+    /* 안내 쪽지 — 흰 점선 종이 */
+    & .dw-note {
+        margin-top: 12px;
+        padding: 11px 13px;
+        border: 1.5px dashed rgb(100 116 139 / 22%);
+        border-radius: 16px;
+        background: rgb(255 255 255 / 85%);
+        color: var(--dw-soft);
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 1.6;
+    }
+
+    & .dw-note i {
+        color: #7c62d6;
+    }
+
+    /* 아래 안내 띠 — 연하늘 점선 */
+    & .dw-banner-note {
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 22px;
+        padding: 13px 18px;
+        border: 1.5px dashed rgb(8 145 178 / 30%);
+        border-radius: 999px;
+        background: #f0f9fc;
+        color: #155e75;
+        font-size: 12.5px;
+        font-weight: 700;
+        text-align: center;
+    }
+
+    & .dw-icon-lg {
+        width: 58px !important;
+        height: 58px !important;
+    }
+
+    /* ── 커뮤니티 확장: 흰 판 대신 바탕 위에 바로, 2×2 카드 ── */
+    & .dw-expansion-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 20px !important;
+        margin-top: 30px;
+    }
+
+    & .dw-xcard {
+        display: flex;
+        height: 100%;
+        flex-direction: column;
+        padding: 26px 26px 22px;
+        border-radius: 30px;
+        box-shadow: var(--dw-shadow);
+    }
+
+    & .dw-xcard-head {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        margin-bottom: 6px;
+    }
+
+    /* 큰 흰 동그라미 아이콘 + 순서 숫자 */
+    & .dw-xcard-icon {
+        position: relative;
+        display: grid;
+        width: 64px;
+        height: 64px;
+        flex: none;
+        place-items: center;
+        border: 2px dashed rgb(255 255 255 / 0%);
+        border-radius: 999px;
+        background: #fff;
+        font-size: 24px;
+        box-shadow: 0 8px 16px -10px rgb(15 23 42 / 30%);
+    }
+
+    & .dw-xcard-icon[data-crayon-tone="coral"] {
+        color: #e2557a;
+    }
+
+    & .dw-xcard-icon[data-crayon-tone="teal"] {
+        color: #0e8aa0;
+    }
+
+    & .dw-xcard-icon[data-crayon-tone="orange"] {
+        color: #e08a16;
+    }
+
+    & .dw-xcard-step {
+        position: absolute;
+        right: -6px;
+        bottom: -4px;
+        display: grid;
+        width: 26px;
+        height: 26px;
+        place-items: center;
+        border: 2px solid #fff;
+        border-radius: 999px;
+        background: var(--dw-pink);
+        color: #fff;
+        font-family: "Cafe24Ssurround", sans-serif;
+        font-size: 11px;
+    }
+
+    & .dw-xcard-cta {
+        align-self: flex-start;
+        margin-top: auto;
+        transform: translateY(14px);
+        margin-bottom: 14px;
+    }
+
+    /* ── 동네 돌봄 찾기 ── */
+    & .dw-local {
+        border-radius: 34px !important;
+    }
+
+    & .dw-local-tabs {
+        border-bottom: 1.5px dashed rgb(100 116 139 / 18%);
+        background: #fbfcfe;
+    }
+
+    & .dw-local-tab {
+        display: flex;
+        min-height: 70px;
+        align-items: center;
+        gap: 12px;
+        padding: 0 16px;
+        border: 1.5px dashed rgb(100 116 139 / 26%);
+        border-radius: 22px;
+        background: #fff;
+        color: var(--dw-text);
+        text-align: left;
+        transition: transform 0.18s ease, border-color 0.18s ease;
+    }
+
+    & .dw-local-tab:hover {
+        border-color: rgb(239 71 111 / 40%);
+    }
+
+    & .dw-local-tab .ddb-crayon-icon {
+        width: 46px !important;
+        height: 46px !important;
+        font-size: 17px !important;
+    }
+
+    /* 고른 종류 — 분홍 크레파스 칠 */
+    & .dw-local-tab.is-on {
+        border: 2px dashed rgb(239 71 111 / 50%);
+        background: #ffeef3 repeating-linear-gradient(168deg, rgb(239 71 111 / 6%) 0 3px, transparent 3px 7px);
+        color: var(--dw-ink);
+        box-shadow: 2px 3px 0 rgb(239 71 111 / 12%);
+    }
+
+    & .dw-local-side {
+        box-shadow: none;
+    }
+
+    & [data-local-care-panel] footer {
+        border-top: 1.5px dashed rgb(100 116 139 / 18%) !important;
+        background: #fbfcfe !important;
+    }
+
+    /* ── 준비 중 혜택 ── */
+    & .dw-prep {
+        border-style: dashed !important;
+        border-radius: 999px !important;
+        padding: 10px 20px !important;
+        text-align: left;
+    }
+
+    & .dw-program {
+        box-shadow: var(--dw-shadow);
+    }
+
+    /* ── 안심 안내(접는 판) ── */
+    & [data-growth-policy-summary] {
+        border-radius: 30px !important;
+    }
+
+    & [data-growth-policy-summary] summary > span {
+        border: 1.5px dashed rgb(100 116 139 / 34%) !important;
+        padding: 10px 18px !important;
+        font-size: 12px !important;
+    }
+}
+
+@media (max-width: 767px) {
+    html:not(.ddb-app-mode) [data-daily-web] {
+        & .dw-expansion-list {
+            grid-template-columns: 1fr !important;
+        }
+
+        & .dw-banner-note {
+            border-radius: 22px;
+        }
+    }
+}
