@@ -187,7 +187,7 @@ export default function GrowthHub() {
                 </div>
             </section>
 
-            <PawTrail />
+            <PawTrail steps={2} />
 
             {/* 탭 ① 오늘의 보물 — 오늘의 보물 · 안전 공유 · 쇼핑으로 잇기 */}
             <div role="tabpanel" id="hub-panel-today" aria-labelledby="hub-tab-today" hidden={activeTab !== "today"}>

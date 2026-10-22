@@ -52,11 +52,11 @@ export function CrayonDoodle({ kind, className = "" }: { kind: "paw" | "bone" | 
     );
 }
 
-// 구역 사이 발자국(지그재그 네 걸음)
-export function PawTrail() {
+// 구역 사이 발자국(지그재그, 기본 네 걸음 · steps={2} 이면 두 걸음짜리 짧은 간격)
+export function PawTrail({ steps = 4 }: { steps?: 2 | 4 }) {
     return (
-        <div className="dw-paw-trail" aria-hidden="true">
-            {[0, 1, 2, 3].map((step) => <CrayonDoodle key={step} kind="paw" />)}
+        <div className={`dw-paw-trail ${steps === 2 ? "is-short" : ""}`} aria-hidden="true">
+            {Array.from({ length: steps }, (_, step) => <CrayonDoodle key={step} kind="paw" />)}
         </div>
     );
 }

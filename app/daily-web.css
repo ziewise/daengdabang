@@ -4426,3 +4426,20 @@ html:not(.ddb-app-mode) [data-daily-web] {
         }
     }
 }
+
+/* ── 보물광산 머리 표지 아래 간격 좁게(2026-10-22 사용자): 발자국 두 걸음 + 탭 첫 구역 위 여백 줄임 ── */
+html:not(.ddb-app-mode) [data-daily-web] {
+    & .dw-paw-trail.is-short {
+        height: 66px;
+        margin-top: 12px;
+    }
+
+    & [role="tabpanel"] > :is(section, div):first-child {
+        padding-top: 0 !important;
+    }
+
+    & [role="tabpanel"] > section:first-child > :first-child,
+    & [role="tabpanel"] > div:first-child > section:first-child {
+        padding-top: 0 !important;
+    }
+}
