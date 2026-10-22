@@ -2749,10 +2749,13 @@ html:not(.ddb-app-mode) [data-daily-web] .dw-safe-title {
  * 아래로 새 쪽 그리기(점선 빈 쪽) · 지난 쪽 모아보기(쪽 카드) · 그림책 부록.
  * 낙서(발바닥 · 뼈다귀 · 하트 · 별)와 사진 고리는 #dw-crayon-grain 필터로 크레파스 결. 괘선 없음.
  * ═══════════════════════════════════════════════════════════════════ */
-html:not(.ddb-app-mode) [data-my-pet-hub][data-daily-web] {
-    --dw-book-paper: #fffdf8;
-    --dw-book-dots: radial-gradient(rgb(180 150 110 / 9%) 1px, transparent 1.3px);
 
+/* ═══════════════════════════════════════════════════════════════════
+ * 매일 댕생활 공용 "기록 결" 부품(2026-10-22 사용자 선택 — 우리 아이 기록 느낌을 보물광산 T1 · 굿즈 G1 · 커뮤니티 C1 에도)
+ * 손글씨 머리글 · 크레파스 낙서 · 발자국 · 둥근 쿠션 셋 · 연보라 안내 한 줄 · 크레파스 테 고리 · 크레파스 표지 · 쿠션 판 · 점선 단계 · 그림 탭
+ * 크레파스 결은 #dw-crayon-grain 필터(components/daily/CrayonArt.tsx 의 CrayonGrainFilter)
+ * ═══════════════════════════════════════════════════════════════════ */
+html:not(.ddb-app-mode) [data-daily-web] {
     /* 손글씨(개구) 작은 머리글 */
     & .dw-hand {
         margin: 0;
@@ -2763,7 +2766,9 @@ html:not(.ddb-app-mode) [data-my-pet-hub][data-daily-web] {
     }
 
     & .dw-hand-pink { color: #e2557a; }
+
     & .dw-hand-sky { color: #0e8aa0; }
+
     & .dw-hand-soft { color: #94a3b8; font-size: 18px; }
 
     /* 크레파스 낙서 그림 */
@@ -2773,6 +2778,346 @@ html:not(.ddb-app-mode) [data-my-pet-hub][data-daily-web] {
         height: 44px;
         pointer-events: none;
     }
+
+    /* 그림책 → 새 쪽으로 걸어가는 발자국(지그재그) */
+    & .dw-paw-trail {
+        position: relative;
+        height: 96px;
+        margin-top: 10px;
+    }
+
+    & .dw-paw-trail .dw-doodle {
+        width: 34px;
+        height: 34px;
+        color: #f29bb6;
+    }
+
+    & .dw-paw-trail .dw-doodle:nth-child(1) { left: calc(50% - 36px); top: 0; transform: rotate(160deg); }
+
+    & .dw-paw-trail .dw-doodle:nth-child(2) { left: calc(50% + 4px); top: 22px; transform: rotate(200deg); opacity: 0.85; }
+
+    & .dw-paw-trail .dw-doodle:nth-child(3) { left: calc(50% - 36px); top: 46px; transform: rotate(160deg); opacity: 0.7; }
+
+    & .dw-paw-trail .dw-doodle:nth-child(4) { left: calc(50% + 4px); top: 68px; transform: rotate(200deg); opacity: 0.55; }
+
+    & .dw-rounds {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 30px;
+    }
+
+    & .dw-round {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        transition: transform 0.18s ease;
+    }
+
+    & .dw-round:hover { transform: translateY(-4px); }
+
+    & .dw-round.is-pink { --dw-rb: #ffeef3; --dw-rc: #e2557a; }
+
+    & .dw-round.is-lav { --dw-rb: #f3f0fe; --dw-rc: #7c62d6; }
+
+    & .dw-round.is-yellow { --dw-rb: #fff6e3; --dw-rc: #d97f0e; }
+
+    & .dw-round-art {
+        display: grid;
+        width: var(--dw-art, 190px);
+        height: var(--dw-art, 190px);
+        place-items: center;
+        border-radius: 999px;
+        background: var(--dw-rb);
+        box-shadow: inset 0 4px 0 rgb(255 255 255 / 90%), inset 0 -10px 18px rgb(0 0 0 / 4%), 0 20px 30px -22px rgb(15 23 42 / 35%);
+    }
+
+    & .dw-round-art img {
+        width: 120px;
+        height: 120px;
+        object-fit: contain;
+    }
+
+    & .dw-round-title {
+        margin-top: 16px;
+        color: var(--dw-ink);
+        font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif;
+        font-size: 20px;
+        font-weight: 400;
+    }
+
+    & .dw-round-body {
+        max-width: 260px;
+        margin-top: 4px;
+        color: #64748b;
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1.6;
+        word-break: keep-all;
+    }
+
+    & .dw-round-go {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        height: 40px;
+        margin-top: 12px;
+        padding: 0 18px;
+        border-radius: 999px;
+        background: var(--dw-rb);
+        color: var(--dw-rc);
+        font-size: 13px;
+        font-weight: 800;
+    }
+
+    /* 행동·소리 분석 안내 한 줄(연보라) */
+    & .dw-appendix-note {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        max-width: 860px;
+        margin: 30px auto 0;
+        padding: 14px 20px;
+        border-radius: 22px;
+        background: #f7f5fe;
+        color: #475569;
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1.65;
+        word-break: keep-all;
+    }
+
+    & .dw-appendix-note > i {
+        margin-top: 4px;
+        color: #7c62d6;
+    }
+
+    & .dw-appendix-note strong { color: #5b45b0; }
+
+    & .dw-appendix-note-link {
+        margin-left: 4px;
+        color: #7c62d6;
+        font-weight: 800;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+        white-space: nowrap;
+    }
+
+    & .dw-round.is-sky { --dw-rb: #e9f4fb; --dw-rc: #0e8aa0; }
+    & .dw-rounds.is-four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    & .dw-round.is-mint { --dw-rb: #e9f8f1; --dw-rc: #12a17a; }
+
+    /* 무지개 크레파스 테 고리 — 흰 동그라미 안에 그림 · 숫자(크기는 --dw-ring) */
+    & .dw-rring {
+        position: relative;
+        display: grid;
+        flex: none;
+        width: var(--dw-ring, 280px);
+        height: var(--dw-ring, 280px);
+        padding: 14px;
+        border-radius: 999px;
+        isolation: isolate;
+    }
+
+    & .dw-rring::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        border-radius: 999px;
+        background: conic-gradient(from 20deg, #f7a8bf, #ffd08a, #a8e0c6, #a9d4ea, #cfc3f5, #f7a8bf);
+        filter: url(#dw-crayon-grain);
+    }
+
+    & .dw-rring > span {
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+        border-radius: 999px;
+        background: #fff;
+        text-align: center;
+    }
+
+    & .dw-rring img {
+        width: 78%;
+        height: 78%;
+        object-fit: contain;
+    }
+
+    /* 크레파스 표지 — 흰 크레파스 결 위 종이 판(색은 is-yellow · is-lav · is-pink) */
+    & .dw-ccover {
+        padding: 16px;
+        border-radius: 44px;
+        background-color: var(--dw-cover, #f7d48a);
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .55 -.12'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 55%), inset 0 -10px 18px rgb(120 60 20 / 8%), 0 30px 50px -30px rgb(140 90 40 / 45%);
+    }
+
+    & .dw-ccover.is-yellow { --dw-cover: #f7d48a; }
+    & .dw-ccover.is-lav { --dw-cover: #d9cdf6; }
+    & .dw-ccover.is-pink { --dw-cover: #f6bfd0; }
+
+    & .dw-ccover-in {
+        padding: 44px 50px;
+        border-radius: 30px;
+        background: #fffdf8 radial-gradient(rgb(180 150 110 / 9%) 1px, transparent 1.3px);
+        background-size: auto, 7px 7px;
+        box-shadow: 0 0 0 5px rgb(255 255 255 / 70%);
+    }
+
+    /* 폭신한 쿠션 판(색은 is-pink · is-yellow · is-mint · is-sky · is-lav) */
+    & .dw-csheet {
+        padding: 40px 44px;
+        border-radius: 46px;
+        background: var(--dw-sheet, #fff);
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), inset 0 -10px 18px rgb(0 0 0 / 3.5%), 0 22px 36px -24px rgb(15 23 42 / 32%);
+    }
+
+    & .dw-csheet.is-pink { --dw-sheet: #ffeef3; }
+    & .dw-csheet.is-yellow { --dw-sheet: #fff6e3; }
+    & .dw-csheet.is-mint { --dw-sheet: #e9f8f1; }
+    & .dw-csheet.is-sky { --dw-sheet: #e9f4fb; }
+    & .dw-csheet.is-lav { --dw-sheet: #f3f0fe; }
+
+    /* 가운데 머리글(영어 손글씨 · 세 색 밑줄 제목 · 설명) */
+    & .dw-rhead {
+        margin-bottom: 26px;
+        text-align: center;
+    }
+
+    & .dw-rhead .dw-kicker { display: block; }
+
+    & .dw-rhead h2.ddb-crayon-title {
+        display: inline-block;
+        margin-top: 6px;
+    }
+
+    /* 점선으로 이은 단계 동그라미(크기는 --dw-step, 번호 색은 --dw-no) */
+    & .dw-dsteps {
+        --dw-step: 112px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    & .dw-dsteps > li {
+        position: relative;
+        display: flex;
+        min-width: 0;
+        flex: 1;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    & .dw-dsteps > li + li::before {
+        content: "";
+        position: absolute;
+        top: calc(var(--dw-step) / 2);
+        left: calc(-50% - 2px + var(--dw-step) / 2);
+        width: calc(100% - 8px - var(--dw-step));
+        border-top: 3px dotted #9ccfe2;
+    }
+
+    & .dw-dstep-art {
+        position: relative;
+        display: grid;
+        width: var(--dw-step);
+        height: var(--dw-step);
+        place-items: center;
+        border-radius: 999px;
+        background: #fff;
+        box-shadow: 0 10px 18px -12px rgb(15 23 42 / 40%);
+    }
+
+    & .dw-dstep-art img {
+        width: 72%;
+        height: 72%;
+        object-fit: contain;
+    }
+
+    & .dw-dstep-no {
+        position: absolute;
+        top: -4px;
+        right: -6px;
+        display: grid;
+        width: 28px;
+        height: 28px;
+        place-items: center;
+        border-radius: 999px;
+        background: var(--dw-no, #e9789a);
+        color: #fff;
+        font-size: 13px;
+        font-weight: 900;
+        box-shadow: 0 4px 8px -4px rgb(0 0 0 / 35%);
+    }
+
+    & .dw-dstep-title {
+        margin-top: 12px;
+        color: var(--dw-ink);
+        font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif;
+        font-size: 18px;
+        font-weight: 400;
+        word-break: keep-all;
+    }
+
+    & .dw-dstep-body {
+        margin-top: 4px;
+        color: #64748b;
+        font-size: 12.5px;
+        font-weight: 600;
+        line-height: 1.6;
+        word-break: keep-all;
+    }
+
+    /* 그림 탭 알약(왼쪽 3D 그림 + 이름 · 작은 설명), 고른 탭은 분홍 테 */
+    & .dw-ctab {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 7px 16px 7px 7px;
+        border-radius: 999px;
+        background: #fff;
+        text-align: left;
+        box-shadow: 0 8px 14px -10px rgb(15 23 42 / 35%), inset 0 0 0 1px #f1e4e8;
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    & .dw-ctab:hover { transform: translateY(-2px); }
+
+    & .dw-ctab img {
+        width: 42px;
+        height: 42px;
+        flex: none;
+        object-fit: contain;
+    }
+
+    & .dw-ctab b {
+        display: block;
+        color: #1e293b;
+        font-size: 13.5px;
+        font-weight: 800;
+    }
+
+    & .dw-ctab small {
+        display: block;
+        color: #94a3b8;
+        font-size: 11px;
+        font-weight: 700;
+    }
+
+    & :is(.dw-ctab.is-on, .dw-ctab[aria-selected="true"]) {
+        box-shadow: 0 0 0 3px var(--dw-pink), 0 8px 14px -10px rgb(15 23 42 / 35%);
+    }
+}
+
+html:not(.ddb-app-mode) [data-my-pet-hub][data-daily-web] {
+    --dw-book-paper: #fffdf8;
+    --dw-book-dots: radial-gradient(rgb(180 150 110 / 9%) 1px, transparent 1.3px);
 
     /* ── 제목 ── */
     & .dw-book-head {
@@ -3158,24 +3503,6 @@ html:not(.ddb-app-mode) [data-my-pet-hub][data-daily-web] {
     & .dw-page-doodle.is-left { top: 30px; right: 44px; color: #f7a8bf; transform: rotate(12deg); }
     & .dw-page-doodle.is-right { right: 86px; bottom: 10px; width: 46px; height: 46px; color: #a8e0c6; transform: rotate(-16deg); }
 
-    /* 그림책 → 새 쪽으로 걸어가는 발자국(지그재그) */
-    & .dw-paw-trail {
-        position: relative;
-        height: 96px;
-        margin-top: 10px;
-    }
-
-    & .dw-paw-trail .dw-doodle {
-        width: 34px;
-        height: 34px;
-        color: #f29bb6;
-    }
-
-    & .dw-paw-trail .dw-doodle:nth-child(1) { left: calc(50% - 36px); top: 0; transform: rotate(160deg); }
-    & .dw-paw-trail .dw-doodle:nth-child(2) { left: calc(50% + 4px); top: 22px; transform: rotate(200deg); opacity: 0.85; }
-    & .dw-paw-trail .dw-doodle:nth-child(3) { left: calc(50% - 36px); top: 46px; transform: rotate(160deg); opacity: 0.7; }
-    & .dw-paw-trail .dw-doodle:nth-child(4) { left: calc(50% + 4px); top: 68px; transform: rotate(200deg); opacity: 0.55; }
-
     /* ── 새 쪽 찍기 — 크레파스 카메라(하늘색 몸통 · 위 뷰파인더 혹 · 노란 플래시 · 크레파스 렌즈) ── */
     & .dw-cam {
         position: relative;
@@ -3437,106 +3764,6 @@ html:not(.ddb-app-mode) [data-my-pet-hub][data-daily-web] {
 
     & .dw-appendix-head .dw-pages-title { margin-top: 4px; }
 
-    & .dw-rounds {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 30px;
-    }
-
-    & .dw-round {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        transition: transform 0.18s ease;
-    }
-
-    & .dw-round:hover { transform: translateY(-4px); }
-
-    & .dw-round.is-pink { --dw-rb: #ffeef3; --dw-rc: #e2557a; }
-    & .dw-round.is-lav { --dw-rb: #f3f0fe; --dw-rc: #7c62d6; }
-    & .dw-round.is-yellow { --dw-rb: #fff6e3; --dw-rc: #d97f0e; }
-
-    & .dw-round-art {
-        display: grid;
-        width: 190px;
-        height: 190px;
-        place-items: center;
-        border-radius: 999px;
-        background: var(--dw-rb);
-        box-shadow: inset 0 4px 0 rgb(255 255 255 / 90%), inset 0 -10px 18px rgb(0 0 0 / 4%), 0 20px 30px -22px rgb(15 23 42 / 35%);
-    }
-
-    & .dw-round-art img {
-        width: 120px;
-        height: 120px;
-        object-fit: contain;
-    }
-
-    & .dw-round-title {
-        margin-top: 16px;
-        color: var(--dw-ink);
-        font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif;
-        font-size: 20px;
-        font-weight: 400;
-    }
-
-    & .dw-round-body {
-        max-width: 260px;
-        margin-top: 4px;
-        color: #64748b;
-        font-size: 13px;
-        font-weight: 600;
-        line-height: 1.6;
-        word-break: keep-all;
-    }
-
-    & .dw-round-go {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        height: 40px;
-        margin-top: 12px;
-        padding: 0 18px;
-        border-radius: 999px;
-        background: var(--dw-rb);
-        color: var(--dw-rc);
-        font-size: 13px;
-        font-weight: 800;
-    }
-
-    /* 행동·소리 분석 안내 한 줄(연보라) */
-    & .dw-appendix-note {
-        display: flex;
-        align-items: flex-start;
-        gap: 10px;
-        max-width: 860px;
-        margin: 30px auto 0;
-        padding: 14px 20px;
-        border-radius: 22px;
-        background: #f7f5fe;
-        color: #475569;
-        font-size: 13px;
-        font-weight: 600;
-        line-height: 1.65;
-        word-break: keep-all;
-    }
-
-    & .dw-appendix-note > i {
-        margin-top: 4px;
-        color: #7c62d6;
-    }
-
-    & .dw-appendix-note strong { color: #5b45b0; }
-
-    & .dw-appendix-note-link {
-        margin-left: 4px;
-        color: #7c62d6;
-        font-weight: 800;
-        text-decoration: underline;
-        text-underline-offset: 3px;
-        white-space: nowrap;
-    }
 }
 
 /* 불러오는 중 발바닥이 통통 */
@@ -3565,9 +3792,6 @@ html:not(.ddb-app-mode) [data-my-pet-hub][data-daily-web] {
         & .dw-cam-lens { width: 200px; height: 200px; padding: 12px; }
         & .dw-cam-steps { justify-content: center; gap: 6px 22px; }
         & .dw-cam-steps li + li::before { left: -21px; width: 18px; }
-        & .dw-rounds { gap: 18px; }
-        & .dw-round-art { width: 150px; height: 150px; }
-        & .dw-round-art img { width: 96px; height: 96px; }
         & :is(.dw-doodle-b, .dw-doodle-d) { display: none; }
     }
 }
@@ -3581,14 +3805,81 @@ html:not(.ddb-app-mode) [data-my-pet-hub][data-daily-web] {
         & .dw-cam-steps li { width: 70px; }
         & .dw-cam-steps li + li::before { display: none; }
         & .dw-cam-steps span { width: 58px; height: 58px; }
+        & .dw-pages-list { grid-template-columns: 1fr 1fr; gap: 10px; }
+        & .dw-page-card { padding: 14px 14px 12px; }
+    }
+}
+
+/* 공용 "기록 결" — 태블릿 · 휴대폰 */
+@media (max-width: 860px) {
+    html:not(.ddb-app-mode) [data-daily-web] {
+        & .dw-rounds { gap: 18px; }
+        & .dw-rounds { --dw-art: 150px; }
+        & .dw-round-art img { width: 96px; height: 96px; }
+        & .dw-ccover-in { padding: 30px 22px; }
+        & .dw-dsteps { flex-wrap: wrap; justify-content: center; gap: 22px 10px; }
+        & .dw-dsteps > li { flex: 0 0 calc(50% - 10px); }
+        & .dw-dsteps > li + li::before { display: none; }
+        & :is(.dw-doodle-b, .dw-doodle-d) { display: none; }
+    }
+}
+
+@media (max-width: 520px) {
+    html:not(.ddb-app-mode) [data-daily-web] {
         /* 부록 셋 — 작게 줄여 가로 한 줄(설명은 숨기고 그림 · 제목 · 버튼만) */
         & .dw-rounds { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
-        & .dw-round-art { width: 96px; height: 96px; }
+        & .dw-rounds { --dw-art: 96px; }
         & .dw-round-art img { width: 64px; height: 64px; }
         & .dw-round-title { margin-top: 10px; font-size: 14.5px; word-break: keep-all; }
         & .dw-round-body { display: none; }
         & .dw-round-go { height: 32px; margin-top: 8px; padding: 0 11px; font-size: 11.5px; gap: 4px; }
-        & .dw-pages-list { grid-template-columns: 1fr 1fr; gap: 10px; }
-        & .dw-page-card { padding: 14px 14px 12px; }
+        & .dw-rounds.is-four { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 12px; }
+        & .dw-ccover { padding: 10px; border-radius: 32px; }
+        & .dw-ccover-in { border-radius: 24px; }
+        & .dw-dsteps { --dw-step: 84px; }
+        & .dw-ctab { padding-right: 12px; }
+        & .dw-ctab img { width: 34px; height: 34px; }
+    }
+}
+
+/* ── 커뮤니티 C1(2026-10-22 사용자 선택): 분홍 쿠션 머리 판 + 점선으로 이은 둥근 쿠션 넷 ── */
+html:not(.ddb-app-mode) [data-daily-web] {
+    & .dw-chero {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 36px;
+        padding: 48px 54px;
+    }
+
+    & .dw-chero-ring { --dw-ring: 290px; }
+
+    /* 둥근 쿠션 줄(목록) — 칸 가운데 정렬 */
+    & .dw-rounds > li {
+        position: relative;
+        display: flex;
+        justify-content: center;
+    }
+
+    /* 둥근 쿠션 사이를 분홍 점선으로 이음(그림 가운데 높이) */
+    & .dw-rounds.is-flow { --dw-art: 176px; }
+
+    & .dw-rounds.is-flow > li + li::before {
+        content: "";
+        position: absolute;
+        top: calc(var(--dw-art) / 2);
+        left: calc(-50% - 15px + var(--dw-art) / 2 + 12px);
+        width: calc(100% + 30px - var(--dw-art) - 24px);
+        border-top: 3px dotted #f2b8c9;
+    }
+}
+
+@media (max-width: 860px) {
+    html:not(.ddb-app-mode) [data-daily-web] {
+        & .dw-chero { grid-template-columns: 1fr; justify-items: center; padding: 34px 24px; text-align: center; }
+        & .dw-chero-ring { --dw-ring: 220px; order: -1; }
+        & .dw-rounds.is-four { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 30px 14px; }
+        & .dw-rounds.is-flow { --dw-art: 140px; }
+        & .dw-rounds.is-flow > li + li::before { display: none; }
     }
 }

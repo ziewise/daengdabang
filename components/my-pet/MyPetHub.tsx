@@ -14,6 +14,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import WeeklyPhotoComparison from "@/components/my-pet/WeeklyPhotoComparison";
+import { CrayonDoodle, CrayonGrainFilter, PawTrail } from "@/components/daily/CrayonArt";
 import { useAuth, type PetProfile } from "@/lib/store";
 import { PETLENS_PHOTO_VIEWS } from "@/lib/petlens-multiview";
 import {
@@ -62,36 +63,6 @@ function petFacts(pet: PetProfile) {
         { key: "sex", icon: "fa-venus-mars", label: "성별", value: sex || "선택 전", tint: "is-sky" },
         { key: "care", icon: "fa-heart", label: "관심 케어", value: pet.concerns.length ? pet.concerns.slice(0, 3).join(", ") : "아직 선택 전", tint: "is-pink" },
     ];
-}
-
-// 크레파스로 그린 낙서(발바닥 · 뼈다귀 · 하트 · 별) — 결은 #dw-crayon-grain 필터
-function CrayonDoodle({ kind, className = "" }: { kind: "paw" | "bone" | "heart" | "star"; className?: string }) {
-    return (
-        <svg viewBox="0 0 48 48" className={`dw-doodle ${className}`} aria-hidden="true" focusable="false">
-            <g filter="url(#dw-crayon-grain)" fill="currentColor">
-                {kind === "paw" && (
-                    <>
-                        <ellipse cx="24" cy="31" rx="9.5" ry="8" />
-                        <circle cx="12.5" cy="20" r="4.2" />
-                        <circle cx="19.5" cy="12.5" r="4.2" />
-                        <circle cx="28.5" cy="12.5" r="4.2" />
-                        <circle cx="35.5" cy="20" r="4.2" />
-                    </>
-                )}
-                {kind === "bone" && (
-                    <>
-                        <rect x="12" y="20" width="24" height="8" rx="4" />
-                        <circle cx="12" cy="19" r="5" />
-                        <circle cx="12" cy="29" r="5" />
-                        <circle cx="36" cy="19" r="5" />
-                        <circle cx="36" cy="29" r="5" />
-                    </>
-                )}
-                {kind === "heart" && <path d="M24 40C8 28 6 16 15 12c5-2 8 1 9 4 1-3 4-6 9-4 9 4 7 16-9 28z" />}
-                {kind === "star" && <path d="M24 6l5 11 12 1.5-9 8.5 2.5 12L24 33l-10.5 6 2.5-12-9-8.5L19 17z" />}
-            </g>
-        </svg>
-    );
 }
 
 export default function MyPetHub() {
@@ -200,15 +171,8 @@ export default function MyPetHub() {
 
     return (
         <main className="mx-auto w-full max-w-[1200px] px-4 py-10 md:px-6 md:py-14" data-my-pet-hub data-daily-web>
-            {/* 크레파스 결 필터 — 낙서 그림이 같이 씀 */}
-            <svg width="0" height="0" className="absolute" aria-hidden="true" focusable="false">
-                <filter id="dw-crayon-grain" x="-10%" y="-10%" width="120%" height="120%">
-                    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="4" result="noise" />
-                    <feDisplacementMap in="SourceGraphic" in2="noise" scale="2.4" result="wobble" />
-                    <feColorMatrix in="noise" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.7 1.5" result="grain" />
-                    <feComposite in="wobble" in2="grain" operator="in" />
-                </filter>
-            </svg>
+            {/* 크레파스 결 필터 — 낙서 그림 · 무지개 테 고리가 같이 씀 */}
+            <CrayonGrainFilter />
 
             {/* 그림책 제목 — 발바닥 낙서가 둘레를 걸어감 */}
             <header className="dw-book-head">
@@ -331,9 +295,7 @@ export default function MyPetHub() {
                 <p className="dw-book-fine">이 리포트는 사진에서 확인된 관찰 항목을 정리하며, 촬영 조건에 따라 달라질 수 있고 수의학적 진단을 대신하지 않습니다.</p>
 
                 {/* 그림책에서 새 쪽으로 걸어 내려가는 발자국 */}
-                <div className="dw-paw-trail" aria-hidden="true">
-                    {[0, 1, 2, 3].map((step) => <CrayonDoodle key={step} kind="paw" />)}
-                </div>
+                <PawTrail />
 
                 {/* 새 쪽 찍기 — 크레파스 카메라(2026-10-22 사용자 선택 N2): 크레파스 렌즈 + 네 방향 순서 + 주간 촬영(기존 WeeklyPhotoComparison) */}
                 <div className="dw-cam">
