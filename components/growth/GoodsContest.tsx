@@ -27,6 +27,7 @@ import {
 import type { GrowthGoodsContent } from "@/lib/growth-content";
 import { useAuth } from "@/lib/store";
 import { inboundCampaignFields, trackStorefrontEvent } from "@/lib/storefront-analytics";
+import { CrayonGrainFilter, PawTrail } from "@/components/daily/CrayonArt";
 
 const LOGIN_HREF = "/auth/login/?redirect=%2Fgoods-contest%2F";
 const GOODS_IMAGE_PLACEHOLDER = "data:image/webp;base64,UklGRioAAABXRUJQVlA4IB4AAABQAQCdASoMAAwABIByJQBOgCgAAP7wDPQfDvWwAAA=";
@@ -125,6 +126,14 @@ function replaceSummaryItem(
         items: current.items.map((item) => item.itemId === replacement.itemId ? replacement : item),
     };
 }
+
+// 진행 4단계 3D 그림(2026-10-22 사용자 선택 G1)
+const CONTEST_STEP_ART = [
+    "/images/ui/shop-menu-brand-128.webp",
+    "/images/ui/menu-daily-community-128.webp",
+    "/images/ui/menu-lab-report-128.webp",
+    "/images/ui/menu-cs-return-128.webp",
+];
 
 export default function GoodsContest({
     content,
@@ -450,42 +459,53 @@ export default function GoodsContest({
                     </div>
                 </div>
 
-                {/* 안내 — 가운데 제목 · 정보 칩 한 줄 · 4단계 쿠션 카드(2026-10-22 사용자 선택 T2). CSS 는 app/daily-web.css */}
-                <div className="dw-intro mt-8">
-                    <div className="dw-section-head">
-                        <p className="ddb-crayon-kicker dw-kicker">{content.kicker}</p>
-                        <h2 id="goods-contest-title" className="ddb-crayon-title ddb-crayon-underline dw-h2 break-keep">
-                            {content.title}
-                        </h2>
-                        <p className="dw-sub">
-                            {content.description}
-                        </p>
-                        <div className="dw-intro-chips">
-                            <span className={`dw-ichip ${campaignClosed ? "is-closed" : "is-open"}`}>
-                                <i className="fa-solid fa-circle-check" aria-hidden="true" />{campaignStatusLabel}
-                            </span>
-                            <span className="dw-ichip is-violet"><i className="fa-solid fa-user-group" aria-hidden="true" />회원·비회원 모두 참여</span>
-                            <span className="dw-ichip">
-                                <i className="fa-regular fa-calendar" aria-hidden="true" />
-                                <span className="sr-only">공모 시작 </span>{formattedCampaignDate(campaignStartsAt)} ~ <span className="sr-only">공모 종료 예정 </span>{formattedCampaignDate(campaignEndsAt)}
+                {/* 안내 — 연보라 크레파스 표지(2026-10-22 사용자 선택 G1): 왼쪽 제목 · 칩 · 결제 없음 손글씨, 오른쪽 "500" 무지개 고리, 아래 점선으로 이은 4단계. CSS 는 app/daily-web.css */}
+                <CrayonGrainFilter />
+                <div className="dw-ccover is-lav dw-gcover mt-8">
+                    <div className="dw-ccover-in">
+                        <div className="dw-gcover-top">
+                            <div className="min-w-0">
+                                <p className="ddb-crayon-kicker dw-kicker">{content.kicker}</p>
+                                <h2 id="goods-contest-title" className="ddb-crayon-title ddb-crayon-underline dw-h2 break-keep">
+                                    {content.title}
+                                </h2>
+                                <p className="dw-sub">
+                                    {content.description}
+                                </p>
+                                <div className="dw-intro-chips">
+                                    <span className={`dw-ichip ${campaignClosed ? "is-closed" : "is-open"}`}>
+                                        <i className="fa-solid fa-circle-check" aria-hidden="true" />{campaignStatusLabel}
+                                    </span>
+                                    <span className="dw-ichip is-violet"><i className="fa-solid fa-user-group" aria-hidden="true" />회원·비회원 모두 참여</span>
+                                    <span className="dw-ichip">
+                                        <i className="fa-regular fa-calendar" aria-hidden="true" />
+                                        <span className="sr-only">공모 시작 </span>{formattedCampaignDate(campaignStartsAt)} ~ <span className="sr-only">공모 종료 예정 </span>{formattedCampaignDate(campaignEndsAt)}
+                                    </span>
+                                </div>
+                                <p className="dw-gcover-note">
+                                    <i className="fa-solid fa-circle-info mr-1.5" aria-hidden="true" />
+                                    선택은 주문·예약·결제가 아니며, 이 단계에서는 결제가 없습니다.
+                                </p>
+                            </div>
+                            <span className="dw-rring dw-gcover-ring" aria-hidden="true">
+                                <span><b>500</b><em>명이 모이면<br />만들어요</em></span>
                             </span>
                         </div>
-                        <p className="dw-intro-note">
-                            <i className="fa-solid fa-circle-info mr-1.5" aria-hidden="true" />
-                            선택은 주문·예약·결제가 아니며, 이 단계에서는 결제가 없습니다.
-                        </p>
-                    </div>
 
-                    <ol className="dw-steps4" aria-label="굿즈 공모전 진행 순서">
-                        {CONTEST_STEPS.map((step, index) => (
-                            <li key={step.number} className={`dw-step4 ${["is-lav", "is-pink", "is-yellow", "is-mint"][index]}`}>
-                                <span className="dw-step4-icon" aria-hidden="true"><i className={`fa-solid ${["fa-hand-pointer", "fa-users", "fa-file-signature", "fa-truck-fast"][index]}`} /></span>
-                                <span className="dw-step4-no">STEP {Number(step.number)}<span className="sr-only"> ({step.number})</span></span>
-                                <strong className="dw-step4-title">{step.title}</strong>
-                                <p className="dw-step4-body">{step.description}</p>
-                            </li>
-                        ))}
-                    </ol>
+                        <ol className="dw-dsteps dw-gcover-steps" aria-label="굿즈 공모전 진행 순서">
+                            {CONTEST_STEPS.map((step, index) => (
+                                <li key={step.number} className={["is-lav", "is-pink", "is-yellow", "is-mint"][index]}>
+                                    <span className="dw-dstep-art" aria-hidden="true">
+                                        <Image src={CONTEST_STEP_ART[index]} alt="" width={68} height={68} />
+                                        <span className="dw-dstep-no">{Number(step.number)}</span>
+                                    </span>
+                                    <span className="sr-only">STEP {Number(step.number)} ({step.number})</span>
+                                    <strong className="dw-dstep-title">{step.title}</strong>
+                                    <p className="dw-dstep-body">{step.description}</p>
+                                </li>
+                            ))}
+                        </ol>
+                    </div>
                 </div>
 
                 {notice ? (
@@ -655,35 +675,42 @@ export default function GoodsContest({
                     })}
                 </div>
 
-                {/* 결제 안전 안내 — 세 장 쿠션(2026-10-22 사용자 선택 B1): 지금은 결제 없음 · 결제 준비 · 에스크로 */}
-                <aside className="dw-safe mt-12" aria-label="굿즈 공모전 결제 및 제작 안내">
-                    <div className="dw-section-head">
+                {/* 결제 안전 안내 — 발자국 + 둥근 쿠션 셋(2026-10-22 사용자 선택 G1): 지금은 결제 없음 · 결제 준비 · 에스크로 */}
+                <PawTrail />
+                <aside className="dw-gsafe" aria-label="굿즈 공모전 결제 및 제작 안내">
+                    <div className="dw-rhead">
                         <p className="ddb-crayon-kicker dw-kicker">SAFE CHECKOUT</p>
                         <p className="ddb-crayon-title ddb-crayon-underline dw-h2 dw-safe-title">선택 단계 안전 안내</p>
                     </div>
-                    <div className="dw-safe-cards">
-                        <div className="dw-safe-card is-sky">
-                            <span className="dw-safe-icon" aria-hidden="true"><i className="fa-solid fa-shield-heart" /></span>
-                            <p className="dw-safe-head">지금은 결제가 없어요</p>
-                            <p className="mt-1">선택은 주문·예약·결제가 아니며 결제 정보도 받지 않습니다.</p>
-                            <p>상품별 500명 달성 후 최종 사양·가격·배송·제작일을 다시 알리고, 조건에 동의한 분만 별도 결제 단계로 진행합니다.</p>
-                        </div>
-                        <div className="dw-safe-card is-yellow">
-                            <span className="dw-safe-icon" aria-hidden="true"><i className="fa-solid fa-coins" /></span>
-                            <p className="dw-safe-head">결제는 이렇게 준비해요</p>
-                            <div className="dw-safe-methods" aria-label="향후 결제 방식">
-                                <span><i className="fa-solid fa-credit-card text-indigo-600" aria-hidden="true" />현금 결제</span>
-                                <span><i className="fa-solid fa-coins text-amber-600" aria-hidden="true" />적립금 + 댕코인 일부 사용</span>
-                                <span><i className="fa-solid fa-wallet text-emerald-600" aria-hidden="true" />적립금·댕코인 전액 결제</span>
+                    <div className="dw-rounds is-text">
+                        <div className="dw-round is-sky">
+                            <span className="dw-round-art" aria-hidden="true"><Image src="/images/ui/pet-settings-96.webp" alt="" width={96} height={96} /></span>
+                            <p className="dw-round-title">지금은 결제가 없어요</p>
+                            <div className="dw-round-body">
+                                <p>선택은 주문·예약·결제가 아니며 결제 정보도 받지 않습니다.</p>
+                                <p>상품별 500명 달성 후 최종 사양·가격·배송·제작일을 다시 알리고, 조건에 동의한 분만 별도 결제 단계로 진행합니다.</p>
                             </div>
-                            <p className="mt-2">최종 결제 기준은 1P=1원, 1댕코인=100원이며 현금·적립금·댕코인을 원하는 만큼 섞어 사용할 수 있도록 준비 중입니다.</p>
                         </div>
-                        <div className="dw-safe-card is-mint">
-                            <span className="dw-safe-icon" aria-hidden="true"><i className="fa-solid fa-scale-balanced" /></span>
-                            <p className="dw-safe-head">에스크로로 지켜요</p>
-                            <p className="mt-1">{content.escrowNotice}</p>
-                            <p className="mt-1">현금이 포함된 주문은 에스크로 계약과 배송 연동 준비가 확인된 뒤에만 결제를 열며, 현재 선택 단계에는 결제나 에스크로가 적용되지 않습니다.</p>
-                            <Link href="/legal/escrow/" className="dw-safe-link">에스크로 안내 보기 <i className="fa-solid fa-arrow-right text-[10px]" aria-hidden="true" /></Link>
+                        <div className="dw-round is-yellow">
+                            <span className="dw-round-art" aria-hidden="true"><Image src="/images/ui/header-cart-128.webp" alt="" width={96} height={96} /></span>
+                            <p className="dw-round-title">결제는 이렇게 준비해요</p>
+                            <div className="dw-round-body">
+                                <div className="dw-safe-methods" aria-label="향후 결제 방식">
+                                    <span><i className="fa-solid fa-credit-card text-indigo-600" aria-hidden="true" />현금 결제</span>
+                                    <span><i className="fa-solid fa-coins text-amber-600" aria-hidden="true" />적립금 + 댕코인 일부 사용</span>
+                                    <span><i className="fa-solid fa-wallet text-emerald-600" aria-hidden="true" />적립금·댕코인 전액 결제</span>
+                                </div>
+                                <p>최종 결제 기준은 1P=1원, 1댕코인=100원이며 현금·적립금·댕코인을 원하는 만큼 섞어 사용할 수 있도록 준비 중입니다.</p>
+                            </div>
+                        </div>
+                        <div className="dw-round is-mint">
+                            <span className="dw-round-art" aria-hidden="true"><Image src="/images/ui/menu-cs-faq-128.webp" alt="" width={96} height={96} /></span>
+                            <p className="dw-round-title">에스크로로 지켜요</p>
+                            <div className="dw-round-body">
+                                <p>{content.escrowNotice}</p>
+                                <p>현금이 포함된 주문은 에스크로 계약과 배송 연동 준비가 확인된 뒤에만 결제를 열며, 현재 선택 단계에는 결제나 에스크로가 적용되지 않습니다.</p>
+                            </div>
+                            <Link href="/legal/escrow/" className="dw-round-go">에스크로 안내 보기 <i className="fa-solid fa-arrow-right text-[10px]" aria-hidden="true" /></Link>
                         </div>
                     </div>
                     <p className="dw-safe-fine">표시 가격은 부가세 포함 예상 펀딩가이며 배송비는 별도입니다. 시제품·제조사 견적과 최종 사양에 따라 결제 전 달라질 수 있습니다.</p>

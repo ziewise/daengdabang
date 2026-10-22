@@ -3883,3 +3883,107 @@ html:not(.ddb-app-mode) [data-daily-web] {
         & .dw-rounds.is-flow > li + li::before { display: none; }
     }
 }
+
+/* ── 굿즈 공모전 G1(2026-10-22 사용자 선택): 연보라 크레파스 표지 + "500" 고리 + 점선 4단계, 안전 안내 둥근 쿠션 셋 ── */
+html:not(.ddb-app-mode) [data-daily-web] {
+    /* 점선 단계 번호 색 */
+    & .dw-dsteps > li.is-lav { --dw-no: #7c62d6; }
+    & .dw-dsteps > li.is-pink { --dw-no: #e9789a; }
+    & .dw-dsteps > li.is-yellow { --dw-no: #f0a020; }
+    & .dw-dsteps > li.is-mint { --dw-no: #12a17a; }
+
+    & .dw-gcover-top {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 34px;
+    }
+
+    & .dw-gcover .dw-kicker { display: block; }
+
+    & .dw-gcover h2.ddb-crayon-title {
+        font-size: clamp(28px, 3vw, 38px) !important;
+    }
+
+    & .dw-gcover .dw-sub {
+        max-width: 640px;
+        margin: 12px 0 0;
+    }
+
+    & .dw-gcover .dw-intro-chips {
+        justify-content: flex-start;
+    }
+
+    /* 결제 없음 — 분홍 손글씨 한 줄 */
+    & .dw-gcover-note {
+        margin-top: 14px;
+        color: #e2557a;
+        font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+        font-size: 18px;
+        font-weight: 700;
+        word-break: keep-all;
+    }
+
+    & .dw-gcover-ring { --dw-ring: 250px; }
+
+    & .dw-gcover-ring b {
+        display: block;
+        color: #e2557a;
+        font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif;
+        font-size: 58px;
+        font-weight: 400;
+        line-height: 1;
+    }
+
+    & .dw-gcover-ring em {
+        display: block;
+        margin-top: 8px;
+        color: #64748b;
+        font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+        font-size: 18px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 1.25;
+    }
+
+    & .dw-gcover-steps {
+        --dw-step: 96px;
+        margin-top: 34px;
+        padding-top: 30px;
+        border-top: 2.5px dashed #e3dcf7;
+    }
+
+    /* 안전 안내 — 글이 있는 둥근 쿠션(링크가 아니라 떠오르지 않음) */
+    & .dw-rounds.is-text { --dw-art: 150px; }
+    & div.dw-round:hover { transform: none; }
+
+    & .dw-rounds.is-text .dw-round-body {
+        display: grid;
+        gap: 4px;
+        max-width: 330px;
+        margin-top: 8px;
+    }
+
+    & .dw-rounds.is-text .dw-safe-methods {
+        margin: 2px 0 4px;
+    }
+}
+
+@media (max-width: 860px) {
+    html:not(.ddb-app-mode) [data-daily-web] {
+        & .dw-gcover-top { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+        & .dw-gcover .dw-sub { margin: 12px auto 0; }
+        & .dw-gcover .dw-intro-chips { justify-content: center; }
+        & .dw-gcover-ring { --dw-ring: 200px; }
+        & .dw-gcover-ring b { font-size: 46px; }
+        & .dw-rounds.is-text { grid-template-columns: 1fr; gap: 34px; }
+    }
+}
+
+@media (max-width: 520px) {
+    html:not(.ddb-app-mode) [data-daily-web] {
+        & .dw-rounds.is-text { grid-template-columns: 1fr; --dw-art: 120px; }
+        & .dw-rounds.is-text .dw-round-body { display: grid; }
+        & .dw-gcover-steps { --dw-step: 80px; }
+    }
+}
