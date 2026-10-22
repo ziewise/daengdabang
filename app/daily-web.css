@@ -2100,3 +2100,123 @@ html:not(.ddb-app-mode) [data-daily-web] {
         }
     }
 }
+
+/* ───────── 카드 표현 다듬기 S1 "차분한 파스텔"(2026-10-22 사용자 선택, "촌스러운 느낌" 정리) ─────────
+   매일 댕생활 네 페이지 공통 — 사선 줄무늬 · 세 색 띠 빼고, 바탕은 옅은 파스텔 단색, 점선 → 같은 색 계열 얇은 실선, 그림자는 부드럽게.
+   (위에 쌓인 규칙들을 덮어쓰는 마지막 묶음 — 구성 · 크기 · 기능은 그대로) */
+html:not(.ddb-app-mode) [data-daily-web] {
+    /* 사선 결 · 종이 결 없이 단색 */
+    & :is(.dw-tint-yellow, .dw-tint-mint, .dw-tint-pink, .dw-tint-sky, .dw-tint-lavender, .dw-step-orange, .dw-step-teal, .dw-step-coral,
+          .dw-login-card, .dw-login-bubble, .dw-tabbar, .dw-tab.is-on, .dw-local-tab.is-on,
+          section[aria-labelledby="growth-share-title"], [data-growth-policy-summary], [data-growth-policy-summary] summary, [data-growth-policy-summary] article) {
+        background-image: none !important;
+    }
+
+    /* 옅은 파스텔 + 같은 색 계열 실선 */
+    & :is(.dw-tint-yellow, .dw-step-orange) {
+        border: 1px solid #f6e3bd !important;
+        background-color: #fffaf0 !important;
+    }
+
+    & :is(.dw-tint-mint, .dw-step-teal) {
+        border: 1px solid #cdebdf !important;
+        background-color: #f1faf6 !important;
+    }
+
+    & :is(.dw-tint-pink, .dw-step-coral) {
+        border: 1px solid #f6d3de !important;
+        background-color: #fff5f8 !important;
+    }
+
+    & .dw-tint-sky {
+        border: 1px solid #cfe6f0 !important;
+        background-color: #f2f9fc !important;
+    }
+
+    & .dw-tint-lavender {
+        border: 1px solid #e0daf7 !important;
+        background-color: #f7f5fe !important;
+    }
+
+    /* 흰 판 · 흰 카드 — 실선 */
+    & :is(.dw-login-card, .dw-login-bubble, .dw-tabbar, .dw-map-card, .dw-map-result, .dw-report, .dw-history, .dw-goods-card,
+          .dw-flow-step, .dw-note, .dw-empty, .dw-history-item, .dw-gate-art, .dw-art-circle, .dw-hero-plate, .ddb-crayon-paper,
+          section[aria-labelledby="growth-share-title"], [data-growth-policy-summary]) {
+        border-style: solid !important;
+        border-width: 1px !important;
+    }
+
+    & .dw-login-card {
+        border-color: #f6d3de !important;
+        background-color: #fff !important;
+    }
+
+    & :is(.dw-tabbar, .dw-login-bubble) {
+        border-color: #e8ecf2 !important;
+        background-color: #fff !important;
+    }
+
+    & section[aria-labelledby="growth-share-title"] {
+        border-color: #cfe6f0 !important;
+        background-color: #fff !important;
+    }
+
+    & :is([data-growth-policy-summary], [data-growth-policy-summary] summary) {
+        border-color: #cdebdf !important;
+        background-color: #fff !important;
+    }
+
+    & [data-growth-policy-summary] article:nth-child(1) {
+        background-color: #fffaf0 !important;
+    }
+
+    & [data-growth-policy-summary] article:nth-child(2) {
+        background-color: #fff5f8 !important;
+    }
+
+    & [data-growth-policy-summary] article:nth-child(3) {
+        background-color: #f2f9fc !important;
+    }
+
+    & [data-growth-policy-summary] article {
+        border-style: solid !important;
+        border-width: 1px !important;
+        border-color: #eef1f5 !important;
+    }
+
+    /* 세 색 띠 · 리포트 색 띠 빼기 */
+    & :is(.dw-band-top, section[aria-labelledby="growth-share-title"], [data-growth-policy-summary])::after,
+    & .dw-report::before {
+        display: none !important;
+    }
+
+    /* 그림자 — 아주 부드럽게 */
+    & :is(.dw-hero, .dw-step, .dw-login-card, .dw-xcard, .dw-program, .dw-map, .dw-map-card, .dw-map-result, .dw-goods, .dw-bridge, .dw-tabbar,
+          .dw-login-bubble, .dw-contest, .dw-goods-card, .dw-tile, .dw-profile, .dw-stat, .dw-report, .dw-band, .dw-history, .dw-gate,
+          .dw-paper-note, .dw-flow-step, section[aria-labelledby="growth-share-title"], [data-growth-policy-summary], [data-goods-hero-video]) {
+        box-shadow: 0 1px 2px rgb(15 23 42 / 4%), 0 12px 28px -18px rgb(15 23 42 / 18%) !important;
+    }
+
+    /* 알약 · 칩 · 탭 — 실선 */
+    & :is(.dw-pill:not(.dw-pill-main), .dw-chip, .dw-soon, .dw-pin-tab, .dw-local-tab, .dw-five span, .dw-select-on, .dw-progress, .dw-gate-art) {
+        border-style: solid !important;
+        border-width: 1px !important;
+    }
+
+    & .dw-tab.is-on {
+        background-color: #fff1f5 !important;
+    }
+
+    & .dw-step-key {
+        background: #e9789a !important;
+    }
+
+    /* 동네 지도 길은 조금 옅게 */
+    & .dw-map-roads {
+        opacity: 0.55;
+    }
+
+    & .dw-checks li {
+        background: rgb(255 255 255 / 70%);
+    }
+}
