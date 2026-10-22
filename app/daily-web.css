@@ -4153,3 +4153,276 @@ html:not(.ddb-app-mode) [data-daily-web] {
         & .dw-ctab small { font-size: 10px; }
     }
 }
+
+/* ── 굿즈 카드 — 휴대폰 두 칸 + 굿즈 더보기(2026-10-22 사용자) ── */
+html:not(.ddb-app-mode) [data-daily-web] {
+    & .dw-goods-more-wrap { display: none; }
+
+    & .dw-goods-more {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        height: 50px;
+        padding: 0 26px;
+        border-radius: 999px;
+        background: #fff;
+        color: #e2557a;
+        font-size: 14.5px;
+        font-weight: 800;
+        box-shadow: 0 0 0 2px #f6c3d2, 0 10px 18px -12px rgb(200 80 120 / 50%);
+    }
+
+    & .dw-goods-more-count {
+        padding: 2px 9px;
+        border-radius: 999px;
+        background: #fff1f5;
+        color: #b4517a;
+        font-size: 11.5px;
+    }
+}
+
+@media (max-width: 640px) {
+    html:not(.ddb-app-mode) [data-daily-web] {
+        & .dw-goods-later { display: none !important; }
+        & .dw-goods-more-wrap { display: flex; justify-content: center; margin-top: 22px; }
+
+        /* 두 칸 카드 — 작게 */
+        & article.dw-goods-card.dw-goods-card { padding: 8px 8px 12px; border-radius: 28px; }
+        & .dw-goods-card .dw-goods-shot { border-radius: 22px; }
+        & .dw-goods-card .dw-goods-body { padding: 10px 4px 0; }
+        & .dw-goods-card h3.ddb-crayon-title { font-size: 15px !important; }
+        & .dw-goods-card .dw-goods-body > p.min-h-10 { min-height: 0; margin-top: 4px; font-size: 11px; line-height: 1.45; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        & .dw-goods-card .dw-goods-body > p.dw-goods-price { font-size: 16px; }
+        & .dw-goods-card .dw-goods-body > .mt-5 { margin-top: 10px; }
+        & .dw-goods-card .dw-goods-wait { min-height: 44px; padding: 0 6px; font-size: 9.5px; line-height: 1.35; text-align: center; }
+        & .dw-goods-card :is(button, .ddb-crayon-link) { min-height: 38px; padding: 0 8px; font-size: 11px; }
+        & .dw-goods-card .mt-auto.pt-4 { padding-top: 10px; }
+    }
+}
+
+/* ── 굿즈 사진 크게 보기 모달(2026-10-22 사용자): 흐린 바탕 위 크림색 둥근 판 · 큰 사진 · 이름 · 예상 펀딩가 · 이전/다음 ── */
+html:not(.ddb-app-mode) [data-daily-web] {
+    /* 카드 사진 — 누를 수 있다는 돋보기 표시 */
+    & .dw-goods-zoom { cursor: zoom-in; }
+
+    & .dw-goods-zoom-hint {
+        position: absolute;
+        right: 10px;
+        bottom: 10px;
+        display: grid;
+        width: 34px;
+        height: 34px;
+        place-items: center;
+        border-radius: 999px;
+        background: rgb(255 255 255 / 88%);
+        color: #e2557a;
+        font-size: 13px;
+        box-shadow: 0 6px 12px -8px rgb(15 23 42 / 45%);
+        transition: transform 0.18s ease;
+    }
+
+    & .dw-goods-zoom:hover .dw-goods-zoom-hint { transform: scale(1.1); }
+
+    & .dw-zoom {
+        position: fixed;
+        inset: 0;
+        z-index: 2700;
+        display: grid;
+        place-items: center;
+        padding: 20px;
+        background: rgb(40 28 48 / 55%);
+        backdrop-filter: blur(6px);
+        animation: dw-zoom-fade 0.18s ease;
+    }
+
+    & .dw-zoom-card {
+        position: relative;
+        display: flex;
+        width: min(640px, 100%);
+        max-height: calc(100dvh - 40px);
+        flex-direction: column;
+        margin: 0;
+        padding: 14px 14px 18px;
+        border-radius: 36px;
+        background: #fffdf8;
+        box-shadow: 0 30px 60px -20px rgb(0 0 0 / 45%);
+        animation: dw-zoom-pop 0.24s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+    }
+
+    & .dw-zoom-shot {
+        position: relative;
+        overflow: hidden;
+        border-radius: 26px;
+        background: #f4e8d3;
+    }
+
+    & .dw-zoom-img {
+        display: block;
+        width: 100%;
+        height: auto;
+        max-height: calc(100dvh - 220px);
+        object-fit: contain;
+    }
+
+    & .dw-zoom-close {
+        position: absolute;
+        top: -12px;
+        right: -12px;
+        z-index: 2;
+        display: grid;
+        width: 46px;
+        height: 46px;
+        place-items: center;
+        border-radius: 999px;
+        background: #fff;
+        color: #e2557a;
+        font-size: 18px;
+        box-shadow: 0 10px 20px -10px rgb(0 0 0 / 45%);
+    }
+
+    & .dw-zoom-nav {
+        position: absolute;
+        top: 50%;
+        display: grid;
+        width: 44px;
+        height: 44px;
+        place-items: center;
+        border-radius: 999px;
+        background: rgb(255 255 255 / 88%);
+        color: #e2557a;
+        font-size: 15px;
+        box-shadow: 0 8px 16px -10px rgb(0 0 0 / 45%);
+        transform: translateY(-50%);
+        transition: transform 0.18s ease;
+    }
+
+    & .dw-zoom-nav:hover { transform: translateY(-50%) scale(1.08); }
+    & .dw-zoom-nav.is-prev { left: 12px; }
+    & .dw-zoom-nav.is-next { right: 12px; }
+
+    & .dw-zoom-caption {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        padding: 14px 10px 0;
+        text-align: center;
+    }
+
+    & .dw-zoom-count {
+        padding: 3px 10px;
+        border-radius: 999px;
+        background: #fff1f5;
+        color: #b4517a;
+        font-size: 11px;
+        font-weight: 800;
+    }
+
+    & .dw-zoom-caption strong {
+        margin-top: 4px;
+        color: var(--dw-ink);
+        font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif;
+        font-size: 21px;
+        font-weight: 400;
+    }
+
+    & .dw-zoom-summary {
+        color: #64748b;
+        font-size: 13px;
+        font-weight: 600;
+        word-break: keep-all;
+    }
+
+    & .dw-zoom-price {
+        margin-top: 2px;
+        color: #e2557a;
+        font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif;
+        font-size: 19px;
+    }
+
+    & .dw-zoom-price small {
+        color: #94a3b8;
+        font-family: var(--font-wanted-sans), sans-serif;
+        font-size: 11.5px;
+        font-weight: 700;
+    }
+}
+
+@keyframes dw-zoom-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes dw-zoom-pop { from { opacity: 0; transform: scale(0.94) translateY(10px); } to { opacity: 1; transform: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+    html:not(.ddb-app-mode) [data-daily-web] :is(.dw-zoom, .dw-zoom-card) { animation: none; }
+}
+
+@media (max-width: 640px) {
+    html:not(.ddb-app-mode) [data-daily-web] {
+        & .dw-zoom { padding: 14px; }
+        & .dw-zoom-card { padding: 10px 10px 16px; border-radius: 30px; }
+        & .dw-zoom-close { top: 18px; right: 18px; width: 40px; height: 40px; }
+        & .dw-zoom-nav { width: 38px; height: 38px; }
+        & .dw-goods-zoom-hint { width: 28px; height: 28px; right: 8px; bottom: 8px; font-size: 11px; }
+    }
+}
+
+/* ── 결제 안전 안내 — 그림 · 제목 단추(PC 는 단추 티 없이), 휴대폰은 동그라미 셋 한 줄 + 누른 항목 내용만 아래 넓게(2026-10-22 사용자) ── */
+html:not(.ddb-app-mode) [data-daily-web] {
+    & .dw-round-pick {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        cursor: default;
+    }
+
+    & .dw-round-pick .dw-round-title { display: block; }
+}
+
+@media (max-width: 640px) {
+    html:not(.ddb-app-mode) [data-daily-web] {
+        & .dw-rounds.is-text {
+            --dw-art: 88px;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0 8px;
+        }
+
+        & .dw-rounds.is-text > .dw-round { display: contents; }
+
+        & .dw-rounds.is-text .dw-round-pick { grid-row: 1; cursor: pointer; }
+        & .dw-rounds.is-text > .dw-round.is-sky > .dw-round-pick { grid-column: 1; }
+        & .dw-rounds.is-text > .dw-round.is-yellow > .dw-round-pick { grid-column: 2; }
+        & .dw-rounds.is-text > .dw-round.is-mint > .dw-round-pick { grid-column: 3; }
+
+        & .dw-rounds.is-text .dw-round-pick .dw-round-title {
+            margin-top: 8px;
+            font-size: 13px;
+            line-height: 1.35;
+            word-break: keep-all;
+        }
+
+        /* 고른 동그라미 — 분홍 테 · 분홍 제목 */
+        & .dw-rounds.is-text > .dw-round.is-active .dw-round-art { box-shadow: 0 0 0 3px var(--dw-pink), 0 16px 24px -18px rgb(15 23 42 / 35%); }
+        & .dw-rounds.is-text > .dw-round.is-active .dw-round-title { color: #e2557a; }
+
+        /* 고른 항목 내용만 아래 한 칸 전체에 */
+        & .dw-rounds.is-text > .dw-round > :is(.dw-round-body, .dw-round-go) { display: none; }
+
+        & .dw-rounds.is-text > .dw-round.is-active > .dw-round-body {
+            display: grid;
+            grid-column: 1 / -1;
+            grid-row: 2;
+            max-width: none;
+            margin-top: 16px;
+            padding: 18px 18px;
+            border-radius: 26px;
+            background: var(--dw-rb);
+            text-align: center;
+        }
+
+        & .dw-rounds.is-text > .dw-round.is-active > .dw-round-go {
+            display: inline-flex;
+            grid-column: 1 / -1;
+            grid-row: 3;
+            justify-self: center;
+        }
+    }
+}

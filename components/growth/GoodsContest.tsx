@@ -127,6 +127,9 @@ function replaceSummaryItem(
     };
 }
 
+// 휴대폰에서 한 번에 보여 줄 굿즈 카드 수(더보기 한 번에 이만큼 더)
+const MOBILE_GOODS_STEP = 8;
+
 // 진행 4단계 3D 그림(2026-10-22 사용자 선택 G1)
 const CONTEST_STEP_ART = [
     "/images/ui/shop-menu-brand-128.webp",
@@ -144,6 +147,15 @@ export default function GoodsContest({
 }) {
     const { hydrated, user } = useAuth();
     const accessToken = user?.apiAccessToken || "";
+    // 휴대폰에서는 굿즈 카드를 8개씩 보여 주고 "굿즈 더보기"로 8개씩 더(2026-10-22 사용자) — 보이기만 바꿈, 선택 · 집계 동작은 그대로
+    const [mobileVisibleCount, setMobileVisibleCount] = useState(MOBILE_GOODS_STEP);
+    // 굿즈 사진 크게 보기(몇 번째 굿즈인지, 닫혀 있으면 null) — 보기 전용, 선택 · 집계와 무관
+    const [zoomIndex, setZoomIndex] = useState<number | null>(null);
+    const zoomCloseRef = useRef<HTMLButtonElement>(null);
+    const zoomReturnRef = useRef<HTMLElement | null>(null);
+    const zoomOpen = zoomIndex !== null;
+    // 결제 안전 안내 — 휴대폰에서 펼친 항목(0 결제 없음 · 1 결제 준비 · 2 에스크로). PC 는 셋 다 보임
+    const [safeOpen, setSafeOpen] = useState(0);
     const [guestToken, setGuestToken] = useState("");
     const [guestTokenHydrated, setGuestTokenHydrated] = useState(false);
     const identityKey = accessToken
@@ -178,6 +190,26 @@ export default function GoodsContest({
         : [];
     const pendingItemId = pendingAction?.owner === identityKey ? pendingAction.itemId : null;
     const selectionOpen = summary?.selectionOpen ?? true;
+
+    // 크게 보기 열림 — Esc 닫기 · ←/→ 넘기기 · 뒤 화면 스크롤 잠금 · 닫으면 누른 사진으로 포커스 되돌림
+    useEffect(() => {
+        if (!zoomOpen) return;
+        const total = GOODS_CONTEST_CATALOG.length;
+        const onKey = (event: KeyboardEvent) => {
+            if (event.key === "Escape") setZoomIndex(null);
+            if (event.key === "ArrowRight") setZoomIndex((index) => (index === null ? index : (index + 1) % total));
+            if (event.key === "ArrowLeft") setZoomIndex((index) => (index === null ? index : (index - 1 + total) % total));
+        };
+        const previousOverflow = document.body.style.overflow;
+        document.body.style.overflow = "hidden";
+        window.addEventListener("keydown", onKey);
+        zoomCloseRef.current?.focus();
+        return () => {
+            window.removeEventListener("keydown", onKey);
+            document.body.style.overflow = previousOverflow;
+            zoomReturnRef.current?.focus();
+        };
+    }, [zoomOpen]);
 
     useEffect(() => {
         setGuestToken(getGoodsContestGuestToken());
@@ -557,7 +589,7 @@ export default function GoodsContest({
                     </div>
                 </aside>
 
-                <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                <div className="dw-goods-grid mt-5 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4">
                     {GOODS_CONTEST_CATALOG.map((catalogItem, catalogIndex) => {
                         const itemContent = content.items[catalogItem.id];
                         const itemSummary = itemSummaries.get(catalogItem.id);
@@ -567,8 +599,16 @@ export default function GoodsContest({
                             ? Math.min(100, (itemSummary.selectionCount / itemSummary.goal) * 100)
                             : 0;
                         return (
-                            <article key={catalogItem.id} className={`dw-goods-card ${["dw-gc-pink", "dw-gc-yellow", "dw-gc-mint", "dw-gc-sky"][catalogIndex % 4]} flex h-full flex-col overflow-hidden ${contentReady && !itemContent.active ? "opacity-75" : ""}`}>
-                                <div className="dw-goods-shot relative overflow-hidden">
+                            <article key={catalogItem.id} className={`dw-goods-card ${["dw-gc-pink", "dw-gc-yellow", "dw-gc-mint", "dw-gc-sky"][catalogIndex % 4]} flex h-full flex-col overflow-hidden ${contentReady && !itemContent.active ? "opacity-75" : ""} ${catalogIndex >= mobileVisibleCount ? "dw-goods-later" : ""}`}>
+                                <button
+                                    type="button"
+                                    className="dw-goods-shot dw-goods-zoom relative block w-full overflow-hidden"
+                                    aria-label={`${itemContent.name} 사진 크게 보기`}
+                                    onClick={(event) => {
+                                        zoomReturnRef.current = event.currentTarget;
+                                        setZoomIndex(catalogIndex);
+                                    }}
+                                >
                                     <Image
                                         src={catalogItem.imageSrc}
                                         alt={`${itemContent.name} 굿즈 시안`}
@@ -577,13 +617,14 @@ export default function GoodsContest({
                                         loading="lazy"
                                         placeholder="blur"
                                         blurDataURL={GOODS_IMAGE_PLACEHOLDER}
-                                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                                        sizes="(max-width: 1024px) 50vw, 25vw"
                                         className="aspect-square h-auto w-full bg-[#f4e8d3] object-cover transition duration-300 hover:scale-[1.02]"
                                     />
                                     {contentReady && !itemContent.active ? (
                                         <span className="absolute right-3 top-3 rounded-full bg-neutral-900/80 px-2.5 py-1 text-[10px] font-black text-white">선택 준비 중</span>
                                     ) : null}
-                                </div>
+                                    <span className="dw-goods-zoom-hint" aria-hidden="true"><i className="fa-solid fa-magnifying-glass-plus" /></span>
+                                </button>
 
                                 <div className="dw-goods-body flex flex-1 flex-col p-4 sm:p-5">
                                     <h3 className="ddb-crayon-title dw-h3">{itemContent.name}</h3>
@@ -675,6 +716,21 @@ export default function GoodsContest({
                     })}
                 </div>
 
+                {/* 휴대폰 전용 굿즈 더보기(PC 에서는 숨김, 전부 보이면 사라짐) */}
+                {mobileVisibleCount < GOODS_CONTEST_CATALOG.length ? (
+                    <div className="dw-goods-more-wrap">
+                        <button
+                            type="button"
+                            className="dw-goods-more"
+                            onClick={() => setMobileVisibleCount((count) => count + MOBILE_GOODS_STEP)}
+                        >
+                            굿즈 더보기
+                            <span className="dw-goods-more-count">{mobileVisibleCount} / {GOODS_CONTEST_CATALOG.length}</span>
+                            <i className="fa-solid fa-chevron-down text-[11px]" aria-hidden="true" />
+                        </button>
+                    </div>
+                ) : null}
+
                 {/* 결제 안전 안내 — 발자국 + 둥근 쿠션 셋(2026-10-22 사용자 선택 G1): 지금은 결제 없음 · 결제 준비 · 에스크로 */}
                 <PawTrail />
                 <aside className="dw-gsafe" aria-label="굿즈 공모전 결제 및 제작 안내">
@@ -683,17 +739,21 @@ export default function GoodsContest({
                         <p className="ddb-crayon-title ddb-crayon-underline dw-h2 dw-safe-title">선택 단계 안전 안내</p>
                     </div>
                     <div className="dw-rounds is-text">
-                        <div className="dw-round is-sky">
-                            <span className="dw-round-art" aria-hidden="true"><Image src="/images/ui/goods-pay-none-256.webp" alt="" width={120} height={120} /></span>
-                            <p className="dw-round-title">지금은 결제가 없어요</p>
+                        <div className={`dw-round is-sky ${safeOpen === 0 ? "is-active" : ""}`}>
+                            <button type="button" className="dw-round-pick" onClick={() => setSafeOpen(0)} aria-expanded={safeOpen === 0}>
+                                <span className="dw-round-art" aria-hidden="true"><Image src="/images/ui/goods-pay-none-256.webp" alt="" width={120} height={120} /></span>
+                                <span className="dw-round-title">지금은 결제가 없어요</span>
+                            </button>
                             <div className="dw-round-body">
                                 <p>선택은 주문·예약·결제가 아니며 결제 정보도 받지 않습니다.</p>
                                 <p>상품별 500명 달성 후 최종 사양·가격·배송·제작일을 다시 알리고, 조건에 동의한 분만 별도 결제 단계로 진행합니다.</p>
                             </div>
                         </div>
-                        <div className="dw-round is-yellow">
-                            <span className="dw-round-art" aria-hidden="true"><Image src="/images/ui/goods-pay-ready-256.webp" alt="" width={120} height={120} /></span>
-                            <p className="dw-round-title">결제는 이렇게 준비해요</p>
+                        <div className={`dw-round is-yellow ${safeOpen === 1 ? "is-active" : ""}`}>
+                            <button type="button" className="dw-round-pick" onClick={() => setSafeOpen(1)} aria-expanded={safeOpen === 1}>
+                                <span className="dw-round-art" aria-hidden="true"><Image src="/images/ui/goods-pay-ready-256.webp" alt="" width={120} height={120} /></span>
+                                <span className="dw-round-title">결제는 이렇게 준비해요</span>
+                            </button>
                             <div className="dw-round-body">
                                 <div className="dw-safe-methods" aria-label="향후 결제 방식">
                                     <span><i className="fa-solid fa-credit-card text-indigo-600" aria-hidden="true" />현금 결제</span>
@@ -703,9 +763,11 @@ export default function GoodsContest({
                                 <p>최종 결제 기준은 1P=1원, 1댕코인=100원이며 현금·적립금·댕코인을 원하는 만큼 섞어 사용할 수 있도록 준비 중입니다.</p>
                             </div>
                         </div>
-                        <div className="dw-round is-mint">
-                            <span className="dw-round-art" aria-hidden="true"><Image src="/images/ui/goods-escrow-256.webp" alt="" width={120} height={120} /></span>
-                            <p className="dw-round-title">에스크로로 지켜요</p>
+                        <div className={`dw-round is-mint ${safeOpen === 2 ? "is-active" : ""}`}>
+                            <button type="button" className="dw-round-pick" onClick={() => setSafeOpen(2)} aria-expanded={safeOpen === 2}>
+                                <span className="dw-round-art" aria-hidden="true"><Image src="/images/ui/goods-escrow-256.webp" alt="" width={120} height={120} /></span>
+                                <span className="dw-round-title">에스크로로 지켜요</span>
+                            </button>
                             <div className="dw-round-body">
                                 <p>{content.escrowNotice}</p>
                                 <p>현금이 포함된 주문은 에스크로 계약과 배송 연동 준비가 확인된 뒤에만 결제를 열며, 현재 선택 단계에는 결제나 에스크로가 적용되지 않습니다.</p>
@@ -716,6 +778,54 @@ export default function GoodsContest({
                     <p className="dw-safe-fine">표시 가격은 부가세 포함 예상 펀딩가이며 배송비는 별도입니다. 시제품·제조사 견적과 최종 사양에 따라 결제 전 달라질 수 있습니다.</p>
                 </aside>
             </div>
+
+            {zoomIndex !== null ? (() => {
+                const zoomItem = GOODS_CONTEST_CATALOG[zoomIndex];
+                const zoomContent = content.items[zoomItem.id];
+                const total = GOODS_CONTEST_CATALOG.length;
+                return (
+                    <div
+                        className="dw-zoom"
+                        role="dialog"
+                        aria-modal="true"
+                        aria-label={`${zoomContent.name} 사진 크게 보기`}
+                        onMouseDown={(event) => {
+                            if (event.target === event.currentTarget) setZoomIndex(null);
+                        }}
+                    >
+                        <figure className="dw-zoom-card">
+                            <button ref={zoomCloseRef} type="button" className="dw-zoom-close" onClick={() => setZoomIndex(null)} aria-label="크게 보기 닫기">
+                                <i className="fa-solid fa-xmark" aria-hidden="true" />
+                            </button>
+                            <div className="dw-zoom-shot">
+                                <Image
+                                    key={zoomItem.id}
+                                    src={zoomItem.imageSrc}
+                                    alt={`${zoomContent.name} 굿즈 시안`}
+                                    width={1080}
+                                    height={1080}
+                                    placeholder="blur"
+                                    blurDataURL={GOODS_IMAGE_PLACEHOLDER}
+                                    sizes="(max-width: 640px) 92vw, 620px"
+                                    className="dw-zoom-img"
+                                />
+                                <button type="button" className="dw-zoom-nav is-prev" onClick={() => setZoomIndex((zoomIndex - 1 + total) % total)} aria-label="이전 굿즈 사진">
+                                    <i className="fa-solid fa-chevron-left" aria-hidden="true" />
+                                </button>
+                                <button type="button" className="dw-zoom-nav is-next" onClick={() => setZoomIndex((zoomIndex + 1) % total)} aria-label="다음 굿즈 사진">
+                                    <i className="fa-solid fa-chevron-right" aria-hidden="true" />
+                                </button>
+                            </div>
+                            <figcaption className="dw-zoom-caption">
+                                <span className="dw-zoom-count">{zoomIndex + 1} / {total}</span>
+                                <strong>{zoomContent.name}</strong>
+                                <span className="dw-zoom-summary">{zoomContent.summary}</span>
+                                <span className="dw-zoom-price"><span className="sr-only">예상 펀딩가 </span>{zoomContent.expectedPriceKrw.toLocaleString("ko-KR")}원<small> · {zoomItem.priceUnit}</small></span>
+                            </figcaption>
+                        </figure>
+                    </div>
+                );
+            })() : null}
 
             {guestVerificationOpen ? (
                 <div className="fixed inset-0 z-[1700] grid place-items-center bg-neutral-950/45 px-4 py-8 backdrop-blur-sm" role="presentation" onMouseDown={(event) => {
