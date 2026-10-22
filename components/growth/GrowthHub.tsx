@@ -155,8 +155,16 @@ export default function GrowthHub() {
                             </h1>
                             <p className="dw-lead">{content.hero.description}</p>
 
-                            {/* 그림 탭 넷 — 고른 탭만 아래에 보임 */}
+                            {/* 그림 탭 넷 — 고른 탭만 아래에 보임. 탭인 줄 알게 위에 안내 한 줄 + 손글씨 화살표(2026-10-22 사용자 선택 K3) */}
                             <div ref={tabBarRef} className="dw-thero-tabs">
+                                <p className="dw-ctabs-q" aria-hidden="true">
+                                    보고 싶은 것을 고르세요
+                                    <em>눌러서 골라요</em>
+                                    <svg viewBox="0 0 60 40" className="dw-ctabs-arrow" focusable="false">
+                                        <path d="M4 8 C 22 2, 40 6, 46 26" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeDasharray="1 7" />
+                                        <path d="M38 22 L46 30 L52 20" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>
+                                </p>
                                 <nav className="dw-ctabs" role="tablist" aria-label="보물광산 구역">
                                     {tabs.map((tab) => (
                                         <button
