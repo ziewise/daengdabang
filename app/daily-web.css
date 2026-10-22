@@ -2940,6 +2940,11 @@ html:not(.ddb-app-mode) [data-my-pet-hub][data-daily-web] {
         min-width: 0;
     }
 
+    /* 칸 수가 홀수면 마지막(관심 케어)은 한 줄 전체 */
+    & .dw-book-facts > div:last-child:nth-child(odd) {
+        grid-column: 1 / -1;
+    }
+
     & .dw-book-facts dt {
         color: #a8a29e;
         font-size: 11.5px;

@@ -51,17 +51,16 @@ const VIEW_ICONS: Record<string, string> = {
 // 지난 쪽 카드 바탕 차례(분홍 · 노랑 · 민트 · 하늘 · 보라)
 const PAGE_TINTS = ["is-pink", "is-yellow", "is-mint", "is-sky", "is-lav"];
 
-// 주인공 소개 칸 — 값이 없으면 "아직 몰라요" 류로
+// 주인공 소개 칸 — 회원이 직접 입력 · 선택하는 값만(견종 · 나이 · 체중 · 성별: 반려견 등록/수정, 관심 케어: 가입 · 펫렌즈).
+// 중성화 · 알레르기는 웹에 입력 칸이 없어 보여 주지 않음(2026-10-22 사용자 확인). 값이 없으면 "기록 전" 류로
 function petFacts(pet: PetProfile) {
     const sex = pet.sex === "female" ? "여아" : pet.sex === "male" ? "남아" : "";
-    const neutered = pet.neutered === "yes" ? "중성화" : pet.neutered === "no" ? "중성화 전" : "";
     return [
         { key: "breed", icon: "fa-dog", label: "견종", value: pet.breed || "견종 확인 전", tint: "is-pink" },
         { key: "age", icon: "fa-cake-candles", label: "나이", value: pet.age || "나이 기록 전", tint: "is-yellow" },
         { key: "weight", icon: "fa-weight-scale", label: "체중", value: pet.weightKg ? `${pet.weightKg}kg` : "체중 기록 전", tint: "is-mint" },
-        { key: "sex", icon: "fa-venus-mars", label: "성별", value: [sex, neutered].filter(Boolean).join(" · ") || "기록 전", tint: "is-sky" },
-        { key: "care", icon: "fa-heart", label: "관심 케어", value: pet.concerns.length ? pet.concerns.slice(0, 2).join(", ") : "아직 선택 전", tint: "is-pink" },
-        { key: "allergy", icon: "fa-triangle-exclamation", label: "알레르기", value: pet.allergies?.length ? pet.allergies.slice(0, 2).join(", ") : "등록 없음", tint: "is-yellow" },
+        { key: "sex", icon: "fa-venus-mars", label: "성별", value: sex || "선택 전", tint: "is-sky" },
+        { key: "care", icon: "fa-heart", label: "관심 케어", value: pet.concerns.length ? pet.concerns.slice(0, 3).join(", ") : "아직 선택 전", tint: "is-pink" },
     ];
 }
 
