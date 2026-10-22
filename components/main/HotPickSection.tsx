@@ -15,7 +15,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { CATALOG, getBestProducts, type CatalogProduct, type CategorySlug } from "@/lib/catalog";
+import type { CatalogProduct } from "@/lib/catalog";
+import { HOT_PICK_GROUPS, HOT_PICK_RANKS, pickHotPickTopThree } from "@/lib/catalog/hot-picks";
 import { catalogPriceBadgeClass, catalogPriceBadgeLabel } from "@/lib/catalog/price-badge";
 import { productPurchaseState, purchaseStateLabel } from "@/lib/catalog/inventory";
 import ProductColorImage from "@/components/products/ProductColorImage";
@@ -23,38 +24,16 @@ import { productHref } from "@/lib/shop";
 import { productCardImage } from "@/lib/catalog/card-image";
 import { useI18n } from "@/lib/i18n";
 
-// 제품군 5개 — 이름 · 카테고리 주소 · 사용자 핫픽 제품군 그림(2026-10-19, 원본 tools/sticker-assets/originals/hotpick-*.png)
-const GROUPS: { slug: CategorySlug; ko: string; en: string; icon: string }[] = [
-    { slug: "outdoor", ko: "산책/아웃도어", en: "Walk & Outdoor", icon: "/images/ui/hotpick-outdoor-128.webp" },
-    { slug: "food", ko: "먹거리", en: "Food", icon: "/images/ui/hotpick-food-128.webp" },
-    { slug: "life", ko: "생활용품", en: "Living", icon: "/images/ui/hotpick-life-128.webp" },
-    { slug: "toy", ko: "장난감/놀이", en: "Toys & Play", icon: "/images/ui/hotpick-toy-128.webp" },
-    { slug: "care", ko: "케어", en: "Care", icon: "/images/ui/hotpick-care-128.webp" },
-];
-
-const RANKS = 3;            // 제품군마다 1~3위
+// 제품군 5개 · 1~3위 고르기(임시 순서)는 lib/catalog/hot-picks.ts — /best/ 핫픽 페이지와 같은 자료
+const GROUPS = HOT_PICK_GROUPS;
+const RANKS = HOT_PICK_RANKS; // 제품군마다 1~3위
 const FLIP_EVERY = 3800;    // 한 바퀴(다섯 장이 한 번씩 뒤집히는) 간격(ms)
 const WAVE_DELAY = 220;     // 왼쪽 카드부터 이만큼씩 늦게 뒤집힘(ms)
 
 // 순위 배지 색 — 1위 금 · 2위 은 · 3위 동(크레파스 톤)
 const RANK_TONE = ["bg-[#f6b73c] text-[#5a3a00]", "bg-[#b9c6d4] text-[#2f3c4a]", "bg-[#e0a07a] text-[#5a2c10]"];
 
-// 임시 순서: 운영자 추천 셀렉트 → 나머지 상품. 사진 있고 품절 · 단종 · 판매 멈춤이 아닌 상품만
-// (추천 가능 표시는 따지지 않음 — 먹거리는 추천 표시가 없어 빠졌었고, 판매 순위는 추천과 별개)
-function pickTopThree(slug: CategorySlug): CatalogProduct[] {
-    const curated = getBestProducts(CATALOG.length);
-    const seen = new Set<string>();
-    const ok = (p: CatalogProduct) => p.category === slug && Boolean(p.image)
-        && !["sold_out", "discontinued", "paused"].includes(String(p.availability));
-    const out: CatalogProduct[] = [];
-    for (const p of [...curated, ...CATALOG]) {
-        if (out.length >= RANKS) break;
-        if (!ok(p) || seen.has(p.id)) continue;
-        seen.add(p.id);
-        out.push(p);
-    }
-    return out;
-}
+const pickTopThree = pickHotPickTopThree;
 
 // 카드 한 면 — 순위 배지 · 사진 · 브랜드 · 이름 · 가격(공용 상품 카드와 같은 가격 표시)
 function Face({ p, rank, back, shown }: { p: CatalogProduct; rank: number; back?: boolean; shown: boolean }) {

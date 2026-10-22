@@ -1,0 +1,122 @@
+/*
+ * hotpick.css — /best/ "댕다방 핫픽" 페이지 꾸밈(app/best/page.tsx 가 불러옴, 2026-10-22)
+ * 큰 globals.css 에서 떼어 이 페이지만 불러오게 함(개발 서버가 큰 파일 끝 변경을 늦게 반영하던 문제도 피함)
+ */
+/* ── /best/ "댕다방 핫픽" 페이지(2026-10-22 사용자: 제품군별 1 · 2 · 3위) — 웹 크레파스 결: 세 색 밑줄 제목 · 제품군마다 흰 쿠션 판 · 금은동 순위 배지 ──
+ *  제품군마다 이름 줄 + 카드 다섯 장(1~3위 + 추천 2), 휴대폰은 옆으로 밀어 보기 */
+.ddb-hotpick-page .ddb-hotpick-head .ddb-pl-head { margin-bottom: 12px; }
+
+
+.ddb-hotpick-page .ddb-hotpick-sub {
+    margin-top: 10px;
+    color: #64748b;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.7;
+}
+
+.ddb-hotpick-page .ddb-hotpick-note {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 12px;
+    padding: 7px 14px;
+    border-radius: 999px;
+    background: #f3f0fe;
+    color: #5b45b0;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* 제품군 줄 — 위아래로 다섯 줄 */
+.ddb-hotpick-page .ddb-hotpick-groups {
+    display: grid;
+    gap: 40px;
+    margin-top: 28px;
+}
+
+/* 묶음 위 제품군 이름 줄 */
+.ddb-hotpick-page .ddb-hotpick-group-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+    padding: 0 2px;
+}
+
+.ddb-hotpick-page .ddb-hotpick-group-head img { width: 40px; height: 40px; object-fit: contain; }
+
+.ddb-hotpick-page .ddb-hotpick-group-title {
+    flex: 1;
+    min-width: 0;
+    color: #1e293b;
+    font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif;
+    font-size: 19px;
+    font-weight: 400;
+}
+
+.ddb-hotpick-page .ddb-hotpick-more {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 30px;
+    padding: 0 12px;
+    border-radius: 999px;
+    background: #fff1f5;
+    color: #e2557a;
+    font-size: 11.5px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+/* 1 · 2 · 3위 카드 세 장 */
+.ddb-hotpick-page .ddb-hotpick-row {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 14px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ddb-hotpick-page .ddb-hotpick-item { position: relative; display: flex; min-width: 0; }
+
+/* 한 줄 카드 높이 맞춤 — 줄(재고 · 외부 후기) 수가 달라도 카드 아래 끝이 같게 */
+.ddb-hotpick-page .ddb-hotpick-item > :last-child { flex: 1; min-width: 0; height: auto; }
+
+/* 순위 배지 — 카드 위 가운데 */
+.ddb-hotpick-page .ddb-hotpick-rank {
+    position: absolute;
+    top: -9px;
+    left: 50%;
+    z-index: 2;
+    padding: 2px 11px;
+    border-radius: 999px;
+    font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif;
+    font-size: 12px;
+    box-shadow: 0 5px 10px -6px rgb(15 23 42 / 45%);
+    transform: translateX(-50%);
+}
+
+.ddb-hotpick-page .ddb-hotpick-rank.is-gold { background: #f6b73c; color: #5a3a00; }
+.ddb-hotpick-page .ddb-hotpick-rank.is-silver { background: #b9c6d4; color: #2f3c4a; }
+.ddb-hotpick-page .ddb-hotpick-rank.is-bronze { background: #e0a07a; color: #5a2c10; }
+.ddb-hotpick-page .ddb-hotpick-rank.is-pick { background: #fff1f5; color: #e2557a; box-shadow: 0 0 0 1.5px #f6c3d2, 0 5px 10px -6px rgb(15 23 42 / 35%); }
+
+
+/* 태블릿 · 휴대폰 — 다섯 장을 옆으로 밀어 보기 */
+@media (max-width: 900px) {
+    .ddb-hotpick-page .ddb-hotpick-row {
+        display: flex;
+        gap: 10px;
+        overflow-x: auto;
+        padding-top: 10px;
+        scroll-snap-type: x mandatory;
+    }
+    .ddb-hotpick-page .ddb-hotpick-item { flex: 0 0 31%; scroll-snap-align: start; }
+}
+
+@media (max-width: 520px) {
+    .ddb-hotpick-page .ddb-hotpick-item { flex-basis: 44%; }
+    .ddb-hotpick-page .ddb-hotpick-group-title { font-size: 17px; }
+}
