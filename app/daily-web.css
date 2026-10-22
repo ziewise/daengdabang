@@ -4504,3 +4504,43 @@ html:not(.ddb-app-mode) [data-daily-web] {
         & .dw-thero .dw-ctab small { font-size: 10px; }
     }
 }
+
+/* ── 점선 버튼 · 점선 테 없애기(2026-10-22 사용자 "점선 버튼이 어울릴까") ──
+ *  쿠션 카드 · 꽉 찬 알약과 어울리게: 버튼은 흰 알약 + 부드러운 그림자, 꾸밈 동그라미 · 테는 옅은 실선.
+ *  단계 사이 점선 길(.dw-dsteps · 발자국 · 카메라 순서)은 "따라가는 길"이라 그대로 */
+html:not(.ddb-app-mode) [data-daily-web] {
+    /* 버튼 — 안전 공유 두 버튼 · 운영 기준 보기 */
+    & section[aria-labelledby="growth-share-title"] .ddb-motion-lift {
+        border: 0 !important;
+        box-shadow: 0 8px 16px -11px rgb(15 23 42 / 38%) !important;
+    }
+
+    & [data-growth-policy-summary] summary > span {
+        border: 0 !important;
+        background: #fff !important;
+        box-shadow: 0 6px 14px -9px rgb(15 23 42 / 40%) !important;
+    }
+
+    /* 꾸밈 동그라미 — 점선 테 대신 흰 테 + 그림자 */
+    & :is(section[aria-labelledby="growth-share-title"] .ddb-crayon-icon, .dw-xcard-icon) {
+        border: 3px solid #fff !important;
+        box-shadow: 0 8px 16px -11px rgb(15 23 42 / 35%) !important;
+    }
+
+    & [data-growth-policy-summary] summary::before {
+        border: 3px solid #fff;
+        box-shadow: 0 8px 16px -11px rgb(15 23 42 / 35%);
+    }
+
+    /* 꾸밈 판 · 액자 — 옅은 실선 */
+    & :is(.dw-goods-frame, .dw-banner-note, .dw-prep, [data-growth-policy-summary] article) {
+        border-style: solid !important;
+    }
+
+    /* 운영 기준 펼친 칸 · 굿즈 표지 안 나눔선도 실선 */
+    & [data-growth-policy-summary] summary + div,
+    & [data-growth-policy-summary] summary + div > div:first-child > article,
+    & .dw-gcover-steps.dw-gcover-steps {
+        border-style: solid !important;
+    }
+}
