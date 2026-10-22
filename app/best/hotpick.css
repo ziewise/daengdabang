@@ -50,7 +50,7 @@
     flex: 1;
     min-width: 0;
     color: #1e293b;
-    font-family: "GmarketSans", var(--font-wanted-sans), sans-serif;
+    font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
     font-size: 19px;
     font-weight: 400;
 }
@@ -92,7 +92,7 @@
     z-index: 2;
     padding: 2px 11px;
     border-radius: 999px;
-    font-family: "GmarketSans", var(--font-wanted-sans), sans-serif;
+    font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
     font-size: 12px;
     box-shadow: 0 5px 10px -6px rgb(15 23 42 / 45%);
     transform: translateX(-50%);

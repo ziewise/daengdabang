@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
-import { Geist, Geist_Mono, Gaegu } from "next/font/google";
+import { Geist, Geist_Mono, Gaegu, Jua } from "next/font/google";
 import localFont from "next/font/local";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "./globals.css";
@@ -30,6 +30,8 @@ const wantedSans = localFont({
 });
 // Gaegu (개구) — 거친 손글씨 한글 폰트, 로고 크레파스 워드마크용
 const gaegu = Gaegu({ variable: "--font-crayon", subsets: ["latin"], weight: ["400", "700"], display: "swap", preload: false });
+// Jua (배민 주아) — 웹 제목 글꼴(2026-10-22 사용자: 로고와 가장 닮은 동글동글한 글꼴, 큰 글씨 · 작은 제목 모두). 앱은 쓰지 않음
+const jua = Jua({ variable: "--font-jua", subsets: ["latin"], weight: "400", display: "swap", preload: false });
 
 const androidAppearanceBootstrap = `
 (() => {
@@ -173,7 +175,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     return (
         <html
             lang="ko"
-            className={`${geistSans.variable} ${geistMono.variable} ${wantedSans.variable} ${gaegu.variable} h-full antialiased`}
+            className={`${geistSans.variable} ${geistMono.variable} ${wantedSans.variable} ${gaegu.variable} ${jua.variable} h-full antialiased`}
             suppressHydrationWarning
         >
             <head>

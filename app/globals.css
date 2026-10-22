@@ -121,23 +121,13 @@ body {
     font-display: swap;
 }
 
-/* 지마켓 산스 굵게 — 웹 제목 글꼴(2026-10-22 사용자: 카페24 써라운드는 가독성이 떨어져 웹 제목을 바꿈, 앱은 그대로).
-   지금은 공개 글꼴 서버(jsDelivr)에서 받음 — 배포 전 사이트 글자만 담은 가벼운 파일로 바꿀 예정. 굵기는 한 가지(굵게)라 모든 굵기에 같은 파일 */
-@font-face {
-    font-family: "GmarketSans";
-    font-style: normal;
-    font-weight: 100 900;
-    font-display: swap;
-    src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff") format("woff");
-}
-
 html:not(.ddb-app-mode) body {
     font-family: var(--font-wanted-sans), "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
 }
 
 /* 한 굵기뿐인 글꼴이라 400으로 고정(가짜 굵게 방지) */
 html:not(.ddb-app-mode) main h2:is([class*="text-xl"], [class*="text-2xl"], [class*="text-3xl"], [class*="text-4xl"]) {
-    font-family: "GmarketSans", var(--font-wanted-sans), sans-serif;
+    font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
     font-weight: 400;
     letter-spacing: -0.02em;
 }
@@ -2768,7 +2758,7 @@ article[data-pet-product="true"] > div:has(> [role="group"]) {
 
 /* 제품군 이름은 제목 글꼴(Cafe24 써라운드, 한 굵기) */
 .ddb-hotpick-group {
-    font-family: "GmarketSans", var(--font-wanted-sans), sans-serif;
+    font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
     font-weight: 400;
 }
 
@@ -2843,7 +2833,7 @@ html:not(.ddb-app-mode) [data-products-filter] {
     isolation: isolate;
     margin: 0;
     color: #1e293b;
-    font-family: "GmarketSans", var(--font-wanted-sans), sans-serif;
+    font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
     font-size: clamp(28px, 3vw, 36px);
     font-weight: 400;
     line-height: 1.15;
