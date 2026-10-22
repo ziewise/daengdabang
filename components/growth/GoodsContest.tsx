@@ -545,7 +545,7 @@ export default function GoodsContest({
                 </aside>
 
                 <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                    {GOODS_CONTEST_CATALOG.map((catalogItem) => {
+                    {GOODS_CONTEST_CATALOG.map((catalogItem, catalogIndex) => {
                         const itemContent = content.items[catalogItem.id];
                         const itemSummary = itemSummaries.get(catalogItem.id);
                         const selected = selectedSet.has(catalogItem.id);
@@ -554,7 +554,7 @@ export default function GoodsContest({
                             ? Math.min(100, (itemSummary.selectionCount / itemSummary.goal) * 100)
                             : 0;
                         return (
-                            <article key={catalogItem.id} className={`dw-goods-card flex h-full flex-col overflow-hidden ${contentReady && !itemContent.active ? "opacity-75" : ""}`}>
+                            <article key={catalogItem.id} className={`dw-goods-card ${["dw-gc-pink", "dw-gc-yellow", "dw-gc-mint", "dw-gc-sky"][catalogIndex % 4]} flex h-full flex-col overflow-hidden ${contentReady && !itemContent.active ? "opacity-75" : ""}`}>
                                 <div className="dw-goods-shot relative overflow-hidden">
                                     <Image
                                         src={catalogItem.imageSrc}
@@ -575,7 +575,7 @@ export default function GoodsContest({
                                     ) : null}
                                 </div>
 
-                                <div className="flex flex-1 flex-col p-4 sm:p-5">
+                                <div className="dw-goods-body flex flex-1 flex-col p-4 sm:p-5">
                                     <h3 className="ddb-crayon-title dw-h3">{itemContent.name}</h3>
                                     <p className="mt-2 min-h-10 text-xs font-bold leading-5 text-neutral-600">{itemContent.summary}</p>
 
@@ -608,7 +608,7 @@ export default function GoodsContest({
                                                 </p>
                                             </>
                                         ) : (
-                                            <div className="grid min-h-[62px] place-items-center rounded-2xl bg-neutral-100 text-[10px] font-black text-neutral-500">
+                                            <div className="dw-goods-wait grid min-h-[62px] place-items-center rounded-2xl bg-neutral-100 text-[10px] font-black text-neutral-500">
                                                 {summaryState === "error" ? "집계를 연결한 뒤 선택할 수 있어요" : "정확한 선택 수 확인 중"}
                                             </div>
                                         )}
