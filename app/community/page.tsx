@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
+// 웹 매일 댕생활 꾸밈(2026-10-22) — 웹에서만 적용(data-daily-web 범위)
+import "../daily-web.css";
 
 export const metadata: Metadata = {
     title: "커뮤니티 | 댕다방",
@@ -37,30 +40,43 @@ const COMMUNITY_LINKS = [
     },
 ] as const;
 
+/* 바로가기 타일 바탕 — 파스텔 크레파스 칠(꾸밈) */
+const LINK_TINTS = ["dw-tint-yellow", "dw-tint-sky", "dw-tint-pink", "dw-tint-mint"] as const;
+
 export default function CommunityPage() {
+    // 웹 매일 댕생활 꾸밈(2026-10-22 사용자) — 머리 판(왼쪽 제목 · 오른쪽 말풍선 그림) + 파스텔 바로가기 타일 네 장. 문구 · 링크 그대로
     return (
-        <main className="mx-auto w-full max-w-[1280px] px-4 py-10 md:px-6 md:py-16">
-            <section className="ddb-crayon-paper overflow-hidden rounded-[32px] border p-6 shadow-card md:p-10">
-                <p className="ddb-crayon-kicker text-xs">DAENGDABANG COMMUNITY</p>
-                <h1 className="ddb-crayon-title ddb-crayon-underline mt-3 max-w-2xl text-3xl text-neutral-950 md:text-5xl">
-                    함께 기록할수록<br />돌봄은 더 쉬워져요
-                </h1>
-                <p className="mt-4 max-w-2xl text-sm font-bold leading-7 text-neutral-600 md:text-base">
-                    구매 후기, 돌봄 상담, 챌린지 기록을 한곳에서 이어가세요. 의료 진단을 대신하지 않고,
-                    보호자가 다음 행동을 정하는 데 도움이 되는 경험을 모읍니다.
-                </p>
+        <main className="mx-auto w-full max-w-[1352px] px-4 py-10 md:px-6 md:py-14" data-daily-web>
+            <section className="dw-hero dw-tint-pink">
+                <div className="dw-hero-text">
+                    <p className="ddb-crayon-kicker dw-kicker">DAENGDABANG COMMUNITY</p>
+                    <h1 className="ddb-crayon-title dw-h1">
+                        함께 기록할수록<br /><span className="ddb-crayon-underline">돌봄은 더 쉬워져요</span>
+                    </h1>
+                    <p className="dw-lead">
+                        구매 후기, 돌봄 상담, 챌린지 기록을 한곳에서 이어가세요. 의료 진단을 대신하지 않고,
+                        보호자가 다음 행동을 정하는 데 도움이 되는 경험을 모읍니다.
+                    </p>
+                </div>
+                {/* 그림 무리(꾸밈) — 말풍선 + 기록 수첩 · 돌봄 체크 그림이 둥실 */}
+                <div className="dw-hero-art" aria-hidden="true">
+                    <span className="dw-hero-plate dw-plate-pink" />
+                    <Image src="/images/ui/daily-hero-community-384.webp" alt="" width={230} height={230} priority className="dw-hero-main" />
+                    <Image src="/images/ui/daily-hero-mypet-384.webp" alt="" width={92} height={92} className="dw-hero-float dw-f1" />
+                    <Image src="/images/ui/daily-care-256.webp" alt="" width={84} height={84} className="dw-hero-float dw-f2" />
+                </div>
             </section>
 
-            <section className="mt-8 grid gap-4 sm:grid-cols-2" aria-label="커뮤니티 바로가기">
-                {COMMUNITY_LINKS.map((item) => (
-                    <Link key={item.href} href={item.href} className="ddb-crayon-paper group rounded-[26px] border p-5 shadow-card transition hover:-translate-y-1 hover:shadow-hover md:p-6">
-                        <span className="ddb-crayon-icon grid h-12 w-12 place-items-center rounded-2xl text-lg text-white" data-crayon-tone={item.tone}>
+            <section className="dw-tiles mt-10" aria-label="커뮤니티 바로가기">
+                {COMMUNITY_LINKS.map((item, index) => (
+                    <Link key={item.href} href={item.href} className={`dw-tile ${LINK_TINTS[index % LINK_TINTS.length]} group`}>
+                        <span className="dw-tile-icon" data-crayon-tone={item.tone}>
                             <i className={`fa-solid ${item.icon}`} aria-hidden="true" />
                         </span>
-                        <h2 className="ddb-crayon-title mt-4 text-xl text-neutral-950">{item.title}</h2>
-                        <p className="mt-2 text-sm font-bold leading-6 text-neutral-600">{item.copy}</p>
-                        <span className="ddb-crayon-link mt-4 inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-sm font-black">
-                            바로가기 <i className="fa-solid fa-arrow-right text-[10px] transition group-hover:translate-x-1" aria-hidden="true" />
+                        <h2 className="ddb-crayon-title dw-h3">{item.title}</h2>
+                        <p className="dw-card-body">{item.copy}</p>
+                        <span className="ddb-crayon-link dw-pill dw-pill-main dw-pill-sm mt-auto">
+                            바로가기 <i className="fa-solid fa-arrow-right ml-1.5 text-[10px] transition group-hover:translate-x-1" aria-hidden="true" />
                         </span>
                     </Link>
                 ))}
