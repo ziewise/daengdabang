@@ -265,33 +265,32 @@ function CommerceBridge({
 /* 하루 보물 길 그림(꾸밈) — GUEST_STEPS 순서대로 출근도장 · 작은 돌봄 · 변화 기록 */
 const GUEST_STEP_ART = ["/images/ui/daily-checkin-256.webp", "/images/ui/daily-care-256.webp", "/images/ui/daily-change-256.webp"] as const;
 
-/** 비회원 오늘의 보물 — 1 → 2 → 3 을 크레파스 점선으로 이은 하루 보물 길 + 말풍선 모양 로그인 안내 */
+/** 비회원 오늘의 보물 — 한 줄 네 장(2026-10-22 사용자): 1 출근도장 → 2 작은 돌봄 → 3 변화 기록 → 로그인 카드(같은 크기, 흰 종이) */
 function GuestTodayCard() {
     return (
         <div className="mx-auto max-w-[1400px] px-4 py-8 sm:px-6">
-            <ol className="dw-steps">
-                {GUEST_STEPS.map((step, index) => (
-                    <li key={step.label} className={`dw-step dw-step-${step.tone}`}>
-                        <span className="dw-step-num" aria-hidden="true">{index + 1}</span>
-                        <Image src={GUEST_STEP_ART[index]} alt="" width={128} height={128} className="dw-step-art" aria-hidden="true" />
-                        <span className="sr-only">{step.label}</span>
-                        <h3 className="ddb-crayon-title dw-h3">{step.title}</h3>
-                        <p className="dw-card-body">{step.body}</p>
-                    </li>
-                ))}
-            </ol>
-            {/* 로그인 안내 — 왼쪽 그림 · 가운데 글 · 오른쪽 버튼(위쪽 세 색 크레파스 띠, 2026-10-22) */}
-            <div className="dw-login-bubble dw-band-top">
-                <span className="dw-art-circle dw-art-pink" aria-hidden="true">
-                    <Image src="/images/ui/daily-hero-mypet-384.webp" alt="" width={84} height={84} />
-                </span>
-                <div className="dw-login-text">
+            <div className="dw-today-row">
+                <ol className="dw-steps">
+                    {GUEST_STEPS.map((step, index) => (
+                        <li key={step.label} className={`dw-step dw-step-${step.tone}`}>
+                            <span className="dw-step-num" aria-hidden="true">{index + 1}</span>
+                            <Image src={GUEST_STEP_ART[index]} alt="" width={128} height={128} className="dw-step-art" aria-hidden="true" />
+                            <span className="sr-only">{step.label}</span>
+                            <h3 className="ddb-crayon-title dw-h3">{step.title}</h3>
+                            <p className="dw-card-body">{step.body}</p>
+                        </li>
+                    ))}
+                </ol>
+                {/* 넷째 카드 — 로그인하면 오늘 기록이 이어져요(열쇠 배지 · 기록 수첩 그림 · 버튼 두 개) */}
+                <div className="dw-login-card">
+                    <span className="dw-step-num dw-step-key" aria-hidden="true"><i className="fa-solid fa-key" /></span>
+                    <Image src="/images/ui/daily-hero-mypet-384.webp" alt="" width={128} height={128} className="dw-step-art" aria-hidden="true" />
                     <h3 className="ddb-crayon-title dw-h3">로그인하면 오늘 기록이 계정에 이어져요</h3>
-                    <p className="dw-card-body mt-2">비회원도 아래 성장 프로그램과 운영 정책은 먼저 둘러볼 수 있습니다.</p>
-                </div>
-                <div className="flex flex-wrap justify-center gap-2">
-                    <Link href="/auth/login/?redirect=%2Ftreasure-mine%2F" className="ddb-crayon-link ddb-attention-cta dw-pill dw-pill-main">로그인하고 시작</Link>
-                    <Link href="/auth/signup/?redirect=%2Ftreasure-mine%2F" className="ddb-motion-lift dw-pill">처음이라면 회원가입</Link>
+                    <p className="dw-card-body">비회원도 아래 성장 프로그램과 운영 정책은 먼저 둘러볼 수 있습니다.</p>
+                    <div className="mt-auto grid w-full gap-2 pt-4">
+                        <Link href="/auth/login/?redirect=%2Ftreasure-mine%2F" className="ddb-crayon-link ddb-attention-cta dw-pill dw-pill-main dw-pill-sm">로그인하고 시작</Link>
+                        <Link href="/auth/signup/?redirect=%2Ftreasure-mine%2F" className="ddb-motion-lift dw-pill dw-pill-sm">처음이라면 회원가입</Link>
+                    </div>
                 </div>
             </div>
         </div>

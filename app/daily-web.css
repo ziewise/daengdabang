@@ -1836,3 +1836,150 @@ html:not(.ddb-app-mode) [data-daily-web] {
         background: #fffefb;
     }
 }
+
+/* ───────── 오늘의 보물(비회원) 한 줄 네 장(2026-10-22 사용자) ───────── */
+html:not(.ddb-app-mode) [data-daily-web] {
+    & .dw-today-row {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 36px;
+        align-items: stretch;
+    }
+
+    /* 세 단계 카드는 같은 칸 줄에(subgrid) */
+    & .dw-today-row .dw-steps {
+        grid-column: span 3;
+        grid-template-columns: subgrid;
+        gap: 36px;
+    }
+
+    & .dw-today-row .dw-step {
+        padding: 30px 20px 24px;
+    }
+
+    /* 셋째 카드 → 로그인 카드로도 점선 화살표 */
+    & .dw-today-row .dw-step:last-child::after {
+        position: absolute;
+        top: 50%;
+        right: -33px;
+        width: 30px;
+        height: 0;
+        border-top: 3px dashed rgb(239 71 111 / 45%);
+        content: "";
+    }
+
+    & .dw-today-row .dw-step:last-child::before {
+        position: absolute;
+        top: calc(50% - 6px);
+        right: -35px;
+        width: 10px;
+        height: 10px;
+        border-top: 3px solid rgb(239 71 111 / 55%);
+        border-right: 3px solid rgb(239 71 111 / 55%);
+        content: "";
+        transform: rotate(45deg);
+    }
+
+    & .dw-today-row .dw-step:not(:last-child)::after {
+        right: -33px;
+        width: 30px;
+    }
+
+    & .dw-today-row .dw-step:not(:last-child)::before {
+        right: -35px;
+    }
+
+    /* 넷째 카드 — 흰 종이 질감 + 분홍 점선 + 위쪽 세 색 띠 */
+    & .dw-login-card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 30px 20px 22px;
+        border: 1.5px dashed rgb(239 71 111 / 34%);
+        border-radius: 30px;
+        background-color: #fffefb;
+        background-image:
+            repeating-linear-gradient(168deg, rgb(148 163 184 / 6%) 0 2px, transparent 2px 7px),
+            repeating-linear-gradient(78deg, rgb(203 178 140 / 4%) 0 1px, transparent 1px 11px),
+            radial-gradient(circle at 18% 22%, rgb(255 236 214 / 35%), transparent 42%),
+            radial-gradient(circle at 86% 78%, rgb(222 240 250 / 35%), transparent 45%);
+        text-align: center;
+        box-shadow: 3px 4px 0 rgb(239 71 111 / 10%), 0 16px 34px -20px rgb(15 23 42 / 22%);
+    }
+
+    & .dw-login-card .dw-h3 {
+        font-size: 18px !important;
+        word-break: keep-all;
+    }
+
+    & .dw-login-card .dw-pill {
+        width: 100%;
+    }
+
+    /* 열쇠 배지 — 세 색 크레파스 줄무늬 */
+    & .dw-step-key {
+        background: repeating-linear-gradient(135deg, #3fb2cb 0 6px, #ec5c80 6px 12px, #f0a020 12px 18px);
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 1023px) {
+    html:not(.ddb-app-mode) [data-daily-web] {
+        & .dw-today-row {
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        & .dw-today-row .dw-steps {
+            grid-column: span 2;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        & .dw-today-row .dw-step::after,
+        & .dw-today-row .dw-step::before {
+            display: none;
+        }
+
+        & .dw-today-row .dw-login-card {
+            grid-column: span 2;
+        }
+    }
+}
+
+@media (max-width: 520px) {
+    html:not(.ddb-app-mode) [data-daily-web] {
+        & .dw-today-row,
+        & .dw-today-row .dw-steps {
+            grid-template-columns: 1fr;
+        }
+
+        & .dw-today-row .dw-steps,
+        & .dw-today-row .dw-login-card {
+            grid-column: auto;
+        }
+    }
+}
+
+/* 네 장 높이 맞춤 — 단계 카드 내용은 세로 가운데, 로그인 카드 그림 · 제목은 조금 작게 */
+html:not(.ddb-app-mode) [data-daily-web] {
+    & .dw-today-row .dw-step {
+        justify-content: center;
+    }
+
+    & .dw-login-card .dw-step-art {
+        width: 92px;
+        height: 92px;
+        margin-bottom: 6px;
+    }
+
+    & .dw-login-card .dw-h3 {
+        font-size: 17px !important;
+    }
+
+    & .dw-login-card .dw-card-body {
+        margin-top: 6px;
+        font-size: 12.5px;
+    }
+}
