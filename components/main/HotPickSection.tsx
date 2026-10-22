@@ -47,7 +47,7 @@ function Face({ p, rank, back, shown, ghost }: { p: CatalogProduct; rank: number
             // 뒤에 숨은 면은 키보드 · 화면읽기에서 빼기
             aria-hidden={!shown}
             tabIndex={shown ? undefined : -1}
-            className={`ddb-hotpick-face flex flex-col overflow-hidden rounded-2xl bg-white shadow-card ${back ? "ddb-hotpick-back" : ""} ${ghost ? "ddb-hotpick-ghost" : ""}`}
+            className={`ddb-hotpick-face flex flex-col overflow-hidden rounded-2xl bg-white shadow-card ${back ? "ddb-hotpick-back" : ""} ${ghost ? "invisible pointer-events-none" : ""}`}
         >
             <span className="relative block aspect-square bg-white">
                 {productCardImage(p) && <ProductColorImage src={productCardImage(p)!} alt={name} sizes="(max-width: 1024px) 46vw, 260px" className="object-contain p-2" />}
@@ -98,7 +98,7 @@ function GroupCard({ group, items, index, tick }: { group: (typeof GROUPS)[numbe
 
     return (
         <div
-            className="ddb-hotpick-card min-w-0 snap-start"
+            className={`ddb-hotpick-card min-w-0 ${index === 4 ? "col-span-2 w-[calc(50%-6px)] justify-self-center sm:col-span-1 sm:w-auto sm:justify-self-auto" : ""}`}
             onMouseEnter={() => { hovered.current = true; }}
             onMouseLeave={() => { hovered.current = false; }}
             onFocus={() => { hovered.current = true; }}
@@ -146,7 +146,7 @@ export default function HotPickSection() {
     }, []);
 
     return (
-        <section ref={sectionRef} id="best" className="py-10 md:py-12" data-hot-pick>
+        <section ref={sectionRef} id="best" className="overflow-x-clip py-10 md:py-12" data-hot-pick>
             <div className="mx-auto max-w-[1400px] px-6">
                 {/* 제목 — 다른 섹션과 같은 모양 */}
                 <div className="mb-6 md:mb-8">
@@ -154,8 +154,8 @@ export default function HotPickSection() {
                     <p className="text-sm text-neutral-500">{locale === "en" ? "Best-loved items right now" : "요즘 가장 사랑받는 인기 상품"}</p>
                 </div>
 
-                {/* 다섯 장 — PC 한 줄 5칸, 휴대폰 옆으로 밀어 보기(scroll-px-6: 첫 카드가 왼쪽 여백에 맞게 멈춤) */}
-                <div className="-mx-6 grid snap-x snap-mandatory scroll-px-6 auto-cols-[46%] grid-flow-col gap-4 overflow-x-auto px-6 pb-2 sm:auto-cols-[31%] lg:mx-0 lg:grid-flow-row lg:grid-cols-5 lg:overflow-visible lg:px-0 lg:pb-0 lg:gap-5">
+                {/* 다섯 장 — PC 한 줄 5칸 · 태블릿 3칸 · 휴대폰 2칸 격자(옆으로 밀기 없음, 2026-10-22 사용자 "우측 스크롤 불편"), 휴대폰 다섯째는 가운데 */}
+                <div className="grid grid-cols-2 gap-x-3 gap-y-6 sm:grid-cols-3 sm:gap-x-4 lg:grid-cols-5 lg:gap-5">
                     {picks.map(({ group, items }, i) => (
                         <GroupCard key={group.slug} group={group} items={items} index={i} tick={tick} />
                     ))}
