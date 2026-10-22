@@ -86,12 +86,12 @@ const SLICE_TONES = [
     { pale: "#f5f2fe", strong: "#dcd2fa", ring: "#8a6fe0" },
     { pale: "#fff7e6", strong: "#fbe0a6", ring: "#e0a020" },
 ];
-// 할 일 그림(서버 할 일 id 별, 모르는 id 는 돌봄 그림)
+// 할 일 그림(서버 할 일 id 별, 모르는 id 는 돌봄 그림) — 사용자 그림 웹하루 · 우리아이분석(2026-10-22)
 const TASK_ART: Partial<Record<DaengLabCareTaskId, string>> = {
-    walk_20: "/images/ui/daily-care-256.webp",
-    eye_check: "/images/ui/mypet-view-front-160.webp",
+    walk_20: "/images/ui/daily-web-care-384.webp",
+    eye_check: "/images/ui/daily-web-care-384.webp",
 };
-const ART_STAMP = "/images/ui/daily-checkin-256.webp";
+const ART_STAMP = "/images/ui/daily-web-checkin-384.webp";
 // 요일별 출근 스티커(앱 매일 댕생활과 같은 그림) — 도장 찍은 날 칸에 붙음
 const DAY_STICKER: Record<string, string> = {
     월: "/images/ui/stickers/sticker-mon.webp",
@@ -102,8 +102,8 @@ const DAY_STICKER: Record<string, string> = {
     토: "/images/ui/stickers/sticker-sat.webp",
     일: "/images/ui/stickers/sticker-sun.webp",
 };
-const ART_ANALYSIS = "/images/ui/mypet-shutter-384.webp";
-const ART_CARE = "/images/ui/daily-care-256.webp";
+const ART_ANALYSIS = "/images/ui/mypet-analysis-camera-384.webp";
+const ART_CARE = "/images/ui/daily-web-care-384.webp";
 // 견종 그림(반려견 친구 기능과 같은 그림 · 같은 판번호)
 const BREED_ART_ROOT = "/images/pet-companion/cute-v4-breeds";
 const BREED_ART_VERSION = "20260730-1";

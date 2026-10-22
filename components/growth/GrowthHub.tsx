@@ -365,7 +365,7 @@ function CommerceBridge({
 }
 
 /* 하루 보물 길 그림(꾸밈) — GUEST_STEPS 순서대로 출근도장 · 작은 돌봄 · 변화 기록 */
-const GUEST_STEP_ART = ["/images/ui/daily-checkin-256.webp", "/images/ui/daily-care-256.webp", "/images/ui/daily-change-256.webp"] as const;
+const GUEST_STEP_ART = ["/images/ui/daily-web-checkin-384.webp", "/images/ui/daily-web-care-384.webp", "/images/ui/daily-web-record-384.webp"] as const; // 사용자 그림 웹하루(2026-10-22)
 
 /** 비회원 오늘의 보물 — 민트 쿠션 판(2026-10-22 사용자 선택 T1): 점선으로 이은 1 출근도장 → 2 작은 돌봄 → 3 변화 기록 + 오른쪽 분홍 로그인 쿠션 */
 function GuestTodayCard() {
