@@ -7,7 +7,9 @@
  *  - 민트 쿠션 판(비회원 화면 .dw-tguest 와 같은 판): 왼쪽 하루 원판(TreasureDial) · 오른쪽 분홍 판(.dw-tlogin, "지금 할 일")
  *    원판 조각 = 출근 도장 + 서버가 주는 오늘 할 일 + 사진 건강 분석. 조각을 고르면 분홍 판이 그 할 일로 바뀌고,
  *    분홍 판 버튼이 기존 함수(claimDaengLabAttendance · completeDaengLabCareTask · PetLens 이동)를 그대로 부른다.
- *  - 아래 쿠션 둘(.dw-tpair): 노랑 = 이번 주 출석(.dw-dsteps 동그라미) · 보라 = 레벨 · 최근 변화 · AI 추천
+ *  - 아래 쿠션 둘(.dw-tpair): 노랑 = 이번 주 출석(.dw-dsteps 동그라미 — 도장 찍은 날은 앱과 같은 요일 스티커가 쾅 붙음,
+ *    오늘 빈칸을 눌러도 도장) · 보라 = 레벨 · 최근 변화 · AI 추천
+ *  - 가운데: 회원이 올린 반려견 사진(없으면 견종 그림)
  * 꾸밈 CSS 는 app/daily-web.css 의 "하루 원판" 묶음.
  */
 
@@ -90,6 +92,16 @@ const TASK_ART: Partial<Record<DaengLabCareTaskId, string>> = {
     eye_check: "/images/ui/mypet-view-front-160.webp",
 };
 const ART_STAMP = "/images/ui/daily-checkin-256.webp";
+// 요일별 출근 스티커(앱 매일 댕생활과 같은 그림) — 도장 찍은 날 칸에 붙음
+const DAY_STICKER: Record<string, string> = {
+    월: "/images/ui/stickers/sticker-mon.webp",
+    화: "/images/ui/stickers/sticker-tue.webp",
+    수: "/images/ui/stickers/sticker-wed.webp",
+    목: "/images/ui/stickers/sticker-thu.webp",
+    금: "/images/ui/stickers/sticker-fri.webp",
+    토: "/images/ui/stickers/sticker-sat.webp",
+    일: "/images/ui/stickers/sticker-sun.webp",
+};
 const ART_ANALYSIS = "/images/ui/mypet-shutter-384.webp";
 const ART_CARE = "/images/ui/daily-care-256.webp";
 // 견종 그림(반려견 친구 기능과 같은 그림 · 같은 판번호)
@@ -310,14 +322,18 @@ export default function MemberAiDashboard({ variant = "home" }: Props) {
                             burst={burst}
                             center={(
                                 <>
-                                    <span className="dw-dial-pet" style={{ backgroundImage: `url("${breedArt}")` } as CSSProperties} aria-hidden="true" />
+                                    {pet?.photoDataUrl ? (
+                                        <span className="dw-dial-photo" aria-hidden="true"><Image src={pet.photoDataUrl} alt="" fill sizes="80px" className="object-cover" unoptimized /></span>
+                                    ) : (
+                                        <span className="dw-dial-pet" style={{ backgroundImage: `url("${breedArt}")` } as CSSProperties} aria-hidden="true" />
+                                    )}
                                     <small>오늘 루틴</small>
                                     <b>{careScore === null ? "—" : careScore}</b>
                                     <small>{completedRoutineCount}/{slots.length} 완료</small>
                                 </>
                             )}
                         />
-                        <p className="dw-dial-hint">조각을 누르거나 옆으로 밀면 원판이 돌아가요 · 테두리는 오늘 루틴 점수(의료 점수가 아닌 오늘 돌봄 완료율)</p>
+                        <p className="dw-dial-hint">조각을 눌러 보세요</p>
                     </div>
 
                     <div className="dw-csheet is-pink dw-tlogin dw-dial-card" aria-live="polite">
@@ -361,7 +377,6 @@ export default function MemberAiDashboard({ variant = "home" }: Props) {
                                             <i className={`fa-solid ${analyzedToday ? "fa-check" : "fa-camera"} mr-1.5`} aria-hidden="true" />{analyzedToday ? "사진 분석 다시 보기" : "사진 찍으러 가기"}
                                         </Link>
                                     )}
-                                    <button type="button" onClick={() => setPickedSlot((selected + 1) % slots.length)} className="ddb-motion-lift dw-pill dw-pill-sm">다음 할 일 보기</button>
                                 </div>
                                 {notice && slot.kind === "attendance" ? <p className="dw-dial-notice" role="status">{notice}</p> : null}
                             </div>
@@ -375,15 +390,26 @@ export default function MemberAiDashboard({ variant = "home" }: Props) {
                         <p className="ddb-crayon-kicker dw-kicker">THIS WEEK</p>
                         <h3 className="dw-tlogin-title">이번 주 출석 {engagement?.weeklyAttendanceProgress || 0}/{engagement?.weeklyAttendanceTarget || 7}</h3>
                         <ol className="dw-dsteps" aria-label="최근 7일 출근도장">
-                            {(attendance?.recentDays || []).map((day) => {
+                            {(attendance?.recentDays || []).map((day, index) => {
                                 const isToday = day.businessDate === today;
+                                const dayName = weekday(day.businessDate);
+                                const sticker = DAY_STICKER[dayName];
+                                // 붙은 스티커 기울기(칸마다 조금씩 다르게, -6~6도) · 방금 찍은 오늘은 쾅 붙는 움직임
+                                const tilt = `${((index * 37) % 13) - 6}deg`;
                                 return (
-                                    <li key={day.businessDate} className={`${day.claimed ? "is-mint is-claimed" : ""} ${isToday ? "is-pink is-today" : ""}`}>
-                                        <span className="dw-dstep-art">
-                                            <i className={`fa-solid ${day.claimed ? "fa-paw" : isToday ? "fa-stamp" : "fa-minus"}`} aria-hidden="true" />
-                                            {day.claimed ? <span className="dw-dstep-no" aria-hidden="true"><i className="fa-solid fa-check" /></span> : null}
-                                        </span>
-                                        <span className="dw-dstep-title">{isToday ? "오늘" : weekday(day.businessDate)}</span>
+                                    <li key={day.businessDate} className={`${day.claimed ? "is-claimed" : ""} ${isToday ? "is-today" : ""}`}>
+                                        {day.claimed && sticker ? (
+                                            <span className="dw-dstep-art dw-dial-stuck">
+                                                <Image src={sticker} alt="" width={88} height={88} className={isToday && burst ? "dw-dial-slam" : ""} style={{ "--dw-tilt": tilt } as CSSProperties} />
+                                            </span>
+                                        ) : isToday && attendance && !attendance.claimedToday ? (
+                                            <button type="button" onClick={() => void onStamp()} disabled={claiming || loading} className="dw-dstep-art dw-dial-slot" aria-label={`오늘 출근 도장 찍고 코인 ${attendance.dailyRewardDaengLabCoins}개 받기`}>
+                                                <span>{claiming ? "꾹…" : "붙이기"}</span>
+                                            </button>
+                                        ) : (
+                                            <span className="dw-dstep-art dw-dial-empty" aria-hidden="true" />
+                                        )}
+                                        <span className="dw-dstep-title">{isToday ? "오늘" : dayName}</span>
                                         <span className="sr-only">{day.claimed ? "도장 찍음" : "도장 없음"}</span>
                                     </li>
                                 );
@@ -394,7 +420,7 @@ export default function MemberAiDashboard({ variant = "home" }: Props) {
                             <span className="dw-chip">{attendance ? `${attendance.wallet.daengLabCoins.toLocaleString("ko-KR")}C 보유` : "지갑 확인 중"}</span>
                             <span className="dw-chip">하루 도장 코인 {attendance?.dailyRewardDaengLabCoins ?? 2}개</span>
                         </div>
-                        <p className="dw-dial-rule"><i className="fa-solid fa-shield-heart" aria-hidden="true" /> 도장 날짜와 보상은 한국 시간 기준으로 서버가 확인하며, 같은 날 여러 번 눌러도 한 번만 지급됩니다.</p>
+                        <p className="dw-dial-rule"><i className="fa-solid fa-shield-heart" aria-hidden="true" /> 도장 날짜와 보상은 한국 시간 기준으로 서버가 확인하며, 같은 날 여러 번 눌러도 한 번만 지급됩니다. 원판 테두리의 루틴 점수는 의료 점수가 아닌 오늘 돌봄 완료율이에요.</p>
                     </div>
 
                     <div className="dw-csheet is-lav dw-dial-level">
@@ -405,7 +431,7 @@ export default function MemberAiDashboard({ variant = "home" }: Props) {
                                 <h3 className="dw-tlogin-title">{(engagement?.level || 1) < 3 ? "건강 새싹" : "우리 아이 지킴이"}</h3>
                             </div>
                         </div>
-                        <div className="dw-dial-meter"><span className="ddb-crayon-meter" style={{ width: `${levelProgress}%` }} /></div>
+                        <div className="dw-dial-meter"><span style={{ width: `${levelProgress}%` }} /></div>
                         <div className="dw-dial-xp"><span>{engagement?.xp || 0} XP</span><span>다음 레벨 {engagement?.nextLevelXp || 100} XP</span></div>
                         <dl className="dw-dial-facts">
                             <div><dt>최근 건강 변화</dt><dd>{analysisStatus(pet?.rawAnalysis)}</dd></div>

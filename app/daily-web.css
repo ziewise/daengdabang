@@ -4772,7 +4772,7 @@ html:not(.ddb-app-mode) [data-daily-web] {
     & .dw-tmember { grid-template-columns: minmax(0, 1fr) 300px; gap: 34px; }
     & .dw-dial-pets { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 16px; }
     & .dw-dial-wrap { display: flex; flex-direction: column; align-items: center; }
-    & .dw-dial-hint { margin-top: 14px; color: #4f8f78; font-size: 12px; font-weight: 700; text-align: center; word-break: keep-all; }
+    & .dw-dial-hint { margin-top: 14px; color: #4f8f78; font-size: 13px; font-weight: 700; text-align: center; word-break: keep-all; }
 
     /* 원판 몸 — 크기 기준은 판 너비(cqw) */
     & .dw-dial { position: relative; width: min(420px, 100%); aspect-ratio: 1; container-type: inline-size; touch-action: pan-y; user-select: none; }
@@ -4821,6 +4821,7 @@ html:not(.ddb-app-mode) [data-daily-web] {
         border-radius: 999px; background: radial-gradient(circle at 50% 30%, #fff 0 45%, #f6f8f7 100%); text-align: center;
         box-shadow: inset 0 1cqw 0 #fff, inset 0 -2cqw 3cqw rgb(15 23 42 / 8%), 0 0 0 1.6cqw rgb(255 255 255 / 65%), 0 3cqw 4cqw -2cqw rgb(15 23 42 / 40%);
     }
+    & .dw-dial-photo { position: relative; width: 15cqw; height: 15cqw; margin: -1cqw 0 0.6cqw; overflow: hidden; border-radius: 999px; box-shadow: 0 0 0 0.8cqw #fff, 0 1.2cqw 2cqw -1cqw rgb(15 23 42 / 40%); }
     & .dw-dial-pet { width: 15cqw; height: 15cqw; margin-top: -2cqw; background-repeat: no-repeat; background-position: 0 0; background-size: 400% 400%; }
     & .dw-dial-center b { color: #12a17a; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: max(7cqw, 22px); font-weight: 400; line-height: 1; }
     & .dw-dial-center small { color: #94a3b8; font-size: max(2.4cqw, 10px); font-weight: 800; }
@@ -4840,20 +4841,25 @@ html:not(.ddb-app-mode) [data-daily-web] {
     & .dw-dial-pair { margin-top: 22px; padding: 0; }
     & .dw-dial-week { display: flex; flex-direction: column; }
     & .dw-dial-week .dw-tlogin-title, & .dw-dial-level .dw-tlogin-title { margin-top: 4px; text-align: left; }
-    & .dw-dial-week .dw-dsteps { --dw-step: 72px; flex-wrap: nowrap; gap: 6px; margin-top: 22px; }
+    & .dw-dial-week .dw-dsteps { --dw-step: 72px; flex-wrap: nowrap; gap: 6px; margin: auto 0; padding: 22px 0; }
     & .dw-dial-week .dw-dsteps > li { flex: 1 1 0; }
-    & .dw-dial-week .dw-dstep-art { color: #cbd5e1; font-size: 26px; }
-    & .dw-dial-week li.is-claimed .dw-dstep-art { background: #e9f8f1; color: #12a17a; }
-    & .dw-dial-week li.is-today .dw-dstep-art { color: #e9789a; box-shadow: 0 0 0 3px #f7a8bf, 0 10px 18px -12px rgb(15 23 42 / 40%); }
+    /* 빈칸 — 하얀 쿠션 동그라미(점선 없음), 오늘 빈칸은 분홍 테가 숨쉬고 누르면 도장 */
+    & .dw-dial-week .dw-dial-empty { background: #fff; box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), inset 0 -6px 10px rgb(15 23 42 / 5%), 0 8px 14px -12px rgb(15 23 42 / 35%); }
+    & .dw-dial-week .dw-dial-slot { position: relative; background: #fff2f6; color: #e2557a; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 14px; cursor: pointer; box-shadow: 0 0 0 3px #f7a8bf, 0 10px 18px -12px rgb(200 80 120 / 55%); }
+    & .dw-dial-week .dw-dial-slot::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: 0 0 0 7px rgb(244 169 189 / 28%); opacity: 0; animation: dw-dial-wait 1.8s ease-in-out infinite; pointer-events: none; }
+    & .dw-dial-week .dw-dial-slot:disabled { cursor: wait; opacity: 0.7; }
+    /* 붙은 스티커 — 앱과 같은 요일 그림, 칸마다 살짝 기울기 */
+    & .dw-dial-week .dw-dial-stuck { background: transparent; box-shadow: none; }
+    & .dw-dial-week .dw-dial-stuck img { width: 112%; height: 112%; max-width: none; object-fit: contain; rotate: var(--dw-tilt, 0deg); filter: drop-shadow(0 6px 6px rgb(90 60 50 / 22%)); }
+    & .dw-dial-week .dw-dial-stuck img.dw-dial-slam { rotate: none; animation: dw-dial-slam 0.55s cubic-bezier(0.2, 1.4, 0.4, 1) both; }
     & .dw-dial-week li.is-today .dw-dstep-title { color: #e2557a; }
-    & .dw-dial-week .dw-dstep-no { top: -4px; right: -6px; width: 22px; height: 22px; background: #12a17a; font-size: 10px; }
     & .dw-dial-week .dw-dstep-title { margin-top: 10px; font-size: 16px; }
     & .dw-dial-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 18px; }
     & .dw-dial-rule { margin-top: 12px; color: #a0855a; font-size: 12px; font-weight: 700; line-height: 1.6; word-break: keep-all; }
     & .dw-dial-level-head { display: flex; align-items: center; gap: 14px; }
     & .dw-dial-level .dw-rring { --dw-ring: 84px; padding: 6px; }
     & .dw-dial-meter { height: 12px; margin-top: 14px; overflow: hidden; border-radius: 999px; background: #fff; }
-    & .dw-dial-meter > span { display: block; height: 100%; transition: width 0.7s ease; }
+    & .dw-dial-meter > span { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, #f7a8bf, #ffd08a 40%, #a8e0c6 70%, #a9d4ea); filter: url(#dw-crayon-grain); transition: width 0.7s ease; }
     & .dw-dial-xp { display: flex; justify-content: space-between; margin-top: 6px; color: #7c6f9a; font-size: 12px; font-weight: 800; }
     & .dw-dial-facts { display: grid; gap: 10px; margin-top: 14px; }
     & .dw-dial-facts dt { color: #94a3b8; font-size: 11.5px; font-weight: 800; }
@@ -4865,6 +4871,16 @@ html:not(.ddb-app-mode) [data-daily-web] {
     0% { opacity: 0; transform: translate(-50%, 2cqw) scale(0.6); }
     25% { opacity: 1; transform: translate(-50%, -2cqw) scale(1.1); }
     100% { opacity: 0; transform: translate(-50%, -12cqw); }
+}
+
+@keyframes dw-dial-slam {
+    0% { opacity: 0; transform: scale(2.2) rotate(-14deg); }
+    60% { opacity: 1; transform: scale(0.92) rotate(4deg); }
+    100% { transform: scale(1) rotate(var(--dw-tilt, 0deg)); }
+}
+
+@keyframes dw-dial-wait {
+    50% { opacity: 1; }
 }
 
 @keyframes dw-dial-slide {
@@ -4881,8 +4897,7 @@ html:not(.ddb-app-mode) [data-daily-web] {
         & .dw-dial-week .dw-dsteps { --dw-step: 36px; flex-wrap: nowrap; gap: 4px; }
         & .dw-dial-week .dw-dsteps > li { flex: 1 1 0; }
         & .dw-dial-week .dw-dsteps > li + li::before { display: none; }
-        & .dw-dial-week .dw-dstep-art { font-size: 15px; }
-        & .dw-dial-week .dw-dstep-no { display: none; }
+        & .dw-dial-week .dw-dial-slot { font-size: 10.5px; }
         & .dw-dial-week .dw-dstep-title { font-size: 12.5px; }
     }
 }
@@ -4891,6 +4906,6 @@ html:not(.ddb-app-mode) [data-daily-web] {
 @media (prefers-reduced-motion: reduce) {
     html:not(.ddb-app-mode) [data-daily-web] {
         & .dw-dial-rotor, & .dw-dial-grooves, & .dw-dial-arts, & .dw-dial-art, & .dw-dial-fill, & .dw-dial-check { transition: none; }
-        & .dw-dial-burst, & .dw-dial-card-in { animation: none; }
+        & .dw-dial-burst, & .dw-dial-card-in, & .dw-dial-week .dw-dial-slam, & .dw-dial-week .dw-dial-slot::after { animation: none; }
     }
 }
