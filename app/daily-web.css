@@ -3964,9 +3964,32 @@ html:not(.ddb-app-mode) [data-daily-web] {
         margin-top: 8px;
     }
 
+    /* 결제 방식 셋 — 작은 파스텔 알약을 한두 줄로(가운데), 그림자 없이 */
     & .dw-rounds.is-text .dw-safe-methods {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 5px;
         margin: 2px 0 4px;
     }
+
+    & .dw-rounds.is-text .dw-safe-methods span {
+        display: inline-flex;
+        gap: 5px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 11.5px;
+        font-weight: 800;
+        box-shadow: none;
+    }
+
+    & .dw-rounds.is-text .dw-safe-methods span:nth-child(1) { background: #eef0fe; color: #4338ca; }
+    & .dw-rounds.is-text .dw-safe-methods span:nth-child(2) { background: #fff3dc; color: #b45309; }
+    & .dw-rounds.is-text .dw-safe-methods span:nth-child(3) { background: #e3f6ee; color: #047857; }
+    & .dw-rounds.is-text .dw-safe-methods i { font-size: 10px; color: inherit !important; }
+
+    /* 세 칸 그림 · 제목 높이를 맞춤(글이 길어도 위에서부터) */
+    & .dw-rounds.is-text { align-items: start; }
 }
 
 @media (max-width: 860px) {

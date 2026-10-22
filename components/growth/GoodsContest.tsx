@@ -684,7 +684,7 @@ export default function GoodsContest({
                     </div>
                     <div className="dw-rounds is-text">
                         <div className="dw-round is-sky">
-                            <span className="dw-round-art" aria-hidden="true"><Image src="/images/ui/pet-settings-96.webp" alt="" width={96} height={96} /></span>
+                            <span className="dw-round-art" aria-hidden="true"><Image src="/images/ui/goods-pay-none-256.webp" alt="" width={120} height={120} /></span>
                             <p className="dw-round-title">지금은 결제가 없어요</p>
                             <div className="dw-round-body">
                                 <p>선택은 주문·예약·결제가 아니며 결제 정보도 받지 않습니다.</p>
@@ -692,7 +692,7 @@ export default function GoodsContest({
                             </div>
                         </div>
                         <div className="dw-round is-yellow">
-                            <span className="dw-round-art" aria-hidden="true"><Image src="/images/ui/header-cart-128.webp" alt="" width={96} height={96} /></span>
+                            <span className="dw-round-art" aria-hidden="true"><Image src="/images/ui/goods-pay-ready-256.webp" alt="" width={120} height={120} /></span>
                             <p className="dw-round-title">결제는 이렇게 준비해요</p>
                             <div className="dw-round-body">
                                 <div className="dw-safe-methods" aria-label="향후 결제 방식">
@@ -704,7 +704,7 @@ export default function GoodsContest({
                             </div>
                         </div>
                         <div className="dw-round is-mint">
-                            <span className="dw-round-art" aria-hidden="true"><Image src="/images/ui/menu-cs-faq-128.webp" alt="" width={96} height={96} /></span>
+                            <span className="dw-round-art" aria-hidden="true"><Image src="/images/ui/goods-escrow-256.webp" alt="" width={120} height={120} /></span>
                             <p className="dw-round-title">에스크로로 지켜요</p>
                             <div className="dw-round-body">
                                 <p>{content.escrowNotice}</p>
