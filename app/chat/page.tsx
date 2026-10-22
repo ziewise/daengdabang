@@ -1,6 +1,9 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import ChatLaunchClient from "./ChatLaunchClient";
+// 웹 연구소 꾸밈(2026-10-23) — 웹 data-lab-web 범위만
+import "../daily-web.css";
+import "../lab-web.css";
 
 export const metadata: Metadata = {
     title: "챗봇 | 댕다방",

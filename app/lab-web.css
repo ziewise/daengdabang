@@ -98,6 +98,10 @@ html:not(.ddb-app-mode) [data-lab-web] {
     & .lab-empty-icon { display: none; }
     & .lab-result-card { border-radius: 36px !important; }
 
+    /* AI 상담(/chat) — 머리 판 버튼 줄 · 둥근 쿠션(버튼) */
+    & .lab-chat-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+    & button.dw-round { width: 100%; cursor: pointer; }
+
     /* 로그인 · 프로필 안내 — 분홍 쿠션 + 무지개 고리 그림 */
     & [data-petlens-member-gate] { min-height: 0 !important; padding: 0 !important; }
     & [data-petlens-member-gate] > div {
