@@ -5,7 +5,8 @@
  * 카드마다 그 제품군 1~3위 상품이 "카드 뒤집기"로 번갈아 보인다(사용자가 고른 움직임).
  *  - 다섯 장이 같은 효과로, 왼쪽부터 조금씩 늦게(물결) 뒤집힌다.
  *  - 카드 아래 순위 점은 두지 않는다(2026-10-20 사용자) — 순위는 카드 속 1위 · 2위 · 3위 배지로 보인다.
- *  - 마우스를 올린 카드 · 화면 밖 · 다른 탭일 때는 멈추고, 움직임 줄이기 설정이면 자동으로 돌지 않는다.
+ *  - 다섯 장이 늘 같은 순위를 보인다(섹션 시계 한 개로 순위를 정함 — 2026-10-22 순위 뒤죽박죽 고침).
+ *  - 마우스가 카드 줄 위에 있거나 · 화면 밖 · 다른 탭일 때는 다섯 장이 같이 멈추고, 움직임 줄이기 설정이면 자동으로 돌지 않는다.
  *
  * ⚠ 순위 자료: 실제 제품군별 판매 순위(주문 데이터)가 아직 연결되지 않아 지금은 운영자 추천 셀렉트 순서
  *   → 나머지 상품 순서로 채운 "임시 순서"다. 배포 전 판매 순위 자료로 바꿔야 한다(협업자 · 데이터 연결 필요).
@@ -73,18 +74,19 @@ function Face({ p, rank, back, shown, ghost }: { p: CatalogProduct; rank: number
 }
 
 // 제품군 카드 하나 — 앞면 · 뒷면 두 장을 겹쳐 두고 뒤집을 때마다 안 보이는 면을 다음 순위로 바꿔 둔다
+// 보일 순위는 섹션 시계(tick)로만 정한다(tick 번째 = tick % 상품 수) — 카드마다 따로 세지 않아 다섯 장 순위가 어긋나지 않음
 function GroupCard({ group, items, index, tick }: { group: (typeof GROUPS)[number]; items: CatalogProduct[]; index: number; tick: number }) {
     const { locale } = useI18n();
     // a = 앞면 순위, b = 뒷면 순위, flipped = 뒷면이 보이는 중, deg = 누적 회전(항상 같은 방향으로 돎)
     const [state, setState] = useState({ a: 0, b: 1, flipped: false, deg: 0 });
-    const hovered = useRef(false);
 
-    // 섹션 시계가 한 번 갈 때마다 왼쪽부터 물결처럼 늦게 다음 순위로
+    // 섹션 시계가 한 번 갈 때마다 왼쪽부터 물결처럼 늦게, 시계가 가리키는 순위로
     useEffect(() => {
         if (tick === 0 || items.length < 2) return;
         const t = window.setTimeout(() => {
-            if (!hovered.current) setState((s) => {
-                const next = ((s.flipped ? s.b : s.a) + 1) % items.length;
+            setState((s) => {
+                const next = tick % items.length;
+                if ((s.flipped ? s.b : s.a) === next) return s; // 이미 그 순위면 그대로
                 return s.flipped ? { ...s, a: next, flipped: false, deg: s.deg + 180 } : { ...s, b: next, flipped: true, deg: s.deg + 180 };
             });
         }, index * WAVE_DELAY);
@@ -97,13 +99,7 @@ function GroupCard({ group, items, index, tick }: { group: (typeof GROUPS)[numbe
     const faceB = items[state.b] ?? items[0];
 
     return (
-        <div
-            className="ddb-hotpick-card min-w-0"
-            onMouseEnter={() => { hovered.current = true; }}
-            onMouseLeave={() => { hovered.current = false; }}
-            onFocus={() => { hovered.current = true; }}
-            onBlur={() => { hovered.current = false; }}
-        >
+        <div className="ddb-hotpick-card min-w-0">
             {/* 제품군 이름 — 누르면 그 제품군 전체 보기 */}
             <Link href={`/category/${group.slug}`} className="mb-2.5 flex min-w-0 items-center gap-1.5 px-1 md:gap-2">
                 <Image src={group.icon} alt="" width={44} height={44} className="h-8 w-8 shrink-0 object-contain md:h-11 md:w-11" />
@@ -182,15 +178,17 @@ export default function HotPickSection() {
     const picks = useMemo(() => GROUPS.map((g) => ({ group: g, items: pickTopThree(g.slug) })), []);
     const sectionRef = useRef<HTMLElement>(null);
     const [tick, setTick] = useState(0);
+    // 카드 줄 위에 마우스가 있거나 키보드 포커스가 들어와 있으면 다섯 장이 같이 멈춤(한 장만 멈춰 순위가 어긋나던 것 고침)
+    const paused = useRef(false);
 
-    // 섹션 시계 — 화면에 보이고 · 탭이 앞에 있을 때만 간다. 움직임 줄이기 설정이면 자동으로 돌지 않음
+    // 섹션 시계 — 화면에 보이고 · 탭이 앞에 있고 · 멈춤이 아닐 때만 간다. 움직임 줄이기 설정이면 자동으로 돌지 않음
     useEffect(() => {
         const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
         let inView = false;
         const io = new IntersectionObserver(([e]) => { inView = e.isIntersecting; }, { threshold: 0.25 });
         if (sectionRef.current) io.observe(sectionRef.current);
         const id = window.setInterval(() => {
-            if (inView && !document.hidden && !reduce.matches) setTick((t) => t + 1);
+            if (inView && !document.hidden && !reduce.matches && !paused.current) setTick((t) => t + 1);
         }, FLIP_EVERY);
         return () => { io.disconnect(); window.clearInterval(id); };
     }, []);
@@ -210,7 +208,14 @@ export default function HotPickSection() {
                 </ol>
 
                 {/* 태블릿 3칸 · PC 한 줄 5칸 — 뒤집기 카드 */}
-                <div className="hidden grid-cols-3 gap-x-4 gap-y-6 sm:grid lg:grid-cols-5 lg:gap-5">
+                <div
+                    className="hidden grid-cols-3 gap-x-4 gap-y-6 sm:grid lg:grid-cols-5 lg:gap-5"
+                    onMouseEnter={() => { paused.current = true; }}
+                    onMouseLeave={() => { paused.current = false; }}
+                    // 키보드로 들어왔을 때만 멈춤(마우스로 누른 뒤 포커스가 남아 계속 멈춰 있던 것 막기)
+                    onFocus={(e) => { if (e.target.matches(":focus-visible")) paused.current = true; }}
+                    onBlur={() => { paused.current = false; }}
+                >
                     {picks.map(({ group, items }, i) => (
                         <GroupCard key={group.slug} group={group} items={items} index={i} tick={tick} />
                     ))}
