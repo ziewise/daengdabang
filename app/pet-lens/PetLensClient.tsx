@@ -32,6 +32,7 @@ import DaengLabServiceTitle from "@/components/petlens/DaengLabServiceTitle";
 import DaengLabSymbol from "@/components/petlens/DaengLabSymbol";
 import PetLensPetSelector from "@/components/petlens/PetLensPetSelector";
 import { CrayonGrainFilter, PawTrail } from "@/components/daily/CrayonArt";
+import { getPetBreedVisual, resolvePetBreedId } from "@/lib/pet-companion-breeds";
 import { trackStorefrontEvent } from "@/lib/storefront-analytics";
 import {
     loadPetObservationJobStatus,
@@ -157,45 +158,81 @@ const LAB_VIEW_ART = {
     back: "/images/ui/mypet-view-back-160.webp",
 } as const;
 
-// 사진 분석 순서 — 점선으로 이은 동그라미 셋(보물광산 비회원 단계와 같은 결), 웹에서만(앱에서는 숨김)
-const LAB_PHOTO_STEPS = [
-    { art: "/images/ui/mypet-view-front-160.webp", title: "네 방향 사진", body: "정면 · 왼쪽 · 오른쪽 · 뒷면을 한 장씩 담아요", tone: "is-yellow" },
-    { art: "/images/ui/lab-dog-256.webp", title: "우리 아이 정보 확인", body: "이름 · 나이 · 크기 · 모질 · 활동량과 관심 포인트", tone: "is-mint" },
-    { art: "/images/ui/lab-summary-256.webp", title: "결과 · 맞춤 상품", body: "외형 · 체형 · 털 상태와 케어 포인트를 정리해요", tone: "is-pink" },
-] as const;
-
-function LabPhotoSteps() {
+// 머리 판 안 고르기 줄(웹) — 분석할 아이(견종 그림 알약, 프로필 · 견종이 있는 아이만) · 분석 종류(그림 알약 둘).
+// 기존 selectPetProfile · setMode 를 그대로 부름. 앱에서는 원래 PetLensPetSelector · PetLensModeTabs 가 보인다.
+const BREED_ART_ROOT = "/images/pet-companion/cute-v4-breeds";
+function LabHeroControls({
+    pets,
+    selectedPetProfileId,
+    disabled,
+    onSelectPet,
+    mode,
+    onMode,
+}: {
+    pets: PetProfile[];
+    selectedPetProfileId?: number;
+    disabled: boolean;
+    onSelectPet: (petProfileId: number) => void;
+    mode: PetLensMode;
+    onMode: (mode: PetLensMode) => void;
+}) {
     return (
-        <ol className="dw-dsteps lab-steps hidden" aria-label="사진 분석 순서">
-            {LAB_PHOTO_STEPS.map((step, index) => (
-                <li key={step.title} className={step.tone}>
-                    <span className="dw-dstep-art" aria-hidden="true">
-                        <Image src={step.art} alt="" width={84} height={84} />
-                        <span className="dw-dstep-no">{index + 1}</span>
-                    </span>
-                    <span className="dw-dstep-title">{step.title}</span>
-                    <span className="dw-dstep-body">{step.body}</span>
-                </li>
-            ))}
-        </ol>
+        <>
+            {pets.length > 1 ? (
+                <div className="lab-pet-pills" role="group" aria-label="분석할 반려견">
+                    {pets.map((pet, index) => {
+                        const ready = Boolean(pet.apiProfileId && pet.breed?.trim());
+                        const active = pet.apiProfileId === selectedPetProfileId;
+                        const art = `${BREED_ART_ROOT}/${getPetBreedVisual(resolvePetBreedId(pet.breed || "")).assetId}-core.webp`;
+                        return (
+                            <button
+                                key={pet.apiProfileId ? `pet-${pet.apiProfileId}` : `unsaved-pet-${index}`}
+                                type="button"
+                                disabled={disabled || !ready}
+                                aria-pressed={active}
+                                onClick={() => { if (pet.apiProfileId) onSelectPet(pet.apiProfileId); }}
+                                className={`lab-pet-pill ${active ? "is-on" : ""}`}
+                                title={ready ? undefined : "견종 확인 필요"}
+                            >
+                                {pet.photoDataUrl
+                                    ? <span className="lab-pet-face"><Image src={pet.photoDataUrl} alt="" fill sizes="34px" className="object-cover" unoptimized /></span>
+                                    : <span className="lab-pet-face is-breed" style={{ backgroundImage: `url("${art}")` }} aria-hidden="true" />}
+                                {pet.name || `반려견 ${index + 1}`}
+                                <small>{pet.breed?.trim() || "견종 확인 필요"}</small>
+                            </button>
+                        );
+                    })}
+                </div>
+            ) : null}
+            <div className="lab-mode-pills" role="group" aria-label="분석 종류">
+                <button type="button" aria-pressed={mode === "photo"} onClick={() => onMode("photo")} className={mode === "photo" ? "is-on" : ""}>
+                    <Image src="/images/ui/lab-tab-photo-160.webp" alt="" width={32} height={32} aria-hidden="true" />사진 건강 분석
+                </button>
+                <button type="button" aria-pressed={mode === "observation"} onClick={() => onMode("observation")} className={mode === "observation" ? "is-on" : ""}>
+                    <Image src="/images/ui/lab-tab-observation-160.webp" alt="" width={32} height={32} aria-hidden="true" />행동 · 소리 분석
+                </button>
+            </div>
+        </>
     );
 }
 
 // 연구소 머리 판 — 사진 분석 = 연보라 쿠션 + 카메라 그림, 행동·소리 = 하늘 쿠션 + 연구하는 강아지 그림(무지개 고리).
 // 웹에서만 보이고 앱에서는 아래 원래 머리글(lab-legacy-head)이 보인다.
-function LabHero({ mode }: { mode: PetLensMode }) {
+function LabHero({ mode, controls }: { mode: PetLensMode; controls?: React.ReactNode }) {
     const observation = mode === "observation";
     return (
-        <section className={`dw-csheet ${observation ? "is-sky" : "is-lav"} dw-chero lab-hero hidden`} aria-labelledby="lab-hero-title">
+        <section className={`dw-csheet ${observation ? "is-sky" : "is-lav"} dw-chero lab-hero ${controls ? "is-compact" : ""} hidden`} aria-labelledby="lab-hero-title">
             <div className="min-w-0">
                 <p className="ddb-crayon-kicker dw-kicker">{observation ? "DAENGDABANG LAB · BEHAVIOR & SOUND" : "DAENGDABANG LAB · PETLENS"}</p>
                 <h1 id="lab-hero-title" className="ddb-crayon-title dw-h1">
                     {observation ? (
-                        <>행동 · 소리로 읽는<br /><span className="ddb-crayon-underline">우리 아이 신호</span></>
+                        <>행동 · 소리로 읽는{controls ? " " : <br />}<span className="ddb-crayon-underline">우리 아이 신호</span></>
                     ) : (
-                        <>네 방향 사진으로 보는<br /><span className="ddb-crayon-underline">우리 아이 오늘</span></>
+                        <>네 방향 사진으로 보는{controls ? " " : <br />}<span className="ddb-crayon-underline">우리 아이 오늘</span></>
                     )}
                 </h1>
+                {controls ? <div className="lab-hero-controls">{controls}</div> : (
+                <>
                 <p className="dw-lead">
                     {observation
                         ? "카메라·마이크로 포착한 행동과 소리를 함께 살펴 우리 아이의 관찰 포인트를 정리합니다."
@@ -207,6 +244,8 @@ function LabHero({ mode }: { mode: PetLensMode }) {
                         : ["정면 · 왼쪽 · 오른쪽 · 뒷면", "회원 견종 기준", "외형 · 체형 · 털 상태"]
                     ).map((chip) => <li key={chip} className="dw-chip">{chip}</li>)}
                 </ul>
+                </>
+                )}
             </div>
             <span className={`dw-rring dw-chero-ring ${observation ? "lab-ring-photo" : ""}`} aria-hidden="true">
                 <span>
@@ -567,7 +606,19 @@ export default function PetLensClient() {
 
     return (
         <LabMain>
-            <LabHero mode={mode} />
+            <LabHero
+                mode={mode}
+                controls={(
+                    <LabHeroControls
+                        pets={user.pets}
+                        selectedPetProfileId={editingPetProfileId}
+                        disabled={loading || photoLoading}
+                        onSelectPet={selectPetProfile}
+                        mode={mode}
+                        onMode={setMode}
+                    />
+                )}
+            />
             <PawTrail />
             {/* 원래 머리글 — 앱에서 보이고, 웹 연구소에서는 위 머리 판이 대신(lab-web.css) */}
             <header className="lab-legacy-head mb-6">
@@ -596,14 +647,17 @@ export default function PetLensClient() {
                 )}
             </header>
 
-            <PetLensPetSelector
-                pets={user.pets}
-                selectedPetProfileId={editingPetProfileId}
-                disabled={loading || photoLoading}
-                onChange={selectPetProfile}
-            />
+            {/* 원래 아이 · 분석 고르기 — 앱에서 보이고, 웹에서는 위 머리 판 고르기 줄이 대신(lab-web.css) */}
+            <div className="lab-legacy-controls">
+                <PetLensPetSelector
+                    pets={user.pets}
+                    selectedPetProfileId={editingPetProfileId}
+                    disabled={loading || photoLoading}
+                    onChange={selectPetProfile}
+                />
 
-            <PetLensModeTabs mode={mode} onChange={setMode} />
+                <PetLensModeTabs mode={mode} onChange={setMode} />
+            </div>
 
             {mode === "observation" && !observationDeepLinkJob && !["idle", "found"].includes(observationDeepLinkState) && (
                 <ObservationDeepLinkNotice state={observationDeepLinkState} message={observationDeepLinkMessage} />
@@ -622,11 +676,11 @@ export default function PetLensClient() {
                 )
             ) : (
             <>
-            <LabPhotoSteps />
             <div className="lab-photo-grid grid gap-6 lg:grid-cols-[420px_1fr]">
                 <form onSubmit={submit} className="surface lab-form grid h-fit gap-4 p-5">
                     <div data-petlens-page-multiview-upload>
-                        <span className="mb-1 block text-xs font-black text-neutral-500">사진</span>
+                        <span className="lab-pane-head hidden" aria-hidden="true"><b>1</b>네 방향 사진</span>
+                        <span className="mb-1 block text-xs font-black text-neutral-500 lab-legacy-label">사진</span>
                         <div className="grid grid-cols-2 gap-2">
                             {PETLENS_PHOTO_VIEWS.map((view) => {
                                 const photo = photoViews[view.id];
@@ -666,6 +720,7 @@ export default function PetLensClient() {
                         {photoLoading && <p className="mt-2 text-xs font-black text-indigo-700">사진 준비 중</p>}
                     </div>
 
+                    <span className="lab-pane-head lab-pane-head-info hidden" aria-hidden="true"><b>2</b>우리 아이 정보</span>
                     <AppPetInfoFold name={name} age={age} size={size} coat={coat} activity={activity}>
                     <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-1">
                         <label>

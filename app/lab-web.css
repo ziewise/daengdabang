@@ -74,12 +74,77 @@ html:not(.ddb-app-mode) [data-lab-web] {
     & [data-petlens-pet-selector] > span:first-child { color: #047857; font-family: var(--font-jua), sans-serif; font-size: 15px; font-weight: 400; }
     & [data-petlens-pet-selector] > span:last-child { color: #3f8f73; }
 
-    /* 사진 분석 순서 — 점선 동그라미 셋(웹에서만) */
-    & .lab-steps { display: flex !important; --dw-step: 92px; max-width: 900px; margin: 0 auto 30px; }
+    /* 머리 판(작게) — 제목 아래 아이 고르기(견종 그림 알약) · 분석 고르기(그림 알약 둘). 원래 고르기 줄은 웹에서 숨김 */
+    & .lab-hero.is-compact { padding: 30px 38px; gap: 26px; }
+    & .lab-hero.is-compact .dw-h1 { font-size: clamp(26px, 2.6vw, 36px) !important; }
+    & .lab-hero.is-compact .dw-chero-ring { --dw-ring: 168px; padding: 11px; }
+    & .lab-legacy-controls { display: none; }
+    & .lab-hero-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin-top: 18px; }
+    & .lab-pet-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+    & .lab-pet-pill { display: inline-flex; align-items: center; gap: 8px; padding: 5px 16px 5px 5px; border-radius: 999px; background: #fff; color: #475569; font-size: 13.5px; font-weight: 800; box-shadow: 0 8px 14px -11px rgb(15 23 42 / 45%); transition: transform 0.18s ease; }
+    & .lab-pet-pill:hover:not(:disabled) { transform: translateY(-2px); }
+    & .lab-pet-pill:disabled { cursor: not-allowed; opacity: 0.55; }
+    & .lab-pet-pill small { color: #94a3b8; font-size: 11px; }
+    & .lab-pet-pill.is-on { background: var(--lab-pink); color: #fff; }
+    & .lab-pet-pill.is-on small { color: rgb(255 255 255 / 85%); }
+    & .lab-pet-face { position: relative; width: 34px; height: 34px; flex: none; overflow: hidden; border-radius: 999px; background: #fff8ef; box-shadow: inset 0 0 0 2px #fff; }
+    & .lab-pet-face.is-breed { background-position: 0 0; background-repeat: no-repeat; background-size: 400% 400%; }
+    & .lab-mode-pills { display: inline-flex; gap: 4px; padding: 5px; border-radius: 999px; background: rgb(255 255 255 / 75%); box-shadow: inset 0 2px 4px rgb(15 23 42 / 6%); }
+    & .lab-mode-pills button { display: inline-flex; align-items: center; gap: 8px; height: 42px; padding: 0 18px 0 6px; border-radius: 999px; color: var(--lab-soft); font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 15px; }
+    & .lab-mode-pills img { width: 32px; height: 32px; object-fit: contain; }
+    & .lab-mode-pills button.is-on { background: #fff; color: var(--lab-pink-deep); box-shadow: 0 0 0 2px #f7a8bf, 0 8px 14px -10px rgb(200 80 120 / 55%); }
 
-    /* 사진 분석 — 왼쪽 입력 판(흰 쿠션) · 오른쪽 결과 자리 */
-    & .lab-photo-grid { gap: 26px; }
-    & .lab-form { padding: 26px 24px !important; border-radius: 36px !important; }
+    /* 사진 분석 — 같은 높이 두 판(① 민트: 네 방향 사진 · ② 분홍: 우리 아이 정보 + 관심 포인트 + 추천 받기), 결과는 아래 전체 폭.
+       form 안 순서는 그대로 두고 격자로만 배치: 업로드 칸 = 왼쪽 칸 전체, 나머지 = 오른쪽 칸, 분홍 바탕은 form::before */
+    & .lab-photo-grid { grid-template-columns: minmax(0, 1fr) !important; gap: 0; }
+    & form.lab-form {
+        position: relative;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-rows: repeat(6, auto);
+        align-content: start;
+        column-gap: 22px;
+        row-gap: 14px;
+        padding: 0 !important;
+        border-radius: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+    }
+    & form.lab-form::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        grid-column: 2;
+        grid-row: 1 / 7;
+        border-radius: 40px;
+        background: #ffeef3;
+        box-shadow: var(--lab-cushion);
+    }
+    & form.lab-form > [data-petlens-page-multiview-upload] {
+        grid-column: 1;
+        grid-row: 1 / 7;
+        padding: 28px 30px;
+        border-radius: 40px;
+        background: #e9f8f1;
+        box-shadow: var(--lab-cushion);
+    }
+    & form.lab-form > .lab-pane-head-info,
+    & form.lab-form [data-app-fold-body] > div,
+    & form.lab-form > div:not([data-petlens-page-multiview-upload]):not([data-app-fold]),
+    & form.lab-form > button[type="submit"],
+    & form.lab-form > p { position: relative; grid-column: 2; margin: 0 30px; }
+    & form.lab-form > .lab-pane-head-info { margin-top: 28px; }
+    & form.lab-form > :last-child { margin-bottom: 28px; }
+    & form.lab-form > button[type="submit"] { width: auto !important; height: 52px; margin-top: 4px; border-radius: 999px !important; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 18px; }
+    & form.lab-form [data-app-fold-body] > div { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 12px !important; }
+    & form.lab-form [data-app-fold-body] > div:nth-child(2) > label:nth-child(3) { grid-column: 1 / -1; }
+    & .lab-pane-head { display: flex !important; align-items: center; gap: 10px; margin-bottom: 14px; color: var(--lab-ink); font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 20px; }
+    & .lab-pane-head b { display: grid; width: 28px; height: 28px; place-items: center; border-radius: 999px; background: #f0a020; color: #fff; font-family: var(--font-wanted-sans), sans-serif; font-size: 13px; font-weight: 900; }
+    & .lab-pane-head-info { margin-bottom: 0; }
+    & .lab-pane-head-info b { background: #12a17a; }
+    & .lab-legacy-label { display: none; }
+    & [data-petlens-page-multiview-upload] > .grid { gap: 12px; }
+    & .lab-slot { aspect-ratio: 5 / 4 !important; }
     & .lab-slot { border: 0 !important; border-radius: 24px !important; background: #fff8f0 !important; box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), inset 0 -8px 14px rgb(120 80 40 / 6%); transition: transform 0.18s ease; }
     & .lab-slot:hover { transform: translateY(-2px); }
     & .lab-slot-art { display: block !important; width: 64px; height: 64px; object-fit: contain; }
@@ -96,8 +161,16 @@ html:not(.ddb-app-mode) [data-lab-web] {
     }
     & .lab-concerns label:has(input:checked) { background: #fff1f5; color: var(--lab-pink-deep); box-shadow: inset 0 0 0 2px #f7a8bf, 0 8px 14px -12px rgb(200 80 120 / 55%); }
     & .lab-concerns input { accent-color: var(--lab-pink); }
-    & .lab-empty { display: flex; min-height: 360px; flex-direction: column; align-items: center; justify-content: center; padding: 40px 30px !important; border-radius: 40px !important; background: #f3f0fe !important; }
-    & .lab-empty-art { display: block !important; width: 120px; height: 120px; margin-bottom: 6px; object-fit: contain; }
+    & .lab-result { margin-top: 26px; }
+    & .surface.lab-empty, & .surface.lab-result-card { background: #f3f0fe !important; }
+    & .lab-empty { display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-rows: auto auto; column-gap: 20px; align-items: center; padding: 22px 30px !important; border-radius: 34px !important; background: #f3f0fe !important; text-align: left !important; }
+    & .lab-empty > * { margin: 0 !important; }
+    & .lab-empty-art { display: block !important; grid-row: 1 / span 2; width: 76px; height: 76px; object-fit: contain; }
+    & .lab-empty h2 { align-self: end; font-size: 19px !important; }
+    & .lab-empty p { align-self: start; }
+    & .lab-result-card { padding: 26px 28px !important; border-radius: 40px !important; background: #f3f0fe !important; }
+    & .lab-result-card [data-petlens-trust-result] { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+    & .lab-result-card [data-petlens-trust-result] > [data-petlens-result-hero] { grid-column: 1 / -1; }
     & .lab-empty-icon { display: none; }
     & .lab-result-card { border-radius: 36px !important; }
 
@@ -176,6 +249,22 @@ html:not(.ddb-app-mode) [data-lab-web] {
     & :is(.bg-black, .bg-neutral-950, .bg-neutral-900).rounded-3xl { border-radius: 32px !important; }
 }
 
+/* 태블릿 · 휴대폰 — 사진 판과 정보 판을 위아래로(분홍 판은 이어 붙인 조각으로 한 판처럼) */
+@media (max-width: 767px) {
+    html:not(.ddb-app-mode) [data-lab-web] {
+        & form.lab-form { grid-template-columns: minmax(0, 1fr); grid-template-rows: repeat(7, auto); }
+        & form.lab-form::before { grid-column: 1; grid-row: 2 / 8; border-radius: 30px; }
+        & form.lab-form > [data-petlens-page-multiview-upload] { grid-row: 1; padding: 22px 16px; border-radius: 30px; }
+        & form.lab-form > .lab-pane-head-info,
+        & form.lab-form [data-app-fold-body] > div,
+        & form.lab-form > div:not([data-petlens-page-multiview-upload]):not([data-app-fold]),
+        & form.lab-form > button[type="submit"],
+        & form.lab-form > p { grid-column: 1; margin: 0 16px; }
+        & form.lab-form > .lab-pane-head-info { margin-top: 22px; }
+        & form.lab-form > :last-child { margin-bottom: 22px; }
+    }
+}
+
 /* 휴대폰 */
 @media (max-width: 640px) {
     html:not(.ddb-app-mode) [data-lab-web] {
@@ -184,11 +273,13 @@ html:not(.ddb-app-mode) [data-lab-web] {
         & .lab-tab-art { width: 44px; height: 44px; }
         & .lab-tab-text { align-items: center !important; font-size: 14.5px; }
         & .lab-tab-help { display: none !important; }
-        & .lab-steps { --dw-step: 64px; gap: 6px; flex-wrap: nowrap !important; }
-        & .lab-steps > li { flex: 1 1 0 !important; }
-        & .lab-steps > li + li::before { display: none; }
-        & .lab-steps .dw-dstep-title { font-size: 14px; }
-        & .lab-steps .dw-dstep-body { display: none; }
+        & .lab-hero.is-compact { padding: 24px 18px; }
+        & .lab-hero-controls { justify-content: center; }
+        & .lab-mode-pills button { padding: 0 12px 0 4px; font-size: 13px; }
+        & .lab-mode-pills img { width: 26px; height: 26px; }
+        & .lab-empty { padding: 18px 18px !important; column-gap: 14px; }
+        & .lab-empty-art { width: 60px; height: 60px; }
+        & .lab-result-card { padding: 20px 14px !important; border-radius: 30px !important; }
         & .lab-form { padding: 20px 16px !important; border-radius: 30px !important; }
         & [data-petlens-member-gate] > div { padding: 28px 20px 24px; border-radius: 34px !important; }
     }
