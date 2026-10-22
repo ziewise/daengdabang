@@ -2323,7 +2323,7 @@ header + main .hero-shell {
     padding: 2px 8px 3px;
     border-radius: 999px;
     background: #fff8f2;
-    color: #6b7280;
+    color: #1f2937; /* 세부 항목 글자 검정(2026-10-22 사용자, 예전 회색 #6b7280) */
     font-size: 11.5px;
     font-weight: 700;
     box-shadow: 0 0 0 1px #f1e3d7;
