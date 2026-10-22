@@ -21,9 +21,9 @@ const DAILY_STEPS = [
     { label: "AI 변화 기록", detail: "사진·주간 비교 이어보기", icon: "/images/ui/daily-change-256.webp", w: 268, h: 176, badge: "bg-[#e9789a]" },
 ] as const;
 
-// 쿠션 그림자 · 카페24 제목 글꼴(매일 댕생활 페이지와 같은 값)
+// 쿠션 그림자 · 제목 글꼴(지마켓 산스, 매일 댕생활 페이지와 같은 값)
 const CUSHION = "shadow-[inset_0_3px_0_rgba(255,255,255,0.9),inset_0_-10px_18px_rgba(0,0,0,0.035),0_22px_36px_-24px_rgba(15,23,42,0.32)]";
-const TITLE_FONT = { fontFamily: '"Cafe24Ssurround", var(--font-wanted-sans), sans-serif', fontWeight: 400 } as const;
+const TITLE_FONT = { fontFamily: '"GmarketSans", var(--font-wanted-sans), sans-serif', fontWeight: 400 } as const;
 
 export default function DailyMineTeaser() {
     const { hydrated, user } = useAuth();

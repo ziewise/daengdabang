@@ -24,7 +24,7 @@ html:not(.ddb-app-mode) [data-daily-web] {
     /* ── 공용 글자: 제목은 카페24(손글씨 대신 또렷하게) ── */
     & .ddb-crayon-title {
         color: var(--dw-ink) !important;
-        font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif !important;
+        font-family: "GmarketSans", var(--font-wanted-sans), sans-serif !important;
         font-weight: 400 !important;
         letter-spacing: -0.02em !important;
         filter: none !important;
@@ -177,7 +177,7 @@ html:not(.ddb-app-mode) [data-daily-web] {
 
     & .dw-card-title {
         color: var(--dw-ink);
-        font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif;
+        font-family: "GmarketSans", var(--font-wanted-sans), sans-serif;
         font-size: 18px;
         line-height: 1.4;
         word-break: keep-all;
@@ -402,7 +402,7 @@ html:not(.ddb-app-mode) [data-daily-web] {
         border: 2.5px solid #fff;
         border-radius: 999px;
         color: #fff;
-        font-family: "Cafe24Ssurround", sans-serif;
+        font-family: "GmarketSans", sans-serif;
         font-size: 17px;
         box-shadow: 0 6px 12px -6px rgb(15 23 42 / 35%);
         transform: translateX(-50%);
@@ -727,7 +727,7 @@ html:not(.ddb-app-mode) [data-daily-web] {
         border-radius: 999px;
         background: var(--dw-pink);
         color: #fff;
-        font-family: "Cafe24Ssurround", sans-serif;
+        font-family: "GmarketSans", sans-serif;
         font-size: 11px;
     }
 
@@ -1015,7 +1015,7 @@ html:not(.ddb-app-mode) [data-daily-web] {
         margin-top: 4px;
         overflow: hidden;
         color: var(--dw-ink);
-        font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif;
+        font-family: "GmarketSans", var(--font-wanted-sans), sans-serif;
         font-size: 19px;
         font-weight: 400;
         text-overflow: ellipsis;
@@ -1178,7 +1178,7 @@ html:not(.ddb-app-mode) [data-daily-web] {
         border-radius: 999px;
         background: #8b72e0;
         color: #fff;
-        font-family: "Cafe24Ssurround", sans-serif;
+        font-family: "GmarketSans", sans-serif;
         font-size: 15px;
         transform: translateX(-50%);
         box-shadow: 0 6px 12px -6px rgb(40 30 80 / 40%);
@@ -1209,7 +1209,7 @@ html:not(.ddb-app-mode) [data-daily-web] {
 
     & .dw-paper-note > p:first-child {
         color: var(--dw-ink);
-        font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif;
+        font-family: "GmarketSans", var(--font-wanted-sans), sans-serif;
         font-size: 17px;
         font-weight: 400;
     }
@@ -2387,7 +2387,7 @@ html:not(.ddb-app-mode) [data-daily-web] {
     & .dw-goods-price {
         margin-top: 4px;
         color: #e2557a;
-        font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif;
+        font-family: "GmarketSans", var(--font-wanted-sans), sans-serif;
         font-size: 19px;
     }
 
@@ -2549,7 +2549,7 @@ html:not(.ddb-app-mode) [data-daily-web] {
         display: block;
         margin-top: 2px;
         color: var(--dw-ink);
-        font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif;
+        font-family: "GmarketSans", var(--font-wanted-sans), sans-serif;
         font-size: 19px;
         font-weight: 400;
     }
@@ -2592,7 +2592,7 @@ html:not(.ddb-app-mode) [data-daily-web] {
 
     & .dw-prodnote-title {
         color: var(--dw-ink);
-        font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif;
+        font-family: "GmarketSans", var(--font-wanted-sans), sans-serif;
         font-size: 18px;
     }
 
@@ -2638,7 +2638,7 @@ html:not(.ddb-app-mode) [data-daily-web] {
     & .dw-safe-head {
         margin-top: 12px;
         color: var(--dw-ink);
-        font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif;
+        font-family: "GmarketSans", var(--font-wanted-sans), sans-serif;
         font-size: 18px;
         font-weight: 400;
     }
@@ -2841,7 +2841,7 @@ html:not(.ddb-app-mode) [data-daily-web] {
     & .dw-round-title {
         margin-top: 16px;
         color: var(--dw-ink);
-        font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif;
+        font-family: "GmarketSans", var(--font-wanted-sans), sans-serif;
         font-size: 20px;
         font-weight: 400;
     }
@@ -3059,7 +3059,7 @@ html:not(.ddb-app-mode) [data-daily-web] {
     & .dw-dstep-title {
         margin-top: 12px;
         color: var(--dw-ink);
-        font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif;
+        font-family: "GmarketSans", var(--font-wanted-sans), sans-serif;
         font-size: 18px;
         font-weight: 400;
         word-break: keep-all;
@@ -3251,7 +3251,7 @@ html:not(.ddb-app-mode) [data-my-pet-hub][data-daily-web] {
     & .dw-book-name {
         margin: 0;
         color: var(--dw-ink);
-        font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif;
+        font-family: "GmarketSans", var(--font-wanted-sans), sans-serif;
         font-size: clamp(32px, 3.4vw, 44px);
         font-weight: 400;
         line-height: 1.15;
@@ -3372,7 +3372,7 @@ html:not(.ddb-app-mode) [data-my-pet-hub][data-daily-web] {
     & .dw-book-story-title {
         margin: 12px 0 0;
         color: var(--dw-ink);
-        font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif;
+        font-family: "GmarketSans", var(--font-wanted-sans), sans-serif;
         font-size: clamp(22px, 2.2vw, 28px);
         font-weight: 400;
         line-height: 1.35;
@@ -3929,7 +3929,7 @@ html:not(.ddb-app-mode) [data-daily-web] {
     & .dw-gcover-ring b {
         display: block;
         color: #e2557a;
-        font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif;
+        font-family: "GmarketSans", var(--font-wanted-sans), sans-serif;
         font-size: 58px;
         font-weight: 400;
         line-height: 1;
@@ -4055,7 +4055,7 @@ html:not(.ddb-app-mode) [data-daily-web] {
     & .dw-tlogin-title {
         margin-top: 12px;
         color: var(--dw-ink);
-        font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif;
+        font-family: "GmarketSans", var(--font-wanted-sans), sans-serif;
         font-size: 19px;
         font-weight: 400;
         line-height: 1.4;
@@ -4321,7 +4321,7 @@ html:not(.ddb-app-mode) [data-daily-web] {
     & .dw-zoom-caption strong {
         margin-top: 4px;
         color: var(--dw-ink);
-        font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif;
+        font-family: "GmarketSans", var(--font-wanted-sans), sans-serif;
         font-size: 21px;
         font-weight: 400;
     }
@@ -4336,7 +4336,7 @@ html:not(.ddb-app-mode) [data-daily-web] {
     & .dw-zoom-price {
         margin-top: 2px;
         color: #e2557a;
-        font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif;
+        font-family: "GmarketSans", var(--font-wanted-sans), sans-serif;
         font-size: 19px;
     }
 
@@ -4452,7 +4452,7 @@ html:not(.ddb-app-mode) [data-daily-web] {
         gap: 10px;
         margin-top: 24px;
         color: var(--dw-ink);
-        font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif;
+        font-family: "GmarketSans", var(--font-wanted-sans), sans-serif;
         font-size: 19px;
     }
 
@@ -4642,14 +4642,14 @@ html:not(.ddb-app-mode) [data-daily-web] {
         border-radius: 999px;
         background: #fff;
         color: var(--dw-place-ink);
-        font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif;
+        font-family: "GmarketSans", var(--font-wanted-sans), sans-serif;
         font-size: 16px;
         box-shadow: 0 6px 12px -8px rgb(15 23 42 / 40%);
     }
 
     & .dw-place-name {
         color: var(--dw-ink);
-        font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif;
+        font-family: "GmarketSans", var(--font-wanted-sans), sans-serif;
         font-size: 16px;
         font-weight: 400;
     }
@@ -4728,7 +4728,7 @@ html:not(.ddb-app-mode) [data-daily-web] {
 
     & .ddb-treasure-prep-scene.dw-prep strong {
         color: #7c4a03;
-        font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif;
+        font-family: "GmarketSans", var(--font-wanted-sans), sans-serif;
         font-size: 15px;
         font-weight: 400;
     }
