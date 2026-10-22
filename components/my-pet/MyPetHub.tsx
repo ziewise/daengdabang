@@ -40,12 +40,12 @@ function formatShortDate(value?: string) {
     return new Intl.DateTimeFormat("ko-KR", { timeZone: "Asia/Seoul", month: "long", day: "numeric" }).format(date);
 }
 
-// 촬영 방향 그림(정면 · 왼쪽 · 오른쪽 · 뒷면)
-const VIEW_ICONS: Record<string, string> = {
-    front: "fa-face-smile",
-    left: "fa-arrow-left",
-    right: "fa-arrow-right",
-    back: "fa-arrow-rotate-left",
+// 촬영 방향 그림(정면 · 왼쪽 · 오른쪽 · 뒷면) — 사용자 그림(2026-10-22, public/images/우리아이*.png → 160px webp)
+const VIEW_ART: Record<string, string> = {
+    front: "/images/ui/mypet-view-front-160.webp",
+    left: "/images/ui/mypet-view-left-160.webp",
+    right: "/images/ui/mypet-view-right-160.webp",
+    back: "/images/ui/mypet-view-back-160.webp",
 };
 
 // 지난 쪽 카드 바탕 차례(분홍 · 노랑 · 민트 · 하늘 · 보라)
@@ -340,8 +340,7 @@ export default function MyPetHub() {
                     <span className="dw-cam-flash" aria-hidden="true" />
                     <div className="dw-cam-lens" aria-hidden="true">
                         <div className="dw-cam-glass">
-                            <span className="dw-cam-shine" />
-                            <CrayonDoodle kind="paw" className="dw-cam-paw" />
+                            <Image src="/images/ui/mypet-shutter-384.webp" alt="" width={230} height={230} className="dw-cam-shutter" />
                         </div>
                     </div>
                     <div className="min-w-0">
@@ -351,7 +350,7 @@ export default function MyPetHub() {
                         <ol className="dw-cam-steps" aria-label="촬영 방향 순서">
                             {PETLENS_PHOTO_VIEWS.map((view, index) => (
                                 <li key={view.id}>
-                                    <span aria-hidden="true"><i className={`fa-solid ${VIEW_ICONS[view.id]}`} /></span>
+                                    <span aria-hidden="true"><Image src={VIEW_ART[view.id]} alt="" width={72} height={72} /></span>
                                     <strong>{index + 1}. {view.label}</strong>
                                     <small>{view.helper}</small>
                                 </li>
@@ -412,9 +411,9 @@ export default function MyPetHub() {
                 </div>
                 <div className="dw-rounds">
                     {[
-                        { href: "/pet-lens/", art: "/images/ui/pet-lens-v2-256.webp", title: "펫렌즈 사진 분석", body: "오늘 모습을 한 장으로 바로 살펴봐요.", go: "바로 살펴보기", tint: "is-pink" },
+                        { href: "/pet-lens/", art: "/images/ui/mypet-analysis-256.webp", title: "펫렌즈 사진 분석", body: "오늘 모습을 한 장으로 바로 살펴봐요.", go: "바로 살펴보기", tint: "is-pink" },
                         { href: "/pet-lens/?mode=observation#observation", art: "/images/ui/menu-lab-observation-128.webp", title: "행동·소리 분석", body: "궁금한 행동·소리 영상을 따로 관찰해요.", go: "열어 보기", tint: "is-lav" },
-                        { href: "/chat/", art: "/images/ui/caretalk-web-128.webp", title: "케어톡 상담", body: "그림책을 보다 궁금한 점을 물어봐요.", go: "물어보기", tint: "is-yellow" },
+                        { href: "/chat/", art: "/images/ui/mypet-caretalk-256.webp", title: "케어톡 상담", body: "그림책을 보다 궁금한 점을 물어봐요.", go: "물어보기", tint: "is-yellow" },
                     ].map((item) => (
                         <Link key={item.href} href={item.href} className={`dw-round ${item.tint}`}>
                             <span className="dw-round-art" aria-hidden="true"><Image src={item.art} alt="" width={120} height={120} /></span>
