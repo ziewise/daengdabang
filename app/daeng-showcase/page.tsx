@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import DaengShowcaseClient from "@/components/daeng-showcase/DaengShowcaseClient";
+// 웹 기록 결 꾸밈(2026-10-22) — data-daily-web 범위
+import "../daily-web.css";
 
 export const metadata: Metadata = {
     title: "오늘의 댕자랑 | 반려견 일상 커뮤니티 | 댕다방",

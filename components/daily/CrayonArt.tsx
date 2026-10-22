@@ -4,7 +4,7 @@
  * CrayonGrainFilter: 크레파스 결 SVG 필터(#dw-crayon-grain) — 낙서 그림과 CSS 의 무지개 테 고리(.dw-rring · .dw-book-ring · .dw-cam-lens)가 같이 씀.
  *   페이지마다 한 번 넣음. 화면에 보이지 않는 0×0 그림.
  * CrayonDoodle: 발바닥 · 뼈다귀 · 하트 · 별 낙서(색은 CSS color).
- * PawTrail: 구역 사이를 잇는 발자국 네 개(지그재그).
+ * PawTrail: 구역 사이를 잇는 발자국 두 개(지그재그) — 모든 구역 간격은 발자국 두 개(2026-10-22 사용자).
  * 모두 꾸밈 전용(aria-hidden) — 기능 없음. 스타일은 app/daily-web.css(.dw-doodle · .dw-paw-trail).
  */
 
@@ -52,8 +52,8 @@ export function CrayonDoodle({ kind, className = "" }: { kind: "paw" | "bone" | 
     );
 }
 
-// 구역 사이 발자국(지그재그, 기본 네 걸음 · steps={2} 이면 두 걸음짜리 짧은 간격)
-export function PawTrail({ steps = 4 }: { steps?: 2 | 4 }) {
+// 구역 사이 발자국(지그재그, 기본 두 걸음 — 모든 페이지 구역 간격 통일 · steps={4} 는 쓰지 않음)
+export function PawTrail({ steps = 2 }: { steps?: 2 | 4 }) {
     return (
         <div className={`dw-paw-trail ${steps === 2 ? "is-short" : ""}`} aria-hidden="true">
             {Array.from({ length: steps }, (_, step) => <CrayonDoodle key={step} kind="paw" />)}

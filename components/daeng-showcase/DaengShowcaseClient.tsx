@@ -1,7 +1,14 @@
 "use client";
 
+/**
+ * DaengShowcaseClient — 오늘의 댕자랑(2026-10-22 웹 기록 결로 꾸밈: 분홍 머리 판 · 댕주제 무대 · 민트 올리기 판 · 파스텔 카드)
+ * 기능(피드 · 주제 · 올리기 · 팔로우 · 응원 · 공유 · 신고 · 쪽 넘김)과 문구는 그대로. 꾸밈 CSS 는 app/daily-web.css "댕자랑" 묶음.
+ */
+
 import { useCallback, useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
+import { CrayonGrainFilter, PawTrail } from "@/components/daily/CrayonArt";
 import { useRouter } from "next/navigation";
 import ShowcaseAuthorProfileModal from "@/components/daeng-showcase/ShowcaseAuthorProfileModal";
 import ShowcaseCard from "@/components/daeng-showcase/ShowcaseCard";
@@ -28,7 +35,7 @@ import { useAuth } from "@/lib/store";
 
 const SHOWCASE_LOGIN_HREF = "/auth/login?redirect=%2Fdaeng-showcase%2F";
 const SHOWCASE_SIGNUP_HREF = "/auth/signup?redirect=%2Fdaeng-showcase%2F";
-const SHOWCASE_PAGE_SIZE = 9;
+const SHOWCASE_PAGE_SIZE = 16; // 한 번에 16장(PC 한 줄 4장 × 4줄) + 아래 "댕자랑 더보기"(2026-10-22 사용자)
 
 function deepLinkedPostId() {
     if (typeof window === "undefined") return "";
@@ -69,9 +76,9 @@ function mergeUniquePosts(primary: ShowcasePost[], secondary: ShowcasePost[]) {
 
 function FeedSkeleton() {
     return (
-        <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3" aria-label="댕자랑 피드 불러오는 중" aria-busy="true">
-            {Array.from({ length: 6 }, (_, index) => (
-                <div key={index} className="overflow-hidden rounded-[26px] border border-white bg-white shadow-card">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" aria-label="댕자랑 피드 불러오는 중" aria-busy="true">
+            {Array.from({ length: 8 }, (_, index) => (
+                <div key={index} className="dw-csheet dw-sc-card">
                     <div className="flex items-center gap-3 p-4">
                         <span className="h-11 w-11 animate-pulse rounded-full bg-neutral-200 motion-reduce:animate-none" />
                         <span className="h-4 w-28 animate-pulse rounded-full bg-neutral-200 motion-reduce:animate-none" />
@@ -96,8 +103,8 @@ export default function DaengShowcaseClient() {
     const [posts, setPosts] = useState<ShowcasePost[]>([]);
     const [nextCursor, setNextCursor] = useState("");
     const [pageCursor, setPageCursor] = useState("");
-    const [pageHistory, setPageHistory] = useState<string[]>([]);
-    const [pageNumber, setPageNumber] = useState(1);
+    // 더보기로 다음 묶음을 불러오는 중(이미 보이는 카드는 그대로 둠)
+    const [loadingMore, setLoadingMore] = useState(false);
     const [loading, setLoading] = useState(true);
     const [feedError, setFeedError] = useState("");
     const [refreshKey, setRefreshKey] = useState(0);
@@ -202,7 +209,10 @@ export default function DaengShowcaseClient() {
                 return;
             }
 
-            setLoading(true);
+            // pageCursor 가 있으면 "더보기" — 아래에 이어 붙이고, 없으면 첫 묶음을 새로 보여 줌
+            const appending = Boolean(pageCursor);
+            if (appending) setLoadingMore(true);
+            else setLoading(true);
             setFeedError("");
             const requestedPostId = scope === "all" && !pageCursor ? deepLinkedPostId() : "";
 
@@ -233,10 +243,16 @@ export default function DaengShowcaseClient() {
                 } else {
                     setHighlightedPostId("");
                 }
-                setPosts(nextPosts);
+                if (appending) setPosts((current) => mergeUniquePosts(current, feed.items));
+                else setPosts(nextPosts);
                 setNextCursor(feed.nextCursor || "");
             } catch (reason) {
                 if (reason instanceof DOMException && reason.name === "AbortError") return;
+                if (appending) {
+                    // 더보기 실패 — 이미 보이는 카드는 지우지 않고 안내만
+                    showNotice(reason instanceof Error ? reason.message : "댕자랑을 더 불러오지 못했어요.", true);
+                    return;
+                }
                 if (reason instanceof ShowcaseApiError && reason.status === 401) {
                     setFeedError("팔로잉 피드는 로그인 후 볼 수 있어요.");
                 } else {
@@ -245,7 +261,10 @@ export default function DaengShowcaseClient() {
                 setPosts([]);
                 setNextCursor("");
             } finally {
-                if (!controller.signal.aborted) setLoading(false);
+                if (!controller.signal.aborted) {
+                    setLoading(false);
+                    setLoadingMore(false);
+                }
             }
         })();
 
@@ -262,30 +281,13 @@ export default function DaengShowcaseClient() {
         }
         if (nextScope === scope) return;
         setPageCursor("");
-        setPageHistory([]);
-        setPageNumber(1);
         setScope(nextScope);
     };
 
-    const scrollToFeed = () => {
-        setTimeout(() => document.getElementById("showcase-feed-title")?.scrollIntoView({ behavior: "smooth", block: "start" }), 80);
-    };
-
-    const showPreviousPage = () => {
-        if (loading || pageHistory.length === 0) return;
-        const previousCursor = pageHistory[pageHistory.length - 1] || "";
-        setPageHistory((current) => current.slice(0, -1));
-        setPageCursor(previousCursor);
-        setPageNumber((current) => Math.max(1, current - 1));
-        scrollToFeed();
-    };
-
-    const showNextPage = () => {
-        if (loading || !nextCursor) return;
-        setPageHistory((current) => [...current, pageCursor]);
+    // 댕자랑 더보기 — 다음 16장을 아래에 이어 붙임
+    const showMorePosts = () => {
+        if (loading || loadingMore || !nextCursor) return;
         setPageCursor(nextCursor);
-        setPageNumber((current) => current + 1);
-        scrollToFeed();
     };
 
     const showExactPost = (post: ShowcasePost, topicId = post.topic?.topicId || "") => {
@@ -356,68 +358,63 @@ export default function DaengShowcaseClient() {
         .map((pet) => ({ id: pet.apiProfileId, name: pet.name, breed: pet.breed }));
 
     return (
-        <main className="w-full overflow-x-clip pb-14 md:pb-20">
-            <section className="px-4 pt-8 sm:px-6 md:pt-12" aria-labelledby="daeng-showcase-title">
-                <div className="ddb-crayon-paper ddb-crayon-banner relative mx-auto max-w-[1352px] overflow-hidden rounded-[34px] border px-5 py-8 shadow-card sm:px-8 md:px-10 md:py-11">
-                    <div className="absolute -right-12 -top-10 h-44 w-44 rounded-full bg-rose-200/35 blur-3xl" aria-hidden="true" />
-                    <div className="absolute -bottom-16 left-[22%] h-44 w-44 rounded-full bg-cyan-200/35 blur-3xl" aria-hidden="true" />
-                    <div className="absolute right-[14%] top-8 h-2 w-40 rotate-[-6deg] rounded-full bg-cyan-400/25 shadow-[0_10px_0_rgba(244,114,182,.18),0_20px_0_rgba(245,158,11,.2)]" aria-hidden="true" />
-
-                    <div className="relative grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-end">
-                        <div>
-                            <div className="flex flex-wrap items-center gap-2">
-                                <p className="ddb-crayon-kicker text-xs">DAENGDABANG SHOWCASE</p>
-                                <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-[10px] font-black text-emerald-800">
-                                    지금 참여 가능
-                                </span>
-                            </div>
-                            <h1 id="daeng-showcase-title" className="ddb-crayon-title mt-3 max-w-4xl break-keep text-4xl leading-tight text-neutral-950 md:text-6xl">
-                                누구나 보고, 회원이면 바로 올리는<br />
-                                <span className="ddb-crayon-underline">오늘의 댕자랑</span>
-                            </h1>
-                            <p className="mt-5 max-w-3xl break-keep text-sm font-bold leading-7 text-neutral-650 md:text-base">
-                                귀여운 표정부터 함께 만든 돌봄 습관까지, 우리 아이의 오늘을 나누고 마음에 드는 친구를 팔로우해 보세요.
-                                공개 피드는 로그인 없이 볼 수 있고 사진 올리기·팔로우·뼈다귀 응원은 회원이 바로 이용할 수 있어요.
-                            </p>
-                            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-                                {authenticated ? (
-                                    <button
-                                        type="button"
-                                        onClick={() => document.getElementById("showcase-composer")?.scrollIntoView({ behavior: "smooth", block: "start" })}
-                                        className="ddb-crayon-link ddb-attention-cta inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-5 text-sm font-black"
-                                    >
-                                        <i className="fa-solid fa-camera" aria-hidden="true" />
-                                        사진 올리기
-                                    </button>
-                                ) : (
-                                    <Link href={signupHref} className="ddb-crayon-link ddb-attention-cta inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-5 text-sm font-black">
-                                        <i className="fa-solid fa-user-plus" aria-hidden="true" />
-                                        회원가입하고 시작
-                                    </Link>
-                                )}
+        <main className="w-full overflow-x-clip pb-14 md:pb-20" data-daily-web>
+            <CrayonGrainFilter />
+            {/* 머리 판 — 커뮤니티와 같은 분홍 쿠션 + 무지개 고리 그림 */}
+            <section className="dw-sc-wrap pt-8 md:pt-12" aria-labelledby="daeng-showcase-title">
+                <div className="dw-csheet is-pink dw-chero">
+                    <div className="min-w-0">
+                        <div className="flex flex-wrap items-center gap-2">
+                            <p className="ddb-crayon-kicker dw-kicker">DAENGDABANG SHOWCASE</p>
+                            <span className="dw-chip dw-sc-chip-live">지금 참여 가능</span>
+                        </div>
+                        <h1 id="daeng-showcase-title" className="ddb-crayon-title dw-h1">
+                            누구나 보고, 회원이면 바로 올리는<br />
+                            <span className="ddb-crayon-underline">오늘의 댕자랑</span>
+                        </h1>
+                        <p className="dw-lead">
+                            귀여운 표정부터 함께 만든 돌봄 습관까지, 우리 아이의 오늘을 나누고 마음에 드는 친구를 팔로우해 보세요.
+                            공개 피드는 로그인 없이 볼 수 있고 사진 올리기·팔로우·뼈다귀 응원은 회원이 바로 이용할 수 있어요.
+                        </p>
+                        <div className="dw-sc-actions">
+                            {authenticated ? (
                                 <button
                                     type="button"
-                                    onClick={() => document.getElementById("showcase-feed")?.scrollIntoView({ behavior: "smooth", block: "start" })}
-                                    className="ddb-motion-lift inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-indigo-200 bg-white px-5 text-sm font-black text-indigo-900 transition hover:border-indigo-400 hover:bg-indigo-50 motion-reduce:transform-none motion-reduce:transition-none"
+                                    onClick={() => document.getElementById("showcase-composer")?.scrollIntoView({ behavior: "smooth", block: "start" })}
+                                    className="ddb-crayon-link ddb-attention-cta dw-pill dw-pill-main"
                                 >
-                                    최신 댕자랑 보기
-                                    <i className="fa-solid fa-arrow-down text-xs" aria-hidden="true" />
+                                    <i className="fa-solid fa-camera mr-2" aria-hidden="true" />
+                                    사진 올리기
                                 </button>
-                            </div>
+                            ) : (
+                                <Link href={signupHref} className="ddb-crayon-link ddb-attention-cta dw-pill dw-pill-main">
+                                    <i className="fa-solid fa-user-plus mr-2" aria-hidden="true" />
+                                    회원가입하고 시작
+                                </Link>
+                            )}
+                            <button
+                                type="button"
+                                onClick={() => document.getElementById("showcase-feed")?.scrollIntoView({ behavior: "smooth", block: "start" })}
+                                className="ddb-motion-lift dw-pill"
+                            >
+                                최신 댕자랑 보기
+                                <i className="fa-solid fa-arrow-down ml-2 text-xs" aria-hidden="true" />
+                            </button>
                         </div>
-
-                        <aside className="rounded-[26px] border border-white/90 bg-white/80 p-5 shadow-sm backdrop-blur-sm" aria-label="댕자랑 이용 안내">
-                            <p className="ddb-crayon-kicker text-[11px]">OPEN COMMUNITY</p>
-                            <h2 className="ddb-crayon-title mt-2 text-2xl text-neutral-950">가볍게 나누고 안전하게 지켜요</h2>
-                            <ul className="mt-4 space-y-3 text-xs font-bold leading-5 text-neutral-650">
-                                <li className="flex gap-2"><i className="fa-solid fa-eye mt-1 text-cyan-700" aria-hidden="true" /><span>누구나 공개 피드를 볼 수 있어요.</span></li>
-                                <li className="flex gap-2"><i className="fa-solid fa-user-group mt-1 text-rose-700" aria-hidden="true" /><span>회원은 게시·팔로우·응원을 바로 이용해요.</span></li>
-                                <li className="flex gap-2"><i className="fa-solid fa-shield-heart mt-1 text-amber-700" aria-hidden="true" /><span>개인정보 노출 등은 신고하면 운영자가 확인해요.</span></li>
-                            </ul>
-                        </aside>
+                        {/* 이용 안내 세 줄 → 칩 */}
+                        <ul className="dw-sc-rules" aria-label="댕자랑 이용 안내">
+                            <li className="dw-chip"><i className="fa-solid fa-eye mr-1.5" aria-hidden="true" />누구나 공개 피드를 볼 수 있어요</li>
+                            <li className="dw-chip"><i className="fa-solid fa-user-group mr-1.5" aria-hidden="true" />회원은 게시·팔로우·응원을 바로 이용해요</li>
+                            <li className="dw-chip"><i className="fa-solid fa-shield-heart mr-1.5" aria-hidden="true" />개인정보 노출 등은 신고하면 운영자가 확인해요</li>
+                        </ul>
                     </div>
+                    <span className="dw-rring dw-chero-ring" aria-hidden="true">
+                        <span><Image src="/images/ui/daily-hero-community-384.webp" alt="" width={230} height={230} priority /></span>
+                    </span>
                 </div>
             </section>
+
+            <PawTrail />
 
             <ShowcaseTopicCard
                 topic={topic}
@@ -439,9 +436,11 @@ export default function DaengShowcaseClient() {
                 onViewFeatured={(post) => showExactPost(post, topic?.topicId || post.topic?.topicId || "")}
             />
 
-            <section id="showcase-composer" className="mx-auto max-w-[1352px] scroll-mt-28 px-4 pt-8 sm:px-6 md:pt-10" aria-label="댕자랑 작성">
+            {/* 구역 사이는 늘 발자국 두 개(2026-10-22 사용자) */}
+            <PawTrail />
+            <section id="showcase-composer" className="dw-sc-wrap scroll-mt-28" aria-label="댕자랑 작성">
                 {!hydrated ? (
-                    <div className="h-44 animate-pulse rounded-[30px] border border-white bg-white/75 shadow-card motion-reduce:animate-none" aria-label="회원 상태 확인 중" />
+                    <div className="dw-csheet is-mint h-44 animate-pulse motion-reduce:animate-none" aria-label="회원 상태 확인 중" />
                 ) : authenticated && user ? (
                     <ShowcaseComposer
                         accessToken={accessToken}
@@ -451,35 +450,35 @@ export default function DaengShowcaseClient() {
                         onCreated={handleCreated}
                     />
                 ) : (
-                    <div className="ddb-crayon-paper rounded-[30px] border p-5 shadow-card sm:p-7">
-                        <div className="grid gap-5 md:grid-cols-[minmax(0,1fr)_auto] md:items-center">
-                            <div>
-                                <p className="ddb-crayon-kicker text-[11px]">JOIN &amp; SHARE</p>
-                                <h2 className="ddb-crayon-title mt-1 text-3xl text-neutral-950">회원가입하면 바로 올릴 수 있어요</h2>
-                                <p className="mt-3 text-sm font-bold leading-6 text-neutral-600">가입 후 사진 한 장과 오늘의 이야기를 공개하고, 마음에 드는 친구를 팔로우해 보세요.</p>
-                            </div>
-                            <div className="flex flex-col gap-2 sm:flex-row">
-                                <Link href={signupHref} className="ddb-crayon-link inline-flex min-h-11 items-center justify-center rounded-full px-5 text-sm font-black">회원가입</Link>
-                                <Link href={loginHref} className="inline-flex min-h-11 items-center justify-center rounded-full border border-neutral-300 bg-white px-5 text-sm font-black text-neutral-700">로그인</Link>
-                            </div>
+                    <div className="dw-csheet is-mint dw-sc-join">
+                        <span className="dw-rring" aria-hidden="true"><span><Image src="/images/ui/mypet-shutter-384.webp" alt="" width={96} height={96} /></span></span>
+                        <div className="min-w-0">
+                            <p className="ddb-crayon-kicker dw-kicker">JOIN &amp; SHARE</p>
+                            <h2 className="dw-tlogin-title">회원가입하면 바로 올릴 수 있어요</h2>
+                            <p className="dw-tlogin-body">가입 후 사진 한 장과 오늘의 이야기를 공개하고, 마음에 드는 친구를 팔로우해 보세요.</p>
+                        </div>
+                        <div className="dw-sc-actions">
+                            <Link href={signupHref} className="ddb-crayon-link dw-pill dw-pill-main">회원가입</Link>
+                            <Link href={loginHref} className="ddb-motion-lift dw-pill">로그인</Link>
                         </div>
                     </div>
                 )}
             </section>
 
-            <section id="showcase-feed" className="mx-auto max-w-[1352px] scroll-mt-28 px-4 pt-10 sm:px-6 md:pt-14" aria-labelledby="showcase-feed-title">
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <PawTrail />
+            <section id="showcase-feed" className="dw-sc-wrap scroll-mt-28" aria-labelledby="showcase-feed-title">
+                <div className="dw-sc-feedhead">
                     <div>
-                        <p className="ddb-crayon-kicker text-xs">TODAY&apos;S SHOWCASE</p>
-                        <h2 id="showcase-feed-title" className="ddb-crayon-title ddb-crayon-underline mt-2 text-3xl text-neutral-950 md:text-4xl">오늘 올라온 댕자랑</h2>
+                        <p className="ddb-crayon-kicker dw-kicker">TODAY&apos;S SHOWCASE</p>
+                        <h2 id="showcase-feed-title" className="ddb-crayon-title ddb-crayon-underline dw-rhead-title">오늘 올라온 댕자랑</h2>
                     </div>
-                    <div className="inline-flex self-start rounded-full border border-neutral-200 bg-white p-1 shadow-sm" role="tablist" aria-label="댕자랑 피드 범위">
+                    <div className="dw-sc-tabs" role="tablist" aria-label="댕자랑 피드 범위">
                         <button
                             type="button"
                             role="tab"
                             aria-selected={scope === "all"}
                             onClick={() => chooseScope("all")}
-                            className={`min-h-10 rounded-full px-5 text-xs font-black transition ${scope === "all" ? "bg-neutral-900 text-white" : "text-neutral-600 hover:bg-neutral-100"}`}
+                            className={scope === "all" ? "is-on" : ""}
                         >
                             전체
                         </button>
@@ -488,7 +487,7 @@ export default function DaengShowcaseClient() {
                             role="tab"
                             aria-selected={scope === "following"}
                             onClick={() => chooseScope("following")}
-                            className={`min-h-10 rounded-full px-5 text-xs font-black transition ${scope === "following" ? "bg-neutral-900 text-white" : "text-neutral-600 hover:bg-neutral-100"}`}
+                            className={scope === "following" ? "is-on" : ""}
                         >
                             팔로잉
                         </button>
@@ -497,23 +496,23 @@ export default function DaengShowcaseClient() {
 
                 <div className="mt-6">
                     {loading ? <FeedSkeleton /> : feedError && posts.length === 0 ? (
-                        <div className="rounded-[28px] border border-red-200 bg-red-50/80 p-7 text-center">
-                            <i className="fa-solid fa-cloud-arrow-down text-2xl text-red-500" aria-hidden="true" />
-                            <p className="mt-3 text-sm font-black text-red-900">{feedError}</p>
-                            <div className="mt-4 flex flex-wrap justify-center gap-2">
-                                <button type="button" onClick={() => setRefreshKey((value) => value + 1)} className="min-h-10 rounded-full border border-red-300 bg-white px-4 text-xs font-black text-red-800">다시 불러오기</button>
-                                {scope === "following" ? <button type="button" onClick={requireAuth} className="min-h-10 rounded-full bg-neutral-900 px-4 text-xs font-black text-white">로그인</button> : null}
+                        <div className="dw-csheet is-pink dw-sc-empty">
+                            <i className="fa-solid fa-cloud-arrow-down text-2xl text-rose-400" aria-hidden="true" />
+                            <p className="dw-tlogin-title">{feedError}</p>
+                            <div className="dw-sc-actions justify-center">
+                                <button type="button" onClick={() => setRefreshKey((value) => value + 1)} className="ddb-motion-lift dw-pill dw-pill-sm">다시 불러오기</button>
+                                {scope === "following" ? <button type="button" onClick={requireAuth} className="ddb-crayon-link dw-pill dw-pill-main dw-pill-sm">로그인</button> : null}
                             </div>
                         </div>
                     ) : posts.length === 0 ? (
-                        <div className="ddb-crayon-paper rounded-[28px] border p-8 text-center shadow-card">
-                            <span className="ddb-crayon-icon mx-auto grid h-14 w-14 place-items-center rounded-2xl text-xl text-white" data-crayon-tone="teal"><i className="fa-solid fa-paw" aria-hidden="true" /></span>
-                            <h3 className="ddb-crayon-title mt-4 text-2xl text-neutral-950">{scope === "following" ? "팔로우한 친구의 첫 소식을 기다려요" : "첫 번째 댕자랑의 주인공이 되어 주세요"}</h3>
-                            <p className="mx-auto mt-2 max-w-xl text-sm font-bold leading-6 text-neutral-600">{scope === "following" ? "전체 피드에서 마음에 드는 친구를 팔로우하면 이곳에 새 글이 모여요." : "회원이라면 위 작성 칸에서 사진 한 장과 오늘의 이야기를 바로 공개할 수 있어요."}</p>
-                            {scope === "following" ? <button type="button" onClick={() => setScope("all")} className="ddb-crayon-link mt-4 min-h-10 rounded-full px-5 text-xs font-black">전체 피드 보기</button> : null}
+                        <div className="dw-csheet is-mint dw-sc-empty">
+                            <span className="dw-rring" aria-hidden="true"><span><Image src="/images/ui/daily-hero-community-384.webp" alt="" width={96} height={96} /></span></span>
+                            <h3 className="dw-tlogin-title">{scope === "following" ? "팔로우한 친구의 첫 소식을 기다려요" : "첫 번째 댕자랑의 주인공이 되어 주세요"}</h3>
+                            <p className="dw-tlogin-body">{scope === "following" ? "전체 피드에서 마음에 드는 친구를 팔로우하면 이곳에 새 글이 모여요." : "회원이라면 위 작성 칸에서 사진 한 장과 오늘의 이야기를 바로 공개할 수 있어요."}</p>
+                            {scope === "following" ? <button type="button" onClick={() => setScope("all")} className="ddb-crayon-link dw-pill dw-pill-main dw-pill-sm mt-4">전체 피드 보기</button> : null}
                         </div>
                     ) : (
-                        <div className="grid items-stretch gap-5 sm:grid-cols-2 xl:grid-cols-3">
+                        <div className="grid items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                             {posts.map((post) => (
                                 <ShowcaseCard
                                     key={post.postId}
@@ -534,28 +533,13 @@ export default function DaengShowcaseClient() {
                     )}
                 </div>
 
-                {(pageNumber > 1 || nextCursor) && !loading ? (
-                    <nav className="mt-7 flex items-center justify-center gap-3" aria-label="댕자랑 페이지 이동">
-                        <button
-                            type="button"
-                            onClick={showPreviousPage}
-                            disabled={pageHistory.length === 0}
-                            className="ddb-motion-lift inline-flex min-h-11 items-center gap-2 rounded-full border border-neutral-200 bg-white px-5 text-xs font-black text-neutral-700 shadow-sm transition hover:border-indigo-300 hover:text-indigo-800 disabled:cursor-not-allowed disabled:opacity-40 motion-reduce:transform-none motion-reduce:transition-none"
-                        >
-                            <i className="fa-solid fa-chevron-left text-[10px]" aria-hidden="true" />
-                            이전
+                {nextCursor && !loading ? (
+                    <div className="dw-sc-morewrap">
+                        <button type="button" onClick={showMorePosts} disabled={loadingMore} className="ddb-motion-lift dw-pill">
+                            {loadingMore ? "불러오는 중…" : "댕자랑 더보기"}
+                            <i className={`fa-solid ${loadingMore ? "fa-circle-notch fa-spin" : "fa-chevron-down"} ml-2 text-[11px]`} aria-hidden="true" />
                         </button>
-                        <span className="min-w-20 text-center text-xs font-black text-neutral-700" aria-current="page">{pageNumber}페이지</span>
-                        <button
-                            type="button"
-                            onClick={showNextPage}
-                            disabled={!nextCursor}
-                            className="ddb-motion-lift inline-flex min-h-11 items-center gap-2 rounded-full border border-indigo-200 bg-white px-5 text-xs font-black text-indigo-900 shadow-sm transition hover:border-indigo-400 hover:bg-indigo-50 disabled:cursor-not-allowed disabled:opacity-40 motion-reduce:transform-none motion-reduce:transition-none"
-                        >
-                            다음
-                            <i className="fa-solid fa-chevron-right text-[10px]" aria-hidden="true" />
-                        </button>
-                    </nav>
+                    </div>
                 ) : null}
             </section>
 

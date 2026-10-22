@@ -1,5 +1,13 @@
 "use client";
 
+/**
+ * ShowcaseTopicCard — 댕자랑 "오늘의 댕주제" 무대(2026-10-22 사용자 선택 S2+사각 사진 · 웹 기록 결)
+ * ---------------------------------------------------------------------
+ * 가운데 머리글 아래 세 칸: 왼쪽 주제(제목 · 설명 · 참여/공유 버튼) · 가운데 대표 사진(둥근 사각 무지개 크레파스 테) ·
+ * 오른쪽 연보라 쿠션(대표 댕자랑 한 줄 + 정확히 보기). 대표 사진이 없으면 주제만 쿠션 판 하나로.
+ * 기능(참여 · 공유 · 대표 글 보기 · 다시 불러오기)과 문구는 그대로. 꾸밈 CSS 는 app/daily-web.css "댕자랑" 묶음.
+ */
+
 import type { ShowcasePost, ShowcaseTopic } from "@/lib/daeng-showcase";
 
 function topicPeriod(startsAt: string, endsAt: string): string {
@@ -12,6 +20,16 @@ function topicPeriod(startsAt: string, endsAt: string): string {
     const end = new Date(endsAt);
     if (!Number.isFinite(start.getTime()) || !Number.isFinite(end.getTime())) return "이번 주";
     return `${formatter.format(start)}–${formatter.format(end)} · KST`;
+}
+
+// 가운데 머리글(영어 손글씨 · 세 색 밑줄 제목) — 상태마다 같은 머리
+function TopicHead({ period }: { period?: string }) {
+    return (
+        <div className="dw-rhead">
+            <p className="ddb-crayon-kicker dw-kicker">TODAY&apos;S DAENG TOPIC{period ? ` · ${period}` : ""}</p>
+            <h2 id="showcase-topic-title" className="ddb-crayon-title ddb-crayon-underline dw-rhead-title">오늘의 댕주제</h2>
+        </div>
+    );
 }
 
 export default function ShowcaseTopicCard({
@@ -35,20 +53,19 @@ export default function ShowcaseTopicCard({
 }) {
     if (loading) {
         return (
-            <section id="showcase-topic" className="mx-auto max-w-[1352px] scroll-mt-28 px-4 pt-8 sm:px-6 md:pt-10" aria-label="오늘의 댕주제 불러오는 중" aria-busy="true">
-                <div className="h-56 animate-pulse rounded-[30px] border border-white bg-white/70 shadow-card motion-reduce:animate-none" />
+            <section id="showcase-topic" className="dw-sc-wrap scroll-mt-28" aria-label="오늘의 댕주제 불러오는 중" aria-busy="true">
+                <div className="dw-csheet h-56 animate-pulse motion-reduce:animate-none" />
             </section>
         );
     }
 
     if (error) {
         return (
-            <section id="showcase-topic" className="mx-auto max-w-[1352px] scroll-mt-28 px-4 pt-8 sm:px-6 md:pt-10" aria-labelledby="showcase-topic-title">
-                <div className="rounded-[30px] border border-amber-200 bg-amber-50/85 p-5 shadow-card sm:p-6">
-                    <p className="ddb-crayon-kicker text-[10px]">TODAY&apos;S DAENG TOPIC</p>
-                    <h2 id="showcase-topic-title" className="ddb-crayon-title mt-1 text-3xl text-neutral-950">오늘의 댕주제</h2>
-                    <p className="mt-3 text-xs font-bold leading-5 text-amber-900" role="status">{error}</p>
-                    <button type="button" onClick={onRetry} className="mt-4 min-h-10 rounded-full border border-amber-300 bg-white px-4 text-xs font-black text-amber-900">주제 다시 불러오기</button>
+            <section id="showcase-topic" className="dw-sc-wrap scroll-mt-28" aria-labelledby="showcase-topic-title">
+                <TopicHead />
+                <div className="dw-csheet is-yellow dw-sc-topic-note">
+                    <p className="dw-tlogin-body" role="status">{error}</p>
+                    <button type="button" onClick={onRetry} className="ddb-motion-lift dw-pill dw-pill-sm mt-3">주제 다시 불러오기</button>
                 </div>
             </section>
         );
@@ -56,72 +73,71 @@ export default function ShowcaseTopicCard({
 
     if (!topic) {
         return (
-            <section id="showcase-topic" className="mx-auto max-w-[1352px] scroll-mt-28 px-4 pt-8 sm:px-6 md:pt-10" aria-labelledby="showcase-topic-title">
-                <div className="ddb-crayon-paper rounded-[30px] border p-5 shadow-card sm:p-6">
-                    <p className="ddb-crayon-kicker text-[10px]">TODAY&apos;S DAENG TOPIC</p>
-                    <h2 id="showcase-topic-title" className="ddb-crayon-title mt-1 text-3xl text-neutral-950">오늘의 댕주제</h2>
-                    <p className="mt-3 text-sm font-bold leading-6 text-neutral-600">새 주제를 준비하고 있어요. 그동안 자유로운 오늘의 한 장을 들려주세요.</p>
-                    <button type="button" onClick={onJoin} className="ddb-crayon-link mt-4 min-h-11 rounded-full px-5 text-xs font-black">자유 주제로 올리기</button>
+            <section id="showcase-topic" className="dw-sc-wrap scroll-mt-28" aria-labelledby="showcase-topic-title">
+                <TopicHead />
+                <div className="dw-csheet is-yellow dw-sc-topic-note">
+                    <p className="dw-tlogin-body">새 주제를 준비하고 있어요. 그동안 자유로운 오늘의 한 장을 들려주세요.</p>
+                    <button type="button" onClick={onJoin} className="ddb-crayon-link dw-pill dw-pill-main dw-pill-sm mt-3">자유 주제로 올리기</button>
                 </div>
             </section>
         );
     }
 
+    const featured = topic.featuredPost;
+
     return (
-        <section id="showcase-topic" className="mx-auto max-w-[1352px] scroll-mt-28 px-4 pt-8 sm:px-6 md:pt-10" aria-labelledby="showcase-topic-title">
-            <div className={`relative overflow-hidden rounded-[32px] border bg-gradient-to-br from-rose-50 via-[#fffaf0] to-cyan-50 p-5 shadow-card transition-shadow sm:p-7 ${highlighted ? "border-rose-400 ring-4 ring-rose-200/70" : "border-white"}`}>
-                <div className="absolute -right-12 -top-12 h-44 w-44 rounded-full bg-rose-200/40 blur-3xl" aria-hidden="true" />
-                <div className="absolute -bottom-16 left-1/3 h-40 w-40 rounded-full bg-cyan-200/35 blur-3xl" aria-hidden="true" />
-                <div className={`relative grid gap-6 ${topic.featuredPost ? "lg:grid-cols-[minmax(0,1fr)_340px] lg:items-center" : ""}`}>
-                    <div>
-                        <div className="flex flex-wrap items-center gap-2">
-                            <p className="ddb-crayon-kicker text-[11px]">TODAY&apos;S DAENG TOPIC</p>
-                            <span className="rounded-full border border-rose-200 bg-white/80 px-3 py-1 text-[10px] font-black text-rose-800">{topicPeriod(topic.startsAt, topic.endsAt)}</span>
-                            <span className={`rounded-full border px-3 py-1 text-[10px] font-black ${topic.isActive ? "border-emerald-200 bg-emerald-50 text-emerald-800" : "border-neutral-200 bg-neutral-100 text-neutral-700"}`}>
-                                {topic.isActive ? "참여 중" : "지난 주제"}
-                            </span>
-                        </div>
-                        <h2 id="showcase-topic-title" className="ddb-crayon-title mt-3 break-keep text-3xl leading-tight text-neutral-950 md:text-5xl">
-                            오늘의 댕주제 · <span className="ddb-crayon-underline">{topic.title}</span>
-                        </h2>
-                        <p className="mt-4 max-w-3xl whitespace-pre-wrap break-keep text-sm font-bold leading-7 text-neutral-700 md:text-base">{topic.prompt}</p>
-                        <p className="mt-3 text-[11px] font-bold leading-5 text-neutral-500">
-                            {topic.isActive
-                                ? "주제 참여는 선택이에요. 사진과 글을 올릴 때 현재 주제 연결 여부를 직접 고를 수 있습니다."
-                                : "주제 참여 기간이 끝났어요. 공개된 게시물과 대표 댕자랑은 그대로 볼 수 있습니다."}
-                        </p>
-                        <div className="mt-6 flex flex-col gap-2 sm:flex-row">
-                            {topic.isActive ? (
-                                <button type="button" onClick={onJoin} className="ddb-crayon-link ddb-attention-cta inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-5 text-sm font-black">
-                                    <i className="fa-solid fa-camera" aria-hidden="true" />이 주제로 올리기
-                                </button>
-                            ) : null}
-                            <button type="button" onClick={onShare} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-indigo-200 bg-white px-5 text-sm font-black text-indigo-900 hover:bg-indigo-50">
-                                <i className="fa-solid fa-share-nodes" aria-hidden="true" />주제 공유카드
+        <section id="showcase-topic" className="dw-sc-wrap scroll-mt-28" aria-labelledby="showcase-topic-title">
+            <TopicHead period={topicPeriod(topic.startsAt, topic.endsAt)} />
+            <div className={`dw-sc-stage ${featured ? "has-featured" : ""} ${highlighted ? "is-highlighted" : ""}`}>
+                {/* 왼쪽 — 주제 */}
+                <div className={`dw-sc-stage-side ${featured ? "" : "dw-csheet is-yellow"}`}>
+                    <span className={`dw-chip ${topic.isActive ? "dw-sc-chip-live" : ""}`}>{topic.isActive ? "참여 중" : "지난 주제"}</span>
+                    <h3 className="ddb-crayon-title dw-sc-topic-title">{topic.title}</h3>
+                    <p className="dw-sc-topic-prompt">{topic.prompt}</p>
+                    <p className="dw-sc-topic-note-line">
+                        {topic.isActive
+                            ? "주제 참여는 선택이에요. 사진과 글을 올릴 때 현재 주제 연결 여부를 직접 고를 수 있습니다."
+                            : "주제 참여 기간이 끝났어요. 공개된 게시물과 대표 댕자랑은 그대로 볼 수 있습니다."}
+                    </p>
+                    <div className="dw-sc-actions">
+                        {topic.isActive ? (
+                            <button type="button" onClick={onJoin} className="ddb-crayon-link ddb-attention-cta dw-pill dw-pill-main">
+                                <i className="fa-solid fa-camera mr-2" aria-hidden="true" />이 주제로 올리기
+                            </button>
+                        ) : null}
+                        <button type="button" onClick={onShare} className="ddb-motion-lift dw-pill">
+                            <i className="fa-solid fa-share-nodes mr-2" aria-hidden="true" />주제 공유카드
+                        </button>
+                    </div>
+                </div>
+
+                {featured ? (
+                    <>
+                        {/* 가운데 — 대표 사진(둥근 사각 · 무지개 크레파스 테) */}
+                        <div className="dw-sc-stage-photo">
+                            <span className="dw-sc-crown">오늘의 대표 댕자랑</span>
+                            <button type="button" onClick={() => onViewFeatured(featured)} className="dw-sc-frame is-rainbow" aria-label="대표 댕자랑 정확히 보기">
+                                {/* eslint-disable-next-line @next/next/no-img-element -- the API returns a deletion-aware public media URL and canonical dimensions. */}
+                                <img
+                                    src={featured.imageUrl}
+                                    alt={`${featured.author.displayName}의 대표 댕자랑 사진`}
+                                    width={featured.imageWidth}
+                                    height={featured.imageHeight}
+                                    className="aspect-square w-full object-cover"
+                                />
                             </button>
                         </div>
-                    </div>
-
-                    {topic.featuredPost ? (
-                        <aside className="overflow-hidden rounded-[24px] border border-white bg-white/85 shadow-sm" aria-label="운영자 선정 대표 댕자랑">
-                            {/* eslint-disable-next-line @next/next/no-img-element -- the API returns a deletion-aware public media URL and canonical dimensions. */}
-                            <img
-                                src={topic.featuredPost.imageUrl}
-                                alt={`${topic.featuredPost.author.displayName}의 대표 댕자랑 사진`}
-                                width={topic.featuredPost.imageWidth}
-                                height={topic.featuredPost.imageHeight}
-                                className="h-44 w-full bg-[#f6f3ee] object-contain"
-                            />
-                            <div className="p-4">
-                                <p className="ddb-crayon-kicker text-[9px]">FEATURED SHOWCASE</p>
-                                <p className="mt-1 line-clamp-2 text-xs font-bold leading-5 text-neutral-700">{topic.featuredPost.caption}</p>
-                                <button type="button" onClick={() => onViewFeatured(topic.featuredPost!)} className="mt-3 inline-flex min-h-10 w-full items-center justify-center rounded-full border border-rose-200 bg-rose-50 px-4 text-xs font-black text-rose-900 hover:bg-rose-100">
-                                    대표 댕자랑 정확히 보기
-                                </button>
-                            </div>
+                        {/* 오른쪽 — 대표 댕자랑 한 줄 */}
+                        <aside className="dw-csheet is-lav dw-sc-stage-info" aria-label="운영자 선정 대표 댕자랑">
+                            <p className="ddb-crayon-kicker dw-kicker">FEATURED SHOWCASE</p>
+                            <p className="dw-tlogin-title">{featured.pet ? `${featured.pet.name}${featured.pet.breed ? ` · ${featured.pet.breed}` : ""}` : featured.author.displayName}</p>
+                            <p className="dw-tlogin-body line-clamp-3">“{featured.caption}”</p>
+                            <button type="button" onClick={() => onViewFeatured(featured)} className="ddb-motion-lift dw-pill dw-pill-sm mt-4">
+                                대표 댕자랑 정확히 보기
+                            </button>
                         </aside>
-                    ) : null}
-                </div>
+                    </>
+                ) : null}
             </div>
         </section>
     );

@@ -147,7 +147,7 @@ export default function ShowcaseComposer({
     };
 
     return (
-        <form onSubmit={submit} className="ddb-crayon-paper rounded-[30px] border p-5 shadow-card sm:p-7" aria-labelledby="showcase-composer-title">
+        <form onSubmit={submit} className="dw-csheet is-mint dw-sc-compose" aria-labelledby="showcase-composer-title">
             <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                     <p className="ddb-crayon-kicker text-[11px]">SHARE TODAY</p>
@@ -163,7 +163,7 @@ export default function ShowcaseComposer({
             <div className="mt-5 grid gap-5 lg:grid-cols-[minmax(240px,.72fr)_minmax(0,1.28fr)]">
                 <div>
                     <label htmlFor="showcase-photo" className="text-xs font-black text-neutral-700">사진 1장</label>
-                    <div className="mt-2 overflow-hidden rounded-[24px] border border-dashed border-rose-200 bg-rose-50/45">
+                    <div className="dw-sc-drop mt-2 overflow-hidden">
                         {previewUrl ? (
                             <div className="relative">
                                 {/* eslint-disable-next-line @next/next/no-img-element -- local object URL preview cannot use the static image loader. */}
@@ -180,9 +180,7 @@ export default function ShowcaseComposer({
                             </div>
                         ) : (
                             <label htmlFor="showcase-photo" className="flex aspect-square cursor-pointer flex-col items-center justify-center px-5 text-center">
-                                <span className="ddb-crayon-icon grid h-14 w-14 place-items-center rounded-2xl text-xl text-white" data-crayon-tone="coral">
-                                    <i className="fa-solid fa-camera" aria-hidden="true" />
-                                </span>
+                                <span className="dw-rring dw-sc-drop-ring" aria-hidden="true"><span><img src="/images/ui/mypet-shutter-384.webp" alt="" width={80} height={80} /></span></span>
                                 <strong className="mt-4 text-sm text-neutral-900">사진을 선택해 주세요</strong>
                                 <span className="mt-1 text-[11px] font-bold leading-5 text-neutral-500">JPG · PNG · WebP / 최대 8MB</span>
                             </label>

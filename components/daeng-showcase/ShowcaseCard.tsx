@@ -1,5 +1,12 @@
 "use client";
 
+/**
+ * ShowcaseCard — 댕자랑 피드 카드(2026-10-22 사용자 선택 S7 · 웹 기록 결)
+ * ---------------------------------------------------------------------
+ * 파스텔 쿠션 카드(.dw-csheet) 위를 꽉 채우는 둥근 사각 사진(얇은 흰 테) → 아이 이름 · 견종 → 이야기(세 줄 + 더보기)
+ * → 뼈다귀 응원 · 공유 · 신고/삭제 → 보호자(프로필 · 팔로우). 기능 · 문구는 그대로, 꾸밈은 app/daily-web.css "댕자랑" 묶음.
+ */
+
 import { useEffect, useRef, useState } from "react";
 import {
     deleteShowcasePost,
@@ -11,6 +18,9 @@ import {
     type ShowcaseReportReason,
 } from "@/lib/daeng-showcase";
 import { inboundCampaignFields, trackStorefrontEvent } from "@/lib/storefront-analytics";
+
+// 카드 파스텔 바탕(기록 결 .dw-csheet 색)
+const SHOWCASE_TINTS = ["is-pink", "is-mint", "is-yellow", "is-sky", "is-lav"] as const;
 
 const REPORT_REASONS: readonly { value: ShowcaseReportReason; label: string }[] = [
     { value: "spam", label: "광고·도배" },
@@ -195,27 +205,98 @@ export default function ShowcaseCard({
         }
     };
 
+    // 카드 바탕색 — 글마다 정해진 파스텔(글 id 로 고정, 새로고침해도 같은 색)
+    const tint = SHOWCASE_TINTS[[...post.postId].reduce((sum, char) => sum + char.charCodeAt(0), 0) % SHOWCASE_TINTS.length];
+
     return (
         <article
             id={`post-${post.postId}`}
-            className={`flex h-full scroll-mt-28 flex-col overflow-hidden rounded-[26px] border bg-white shadow-card transition-shadow ${highlighted ? "border-rose-300 ring-4 ring-rose-200/65" : "border-white/90"}`}
+            className={`dw-csheet ${tint} dw-sc-card scroll-mt-28 ${highlighted ? "is-highlighted" : ""}`}
         >
-            <div className="flex items-center gap-3 px-4 py-4 sm:px-5">
-                <button type="button" onClick={() => onOpenAuthor(post.author.authorId)} className="group flex min-w-0 flex-1 items-center gap-3 text-left" aria-label={`${post.author.displayName} 프로필 보기`}>
-                    <span className="ddb-crayon-icon grid h-11 w-11 shrink-0 place-items-center rounded-full text-sm font-black text-white" data-crayon-tone="coral" aria-hidden="true">
-                        {post.author.displayName.slice(0, 1)}
+            {/* 사진 — 카드 위를 꽉 채우는 둥근 사각(얇은 흰 테), 주제 참여 글은 사진 위에 주제 표시 */}
+            <div className="dw-sc-photo">
+                <span className="dw-sc-frame">
+                    {/* eslint-disable-next-line @next/next/no-img-element -- API provides canonical dimensions and deletion-aware public media URLs. */}
+                    <img
+                        src={post.imageUrl}
+                        alt={`${post.pet?.name || post.author.displayName}의 댕자랑 사진`}
+                        width={post.imageWidth}
+                        height={post.imageHeight}
+                        loading="lazy"
+                        decoding="async"
+                        className="aspect-square w-full bg-[#f6f3ee] object-cover"
+                    />
+                </span>
+                {post.topic ? (
+                    <span className="dw-sc-topic-tag"><i className="fa-solid fa-hashtag" aria-hidden="true" />{post.topic.title}</span>
+                ) : null}
+            </div>
+
+            {/* 아이 이름 · 견종 */}
+            {post.pet ? (
+                <p className="dw-sc-pet">{post.pet.name}{post.pet.breed ? <small>{post.pet.breed}</small> : null}</p>
+            ) : null}
+
+            {/* 오늘의 이야기(세 줄 넘으면 더보기) */}
+            <div className="dw-sc-caption">
+                <p
+                    ref={captionRef}
+                    id={`caption-${post.postId}`}
+                    className={`whitespace-pre-wrap break-words ${captionExpanded ? "" : "line-clamp-3"}`}
+                >
+                    {post.caption}
+                </p>
+                {captionOverflows ? (
+                    <button
+                        type="button"
+                        aria-controls={`caption-${post.postId}`}
+                        aria-expanded={captionExpanded}
+                        onClick={() => setCaptionExpanded((value) => !value)}
+                        className="dw-sc-more"
+                    >
+                        {captionExpanded ? "접기" : "더보기"}
+                        <i className={`fa-solid ${captionExpanded ? "fa-chevron-up" : "fa-chevron-down"} text-[9px]`} aria-hidden="true" />
+                    </button>
+                ) : null}
+            </div>
+
+            {/* 뼈다귀 응원 · 공유 · 신고(내 글이면 삭제) */}
+            <div className="dw-sc-acts">
+                <button
+                    type="button"
+                    onClick={toggleBone}
+                    disabled={busy === "bone"}
+                    aria-pressed={post.bonedByMe}
+                    className={`dw-sc-bone ${post.bonedByMe ? "is-on" : ""}`}
+                >
+                    <i className="fa-solid fa-bone" aria-hidden="true" />
+                    응원 {post.boneCount.toLocaleString("ko-KR")}
+                </button>
+                <button type="button" onClick={() => onShare(post)} className="dw-sc-mini" aria-label={`${post.author.displayName}의 댕자랑 공유`}>
+                    <i className="fa-solid fa-share-nodes" aria-hidden="true" />
+                </button>
+                {post.canDelete ? (
+                    <button type="button" onClick={removePost} disabled={busy === "delete"} className="dw-sc-mini is-text" aria-label="이 댕자랑 삭제">
+                        {busy === "delete" ? "삭제 중" : "삭제"}
+                    </button>
+                ) : (
+                    <button type="button" onClick={openReport} className="dw-sc-mini" aria-label="이 댕자랑 신고">
+                        <i className="fa-regular fa-flag" aria-hidden="true" />
+                    </button>
+                )}
+            </div>
+
+            {/* 보호자 — 누르면 프로필, 오른쪽 팔로우 */}
+            <div className="dw-sc-author">
+                <button type="button" onClick={() => onOpenAuthor(post.author.authorId)} className="dw-sc-author-btn" aria-label={`${post.author.displayName} 프로필 보기`}>
+                    <span className="dw-sc-avatar" aria-hidden="true">{post.author.displayName.slice(0, 1)}</span>
+                    <span className="min-w-0">
+                        <h3 className="dw-sc-author-name">
+                            {post.author.displayName}
+                            {post.author.isMe ? <span className="dw-sc-me">나</span> : null}
+                        </h3>
+                        <span className="dw-sc-author-meta">팔로워 {post.author.followerCount.toLocaleString("ko-KR")}명 · {formatCreatedAt(post.createdAt)}</span>
                     </span>
-                    <div className="min-w-0 flex-1">
-                        <div className="flex flex-wrap items-center gap-2">
-                            <h3 className="truncate text-sm font-black text-neutral-950 underline-offset-4 group-hover:underline">{post.author.displayName}</h3>
-                            {post.author.isMe ? (
-                                <span className="rounded-full bg-indigo-50 px-2 py-0.5 text-[9px] font-black text-indigo-700">나</span>
-                            ) : null}
-                        </div>
-                        <p className="mt-0.5 text-[10px] font-bold text-neutral-500">
-                            팔로워 {post.author.followerCount.toLocaleString("ko-KR")}명 · {formatCreatedAt(post.createdAt)}
-                        </p>
-                    </div>
                 </button>
                 {!post.author.isMe ? (
                     <button
@@ -223,87 +304,11 @@ export default function ShowcaseCard({
                         onClick={toggleFollow}
                         disabled={busy === "follow"}
                         aria-pressed={post.author.followedByMe}
-                        className={`min-h-9 shrink-0 rounded-full border px-3 text-[11px] font-black transition ${post.author.followedByMe ? "border-neutral-300 bg-neutral-100 text-neutral-700" : "border-cyan-300 bg-cyan-50 text-cyan-800 hover:bg-cyan-100"}`}
+                        className={`dw-sc-follow ${post.author.followedByMe ? "is-on" : ""}`}
                     >
                         {busy === "follow" ? "처리 중" : post.author.followedByMe ? "팔로잉" : "팔로우"}
                     </button>
                 ) : null}
-            </div>
-
-            {/* eslint-disable-next-line @next/next/no-img-element -- API provides canonical dimensions and deletion-aware public media URLs. */}
-            <img
-                src={post.imageUrl}
-                alt={`${post.pet?.name || post.author.displayName}의 댕자랑 사진`}
-                width={post.imageWidth}
-                height={post.imageHeight}
-                loading="lazy"
-                decoding="async"
-                className="aspect-square w-full bg-[#f6f3ee] object-cover"
-            />
-
-            <div className="flex flex-1 flex-col p-4 sm:p-5">
-                <div className="mb-3 flex min-h-7 flex-wrap items-start gap-2">
-                    {post.pet ? (
-                        <p className="inline-flex max-w-full items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-[10px] font-black text-amber-900">
-                            <i className="fa-solid fa-dog" aria-hidden="true" />
-                            <span className="truncate">{post.pet.name}{post.pet.breed ? ` · ${post.pet.breed}` : ""}</span>
-                        </p>
-                    ) : null}
-                    {post.topic ? (
-                        <p className="inline-flex max-w-full items-center gap-1.5 rounded-full border border-rose-200 bg-rose-50 px-3 py-1 text-[10px] font-black text-rose-900">
-                            <i className="fa-solid fa-hashtag" aria-hidden="true" />
-                            <span className="truncate">{post.topic.title}</span>
-                        </p>
-                    ) : null}
-                </div>
-                <div className="min-h-[7rem]">
-                    <p
-                        ref={captionRef}
-                        id={`caption-${post.postId}`}
-                        className={`whitespace-pre-wrap break-words text-sm font-bold leading-7 text-neutral-700 ${captionExpanded ? "" : "line-clamp-3"}`}
-                    >
-                        {post.caption}
-                    </p>
-                    {captionOverflows ? (
-                        <button
-                            type="button"
-                            aria-controls={`caption-${post.postId}`}
-                            aria-expanded={captionExpanded}
-                            onClick={() => setCaptionExpanded((value) => !value)}
-                            className="mt-1 inline-flex min-h-7 items-center gap-1 rounded-full px-1 text-[11px] font-black text-neutral-500 hover:text-indigo-700"
-                        >
-                            {captionExpanded ? "접기" : "더보기"}
-                            <i className={`fa-solid ${captionExpanded ? "fa-chevron-up" : "fa-chevron-down"} text-[9px]`} aria-hidden="true" />
-                        </button>
-                    ) : null}
-                </div>
-
-                <div className="mt-auto flex items-center justify-between gap-3 border-t border-neutral-100 pt-4">
-                    <button
-                        type="button"
-                        onClick={toggleBone}
-                        disabled={busy === "bone"}
-                        aria-pressed={post.bonedByMe}
-                        className={`inline-flex min-h-10 items-center gap-2 rounded-full border px-4 text-xs font-black transition ${post.bonedByMe ? "border-amber-300 bg-amber-100 text-amber-950" : "border-neutral-200 bg-white text-neutral-700 hover:border-amber-300 hover:bg-amber-50"}`}
-                    >
-                        <i className="fa-solid fa-bone" aria-hidden="true" />
-                        응원 {post.boneCount.toLocaleString("ko-KR")}
-                    </button>
-                    <div className="flex items-center gap-1">
-                        <button type="button" onClick={() => onShare(post)} className="min-h-10 rounded-full px-3 text-[11px] font-black text-indigo-600 hover:bg-indigo-50 hover:text-indigo-900" aria-label={`${post.author.displayName}의 댕자랑 공유`}>
-                            <i className="fa-solid fa-share-nodes mr-1.5" aria-hidden="true" />공유
-                        </button>
-                        {post.canDelete ? (
-                            <button type="button" onClick={removePost} disabled={busy === "delete"} className="min-h-10 rounded-full px-3 text-[11px] font-black text-neutral-500 hover:bg-red-50 hover:text-red-700">
-                                {busy === "delete" ? "삭제 중" : "삭제"}
-                            </button>
-                        ) : (
-                            <button type="button" onClick={openReport} className="min-h-10 rounded-full px-3 text-[11px] font-black text-neutral-500 hover:bg-neutral-100 hover:text-neutral-800">
-                                신고
-                            </button>
-                        )}
-                    </div>
-                </div>
             </div>
 
             {reportOpen ? (

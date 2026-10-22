@@ -3754,7 +3754,7 @@ html:not(.ddb-app-mode) [data-my-pet-hub][data-daily-web] {
 
     /* ── 그림책 부록 — 둥근 쿠션 셋 ── */
     & .dw-appendix {
-        margin-top: 60px;
+        margin-top: 0;
     }
 
     & .dw-appendix-head {
@@ -4915,5 +4915,95 @@ html:not(.ddb-app-mode) [data-daily-web] {
     html:not(.ddb-app-mode) [data-daily-web] {
         & .dw-dial-rotor, & .dw-dial-grooves, & .dw-dial-arts, & .dw-dial-art, & .dw-dial-fill, & .dw-dial-check { transition: none; }
         & .dw-dial-burst, & .dw-dial-card-in, & .dw-dial-week .dw-dial-slam, & .dw-dial-week .dw-dial-slot::after, & .dw-dial-idle.is-loading { animation: none; }
+    }
+}
+
+/* ── 댕자랑(2026-10-22 사용자 선택: 댕주제 무대 + 사각 사진 · 파스텔 카드 S7) ──
+   머리 판 · 무대 · 올리기 판 · 카드 모두 기록 결(.dw-csheet · .dw-rring · .dw-pill · .dw-chip)을 그대로 쓰고 자리만 잡는다. */
+html:not(.ddb-app-mode) [data-daily-web] {
+    & .dw-sc-wrap { max-width: 1248px; margin: 0 auto; padding-right: 16px; padding-left: 16px; }
+    & .dw-sc-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+    & .dw-sc-rules { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+    & .dw-sc-chip-live { color: #047857; }
+
+    /* 오늘의 댕주제 무대 — 왼쪽 주제 · 가운데 대표 사진(둥근 사각 무지개 테) · 오른쪽 연보라 쿠션 */
+    & .dw-sc-stage { display: grid; gap: 30px; align-items: center; }
+    & .dw-sc-stage.has-featured { grid-template-columns: minmax(0, 1fr) 360px minmax(0, 0.9fr); }
+    & .dw-sc-stage.is-highlighted .dw-sc-frame { box-shadow: 0 0 0 5px #f7a8bf, 0 14px 24px -18px rgb(15 23 42 / 45%); }
+    & .dw-sc-stage-side.dw-csheet { padding: 32px 36px; }
+    & h3.dw-sc-topic-title { margin-top: 10px; font-size: 34px !important; line-height: 1.25 !important; word-break: keep-all; }
+    & .dw-sc-topic-prompt { margin-top: 10px; color: #475569; font-size: 14.5px; font-weight: 600; line-height: 1.75; white-space: pre-wrap; word-break: keep-all; }
+    & .dw-sc-topic-note-line { margin-top: 8px; color: #94a3b8; font-size: 12px; font-weight: 700; line-height: 1.6; word-break: keep-all; }
+    & .dw-sc-topic-note { padding: 28px 32px; text-align: center; }
+    & .dw-sc-stage-photo { position: relative; }
+    & .dw-sc-crown { position: absolute; top: -18px; left: 50%; z-index: 2; padding: 8px 20px; border-radius: 999px; background: #e9789a; color: #fff; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 16px; white-space: nowrap; transform: translateX(-50%); box-shadow: 0 10px 18px -10px rgb(200 80 120 / 70%); }
+    & .dw-sc-stage-info { padding: 26px 26px; border-radius: 34px; }
+    & .dw-sc-stage-info .dw-tlogin-title, & .dw-sc-stage-info .dw-tlogin-body { text-align: left; }
+
+    /* 사진 테 — 얇은 흰 테(카드) · 무지개 크레파스 테(무대) */
+    & .dw-sc-frame { position: relative; display: block; width: 100%; padding: 5px; border-radius: 30px; background: #fff; box-shadow: 0 14px 24px -18px rgb(15 23 42 / 45%); }
+    & .dw-sc-frame img { display: block; border-radius: 25px; }
+    & .dw-sc-frame.is-rainbow { padding: 12px; background: transparent; isolation: isolate; cursor: pointer; }
+    & .dw-sc-frame.is-rainbow::before { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: 32px; background: conic-gradient(from 20deg, #f7a8bf, #ffd08a, #a8e0c6, #a9d4ea, #cfc3f5, #f7a8bf); filter: url(#dw-crayon-grain); }
+    & .dw-sc-frame.is-rainbow::after { content: ""; position: absolute; inset: 9px; z-index: -1; border-radius: 25px; background: #fff; }
+    & .dw-sc-frame.is-rainbow img { border-radius: 20px; }
+
+    /* 올리기 판 · 비회원 안내 */
+    & .dw-sc-compose { padding: 30px 34px; }
+    & .dw-sc-drop { border-radius: 26px; background: #fff; box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), inset 0 -8px 14px rgb(15 23 42 / 4%), 0 10px 18px -14px rgb(15 23 42 / 35%); }
+    & .dw-sc-drop-ring { --dw-ring: 96px; padding: 7px; }
+    & .dw-sc-join { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 24px; padding: 28px 34px; }
+    & .dw-sc-join .dw-rring { --dw-ring: 110px; padding: 8px; }
+    & .dw-sc-join .dw-tlogin-title, & .dw-sc-join .dw-tlogin-body { text-align: left; }
+    & .dw-sc-join .dw-sc-actions { margin-top: 0; }
+
+    /* 피드 머리 · 전체/팔로잉 탭 */
+    & .dw-sc-feedhead .dw-kicker { display: block; }
+    & .dw-sc-feedhead { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
+    & .dw-sc-tabs { display: inline-flex; gap: 4px; padding: 5px; border-radius: 999px; background: #fff; box-shadow: 0 8px 16px -12px rgb(15 23 42 / 40%); }
+    & .dw-sc-tabs button { min-height: 38px; padding: 0 20px; border-radius: 999px; color: #64748b; font-size: 13px; font-weight: 800; }
+    & .dw-sc-tabs button.is-on { background: #e9789a; color: #fff; }
+    & .dw-sc-empty { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 34px 28px; text-align: center; }
+    & .dw-sc-empty .dw-rring { --dw-ring: 110px; padding: 8px; }
+    & .dw-sc-morewrap { display: flex; justify-content: center; margin-top: 30px; }
+
+    /* 피드 카드 — 파스텔 쿠션 + 꽉 찬 사진 */
+    & .dw-sc-card { display: flex; height: 100%; flex-direction: column; padding: 8px 8px 20px; border-radius: 38px; text-align: center; }
+    & .dw-sc-card.is-highlighted { box-shadow: 0 0 0 4px #f7a8bf, 0 22px 36px -24px rgb(15 23 42 / 32%); }
+    & .dw-sc-photo { position: relative; }
+    & .dw-sc-topic-tag { position: absolute; top: 16px; right: 16px; display: inline-flex; align-items: center; gap: 4px; max-width: calc(100% - 32px); padding: 5px 12px; overflow: hidden; border-radius: 999px; background: #ffd08a; color: #7a4a00; font-size: 11px; font-weight: 800; text-overflow: ellipsis; white-space: nowrap; }
+    & .dw-sc-pet { margin-top: 14px; color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 22px; }
+    & .dw-sc-pet small { margin-left: 6px; color: #94a3b8; font-family: var(--font-wanted-sans), sans-serif; font-size: 12px; font-weight: 800; }
+    & .dw-sc-caption { min-height: 4.9em; margin-top: 6px; padding: 0 14px; color: #334155; font-size: 14px; font-weight: 600; line-height: 1.65; }
+    & .dw-sc-more { display: inline-flex; align-items: center; gap: 4px; min-height: 28px; color: #94a3b8; font-size: 12px; font-weight: 800; }
+    & .dw-sc-acts { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: auto; padding-top: 12px; }
+    & .dw-sc-bone { display: inline-flex; align-items: center; gap: 7px; height: 40px; padding: 0 16px; border-radius: 999px; background: #fff1f5; color: #e2557a; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 15px; box-shadow: inset 0 2px 0 rgb(255 255 255 / 90%), 0 6px 12px -9px rgb(200 80 120 / 60%); }
+    & .dw-sc-bone.is-on { background: #e9789a; color: #fff; }
+    & .dw-sc-mini { display: inline-grid; place-items: center; min-width: 38px; height: 38px; padding: 0 4px; border-radius: 999px; background: rgb(255 255 255 / 80%); color: #64748b; font-size: 13px; }
+    & .dw-sc-mini.is-text { padding: 0 12px; font-size: 12px; font-weight: 800; }
+    & .dw-sc-author { display: flex; align-items: center; gap: 10px; margin: 16px 12px 0; padding-top: 14px; border-top: 2px solid rgb(255 255 255 / 90%); text-align: left; }
+    & .dw-sc-author-btn { display: flex; min-width: 0; flex: 1; align-items: center; gap: 10px; text-align: left; }
+    & .dw-sc-avatar { display: grid; width: 38px; height: 38px; flex: none; place-items: center; border-radius: 999px; background: #e9789a; color: #fff; font-family: var(--font-jua), sans-serif; font-size: 16px; }
+    & .dw-sc-author-name { display: flex; align-items: center; gap: 6px; overflow: hidden; color: #1e293b; font-size: 13.5px; font-weight: 800; text-overflow: ellipsis; white-space: nowrap; }
+    & .dw-sc-me { padding: 1px 7px; border-radius: 999px; background: #eef0fe; color: #4338ca; font-size: 10px; }
+    & .dw-sc-author-meta { display: block; overflow: hidden; color: #94a3b8; font-size: 11px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+    & .dw-sc-follow { flex: none; padding: 6px 14px; border-radius: 999px; background: #fff1f5; color: #e2557a; font-size: 12px; font-weight: 800; }
+    & .dw-sc-follow.is-on { background: rgb(255 255 255 / 80%); color: #64748b; }
+}
+
+@media (max-width: 1023px) {
+    html:not(.ddb-app-mode) [data-daily-web] {
+        & .dw-sc-stage.has-featured { grid-template-columns: 1fr; justify-items: center; }
+        & .dw-sc-stage-photo { width: min(340px, 100%); }
+        & .dw-sc-stage-info { width: 100%; }
+    }
+}
+
+@media (max-width: 640px) {
+    html:not(.ddb-app-mode) [data-daily-web] {
+        & h3.dw-sc-topic-title { font-size: 26px !important; }
+        & .dw-sc-stage-side.dw-csheet, & .dw-sc-compose { padding: 22px 16px; }
+        & .dw-sc-join { grid-template-columns: 1fr; justify-items: center; padding: 24px 18px; text-align: center; }
+        & .dw-sc-join .dw-tlogin-title, & .dw-sc-join .dw-tlogin-body { text-align: center; }
     }
 }

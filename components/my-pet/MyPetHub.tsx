@@ -365,6 +365,9 @@ export default function MyPetHub() {
                 )}
             </section>
 
+            {/* 구역 사이는 발자국 두 개(2026-10-22 사용자) */}
+            <PawTrail />
+
             {/* 그림책 부록 — 둥근 쿠션 셋(2026-10-22 사용자 선택 N2): 펫렌즈 · 행동·소리 · 케어톡(모두 기존 페이지) */}
             <section className="dw-appendix" aria-labelledby="dw-appendix-title">
                 <div className="dw-appendix-head">

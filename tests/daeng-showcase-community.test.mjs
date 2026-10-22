@@ -48,14 +48,12 @@ test("live showcase supports public read, member posting, feed scopes, cursor pa
     assert.match(client, /new URLSearchParams\(window\.location\.search\)\.get\("author"\)/);
     assert.match(client, /<ShowcaseAuthorProfileModal/);
     assert.match(client, /chooseScope\("following"\)/);
-    assert.match(client, /SHOWCASE_PAGE_SIZE = 9/);
+    assert.match(client, /SHOWCASE_PAGE_SIZE = 16/); // 2026-10-22 사용자: 한 번에 16장 + 더보기
     assert.match(client, /cursor: pageCursor \|\| undefined/);
-    assert.match(client, /setPageHistory\(\(current\) => \[\.\.\.current, pageCursor\]\)/);
-    assert.match(client, /댕자랑 페이지 이동/);
-    assert.match(client, /이전/);
+    assert.match(client, /setPosts\(\(current\) => mergeUniquePosts\(current, feed\.items\)\)/);
+    assert.match(client, /댕자랑 더보기/);
     assert.match(client, /다음/);
-    assert.match(client, /\{pageNumber\}페이지/);
-    assert.match(client, /sm:grid-cols-2 xl:grid-cols-3/);
+    assert.match(client, /sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4/); // 2026-10-22 사용자: PC 한 줄 4장
     assert.match(client, /grid items-stretch/);
     assert.match(client, /FeedSkeleton/);
     assert.match(client, /다시 불러오기/);
