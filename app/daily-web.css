@@ -2967,7 +2967,7 @@ html:not(.ddb-app-mode) [data-my-pet-hub][data-daily-web] {
     }
 
     /* 파스텔 차례(아이콘 동그라미 · 칩 · 쪽 카드 · 부록 카드 같이 씀) */
-    & :is(.dw-book-fact-icon, .dw-book-chips span, .dw-page-card, .dw-appendix-card) {
+    & :is(.dw-book-fact-icon, .dw-book-chips span, .dw-page-card) {
         &.is-pink { background: #ffeef3; color: #e2557a; }
         &.is-yellow { background: #fff6e3; color: #d97f0e; }
         &.is-mint { background: #e9f8f1; color: #12a17a; }
@@ -3171,38 +3171,103 @@ html:not(.ddb-app-mode) [data-my-pet-hub][data-daily-web] {
     & .dw-paw-trail .dw-doodle:nth-child(3) { left: calc(50% - 36px); top: 46px; transform: rotate(160deg); opacity: 0.7; }
     & .dw-paw-trail .dw-doodle:nth-child(4) { left: calc(50% + 4px); top: 68px; transform: rotate(200deg); opacity: 0.55; }
 
-    /* ── 새 쪽 그리기 — 점선 빈 쪽 ── */
-    & .dw-newpage {
+    /* ── 새 쪽 찍기 — 크레파스 카메라(하늘색 몸통 · 위 뷰파인더 혹 · 노란 플래시 · 크레파스 렌즈) ── */
+    & .dw-cam {
         position: relative;
         display: grid;
-        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-columns: 260px minmax(0, 1fr);
         align-items: center;
-        gap: 28px;
-        margin-top: 4px;
-        padding: 32px 40px;
-        border: 2.5px dashed #f2a9be;
-        border-radius: 40px;
-        background: var(--dw-book-paper) var(--dw-book-dots);
-        background-size: auto, 7px 7px;
+        gap: 46px;
+        margin-top: 30px;
+        padding: 44px 52px;
+        border-radius: 46px;
+        background: #e9f4fb;
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), inset 0 -10px 18px rgb(14 138 160 / 6%), 0 22px 36px -24px rgb(15 23 42 / 32%);
     }
 
-    & .dw-newpage-star {
-        top: -22px;
-        right: 34px;
-        width: 46px;
-        height: 46px;
-        color: #ffcf6e;
-        transform: rotate(12deg);
+    & .dw-cam::before {
+        content: "";
+        position: absolute;
+        top: -24px;
+        left: 80px;
+        width: 130px;
+        height: 40px;
+        border-radius: 20px 20px 0 0;
+        background: #e9f4fb;
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%);
     }
 
-    & h2.dw-newpage-title.ddb-crayon-title {
+    & .dw-cam-flash {
+        position: absolute;
+        top: 26px;
+        right: 44px;
+        width: 22px;
+        height: 22px;
+        border-radius: 999px;
+        background: #ffcf6e;
+        box-shadow: 0 0 0 7px rgb(255 207 110 / 30%);
+    }
+
+    & .dw-cam-lens {
+        position: relative;
+        width: 260px;
+        height: 260px;
+        padding: 16px;
+        border-radius: 999px;
+        isolation: isolate;
+    }
+
+    /* 무지개 크레파스 테(결 필터) */
+    & .dw-cam-lens::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        border-radius: 999px;
+        background: conic-gradient(from 20deg, #f7a8bf, #ffd08a, #a8e0c6, #a9d4ea, #cfc3f5, #f7a8bf);
+        filter: url(#dw-crayon-grain);
+    }
+
+    /* 렌즈 유리 — 흰 테 안에 겹겹 파란 동그라미 */
+    & .dw-cam-glass {
+        position: relative;
+        display: grid;
+        width: 100%;
+        height: 100%;
+        place-items: center;
+        overflow: hidden;
+        border: 12px solid #fff;
+        border-radius: 999px;
+        background: radial-gradient(circle at 50% 52%, #eef7fd 0 25%, #cfe5f5 26% 38%, #fff 39% 42%, #a9cdea 43% 70%, #8dbbe2 71% 100%);
+        box-shadow: inset 0 0 0 3px #d6e8f4;
+    }
+
+    & .dw-cam-shine::before,
+    & .dw-cam-shine::after {
+        content: "";
+        position: absolute;
+        border-radius: 999px;
+        background: rgb(255 255 255 / 75%);
+    }
+
+    & .dw-cam-shine::before { top: 22%; left: 24%; width: 38px; height: 22px; transform: rotate(-30deg); }
+    & .dw-cam-shine::after { top: 36%; left: 20%; width: 12px; height: 12px; }
+
+    & .dw-cam-paw {
+        position: relative;
+        width: 74px;
+        height: 74px;
+        color: #f29bb6;
+    }
+
+    & h2.dw-cam-title.ddb-crayon-title {
         margin-top: 6px;
-        font-size: clamp(21px, 2vw, 26px) !important;
+        font-size: clamp(22px, 2.2vw, 28px) !important;
         word-break: keep-all;
     }
 
-    & .dw-newpage-sub {
-        margin-top: 6px;
+    & .dw-cam-sub {
+        margin-top: 8px;
         color: var(--dw-soft);
         font-size: 13.5px;
         font-weight: 600;
@@ -3210,65 +3275,62 @@ html:not(.ddb-app-mode) [data-my-pet-hub][data-daily-web] {
         word-break: keep-all;
     }
 
-    & .dw-newpage-views {
+    /* 네 방향 순서 — 흰 동그라미를 점선으로 이음 */
+    & .dw-cam-steps {
         display: flex;
         flex-wrap: wrap;
-        gap: 14px;
-        margin-top: 18px;
+        gap: 6px 34px;
+        margin: 22px 0 24px;
     }
 
-    & .dw-newpage-views li {
+    & .dw-cam-steps li {
+        position: relative;
         display: flex;
-        width: 78px;
+        width: 84px;
         flex-direction: column;
         align-items: center;
         text-align: center;
     }
 
-    & .dw-newpage-views span {
-        display: grid;
-        width: 58px;
-        height: 58px;
-        place-items: center;
-        border-radius: 20px;
-        background: #e9f4fb;
-        color: #0e8aa0;
-        font-size: 21px;
-        box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%), 0 8px 14px -10px rgb(15 23 42 / 35%);
+    & .dw-cam-steps li + li::before {
+        content: "";
+        position: absolute;
+        top: 30px;
+        left: -32px;
+        width: 28px;
+        border-top: 3px dotted #9ccfe2;
     }
 
-    & .dw-newpage-views strong {
+    & .dw-cam-steps span {
+        display: grid;
+        width: 62px;
+        height: 62px;
+        place-items: center;
+        border-radius: 999px;
+        background: #fff;
+        color: #0e8aa0;
+        font-size: 22px;
+        box-shadow: 0 8px 14px -10px rgb(15 23 42 / 40%);
+    }
+
+    & .dw-cam-steps strong {
         margin-top: 7px;
         color: #334155;
         font-size: 13px;
         font-weight: 800;
     }
 
-    & .dw-newpage-views small {
+    & .dw-cam-steps small {
         color: #94a3b8;
         font-size: 11px;
         font-weight: 700;
     }
 
-    & .dw-newpage-action {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
-        text-align: center;
-    }
-
     /* 기존 주간 촬영 버튼(WeeklyPhotoComparison)을 크게 */
-    & .dw-newpage-action [data-weekly-photo-analysis-launcher] {
+    & .dw-cam-action [data-weekly-photo-analysis-launcher] {
         min-height: 58px;
         padding: 0 32px;
         font-size: 16px;
-    }
-
-    & .dw-newpage-hint {
-        color: #94a3b8;
-        font-size: 12px;
-        font-weight: 700;
     }
 
     /* ── 지난 쪽 모아보기 ── */
@@ -3371,68 +3433,65 @@ html:not(.ddb-app-mode) [data-my-pet-hub][data-daily-web] {
 
     & .dw-page-views i.is-on { background: currentColor; }
 
-    /* ── 그림책 부록 ── */
+    /* ── 그림책 부록 — 둥근 쿠션 셋 ── */
     & .dw-appendix {
-        margin-top: 54px;
+        margin-top: 60px;
     }
 
     & .dw-appendix-head {
-        margin-bottom: 18px;
+        margin-bottom: 26px;
         text-align: center;
     }
 
-    & .dw-appendix-grid {
+    & .dw-appendix-head .dw-pages-title { margin-top: 4px; }
+
+    & .dw-rounds {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 16px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 30px;
     }
 
-    & .dw-appendix-card {
+    & .dw-round {
         display: flex;
+        flex-direction: column;
         align-items: center;
-        gap: 16px;
-        padding: 22px 26px;
-        border-radius: 34px;
-        box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), inset 0 -8px 16px rgb(0 0 0 / 3.5%), 0 18px 30px -22px rgb(15 23 42 / 30%);
+        text-align: center;
         transition: transform 0.18s ease;
     }
 
-    & .dw-appendix-card.is-wide { grid-column: 1 / -1; }
-    & a.dw-appendix-card:hover { transform: translateY(-3px); }
+    & .dw-round:hover { transform: translateY(-4px); }
 
-    & .dw-appendix-icon {
+    & .dw-round.is-pink { --dw-rb: #ffeef3; --dw-rc: #e2557a; }
+    & .dw-round.is-lav { --dw-rb: #f3f0fe; --dw-rc: #7c62d6; }
+    & .dw-round.is-yellow { --dw-rb: #fff6e3; --dw-rc: #d97f0e; }
+
+    & .dw-round-art {
         display: grid;
-        flex: none;
-        width: 56px;
-        height: 56px;
+        width: 190px;
+        height: 190px;
         place-items: center;
         border-radius: 999px;
-        background: #fff;
-        font-size: 21px;
-        box-shadow: 0 8px 14px -10px rgb(15 23 42 / 35%);
+        background: var(--dw-rb);
+        box-shadow: inset 0 4px 0 rgb(255 255 255 / 90%), inset 0 -10px 18px rgb(0 0 0 / 4%), 0 20px 30px -22px rgb(15 23 42 / 35%);
     }
 
-    & .dw-appendix-card > .min-w-0 { flex: 1; }
-
-    & .dw-appendix-kicker {
-        color: inherit;
-        font-family: var(--font-crayon), sans-serif;
-        font-size: 16px;
-        font-weight: 700;
+    & .dw-round-art img {
+        width: 120px;
+        height: 120px;
+        object-fit: contain;
     }
 
-    & .dw-appendix-title {
-        margin: 0;
+    & .dw-round-title {
+        margin-top: 16px;
         color: var(--dw-ink);
         font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif;
-        font-size: 18px;
+        font-size: 20px;
         font-weight: 400;
-        line-height: 1.4;
-        word-break: keep-all;
     }
 
-    & .dw-appendix-body {
-        margin-top: 3px;
+    & .dw-round-body {
+        max-width: 260px;
+        margin-top: 4px;
         color: #64748b;
         font-size: 13px;
         font-weight: 600;
@@ -3440,9 +3499,51 @@ html:not(.ddb-app-mode) [data-my-pet-hub][data-daily-web] {
         word-break: keep-all;
     }
 
-    & .dw-appendix-go {
-        color: inherit;
-        font-size: 15px;
+    & .dw-round-go {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        height: 40px;
+        margin-top: 12px;
+        padding: 0 18px;
+        border-radius: 999px;
+        background: var(--dw-rb);
+        color: var(--dw-rc);
+        font-size: 13px;
+        font-weight: 800;
+    }
+
+    /* 행동·소리 분석 안내 한 줄(연보라) */
+    & .dw-appendix-note {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        max-width: 860px;
+        margin: 30px auto 0;
+        padding: 14px 20px;
+        border-radius: 22px;
+        background: #f7f5fe;
+        color: #475569;
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1.65;
+        word-break: keep-all;
+    }
+
+    & .dw-appendix-note > i {
+        margin-top: 4px;
+        color: #7c62d6;
+    }
+
+    & .dw-appendix-note strong { color: #5b45b0; }
+
+    & .dw-appendix-note-link {
+        margin-left: 4px;
+        color: #7c62d6;
+        font-weight: 800;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+        white-space: nowrap;
     }
 }
 
@@ -3467,12 +3568,14 @@ html:not(.ddb-app-mode) [data-my-pet-hub][data-daily-web] {
         & .dw-book-no.is-right { right: 24px; }
         & .dw-book-cover { padding: 10px; border-radius: 34px; }
         & .dw-book { border-radius: 26px; }
-        & .dw-newpage { grid-template-columns: 1fr; padding: 26px 22px; }
-        & .dw-newpage-views { justify-content: space-between; gap: 6px; }
-        & .dw-newpage-views li { width: 23%; }
-        & .dw-appendix-grid { grid-template-columns: 1fr; }
-        & .dw-appendix-card.is-wide { display: grid; grid-template-columns: 56px minmax(0, 1fr); }
-        & .dw-appendix-card.is-wide > a { grid-column: 1 / -1; width: 100%; }
+        & .dw-cam { grid-template-columns: 1fr; justify-items: center; gap: 26px; padding: 40px 22px 30px; text-align: center; }
+        & .dw-cam::before { left: 50%; transform: translateX(-50%); }
+        & .dw-cam-lens { width: 200px; height: 200px; padding: 12px; }
+        & .dw-cam-steps { justify-content: center; gap: 6px 22px; }
+        & .dw-cam-steps li + li::before { left: -21px; width: 18px; }
+        & .dw-rounds { gap: 18px; }
+        & .dw-round-art { width: 150px; height: 150px; }
+        & .dw-round-art img { width: 96px; height: 96px; }
         & :is(.dw-doodle-b, .dw-doodle-d) { display: none; }
     }
 }
@@ -3482,7 +3585,11 @@ html:not(.ddb-app-mode) [data-my-pet-hub][data-daily-web] {
         & .dw-book-hero { flex-direction: column; text-align: center; }
         & .dw-book-ring { width: 150px; height: 150px; }
         & .dw-book-facts { gap: 12px 10px; }
-        & .dw-newpage-views span { width: 50px; height: 50px; font-size: 18px; border-radius: 17px; }
+        & .dw-cam-steps { gap: 6px 10px; }
+        & .dw-cam-steps li { width: 70px; }
+        & .dw-cam-steps li + li::before { display: none; }
+        & .dw-cam-steps span { width: 52px; height: 52px; font-size: 19px; }
+        & .dw-rounds { grid-template-columns: 1fr; gap: 26px; }
         & .dw-pages-list { grid-template-columns: 1fr 1fr; gap: 10px; }
         & .dw-page-card { padding: 14px 14px 12px; }
     }

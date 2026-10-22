@@ -336,42 +336,47 @@ export default function MyPetHub() {
                     {[0, 1, 2, 3].map((step) => <CrayonDoodle key={step} kind="paw" />)}
                 </div>
 
-                {/* 새 쪽 그리기 — 점선 빈 쪽 + 네 방향 + 주간 촬영(기존 WeeklyPhotoComparison) */}
-                <div className="dw-newpage">
-                    <CrayonDoodle kind="star" className="dw-newpage-star" />
-                    <div className="dw-newpage-text">
+                {/* 새 쪽 찍기 — 크레파스 카메라(2026-10-22 사용자 선택 N2): 크레파스 렌즈 + 네 방향 순서 + 주간 촬영(기존 WeeklyPhotoComparison) */}
+                <div className="dw-cam">
+                    <span className="dw-cam-flash" aria-hidden="true" />
+                    <div className="dw-cam-lens" aria-hidden="true">
+                        <div className="dw-cam-glass">
+                            <span className="dw-cam-shine" />
+                            <CrayonDoodle kind="paw" className="dw-cam-paw" />
+                        </div>
+                    </div>
+                    <div className="min-w-0">
                         <p className="ddb-crayon-kicker dw-kicker">AI 주간 사진 변화 리포트</p>
-                        <h2 id="health-report-title" className="ddb-crayon-title dw-newpage-title">새 쪽 그리기 · 매주 같은 방향으로 비교해요</h2>
-                        <p className="dw-newpage-sub">새로 촬영한 사진은 선택한 {pet.name}의 주간 기록으로만 저장되며, 최초 등록 사진을 덮어쓰지 않습니다.</p>
-                        <ol className="dw-newpage-views" aria-label="촬영 방향">
-                            {PETLENS_PHOTO_VIEWS.map((view) => (
+                        <h2 id="health-report-title" className="ddb-crayon-title dw-cam-title">찰칵! 이번 주 {pet.name}의 모습을 담아 볼까요?</h2>
+                        <p className="dw-cam-sub">새로 촬영한 사진은 선택한 {pet.name}의 주간 기록으로만 저장되며, 최초 등록 사진을 덮어쓰지 않습니다.</p>
+                        <ol className="dw-cam-steps" aria-label="촬영 방향 순서">
+                            {PETLENS_PHOTO_VIEWS.map((view, index) => (
                                 <li key={view.id}>
                                     <span aria-hidden="true"><i className={`fa-solid ${VIEW_ICONS[view.id]}`} /></span>
-                                    <strong>{view.label}</strong>
+                                    <strong>{index + 1}. {view.label}</strong>
                                     <small>{view.helper}</small>
                                 </li>
                             ))}
                         </ol>
-                    </div>
-                    <div className="dw-newpage-action">
-                        {pet.apiProfileId && accessToken ? (
-                            <WeeklyPhotoComparison
-                                key={pet.apiProfileId}
-                                pet={pet}
-                                history={weeklyHistory}
-                                onCompleted={(record) => {
-                                    setOpenedRecordId(undefined);
-                                    setWeeklyState((current) => ({
-                                        profileId: pet.apiProfileId,
-                                        loading: false,
-                                        items: [record, ...current.items.filter((item) => item.id !== record.id)].slice(0, 8),
-                                    }));
-                                }}
-                            />
-                        ) : (
-                            <Link href="/auth/login/?redirect=%2Fmy-pet" className="ddb-crayon-link dw-pill dw-pill-main">다시 로그인하고 사진 남기기</Link>
-                        )}
-                        <p className="dw-newpage-hint">정면 · 왼쪽 · 오른쪽 · 뒷면을 차례로 찍어요</p>
+                        <div className="dw-cam-action">
+                            {pet.apiProfileId && accessToken ? (
+                                <WeeklyPhotoComparison
+                                    key={pet.apiProfileId}
+                                    pet={pet}
+                                    history={weeklyHistory}
+                                    onCompleted={(record) => {
+                                        setOpenedRecordId(undefined);
+                                        setWeeklyState((current) => ({
+                                            profileId: pet.apiProfileId,
+                                            loading: false,
+                                            items: [record, ...current.items.filter((item) => item.id !== record.id)].slice(0, 8),
+                                        }));
+                                    }}
+                                />
+                            ) : (
+                                <Link href="/auth/login/?redirect=%2Fmy-pet" className="ddb-crayon-link dw-pill dw-pill-main">다시 로그인하고 사진 남기기</Link>
+                            )}
+                        </div>
                     </div>
                 </div>
 
@@ -400,39 +405,30 @@ export default function MyPetHub() {
                 )}
             </section>
 
-            {/* 그림책 부록 — 등록한 아이와 따로 쓰는 기능 · 함께 쓰면 좋은 기능 */}
-            <section className="dw-appendix" aria-labelledby="independent-observation-title">
+            {/* 그림책 부록 — 둥근 쿠션 셋(2026-10-22 사용자 선택 N2): 펫렌즈 · 행동·소리 · 케어톡(모두 기존 페이지) */}
+            <section className="dw-appendix" aria-labelledby="dw-appendix-title">
                 <div className="dw-appendix-head">
                     <p className="ddb-crayon-kicker dw-kicker">BOOK APPENDIX</p>
-                    <p className="ddb-crayon-title ddb-crayon-underline dw-pages-title">그림책 부록</p>
+                    <h2 id="dw-appendix-title" className="ddb-crayon-title ddb-crayon-underline dw-pages-title">그림책과 함께 쓰면 좋아요</h2>
                 </div>
-                <div className="dw-appendix-grid">
-                    <article className="dw-appendix-card is-lav is-wide">
-                        <span className="dw-appendix-icon" aria-hidden="true"><i className="fa-solid fa-wave-square" /></span>
-                        <div className="min-w-0">
-                            <p className="dw-appendix-kicker">별도 기능</p>
-                            <h2 id="independent-observation-title" className="dw-appendix-title">행동·소리 분석은 등록한 우리 아이와 별개예요</h2>
-                            <p className="dw-appendix-body">궁금한 강아지의 행동·소리 영상을 관찰하는 독립 기능이며, 주간 사진 변화 기록과 섞이지 않습니다.</p>
-                        </div>
-                        <Link href="/pet-lens/?mode=observation#observation" className="ddb-crayon-link dw-pill dw-pill-main shrink-0">행동·소리 분석 열기</Link>
-                    </article>
-                    <Link href="/pet-lens/" className="dw-appendix-card is-pink">
-                        <span className="dw-appendix-icon" aria-hidden="true"><i className="fa-solid fa-camera-retro" /></span>
-                        <div className="min-w-0">
-                            <p className="dw-appendix-title">펫렌즈 사진 분석</p>
-                            <p className="dw-appendix-body">오늘 모습을 한 장으로 바로 살펴봐요.</p>
-                        </div>
-                        <i className="fa-solid fa-arrow-right dw-appendix-go" aria-hidden="true" />
-                    </Link>
-                    <Link href="/chat/" className="dw-appendix-card is-yellow">
-                        <span className="dw-appendix-icon" aria-hidden="true"><i className="fa-solid fa-comment-dots" /></span>
-                        <div className="min-w-0">
-                            <p className="dw-appendix-title">케어톡 상담</p>
-                            <p className="dw-appendix-body">그림책을 보다 궁금한 점을 물어봐요.</p>
-                        </div>
-                        <i className="fa-solid fa-arrow-right dw-appendix-go" aria-hidden="true" />
-                    </Link>
+                <div className="dw-rounds">
+                    {[
+                        { href: "/pet-lens/", art: "/images/ui/pet-lens-v2-256.webp", title: "펫렌즈 사진 분석", body: "오늘 모습을 한 장으로 바로 살펴봐요.", go: "바로 살펴보기", tint: "is-pink" },
+                        { href: "/pet-lens/?mode=observation#observation", art: "/images/ui/menu-lab-observation-128.webp", title: "행동·소리 분석", body: "궁금한 행동·소리 영상을 따로 관찰해요.", go: "열어 보기", tint: "is-lav" },
+                        { href: "/chat/", art: "/images/ui/caretalk-web-128.webp", title: "케어톡 상담", body: "그림책을 보다 궁금한 점을 물어봐요.", go: "물어보기", tint: "is-yellow" },
+                    ].map((item) => (
+                        <Link key={item.href} href={item.href} className={`dw-round ${item.tint}`}>
+                            <span className="dw-round-art" aria-hidden="true"><Image src={item.art} alt="" width={120} height={120} /></span>
+                            <strong className="dw-round-title">{item.title}</strong>
+                            <span className="dw-round-body">{item.body}</span>
+                            <span className="dw-round-go">{item.go} <i className="fa-solid fa-arrow-right text-[10px]" aria-hidden="true" /></span>
+                        </Link>
+                    ))}
                 </div>
+                <p className="dw-appendix-note">
+                    <i className="fa-solid fa-circle-info" aria-hidden="true" />
+                    <span><strong id="independent-observation-title">행동·소리 분석은 등록한 우리 아이와 별개예요.</strong> 궁금한 강아지의 행동·소리 영상을 관찰하는 독립 기능이며, 주간 사진 변화 기록과 섞이지 않습니다. <Link href="/pet-lens/?mode=observation#observation" className="dw-appendix-note-link">행동·소리 분석 열기</Link></span>
+                </p>
             </section>
         </main>
     );
