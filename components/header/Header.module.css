@@ -76,8 +76,8 @@
     position: relative;
     isolation: isolate;
     overflow: visible;
-    /* 메뉴 글자는 앱 제목 글꼴(Cafe24 써라운드, globals.css에서 불러옴) — 한 굵기뿐이라 400 */
-    font-family: "Cafe24Ssurround", var(--font-wanted-sans), Arial, sans-serif;
+    /* 메뉴 글자는 웹 제목 글꼴(주아, app/layout.tsx 의 next/font, 2026-10-22 사용자) — 한 굵기뿐이라 400 */
+    font-family: var(--font-jua), var(--font-wanted-sans), Arial, sans-serif;
     font-weight: 400;
     letter-spacing: -0.02em;
     transform-origin: 50% 72%;
