@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import GoodsContestLanding from "@/components/growth/GoodsContestLanding";
+// 웹 매일 댕생활 꾸밈(2026-10-22) — 웹에서만 적용(data-daily-web 범위)
+import "../daily-web.css";
 
 export const metadata: Metadata = {
     title: "댕다방 굿즈 500명 공모전 | 함께 고르는 다음 굿즈",

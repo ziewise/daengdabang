@@ -450,8 +450,9 @@ export default function GoodsContest({
                     </div>
                 </div>
 
-                <div className="ddb-crayon-paper mt-6 overflow-hidden rounded-[34px] border">
-                    <div className="ddb-crayon-banner grid gap-5 p-5 sm:p-7 lg:grid-cols-[minmax(0,1.25fr)_minmax(360px,0.75fr)] lg:items-start lg:p-9">
+                {/* 웹 매일 댕생활 꾸밈(2026-10-22) — 안내 판은 연보라 크레파스 칠, 진행 순서는 숫자 동그라미 길. CSS 는 app/daily-web.css */}
+                <div className="dw-contest dw-tint-lavender mt-6 overflow-hidden">
+                    <div className="grid gap-5 p-5 sm:p-7 lg:grid-cols-[minmax(0,1.25fr)_minmax(360px,0.75fr)] lg:items-start lg:p-9">
                         <div>
                             <div className="flex flex-wrap items-center gap-2">
                                 <p className="ddb-crayon-kicker text-xs">{content.kicker}</p>
@@ -460,10 +461,10 @@ export default function GoodsContest({
                                 </span>
                                 <span className="rounded-full border border-indigo-200 bg-white/90 px-3 py-1 text-[10px] font-black text-indigo-800">회원·비회원 모두 참여</span>
                             </div>
-                            <h2 id="goods-contest-title" className="ddb-crayon-title ddb-crayon-underline mt-2 break-keep text-3xl leading-tight text-neutral-950 md:text-5xl">
+                            <h2 id="goods-contest-title" className="ddb-crayon-title ddb-crayon-underline dw-h2 break-keep">
                                 {content.title}
                             </h2>
-                            <p className="mt-4 max-w-2xl break-keep text-sm font-bold leading-7 text-neutral-650">
+                            <p className="dw-lead break-keep">
                                 {content.description}
                             </p>
                         </div>
@@ -485,14 +486,13 @@ export default function GoodsContest({
                         </div>
                     </div>
 
-                    <ol className="grid border-t border-neutral-200 bg-white/75 sm:grid-cols-2 lg:grid-cols-4" aria-label="굿즈 공모전 진행 순서">
+                    <ol className="dw-flow" aria-label="굿즈 공모전 진행 순서">
                         {CONTEST_STEPS.map((step) => (
-                            <li key={step.number} className="border-b border-neutral-200 p-4 last:border-b-0 sm:[&:nth-last-child(-n+2)]:border-b-0 lg:border-b-0 lg:border-r lg:last:border-r-0">
-                                <div className="flex items-center gap-2">
-                                    <span className="ddb-crayon-kicker text-[10px]">{step.number}</span>
-                                    <strong className="text-sm font-black text-neutral-950">{step.title}</strong>
-                                </div>
-                                <p className="mt-1 text-[11px] font-bold leading-4 text-neutral-550">{step.description}</p>
+                            <li key={step.number} className="dw-flow-step">
+                                <span className="dw-flow-num" aria-hidden="true">{Number(step.number)}</span>
+                                <span className="sr-only">{step.number}</span>
+                                <strong className="dw-card-title">{step.title}</strong>
+                                <p className="dw-card-body mt-1">{step.description}</p>
                             </li>
                         ))}
                     </ol>
@@ -538,7 +538,7 @@ export default function GoodsContest({
                     </div>
                 ) : null}
 
-                <aside className="mt-6 rounded-2xl border border-amber-200 bg-amber-50/80 px-4 py-4 text-xs font-bold leading-6 text-neutral-700" aria-label="소량 제작 예상 펀딩가 안내">
+                <aside className="dw-paper-note dw-tint-yellow mt-6" aria-label="소량 제작 예상 펀딩가 안내">
                     <p className="text-sm font-black text-neutral-900">좋은 소재와 꼼꼼한 마감을 위한 소량 제작</p>
                     <p className="mt-1">예상 펀딩가는 샘플 제작·인쇄·마감·검수·포장과 불량 대응 비용을 고려했습니다. 부가세 포함, 배송비 별도이며 최종 사양과 제조사 견적에 따라 달라질 수 있어요.</p>
                     <p className="mt-1">세트 상품은 1세트, 그 외 상품은 1개 기준입니다. 이미지 속 여러 캐릭터가 모두 포함되는 것은 아니며, 크기·소재·세트 구성은 제작 전 안내합니다.</p>
@@ -554,8 +554,8 @@ export default function GoodsContest({
                             ? Math.min(100, (itemSummary.selectionCount / itemSummary.goal) * 100)
                             : 0;
                         return (
-                            <article key={catalogItem.id} className={`ddb-crayon-paper flex h-full flex-col overflow-hidden rounded-[26px] border ${contentReady && !itemContent.active ? "opacity-75" : ""}`}>
-                                <div className="relative overflow-hidden border-b border-neutral-200 bg-white">
+                            <article key={catalogItem.id} className={`dw-goods-card flex h-full flex-col overflow-hidden ${contentReady && !itemContent.active ? "opacity-75" : ""}`}>
+                                <div className="dw-goods-shot relative overflow-hidden">
                                     <Image
                                         src={catalogItem.imageSrc}
                                         alt={`${itemContent.name} 굿즈 시안`}
@@ -567,7 +567,7 @@ export default function GoodsContest({
                                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                                         className="aspect-square h-auto w-full bg-[#f4e8d3] object-cover transition duration-300 hover:scale-[1.02]"
                                     />
-                                    <span className="absolute left-3 top-3 rounded-full border border-white/80 bg-white/90 px-2.5 py-1 text-[10px] font-black text-neutral-700 shadow-sm">
+                                    <span className="dw-price-tag absolute left-3 top-3">
                                         예상 펀딩가 {itemContent.expectedPriceKrw.toLocaleString("ko-KR")}원 · {catalogItem.priceUnit}
                                     </span>
                                     {contentReady && !itemContent.active ? (
@@ -576,7 +576,7 @@ export default function GoodsContest({
                                 </div>
 
                                 <div className="flex flex-1 flex-col p-4 sm:p-5">
-                                    <h3 className="ddb-crayon-title text-2xl text-neutral-950">{itemContent.name}</h3>
+                                    <h3 className="ddb-crayon-title dw-h3">{itemContent.name}</h3>
                                     <p className="mt-2 min-h-10 text-xs font-bold leading-5 text-neutral-600">{itemContent.summary}</p>
 
                                     <div className="mt-5">
@@ -595,9 +595,9 @@ export default function GoodsContest({
                                                     aria-valuemax={itemSummary.goal}
                                                     aria-valuenow={Math.min(itemSummary.selectionCount, itemSummary.goal)}
                                                     aria-valuetext={`${itemSummary.selectionCount}명 선택, 목표 ${itemSummary.goal}명`}
-                                                    className="mt-2 h-2.5 overflow-hidden rounded-full bg-neutral-200"
+                                                    className="dw-progress mt-2 h-3 overflow-hidden rounded-full"
                                                 >
-                                                    <div className={`h-full rounded-full transition-[width] ${itemSummary.productionEligible ? "bg-emerald-500" : "bg-indigo-500"}`} style={{ width: `${progress}%` }} />
+                                                    <div className={`dw-progress-fill h-full rounded-full transition-[width] ${itemSummary.productionEligible ? "is-done" : ""}`} style={{ width: `${progress}%` }} />
                                                 </div>
                                                 <p className="mt-2 text-[10px] font-bold leading-4 text-neutral-500">
                                                     {itemSummary.productionEligible
@@ -648,7 +648,7 @@ export default function GoodsContest({
                                                 aria-pressed={selected}
                                                 disabled={pendingItemId !== null || summaryState !== "ready" || selectionState !== "ready"}
                                                 onClick={() => void toggleSelection(catalogItem.id, itemContent.active)}
-                                                className={`inline-flex min-h-11 w-full items-center justify-center rounded-full border px-4 text-xs font-black transition disabled:cursor-wait disabled:opacity-55 ${selected ? "border-rose-200 bg-rose-50 text-rose-800 hover:bg-rose-100" : "border-indigo-700 bg-indigo-700 text-white hover:bg-indigo-800"}`}
+                                                className={`inline-flex min-h-11 w-full items-center justify-center rounded-full border px-4 text-xs font-black transition disabled:cursor-wait disabled:opacity-55 ${selected ? "dw-select-on" : "dw-select"}`}
                                             >
                                                 {pending ? <><i className="fa-solid fa-circle-notch fa-spin mr-2" aria-hidden="true" />처리 중…</> : selected ? "선택 취소" : "이 굿즈 선택"}
                                             </button>
@@ -660,7 +660,7 @@ export default function GoodsContest({
                     })}
                 </div>
 
-                <aside className="mt-6 rounded-[26px] border border-indigo-200 bg-indigo-50/80 p-5 text-xs font-bold leading-6 text-indigo-950 sm:p-6" aria-label="굿즈 공모전 결제 및 제작 안내">
+                <aside className="dw-paper-note dw-tint-sky mt-6" aria-label="굿즈 공모전 결제 및 제작 안내">
                     <p className="font-black">선택 단계 안전 안내</p>
                     <p className="mt-1">선택은 주문·예약·결제가 아니며 결제 정보도 받지 않습니다.</p>
                     <p>상품별 500명 달성 후 최종 사양·가격·배송·제작일을 다시 알리고, 조건에 동의한 분만 별도 결제 단계로 진행합니다.</p>

@@ -33,7 +33,7 @@ export default function GoodsContestLanding() {
     }, [hydrated, user]);
 
     return (
-        <main className="w-full overflow-x-clip" data-growth-motion-scope>
+        <main className="w-full overflow-x-clip" data-growth-motion-scope data-daily-web>
             <GoodsContest content={content} contentReady={contentReady} />
         </main>
     );
