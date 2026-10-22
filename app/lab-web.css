@@ -74,6 +74,9 @@ html:not(.ddb-app-mode) [data-lab-web] {
     & [data-petlens-pet-selector] > span:first-child { color: #047857; font-family: var(--font-jua), sans-serif; font-size: 15px; font-weight: 400; }
     & [data-petlens-pet-selector] > span:last-child { color: #3f8f73; }
 
+    /* 사진 분석 순서 — 점선 동그라미 셋(웹에서만) */
+    & .lab-steps { display: flex !important; --dw-step: 92px; max-width: 900px; margin: 0 auto 30px; }
+
     /* 사진 분석 — 왼쪽 입력 판(흰 쿠션) · 오른쪽 결과 자리 */
     & .lab-photo-grid { gap: 26px; }
     & .lab-form { padding: 26px 24px !important; border-radius: 36px !important; }
@@ -181,6 +184,11 @@ html:not(.ddb-app-mode) [data-lab-web] {
         & .lab-tab-art { width: 44px; height: 44px; }
         & .lab-tab-text { align-items: center !important; font-size: 14.5px; }
         & .lab-tab-help { display: none !important; }
+        & .lab-steps { --dw-step: 64px; gap: 6px; flex-wrap: nowrap !important; }
+        & .lab-steps > li { flex: 1 1 0 !important; }
+        & .lab-steps > li + li::before { display: none; }
+        & .lab-steps .dw-dstep-title { font-size: 14px; }
+        & .lab-steps .dw-dstep-body { display: none; }
         & .lab-form { padding: 20px 16px !important; border-radius: 30px !important; }
         & [data-petlens-member-gate] > div { padding: 28px 20px 24px; border-radius: 34px !important; }
     }

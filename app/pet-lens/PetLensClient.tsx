@@ -157,6 +157,30 @@ const LAB_VIEW_ART = {
     back: "/images/ui/mypet-view-back-160.webp",
 } as const;
 
+// 사진 분석 순서 — 점선으로 이은 동그라미 셋(보물광산 비회원 단계와 같은 결), 웹에서만(앱에서는 숨김)
+const LAB_PHOTO_STEPS = [
+    { art: "/images/ui/mypet-view-front-160.webp", title: "네 방향 사진", body: "정면 · 왼쪽 · 오른쪽 · 뒷면을 한 장씩 담아요", tone: "is-yellow" },
+    { art: "/images/ui/lab-dog-256.webp", title: "우리 아이 정보 확인", body: "이름 · 나이 · 크기 · 모질 · 활동량과 관심 포인트", tone: "is-mint" },
+    { art: "/images/ui/lab-summary-256.webp", title: "결과 · 맞춤 상품", body: "외형 · 체형 · 털 상태와 케어 포인트를 정리해요", tone: "is-pink" },
+] as const;
+
+function LabPhotoSteps() {
+    return (
+        <ol className="dw-dsteps lab-steps hidden" aria-label="사진 분석 순서">
+            {LAB_PHOTO_STEPS.map((step, index) => (
+                <li key={step.title} className={step.tone}>
+                    <span className="dw-dstep-art" aria-hidden="true">
+                        <Image src={step.art} alt="" width={84} height={84} />
+                        <span className="dw-dstep-no">{index + 1}</span>
+                    </span>
+                    <span className="dw-dstep-title">{step.title}</span>
+                    <span className="dw-dstep-body">{step.body}</span>
+                </li>
+            ))}
+        </ol>
+    );
+}
+
 // 연구소 머리 판 — 사진 분석 = 연보라 쿠션 + 카메라 그림, 행동·소리 = 하늘 쿠션 + 연구하는 강아지 그림(무지개 고리).
 // 웹에서만 보이고 앱에서는 아래 원래 머리글(lab-legacy-head)이 보인다.
 function LabHero({ mode }: { mode: PetLensMode }) {
@@ -597,6 +621,8 @@ export default function PetLensClient() {
                     />
                 )
             ) : (
+            <>
+            <LabPhotoSteps />
             <div className="lab-photo-grid grid gap-6 lg:grid-cols-[420px_1fr]">
                 <form onSubmit={submit} className="surface lab-form grid h-fit gap-4 p-5">
                     <div data-petlens-page-multiview-upload>
@@ -757,6 +783,7 @@ export default function PetLensClient() {
                     )}
                 </section>
             </div>
+            </>
             )}
         </LabMain>
     );
