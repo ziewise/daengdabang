@@ -4544,3 +4544,21 @@ html:not(.ddb-app-mode) [data-daily-web] {
         border-style: solid !important;
     }
 }
+
+/* ── 보물광산 안전 공유 · 안심 안내 아이콘을 사용자 그림으로(2026-10-22, public/images/오늘의보물.png 를 둘로 나눔) ──
+ *  안전 공유 첫 버튼은 하늘 판과 같은 색이라 흰 알약으로 */
+html:not(.ddb-app-mode) [data-daily-web] {
+    & section[aria-labelledby="growth-share-title"] .ddb-crayon-icon {
+        background: #fff url(/images/ui/treasure-safe-share-256.webp) center / 64px no-repeat !important;
+    }
+
+    & section[aria-labelledby="growth-share-title"] .ddb-motion-lift:nth-child(1) {
+        background: #fff !important;
+    }
+
+    & [data-growth-policy-summary] summary::before {
+        background: #fff url(/images/ui/treasure-safe-default-256.webp) center / 54px no-repeat;
+        color: transparent;
+        content: "";
+    }
+}
