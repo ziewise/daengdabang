@@ -36,7 +36,7 @@ const RANK_TONE = ["bg-[#f6b73c] text-[#5a3a00]", "bg-[#b9c6d4] text-[#2f3c4a]",
 const pickTopThree = pickHotPickTopThree;
 
 // 카드 한 면 — 순위 배지 · 사진 · 브랜드 · 이름 · 가격(공용 상품 카드와 같은 가격 표시)
-function Face({ p, rank, back, shown }: { p: CatalogProduct; rank: number; back?: boolean; shown: boolean }) {
+function Face({ p, rank, back, shown, ghost }: { p: CatalogProduct; rank: number; back?: boolean; shown: boolean; ghost?: boolean }) {
     const { locale, productName, formatPrice } = useI18n();
     const name = productName(p);
     const purchase = productPurchaseState(p);
@@ -47,7 +47,7 @@ function Face({ p, rank, back, shown }: { p: CatalogProduct; rank: number; back?
             // 뒤에 숨은 면은 키보드 · 화면읽기에서 빼기
             aria-hidden={!shown}
             tabIndex={shown ? undefined : -1}
-            className={`ddb-hotpick-face flex flex-col overflow-hidden rounded-2xl bg-white shadow-card ${back ? "ddb-hotpick-back" : ""}`}
+            className={`ddb-hotpick-face flex flex-col overflow-hidden rounded-2xl bg-white shadow-card ${back ? "ddb-hotpick-back" : ""} ${ghost ? "ddb-hotpick-ghost" : ""}`}
         >
             <span className="relative block aspect-square bg-white">
                 {productCardImage(p) && <ProductColorImage src={productCardImage(p)!} alt={name} sizes="(max-width: 1024px) 46vw, 260px" className="object-contain p-2" />}
@@ -115,6 +115,8 @@ function GroupCard({ group, items, index, tick }: { group: (typeof GROUPS)[numbe
             {/* 뒤집히는 카드 — 두 면을 같은 칸에 겹쳐 높이를 맞춤 */}
             <div className="ddb-hotpick-flip" style={{ perspective: "1200px" }}>
                 <div className="ddb-hotpick-inner" style={{ transform: `rotateY(${state.deg}deg)` }}>
+                    {/* 키 맞춤용 보이지 않는 세 장 — 카드 높이를 세 상품 중 가장 긴 것에 고정해, 뒤집혀 다른 상품이 나와도 화면이 흔들리지 않게(2026-10-22) */}
+                    {items.map((item, rank) => <Face key={`ghost-${item.id}`} p={item} rank={rank} shown={false} ghost />)}
                     <Face p={faceA} rank={state.a} shown={!state.flipped} />
                     <Face p={faceB} rank={state.b} back shown={state.flipped} />
                 </div>

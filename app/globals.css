@@ -2742,6 +2742,12 @@ article[data-pet-product="true"] > div:has(> [role="group"]) {
     transform: rotateY(180deg);
 }
 
+/* 키 맞춤용 보이지 않는 면 — 자리만 차지(보이지 않고 누를 수 없음) */
+.ddb-hotpick-ghost {
+    visibility: hidden;
+    pointer-events: none;
+}
+
 /* 제품군 이름은 제목 글꼴(Cafe24 써라운드, 한 굵기) */
 .ddb-hotpick-group {
     font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif;

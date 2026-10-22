@@ -104,19 +104,18 @@
 .ddb-hotpick-page .ddb-hotpick-rank.is-pick { background: #fff1f5; color: #e2557a; box-shadow: 0 0 0 1.5px #f6c3d2, 0 5px 10px -6px rgb(15 23 42 / 35%); }
 
 
-/* 태블릿 · 휴대폰 — 다섯 장을 옆으로 밀어 보기 */
+/* 태블릿 — 한 줄 세 장(다섯 장이 두 줄로) */
 @media (max-width: 900px) {
-    .ddb-hotpick-page .ddb-hotpick-row {
-        display: flex;
-        gap: 10px;
-        overflow-x: auto;
-        padding-top: 10px;
-        scroll-snap-type: x mandatory;
-    }
-    .ddb-hotpick-page .ddb-hotpick-item { flex: 0 0 31%; scroll-snap-align: start; }
+    .ddb-hotpick-page .ddb-hotpick-row { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 22px; }
 }
 
-@media (max-width: 520px) {
-    .ddb-hotpick-page .ddb-hotpick-item { flex-basis: 44%; }
+/* 휴대폰 — 다른 상품 페이지처럼 두 칸, 1 · 2 · 3위 + 추천 하나(2×2), 두 번째 추천은 숨김. 제목 줄 · 안내는 줄바꿈 */
+@media (max-width: 640px) {
+    .ddb-hotpick-page .ddb-pl-titlebox { flex-wrap: wrap; gap: 4px 10px; }
+    .ddb-hotpick-page .ddb-hotpick-note { display: flex; align-items: flex-start; font-size: 11.5px; line-height: 1.5; border-radius: 16px; }
+    .ddb-hotpick-page .ddb-hotpick-note i { margin-top: 3px; }
+    .ddb-hotpick-page .ddb-hotpick-groups { gap: 32px; }
+    .ddb-hotpick-page .ddb-hotpick-row { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 10px; }
+    .ddb-hotpick-page .ddb-hotpick-item:nth-child(5) { display: none; }
     .ddb-hotpick-page .ddb-hotpick-group-title { font-size: 17px; }
 }
