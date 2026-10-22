@@ -1615,3 +1615,204 @@ html:not(.ddb-app-mode) [data-daily-web] {
         }
     }
 }
+
+/* ───────── 흰 판 셋(로그인 안내 · 안전 공유 · 안심 안내)을 크레파스 결로 잇기(2026-10-22 사용자 "따로 노는 느낌") ─────────
+   흰 바탕은 그대로, 위쪽 세 색 크레파스 띠 + 색 점선 테두리 + 색 그림자 + 왼쪽 큰 동그라미 그림 */
+html:not(.ddb-app-mode) [data-daily-web] {
+    /* 세 색 크레파스 띠(판 위쪽 가장자리) */
+    & .dw-band-top,
+    & section[aria-labelledby="growth-share-title"],
+    & [data-growth-policy-summary] {
+        position: relative;
+        overflow: hidden;
+    }
+
+    & .dw-band-top::after,
+    & section[aria-labelledby="growth-share-title"]::after,
+    & [data-growth-policy-summary]::after {
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        height: 8px;
+        background: repeating-linear-gradient(90deg, #8fd3e3 0 22px, #f7b6c9 22px 44px, #f5cf7e 44px 66px);
+        content: "";
+        opacity: 0.9;
+        pointer-events: none;
+    }
+
+    /* 큰 동그라미 그림 받침 */
+    & .dw-art-circle {
+        display: grid;
+        width: 96px;
+        height: 96px;
+        flex: none;
+        place-items: center;
+        border-radius: 999px;
+    }
+
+    & .dw-art-circle img {
+        width: 78px;
+        height: 78px;
+        object-fit: contain;
+    }
+
+    & .dw-art-pink {
+        border: 2px dashed rgb(239 71 111 / 30%);
+        background: #ffeef3;
+    }
+
+    /* ── 로그인 안내: 한 줄 배치(꼬리는 위로) ── */
+    & .dw-login-bubble {
+        flex-direction: row;
+        gap: 22px;
+        max-width: 980px;
+        padding: 28px 30px 24px;
+        border-color: rgb(239 71 111 / 32%);
+        text-align: left;
+        box-shadow: 3px 4px 0 rgb(239 71 111 / 10%), 0 16px 34px -20px rgb(15 23 42 / 22%);
+        overflow: visible;
+    }
+
+    & .dw-login-bubble::before {
+        border-color: rgb(239 71 111 / 32%);
+        z-index: 1;
+    }
+
+    /* 말풍선 꼬리 때문에 판을 자르지 않으므로 띠를 둥근 모서리 안쪽으로 */
+    & .dw-login-bubble::after {
+        right: 26px;
+        left: 26px;
+        border-radius: 0 0 8px 8px;
+    }
+
+    & .dw-login-text {
+        flex: 1;
+        min-width: 0;
+    }
+
+    /* ── 안전 공유: 하늘 점선 · 말풍선 그림 · 칠한 알약 ── */
+    & section[aria-labelledby="growth-share-title"] {
+        display: flex;
+        flex-direction: column;
+        border-color: rgb(8 145 178 / 30%) !important;
+        box-shadow: 3px 4px 0 rgb(8 145 178 / 10%), 0 16px 34px -20px rgb(15 23 42 / 22%) !important;
+    }
+
+    & section[aria-labelledby="growth-share-title"] > div:nth-child(2) {
+        margin-top: auto;
+        padding-top: 18px;
+    }
+
+    & section[aria-labelledby="growth-share-title"] .ddb-crayon-icon {
+        width: 84px !important;
+        height: 84px !important;
+        border: 2px dashed rgb(8 145 178 / 30%) !important;
+        background: #eaf5fb url(/images/ui/daily-hero-community-384.webp) center / 66px no-repeat !important;
+    }
+
+    & section[aria-labelledby="growth-share-title"] .ddb-crayon-icon i {
+        display: none;
+    }
+
+    & section[aria-labelledby="growth-share-title"] .ddb-motion-lift:nth-child(1) {
+        border-color: rgb(8 145 178 / 32%) !important;
+        background: #eaf5fb !important;
+    }
+
+    & section[aria-labelledby="growth-share-title"] .ddb-motion-lift:nth-child(2) {
+        border-color: rgb(234 120 60 / 34%) !important;
+        background: #fff4ec !important;
+    }
+
+    /* ── 안심 안내: 민트 점선 · 방패 동그라미 ── */
+    & [data-growth-policy-summary] {
+        border-color: rgb(16 160 110 / 30%) !important;
+        box-shadow: 3px 4px 0 rgb(16 160 110 / 10%), 0 16px 34px -20px rgb(15 23 42 / 22%) !important;
+    }
+
+    & [data-growth-policy-summary] summary {
+        gap: 20px !important;
+        padding-top: 26px !important;
+    }
+
+    & [data-growth-policy-summary] summary::before {
+        display: grid;
+        width: 72px;
+        height: 72px;
+        flex: none;
+        place-items: center;
+        border: 2px dashed rgb(16 160 110 / 32%);
+        border-radius: 999px;
+        background: #eaf8f2;
+        color: #12a17a;
+        content: "\f3ed";
+        font-family: "Font Awesome 7 Free";
+        font-size: 28px;
+        font-weight: 900;
+    }
+
+    & [data-growth-policy-summary] summary > div {
+        flex: 1;
+    }
+
+    & [data-growth-policy-summary] summary > span {
+        border-color: rgb(16 160 110 / 40%) !important;
+        background: #eaf8f2 !important;
+        color: #0f7a55 !important;
+    }
+}
+
+@media (max-width: 767px) {
+    html:not(.ddb-app-mode) [data-daily-web] {
+        & .dw-login-bubble {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        & [data-growth-policy-summary] summary::before {
+            display: none;
+        }
+    }
+}
+
+/* 안심 안내 펼친 내용 — 세 칸을 파스텔 칠 카드로 */
+html:not(.ddb-app-mode) [data-daily-web] [data-growth-policy-summary] {
+    & summary + div {
+        border-top: 1.5px dashed rgb(16 160 110 / 22%) !important;
+    }
+
+    & summary + div > div:first-child {
+        gap: 14px;
+        padding: 20px 24px;
+        border: 0 !important;
+    }
+
+    & summary + div > div:first-child > article {
+        border: 1.5px dashed rgb(100 116 139 / 20%) !important;
+        border-radius: 24px;
+    }
+
+    & summary + div > div:first-child > article:nth-child(1) {
+        background: #fff8e3 repeating-linear-gradient(168deg, rgb(245 158 11 / 6%) 0 3px, transparent 3px 7px);
+    }
+
+    & summary + div > div:first-child > article:nth-child(2) {
+        background: #ffeef3 repeating-linear-gradient(168deg, rgb(239 71 111 / 6%) 0 3px, transparent 3px 7px);
+    }
+
+    & summary + div > div:first-child > article:nth-child(3) {
+        background: #eaf5fb repeating-linear-gradient(168deg, rgb(8 145 178 / 6%) 0 3px, transparent 3px 7px);
+    }
+
+    & summary + div > div:first-child > article .ddb-crayon-icon {
+        width: 48px !important;
+        height: 48px !important;
+        background: #fff !important;
+    }
+
+    & summary + div > div:last-child {
+        border-top: 0 !important;
+        background: transparent !important;
+    }
+}

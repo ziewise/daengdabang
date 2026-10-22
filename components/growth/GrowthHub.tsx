@@ -280,8 +280,12 @@ function GuestTodayCard() {
                     </li>
                 ))}
             </ol>
-            <div className="dw-login-bubble">
-                <div>
+            {/* 로그인 안내 — 왼쪽 그림 · 가운데 글 · 오른쪽 버튼(위쪽 세 색 크레파스 띠, 2026-10-22) */}
+            <div className="dw-login-bubble dw-band-top">
+                <span className="dw-art-circle dw-art-pink" aria-hidden="true">
+                    <Image src="/images/ui/daily-hero-mypet-384.webp" alt="" width={84} height={84} />
+                </span>
+                <div className="dw-login-text">
                     <h3 className="ddb-crayon-title dw-h3">로그인하면 오늘 기록이 계정에 이어져요</h3>
                     <p className="dw-card-body mt-2">비회원도 아래 성장 프로그램과 운영 정책은 먼저 둘러볼 수 있습니다.</p>
                 </div>
