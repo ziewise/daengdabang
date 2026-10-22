@@ -440,6 +440,7 @@ body[data-petlens-capture-active="true"] [data-site-header] {
 .toy-wallpaper img {
     position: absolute;
     object-fit: contain;
+    opacity: 0.6; /* 더 연하게(2026-10-22 사용자) — 그림 자체 농도 60% 위에 한 번 더 */
     user-select: none;
 }
 
