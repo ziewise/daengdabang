@@ -2742,3 +2742,748 @@ html:not(.ddb-app-mode) [data-daily-web] .dw-safe-title {
         }
     }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+ * 우리 아이 기록 — "우리 아이 그림책"(2026-10-22 사용자 선택 P3)
+ * 분홍 크레파스 표지 위에 펼친 두 쪽(왼쪽 주인공 소개 · 오른쪽 주간 사진 이야기),
+ * 아래로 새 쪽 그리기(점선 빈 쪽) · 지난 쪽 모아보기(쪽 카드) · 그림책 부록.
+ * 낙서(발바닥 · 뼈다귀 · 하트 · 별)와 사진 고리는 #dw-crayon-grain 필터로 크레파스 결. 괘선 없음.
+ * ═══════════════════════════════════════════════════════════════════ */
+html:not(.ddb-app-mode) [data-my-pet-hub][data-daily-web] {
+    --dw-book-paper: #fffdf8;
+    --dw-book-dots: radial-gradient(rgb(180 150 110 / 9%) 1px, transparent 1.3px);
+
+    /* 손글씨(개구) 작은 머리글 */
+    & .dw-hand {
+        margin: 0;
+        font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+        font-size: 21px;
+        font-weight: 700;
+        line-height: 1.3;
+    }
+
+    & .dw-hand-pink { color: #e2557a; }
+    & .dw-hand-sky { color: #0e8aa0; }
+    & .dw-hand-soft { color: #94a3b8; font-size: 18px; }
+
+    /* 크레파스 낙서 그림 */
+    & .dw-doodle {
+        position: absolute;
+        width: 44px;
+        height: 44px;
+        pointer-events: none;
+    }
+
+    /* ── 제목 ── */
+    & .dw-book-head {
+        position: relative;
+        max-width: 760px;
+        margin: 0 auto 30px;
+        text-align: center;
+    }
+
+    /* 영어 머리글은 제목 위 한 줄 */
+    & :is(.dw-book-head, .dw-appendix-head) .dw-kicker {
+        display: block;
+    }
+
+    & .dw-book-title {
+        display: inline-block;
+        margin-top: 6px;
+        font-size: clamp(32px, 3.6vw, 46px) !important;
+        line-height: 1.25 !important;
+        word-break: keep-all;
+    }
+
+    & .dw-doodle-a { left: 4%; top: 6px; color: #f4a6bd; transform: rotate(-18deg); }
+    & .dw-doodle-b { left: 12%; top: 58px; width: 30px; height: 30px; color: #f9c9d6; transform: rotate(-30deg); }
+    & .dw-doodle-c { right: 6%; top: 4px; width: 40px; height: 40px; color: #f7b267; }
+    & .dw-doodle-d { right: 12%; top: 62px; width: 50px; height: 50px; color: #9fd9c2; transform: rotate(-20deg); }
+
+    /* ── 표지 + 펼친 두 쪽 ── */
+    & .dw-book-cover {
+        position: relative;
+        padding: 16px;
+        border-radius: 44px;
+        background-color: #f6bfd0;
+        /* 흰 크레파스 결 + 옅은 발바닥 무늬 */
+        background-image:
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .55 -.12'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E"),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90' fill='%23fff' fill-opacity='.28'%3E%3Cg transform='translate(12 14) rotate(-15)'%3E%3Cellipse cx='12' cy='15' rx='5.5' ry='4.6'/%3E%3Ccircle cx='5' cy='8.5' r='2.4'/%3E%3Ccircle cx='9.5' cy='4.5' r='2.4'/%3E%3Ccircle cx='15' cy='4.5' r='2.4'/%3E%3Ccircle cx='19.5' cy='8.5' r='2.4'/%3E%3C/g%3E%3Cg transform='translate(56 52) rotate(18)'%3E%3Cellipse cx='12' cy='15' rx='5.5' ry='4.6'/%3E%3Ccircle cx='5' cy='8.5' r='2.4'/%3E%3Ccircle cx='9.5' cy='4.5' r='2.4'/%3E%3Ccircle cx='15' cy='4.5' r='2.4'/%3E%3Ccircle cx='19.5' cy='8.5' r='2.4'/%3E%3C/g%3E%3C/svg%3E");
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 55%), inset 0 -10px 18px rgb(160 60 95 / 10%), 0 30px 50px -30px rgb(160 70 100 / 55%);
+    }
+
+    & .dw-book {
+        position: relative;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        border-radius: 30px;
+        background: var(--dw-book-paper) var(--dw-book-dots);
+        background-size: auto, 7px 7px;
+        overflow: hidden;
+        /* 종이 여러 장이 겹친 가장자리 */
+        box-shadow: 0 0 0 5px #fff7f9, 0 5px 0 6px #f3d6df;
+    }
+
+    /* 가운데 접힌 자리 그늘 */
+    & .dw-book::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        z-index: 1;
+        width: 96px;
+        transform: translateX(-50%);
+        background: linear-gradient(90deg, transparent, rgb(140 100 60 / 6%) 38%, rgb(140 100 60 / 16%) 50%, rgb(140 100 60 / 6%) 62%, transparent);
+        pointer-events: none;
+    }
+
+    & .dw-book-page {
+        position: relative;
+        min-width: 0;
+        padding: 40px 48px 44px;
+    }
+
+    & .dw-book-no {
+        position: absolute;
+        bottom: 16px;
+        color: #d8b9a3;
+        font-family: var(--font-crayon), sans-serif;
+        font-size: 17px;
+        font-weight: 700;
+    }
+
+    & .dw-book-no.is-left { left: 48px; }
+    & .dw-book-no.is-right { right: 48px; }
+
+    /* 왼쪽 쪽 — 주인공 */
+    & .dw-book-hero {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        margin-top: 12px;
+    }
+
+    & .dw-book-ring {
+        position: relative;
+        flex: none;
+        width: 186px;
+        height: 186px;
+        padding: 10px;
+        border-radius: 999px;
+        isolation: isolate;
+    }
+
+    /* 무지개 크레파스 고리(결 필터) */
+    & .dw-book-ring::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        border-radius: 999px;
+        background: conic-gradient(from 20deg, #f7a8bf, #ffd08a, #a8e0c6, #a9d4ea, #cfc3f5, #f7a8bf);
+        filter: url(#dw-crayon-grain);
+    }
+
+    & .dw-book-ring > div {
+        position: relative;
+        display: grid;
+        width: 100%;
+        height: 100%;
+        place-items: center;
+        overflow: hidden;
+        border-radius: 999px;
+        background: #fff;
+    }
+
+    & .dw-book-ring-art {
+        width: 88%;
+        height: auto;
+        object-fit: contain;
+    }
+
+    & .dw-book-name {
+        margin: 0;
+        color: var(--dw-ink);
+        font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif;
+        font-size: clamp(32px, 3.4vw, 44px);
+        font-weight: 400;
+        line-height: 1.15;
+        word-break: keep-all;
+    }
+
+    & .dw-book-count {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        margin-top: 12px;
+        padding: 7px 13px;
+        border-radius: 999px;
+        background: #fff1f5;
+        color: #c2557a;
+        font-size: 12.5px;
+        font-weight: 800;
+    }
+
+    & .dw-book-facts {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px 18px;
+        margin: 14px 0 0;
+    }
+
+    & .dw-book-facts > div {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        min-width: 0;
+    }
+
+    & .dw-book-facts dt {
+        color: #a8a29e;
+        font-size: 11.5px;
+        font-weight: 800;
+    }
+
+    & .dw-book-facts dd {
+        margin: 0;
+        overflow: hidden;
+        color: #334155;
+        font-size: 14.5px;
+        font-weight: 800;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    & .dw-book-fact-icon {
+        display: grid;
+        flex: none;
+        width: 38px;
+        height: 38px;
+        place-items: center;
+        border-radius: 999px;
+        font-size: 14px;
+    }
+
+    /* 파스텔 차례(아이콘 동그라미 · 칩 · 쪽 카드 · 부록 카드 같이 씀) */
+    & :is(.dw-book-fact-icon, .dw-book-chips span, .dw-page-card, .dw-appendix-card) {
+        &.is-pink { background: #ffeef3; color: #e2557a; }
+        &.is-yellow { background: #fff6e3; color: #d97f0e; }
+        &.is-mint { background: #e9f8f1; color: #12a17a; }
+        &.is-sky { background: #e9f4fb; color: #0e8aa0; }
+        &.is-lav { background: #f3f0fe; color: #7c62d6; }
+    }
+
+    & .dw-book-switch {
+        margin-top: 26px;
+    }
+
+    & .dw-book-switch-label {
+        margin-bottom: 8px;
+        color: #94a3b8;
+        font-size: 12px;
+        font-weight: 800;
+    }
+
+    & .dw-book-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        min-height: 40px;
+        padding: 0 16px;
+        border-radius: 999px;
+        background: #fff;
+        color: #64748b;
+        font-size: 13px;
+        font-weight: 800;
+        box-shadow: 0 6px 12px -9px rgb(15 23 42 / 40%), inset 0 0 0 1px #f1e4e8;
+        transition: transform 0.18s ease;
+    }
+
+    & .dw-book-pill:hover { transform: translateY(-2px); }
+    & .dw-book-pill.is-on { background: var(--dw-pink); color: #fff; box-shadow: 0 8px 16px -10px rgb(200 80 120 / 60%); }
+    & .dw-book-pill.is-edit { color: #e2557a; }
+
+    /* 오른쪽 쪽 — 주간 이야기 */
+    & .dw-book-chips {
+        display: inline-flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    & .dw-book-chips span {
+        padding: 6px 12px;
+        border-radius: 999px;
+        font-size: 11.5px;
+        font-weight: 800;
+    }
+
+    & .dw-book-story-title {
+        margin: 12px 0 0;
+        color: var(--dw-ink);
+        font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif;
+        font-size: clamp(22px, 2.2vw, 28px);
+        font-weight: 400;
+        line-height: 1.35;
+        word-break: keep-all;
+    }
+
+    & .dw-book-story-body {
+        margin-top: 8px;
+        color: var(--dw-text);
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1.7;
+        word-break: keep-all;
+    }
+
+    /* 크레파스 동그라미 체크 */
+    & .dw-book-ticks {
+        display: grid;
+        gap: 10px;
+        margin-top: 18px;
+    }
+
+    & .dw-book-ticks li {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        color: #475569;
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 1.55;
+        word-break: keep-all;
+    }
+
+    & .dw-book-ticks li::before {
+        content: "✓";
+        display: grid;
+        flex: none;
+        width: 22px;
+        height: 22px;
+        place-items: center;
+        border: 2.5px solid #2bb38a;
+        border-radius: 999px;
+        color: #12a17a;
+        font-size: 12px;
+        font-weight: 900;
+    }
+
+    & .dw-book-compare {
+        margin-top: 20px;
+        padding: 16px 20px;
+        border-radius: 26px;
+        background: #fff1f5;
+    }
+
+    & .dw-book-compare .dw-hand { font-size: 18px; }
+
+    & .dw-book-compare-head {
+        margin-top: 4px;
+        color: #334155;
+        font-size: 14px;
+        font-weight: 800;
+        line-height: 1.6;
+        word-break: keep-all;
+    }
+
+    & .dw-book-compare-list {
+        display: grid;
+        gap: 6px;
+        margin-top: 8px;
+        color: #475569;
+        font-size: 12.5px;
+        font-weight: 700;
+    }
+
+    & .dw-book-compare-list li {
+        display: flex;
+        gap: 8px;
+    }
+
+    & .dw-book-compare-list i { margin-top: 3px; }
+
+    & .dw-book-when {
+        margin-top: 14px;
+        color: #b8a898;
+        font-size: 11.5px;
+        font-weight: 700;
+    }
+
+    /* 빈 쪽 · 불러오는 중 */
+    & .dw-book-blank {
+        display: flex;
+        min-height: 100%;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 30px 10px;
+        text-align: center;
+        word-break: keep-all;
+    }
+
+    & .dw-book-blank-paw {
+        position: static;
+        width: 64px;
+        height: 64px;
+        margin-bottom: 10px;
+        color: #a9d4ea;
+        animation: dw-paw-bob 1.4s ease-in-out infinite;
+    }
+
+    & .dw-book-fine {
+        margin: 22px auto 0;
+        max-width: 760px;
+        color: #94a3b8;
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 1.6;
+        text-align: center;
+        word-break: keep-all;
+    }
+
+    /* 쪽 귀퉁이 낙서 */
+    & .dw-page-doodle {
+        z-index: 2;
+        width: 40px;
+        height: 40px;
+    }
+
+    & .dw-page-doodle.is-left { top: 30px; right: 44px; color: #f7a8bf; transform: rotate(12deg); }
+    & .dw-page-doodle.is-right { right: 86px; bottom: 10px; width: 46px; height: 46px; color: #a8e0c6; transform: rotate(-16deg); }
+
+    /* 그림책 → 새 쪽으로 걸어가는 발자국(지그재그) */
+    & .dw-paw-trail {
+        position: relative;
+        height: 96px;
+        margin-top: 10px;
+    }
+
+    & .dw-paw-trail .dw-doodle {
+        width: 34px;
+        height: 34px;
+        color: #f29bb6;
+    }
+
+    & .dw-paw-trail .dw-doodle:nth-child(1) { left: calc(50% - 36px); top: 0; transform: rotate(160deg); }
+    & .dw-paw-trail .dw-doodle:nth-child(2) { left: calc(50% + 4px); top: 22px; transform: rotate(200deg); opacity: 0.85; }
+    & .dw-paw-trail .dw-doodle:nth-child(3) { left: calc(50% - 36px); top: 46px; transform: rotate(160deg); opacity: 0.7; }
+    & .dw-paw-trail .dw-doodle:nth-child(4) { left: calc(50% + 4px); top: 68px; transform: rotate(200deg); opacity: 0.55; }
+
+    /* ── 새 쪽 그리기 — 점선 빈 쪽 ── */
+    & .dw-newpage {
+        position: relative;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 28px;
+        margin-top: 4px;
+        padding: 32px 40px;
+        border: 2.5px dashed #f2a9be;
+        border-radius: 40px;
+        background: var(--dw-book-paper) var(--dw-book-dots);
+        background-size: auto, 7px 7px;
+    }
+
+    & .dw-newpage-star {
+        top: -22px;
+        right: 34px;
+        width: 46px;
+        height: 46px;
+        color: #ffcf6e;
+        transform: rotate(12deg);
+    }
+
+    & h2.dw-newpage-title.ddb-crayon-title {
+        margin-top: 6px;
+        font-size: clamp(21px, 2vw, 26px) !important;
+        word-break: keep-all;
+    }
+
+    & .dw-newpage-sub {
+        margin-top: 6px;
+        color: var(--dw-soft);
+        font-size: 13.5px;
+        font-weight: 600;
+        line-height: 1.65;
+        word-break: keep-all;
+    }
+
+    & .dw-newpage-views {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-top: 18px;
+    }
+
+    & .dw-newpage-views li {
+        display: flex;
+        width: 78px;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    & .dw-newpage-views span {
+        display: grid;
+        width: 58px;
+        height: 58px;
+        place-items: center;
+        border-radius: 20px;
+        background: #e9f4fb;
+        color: #0e8aa0;
+        font-size: 21px;
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%), 0 8px 14px -10px rgb(15 23 42 / 35%);
+    }
+
+    & .dw-newpage-views strong {
+        margin-top: 7px;
+        color: #334155;
+        font-size: 13px;
+        font-weight: 800;
+    }
+
+    & .dw-newpage-views small {
+        color: #94a3b8;
+        font-size: 11px;
+        font-weight: 700;
+    }
+
+    & .dw-newpage-action {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        text-align: center;
+    }
+
+    /* 기존 주간 촬영 버튼(WeeklyPhotoComparison)을 크게 */
+    & .dw-newpage-action [data-weekly-photo-analysis-launcher] {
+        min-height: 58px;
+        padding: 0 32px;
+        font-size: 16px;
+    }
+
+    & .dw-newpage-hint {
+        color: #94a3b8;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    /* ── 지난 쪽 모아보기 ── */
+    & .dw-pages {
+        margin-top: 44px;
+    }
+
+    & .dw-pages-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 8px 16px;
+    }
+
+    & .dw-pages-title.ddb-crayon-title {
+        display: inline-block;
+        margin: 0;
+        font-size: clamp(22px, 2vw, 26px) !important;
+    }
+
+    & .dw-pages-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+        gap: 16px;
+        margin-top: 18px;
+    }
+
+    /* 쪽 카드 — 오른쪽 위가 살짝 접힌 종이 */
+    & .dw-page-card {
+        position: relative;
+        display: flex;
+        width: 100%;
+        height: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 18px 20px 16px;
+        border-radius: 26px 10px 26px 26px;
+        text-align: left;
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%), inset 0 -8px 16px rgb(0 0 0 / 3%), 0 14px 24px -18px rgb(15 23 42 / 35%);
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    & .dw-page-card::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 26px;
+        height: 26px;
+        border-radius: 0 10px 0 12px;
+        background: linear-gradient(225deg, var(--dw-book-paper) 50%, rgb(0 0 0 / 7%) 50%);
+    }
+
+    & .dw-page-card:hover { transform: translateY(-3px); }
+
+    & .dw-page-card.is-open {
+        box-shadow: 0 0 0 3px var(--dw-pink), 0 14px 24px -18px rgb(15 23 42 / 35%);
+    }
+
+    & .dw-page-no {
+        font-family: var(--font-crayon), sans-serif;
+        font-size: 17px;
+        font-weight: 700;
+    }
+
+    & .dw-page-date {
+        margin-top: 2px;
+        color: #64748b;
+        font-size: 12px;
+        font-weight: 800;
+    }
+
+    & .dw-page-title {
+        display: -webkit-box;
+        margin-top: 6px;
+        overflow: hidden;
+        color: #1e293b;
+        font-size: 14px;
+        font-weight: 800;
+        line-height: 1.45;
+        word-break: keep-all;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+    }
+
+    & .dw-page-views {
+        display: flex;
+        gap: 4px;
+        margin-top: auto;
+        padding-top: 10px;
+    }
+
+    & .dw-page-views i {
+        width: 11px;
+        height: 11px;
+        border-radius: 999px;
+        background: rgb(255 255 255 / 85%);
+    }
+
+    & .dw-page-views i.is-on { background: currentColor; }
+
+    /* ── 그림책 부록 ── */
+    & .dw-appendix {
+        margin-top: 54px;
+    }
+
+    & .dw-appendix-head {
+        margin-bottom: 18px;
+        text-align: center;
+    }
+
+    & .dw-appendix-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+
+    & .dw-appendix-card {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 22px 26px;
+        border-radius: 34px;
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), inset 0 -8px 16px rgb(0 0 0 / 3.5%), 0 18px 30px -22px rgb(15 23 42 / 30%);
+        transition: transform 0.18s ease;
+    }
+
+    & .dw-appendix-card.is-wide { grid-column: 1 / -1; }
+    & a.dw-appendix-card:hover { transform: translateY(-3px); }
+
+    & .dw-appendix-icon {
+        display: grid;
+        flex: none;
+        width: 56px;
+        height: 56px;
+        place-items: center;
+        border-radius: 999px;
+        background: #fff;
+        font-size: 21px;
+        box-shadow: 0 8px 14px -10px rgb(15 23 42 / 35%);
+    }
+
+    & .dw-appendix-card > .min-w-0 { flex: 1; }
+
+    & .dw-appendix-kicker {
+        color: inherit;
+        font-family: var(--font-crayon), sans-serif;
+        font-size: 16px;
+        font-weight: 700;
+    }
+
+    & .dw-appendix-title {
+        margin: 0;
+        color: var(--dw-ink);
+        font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif;
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 1.4;
+        word-break: keep-all;
+    }
+
+    & .dw-appendix-body {
+        margin-top: 3px;
+        color: #64748b;
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1.6;
+        word-break: keep-all;
+    }
+
+    & .dw-appendix-go {
+        color: inherit;
+        font-size: 15px;
+    }
+}
+
+/* 불러오는 중 발바닥이 통통 */
+@keyframes dw-paw-bob {
+    0%, 100% { transform: translateY(0) rotate(-8deg); }
+    50% { transform: translateY(-8px) rotate(8deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html:not(.ddb-app-mode) [data-my-pet-hub][data-daily-web] .dw-book-blank-paw { animation: none; }
+}
+
+/* 태블릿 · 휴대폰 — 두 쪽을 위아래로, 접힌 그늘 없애기 */
+@media (max-width: 860px) {
+    html:not(.ddb-app-mode) [data-my-pet-hub][data-daily-web] {
+        & .dw-book { grid-template-columns: 1fr; }
+        & .dw-book::before { display: none; }
+        & .dw-book-right { border-top: 2px dashed #f3d6df; }
+        & .dw-book-page { padding: 30px 24px 40px; }
+        & .dw-book-no.is-left { left: 24px; }
+        & .dw-book-no.is-right { right: 24px; }
+        & .dw-book-cover { padding: 10px; border-radius: 34px; }
+        & .dw-book { border-radius: 26px; }
+        & .dw-newpage { grid-template-columns: 1fr; padding: 26px 22px; }
+        & .dw-newpage-views { justify-content: space-between; gap: 6px; }
+        & .dw-newpage-views li { width: 23%; }
+        & .dw-appendix-grid { grid-template-columns: 1fr; }
+        & .dw-appendix-card.is-wide { display: grid; grid-template-columns: 56px minmax(0, 1fr); }
+        & .dw-appendix-card.is-wide > a { grid-column: 1 / -1; width: 100%; }
+        & :is(.dw-doodle-b, .dw-doodle-d) { display: none; }
+    }
+}
+
+@media (max-width: 520px) {
+    html:not(.ddb-app-mode) [data-my-pet-hub][data-daily-web] {
+        & .dw-book-hero { flex-direction: column; text-align: center; }
+        & .dw-book-ring { width: 150px; height: 150px; }
+        & .dw-book-facts { gap: 12px 10px; }
+        & .dw-newpage-views span { width: 50px; height: 50px; font-size: 18px; border-radius: 17px; }
+        & .dw-pages-list { grid-template-columns: 1fr 1fr; gap: 10px; }
+        & .dw-page-card { padding: 14px 14px 12px; }
+    }
+}
