@@ -3,7 +3,6 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { CrayonDoodle } from "@/components/daily/CrayonArt";
 import {
     cancelGrowthInterest,
     DdbApiError,
@@ -203,12 +202,22 @@ export default function GrowthPrograms() {
                         data-treasure-preparing-visual
                         aria-label="전 프로그램 준비 중"
                     >
-                        {/* 보물 캐는 장면(꾸밈) — 통통 튀는 보물상자 · 땅 파는 크레파스 발바닥 · 반짝이는 크레파스 별 둘(2026-10-22) */}
+                        {/* 준비 중 그림(꾸밈) — 사이트 3D 그림 결의 발바닥 톱니(통통) · 톡 찍히는 분홍 발바닥 · 반짝이는 노란 별 둘(2026-10-22) */}
                         <span className="ddb-treasure-prep-icons dw-prep-art" aria-hidden="true">
-                            <Image src="/images/ui/menu-daily-treasure-128.webp" alt="" width={52} height={52} className="ddb-treasure-coin" />
-                            <CrayonDoodle kind="paw" className="ddb-treasure-pick" />
-                            <CrayonDoodle kind="star" className="ddb-treasure-spark" />
-                            <CrayonDoodle kind="star" className="ddb-treasure-spark" />
+                            <Image src="/images/ui/pet-settings-96.webp" alt="" width={50} height={50} className="ddb-treasure-coin dw-prep-gear" />
+                            <svg viewBox="0 0 48 48" className="ddb-treasure-pick dw-prep-paw" focusable="false">
+                                <ellipse cx="24" cy="31" rx="9.5" ry="8" fill="#f497b6" />
+                                <circle cx="12.5" cy="20" r="4.2" fill="#f497b6" />
+                                <circle cx="19.5" cy="12.5" r="4.2" fill="#f497b6" />
+                                <circle cx="28.5" cy="12.5" r="4.2" fill="#f497b6" />
+                                <circle cx="35.5" cy="20" r="4.2" fill="#f497b6" />
+                            </svg>
+                            <svg viewBox="0 0 16 16" className="ddb-treasure-spark dw-prep-star" focusable="false">
+                                <path d="M8 0 C9 5 11 7 16 8 C11 9 9 11 8 16 C7 11 5 9 0 8 C5 7 7 5 8 0Z" fill="#ffc83d" />
+                            </svg>
+                            <svg viewBox="0 0 16 16" className="ddb-treasure-spark dw-prep-star" focusable="false">
+                                <path d="M8 0 C9 5 11 7 16 8 C11 9 9 11 8 16 C7 11 5 9 0 8 C5 7 7 5 8 0Z" fill="#ffd96b" />
+                            </svg>
                         </span>
                         <span className="min-w-0">
                             <strong className="block text-xs font-black text-amber-950">전 프로그램 준비 중</strong>

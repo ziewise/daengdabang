@@ -4734,6 +4734,7 @@ html:not(.ddb-app-mode) [data-daily-web] {
     }
 
     & .dw-prep-art {
+        overflow: hidden;
         width: 88px;
         height: 60px;
         border-radius: 999px;
@@ -4741,34 +4742,28 @@ html:not(.ddb-app-mode) [data-daily-web] {
         box-shadow: 0 6px 12px -9px rgb(140 90 20 / 45%);
     }
 
-    /* 보물상자 — 가운데 아래 */
-    & .dw-prep-art img.ddb-treasure-coin {
+    /* 발바닥 톱니 3D 그림 — 가운데(통통 튀는 움직임은 globals.css ddb-treasure-coin) */
+    & .dw-prep-art .dw-prep-gear {
         left: 50%;
         right: auto;
-        bottom: 4px;
+        bottom: 5px;
         width: 50px;
         height: 50px;
         margin-left: -25px;
         object-fit: contain;
-        filter: none;
+        filter: drop-shadow(0 4px 4px rgb(200 120 60 / 18%));
     }
 
-    /* 크레파스 발바닥 — 왼쪽에서 톡톡 파는 모양 */
-    & .dw-prep-art .ddb-treasure-pick {
-        left: 2px;
+    /* 분홍 발바닥 — 왼쪽 아래에서 톡(움직임은 globals.css ddb-treasure-pick) */
+    & .dw-prep-art .dw-prep-paw {
+        left: 6px;
         bottom: 6px;
-        width: 27px;
-        height: 27px;
-        color: #ec7fa2;
+        width: 18px;
+        height: 18px;
     }
 
-    /* 크레파스 별 둘 — 오른쪽 위에서 반짝 */
-    & .dw-prep-art .ddb-treasure-spark {
-        width: 17px;
-        height: 17px;
-        color: #f5b021;
-    }
-
-    & .dw-prep-art .ddb-treasure-spark:nth-of-type(2) { top: 4px; right: 10px; }
-    & .dw-prep-art .ddb-treasure-spark:nth-of-type(3) { top: 22px; right: 2px; width: 11px; height: 11px; }
+    /* 노란 별 둘 — 오른쪽 위에서 반짝 */
+    & .dw-prep-art .dw-prep-star { width: 14px; height: 14px; }
+    & .dw-prep-art .dw-prep-star:nth-of-type(2) { top: 6px; right: 10px; }
+    & .dw-prep-art .dw-prep-star:nth-of-type(3) { top: 20px; right: 3px; width: 10px; height: 10px; }
 }
