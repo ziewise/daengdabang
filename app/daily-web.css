@@ -4488,9 +4488,9 @@ html:not(.ddb-app-mode) [data-daily-web] {
 
     & .dw-thero :is(.dw-ctab.is-on, .dw-ctab[aria-selected="true"]) :is(b, small) { color: #fff; }
 
+    /* 고른 탭 그림 — 흰 동그라미 없이 분홍 바탕 위에 그대로(2026-10-22 사용자) */
     & .dw-thero :is(.dw-ctab.is-on, .dw-ctab[aria-selected="true"]) img {
-        border-radius: 999px;
-        background: #fff;
+        background: transparent;
     }
 }
 
