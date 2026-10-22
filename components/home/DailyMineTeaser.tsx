@@ -40,9 +40,9 @@ export default function DailyMineTeaser() {
 
                 <CrayonGrainFilter />
                 {/* 민트 쿠션 판 — 왼쪽 점선 길 세 단계, 오른쪽 분홍 쿠션 카드 */}
-                <div className={`grid items-center gap-6 rounded-[36px] bg-[#e9f8f1] px-4 py-7 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-8 lg:rounded-[46px] lg:px-10 lg:py-9 ${CUSHION}`}>
+                <div className={`grid items-center gap-6 rounded-[36px] bg-[#e9f8f1] px-4 py-7 lg:grid-cols-[minmax(0,1fr)_400px] lg:gap-8 lg:rounded-[46px] lg:px-10 lg:py-9 ${CUSHION}`}>
                     {/* 세 단계 — 설명(누르는 칸 아님), 흰 동그라미를 점선 길로 이음 */}
-                    <ol className="relative grid grid-cols-3 gap-2 text-center lg:gap-3" aria-label="오늘의 세 가지 루틴">
+                    <ol className="relative mx-auto grid w-full grid-cols-3 gap-2 text-center lg:max-w-[620px] lg:gap-3" aria-label="오늘의 세 가지 루틴">
                         <span aria-hidden="true" className="absolute left-[18%] right-[18%] top-[36px] border-t-[3px] border-dotted border-[#9ccfe2] lg:top-[54px]" />
                         {DAILY_STEPS.map((step, index) => (
                             <li key={step.label} className="relative">
@@ -57,7 +57,7 @@ export default function DailyMineTeaser() {
                     </ol>
 
                     {/* 분홍 쿠션 카드 — 누르는 곳은 버튼 하나 */}
-                    <div className={`flex flex-col items-center rounded-[30px] bg-[#ffeef3] px-5 py-5 text-center lg:py-6 ${CUSHION}`}>
+                    <div className={`flex flex-col items-center rounded-[30px] bg-[#ffeef3] px-5 py-5 text-center lg:px-8 lg:py-6 ${CUSHION}`}>
                         <span className="relative isolate hidden h-[84px] w-[84px] place-items-center rounded-full p-[7px] lg:grid" aria-hidden="true">
                             <span className="absolute inset-0 -z-10 rounded-full" style={{ background: "conic-gradient(from 20deg, #f7a8bf, #ffd08a, #a8e0c6, #a9d4ea, #cfc3f5, #f7a8bf)", filter: "url(#dw-crayon-grain)" }} />
                             <span className="grid h-full w-full place-items-center rounded-full bg-white">
