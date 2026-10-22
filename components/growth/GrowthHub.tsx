@@ -160,11 +160,14 @@ export default function GrowthHub() {
                 </div>
             </section>
 
-            <GoodsContestTeaser content={content.goods} contentReady={contentReady} />
+            {/* 동네 돌봄 찾기는 돌봄 구역이라 오늘의 보물 바로 다음(2026-10-22 사용자) */}
+            {content.visibility.localCare ? <LocalCareFinder /> : null}
 
             <CommerceCommunityExpansion />
 
-            {content.visibility.localCare ? <LocalCareFinder /> : null}
+            {/* 굿즈 공모전은 다음 보물(준비 중 혜택) 바로 위(2026-10-22 사용자) */}
+            <GoodsContestTeaser content={content.goods} contentReady={contentReady} />
+
             {content.visibility.programs ? <GrowthPrograms /> : null}
             {content.visibility.policy ? <GrowthPolicySummary /> : null}
         </main>
