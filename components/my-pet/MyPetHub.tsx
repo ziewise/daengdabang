@@ -216,8 +216,8 @@ export default function MyPetHub() {
                 <CrayonDoodle kind="paw" className="dw-doodle-b" />
                 <CrayonDoodle kind="heart" className="dw-doodle-c" />
                 <CrayonDoodle kind="bone" className="dw-doodle-d" />
-                <p className="ddb-crayon-kicker dw-kicker">MY PET PICTURE BOOK</p>
-                <h1 className="ddb-crayon-title ddb-crayon-underline dw-book-title">{pet.name}의 그림책</h1>
+                <p className="ddb-crayon-kicker dw-kicker">MY PET RECORD</p>
+                <h1 className="ddb-crayon-title ddb-crayon-underline dw-book-title">{pet.name}의 기록</h1>
                 <p className="dw-sub">매주 한 쪽씩, {pet.name}의 모습이 그림책으로 차곡차곡 쌓여요.</p>
             </header>
 
