@@ -2449,3 +2449,296 @@ html:not(.ddb-app-mode) [data-daily-web] {
         font-weight: 400 !important;
     }
 }
+
+/* ───────── 굿즈 공모전 안내 T2 · 결제 안전 안내 B1(2026-10-22 사용자 선택) — 쿠션 카드 결 ───────── */
+html:not(.ddb-app-mode) [data-daily-web] {
+    --dw-cushion: inset 0 3px 0 rgb(255 255 255 / 90%), inset 0 -8px 16px rgb(0 0 0 / 3.5%), 0 18px 30px -20px rgb(15 23 42 / 30%);
+
+    /* 정보 칩 한 줄 */
+    & .dw-intro-chips {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 16px;
+    }
+
+    & .dw-ichip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 14px;
+        border-radius: 999px;
+        background: #fff;
+        color: #334155;
+        font-size: 12.5px;
+        font-weight: 800;
+        box-shadow: 0 6px 12px -9px rgb(15 23 42 / 35%);
+    }
+
+    & .dw-ichip i {
+        color: #e9789a;
+    }
+
+    & .dw-ichip.is-open,
+    & .dw-ichip.is-open i {
+        color: #0f7a55;
+    }
+
+    & .dw-ichip.is-closed,
+    & .dw-ichip.is-closed i {
+        color: #64748b;
+    }
+
+    & .dw-ichip.is-violet,
+    & .dw-ichip.is-violet i {
+        color: #5b45b0;
+    }
+
+    & .dw-intro-note {
+        margin-top: 12px;
+        color: #92400e;
+        font-size: 12.5px;
+        font-weight: 700;
+    }
+
+    /* 4단계 쿠션 카드 */
+    & .dw-steps4 {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 18px;
+        margin: 26px 0 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    & .dw-step4 {
+        padding: 26px 18px 22px;
+        border-radius: 36px;
+        text-align: center;
+        box-shadow: var(--dw-cushion);
+    }
+
+    & .dw-step4.is-lav { background: #f3f0fe; --c: #8b72e0; }
+    & .dw-step4.is-pink { background: #ffeef3; --c: #ec5c80; }
+    & .dw-step4.is-yellow { background: #fff6e3; --c: #f0a020; }
+    & .dw-step4.is-mint { background: #e9f8f1; --c: #12a17a; }
+
+    & .dw-step4-icon {
+        display: grid;
+        width: 58px;
+        height: 58px;
+        margin: 0 auto;
+        place-items: center;
+        border-radius: 999px;
+        background: #fff;
+        color: var(--c);
+        font-size: 23px;
+        box-shadow: 0 8px 14px -10px rgb(15 23 42 / 35%);
+    }
+
+    & .dw-step4-no {
+        display: block;
+        margin-top: 12px;
+        color: var(--c);
+        font-size: 12px;
+        font-weight: 800;
+    }
+
+    & .dw-step4-title {
+        display: block;
+        margin-top: 2px;
+        color: var(--dw-ink);
+        font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif;
+        font-size: 19px;
+        font-weight: 400;
+    }
+
+    & .dw-step4-body {
+        margin-top: 6px;
+        color: var(--dw-soft);
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1.6;
+        word-break: keep-all;
+    }
+
+    /* 소량 제작 안내 — 흰 쿠션 */
+    & .dw-prodnote {
+        display: flex;
+        align-items: flex-start;
+        gap: 18px;
+        padding: 22px 26px;
+        border-radius: 36px;
+        background: #fff;
+        color: var(--dw-text);
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1.7;
+        box-shadow: var(--dw-cushion);
+    }
+
+    & .dw-prodnote-icon {
+        display: grid;
+        width: 58px;
+        height: 58px;
+        flex: none;
+        place-items: center;
+        border-radius: 999px;
+        background: #fff6e3;
+        color: #e08a16;
+        font-size: 23px;
+    }
+
+    & .dw-prodnote-title {
+        color: var(--dw-ink);
+        font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif;
+        font-size: 18px;
+    }
+
+    /* 결제 안전 안내 — 세 장 쿠션 */
+    & .dw-safe-title {
+        font-size: clamp(22px, 2vw, 26px) !important;
+    }
+
+    & .dw-safe-cards {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+        margin-top: 22px;
+    }
+
+    & .dw-safe-card {
+        padding: 26px;
+        border-radius: 36px;
+        color: var(--dw-text);
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1.7;
+        word-break: keep-all;
+        box-shadow: var(--dw-cushion);
+    }
+
+    & .dw-safe-card.is-sky { background: #e9f4fb; --c: #0e8aa0; }
+    & .dw-safe-card.is-yellow { background: #fff6e3; --c: #e08a16; }
+    & .dw-safe-card.is-mint { background: #e9f8f1; --c: #12a17a; }
+
+    & .dw-safe-icon {
+        display: grid;
+        width: 58px;
+        height: 58px;
+        place-items: center;
+        border-radius: 999px;
+        background: #fff;
+        color: var(--c);
+        font-size: 23px;
+        box-shadow: 0 8px 14px -10px rgb(15 23 42 / 35%);
+    }
+
+    & .dw-safe-head {
+        margin-top: 12px;
+        color: var(--dw-ink);
+        font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif;
+        font-size: 18px;
+        font-weight: 400;
+    }
+
+    & .dw-safe-methods {
+        display: grid;
+        gap: 6px;
+        margin-top: 10px;
+    }
+
+    & .dw-safe-methods span {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 13px;
+        border-radius: 999px;
+        background: #fff;
+        color: #334155;
+        font-size: 12.5px;
+        font-weight: 800;
+        box-shadow: 0 6px 12px -9px rgb(15 23 42 / 35%);
+    }
+
+    & .dw-safe-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 10px;
+        padding: 7px 14px;
+        border-radius: 999px;
+        background: #fff;
+        color: #0f7a55;
+        font-size: 12.5px;
+        font-weight: 800;
+        box-shadow: 0 6px 12px -9px rgb(15 23 42 / 35%);
+    }
+
+    & .dw-safe-fine {
+        margin-top: 14px;
+        color: #94a3b8;
+        font-size: 11.5px;
+        font-weight: 600;
+        text-align: center;
+    }
+}
+
+@media (max-width: 1023px) {
+    html:not(.ddb-app-mode) [data-daily-web] {
+        & .dw-steps4 {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        & .dw-safe-cards {
+            grid-template-columns: 1fr;
+        }
+    }
+}
+
+@media (max-width: 520px) {
+    html:not(.ddb-app-mode) [data-daily-web] {
+        & .dw-steps4 {
+            grid-template-columns: 1fr;
+        }
+
+        & .dw-prodnote {
+            flex-direction: column;
+        }
+    }
+}
+
+/* 결제 안전 안내 제목(p) 밑줄도 글자 길이만큼 */
+html:not(.ddb-app-mode) [data-daily-web] .dw-safe-title {
+    display: inline-block;
+}
+
+/* 휴대폰 — 4단계 쿠션은 두 칸씩 작게 */
+@media (max-width: 520px) {
+    html:not(.ddb-app-mode) [data-daily-web] {
+        & .dw-steps4 {
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        & .dw-step4 {
+            padding: 18px 10px 16px;
+            border-radius: 28px;
+        }
+
+        & .dw-step4-icon {
+            width: 46px;
+            height: 46px;
+            font-size: 18px;
+        }
+
+        & .dw-step4-title {
+            font-size: 16px;
+        }
+
+        & .dw-step4-body {
+            font-size: 12px;
+        }
+    }
+}
