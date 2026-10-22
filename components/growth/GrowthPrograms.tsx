@@ -202,16 +202,9 @@ export default function GrowthPrograms() {
                         data-treasure-preparing-visual
                         aria-label="전 프로그램 준비 중"
                     >
-                        {/* 준비 중 그림(꾸밈) — 사이트 3D 그림 결의 발바닥 톱니(통통) · 톡 찍히는 분홍 발바닥 · 반짝이는 노란 별 둘(2026-10-22) */}
+                        {/* 준비 중 그림(꾸밈) — 사용자 그림 "프로그램준비중"(공구 · 발바닥 표), 흰 바탕 없이. 살짝 통통 + 노란 별 둘 반짝(2026-10-22) */}
                         <span className="ddb-treasure-prep-icons dw-prep-art" aria-hidden="true">
-                            <Image src="/images/ui/pet-settings-96.webp" alt="" width={50} height={50} className="ddb-treasure-coin dw-prep-gear" />
-                            <svg viewBox="0 0 48 48" className="ddb-treasure-pick dw-prep-paw" focusable="false">
-                                <ellipse cx="24" cy="31" rx="9.5" ry="8" fill="#f497b6" />
-                                <circle cx="12.5" cy="20" r="4.2" fill="#f497b6" />
-                                <circle cx="19.5" cy="12.5" r="4.2" fill="#f497b6" />
-                                <circle cx="28.5" cy="12.5" r="4.2" fill="#f497b6" />
-                                <circle cx="35.5" cy="20" r="4.2" fill="#f497b6" />
-                            </svg>
+                            <Image src="/images/ui/program-preparing-192.webp" alt="" width={64} height={64} className="ddb-treasure-pick ddb-treasure-coin dw-prep-tools" />
                             <svg viewBox="0 0 16 16" className="ddb-treasure-spark dw-prep-star" focusable="false">
                                 <path d="M8 0 C9 5 11 7 16 8 C11 9 9 11 8 16 C7 11 5 9 0 8 C5 7 7 5 8 0Z" fill="#ffc83d" />
                             </svg>

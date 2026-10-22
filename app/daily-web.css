@@ -4733,39 +4733,29 @@ html:not(.ddb-app-mode) [data-daily-web] {
         font-weight: 400;
     }
 
+    /* 그림 자리 — 흰 바탕 없이 알약 색 위에 그대로(2026-10-22 사용자) */
     & .dw-prep-art {
-        overflow: hidden;
-        width: 88px;
-        height: 60px;
-        border-radius: 999px;
-        background: #fff;
-        box-shadow: 0 6px 12px -9px rgb(140 90 20 / 45%);
+        width: 72px;
+        height: 64px;
     }
 
-    /* 발바닥 톱니 3D 그림 — 가운데(통통 튀는 움직임은 globals.css ddb-treasure-coin) */
-    & .dw-prep-art .dw-prep-gear {
+    /* 공구 · 발바닥 표 그림 — 가운데(통통 튀는 움직임은 globals.css ddb-treasure-coin) */
+    & .dw-prep-art .dw-prep-tools {
         left: 50%;
         right: auto;
-        bottom: 5px;
-        width: 50px;
-        height: 50px;
-        margin-left: -25px;
+        bottom: 0;
+        width: 64px;
+        height: 64px;
+        margin-left: -32px;
         object-fit: contain;
-        filter: drop-shadow(0 4px 4px rgb(200 120 60 / 18%));
-    }
-
-    /* 분홍 발바닥 — 왼쪽 아래에서 톡(움직임은 globals.css ddb-treasure-pick) */
-    & .dw-prep-art .dw-prep-paw {
-        left: 6px;
-        bottom: 6px;
-        width: 18px;
-        height: 18px;
+        transform: none;
+        filter: none;
     }
 
     /* 노란 별 둘 — 오른쪽 위에서 반짝 */
-    & .dw-prep-art .dw-prep-star { width: 14px; height: 14px; }
-    & .dw-prep-art .dw-prep-star:nth-of-type(2) { top: 6px; right: 10px; }
-    & .dw-prep-art .dw-prep-star:nth-of-type(3) { top: 20px; right: 3px; width: 10px; height: 10px; }
+    & .dw-prep-art .dw-prep-star { width: 13px; height: 13px; }
+    & .dw-prep-art .dw-prep-star:nth-of-type(1) { top: 2px; right: 2px; }
+    & .dw-prep-art .dw-prep-star:nth-of-type(2) { top: 18px; right: -4px; width: 9px; height: 9px; }
 }
 
 /* ── 운영 기준 세 칸 그림(2026-10-22 사용자 그림) ── */
