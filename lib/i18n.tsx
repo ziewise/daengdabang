@@ -54,6 +54,7 @@ const STRINGS = {
         categoryFilter: "카테고리",
         typeFilter: "분류",
         subcategoryFilter: "세부",
+        subcategoryPlaceholder: "세부 카테고리", // 웹 제품군 페이지 세부 카테고리 버튼(아직 안 골랐을 때, 2026-10-22)
         sort: "정렬",
         all: "전체",
         searchFieldPlaceholder: "상품명, 브랜드, 용도",
@@ -160,6 +161,7 @@ const STRINGS = {
         categoryFilter: "Category",
         typeFilter: "Type",
         subcategoryFilter: "Subcategory",
+        subcategoryPlaceholder: "Subcategory",
         sort: "Sort",
         all: "All",
         searchFieldPlaceholder: "Product name, brand, or use",

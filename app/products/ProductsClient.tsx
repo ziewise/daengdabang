@@ -28,6 +28,8 @@ import ExternalProductCard from "@/components/products/ExternalProductCard";
 import ExternalProductComparisonTable from "@/components/products/ExternalProductComparisonTable";
 import PaginatedProductGrid from "@/components/products/PaginatedProductGrid";
 import AppProductFilter from "@/components/app-shell/AppProductFilter";
+// 웹 상품 목록 머리 줄(제목 · 개수 + 검색 · 카테고리 · 정렬 흰 알약, 2026-10-22) — 앱은 아래 기존 머리글 · 필터 그대로
+import ProductsWebToolbar from "@/components/products/ProductsWebToolbar";
 
 type Props = {
     initialCategory?: CategorySlug;
@@ -38,6 +40,8 @@ type CategoryFilter = CategorySlug | "all";
 type SubcategoryFilter = SubcategorySlug | "all";
 
 const SORT_OPTIONS = Object.keys(SORT_LABEL) as SortKey[];
+// 웹 정렬 버튼 목록 — 네 가지만(2026-10-22 사용자 결정). 앱 필터 속지는 SORT_OPTIONS 그대로
+const WEB_SORT_OPTIONS: SortKey[] = ["popular", "newest", "priceAsc", "priceDesc"];
 const SUBCATEGORY_OPTIONS = Object.keys(SUBCATEGORY_LABEL) as SubcategorySlug[];
 
 function isCategory(value: string | null): value is CategorySlug {
@@ -67,7 +71,8 @@ function subcategoryFromParams(params: SearchLike): SubcategoryFilter {
 
 function sortFromParams(params: SearchLike): SortKey {
     const value = params.get("sort");
-    return isSort(value) ? value : "popular";
+    // 처음 정렬은 최신순(2026-10-22 사용자 결정, 예전 추천순) — 주소에 sort 가 있으면 그 값
+    return isSort(value) ? value : "newest";
 }
 
 export default function ProductsClient({ initialCategory, title }: Props) {
@@ -185,7 +190,43 @@ export default function ProductsClient({ initialCategory, title }: Props) {
 
     return (
         <main className="mx-auto w-full min-w-0 max-w-[1280px] px-4 py-8 md:px-6">
-            <header className="mb-6">
+            <ProductsWebToolbar
+                heading={heading}
+                countLabel={`${t("productCount")} ${countText(visibleCount)}`}
+                query={query}
+                onQuery={setQuery}
+                searchPlaceholder={t("searchFieldPlaceholder")}
+                searchLabel={t("search")}
+                filter={initialCategory
+                    // 제품군 페이지 — 그 제품군의 세부 카테고리
+                    ? {
+                        label: t("subcategoryFilter"),
+                        value: subcategory,
+                        options: [{ value: "all", label: t("all") }, ...availableSubcategories.map((slug) => ({ value: slug, label: subcategoryLabel(slug, SUBCATEGORY_LABEL[slug]) }))],
+                        placeholder: { value: "all", text: t("subcategoryPlaceholder") },
+                        onChange: (value) => setSubcategory(value as SubcategoryFilter),
+                    }
+                    // 전체상품 — 제품군(고르면 세부는 처음으로)
+                    : {
+                        label: t("categoryFilter"),
+                        value: category,
+                        options: [{ value: "all", label: t("all") }, ...CATEGORY_ORDER.map((slug) => ({ value: slug, label: categoryLabel(slug, CATEGORY_LABEL[slug]) }))],
+                        placeholder: { value: "all", text: t("categoryFilter") },
+                        onChange: (value) => {
+                            setCategory(value as CategoryFilter);
+                            setSubcategory("all");
+                        },
+                    }}
+                sort={{
+                    label: t("sort"),
+                    value: sort,
+                    // 웹은 "신상품순" 대신 "최신순"(2026-10-22 사용자 결정, 한국어 화면만 — 영어는 기존 번역)
+                    options: WEB_SORT_OPTIONS.map((slug) => ({ value: slug, label: slug === "newest" && locale !== "en" ? "최신순" : menuLabel(SORT_LABEL[slug]) })),
+                    onChange: (value) => setSort(value as SortKey),
+                }}
+            />
+            {/* 아래 머리글 · 필터는 앱 화면용(웹에서는 CSS 로 숨김 — data-products-head · data-products-filter) */}
+            <header className="mb-6" data-products-head>
                 <p className="text-sm font-black text-indigo-700">{t("productCount")} {countText(visibleCount)}</p>
                 <h1 className="mt-2 text-3xl font-black tracking-tight text-neutral-950 md:text-4xl">
                     {heading}

@@ -2782,3 +2782,279 @@ article[data-pet-product="true"] > div:has(> [role="group"]) {
         display: none;
     }
 }
+
+/* ───────── 웹 상품 목록 머리 줄(ProductsWebToolbar, 2026-10-22 사용자 결정) ─────────
+   전체상품 · 제품군 페이지: 왼쪽 제목(카페24 + 세 색 크레파스 밑줄) · 상품 개수(세 색 크레파스 글씨),
+   같은 줄 오른쪽 흰 알약 세 개(검색 · 카테고리/세부 · 정렬). 알약 · 펼친 목록 = 흰 크레파스 종이(옅은 회색 점선 · 청록/분홍 엇갈린 그림자).
+   웹 크레파스 컨셉(스티커 요소 없음). 앱은 기존 머리글 · 필터를 그대로 쓰므로 이 줄은 앱에서 숨기고, 웹에서는 기존 것을 숨김 */
+html.ddb-app-mode [data-products-web-toolbar] {
+    display: none !important;
+}
+
+html:not(.ddb-app-mode) [data-products-head],
+html:not(.ddb-app-mode) [data-products-filter] {
+    display: none !important;
+}
+
+.ddb-pl-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px 24px;
+    margin-bottom: 26px;
+}
+
+/* 제목 + 개수 */
+.ddb-pl-titlebox {
+    display: flex;
+    align-items: flex-end;
+    gap: 14px;
+    min-width: 0;
+}
+
+.ddb-pl-title {
+    position: relative;
+    isolation: isolate;
+    margin: 0;
+    color: #1e293b;
+    font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif;
+    font-size: clamp(28px, 3vw, 36px);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+}
+
+/* 제목 밑 세 색 크레파스 밑줄(.ddb-crayon-underline 과 같은 결) */
+.ddb-pl-title::after {
+    position: absolute;
+    right: 2%;
+    bottom: -0.08em;
+    left: 0;
+    z-index: -1;
+    height: 0.22em;
+    border-radius: 999px 70% 999px 60%;
+    background: repeating-linear-gradient(94deg, rgb(8 145 178 / 62%) 0 14px, rgb(239 71 111 / 58%) 14px 28px, rgb(245 158 11 / 62%) 28px 42px);
+    content: "";
+    opacity: 0.6;
+    transform: rotate(-0.7deg) skewX(-7deg);
+}
+
+/* 상품 개수 — 세 색 크레파스 손글씨(.ddb-crayon-kicker 결) */
+.ddb-pl-count {
+    flex: none;
+    margin-bottom: 3px;
+    background-image: repeating-linear-gradient(172deg, #07849e 0 5px, #ef476f 5px 10px, #e98708 10px 15px);
+    -webkit-background-clip: text;
+    background-clip: text;
+    font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    filter: drop-shadow(0.45px 0.55px 0 rgb(15 23 42 / 16%));
+    -webkit-text-fill-color: transparent;
+}
+
+/* 오른쪽 알약 줄 */
+.ddb-pl-tools {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* 흰 크레파스 종이(알약 · 펼친 목록 공통 바탕) */
+.ddb-pl-search,
+.ddb-pl-pill,
+.ddb-pl-menu {
+    border: 1.5px dashed rgb(100 116 139 / 30%);
+    background: #fff;
+    box-shadow:
+        2px 3px 0 rgb(8 145 178 / 8%),
+        -1px -1px 0 rgb(239 71 111 / 5%),
+        0 10px 24px -14px rgb(15 23 42 / 18%);
+}
+
+/* 검색 알약 — 3D 돋보기 + 입력칸 */
+.ddb-pl-search {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 9px;
+    width: 300px;
+    height: 52px;
+    padding: 0 18px 0 12px;
+    border-radius: 999px;
+    cursor: text;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.ddb-pl-search img {
+    flex: none;
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+}
+
+.ddb-pl-search input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    outline: 0;
+    color: #334155;
+    font-size: 15px;
+}
+
+.ddb-pl-search input::placeholder {
+    color: #94a3b8;
+}
+
+/* 입력 중 — 분홍 점선 */
+.ddb-pl-search:focus-within {
+    border-color: rgb(239 71 111 / 45%);
+    box-shadow:
+        0 0 0 3px rgb(239 71 111 / 10%),
+        2px 3px 0 rgb(8 145 178 / 8%);
+}
+
+/* 카테고리 · 정렬 알약 */
+.ddb-pl-select {
+    position: relative;
+    flex: none;
+}
+
+.ddb-pl-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    height: 52px;
+    padding: 0 18px 0 20px;
+    border-radius: 999px;
+    color: #334155;
+    font-size: 14.5px;
+    font-weight: 800;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+/* 아직 안 고름("카테고리" · "세부 카테고리") — 옅은 글씨 */
+.ddb-pl-pill.is-placeholder {
+    color: #64748b;
+    font-weight: 700;
+}
+
+.ddb-pl-pill:hover {
+    border-color: rgb(239 71 111 / 40%);
+    transform: translateY(-1px);
+}
+
+.ddb-pl-pill[aria-expanded="true"] {
+    border-color: rgb(239 71 111 / 45%);
+    box-shadow:
+        0 0 0 3px rgb(239 71 111 / 10%),
+        2px 3px 0 rgb(8 145 178 / 8%);
+    transform: none;
+}
+
+.ddb-pl-caret {
+    color: #e9789a;
+    font-size: 11px;
+    transition: transform 0.18s ease;
+}
+
+.ddb-pl-pill[aria-expanded="true"] .ddb-pl-caret {
+    transform: rotate(180deg);
+}
+
+/* 펼친 목록 — 글자 길이만큼(버튼보다 좁아지지는 않게) */
+.ddb-pl-menu {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 0;
+    z-index: 40;
+    min-width: 100%;
+    margin: 0;
+    padding: 6px;
+    border-radius: 20px;
+    list-style: none;
+    white-space: nowrap;
+    box-shadow:
+        2px 3px 0 rgb(8 145 178 / 8%),
+        -1px -1px 0 rgb(239 71 111 / 5%),
+        0 22px 44px -18px rgb(15 23 42 / 28%);
+}
+
+/* 줄 끝(정렬) 목록은 버튼 오른쪽 끝에 맞춤 */
+.ddb-pl-menu.is-right {
+    right: 0;
+    left: auto;
+}
+
+.ddb-pl-option {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 40px;
+    padding: 0 14px;
+    border-radius: 14px;
+    color: #475569;
+    font-size: 14.5px;
+    font-weight: 700;
+    text-align: left;
+    cursor: pointer;
+}
+
+.ddb-pl-option:hover,
+.ddb-pl-option:focus-visible {
+    outline: none;
+    background: #f1f5f9;
+}
+
+/* 고른 항목 — 굵게 + 세 색 크레파스 밑줄 */
+.ddb-pl-option[aria-selected="true"] {
+    background: #f8fafc;
+    color: #1e293b;
+    font-weight: 800;
+}
+
+.ddb-pl-option span {
+    position: relative;
+    isolation: isolate;
+}
+
+.ddb-pl-option[aria-selected="true"] span::after {
+    position: absolute;
+    right: -2px;
+    bottom: 0;
+    left: -2px;
+    z-index: -1;
+    height: 8px;
+    border-radius: 999px 70% 999px 60%;
+    background: repeating-linear-gradient(94deg, rgb(8 145 178 / 62%) 0 14px, rgb(239 71 111 / 58%) 14px 28px, rgb(245 158 11 / 62%) 28px 42px);
+    content: "";
+    opacity: 0.6;
+}
+
+/* 좁은 화면 — 알약 줄이 제목 아래 한 줄 전체: 검색이 윗줄 가득, 카테고리 · 정렬이 아랫줄 반씩 */
+@media (max-width: 900px) {
+    .ddb-pl-tools {
+        flex-wrap: wrap;
+        width: 100%;
+    }
+
+    .ddb-pl-search {
+        flex: 1 1 100%;
+        width: auto;
+    }
+
+    .ddb-pl-select {
+        flex: 1 1 0;
+    }
+
+    .ddb-pl-pill {
+        justify-content: space-between;
+        width: 100%;
+    }
+}
