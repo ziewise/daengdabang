@@ -567,9 +567,6 @@ export default function GoodsContest({
                                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                                         className="aspect-square h-auto w-full bg-[#f4e8d3] object-cover transition duration-300 hover:scale-[1.02]"
                                     />
-                                    <span className="dw-price-tag absolute left-3 top-3">
-                                        예상 펀딩가 {itemContent.expectedPriceKrw.toLocaleString("ko-KR")}원 · {catalogItem.priceUnit}
-                                    </span>
                                     {contentReady && !itemContent.active ? (
                                         <span className="absolute right-3 top-3 rounded-full bg-neutral-900/80 px-2.5 py-1 text-[10px] font-black text-white">선택 준비 중</span>
                                     ) : null}
@@ -578,6 +575,11 @@ export default function GoodsContest({
                                 <div className="dw-goods-body flex flex-1 flex-col p-4 sm:p-5">
                                     <h3 className="ddb-crayon-title dw-h3">{itemContent.name}</h3>
                                     <p className="mt-2 min-h-10 text-xs font-bold leading-5 text-neutral-600">{itemContent.summary}</p>
+                                    {/* 예상 펀딩가 — 설명 아래 크게(폭신한 쿠션 카드 G8, 2026-10-22 사용자 선택) */}
+                                    <p className="dw-goods-price">
+                                        <span className="sr-only">예상 펀딩가 </span>{itemContent.expectedPriceKrw.toLocaleString("ko-KR")}원
+                                        <small> · {catalogItem.priceUnit}</small>
+                                    </p>
 
                                     <div className="mt-5">
                                         {itemSummary ? (

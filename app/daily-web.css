@@ -2334,3 +2334,118 @@ html:not(.ddb-app-mode) [data-daily-web] {
         text-decoration-color: rgb(239 71 111 / 30%) !important;
     }
 }
+
+/* ───────── 굿즈 카드 G8 "폭신한 쿠션"(2026-10-22 사용자 선택) ─────────
+   파스텔 카드가 쿠션처럼 살짝 부푼 모양(위 흰 광택 · 아래 옅은 그늘), 둥근 사진, 가운데 글, 설명 아래 큰 가격, 흰 알약 버튼 */
+html:not(.ddb-app-mode) [data-daily-web] {
+    & .dw-goods-card {
+        padding: 14px 14px 18px;
+        border: 0 !important;
+        border-radius: 42px;
+        box-shadow:
+            inset 0 3px 0 rgb(255 255 255 / 90%),
+            inset 0 -8px 16px rgb(0 0 0 / 3.5%),
+            0 18px 30px -20px rgb(15 23 42 / 30%) !important;
+    }
+
+    & .dw-gc-pink {
+        background: #ffeef3;
+    }
+
+    & .dw-gc-yellow {
+        background: #fff6e3;
+    }
+
+    & .dw-gc-mint {
+        background: #e9f8f1;
+    }
+
+    & .dw-gc-sky {
+        background: #e9f4fb;
+    }
+
+    & .dw-goods-card:hover {
+        transform: translateY(-6px);
+        box-shadow:
+            inset 0 3px 0 rgb(255 255 255 / 90%),
+            inset 0 -8px 16px rgb(0 0 0 / 3.5%),
+            0 26px 38px -22px rgb(200 80 120 / 40%) !important;
+    }
+
+    /* 사진 — 흰 테두리 없이 둥글게 */
+    & .dw-goods-shot {
+        border: 0;
+        border-radius: 32px;
+        box-shadow: 0 10px 18px -12px rgb(15 23 42 / 35%);
+    }
+
+    & .dw-goods-body {
+        padding: 16px 6px 2px !important;
+    }
+
+    /* 큰 가격 */
+    & .dw-goods-price {
+        margin-top: 4px;
+        color: #e2557a;
+        font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif;
+        font-size: 19px;
+    }
+
+    & .dw-goods-price small {
+        color: #94a3b8;
+        font-family: var(--font-wanted-sans), sans-serif;
+        font-size: 11.5px;
+        font-weight: 700;
+    }
+
+    /* 진행 막대 · 집계 — 흰색 */
+    & .dw-goods-body .dw-progress {
+        background: rgb(255 255 255 / 85%) !important;
+    }
+
+    & .dw-goods-wait {
+        background: rgb(255 255 255 / 80%) !important;
+    }
+
+    /* 버튼 — 흰 알약 + 분홍 글씨(선택됨은 분홍 칠) */
+    & .dw-goods-body :is(.dw-select, .ddb-crayon-link) {
+        border: 0 !important;
+        background: #fff !important;
+        color: #e2557a !important;
+        box-shadow: 0 8px 14px -10px rgb(15 23 42 / 35%) !important;
+    }
+
+    & .dw-goods-body :is(.dw-select, .ddb-crayon-link):hover {
+        background: #fff7fa !important;
+        color: #c83259 !important;
+    }
+
+    & .dw-goods-body .dw-select-on {
+        border: 0 !important;
+        background: #e9789a !important;
+        color: #fff !important;
+    }
+}
+
+/* G8 쿠션 — 앞쪽 S1 공통 규칙(실선 테두리 · 그림자 · 설명 글 색)보다 우선 */
+html:not(.ddb-app-mode) [data-daily-web] {
+    & article.dw-goods-card.dw-goods-card {
+        border: 0 !important;
+        box-shadow:
+            inset 0 3px 0 rgb(255 255 255 / 90%),
+            inset 0 -8px 16px rgb(0 0 0 / 3.5%),
+            0 18px 30px -20px rgb(15 23 42 / 30%) !important;
+    }
+
+    & article.dw-goods-card.dw-goods-card:hover {
+        box-shadow:
+            inset 0 3px 0 rgb(255 255 255 / 90%),
+            inset 0 -8px 16px rgb(0 0 0 / 3.5%),
+            0 26px 38px -22px rgb(200 80 120 / 40%) !important;
+    }
+
+    & .dw-goods-body > p.dw-goods-price {
+        color: #e2557a !important;
+        font-weight: 400 !important;
+    }
+}
