@@ -4684,3 +4684,17 @@ html:not(.ddb-app-mode) [data-daily-web] {
 @media (min-width: 640px) {
     html:not(.ddb-app-mode) [data-daily-web] .dw-place-links { padding-left: 0; }
 }
+
+/* ── 굿즈 · 발견 카드 그림(2026-10-22 사용자 그림) — 흰 동그라미를 조금 키우고 그림을 가득 ── */
+html:not(.ddb-app-mode) [data-daily-web] {
+    & .dw-xcard-icon.dw-xcard-icon {
+        width: 76px;
+        height: 76px;
+    }
+
+    & .dw-xcard-icon img {
+        width: 60px;
+        height: 60px;
+        object-fit: contain;
+    }
+}

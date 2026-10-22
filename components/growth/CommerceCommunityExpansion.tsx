@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export type ExpansionCard = {
@@ -74,6 +75,14 @@ export const EXPANSION_CARDS: readonly ExpansionCard[] = [
 /* 웹 매일 댕생활 꾸밈(2026-10-22) — 카드마다 다른 파스텔 크레파스 칠(분홍 · 하늘 · 민트 · 노랑) */
 const CARD_TINTS = ["dw-tint-pink", "dw-tint-sky", "dw-tint-mint", "dw-tint-yellow"] as const;
 
+// 카드 그림(2026-10-22 사용자 그림 "발견아이콘" 을 넷으로 나눔) — 카드 순서대로 댕자랑 · 돌봄 비교 매거진 · 인디 브랜드 선발굴 · 생활 기본템과 멤버십
+const EXPANSION_ART = [
+    "/images/ui/find-showcase-256.webp",
+    "/images/ui/find-magazine-256.webp",
+    "/images/ui/find-indie-256.webp",
+    "/images/ui/find-basics-256.webp",
+] as const;
+
 export default function CommerceCommunityExpansion() {
     // 웹 매일 댕생활 꾸밈(2026-10-22 사용자) — 가운데 제목 + 2×2 가로 카드(큰 동그라미 아이콘 · 상태 칩 · 안내 쪽지 · 알약 버튼).
     // 문구 · 링크 · 순서는 그대로. 꾸밈 CSS 는 app/daily-web.css(웹 data-daily-web 범위)
@@ -102,7 +111,7 @@ export default function CommerceCommunityExpansion() {
                             <article className={`dw-xcard ${CARD_TINTS[index % CARD_TINTS.length]} group transition duration-300 hover:-translate-y-1 motion-reduce:transform-none motion-reduce:transition-none`}>
                                 <div className="dw-xcard-head">
                                     <span className="dw-xcard-icon" data-crayon-tone={card.tone}>
-                                        <i className={`fa-solid ${card.icon}`} aria-hidden="true" />
+                                        <Image src={EXPANSION_ART[index % EXPANSION_ART.length]} alt="" width={56} height={56} aria-hidden="true" />
                                         <span className="dw-xcard-step">{card.step}</span>
                                     </span>
                                     <div className="min-w-0">
