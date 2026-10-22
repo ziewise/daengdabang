@@ -2742,6 +2742,20 @@ article[data-pet-product="true"] > div:has(> [role="group"]) {
     transform: rotateY(180deg);
 }
 
+/* 휴대폰 핫픽 줄 — 작은 사진을 눌러 바뀐 상품이 살짝 떠오르며 나타남 */
+.ddb-hp-swap {
+    animation: ddb-hp-swap 0.28s ease-out;
+}
+
+@keyframes ddb-hp-swap {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ddb-hp-swap { animation: none; }
+}
+
 /* 제품군 이름은 제목 글꼴(Cafe24 써라운드, 한 굵기) */
 .ddb-hotpick-group {
     font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif;

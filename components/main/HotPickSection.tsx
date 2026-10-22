@@ -98,7 +98,7 @@ function GroupCard({ group, items, index, tick }: { group: (typeof GROUPS)[numbe
 
     return (
         <div
-            className={`ddb-hotpick-card min-w-0 ${index === 4 ? "col-span-2 w-[calc(50%-6px)] justify-self-center sm:col-span-1 sm:w-auto sm:justify-self-auto" : ""}`}
+            className="ddb-hotpick-card min-w-0"
             onMouseEnter={() => { hovered.current = true; }}
             onMouseLeave={() => { hovered.current = false; }}
             onFocus={() => { hovered.current = true; }}
@@ -124,6 +124,56 @@ function GroupCard({ group, items, index, tick }: { group: (typeof GROUPS)[numbe
 
             {/* 카드 아래 순위 점(●●▬)은 뺌(2026-10-20 사용자) — 순위는 카드 속 1위 · 2위 · 3위 배지로 */}
         </div>
+    );
+}
+
+// 휴대폰 한 줄(2026-10-22 사용자 B안) — 왼쪽 큰 사진 · 가운데 제품군 · 이름 · 가격, 오른쪽 다른 순위 작은 사진 둘.
+// 작은 사진을 누르면 그 순위가 크게 올라오고, 크게 있던 순위는 작은 사진 자리로(보기만 바꿈 — 상품을 누르면 상세로)
+function MobileRow({ group, items }: { group: (typeof GROUPS)[number]; items: CatalogProduct[] }) {
+    const { locale, productName, formatPrice } = useI18n();
+    const [shown, setShown] = useState(0); // 크게 보이는 순위(0 = 1위)
+    if (items.length === 0) return null;
+    const p = items[shown] ?? items[0];
+    const name = productName(p);
+    const purchase = productPurchaseState(p);
+    const image = productCardImage(p);
+    const rankLabel = (rank: number) => (locale === "en" ? `No.${rank + 1}` : `${rank + 1}위`);
+    return (
+        <li className="flex items-center gap-2.5 rounded-[22px] bg-white p-2.5 shadow-card">
+            {/* 큰 사진 — 누르면 상품 상세 */}
+            <Link href={productHref(p)} aria-label={`${rankLabel(shown)} ${name}`} className="relative block h-[88px] w-[88px] shrink-0 overflow-hidden rounded-2xl bg-[#f6efe4]">
+                {image ? <span key={p.id} className="ddb-hp-swap absolute inset-0"><ProductColorImage src={image} alt="" sizes="88px" className="object-contain p-1" /></span> : null}
+                <span className={`absolute left-1 top-1 z-[1] rounded-full px-1.5 py-px text-[10px] font-black ${RANK_TONE[shown]}`}>{rankLabel(shown)}</span>
+            </Link>
+            {/* 가운데 — 제품군(누르면 제품군 전체) · 이름 · 가격 */}
+            <div className="min-w-0 flex-1">
+                <Link href={`/category/${group.slug}`} className="flex min-w-0 items-center gap-1">
+                    <Image src={group.icon} alt="" width={22} height={22} className="h-[22px] w-[22px] shrink-0 object-contain" />
+                    <span className="ddb-hotpick-group truncate text-[13px] text-neutral-900">{locale === "en" ? group.en : group.ko}</span>
+                </Link>
+                <Link href={productHref(p)} key={p.id} className="ddb-hp-swap mt-1 block min-w-0">
+                    <span className="block text-[11.5px] font-bold leading-[1.35] text-neutral-700 line-clamp-2">{name}</span>
+                    {purchase.purchasable
+                        ? <span className="ddb-crayon-price mt-0.5 block whitespace-nowrap text-[15px]">{formatPrice(p.price)}</span>
+                        : <span className="mt-0.5 block text-[11px] font-black text-rose-700">{purchaseStateLabel(purchase, locale)}</span>}
+                </Link>
+            </div>
+            {/* 다른 순위 작은 사진 둘 — 누르면 크게 */}
+            <div className="flex shrink-0 flex-col gap-1.5">
+                {items.map((item, rank) => rank === shown ? null : (
+                    <button
+                        key={item.id}
+                        type="button"
+                        onClick={() => setShown(rank)}
+                        aria-label={`${rankLabel(rank)} ${productName(item)} 크게 보기`}
+                        className="relative h-[42px] w-[42px] overflow-hidden rounded-xl bg-[#f6efe4] ring-1 ring-neutral-200/70 transition active:scale-95"
+                    >
+                        {productCardImage(item) ? <ProductColorImage src={productCardImage(item)!} alt="" sizes="42px" className="object-contain" /> : null}
+                        <span className={`absolute -bottom-px -left-px rounded-full px-1 text-[9px] font-black leading-[14px] ${RANK_TONE[rank]}`}>{rank + 1}</span>
+                    </button>
+                ))}
+            </div>
+        </li>
     );
 }
 
@@ -154,8 +204,13 @@ export default function HotPickSection() {
                     <p className="text-sm text-neutral-500">{locale === "en" ? "Best-loved items right now" : "요즘 가장 사랑받는 인기 상품"}</p>
                 </div>
 
-                {/* 다섯 장 — PC 한 줄 5칸 · 태블릿 3칸 · 휴대폰 2칸 격자(옆으로 밀기 없음, 2026-10-22 사용자 "우측 스크롤 불편"), 휴대폰 다섯째는 가운데 */}
-                <div className="grid grid-cols-2 gap-x-3 gap-y-6 sm:grid-cols-3 sm:gap-x-4 lg:grid-cols-5 lg:gap-5">
+                {/* 휴대폰 — 제품군마다 한 줄(작은 사진 누르면 그 순위가 크게) */}
+                <ol className="grid gap-2.5 sm:hidden">
+                    {picks.map(({ group, items }) => <MobileRow key={group.slug} group={group} items={items} />)}
+                </ol>
+
+                {/* 태블릿 3칸 · PC 한 줄 5칸 — 뒤집기 카드 */}
+                <div className="hidden grid-cols-3 gap-x-4 gap-y-6 sm:grid lg:grid-cols-5 lg:gap-5">
                     {picks.map(({ group, items }, i) => (
                         <GroupCard key={group.slug} group={group} items={items} index={i} tick={tick} />
                     ))}
