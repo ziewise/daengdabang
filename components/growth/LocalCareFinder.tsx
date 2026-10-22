@@ -311,21 +311,22 @@ export default function LocalCareFinder() {
                                             <p className="ddb-crayon-kicker text-[10px]">NEARBY CANDIDATES</p>
                                             <h3 className="ddb-crayon-title mt-1 text-2xl text-neutral-950">가까운 {selected.shortLabel} 후보 {stateForSelection.places.length}곳</h3>
                                         </div>
-                                        <span className="text-[10px] font-black text-neutral-500">가까운 순</span>
+                                        <span className="dw-place-sort"><i className="fa-solid fa-person-walking mr-1" aria-hidden="true" />가까운 순</span>
                                     </div>
-                                    <div className="mt-3 grid gap-2">
+                                    {/* 후보 목록 — 번호 동그라미를 점선 길로 이은 파스텔 쿠션 줄(2026-10-22 사용자 "페이지 느낌에 맞게") */}
+                                    <div className="dw-places mt-4 grid gap-3">
                                         {stateForSelection.places.map((place, index) => (
-                                            <article key={place.id} className="flex flex-col gap-3 rounded-[20px] border border-neutral-200 bg-white p-4 sm:flex-row sm:items-center sm:justify-between">
+                                            <article key={place.id} className={`dw-place ${["is-pink", "is-yellow", "is-mint", "is-sky", "is-lav"][index % 5]} flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between`}>
                                                 <div className="min-w-0">
                                                     <div className="flex items-center gap-2">
-                                                        <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-indigo-50 text-[10px] font-black text-indigo-800">{index + 1}</span>
-                                                        <h4 className="truncate text-sm font-black text-neutral-950">{place.name}</h4>
-                                                        <span className="shrink-0 rounded-full bg-cyan-50 px-2 py-1 text-[9px] font-black text-cyan-800">{formatDistance(place.distanceMeters)}</span>
+                                                        <span className="dw-place-no shrink-0">{index + 1}</span>
+                                                        <h4 className="dw-place-name truncate">{place.name}</h4>
+                                                        <span className="dw-place-dist shrink-0">{formatDistance(place.distanceMeters)}</span>
                                                     </div>
-                                                    <p className="mt-1 pl-8 text-[11px] font-bold leading-5 text-neutral-500"><PlaceAddressLink place={place} /></p>
+                                                    <p className="dw-place-addr mt-1 text-[11px] font-bold leading-5 text-neutral-500"><PlaceAddressLink place={place} /></p>
                                                 </div>
-                                                <div className="flex flex-wrap gap-2 pl-8 sm:pl-0">
-                                                    {place.phone ? <a href={`tel:${place.phone}`} className="ddb-motion-lift inline-flex min-h-9 items-center rounded-full border border-neutral-200 px-3 text-[10px] font-black text-neutral-700">전화</a> : null}
+                                                <div className="dw-place-links flex flex-wrap gap-2 sm:pl-0">
+                                                    {place.phone ? <a href={`tel:${place.phone}`} className="dw-place-call ddb-motion-lift inline-flex min-h-9 items-center rounded-full px-3 text-[10px] font-black"><i className="fa-solid fa-phone mr-1.5 text-[9px]" aria-hidden="true" />전화</a> : null}
                                                     <PlaceMapLinks place={place} />
                                                 </div>
                                             </article>

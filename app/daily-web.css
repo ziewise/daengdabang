@@ -4595,3 +4595,92 @@ html:not(.ddb-app-mode) [data-daily-web] {
     & .dw-bigpin-art { display: grid; width: 132px; height: 132px; margin: 0 auto; }
     & .dw-bigpin-art img { width: 100px; height: 100px; object-fit: contain; }
 }
+
+/* ── 동네 돌봄 후보 목록 — 파스텔 쿠션 줄 + 번호 동그라미를 잇는 점선 길 + 흰 알약 지도 버튼(2026-10-22 사용자) ── */
+html:not(.ddb-app-mode) [data-daily-web] {
+    & .dw-place-sort {
+        padding: 5px 12px;
+        border-radius: 999px;
+        background: #fff1f5;
+        color: #e2557a;
+        font-size: 11px;
+        font-weight: 800;
+    }
+
+    & .dw-places { position: relative; }
+
+    /* 1 → 5 번호를 잇는 점선 길 */
+    & .dw-places::before {
+        content: "";
+        position: absolute;
+        top: 34px;
+        bottom: 34px;
+        left: 33px;
+        border-left: 3px dotted #f2b8c9;
+    }
+
+    & .dw-place {
+        position: relative;
+        border-radius: 26px;
+        background: var(--dw-place, #fff);
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), inset 0 -8px 14px rgb(0 0 0 / 3%), 0 12px 22px -18px rgb(15 23 42 / 35%);
+    }
+
+    & .dw-place.is-pink { --dw-place: #fff1f5; --dw-place-ink: #e2557a; }
+    & .dw-place.is-yellow { --dw-place: #fff8e8; --dw-place-ink: #d97f0e; }
+    & .dw-place.is-mint { --dw-place: #ecf8f2; --dw-place-ink: #12a17a; }
+    & .dw-place.is-sky { --dw-place: #edf6fb; --dw-place-ink: #0e8aa0; }
+    & .dw-place.is-lav { --dw-place: #f4f1fe; --dw-place-ink: #7c62d6; }
+
+    & .dw-place-no {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        width: 34px;
+        height: 34px;
+        place-items: center;
+        border-radius: 999px;
+        background: #fff;
+        color: var(--dw-place-ink);
+        font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif;
+        font-size: 16px;
+        box-shadow: 0 6px 12px -8px rgb(15 23 42 / 40%);
+    }
+
+    & .dw-place-name {
+        color: var(--dw-ink);
+        font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif;
+        font-size: 16px;
+        font-weight: 400;
+    }
+
+    & .dw-place-dist {
+        padding: 3px 10px;
+        border-radius: 999px;
+        background: #fff;
+        color: var(--dw-place-ink);
+        font-size: 11px;
+        font-weight: 800;
+    }
+
+    & .dw-place-addr { padding-left: 42px; }
+
+    /* 지도 · 전화 버튼 — 흰 알약 + 그림자(테두리 없음) */
+    & .dw-place-links { padding-left: 42px; }
+
+    & .dw-place-links :is(a, [data-place-map-links] a) {
+        border: 0 !important;
+        background: #fff !important;
+        color: #475569 !important;
+        box-shadow: 0 6px 12px -9px rgb(15 23 42 / 40%);
+    }
+
+    & .dw-place-links a.dw-place-call {
+        background: var(--dw-pink) !important;
+        color: #fff !important;
+    }
+}
+
+@media (min-width: 640px) {
+    html:not(.ddb-app-mode) [data-daily-web] .dw-place-links { padding-left: 0; }
+}
