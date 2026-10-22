@@ -387,8 +387,18 @@ export default function MemberAiDashboard({ variant = "home" }: Props) {
                 {/* 아래 쿠션 둘 — 노랑: 이번 주 출석 · 보라: 레벨 · 최근 변화 · AI 추천 */}
                 <div className="dw-pair dw-tpair dw-dial-pair">
                     <div className="dw-csheet is-yellow dw-dial-week">
-                        <p className="ddb-crayon-kicker dw-kicker">THIS WEEK</p>
-                        <h3 className="dw-tlogin-title">이번 주 출석 {engagement?.weeklyAttendanceProgress || 0}/{engagement?.weeklyAttendanceTarget || 7}</h3>
+                        {/* 머리 줄 — 제목 왼쪽 · 연속 출근 · 코인 칩 오른쪽(위아래 무게를 맞춰 스티커 줄이 판 한가운데 오게) */}
+                        <div className="dw-dial-week-head">
+                            <div>
+                                <p className="ddb-crayon-kicker dw-kicker">THIS WEEK</p>
+                                <h3 className="dw-tlogin-title">이번 주 출석 {engagement?.weeklyAttendanceProgress || 0}/{engagement?.weeklyAttendanceTarget || 7}</h3>
+                            </div>
+                            <div className="dw-dial-chips">
+                                <span className="dw-chip">{attendance?.currentStreak || 0}일 연속 출근</span>
+                                <span className="dw-chip">{attendance ? `${attendance.wallet.daengLabCoins.toLocaleString("ko-KR")}C 보유` : "지갑 확인 중"}</span>
+                                <span className="dw-chip">하루 도장 코인 {attendance?.dailyRewardDaengLabCoins ?? 2}개</span>
+                            </div>
+                        </div>
                         <ol className="dw-dsteps" aria-label="최근 7일 출근도장">
                             {(attendance?.recentDays || []).map((day, index) => {
                                 const isToday = day.businessDate === today;
@@ -415,11 +425,6 @@ export default function MemberAiDashboard({ variant = "home" }: Props) {
                                 );
                             })}
                         </ol>
-                        <div className="dw-dial-chips">
-                            <span className="dw-chip">{attendance?.currentStreak || 0}일 연속 출근</span>
-                            <span className="dw-chip">{attendance ? `${attendance.wallet.daengLabCoins.toLocaleString("ko-KR")}C 보유` : "지갑 확인 중"}</span>
-                            <span className="dw-chip">하루 도장 코인 {attendance?.dailyRewardDaengLabCoins ?? 2}개</span>
-                        </div>
                         <p className="dw-dial-rule"><i className="fa-solid fa-shield-heart" aria-hidden="true" /> 도장 날짜와 보상은 한국 시간 기준으로 서버가 확인하며, 같은 날 여러 번 눌러도 한 번만 지급됩니다. 원판 테두리의 루틴 점수는 의료 점수가 아닌 오늘 돌봄 완료율이에요.</p>
                     </div>
 

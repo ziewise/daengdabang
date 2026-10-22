@@ -4854,8 +4854,9 @@ html:not(.ddb-app-mode) [data-daily-web] {
     & .dw-dial-week .dw-dial-stuck img.dw-dial-slam { rotate: none; animation: dw-dial-slam 0.55s cubic-bezier(0.2, 1.4, 0.4, 1) both; }
     & .dw-dial-week li.is-today .dw-dstep-title { color: #e2557a; }
     & .dw-dial-week .dw-dstep-title { margin-top: 10px; font-size: 16px; }
-    & .dw-dial-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 18px; }
-    & .dw-dial-rule { margin-top: 12px; color: #a0855a; font-size: 12px; font-weight: 700; line-height: 1.6; word-break: keep-all; }
+    & .dw-dial-week-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 10px 16px; }
+    & .dw-dial-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    & .dw-dial-rule { margin-top: 0; color: #a0855a; font-size: 12px; font-weight: 700; line-height: 1.6; word-break: keep-all; }
     & .dw-dial-level-head { display: flex; align-items: center; gap: 14px; }
     & .dw-dial-level .dw-rring { --dw-ring: 84px; padding: 6px; }
     & .dw-dial-meter { height: 12px; margin-top: 14px; overflow: hidden; border-radius: 999px; background: #fff; }
