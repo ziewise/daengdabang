@@ -85,11 +85,63 @@ export default function GrowthHub() {
         return () => controller.abort();
     }, []);
 
+    // 페이지 안 탭(2026-10-22 사용자 "길게 나열한 느낌") — 지금 구역들을 빼지 않고 탭 네 개에 나눠 담음.
+    // 머리 판 · 안심 안내는 늘 보이고, 고른 탭의 구역만 보임(숨긴 구역도 화면에 붙어 있어 동네 돌봄 검색 결과 · 관심등록 상태가 그대로 남음).
+    // 고른 탭은 주소 # 에 남김(새로고침 · 뒤로 가기 그대로). 다른 화면 · 카드의 #구역 바로가기도 그 탭을 열고 그 구역으로 이동
+    const tabs = HUB_TABS.filter((tab) => (tab.id !== "local" || content.visibility.localCare) && (tab.id !== "next" || content.visibility.programs));
+    const [activeTab, setActiveTab] = useState<HubTabId>("today");
+    const tabBarRef = useRef<HTMLDivElement>(null);
+
+    // 주소 # → 탭(처음 열 때 · # 이 바뀔 때)
+    useEffect(() => {
+        const syncFromHash = () => {
+            const tab = tabForAnchor(window.location.hash.slice(1));
+            if (!tab) return;
+            setActiveTab(tab);
+            const anchor = window.location.hash.slice(1);
+            // 탭이 그려진 뒤 그 구역으로(탭 이름 # 이면 탭 줄로)
+            window.requestAnimationFrame(() => {
+                const target = HUB_TABS.some((item) => item.anchor === anchor) ? tabBarRef.current : document.getElementById(anchor);
+                target?.scrollIntoView({ block: "start" });
+            });
+        };
+        syncFromHash();
+        window.addEventListener("hashchange", syncFromHash);
+        // 페이지 안 "#구역" 링크(예: 멤버십 소식 관심등록 → #growth-programs)는 Next 가 # 만 바꿔 hashchange 가 안 올 수 있어 직접 잡음
+        const onClick = (event: MouseEvent) => {
+            const link = (event.target as Element | null)?.closest?.("a[href^='#']");
+            if (!link) return;
+            const anchor = (link.getAttribute("href") || "").slice(1);
+            const tab = tabForAnchor(anchor);
+            if (!tab) return;
+            event.preventDefault();
+            setActiveTab(tab);
+            window.history.replaceState(window.history.state, "", `#${anchor}`);
+            window.requestAnimationFrame(() => document.getElementById(anchor)?.scrollIntoView({ block: "start" }));
+        };
+        document.addEventListener("click", onClick);
+        return () => {
+            window.removeEventListener("hashchange", syncFromHash);
+            document.removeEventListener("click", onClick);
+        };
+    }, []);
+
+    // 탭 누름 — 주소 # 바꾸고, 탭 줄이 화면 위로 지나갔으면 탭 줄 위치로 올림
+    const chooseTab = (tab: HubTabId) => {
+        setActiveTab(tab);
+        const anchor = HUB_TABS.find((item) => item.id === tab)?.anchor;
+        if (anchor) window.history.replaceState(window.history.state, "", `#${anchor}`);
+        const bar = tabBarRef.current;
+        if (bar && bar.getBoundingClientRect().top < 100) {
+            window.scrollTo({ top: bar.offsetTop - 80 });
+        }
+    };
+
     // 웹 매일 댕생활 꾸밈(2026-10-22 사용자 "귀엽고 보기 좋은 구성으로") — 배치 · 카드 모양만 바꿈, 문구 · 링크 · 동작은 그대로.
     // 꾸밈 CSS 는 app/daily-web.css(웹에서만, data-daily-web 범위)
     return (
         <main className="w-full overflow-x-clip" data-growth-motion-scope data-daily-web>
-            {/* ① 머리 판 — 왼쪽 제목 · 설명 · 바로가기 알약 줄, 오른쪽 보물상자 그림 무리 */}
+            {/* ① 머리 판 — 왼쪽 제목 · 설명, 오른쪽 보물상자 그림 무리(바로가기 알약은 아래 탭으로) */}
             <section className="px-4 pt-8 sm:px-6 md:pt-12" aria-labelledby="treasure-mine-title">
                 <div className="dw-hero dw-tint-yellow mx-auto max-w-[1352px]">
                     <div className="dw-hero-text">
@@ -101,25 +153,6 @@ export default function GrowthHub() {
                             {content.hero.titlePrefix} <span className="ddb-crayon-underline">{content.hero.titleHighlight}</span>{content.hero.titleSuffix}
                         </h1>
                         <p className="dw-lead">{content.hero.description}</p>
-
-                        <nav className="dw-hero-nav" aria-label="보물광산 구역 바로가기">
-                            <a href="#today-treasure" className="ddb-crayon-link ddb-attention-cta dw-pill dw-pill-main">
-                                오늘의 보물
-                            </a>
-                            <Link href="/goods-contest/" className="ddb-motion-lift dw-pill">
-                                굿즈 500명 공모전
-                            </Link>
-                            {content.visibility.localCare ? (
-                                <a href="#local-care-finder" className="ddb-motion-lift dw-pill">
-                                    동네 돌봄 찾기
-                                </a>
-                            ) : null}
-                            {content.visibility.programs ? (
-                                <a href="#growth-programs" className="ddb-motion-lift dw-pill">
-                                    준비 중인 혜택
-                                </a>
-                            ) : null}
-                        </nav>
                     </div>
 
                     {/* 그림 무리(꾸밈) — 보물상자 + 출근도장 · 작은 돌봄 · 변화 기록 그림이 둥실 */}
@@ -133,45 +166,97 @@ export default function GrowthHub() {
                 </div>
             </section>
 
-            {/* ② 오늘의 보물 — 가운데 정렬 제목, 아래 하루 보물 길(비회원) 또는 회원 기록판 */}
-            <section id="today-treasure" className="scroll-mt-28 pt-12 md:pt-16" aria-labelledby="today-treasure-title">
-                <div className="dw-section-head mx-auto max-w-[1400px] px-4 sm:px-6">
-                    <p className="ddb-crayon-kicker dw-kicker">{content.today.kicker}</p>
-                    <h2 id="today-treasure-title" className="ddb-crayon-title ddb-crayon-underline dw-h2">{content.today.title}</h2>
-                    <p className="dw-sub">{content.today.description}</p>
-                </div>
+            {/* 탭 줄 — 내리는 동안 화면 위에 붙어 있음 */}
+            <div ref={tabBarRef} className="dw-tabbar-wrap">
+                <nav className="dw-tabbar" role="tablist" aria-label="보물광산 구역">
+                    {tabs.map((tab) => (
+                        <button
+                            key={tab.id}
+                            type="button"
+                            role="tab"
+                            id={`hub-tab-${tab.id}`}
+                            aria-selected={activeTab === tab.id}
+                            aria-controls={`hub-panel-${tab.id}`}
+                            onClick={() => chooseTab(tab.id)}
+                            className={`dw-tab ${activeTab === tab.id ? "is-on" : ""}`}
+                        >
+                            <Image src={tab.art} alt="" width={40} height={40} aria-hidden="true" />
+                            <span className="text-left">
+                                <b>{tab.label}</b>
+                                <small>{tab.helper}</small>
+                            </span>
+                        </button>
+                    ))}
+                </nav>
+            </div>
 
-                {!hydrated ? (
-                    <div className="mx-auto max-w-[1400px] px-4 py-8 sm:px-6" aria-label="회원 돌봄 현황 확인 중">
-                        <div className="ddb-crayon-paper grid min-h-64 animate-pulse place-items-center rounded-[30px] border text-sm font-black text-neutral-400">
-                            <span><i className="fa-solid fa-circle-notch fa-spin mr-2" aria-hidden="true" />오늘의 보물을 준비하는 중</span>
-                        </div>
+            {/* 탭 ① 오늘의 보물 — 오늘의 보물 · 안전 공유 · 쇼핑으로 잇기 */}
+            <div role="tabpanel" id="hub-panel-today" aria-labelledby="hub-tab-today" hidden={activeTab !== "today"}>
+                <section id="today-treasure" className="scroll-mt-40 pt-10 md:pt-12" aria-labelledby="today-treasure-title">
+                    <div className="dw-section-head mx-auto max-w-[1400px] px-4 sm:px-6">
+                        <p className="ddb-crayon-kicker dw-kicker">{content.today.kicker}</p>
+                        <h2 id="today-treasure-title" className="ddb-crayon-title ddb-crayon-underline dw-h2">{content.today.title}</h2>
+                        <p className="dw-sub">{content.today.description}</p>
                     </div>
-                ) : user ? (
-                    <MemberAiDashboard variant="full" />
-                ) : (
-                    <GuestTodayCard />
-                )}
 
-                {/* ③ 안전 공유 · 쇼핑으로 잇기 — 위아래로 길게 쌓던 두 판을 나란히 */}
-                <div className="dw-pair mx-auto max-w-[1400px] px-4 pt-4 sm:px-6">
-                    <GrowthShareCard canShareAiRecord={hasAiRecord} isMember={isMember} />
-                    <CommerceBridge isMember={isMember} hasPet={hasPet} hasAiRecord={hasAiRecord} content={content.commerce} />
+                    {!hydrated ? (
+                        <div className="mx-auto max-w-[1400px] px-4 py-8 sm:px-6" aria-label="회원 돌봄 현황 확인 중">
+                            <div className="ddb-crayon-paper grid min-h-64 animate-pulse place-items-center rounded-[30px] border text-sm font-black text-neutral-400">
+                                <span><i className="fa-solid fa-circle-notch fa-spin mr-2" aria-hidden="true" />오늘의 보물을 준비하는 중</span>
+                            </div>
+                        </div>
+                    ) : user ? (
+                        <MemberAiDashboard variant="full" />
+                    ) : (
+                        <GuestTodayCard />
+                    )}
+
+                    {/* 안전 공유 · 쇼핑으로 잇기 나란히 */}
+                    <div className="dw-pair mx-auto max-w-[1400px] px-4 pt-4 sm:px-6">
+                        <GrowthShareCard canShareAiRecord={hasAiRecord} isMember={isMember} />
+                        <CommerceBridge isMember={isMember} hasPet={hasPet} hasAiRecord={hasAiRecord} content={content.commerce} />
+                    </div>
+                </section>
+            </div>
+
+            {/* 탭 ② 동네 돌봄 */}
+            {content.visibility.localCare ? (
+                <div role="tabpanel" id="hub-panel-local" aria-labelledby="hub-tab-local" hidden={activeTab !== "local"}>
+                    <LocalCareFinder />
                 </div>
-            </section>
+            ) : null}
 
-            {/* 동네 돌봄 찾기는 돌봄 구역이라 오늘의 보물 바로 다음(2026-10-22 사용자) */}
-            {content.visibility.localCare ? <LocalCareFinder /> : null}
+            {/* 탭 ③ 굿즈 · 발견 — 확장 계획 · 굿즈 공모전 */}
+            <div role="tabpanel" id="hub-panel-discover" aria-labelledby="hub-tab-discover" hidden={activeTab !== "discover"}>
+                <CommerceCommunityExpansion />
+                <GoodsContestTeaser content={content.goods} contentReady={contentReady} />
+            </div>
 
-            <CommerceCommunityExpansion />
+            {/* 탭 ④ 다음 보물 */}
+            {content.visibility.programs ? (
+                <div role="tabpanel" id="hub-panel-next" aria-labelledby="hub-tab-next" hidden={activeTab !== "next"}>
+                    <GrowthPrograms />
+                </div>
+            ) : null}
 
-            {/* 굿즈 공모전은 다음 보물(준비 중 혜택) 바로 위(2026-10-22 사용자) */}
-            <GoodsContestTeaser content={content.goods} contentReady={contentReady} />
-
-            {content.visibility.programs ? <GrowthPrograms /> : null}
-            {content.visibility.policy ? <GrowthPolicySummary /> : null}
+            {/* 안심 안내 — 어느 탭이든 맨 아래 */}
+            {content.visibility.policy ? <div className="pt-6"><GrowthPolicySummary /></div> : null}
         </main>
     );
+}
+
+/* 페이지 안 탭 — 이름 · 그림 · 작은 설명 · 탭 주소(#) · 그 탭에 든 구역 # */
+type HubTabId = "today" | "local" | "discover" | "next";
+const HUB_TABS: readonly { id: HubTabId; label: string; helper: string; art: string; anchor: string; anchors: readonly string[] }[] = [
+    { id: "today", label: "오늘의 보물", helper: "출근도장 · 작은 돌봄", art: "/images/ui/daily-checkin-256.webp", anchor: "today-treasure", anchors: ["today-treasure"] },
+    { id: "local", label: "동네 돌봄", helper: "병원 · 미용 · 호텔 찾기", art: "/images/ui/daily-care-256.webp", anchor: "local-care-finder", anchors: ["local-care-finder"] },
+    { id: "discover", label: "굿즈 · 발견", helper: "굿즈 500명 공모전", art: "/images/ui/daily-hero-goods-384.webp", anchor: "goods-contest", anchors: ["goods-contest", "community-commerce-roadmap"] },
+    { id: "next", label: "다음 보물", helper: "준비 중인 혜택", art: "/images/ui/daily-hero-treasure-384.webp", anchor: "growth-programs", anchors: ["growth-programs"] },
+];
+
+function tabForAnchor(anchor: string): HubTabId | null {
+    if (!anchor) return null;
+    return HUB_TABS.find((tab) => tab.anchors.includes(anchor))?.id ?? null;
 }
 
 /** ④ 굿즈 공모전 미리보기 — 연보라 크레파스 판, 오른쪽 굿즈 사진은 흰 액자 안에 */
