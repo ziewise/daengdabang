@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import RecommendationPetSelector from "@/components/recommendation/RecommendationPetSelector";
 import RecommendationProductCard from "@/components/recommendation/RecommendationProductCard";
@@ -131,7 +132,8 @@ export default function RecommendSection() {
                         ) : null}
                         <Link
                             href={personalizationEnabled && !selectedPet ? "/mypage/#pet-profiles" : "/recommendations/"}
-                            className="ddb-crayon-link inline-flex items-center gap-1.5 rounded-full px-5 py-2.5 text-xs md:text-sm"
+                            // 점선 공용 링크(ddb-crayon-link) 대신 크레파스 테 알약 — 이 단추만(2026-10-23 사용자)
+                            className="inline-flex items-center gap-1.5 rounded-full bg-[#fffaf1] px-5 py-2.5 text-xs text-[#d9577f] shadow-[0_0_0_2.5px_#f3d9b8] transition [font-family:var(--font-jua),var(--font-wanted-sans),sans-serif] hover:shadow-[0_0_0_2.5px_#f7a8bf] md:text-sm"
                         >
                             {personalizationEnabled && !selectedPet ? "프로필 등록하기" : "추천 전체 보기"}
                             <i className="fa-solid fa-arrow-right text-[10px]" />
@@ -144,7 +146,8 @@ export default function RecommendSection() {
                     </div>
                 </div>
 
-                {personalizationEnabled && preferenceState.errorMessage && selectedPet ? (
+                {/* 설정 저장 오류 띠 — 설정을 아예 못 불러온 경우는 제목 아래 같은 문구가 이미 있어 한 번만(2026-10-23 사용자) */}
+                {personalizationEnabled && preferenceState.errorMessage && selectedPet && preferences ? (
                     <p className="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs font-black leading-5 text-amber-900" role="status">
                         {preferenceState.errorMessage}
                     </p>
@@ -172,25 +175,46 @@ export default function RecommendSection() {
                         ))}
                     </div>
                 ) : baseItems.length > 0 ? (
-                    <div className="rounded-3xl border border-dashed border-neutral-300 bg-neutral-50 px-6 py-10 text-center">
-                        <p className="font-black text-neutral-950">이 추천 묶음의 상품을 모두 숨겼어요.</p>
-                        <button
-                            type="button"
-                            className="mt-3 text-sm font-black text-indigo-700 hover:underline"
-                            onClick={recommendationAnalytics.resetHidden}
-                        >
-                            숨긴 상품 다시 보기
+                    <RecommendEmptyCard
+                        art="/images/ui/hotpick-life-128.webp"
+                        title="이 추천 묶음의 상품을 모두 숨겼어요."
+                        body="숨긴 상품을 다시 보거나 전체 상품에서 직접 골라 보세요."
+                    >
+                        <button type="button" className={EMPTY_ACTION_CLASS} onClick={recommendationAnalytics.resetHidden}>
+                            숨긴 상품 다시 보기 <i className="fa-solid fa-rotate-left text-[11px]" aria-hidden="true" />
                         </button>
-                    </div>
+                    </RecommendEmptyCard>
                 ) : (
-                    <div className="rounded-3xl border border-dashed border-neutral-300 bg-neutral-50 px-6 py-10 text-center">
-                        <p className="font-black text-neutral-950">현재 안전 기준을 통과한 맞춤 상품이 없어요.</p>
-                        <Link href="/products/" className="mt-3 inline-flex text-sm font-black text-indigo-700 hover:underline">
-                            전체 상품 직접 보기
+                    <RecommendEmptyCard
+                        art="/images/ui/shop-menu-all-128.webp"
+                        title="현재 안전 기준을 통과한 맞춤 상품이 없어요."
+                        body="추천할 상품을 꼼꼼히 살펴보는 중이에요. 그동안 전체 상품에서 직접 둘러봐 주세요."
+                    >
+                        <Link href="/products/" className={EMPTY_ACTION_CLASS}>
+                            전체 상품 직접 보기 <i className="fa-solid fa-arrow-right text-[11px]" aria-hidden="true" />
                         </Link>
-                    </div>
+                    </RecommendEmptyCard>
                 )}
             </div>
         </section>
+    );
+}
+
+// 추천이 비었을 때 안내 카드(2026-10-23 사용자 "전혀 어울리지 않아") — 점선 회색 상자 대신
+// 크림 쿠션 판 + 3D 그림 동그라미 + 주아 제목 + 짧은 설명 + 분홍 알약 단추. 문구 뜻 · 연결은 그대로
+const EMPTY_ACTION_CLASS = "inline-flex items-center gap-2 rounded-full bg-[#e9789a] px-5 py-2.5 text-sm font-black text-white shadow-[inset_0_3px_0_rgba(255,255,255,0.3),0_12px_20px_-12px_rgba(200,80,120,0.65)] transition hover:-translate-y-0.5 hover:bg-[#e2557a]";
+
+function RecommendEmptyCard({ art, title, body, children }: { art: string; title: string; body: string; children: React.ReactNode }) {
+    return (
+        <div className="flex flex-col items-center gap-5 rounded-[36px] bg-[#fffaf1] px-6 py-8 text-center shadow-[inset_0_3px_0_rgba(255,255,255,0.9),0_20px_34px_-24px_rgba(120,80,30,0.35)] sm:flex-row sm:px-10 sm:text-left">
+            <span className="grid h-24 w-24 shrink-0 place-items-center rounded-full bg-[#ffeef3] shadow-[inset_0_4px_0_rgba(255,255,255,0.9)]" aria-hidden="true">
+                <Image src={art} alt="" width={64} height={64} className="h-16 w-16 object-contain" />
+            </span>
+            <div className="min-w-0 flex-1">
+                <p className="text-xl text-neutral-900 [font-family:var(--font-jua),var(--font-wanted-sans),sans-serif] md:text-2xl">{title}</p>
+                <p className="mt-1.5 text-sm font-bold leading-6 text-neutral-500">{body}</p>
+            </div>
+            <div className="shrink-0">{children}</div>
+        </div>
     );
 }
