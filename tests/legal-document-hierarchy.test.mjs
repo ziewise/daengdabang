@@ -52,7 +52,7 @@ test("the privacy page discloses the live behavior and sound processing boundary
     const privacy = await source("app/privacy/page.tsx");
 
     assert.doesNotMatch(privacy, /상시적으로 국외 이전하지 않습니다/);
-    assert.match(privacy, /Gemini 임시 채팅은 Google 계정에 72시간 보관/);
+    assert.match(privacy, /임시 채팅은 Google 계정에 72시간 보관/);
     assert.match(privacy, /케어톡 질문, 이전 대화 맥락/);
     assert.match(privacy, /Google LLC \(개인정보 문의: https:\/\/policies\.google\.com\/privacy\?hl=ko\)/);
     assert.match(privacy, /명시적으로 동의하고 분석을 실행할 때 암호화된 HTTPS 통신으로 이전/);
