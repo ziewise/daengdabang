@@ -1,5 +1,10 @@
 "use client";
 
+/*
+ * 로그인(/auth/login) — 2026-10-24 웹 크레파스 결: 영상 · 배치는 그대로 두고 입력칸 · 버튼만 사이트 결(크림 알약 칸 · 분홍 로그인 알약)로.
+ * 이름표(data-login-web · lg-*)만 붙이고 꾸밈은 app/auth-web.css(웹 전용). 로그인 동작 그대로.
+ */
+
 /**
  * LoginPage — 풀스크린 로그인 (헤더/푸터 없음 · ConditionalChrome 가 크롬 숨김).
  * ---------------------------------------------------------------------
@@ -10,6 +15,7 @@
  */
 
 import { FormEvent, useState, useSyncExternalStore } from "react";
+import "../../auth-web.css";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -102,7 +108,7 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-[#fdf9f1] via-[#fbf3e7] to-[#faecd9] px-4 py-8">
+        <div data-login-web className="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-[#fdf9f1] via-[#fbf3e7] to-[#faecd9] px-4 py-8">
             {/* 영상 톤(크림/허니)에 맞춘 부드러운 블롭 장식 */}
             <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-amber-200/40 blur-3xl" />
             <div className="pointer-events-none absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-orange-200/35 blur-3xl" />
@@ -190,7 +196,7 @@ export default function LoginPage() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="mt-1 h-12 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 text-sm font-black text-white shadow-[0_8px_20px_rgba(245,158,11,0.35)] transition hover:from-amber-500 hover:to-amber-600 disabled:opacity-60"
+                            className="lg-submit mt-1 h-12 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 text-sm font-black text-white shadow-[0_8px_20px_rgba(245,158,11,0.35)] transition hover:from-amber-500 hover:to-amber-600 disabled:opacity-60"
                         >
                             {loading ? "로그인 중…" : "로그인"}
                         </button>

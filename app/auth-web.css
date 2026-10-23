@@ -1,0 +1,253 @@
+/*
+ * auth-web.css — 웹 회원가입(/auth/signup) · 로그인(/auth/login) 크레파스 꾸밈 · 2026-10-24
+ * ---------------------------------------------------------------------
+ * 회원가입: 무지개 고리 안 댕다방 강아지 · 영문 손글씨 · 주아 제목 + 세 색 밑줄 · 한 줄 설명 ·
+ *   가입 혜택 연보라 쿠션 · 약관 · 간편가입 · 입력 판 흰 쿠션(안쪽 칸 크림) · 반려견 사진 칸 크림 동그라미 모서리(점선 없음) ·
+ *   관심 케어 파스텔 알약(고른 것 분홍) · 선택 동의 연보라 메모 · 분홍 가입 알약.
+ * 로그인: 영상 · 배치 그대로, 입력칸 크림 알약 · 로그인 분홍 알약 · 회원가입 링크 분홍 테 알약.
+ * 범위: 웹(html:not(.ddb-app-mode)) · main[data-signup-web] · [data-login-web] 안에서만. 가입 · 로그인 · 인증 동작 그대로.
+ */
+
+/* ───────── 회원가입 ───────── */
+html:not(.ddb-app-mode) main[data-signup-web] {
+    --su-cushion: inset 0 3px 0 rgb(255 255 255 / 90%), inset 0 -10px 18px rgb(0 0 0 / 3%), 0 22px 36px -24px rgb(15 23 42 / 32%);
+
+    &[data-signup-web="form"] { max-width: 760px; text-align: left; }
+
+    /* 머리 — 무지개 고리 강아지 · 꼬리표 · 제목 · 설명(가운데) */
+    & .su-ring {
+        display: grid;
+        width: 132px;
+        height: 132px;
+        margin: 0 auto;
+        padding: 9px;
+        border-radius: 999px;
+        background: conic-gradient(from 20deg, #f7a8bf, #ffd08a, #a8e0c6, #a9d4ea, #cfc3f5, #f7a8bf);
+        box-shadow: 0 18px 30px -20px rgb(15 23 42 / 40%);
+    }
+
+    & .su-ring > span { display: grid; place-items: center; overflow: hidden; border-radius: 999px; background: #fff; }
+    & .su-ring img { width: 82%; height: 82%; object-fit: contain; }
+
+    & .su-kicker {
+        display: block;
+        width: fit-content;
+        margin: 16px auto 0;
+        background-image: repeating-linear-gradient(172deg, #07849e 0 5px, #ef476f 5px 10px, #e98708 10px 15px);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: #07849e;
+        font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        -webkit-text-fill-color: transparent;
+    }
+
+    & .su-title {
+        position: relative;
+        display: block;
+        width: fit-content;
+        color: #1e293b;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-weight: 400;
+        isolation: isolate;
+    }
+
+    &[data-signup-web="form"] .su-title { margin: 6px auto 0; font-size: 38px; }
+
+    & .su-title::after {
+        content: "";
+        position: absolute;
+        right: 1%;
+        bottom: -0.1em;
+        left: 0;
+        z-index: -1;
+        height: 0.22em;
+        border-radius: 999px 70% 999px 60%;
+        background: repeating-linear-gradient(94deg, rgb(8 145 178 / 62%) 0 14px, rgb(239 71 111 / 58%) 14px 28px, rgb(245 158 11 / 62%) 28px 42px);
+    }
+
+    & .su-lead {
+        display: block;
+        margin: 14px auto 0;
+        color: #64748b;
+        font-size: 15px;
+        font-weight: 600;
+        text-align: center;
+        word-break: keep-all;
+    }
+
+    /* 가입 혜택 — 연보라 쿠션 */
+    & [data-signup-daenglab-bonus] {
+        margin-top: 26px;
+        padding: 16px 20px;
+        border: 0;
+        border-radius: 26px;
+        background: #f3f0fe;
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%);
+    }
+
+    & [data-signup-daenglab-bonus] p:first-of-type { font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 16px; font-weight: 400; }
+
+    /* 판(약관 · 간편가입 · 입력) — 흰 쿠션 */
+    & :is([data-signup-required-agreements], section.surface, form.surface) {
+        margin-top: 22px;
+        padding: 24px 24px 26px;
+        border: 0;
+        border-radius: 32px;
+        background: #fff;
+        box-shadow: var(--su-cushion);
+    }
+
+    & :is([data-signup-required-agreements], section.surface) h2 {
+        color: #1e293b;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 19px;
+        font-weight: 400;
+    }
+
+    /* 약관 · 개인정보 동의 칸 — 크림 */
+    & :is([data-signup-terms-agreement], [data-signup-privacy-consent]) {
+        padding: 14px 16px;
+        border: 0;
+        border-radius: 20px;
+        background: #fffaf1;
+    }
+
+    & :is([data-signup-terms-agreement], [data-signup-privacy-consent]) a { color: #d0436d; }
+    & summary { color: #b08a5a; }
+    & input[type="checkbox"] { accent-color: #e9789a; }
+
+    /* 간편가입 단추 — 고유색 그대로, 둥근 알약 */
+    & section.surface .grid > button,
+    & section.surface .flex > button { border-radius: 999px; }
+
+    /* 입력 이름 · 칸 */
+    & label > span.mb-1:first-child,
+    & div > span.mb-1:first-child,
+    & div > span.mb-2:first-child {
+        color: #1e293b;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 14.5px;
+        font-weight: 400;
+    }
+
+    & :is(.input, input:not([type="checkbox"]):not([type="file"]), select) {
+        height: 48px;
+        border: 0;
+        border-radius: 16px;
+        background: #fffaf1;
+        box-shadow: 0 0 0 2px #f3e3cc;
+    }
+
+    & :is(.input, input:not([type="checkbox"]):not([type="file"]), select):focus {
+        outline: none;
+        background: #fff;
+        box-shadow: 0 0 0 2.5px #f7a8bf, 0 0 0 7px rgb(247 168 191 / 22%);
+    }
+
+    & :is(input, select)::placeholder { color: #b8a58c; }
+
+    /* 반려견 정보 판 — 연크림 · 사진 칸 크림(점선 없음) */
+    & .su-pet { padding: 18px; border: 0; border-radius: 26px; background: #fffaf1; }
+    & .su-pet :is(.input, input:not([type="checkbox"]):not([type="file"]), select) { background: #fff; }
+
+    & [data-petlens-photo-view] > span.grid {
+        border: 0;
+        border-radius: 22px;
+        background: #fff;
+        color: #e9a8bb;
+        box-shadow: 0 0 0 2px #f3e3cc;
+    }
+
+    & [data-petlens-photo-view] > span.grid:hover { box-shadow: 0 0 0 2.5px #f7a8bf; }
+
+    /* 관심 케어 — 파스텔 알약(고른 것 분홍) */
+    & label.rounded-full {
+        height: 40px;
+        padding: 0 16px;
+        border: 0;
+        background: #fff;
+        color: #475569;
+        box-shadow: 0 0 0 1.5px #efe7dc;
+    }
+
+    & label.rounded-full:has(input:checked) { background: #ffeef3; color: #d0436d; box-shadow: 0 0 0 2px #f7a8bf; }
+
+    /* 선택 동의 — 연보라 메모 */
+    & [data-signup-petlens-optional-consent] { border: 0; border-radius: 22px; background: #f3f0fe; }
+    & [data-signup-petlens-optional-consent] > div { border: 0; border-radius: 16px; }
+
+    /* 안내 · 오류 문구 — 둥글게 */
+    & p[class*="bg-amber-50"], & p[class*="bg-rose-50"], & p[class*="bg-indigo-50"] { border: 0; border-radius: 16px; }
+
+    /* 분홍 가입 알약 · 로그인 링크 */
+    & :is(.su-submit, form .btn-primary) {
+        height: 56px;
+        border-radius: 999px;
+        background: #e9789a;
+        color: #fff;
+        font-size: 16px;
+        box-shadow: 0 10px 20px -12px rgb(200 80 120 / 70%);
+    }
+
+    & :is(.su-submit, form .btn-primary):hover:not(:disabled) { background: #e26690; }
+    & :is(.su-submit, form .btn-primary):disabled { background: #f3c7d4; box-shadow: none; }
+
+    & .su-login a {
+        display: inline-flex;
+        margin-left: 4px;
+        padding: 6px 16px;
+        border-radius: 999px;
+        background: #ffeef3;
+        color: #d0436d;
+    }
+
+    /* 이메일 인증 화면(가입 후) — 가운데 제목 + 흰 쿠션 */
+    &[data-signup-web="verify"] .su-title { font-size: 28px; }
+    &[data-signup-web="verify"] > div { border-radius: 30px; }
+}
+
+/* ───────── 로그인(영상 · 배치 그대로, 입력칸 · 버튼만) ───────── */
+html:not(.ddb-app-mode) [data-login-web] {
+    & > div.relative.z-10 { border-radius: 36px; }
+
+    & form input {
+        height: 52px;
+        border: 0;
+        border-radius: 999px;
+        background: #fffaf1;
+        box-shadow: 0 0 0 2px #f3e3cc;
+    }
+
+    & form input:focus { background: #fff; box-shadow: 0 0 0 2.5px #f7a8bf, 0 0 0 7px rgb(247 168 191 / 22%); }
+
+    & .lg-submit {
+        height: 54px;
+        border-radius: 999px;
+        background: #e9789a;
+        font-size: 16px;
+        box-shadow: 0 10px 20px -12px rgb(200 80 120 / 70%);
+    }
+
+    & .lg-submit:hover:not(:disabled) { background: #e26690; }
+
+    /* 회원가입 링크 — 분홍 테 알약 */
+    & a[href*="/auth/signup"] {
+        border-color: #f7a8bf;
+        background: #ffeef3;
+        color: #d0436d;
+    }
+
+    & a[href*="/auth/signup"]:hover { border-color: #e9789a; background: #ffe2eb; }
+    & a[href*="forgot"]:hover { color: #d0436d; }
+}
+
+@media (max-width: 560px) {
+    html:not(.ddb-app-mode) main[data-signup-web] {
+        &[data-signup-web="form"] .su-title { font-size: 32px; }
+        & :is([data-signup-required-agreements], section.surface, form.surface) { padding: 20px 16px 22px; border-radius: 26px; }
+        & .su-pet { padding: 14px; }
+    }
+}

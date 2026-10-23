@@ -1,8 +1,16 @@
 "use client";
 
+/*
+ * 회원가입(/auth/signup) — 2026-10-24 웹 크레파스 결: 이름표(su-* · data-signup-web)만 붙이고 꾸밈은 app/auth-web.css(웹 전용).
+ * 무지개 고리 강아지 · 영문 손글씨 · 주아 제목 · 쿠션 판 · 크림 입력칸 · 분홍 알약. 가입 · 인증 · 사진 분석 동작 그대로.
+ */
+
 import { FormEvent, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+// 그림 부품 — 이 파일은 브라우저 기본 Image(사진 읽기)도 쓰므로 이름을 NextImage 로
+import NextImage from "next/image";
+import "../../auth-web.css";
 import {
     customerApiErrorMessage,
     ddbApiReady,
@@ -758,8 +766,8 @@ export default function SignupPage() {
         if (pendingVerification.kind === "activation") {
             if (pendingVerification.verified) {
                 return (
-                    <main className="mx-auto max-w-lg px-4 py-10 sm:py-16">
-                        <h1 className="text-2xl font-black tracking-tight text-neutral-950">이메일 확인 완료</h1>
+                    <main className="mx-auto max-w-lg px-4 py-10 sm:py-16" data-signup-web="verify">
+                        <h1 className="su-title text-2xl font-black tracking-tight text-neutral-950">이메일 확인 완료</h1>
                         <p className="mt-2 text-sm font-bold leading-6 text-neutral-600">
                             이메일이 확인되었습니다. 안전하게 계정 이용을 시작하기 위해 가입 때 입력한 비밀번호로 로그인해 주세요.
                         </p>
@@ -804,8 +812,8 @@ export default function SignupPage() {
             }
 
             return (
-                <main className="mx-auto max-w-lg px-4 py-10 sm:py-16">
-                    <h1 className="text-2xl font-black tracking-tight text-neutral-950">회원가입 이메일 확인</h1>
+                <main className="mx-auto max-w-lg px-4 py-10 sm:py-16" data-signup-web="verify">
+                    <h1 className="su-title text-2xl font-black tracking-tight text-neutral-950">회원가입 이메일 확인</h1>
                     <p className="mt-2 text-sm font-bold leading-6 text-neutral-600">
                         이메일 확인을 마쳐야 계정 이용이 시작됩니다. 확인 전에는 로그인 정보나 회원 프로필을 저장하지 않습니다.
                     </p>
@@ -822,8 +830,8 @@ export default function SignupPage() {
         }
 
         return (
-            <main className="mx-auto max-w-lg px-4 py-10 sm:py-16">
-                <h1 className="text-2xl font-black tracking-tight text-neutral-950">회원가입 이메일 인증</h1>
+            <main className="mx-auto max-w-lg px-4 py-10 sm:py-16" data-signup-web="verify">
+                <h1 className="su-title text-2xl font-black tracking-tight text-neutral-950">회원가입 이메일 인증</h1>
                 <p className="mt-2 text-sm font-bold leading-6 text-neutral-600">
                     계정 가입은 완료되었습니다. 가입 이메일로 자동 발송된 6자리 인증번호를 확인하면 신규 가입 혜택 20C를 받을 수 있어요.
                 </p>
@@ -840,8 +848,14 @@ export default function SignupPage() {
     }
 
     return (
-        <main className="mx-auto max-w-2xl px-4 py-10">
-            <h1 className="text-3xl font-black tracking-tight text-neutral-950">회원가입</h1>
+        <main className="mx-auto max-w-2xl px-4 py-10" data-signup-web="form">
+            {/* 웹 전용 머리(2026-10-24 크레파스 결, 꾸밈은 app/auth-web.css) — 무지개 고리 댕다방 강아지 · 영문 손글씨 · 아래 제목 · 한 줄 설명 */}
+            <span className="hidden su-ring dw-rring" aria-hidden="true">
+                <span><NextImage src="/images/ui/logo-poodle-384.webp" alt="" width={120} height={120} priority /></span>
+            </span>
+            <p className="hidden su-kicker">JOIN DAENGDABANG</p>
+            <h1 className="su-title text-3xl font-black tracking-tight text-neutral-950">회원가입</h1>
+            <p className="hidden su-lead">우리 아이 정보를 함께 등록하면 꼭 맞는 상품과 돌봄을 추천해 드려요.</p>
             <section
                 className="mt-4 rounded-2xl border border-indigo-100 bg-gradient-to-r from-cyan-50 via-rose-50 to-amber-50 px-4 py-3"
                 aria-labelledby="signup-daenglab-bonus-title"
@@ -986,7 +1000,7 @@ export default function SignupPage() {
                         placeholder="8자 이상·최대 72바이트"
                     />
                 </label>
-                <div className="grid gap-4 rounded-lg border border-neutral-200 bg-neutral-50 p-4">
+                <div className="su-pet grid gap-4 rounded-lg border border-neutral-200 bg-neutral-50 p-4">
                     <div className="grid gap-4 md:grid-cols-[260px_1fr]">
                         <div className="block" data-pet-guide-target="signup-pet-photo" data-petlens-multiview-upload>
                             <span className="mb-1 block text-xs font-black text-neutral-500">사진</span>
@@ -1238,14 +1252,14 @@ export default function SignupPage() {
                 <button
                     type="submit"
                     data-pet-guide-target="signup-submit"
-                    className="btn btn-primary w-full"
+                    className="su-submit btn btn-primary w-full"
                     disabled={photoLoading || loading || apiReady !== true || !signupSecurityReady}
                 >
                     <i className="fa-solid fa-user-plus text-xs" />
                     {loading ? "가입 처리 중" : "가입하고 이메일 인증"}
                 </button>
             </form>
-            <p className="mt-5 text-center text-sm font-bold text-neutral-600">
+            <p className="su-login mt-5 text-center text-sm font-bold text-neutral-600">
                 이미 계정이 있다면{" "}
                 <Link href="/auth/login" className="font-black text-indigo-700">
                     로그인
