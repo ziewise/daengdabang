@@ -344,6 +344,33 @@ html:not(.ddb-app-mode) main[data-cart-web] {
     & .cart-qty button:hover:not(:disabled) { background: #fde0e9; }
     & .cart-qty span { width: 40px; color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 16px; font-weight: 400; }
 
+    /* 살 수 없는 옵션 — "장바구니에 보관하고 결제에서 제외"는 밑줄 글씨 대신 연보라 알약 */
+    & .cart-blocked {
+        display: inline-flex;
+        margin-top: 8px;
+        padding: 6px 14px;
+        border-radius: 999px;
+        background: #f3f0fe;
+        color: #6b51c9;
+        text-decoration: none;
+    }
+
+    /* 머리(브랜드 · 이름 · 옵션) — 오른쪽 위 삭제 알약 자리만큼 비움 */
+    & .cart-head { padding-right: 56px; }
+    & .cart-name { padding-right: 0; }
+
+    /* 가격 · 수량 한 줄 — 왼쪽 크레파스 가격 · 오른쪽 수량 알약 */
+    & .cart-foot {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 14px;
+    }
+
+    & .cart-foot .cart-price,
+    & .cart-foot .cart-qty { margin-top: 0; }
+
     /* 삭제 — 흰 알약 */
     & .cart-del {
         top: 18px;
@@ -451,11 +478,37 @@ html:not(.ddb-app-mode) main[data-cart-web] {
         & .cart-shortcut-art { width: 92px; height: 92px; }
         & .cart-title { font-size: 30px; }
         & .cart-steps li { height: 34px; padding-right: 10px; font-size: 12px; }
-        & .cart-line { gap: 12px; padding: 16px 14px; border-radius: 26px; }
-        & .cart-line > .cart-check { margin-top: 36px; }
-        & .cart-thumb { width: 92px; height: 92px; border-radius: 18px; }
-        & .cart-name { font-size: 16px; }
-        & .cart-price { font-size: 21px; }
-        & .cart-del { top: 14px; right: 12px; }
+        /* 상품 카드(휴대폰) — 윗줄: 체크 · 사진 · 머리(브랜드 · 이름 2줄 · 옵션) / 아래는 카드 전체 폭:
+           배송 안내 → 누구를 위한 메모 → 가격 | 수량 (2026-10-24 사용자 "모바일 카드 엉망") */
+        & .cart-line {
+            display: grid;
+            grid-template-columns: 24px 84px minmax(0, 1fr);
+            align-items: start;
+            gap: 0 12px;
+            padding: 16px 16px 18px;
+            border-radius: 26px;
+        }
+
+        & .cart-info { display: contents; }
+        & .cart-line > .cart-check { grid-column: 1; grid-row: 1; align-self: center; margin-top: 0; }
+        & .cart-thumb { grid-column: 2; grid-row: 1; width: 84px; height: 84px; border-radius: 18px; }
+        & .cart-head { grid-column: 3; grid-row: 1; align-self: center; padding-right: 46px; }
+        & :is(.cart-meta, .cart-pet, .cart-foot) { grid-column: 1 / -1; }
+
+        & .cart-name {
+            display: -webkit-box;
+            overflow: hidden;
+            font-size: 16px;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+        }
+
+        & .cart-option { margin-top: 6px; }
+        & .cart-meta { margin-top: 12px; }
+        & .cart-arrival { margin-top: 0; }
+        & .cart-pet { max-width: none; margin-top: 12px; }
+        & .cart-foot { margin-top: 14px; }
+        & .cart-price { font-size: 22px; }
+        & .cart-del { top: 14px; right: 14px; padding: 5px 12px; }
     }
 }

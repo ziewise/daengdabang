@@ -201,6 +201,8 @@ export default function CartPage() {
 
                                 {/* 정보 — 이름·옵션·도착일·금액·수량 (선택 여부와 무관하게 항상 선명) */}
                                 <div className="cart-info min-w-0 flex-1">
+                                    {/* 머리 — 브랜드 · 이름 · 옵션(휴대폰 웹에서는 사진 옆) */}
+                                    <div className="cart-head">
                                     <p className="cart-brand text-[11px] font-black uppercase tracking-wide text-indigo-600">
                                         {product.brandEn || product.brandKo}
                                     </p>
@@ -215,6 +217,9 @@ export default function CartPage() {
                                             {t("option")}: {[color, size].filter(Boolean).join(", ")}
                                         </p>
                                     )}
+                                    </div>
+                                    {/* 배송 안내 묶음(휴대폰 웹에서는 카드 전체 폭) */}
+                                    <div className="cart-meta">
                                     {/* 도착 예정일 — 1~2영업일 출고 기준 */}
                                     <p className="cart-arrival mt-1.5 text-xs font-black text-emerald-600">
                                         <i className="fa-solid fa-truck-fast mr-1 text-[10px]" />
@@ -222,7 +227,8 @@ export default function CartPage() {
                                     </p>
                                     {purchaseState.supplierRequest && <p className="mt-1 text-xs font-bold text-amber-800">{locale === "en" ? "Dispatch timing will be confirmed after the supplier request." : "본사 요청 후 발송 일정을 확인해 안내합니다."}</p>}
                                     {purchaseState.sourceDate && <p className="mt-1 text-[11px] text-neutral-500">{locale === "en" ? "Inventory sheet dated" : "재고표 기준일"}: {purchaseState.sourceDate}</p>}
-                                    {selectionBlocked && <button type="button" onClick={() => cart.setSelected(product.id, false, color, size)} className="mt-2 text-xs font-black text-indigo-700 underline">{locale === "en" ? "Keep this item but exclude it from checkout" : "장바구니에 보관하고 결제에서 제외"}</button>}
+                                    {selectionBlocked && <button type="button" onClick={() => cart.setSelected(product.id, false, color, size)} className="cart-blocked mt-2 text-xs font-black text-indigo-700 underline">{locale === "en" ? "Keep this item but exclude it from checkout" : "장바구니에 보관하고 결제에서 제외"}</button>}
+                                    </div>
                                     <div className="cart-pet mt-2.5 rounded-lg border border-indigo-100 bg-indigo-50/60 px-3 py-2">
                                         <label className="block">
                                             <span className="mb-1 block text-[11px] font-black text-indigo-700">
@@ -257,6 +263,8 @@ export default function CartPage() {
                                             )}
                                         </label>
                                     </div>
+                                    {/* 가격 · 수량 한 줄(웹) */}
+                                    <div className="cart-foot">
                                     <p className="cart-price mt-1.5 text-lg font-black text-neutral-950">
                                         {formatPrice(subtotal)}
                                     </p>
@@ -281,6 +289,7 @@ export default function CartPage() {
                                         >
                                             <i className="fa-solid fa-plus text-xs" />
                                         </button>
+                                    </div>
                                     </div>
                                 </div>
 
