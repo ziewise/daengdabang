@@ -409,6 +409,9 @@ html:not(.ddb-app-mode) [data-lab-web] [data-petlens-observation-experience][dat
     & > [data-daenglab-analysis-wallet] > div:first-child { flex-wrap: nowrap; }
     & > [data-daenglab-analysis-wallet] > div:first-child > div:first-child { min-width: 0; }
     & > [data-daenglab-analysis-wallet] .text-right { flex: none; }
+    /* 코인 표시는 "C 코인"만(앞의 "댕다방연구소" 글자 숨김 — 제목에 이미 있어 줄바꿈만 생김) */
+    & > [data-daenglab-analysis-wallet] .ddb-daenglab-coin-brand { display: none; }
+    & > [data-daenglab-analysis-wallet] [data-daenglab-coin-mark] { flex: none; zoom: 1.35; }
     & > [data-daenglab-analysis-wallet] > div.mt-3 > span { font-size: 12.5px; }
     & > div[data-petlens-emergency-preflight].border { position: relative; padding-left: 86px !important; background: #ffeef3 !important; }
     & > div[data-petlens-emergency-preflight]::before { content: ""; position: absolute; left: 24px; top: 50%; width: 46px; height: 46px; translate: 0 -50%; background: url("/images/ui/lab-priority-160.webp") center / contain no-repeat; }
