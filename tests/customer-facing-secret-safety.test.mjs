@@ -113,12 +113,7 @@ test("customer chat progress does not invent internal stages", async () => {
     const sources = await Promise.all(paths.map(async (path) => [path, await readSource(path)]));
 
     for (const [path, source] of sources) {
-        // The named recipient in the privacy notice is intentional disclosure,
-        // not an invented progress stage or a private runtime/model label.
-        const disclosure = "Google Gemini에 전달될 수 있어요.";
-        if (source.includes(disclosure)) assert.match(source, /href="\/privacy\/#overseas"/);
-        const customerCopySource = source.replaceAll("@/lib/daengdabang-llm", "")
-            .replaceAll(disclosure, "외부 처리 안내");
+        const customerCopySource = source.replaceAll("@/lib/daengdabang-llm", "");
         assert.doesNotMatch(
             customerCopySource,
             /\b(?:llama|openai|gemini|llm|rag|model|token|backend|provider|router|pipeline|fallback)\b/i,
