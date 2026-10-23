@@ -4,6 +4,7 @@
  * 흐름(우리 추가):
  *   open() → ① 메뉴(2택) → ②-a 댕댕이 사진 분석
  *                        → ②-b 댕댕이 행동·소리 관찰
+ *   웹(2026-10-23~): ②-a · ②-b 대신 창을 닫고 /pet-lens/ · /pet-lens/?mode=observation 페이지로 이동. 앱은 위 흐름 그대로.
  *
  * 설계 원칙:
  *   - 사진과 행동·소리 관찰은 같은 PetLensModalContent를 각 전용 탭으로 연다.
@@ -30,7 +31,7 @@ import {
 } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import DaengLabServiceTitle from "@/components/petlens/DaengLabServiceTitle";
 import DaengLabSymbol from "@/components/petlens/DaengLabSymbol";
 import { trackStorefrontEvent } from "@/lib/storefront-analytics";
@@ -71,6 +72,7 @@ export function usePetLensModal() {
 export default function PetLensModalProvider({ children }: { children: ReactNode }) {
     const { locale } = useI18n();
     const pathname = usePathname();
+    const router = useRouter();
     const previousPathnameRef = useRef(pathname);
     const [isOpen, setIsOpen] = useState(false);
     const [view, setView] = useState<View>("menu");
@@ -99,16 +101,29 @@ export default function PetLensModalProvider({ children }: { children: ReactNode
         return () => window.clearTimeout(closeAfterNavigation);
     }, [pathname]);
 
+    // 웹은 고르기 창에서 바로 펫렌즈 페이지로(2026-10-23 사용자 결정) — 크레파스 결로 꾸민 페이지 화면에서 분석 · 결과를 보게.
+    // 헤더 "댕다방 연구소" 메뉴와 같은 주소. 페이지가 주소의 mode 로 탭을 정하고 열림 기록(surface: "page")도 남김.
+    // 앱(ddb-app-mode)은 지금처럼 창 안에서 연다.
+    const openPageOnWeb = useCallback((href: string) => {
+        if (document.documentElement.classList.contains("ddb-app-mode")) return false;
+        setIsOpen(false);
+        setView("menu");
+        router.push(href);
+        return true;
+    }, [router]);
+
     // 메뉴 → 사진 분석(협업자 기능). 분석 진입 이벤트는 여기서 기록
     const startPhoto = useCallback(() => {
+        if (openPageOnWeb("/pet-lens/")) return;
         trackStorefrontEvent("petlens_opened", { mode: "photo", surface: "modal" });
         setView("photo");
-    }, []);
+    }, [openPageOnWeb]);
     // 메뉴 → 행동·소리 관찰. 실제 관찰 탭을 바로 연다.
     const startObservation = useCallback(() => {
+        if (openPageOnWeb("/pet-lens/?mode=observation")) return;
         trackStorefrontEvent("petlens_opened", { mode: "observation", surface: "modal" });
         setView("observation");
-    }, []);
+    }, [openPageOnWeb]);
 
     // 모달 열려 있는 동안 배경 스크롤 잠금 + ESC 로 닫기
     useEffect(() => {
