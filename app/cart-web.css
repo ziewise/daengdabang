@@ -458,6 +458,49 @@ html:not(.ddb-app-mode) main[data-cart-web] {
     & .cart-summary .grid > button { border-radius: 999px; }
 }
 
+/* 상품 카드(태블릿 · PC) — 휴대폰 카드처럼 균형 있게(2026-10-24 사용자 "PC 카드도 정리"):
+   왼쪽 체크 · 큰 사진 / 가운데 머리(브랜드 · 이름 · 옵션) + 배송 안내 / 오른쪽 열 가격 · 수량(아래 맞춤) /
+   카드 아래 "누구를 위한" 메모 가로 띠(사진 시작부터 끝까지) */
+@media (min-width: 561px) {
+    html:not(.ddb-app-mode) main[data-cart-web] {
+        & .cart-line {
+            display: grid;
+            grid-template-columns: 24px 132px minmax(0, 1fr) auto;
+            grid-template-areas:
+                "check thumb head ."
+                "check thumb meta foot"
+                ".     pet   pet  pet";
+            grid-template-rows: auto 1fr auto;
+            align-items: start;
+            gap: 0 20px;
+            padding: 22px 24px 22px 20px;
+        }
+
+        & .cart-info { display: contents; }
+        & .cart-line > .cart-check { grid-area: check; align-self: center; margin-top: 0; }
+        & .cart-thumb { grid-area: thumb; width: 132px; height: 132px; }
+        & .cart-head { grid-area: head; padding-right: 64px; }
+        & .cart-meta { grid-area: meta; margin-top: 4px; }
+        & .cart-foot { grid-area: foot; align-self: end; flex-direction: column; align-items: flex-end; gap: 10px; margin-top: 0; }
+        & .cart-pet { grid-area: pet; max-width: none; margin-top: 16px; }
+
+        & .cart-name {
+            display: -webkit-box;
+            overflow: hidden;
+            font-size: 19px;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+        }
+
+        & .cart-price { font-size: 26px; }
+
+        /* 메모 — 가로 띠: 제목 · 설명 왼쪽, 등록 · 고르기 오른쪽 */
+        & .cart-pet { padding: 12px 14px 12px 20px; }
+        & .cart-pet label > div { flex-wrap: nowrap; }
+        & .cart-pet label > div > p { flex: 1; }
+    }
+}
+
 /* 넓은 화면 — 상품 | 주문 요약 두 칸 */
 @media (min-width: 1024px) {
     html:not(.ddb-app-mode) main[data-cart-web] .cart-layout { grid-template-columns: minmax(0, 1fr) 360px; }
