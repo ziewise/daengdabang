@@ -294,6 +294,30 @@ export default function MyPetHub() {
                 </div>
                 <p className="dw-book-fine">이 리포트는 사진에서 확인된 관찰 항목을 정리하며, 촬영 조건에 따라 달라질 수 있고 수의학적 진단을 대신하지 않습니다.</p>
 
+                {/* 지난 쪽 모아보기 — 누르면 그림책에 펼침. 그림책 바로 아래(2026-10-23 사용자: 촬영 구역보다 위) */}
+                {weeklyHistory.length > 0 && (
+                    <div className="dw-pages" data-weekly-photo-history>
+                        <div className="dw-pages-head">
+                            <h3 className="ddb-crayon-title ddb-crayon-underline dw-pages-title">주간 사진 히스토리</h3>
+                            <span className="dw-hand dw-hand-soft">지난 쪽을 누르면 그림책에 펼쳐져요 · 최근 {weeklyHistory.length}회</span>
+                        </div>
+                        <ol className="dw-pages-list">
+                            {weeklyHistory.map((item, index) => (
+                                <li key={item.id}>
+                                    <button type="button" onClick={() => openPage(item.id)} className={`dw-page-card ${PAGE_TINTS[index % PAGE_TINTS.length]} ${item.id === openedWeekly?.id ? "is-open" : ""}`} aria-pressed={item.id === openedWeekly?.id}>
+                                        <span className="dw-page-no">{pageNumber(index)}쪽</span>
+                                        <span className="dw-page-date">{index === 0 ? "최근 · " : ""}{formatShortDate(item.analyzedAt)}</span>
+                                        <strong className="dw-page-title">{item.title || "주간 사진 분석"}</strong>
+                                        <span className="dw-page-views" aria-label={`${item.viewCount}방향 촬영`}>
+                                            {PETLENS_PHOTO_VIEWS.map((view) => <i key={view.id} className={item.viewIds.includes(view.id) ? "is-on" : ""} />)}
+                                        </span>
+                                    </button>
+                                </li>
+                            ))}
+                        </ol>
+                    </div>
+                )}
+
                 {/* 그림책에서 새 쪽으로 걸어 내려가는 발자국 */}
                 <PawTrail />
 
@@ -340,29 +364,6 @@ export default function MyPetHub() {
                     </div>
                 </div>
 
-                {/* 지난 쪽 모아보기 — 누르면 그림책에 펼침 */}
-                {weeklyHistory.length > 0 && (
-                    <div className="dw-pages" data-weekly-photo-history>
-                        <div className="dw-pages-head">
-                            <h3 className="ddb-crayon-title ddb-crayon-underline dw-pages-title">주간 사진 히스토리</h3>
-                            <span className="dw-hand dw-hand-soft">지난 쪽을 누르면 그림책에 펼쳐져요 · 최근 {weeklyHistory.length}회</span>
-                        </div>
-                        <ol className="dw-pages-list">
-                            {weeklyHistory.map((item, index) => (
-                                <li key={item.id}>
-                                    <button type="button" onClick={() => openPage(item.id)} className={`dw-page-card ${PAGE_TINTS[index % PAGE_TINTS.length]} ${item.id === openedWeekly?.id ? "is-open" : ""}`} aria-pressed={item.id === openedWeekly?.id}>
-                                        <span className="dw-page-no">{pageNumber(index)}쪽</span>
-                                        <span className="dw-page-date">{index === 0 ? "최근 · " : ""}{formatShortDate(item.analyzedAt)}</span>
-                                        <strong className="dw-page-title">{item.title || "주간 사진 분석"}</strong>
-                                        <span className="dw-page-views" aria-label={`${item.viewCount}방향 촬영`}>
-                                            {PETLENS_PHOTO_VIEWS.map((view) => <i key={view.id} className={item.viewIds.includes(view.id) ? "is-on" : ""} />)}
-                                        </span>
-                                    </button>
-                                </li>
-                            ))}
-                        </ol>
-                    </div>
-                )}
             </section>
 
             {/* 구역 사이는 발자국 두 개(2026-10-22 사용자) */}
