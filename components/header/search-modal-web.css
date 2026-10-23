@@ -1,0 +1,207 @@
+/*
+ * search-modal-web.css — 헤더 검색 버튼으로 여는 검색 창(SearchModal) 웹 크레파스 꾸밈 · 2026-10-23
+ * ---------------------------------------------------------------------
+ * 사이트 크레파스 결(케어톡 창 · 펫렌즈 고르기 창과 같음): 크림 종이 창 · 흰 알약 입력칸(살구 테, 누르면 분홍 테) ·
+ * 헤더 검색 3D 그림 · 주아 제목 + 세 색 밑줄 · 인기 검색어 = 파스텔 쿠션 알약(번호는 흰 동그라미) · 결과 = 흰 쿠션 줄 ·
+ * "전체 결과 보기"는 분홍 알약. 점선 · 줄무늬 없음.
+ * 범위: 웹(html:not(.ddb-app-mode))의 검색 창만 — 앱은 appShopSkin 의 검색 창 꾸밈 그대로. 검색 동작 · 문구 그대로.
+ */
+
+html:not(.ddb-app-mode) .sm-panel {
+    border-radius: 32px;
+    background: #fffaf1;
+    box-shadow: 0 0 0 1px rgb(160 120 60 / 10%), 0 34px 60px -30px rgb(120 80 30 / 45%);
+
+    /* ── 머리 — 크림 바탕 · 흰 알약 입력칸 ── */
+    & .sm-head {
+        padding: 22px 22px 16px;
+        border-bottom: 0;
+        background: #fffaf1;
+    }
+
+    & .sm-input {
+        height: 58px;
+        padding-left: 62px;
+        padding-right: 58px;
+        border: 0;
+        border-radius: 999px;
+        background: #fff;
+        color: #1e293b;
+        font-size: 15px;
+        font-weight: 600;
+        box-shadow: 0 0 0 2px #f3d9b8, 0 10px 18px -14px rgb(120 80 30 / 45%);
+    }
+
+    & .sm-input { text-overflow: ellipsis; }
+    /* 브라우저 기본 지우기 "×" 숨김 — 오른쪽 닫기 단추와 겹쳐 보였음 */
+    & .sm-input::-webkit-search-cancel-button { display: none; -webkit-appearance: none; }
+    & .sm-input::placeholder { color: #b8a58c; font-weight: 500; text-overflow: ellipsis; }
+
+    & .sm-input:focus {
+        border: 0;
+        background: #fff;
+        box-shadow: 0 0 0 2.5px #f7a8bf, 0 0 0 7px rgb(247 168 191 / 22%);
+    }
+
+    /* 돋보기 — 헤더 검색 버튼과 같은 3D 그림(글꼴 아이콘 대신) */
+    & .sm-search-icon {
+        left: 14px;
+        width: 36px;
+        height: 36px;
+        background: url("/images/ui/header-search-128.webp") center / contain no-repeat;
+    }
+
+    & .sm-search-icon::before { content: none; }
+
+    /* 닫기 — 크림 동그라미 + 살구 테 */
+    & .sm-close {
+        right: 10px;
+        width: 38px;
+        height: 38px;
+        background: #fff5e8;
+        color: #c08a4a;
+        box-shadow: 0 0 0 1.5px #f3d9b8;
+    }
+
+    & .sm-close:hover { background: #fff; color: #a8702f; }
+
+    & .sm-body { padding: 10px 24px 26px; }
+
+    /* ── 구역 제목 — 주아 + 세 색 밑줄 ── */
+    & .sm-h {
+        position: relative;
+        display: inline-block;
+        margin-bottom: 14px;
+        color: #1e293b;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 16px;
+        font-weight: 400;
+        letter-spacing: 0;
+        isolation: isolate;
+    }
+
+    & .sm-h::after {
+        content: "";
+        position: absolute;
+        right: 1%;
+        bottom: -0.12em;
+        left: 0;
+        z-index: -1;
+        height: 0.24em;
+        border-radius: 999px 70% 999px 60%;
+        background: repeating-linear-gradient(94deg, rgb(8 145 178 / 62%) 0 14px, rgb(239 71 111 / 58%) 14px 28px, rgb(245 158 11 / 62%) 28px 42px);
+    }
+
+    & .sm-count { color: #b8a58c; font-size: 12px; }
+
+    /* ── 인기 검색어 — 파스텔 쿠션 알약(색 돌려 쓰기) ── */
+    & .sm-popular { gap: 10px; }
+
+    & .sm-pop {
+        --sm-bg: #ffeef3;
+        --sm-ink: #d0436d;
+        gap: 8px;
+        height: 42px;
+        padding: 0 16px 0 6px;
+        background: var(--sm-bg);
+        color: #334155;
+        font-size: 14px;
+        font-weight: 700;
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%), 0 8px 14px -12px rgb(15 23 42 / 35%);
+        transition: transform 0.18s ease;
+    }
+
+    & .sm-pop:nth-child(5n + 2) { --sm-bg: #fff6e3; --sm-ink: #d97f0e; }
+    & .sm-pop:nth-child(5n + 3) { --sm-bg: #e9f8f1; --sm-ink: #12a17a; }
+    & .sm-pop:nth-child(5n + 4) { --sm-bg: #e9f4fb; --sm-ink: #0e8aa0; }
+    & .sm-pop:nth-child(5n + 5) { --sm-bg: #f3f0fe; --sm-ink: #7c62d6; }
+
+    & .sm-pop:hover { background: var(--sm-bg); color: #1e293b; transform: translateY(-2px); }
+
+    /* 번호 — 흰 동그라미 + 쿠션 색 글씨(주아) */
+    & .sm-pop-no {
+        display: grid;
+        width: 30px;
+        height: 30px;
+        place-items: center;
+        border-radius: 999px;
+        background: #fff;
+        color: var(--sm-ink);
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 14px;
+        font-weight: 400;
+    }
+
+    & .sm-pop:hover .sm-pop-no { color: var(--sm-ink); }
+
+    /* ── 최근 검색어 — 흰 알약 + 살구 테 ── */
+    & .sm-clear { color: #b8a58c; font-size: 12px; }
+    & .sm-clear:hover { color: #d0436d; }
+    & .sm-recent { gap: 8px; }
+
+    & .sm-recent > span {
+        height: 36px;
+        padding: 0 10px 0 14px;
+        background: #fff;
+        color: #475569;
+        font-size: 13px;
+        font-weight: 600;
+        box-shadow: 0 0 0 1.5px #f3e3cc;
+    }
+
+    & .sm-recent > span:hover { background: #fff5e8; }
+
+    /* ── 결과 — 흰 쿠션 줄 ── */
+    /* 한 칸 격자 — 긴 상품 이름이 창 밖으로 밀지 않게(minmax 0) */
+    & .sm-results { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
+    & .sm-results > li { margin: 0; }
+
+    & .sm-result {
+        gap: 14px;
+        padding: 10px 14px 10px 10px;
+        border-radius: 22px;
+        background: #fff;
+        box-shadow: 0 0 0 1.5px #f6ead8, 0 8px 14px -12px rgb(120 80 30 / 40%);
+        transition: transform 0.18s ease;
+    }
+
+    & .sm-result:hover { background: #fff; box-shadow: 0 0 0 2px #f7a8bf, 0 8px 14px -12px rgb(120 80 30 / 40%); transform: translateY(-1px); }
+
+    & .sm-thumb { width: 54px; height: 54px; border-radius: 16px; }
+
+    & .sm-brand {
+        color: #e2557a;
+        font-size: 11px;
+        letter-spacing: 0.04em;
+    }
+
+    & .sm-name { margin-top: 2px; color: #1e293b; font-size: 14px; }
+
+    & .sm-all {
+        min-height: 46px;
+        border-radius: 999px;
+        background: #e9789a;
+        color: #fff;
+        font-size: 14px;
+        box-shadow: 0 8px 18px -10px rgb(200 80 120 / 60%);
+    }
+
+    & .sm-all:hover { background: #e26690; }
+
+    /* 결과 없음 */
+    & .sm-empty i { color: #f2b8c9; font-size: 30px; }
+    & .sm-empty p { color: #64748b; font-size: 14px; font-weight: 600; }
+}
+
+/* 휴대폰 웹 — 입력칸 조금 낮게 */
+@media (max-width: 480px) {
+    html:not(.ddb-app-mode) .sm-panel {
+        border-radius: 26px;
+
+        & .sm-head { padding: 16px 14px 12px; }
+        & .sm-input { height: 52px; padding-left: 54px; padding-right: 50px; font-size: 14px; }
+        & .sm-search-icon { left: 12px; width: 32px; height: 32px; }
+        & .sm-body { padding: 8px 16px 20px; }
+        & .sm-pop { height: 40px; font-size: 13.5px; }
+    }
+}

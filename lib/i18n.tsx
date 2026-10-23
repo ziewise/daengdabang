@@ -304,6 +304,7 @@ const MENU_EN: Record<string, string> = {
     "리드줄": "Leashes",
     "고글": "Goggles",
     "유모차": "Strollers",
+    "의류": "Apparel",
     "쿠션": "Cushions",
     "리드줄/목줄": "Leashes & Collars",
     "의류/보호장비": "Apparel & Safety Gear",
