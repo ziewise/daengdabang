@@ -10,6 +10,11 @@
  *   - 메뉴는 두 실제 기능으로 바로 연결하며 별도 안내 화면을 두지 않는다.
  *
  * 마운트 위치: app/layout.tsx (LanguageProvider·StoreProvider 하위)
+ *
+ * 2026-10-23 웹 크레파스 결(메뉴 화면만): 크림 종이 창 · 영문 손글씨 꼬리표 · 주아 제목 + 세 색 밑줄 ·
+ * 고르기 둘 = 노랑(사진) · 민트(행동·소리) 쿠션 + 연구소 웹 탭과 같은 그림(lab-tab-*) + 둥근 화살표.
+ * 꾸밈은 ./petlens-menu-web.css(웹 html:not(.ddb-app-mode) [data-petlens-view="menu"] 안에서만).
+ * 웹 전용 그림 · 꼬리표는 hidden 으로 넣고 CSS 가 웹에서만 보이게 함. 버튼 동작 · 문구 그대로.
  */
 "use client";
 
@@ -30,6 +35,7 @@ import DaengLabServiceTitle from "@/components/petlens/DaengLabServiceTitle";
 import DaengLabSymbol from "@/components/petlens/DaengLabSymbol";
 import { trackStorefrontEvent } from "@/lib/storefront-analytics";
 import { useI18n } from "@/lib/i18n";
+import "./petlens-menu-web.css";
 
 // 사진·행동 관찰 본문. 카메라/마이크 브라우저 API를 사용하므로 클라이언트에서만 로드한다.
 const PetLensModalContent = dynamic(() => import("./PetLensModalContent"), {
@@ -135,6 +141,7 @@ export default function PetLensModalProvider({ children }: { children: ReactNode
                     onClick={close}
                 >
                     <div
+                        data-petlens-view={view}
                         className={`relative my-auto flex max-h-[calc(100dvh-4.75rem)] min-w-0 w-full flex-col overflow-hidden rounded-2xl bg-white shadow-2xl sm:max-h-[calc(100dvh-3rem)] ${
                             view === "observation" ? "max-w-5xl" : "max-w-md"
                         }`}
@@ -157,7 +164,7 @@ export default function PetLensModalProvider({ children }: { children: ReactNode
                             type="button"
                             onClick={close}
                             aria-label={en ? "Close" : "닫기"}
-                            className="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-neutral-600 shadow-card transition-colors hover:bg-white hover:text-neutral-900"
+                            className="pl-close absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-neutral-600 shadow-card transition-colors hover:bg-white hover:text-neutral-900"
                         >
                             <i className="fa-solid fa-xmark text-base" />
                         </button>
@@ -165,16 +172,20 @@ export default function PetLensModalProvider({ children }: { children: ReactNode
                         <div className="min-w-0 overflow-x-hidden overflow-y-auto overscroll-contain">
                             {/* ① 메뉴 — 2택 */}
                             {view === "menu" && (
-                                <div className="px-6 pb-7 pt-8">
-                                    <div className="mb-6 text-center">
+                                <div className="pl-menu px-6 pb-7 pt-8">
+                                    <div className="pl-head mb-6 text-center">
                                         {/* 펫렌즈 아이콘 — 원형 배지 이미지(자체 원/테두리 포함) */}
-                                        <span className="relative mx-auto mb-3 block h-20 w-20">
-                                            <Image src="/images/ui/pet-lens-128.webp" alt="" fill sizes="80px" loading="eager" className="object-contain" />
+                                        <span className="pl-head-art relative mx-auto mb-3 block h-20 w-20">
+                                            <Image src="/images/ui/pet-lens-128.webp" alt="" fill sizes="80px" loading="eager" className="pl-head-app object-contain" />
+                                            {/* 웹 전용 — 방금 누른 헤더 펫렌즈 버튼 그림(사진 분석 그림과 겹치지 않게) */}
+                                            <Image src="/images/ui/header-petlens-128.webp" alt="" fill sizes="92px" loading="eager" className="pl-head-web hidden object-contain" />
                                         </span>
-                                        <h2 className="text-xl font-black text-neutral-950">
+                                        {/* 웹 전용 — 영문 손글씨 꼬리표 */}
+                                        <p className="pl-kicker hidden" aria-hidden="true">DAENGDABANG LAB · PETLENS</p>
+                                        <h2 className="pl-title text-xl font-black text-neutral-950">
                                             {en ? "PetLens Analysis" : "펫렌즈 분석"}
                                         </h2>
-                                        <p className="mt-1 text-sm font-medium text-neutral-500">
+                                        <p className="pl-sub mt-1 text-sm font-medium text-neutral-500">
                                             {en ? "How would you like to analyze your dog?" : "우리 아이를 어떻게 분석할까요?"}
                                         </p>
                                     </div>
@@ -184,21 +195,25 @@ export default function PetLensModalProvider({ children }: { children: ReactNode
                                         <button
                                             type="button"
                                             onClick={startPhoto}
-                                            className="group flex items-center gap-4 rounded-2xl border-2 border-neutral-100 bg-white p-4 text-left transition hover:-translate-y-0.5 hover:border-aurora-indigo/30 hover:shadow-card"
+                                            className="pl-choice is-photo group flex items-center gap-4 rounded-2xl border-2 border-neutral-100 bg-white p-4 text-left transition hover:-translate-y-0.5 hover:border-aurora-indigo/30 hover:shadow-card"
                                         >
-                                            <span className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-white ring-1 ring-neutral-100">
+                                            <span className="pl-app-art relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-white ring-1 ring-neutral-100">
                                                 {/* 사진 분석 아이콘 — 모서리 둥근 네모 타일 */}
                                                 <Image src="/images/ui/pet-photo-128.webp" alt="" fill sizes="64px" loading="eager" className="object-cover" />
                                             </span>
+                                            {/* 웹 전용 — 연구소 웹 사진 탭과 같은 그림 */}
+                                            <span className="pl-art hidden" aria-hidden="true">
+                                                <Image src="/images/ui/lab-tab-photo-160.webp" alt="" width={64} height={64} loading="eager" />
+                                            </span>
                                             <span className="min-w-0 flex-1">
-                                                <span className="block text-[15px] font-black text-neutral-950">
+                                                <span className="pl-choice-title block text-[15px] font-black text-neutral-950">
                                                     {en ? "Photo analysis" : "댕댕이 사진 분석"}
                                                 </span>
-                                                <span className="mt-0.5 block text-xs font-medium leading-relaxed text-neutral-500">
+                                                <span className="pl-choice-body mt-0.5 block text-xs font-medium leading-relaxed text-neutral-500">
                                                     {en ? "Analyze breed & body from a photo for tailored picks" : "사진으로 견종·체형을 분석해 맞춤 추천"}
                                                 </span>
                                             </span>
-                                            <i className="fa-solid fa-chevron-right text-neutral-300 transition group-hover:translate-x-0.5 group-hover:text-aurora-indigo" />
+                                            <i className="pl-go fa-solid fa-chevron-right text-neutral-300 transition group-hover:translate-x-0.5 group-hover:text-aurora-indigo" />
                                         </button>
 
                                         {/* 행동·소리 관찰 */}
@@ -208,26 +223,30 @@ export default function PetLensModalProvider({ children }: { children: ReactNode
                                             aria-label={en
                                                 ? "Open DaengDaBang Research Lab Behavior and Sound Analysis, new service"
                                                 : "댕다방 연구소 행동·소리 분석 신규 서비스 열기"}
-                                            className="group relative grid w-full grid-cols-[3.25rem_minmax(0,1fr)_auto] items-center gap-3 overflow-hidden rounded-2xl border-2 border-cyan-100 bg-gradient-to-br from-cyan-50/70 via-white to-rose-50/70 p-3 text-left transition hover:-translate-y-0.5 hover:border-pink-300 hover:shadow-card focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-pink-200 motion-reduce:transform-none motion-reduce:transition-none sm:grid-cols-[4rem_minmax(0,1fr)_auto] sm:gap-4 sm:p-4"
+                                            className="pl-choice is-obs group relative grid w-full grid-cols-[3.25rem_minmax(0,1fr)_auto] items-center gap-3 overflow-hidden rounded-2xl border-2 border-cyan-100 bg-gradient-to-br from-cyan-50/70 via-white to-rose-50/70 p-3 text-left transition hover:-translate-y-0.5 hover:border-pink-300 hover:shadow-card focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-pink-200 motion-reduce:transform-none motion-reduce:transition-none sm:grid-cols-[4rem_minmax(0,1fr)_auto] sm:gap-4 sm:p-4"
                                             data-petlens-observation-launcher
                                         >
                                             <DaengLabSymbol
                                                 size={64}
                                                 priority
-                                                className="h-[52px]! w-[52px]! ring-1 ring-cyan-100 sm:h-16! sm:w-16!"
+                                                className="pl-app-art h-[52px]! w-[52px]! ring-1 ring-cyan-100 sm:h-16! sm:w-16!"
                                             />
+                                            {/* 웹 전용 — 연구소 웹 행동·소리 탭과 같은 그림 */}
+                                            <span className="pl-art hidden" aria-hidden="true">
+                                                <Image src="/images/ui/lab-tab-observation-160.webp" alt="" width={64} height={64} loading="eager" />
+                                            </span>
                                             <span className="min-w-0">
                                                 <DaengLabServiceTitle
                                                     en={en}
                                                     suffixClassName="break-keep text-[14px] font-black leading-[1.25] text-neutral-950 sm:text-[15px]"
                                                 />
-                                                <span className="mt-0.5 block text-xs font-medium leading-relaxed text-neutral-500">
+                                                <span className="pl-choice-body mt-0.5 block text-xs font-medium leading-relaxed text-neutral-500">
                                                     {en
                                                         ? "Camera and microphone signals become a tailored observation"
                                                         : "행동·소리 신호를 함께 살펴 맞춤형 관찰 결과를 제공해요"}
                                                 </span>
                                             </span>
-                                            <i className="fa-solid fa-chevron-right shrink-0 text-neutral-300 transition group-hover:translate-x-0.5 group-hover:text-pink-500" aria-hidden="true" />
+                                            <i className="pl-go fa-solid fa-chevron-right shrink-0 text-neutral-300 transition group-hover:translate-x-0.5 group-hover:text-pink-500" aria-hidden="true" />
                                         </button>
                                     </div>
                                 </div>

@@ -1,0 +1,190 @@
+/*
+ * petlens-menu-web.css — 헤더 펫렌즈 버튼으로 여는 "펫렌즈 분석" 고르기 창(PetLensModalLauncher 메뉴 화면) 웹 크레파스 꾸밈 · 2026-10-23
+ * ---------------------------------------------------------------------
+ * 사이트 크레파스 결(케어톡 창 · 고객센터와 같음): 크림 종이 창 · 영문 손글씨 꼬리표 · 주아 제목 + 세 색 크레파스 밑줄 ·
+ * 고르기 둘 = 파스텔 쿠션(사진 노랑 · 행동·소리 민트) + 흰 동그라미 그림(연구소 웹 탭 그림 lab-tab-*) + 둥근 화살표.
+ * 점선 · 줄무늬 · 기울기 없음. 범위: 웹(html:not(.ddb-app-mode))의 메뉴 화면([data-petlens-view="menu"])만 —
+ * 사진 · 행동 분석 화면(같은 창 안 다음 화면)과 앱은 그대로. 버튼 동작 · 문구 그대로, 모양만.
+ */
+
+html:not(.ddb-app-mode) [data-petlens-view="menu"] {
+    border-radius: 34px;
+    background: #fffaf1;
+    box-shadow: 0 0 0 1px rgb(160 120 60 / 10%), 0 34px 60px -30px rgb(120 80 30 / 45%);
+
+    /* 닫기 — 크림 동그라미 + 살구 테 */
+    & .pl-close {
+        width: 42px;
+        height: 42px;
+        top: 16px;
+        right: 16px;
+        background: #fff;
+        color: #c08a4a;
+        box-shadow: 0 0 0 2px #f3d9b8;
+    }
+
+    & .pl-close:hover { background: #fff5e8; color: #a8702f; }
+
+    & .pl-menu { padding: 34px 28px 30px; }
+
+    /* ── 머리 — 펫렌즈 배지 · 영문 손글씨 · 주아 제목 + 세 색 밑줄 ── */
+    & .pl-head { margin-bottom: 24px; }
+
+    & .pl-head-art {
+        width: 92px;
+        height: 92px;
+        margin-bottom: 12px;
+        filter: drop-shadow(0 12px 14px rgb(120 80 160 / 22%));
+    }
+
+    /* 머리 그림 — 웹은 헤더 펫렌즈 버튼 그림으로(앱 그림 숨김) */
+    & .pl-head-app { display: none; }
+    & .pl-head-web { display: block; }
+
+    & .pl-kicker {
+        display: inline-block;
+        background-image: repeating-linear-gradient(172deg, #07849e 0 5px, #ef476f 5px 10px, #e98708 10px 15px);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: #07849e;
+        font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        -webkit-text-fill-color: transparent;
+    }
+
+    & .pl-title {
+        position: relative;
+        width: fit-content;
+        margin: 6px auto 0;
+        color: #1e293b;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 27px;
+        font-weight: 400;
+        line-height: 1.3;
+        isolation: isolate;
+    }
+
+    /* 세 색 크레파스 밑줄(.ddb-crayon-underline 결) */
+    & .pl-title::after {
+        content: "";
+        position: absolute;
+        right: 1%;
+        bottom: -0.1em;
+        left: 0;
+        z-index: -1;
+        height: 0.2em;
+        border-radius: 999px 70% 999px 60%;
+        background: repeating-linear-gradient(94deg, rgb(8 145 178 / 62%) 0 14px, rgb(239 71 111 / 58%) 14px 28px, rgb(245 158 11 / 62%) 28px 42px);
+    }
+
+    & .pl-sub {
+        margin-top: 12px;
+        color: #64748b;
+        font-size: 14.5px;
+        font-weight: 600;
+    }
+
+    /* ── 고르기 둘 — 파스텔 쿠션 ── */
+    & .pl-choice {
+        --pl-bg: #fff6e3;
+        --pl-ink: #d97f0e;
+        --pl-ring: #f7d48a;
+        display: grid;
+        grid-template-columns: 76px minmax(0, 1fr) 40px;
+        align-items: center;
+        gap: 16px;
+        padding: 18px 20px;
+        border: 0;
+        border-radius: 30px;
+        background: var(--pl-bg);
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), inset 0 -10px 18px rgb(0 0 0 / 3%), 0 18px 30px -22px rgb(15 23 42 / 35%);
+        transition: transform 0.18s ease;
+    }
+
+    & .pl-choice.is-obs { --pl-bg: #e9f8f1; --pl-ink: #12a17a; --pl-ring: #a8e0c6; }
+
+    & .pl-choice:hover {
+        border: 0;
+        background: var(--pl-bg);
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), inset 0 -10px 18px rgb(0 0 0 / 3%), 0 18px 30px -22px rgb(15 23 42 / 35%);
+        transform: translateY(-3px);
+    }
+
+    & .pl-choice:focus-visible { outline: 3px solid var(--pl-ring); outline-offset: 3px; }
+
+    /* 그림 — 앱 그림은 숨기고 웹 그림(흰 동그라미 + 쿠션 색 테) */
+    & .pl-app-art { display: none !important; }
+
+    & .pl-art {
+        display: grid;
+        width: 76px;
+        height: 76px;
+        place-items: center;
+        border-radius: 999px;
+        background: #fff;
+        box-shadow: 0 0 0 3px var(--pl-ring), 0 12px 18px -12px rgb(15 23 42 / 40%);
+    }
+
+    & .pl-art img { width: 60px; height: 60px; object-fit: contain; }
+
+    /* 글 — 제목 주아 · 설명 본문 */
+    & .pl-choice-title {
+        color: #1e293b;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 19px;
+        font-weight: 400;
+    }
+
+    & .pl-choice [data-daenglab-service-title] > span[aria-hidden="true"] > span:last-child {
+        color: #1e293b;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 17px;
+        font-weight: 400;
+    }
+
+    /* 신규서비스 꼬리표 — 점선 대신 흰 알약 + 분홍 테 */
+    & .pl-choice [data-daenglab-new-service] {
+        border: 0;
+        background: #fff;
+        color: #d0436d;
+        box-shadow: 0 0 0 1.5px #f7a8bf;
+    }
+
+    & .pl-choice-body {
+        margin-top: 6px;
+        color: #64748b;
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1.6;
+        word-break: keep-all;
+    }
+
+    /* 둥근 화살표 */
+    & .pl-go {
+        display: grid;
+        width: 40px;
+        height: 40px;
+        place-items: center;
+        border-radius: 999px;
+        background: #fff;
+        color: var(--pl-ink);
+        font-size: 13px;
+        box-shadow: 0 0 0 2px var(--pl-ring);
+    }
+
+    & .pl-choice:hover .pl-go { color: var(--pl-ink); }
+}
+
+/* 휴대폰 — 그림 · 화살표 조금 작게 */
+@media (max-width: 480px) {
+    html:not(.ddb-app-mode) [data-petlens-view="menu"] {
+        & .pl-menu { padding: 30px 18px 22px; }
+        & .pl-title { font-size: 24px; }
+        & .pl-choice { grid-template-columns: 62px minmax(0, 1fr) 34px; gap: 12px; padding: 16px 14px; border-radius: 26px; }
+        & .pl-art { width: 62px; height: 62px; }
+        & .pl-art img { width: 48px; height: 48px; }
+        & .pl-go { width: 34px; height: 34px; }
+    }
+}
