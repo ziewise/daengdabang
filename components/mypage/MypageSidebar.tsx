@@ -10,6 +10,8 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/lib/store";
 import { MYPAGE_MENU_GROUPS } from "@/lib/mypage-data";
+// 웹 마이페이지 크레파스 꾸밈(2026-10-24) — 이 메뉴가 있는 화면 전체에 적용, 앱은 닿지 않음
+import "../../app/mypage-web.css";
 
 export default function MypageSidebar({ className = "" }: { className?: string }) {
     const pathname = usePathname();

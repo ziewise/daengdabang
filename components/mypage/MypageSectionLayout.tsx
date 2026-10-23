@@ -1,11 +1,13 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import MypageSidebar from "@/components/mypage/MypageSidebar";
+// 로그인 안내 화면에도 웹 마이페이지 꾸밈(사이드 메뉴가 없는 화면이라 직접 불러옴)
+import "../../app/mypage-web.css";
 
 export function MypageLoginGate({ redirect }: { redirect: string }) {
     const loginHref = `/auth/login?redirect=${encodeURIComponent(redirect)}`;
     return (
-        <main className="mx-auto max-w-[680px] px-4 py-16 text-center">
+        <main className="mx-auto max-w-[680px] px-4 py-16 text-center" data-mypage-web="gate">
             <span className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-amber-50 text-2xl text-amber-600" aria-hidden="true">
                 <i className="fa-solid fa-lock" />
             </span>

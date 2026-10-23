@@ -1,0 +1,170 @@
+/*
+ * mypage-web.css — 웹 마이페이지(대시보드 · 주문 내역 · 배송지 · 결제수단 · 추천 데이터 · 정보 수정 · 회원 탈퇴) 크레파스 꾸밈 · 2026-10-24
+ * ---------------------------------------------------------------------
+ * 범위: 웹(html:not(.ddb-app-mode))에서 "마이페이지 메뉴"(MypageSidebar)가 있는 main 안 + 로그인 안내(data-mypage-web="gate").
+ * 앱은 appShopSkin "마이 탭 웹 화면" 꾸밈 그대로(이 파일은 앱에 닿지 않음).
+ * 결: 영문 손글씨 꼬리표 · 주아 제목 + 세 색 밑줄 · 사이드 메뉴 흰 쿠션(지금 화면 분홍 알약) · 카드 흰 쿠션 · 안쪽 칸 크림 ·
+ *     입력칸 크림(누르면 분홍 테) · 주 버튼 분홍 알약 · 보조 버튼 흰 알약. 점선 · 줄무늬 · 기울기 · 스티커 없음.
+ * 문구 · 링크 · 저장 · 로그아웃 · 탈퇴 동작 그대로, 모양만.
+ */
+
+html:not(.ddb-app-mode) :is(main:has(nav[aria-label="마이페이지 메뉴"]), main[data-mypage-web]) {
+    --mp-cushion: inset 0 3px 0 rgb(255 255 255 / 90%), inset 0 -10px 18px rgb(0 0 0 / 3%), 0 22px 36px -24px rgb(15 23 42 / 32%);
+    --mp-underline: repeating-linear-gradient(94deg, rgb(8 145 178 / 62%) 0 14px, rgb(239 71 111 / 58%) 14px 28px, rgb(245 158 11 / 62%) 28px 42px);
+
+    /* ── 머리: 꼬리표 · 제목 · 설명 ── */
+    & :is(header > p:first-child, div > p.text-indigo-700:first-child):has(+ h1) {
+        display: block;
+        width: fit-content;
+        background-image: repeating-linear-gradient(172deg, #07849e 0 5px, #ef476f 5px 10px, #e98708 10px 15px);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: #07849e;
+        font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+        font-size: 14px;
+        letter-spacing: 0.06em;
+        -webkit-text-fill-color: transparent;
+    }
+
+    & h1 {
+        position: relative;
+        display: block;
+        width: fit-content;
+        color: #1e293b;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 34px;
+        font-weight: 400;
+        letter-spacing: -0.01em;
+        isolation: isolate;
+    }
+
+    & h1::after {
+        content: "";
+        position: absolute;
+        right: 1%;
+        bottom: -0.1em;
+        left: 0;
+        z-index: -1;
+        height: 0.22em;
+        border-radius: 999px 70% 999px 60%;
+        background: var(--mp-underline);
+    }
+
+    & h1 + p { margin-top: 10px; color: #64748b; font-weight: 600; }
+
+    /* ── 사이드 메뉴: 흰 쿠션 · 묶음 이름 주아 · 지금 화면 분홍 알약 ── */
+    & nav[aria-label="마이페이지 메뉴"] {
+        border: 0;
+        border-radius: 30px;
+        background: #fff;
+        box-shadow: var(--mp-cushion);
+        backdrop-filter: none;
+    }
+
+    & nav[aria-label="마이페이지 메뉴"] h2,
+    & nav[aria-label="마이페이지 메뉴"] p[class*="tracking"] {
+        color: #94a3b8;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 13px;
+        font-weight: 400;
+        letter-spacing: 0.04em;
+    }
+
+    & nav[aria-label="마이페이지 메뉴"] [class*="border-t"] { border-top-color: #f1e9de; }
+
+    & nav[aria-label="마이페이지 메뉴"] li > a {
+        border-radius: 999px;
+        color: #475569;
+        font-size: 14px;
+    }
+
+    & nav[aria-label="마이페이지 메뉴"] li > a:hover { background: #fff5f8; color: #d0436d; }
+    & nav[aria-label="마이페이지 메뉴"] li > a i { color: #e9a3b8; }
+
+    & nav[aria-label="마이페이지 메뉴"] li > a[aria-current="page"] {
+        background: #ffeef3;
+        color: #d0436d;
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%), 0 0 0 2px #f7a8bf;
+    }
+
+    & nav[aria-label="마이페이지 메뉴"] li > a[aria-current="page"] i { color: #e2557a; }
+    & nav[aria-label="마이페이지 메뉴"] > div:last-child button { border-radius: 999px; }
+
+    /* ── 카드: 흰 쿠션 · 안쪽 칸 크림 ── */
+    & :is(.surface, .glass-card):not(nav) {
+        border: 0;
+        border-radius: 30px;
+        background: #fff;
+        box-shadow: var(--mp-cushion);
+        backdrop-filter: none;
+    }
+
+    & :is(.surface, .glass-card) h2 {
+        color: #1e293b;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-weight: 400;
+    }
+
+    & :is(.surface, .glass-card) :is(div, section, li, article)[class*="rounded"][class*="border"]:not([class*="rounded-full"]) {
+        border-color: transparent;
+        border-radius: 20px;
+        background-color: #fffaf1;
+    }
+
+    /* ── 입력칸 · 고르기 ── */
+    & :is(.input, input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="range"]), select, textarea):not([aria-invalid="true"]):not([class*="border-red"]):not([class*="border-rose"]) {
+        border-color: transparent;
+        border-radius: 16px;
+        background-color: #fffaf1;
+        box-shadow: 0 0 0 2px #f3e3cc;
+    }
+
+    & :is(.input, input:not([type="checkbox"]):not([type="radio"]):not([type="file"]), select, textarea):focus {
+        outline: none;
+        background-color: #fff;
+        box-shadow: 0 0 0 2.5px #f7a8bf, 0 0 0 7px rgb(247 168 191 / 22%);
+    }
+
+    & input:is([type="checkbox"], [type="radio"]) { accent-color: #e9789a; }
+
+    /* 입력칸 이름 — 주아 */
+    & :is(.surface, .glass-card) label > span[class*="font-black"]:first-child,
+    & :is(.surface, .glass-card) label[class*="text-xs"][class*="font-black"] {
+        color: #1e293b;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 14px;
+        font-weight: 400;
+    }
+
+    /* ── 버튼: 주 = 분홍 알약 · 보조 = 흰 알약 ── */
+    & :is(.btn-primary, button[class*="bg-indigo-6"], a[class*="bg-indigo-6"], button[class*="bg-neutral-950"], a[class*="bg-neutral-950"]) {
+        border: 0;
+        border-radius: 999px;
+        background: #e9789a;
+        color: #fff;
+        box-shadow: 0 10px 18px -12px rgb(200 80 120 / 70%);
+    }
+
+    & :is(.btn-primary, button[class*="bg-indigo-6"], a[class*="bg-indigo-6"], button[class*="bg-neutral-950"], a[class*="bg-neutral-950"]):hover:not(:disabled) { background: #e26690; }
+    & :is(.btn-primary, button[class*="bg-indigo-6"]):disabled { background: #f3c7d4; box-shadow: none; }
+
+    & :is(.btn-secondary, .surface button[class*="border-neutral-2"], .surface a[class*="border-neutral-2"]):not([role="checkbox"]) {
+        border-color: transparent;
+        border-radius: 999px;
+        background: #fff;
+        box-shadow: 0 0 0 1.5px #efe7dc, 0 8px 14px -12px rgb(15 23 42 / 30%);
+    }
+
+    /* 안내 · 오류 상자 — 둥글게 */
+    & :is(p, div)[class*="bg-amber-50"], & :is(p, div)[class*="bg-rose-50"], & :is(p, div)[class*="bg-emerald-50"], & :is(p, div)[class*="bg-sky-50"], & :is(p, div)[class*="bg-indigo-50"] {
+        border-color: transparent;
+        border-radius: 18px;
+    }
+}
+
+/* 로그인 안내(마이페이지 · 하위 화면 공통) — 가운데 자물쇠 동그라미 · 주아 제목 · 분홍 알약 */
+html:not(.ddb-app-mode) main[data-mypage-web="gate"] {
+    & > span:first-child { width: 88px; height: 88px; background: #fff6e3; box-shadow: 0 0 0 8px #fffaf1, 0 18px 30px -20px rgb(15 23 42 / 35%); }
+    & h1 { margin: 18px auto 0; font-size: 28px; }
+    & .btn { height: 50px; padding: 0 26px; }
+}
