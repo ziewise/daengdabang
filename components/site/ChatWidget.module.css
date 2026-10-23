@@ -803,3 +803,25 @@
 /* 개인정보 안내 — "처리 안내 ›" 는 문장과 섞이지 않게 따로 한 줄 */
 :global(html:not(.ddb-app-mode)) .privacyLine a { display: block; width: fit-content; margin-top: 2px; }
 :global(html:not(.ddb-app-mode)) .privacyLine a::after { content: " ›"; }
+
+/* 답변 아래 부품 — 크레파스 결로(2026-10-23): 안내 단추 · 평가 단추 · 멈추기 · 상품 카드.
+   협업자 부품(ChatResponseExtras · ChatAnswerControls · ChatProductCards)의 글 · 동작 그대로, 모양만 웹에서 */
+:global(html:not(.ddb-app-mode)) .responseExtras :global(:is(a, button).border-indigo-200) {
+    min-height: 40px;
+    border: 0;
+    border-radius: 999px;
+    background: #fffaf1;
+    box-shadow: 0 0 0 2.5px #f3d9b8;
+    color: #5a4636;
+    font-size: 13.5px;
+}
+:global(html:not(.ddb-app-mode)) .responseExtras :global(:is(a, button).border-indigo-200):hover { background: #fff3f6; box-shadow: 0 0 0 2.5px #f7a8bf; transform: none; }
+:global(html:not(.ddb-app-mode)) .responseExtras :global(:is(a, button).border-indigo-200 i) { color: #e9789a; }
+:global(html:not(.ddb-app-mode)) .responseExtras :global([data-chat-feedback]) { color: #b08a5a; }
+:global(html:not(.ddb-app-mode)) .responseExtras :global([data-chat-feedback] button:not([aria-pressed="true"])) { border: 0; background: #fffaf1; box-shadow: 0 0 0 2px #f3d9b8; color: #b08a5a; }
+:global(html:not(.ddb-app-mode)) .responseExtras :global([data-chat-feedback] button:not([aria-pressed="true"]):hover) { box-shadow: 0 0 0 2px #f7a8bf; color: #d9577f; }
+:global(html:not(.ddb-app-mode)) .loadingBubble button { border: 0; border-radius: 999px; background: #fffaf1; box-shadow: 0 0 0 2px #f3d9b8; color: #b08a5a; }
+:global(html:not(.ddb-app-mode)) .messageRow :global([data-chat-product-card]) { border: 0; border-radius: 20px; background: #ffffff; box-shadow: 0 0 0 2.5px #f3d9b8; }
+:global(html:not(.ddb-app-mode)) .messageRow :global([data-chat-product-card]):hover { box-shadow: 0 0 0 2.5px #f7a8bf; }
+/* 입력 칸 안내 글자 — 원래 굵게(600)가 남아 주아가 억지 굵게 덧칠됨 → 보통 굵기로(2026-10-23 사용자) */
+:global(html:not(.ddb-app-mode)) .input::placeholder { font-weight: 400; }
