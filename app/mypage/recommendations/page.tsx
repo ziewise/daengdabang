@@ -238,7 +238,7 @@ export default function MypageRecommendationPreferencesPage() {
                     </p>
                     <div className="mt-4 flex flex-wrap gap-2">
                         <Link href="/mypage/#pet-profiles" className="btn btn-secondary">반려견 프로필 수정</Link>
-                        <Link href="/my-pet/#health-report" className="btn btn-secondary">분석 기록 확인</Link>
+                        <Link href="/health-report/" className="btn btn-secondary">분석 기록 확인</Link>
                         <Link href="/inquiry/?category=other#inquiry-form" className="btn btn-secondary">분석 결과 삭제 요청</Link>
                         <Link href="/privacy/" className="btn btn-secondary">개인정보 처리 안내</Link>
                     </div>

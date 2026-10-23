@@ -347,7 +347,7 @@ export default function PetLensModalContent({ initialMode = "photo", onNavigate 
                 <div className="rounded-2xl border border-neutral-100 bg-neutral-50 p-3 sm:p-4">
                     <PetLensAnalysisSummary profile={result.profile} details={result.details} />
                     <Link
-                        href="/my-pet/#health-report"
+                        href="/health-report/"
                         onClick={onNavigate}
                         className="btn btn-secondary mt-3 w-full justify-center"
                         data-petlens-result-profile-cta

@@ -26,7 +26,7 @@ const ACTIONS = [
         tilt: "hover:-rotate-[0.4deg]",
     },
     {
-        href: "/my-pet/#health-report",
+        href: "/health-report/",
         label: "건강 리포트",
         helper: "저장된 분석 기록 한눈에 보기",
         icon: "fa-chart-line",

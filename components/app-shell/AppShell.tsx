@@ -242,9 +242,9 @@ function StitchBackIcon() {
 }
 
 
-/** 우리 아이 기록(웹) → 앱 건강 변화 리포트(같은 정보 · 앱 화면) */
+/** 우리 아이 기록 · 건강 변화 리포트(웹, 2026-10-23 나눔) → 앱 건강 변화 리포트(같은 정보 · 앱 화면) */
 const APP_REPORT = "/app/sticker/report/";
-const isMyPetPath = (pathname: string) => /^\/my-pet(\/|$)/.test(pathname);
+const isMyPetPath = (pathname: string) => /^\/(my-pet|health-report)(\/|$)/.test(pathname);
 
 /**
  * 앱에서는 앱으로(사용자 결정 2026-10-17 "앱에서 웹으로 갈 수는 없잖아") — 앱 화면이 따로 있는 웹 주소는 같은 기능의 앱 화면으로.

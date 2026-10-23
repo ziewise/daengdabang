@@ -298,7 +298,7 @@ export default function MyPetHub() {
                 <PawTrail />
 
                 {/* 새 쪽 찍기 — 크레파스 카메라(2026-10-22 사용자 선택 N2): 크레파스 렌즈 + 네 방향 순서 + 주간 촬영(기존 WeeklyPhotoComparison) */}
-                <div className="dw-cam">
+                <div id="weekly-camera" className="dw-cam scroll-mt-28">
                     <span className="dw-cam-flash" aria-hidden="true" />
                     <div className="dw-cam-lens" aria-hidden="true">
                         <div className="dw-cam-glass">

@@ -49,7 +49,7 @@ test("desktop and mobile navigation expose the compact commerce-first informatio
         assert.match(source, /DaengLabWordmark/);
         assert.match(source, /t\("daengLab"\)/);
         assert.doesNotMatch(source, /label=\{t\("aiAnalysis"\)\}/);
-        for (const href of ["/pet-lens/", "/pet-lens/?mode=observation", "/my-pet/#health-report", "/chat/"]) {
+        for (const href of ["/pet-lens/", "/pet-lens/?mode=observation", "/health-report/", "/chat/"]) {
             assert.ok(source.includes(`"${href}"`), `${href} must stay in the DaengLab dropdown`);
         }
         for (const href of ["/products", "/best", "/new", "/brands", "/treasure-mine", "/my-pet", "/community"]) {

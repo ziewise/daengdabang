@@ -27,7 +27,7 @@ test("completed PetLens results persist a compact server-backed member record", 
         assert.match(ui, /savePetProfileSmart\(profileToSave, user\.apiAccessToken\)/);
         assert.match(ui, /mergeSavedPetLensProfile\(profileToSave, saved\)/);
         assert.match(ui, /data-petlens-result-profile-cta/);
-        assert.match(ui, /href="\/my-pet\/#health-report"/);
+        assert.match(ui, /href="\/health-report\/"/);
         assert.doesNotMatch(ui, /savePetProfilePhotosSmart/);
     }
 });

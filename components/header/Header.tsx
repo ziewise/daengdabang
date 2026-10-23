@@ -246,7 +246,7 @@ export default function Header() {
                                 {[
                                     ["/pet-lens/", "사진 건강 분석", "/images/ui/header-petlens-128.webp"],
                                     ["/pet-lens/?mode=observation", "울음소리·행동 분석", "/images/ui/menu-lab-observation-128.webp"],
-                                    ["/my-pet/#health-report", "건강 변화 리포트", "/images/ui/menu-lab-report-128.webp"],
+                                    ["/health-report/", "건강 변화 리포트", "/images/ui/menu-lab-report-128.webp"],
                                     ["/chat/", "AI 상담", "/images/ui/caretalk-web-128.webp"],
                                 ].map(([href, label, icon]) => (
                                     <li key={href}>

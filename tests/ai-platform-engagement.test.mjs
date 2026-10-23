@@ -74,7 +74,7 @@ test("P2 through P5 routes connect analysis history, quick actions, challenges, 
 
     assert.match(persistence, /rawAnalysis:/);
     assert.match(persistence, /lastAnalyzedAt/);
-    for (const href of ["/pet-lens/", "/my-pet/#health-report", "/chat/", "/treasure-mine/"]) {
+    for (const href of ["/pet-lens/", "/health-report/", "/chat/", "/treasure-mine/"]) {
         assert.match(actions, new RegExp(href.replaceAll("/", "\\/")));
     }
     assert.match(myPet, /loadWeeklyPhotoAnalyses/);

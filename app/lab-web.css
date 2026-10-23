@@ -821,3 +821,95 @@ html:not(.ddb-app-mode) [data-lab-web] .lab-result {
         & .lab-photo-pillar-main img { border-radius: 30px; }
     }
 }
+
+/* ───────── 7부 · 건강 변화 리포트(/health-report · 2026-10-23 사용자 선택 H2 변화 일기 카드) ─────────
+   민트 머리 판(아이 고르기) → 발자국 → 변화 일기: 왼쪽 날짜 · 가운데 세로 줄 · 오른쪽 카드(위아래로 한 주씩).
+   카드 한 장 안은 두 칸(왼쪽 = 그 주 이야기 · 오른쪽 = 그 주 케어), 내용이 많으면 카드가 세로로 길어짐.
+   점 색: 주황 새로 보인 것 · 민트 계속 보이는 것 · 하늘 이번엔 안 보인 것 · 분홍 케어 · 연보라 사진에서 본 것(비교 전 첫 주) */
+html:not(.ddb-app-mode) [data-health-report] {
+    /* 머리 판 */
+    & .hr-hero { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 30px; align-items: center; padding: 40px 48px !important; border-radius: 46px !important; }
+    & .hr-title { margin-top: 8px; color: var(--lab-ink); font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 40px; font-weight: 400; line-height: 1.25; }
+    & .hr-lead { margin-top: 12px; max-width: 580px; color: #64748b; font-size: 15px; font-weight: 600; line-height: 1.8; }
+    & .hr-pets { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+    & .hr-pet { display: inline-flex; align-items: center; gap: 8px; padding: 5px 16px 5px 5px; border-radius: 999px; background: #fff; color: #475569; font-size: 13.5px; font-weight: 800; box-shadow: 0 8px 14px -11px rgb(15 23 42 / 45%); transition: transform 0.18s ease; }
+    & .hr-pet:hover { transform: translateY(-2px); }
+    & .hr-pet.is-on { background: var(--lab-pink); color: #fff; }
+    & .hr-pet-face { display: grid; width: 34px; height: 34px; overflow: hidden; place-items: center; border-radius: 999px; background: #fff8ef; }
+    & .hr-pet-face img { width: 100%; height: 100%; object-fit: cover; }
+    & .hr-ring { display: block; width: 180px; height: 180px; padding: 12px; border-radius: 999px; background: conic-gradient(#f7a8bf, #ffd48a, #9fe0c4, #9cc9f0, #c9b5f5, #f7a8bf); }
+    & .hr-ring > span { display: grid; width: 100%; height: 100%; place-items: center; border-radius: 999px; background: #fff; }
+    & .hr-ring img { width: 112px; height: 112px; object-fit: contain; }
+
+    /* 제목 · 점 색 안내 */
+    & .hr-h2 { display: inline-block; padding-bottom: 8px; background: linear-gradient(90deg, #f7a8bf 0 33%, #ffd48a 33% 66%, #9cc9f0 66% 100%) left bottom / 100% 5px no-repeat; color: var(--lab-ink); font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 26px; font-weight: 400; }
+    & .hr-legend { display: flex; flex-wrap: wrap; gap: 6px 20px; margin: 12px 0 0; padding: 0; list-style: none; }
+    & .hr-legend li { display: inline-flex; align-items: center; gap: 7px; color: #64748b; font-size: 13px; font-weight: 800; }
+    & .hr-legend li::before, & .hr-mark::before { content: ""; flex: none; width: 9px; height: 9px; border-radius: 999px; background: var(--c); }
+    & :is(.hr-legend li, .hr-mark).is-new { --c: #f0a020; }
+    & :is(.hr-legend li, .hr-mark).is-same { --c: #9fe0c4; }
+    & :is(.hr-legend li, .hr-mark).is-gone { --c: #9cc9f0; }
+    & :is(.hr-legend li, .hr-mark).is-care { --c: #f7a8bf; }
+    & .hr-mark.is-seen { --c: #c9b5f5; }
+
+    /* 변화 일기 — 왼쪽 날짜 · 가운데 줄 · 오른쪽 카드 */
+    & .hr-diary { display: grid; margin: 28px 0 0; padding: 0; list-style: none; }
+    & .hr-entry { display: grid; grid-template-columns: 130px 56px minmax(0, 1fr); align-items: start; }
+    & .hr-when { padding-top: 6px; text-align: right; }
+    & .hr-when b { display: block; color: var(--lab-ink); font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 20px; font-weight: 400; }
+    & .hr-when small { display: block; margin-top: 2px; color: #94a3b8; font-size: 12.5px; font-weight: 800; }
+    & .hr-rail { position: relative; align-self: stretch; }
+    & .hr-rail::before { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; width: 4px; translate: -50% 0; border-radius: 99px; background: #e7e0fb; }
+    & .hr-entry:first-child .hr-rail::before { top: 18px; }
+    & .hr-entry:last-child .hr-rail::before { bottom: auto; height: 18px; }
+    & .hr-entry:only-child .hr-rail::before { display: none; }
+    & .hr-rail > i { position: absolute; left: 50%; top: 10px; width: 18px; height: 18px; translate: -50% 0; border-radius: 999px; background: #fff; box-shadow: 0 0 0 4px #c9b5f5; }
+    & .hr-entry.is-now .hr-rail > i { top: 7px; width: 24px; height: 24px; background: var(--lab-pink); box-shadow: 0 0 0 5px #ffd3df; }
+
+    /* 카드 한 장 — 안은 두 칸(이야기 | 케어), 케어가 없으면 한 칸 */
+    & .hr-card { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); margin-bottom: 26px; padding: 26px 30px !important; border-radius: 36px !important; }
+    & .hr-card:not(:has(> div + div)) { grid-template-columns: minmax(0, 1fr); }
+    & .hr-card > div + div { padding-left: 28px; border-left: 2px solid rgb(15 23 42 / 6%); }
+    & .hr-card > div:first-child { padding-right: 28px; }
+    & .hr-card h3 { color: var(--lab-ink); font-size: 22px; line-height: 1.35; word-break: keep-all; }
+    & .hr-entry.is-now .hr-card h3 { font-size: 28px; }
+    & .hr-headline { margin-top: 6px; color: #7c62d6; font-size: 14.5px; font-weight: 700; line-height: 1.6; }
+    & .hr-marks { display: grid; gap: 6px; margin: 12px 0 0; padding: 0; list-style: none; }
+    & .hr-mark { display: flex; align-items: flex-start; gap: 8px; color: #334155; font-size: 14.5px; font-weight: 700; line-height: 1.6; }
+    & .hr-mark::before { margin-top: 8px; }
+    & .hr-care-head { color: #64748b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 16px; }
+    & .hr-care-head + .hr-marks { margin-top: 10px; }
+    & .hr-meta { display: flex; align-items: center; gap: 10px; margin-top: 14px; color: #94a3b8; font-size: 12.5px; font-weight: 800; }
+    & .hr-dots { display: inline-flex; gap: 4px; }
+    & .hr-dots i { width: 8px; height: 8px; border-radius: 999px; background: #e2e8f0; }
+    & .hr-dots i.is-on { background: var(--lab-pink); }
+
+    /* 안내 · 빈 화면 · 아래 링크 */
+    & .hr-note { margin-top: 18px; color: #94a3b8; font-size: 14px; font-weight: 700; }
+    & .hr-note.is-error { color: #be123c; }
+    & .hr-empty { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 24px; align-items: center; margin-top: 28px; padding: 28px 32px; border-radius: 36px; background: #fff; box-shadow: var(--lab-cushion); }
+    & .hr-empty img { width: 110px; height: 110px; object-fit: contain; }
+    & .hr-empty h3 { color: var(--lab-ink); font-size: 22px; }
+    & .hr-empty p { margin-top: 6px; color: #64748b; font-size: 14px; font-weight: 600; line-height: 1.7; }
+    & .hr-empty .hr-link { display: inline-flex; margin-top: 12px; }
+    & .hr-links { display: flex; flex-wrap: wrap; gap: 10px 28px; margin-top: 30px; }
+    & .hr-link { color: #7c62d6; font-size: 14.5px; font-weight: 800; }
+    & .hr-link:hover { color: #6d55c9; }
+}
+
+/* 건강 변화 리포트 — 태블릿 이하: 날짜 칸 줄이고 카드 안 두 칸은 위아래로 */
+@media (max-width: 1023px) {
+    html:not(.ddb-app-mode) [data-health-report] {
+        & .hr-hero { grid-template-columns: minmax(0, 1fr); padding: 30px 22px !important; border-radius: 34px !important; }
+        & .hr-ring { display: none; }
+        & .hr-title { font-size: 30px; }
+        & .hr-entry { grid-template-columns: 78px 32px minmax(0, 1fr); }
+        & .hr-when b { font-size: 16px; }
+        & .hr-card { grid-template-columns: minmax(0, 1fr); padding: 20px 18px !important; border-radius: 28px !important; }
+        & .hr-card > div:first-child { padding-right: 0; }
+        & .hr-card > div + div { margin-top: 14px; padding: 14px 0 0; border-top: 2px solid rgb(15 23 42 / 6%); border-left: 0; }
+        & .hr-entry.is-now .hr-card h3 { font-size: 22px; }
+        & .hr-card h3 { font-size: 19px; }
+        & .hr-empty { grid-template-columns: minmax(0, 1fr); justify-items: center; text-align: center; padding: 24px 18px; }
+    }
+}

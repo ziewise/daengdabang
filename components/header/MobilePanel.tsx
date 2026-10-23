@@ -188,7 +188,7 @@ export default function MobilePanel({ open, onClose }: Props) {
                     >
                         <SubLink href="/pet-lens/" icon="fa-camera-retro" onClick={onClose}>사진 건강 분석</SubLink>
                         <SubLink href="/pet-lens/?mode=observation" icon="fa-wave-square" onClick={onClose}>울음소리·행동 분석</SubLink>
-                        <SubLink href="/my-pet/#health-report" icon="fa-chart-line" onClick={onClose}>건강 변화 리포트</SubLink>
+                        <SubLink href="/health-report/" icon="fa-chart-line" onClick={onClose}>건강 변화 리포트</SubLink>
                         <SubLink href="/chat/" icon="fa-comment-dots" onClick={onClose}>AI 상담</SubLink>
                     </MobileGroup>
 

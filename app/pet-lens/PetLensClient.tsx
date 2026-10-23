@@ -800,7 +800,7 @@ export default function PetLensClient() {
                                 <LabPhotoPillar photoViews={photoViews} fallback={result.profile.photoDataUrl} name={result.profile.name} />
                                 <PetLensAnalysisSummary profile={result.profile} details={result.details} />
                                 <Link
-                                    href="/my-pet/#health-report"
+                                    href="/health-report/"
                                     className="btn btn-secondary mt-4 w-full justify-center sm:w-auto"
                                     data-petlens-result-profile-cta
                                 >
