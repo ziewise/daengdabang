@@ -19,6 +19,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import ChatWidget from "@/components/site/ChatWidget";
+import CareTalkWelcome from "@/components/site/CareTalkWelcome";
 import { useMobileFloatingVisibility } from "@/hooks/useMobileFloatingVisibility";
 import { CHAT_WIDGET_NAVIGATOR_REVEAL_EVENT } from "@/lib/chat-widget-events";
 
@@ -126,6 +127,7 @@ export default function FloatingDock() {
                     isMobile={mobileFloating.isMobile}
                     launcherHidden={!dockVisible}
                     onOpenChange={setChatOpen}
+                    empty={CareTalkWelcome}
                 />
             </div>
         </div>

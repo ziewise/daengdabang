@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, type ComponentType, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import Image from "next/image";
 import ChatPendingRecovery from "@/components/site/ChatPendingRecovery";
 import { CHAT_VIEW_DETACHED } from "@/lib/shop-chat-jobs";
 import ChatProductCards from "@/components/site/ChatProductCards";
@@ -449,9 +450,12 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                     className={`${styles.panel} absolute bottom-[calc(100%+12px)] z-[2201] flex h-[min(520px,calc(100dvh-112px))] w-[min(360px,calc(100vw-32px))] flex-col overflow-hidden`}
                 >
                     <header {...chatWindow.dragHandlers} className={`${styles.header} flex items-center justify-between px-4`} title={chatWindow.desktop ? "제목을 잡고 끌어 창 이동" : undefined}>
+                        {/* 웹 쿠션 창 전용(아래 둘은 앱에서 숨김 · ChatWidget.module.css 웹 구역): 케어톡 그림 고리 · "AI 상담" 작은 글 */}
+                        <span className={styles.headerAvatar} aria-hidden="true"><span><Image src="/images/ui/caretalk-web-128.webp" alt="" width={30} height={30} /></span></span>
                         <div className={styles.titleGroup}>
                             <span className={styles.noteEyebrow}>CRAYON CARE NOTE</span>
                             <b className={styles.title}>댕다방 케어톡</b>
+                            <span className={styles.headerSub}>AI 상담</span>
                         </div>
                         <div className="flex shrink-0 items-center gap-1">
                             {/* 글꼴 전환(손글씨체 ↔ 정자체) — 글꼴을 고정한 앱에서는 뺌 */}
@@ -637,8 +641,8 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                                 <p>답변을 확인한 뒤 새 상담을 시작해 주세요. 현재 화면의 대화가 비워지고, 이전 대화는 다음 답변에 이어지지 않아요.</p>
                                 <button type="button" onClick={clearChat} className="mt-2 rounded-lg bg-neutral-900 px-4 py-2 font-bold text-white">새 상담 시작</button>
                             </div>
-                        ) : <p className="mb-2 text-xs text-neutral-600">답변 {completedExchanges}/5 · 5회 후 안내에 따라 새 상담을 시작해요.</p>}
-                        <p className="mb-2 text-[11px] leading-4 text-neutral-500">질문·대화 맥락은 Google Gemini에 전달될 수 있어요. 연락처·주소 등 개인정보는 입력하지 마세요. <a href="/privacy/#overseas" className="underline">처리 안내</a></p>
+                        ) : <p className={`${styles.countLine} mb-2 text-xs text-neutral-600`}>답변 {completedExchanges}/5 · 5회 후 안내에 따라 새 상담을 시작해요.</p>}
+                        <p className={`${styles.privacyLine} mb-2 text-[11px] leading-4 text-neutral-500`}>질문·대화 맥락은 Google Gemini에 전달될 수 있어요. 연락처·주소 등 개인정보는 입력하지 마세요. <a href="/privacy/#overseas" className="underline">처리 안내</a></p>
                         <GenerationReferenceTray controller={generationReferences} compact />
                         <div className="flex gap-2">
                             <GenerationReferencePhotoButton controller={generationReferences} disabled={loading || sessionComplete} compact />

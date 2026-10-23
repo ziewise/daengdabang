@@ -14,12 +14,13 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { openChatWidget } from "@/lib/chat-widget-events";
 import { CrayonGrainFilter, PawTrail } from "@/components/daily/CrayonArt";
+import { CARE_TALK_STARTERS } from "@/components/site/CareTalkWelcome";
 
-// 케어톡에서 물어볼 수 있는 것 — 누르면 같은 케어톡 창이 열림
+// 케어톡에서 물어볼 수 있는 것 — 누르면 같은 케어톡 창이 그 질문으로 열림(창 첫 화면 질문 카드와 같은 질문, 2026-10-23)
 const CARE_TALK_TOPICS = [
-    { title: "우리 아이 상품 고르기", body: "크기 · 생활 습관에 맞는 산책용품 · 먹거리를 함께 골라 봐요.", art: "/images/ui/shop-menu-all-128.webp", tint: "is-yellow" },
-    { title: "생활 돌봄 질문", body: "목욕 · 빗질 · 산책처럼 매일 하는 돌봄을 차근차근 물어봐요.", art: "/images/ui/daily-web-care-384.webp", tint: "is-mint" },
-    { title: "동네 돌봄 찾기", body: "가까운 병원 · 미용 · 호텔 후보를 지도와 함께 살펴봐요.", art: "/images/ui/care-vet-256.webp", tint: "is-sky" },
+    { title: "우리 아이 상품 고르기", body: "크기 · 생활 습관에 맞는 산책용품 · 먹거리를 함께 골라 봐요.", art: "/images/ui/shop-menu-all-128.webp", tint: "is-yellow", question: CARE_TALK_STARTERS[0].question },
+    { title: "생활 돌봄 질문", body: "목욕 · 빗질 · 산책처럼 매일 하는 돌봄을 차근차근 물어봐요.", art: "/images/ui/daily-web-care-384.webp", tint: "is-mint", question: CARE_TALK_STARTERS[1].question },
+    { title: "동네 돌봄 찾기", body: "가까운 병원 · 미용 · 호텔 후보를 지도와 함께 살펴봐요.", art: "/images/ui/care-vet-256.webp", tint: "is-sky", question: CARE_TALK_STARTERS[2].question },
 ] as const;
 
 // Compatibility entry for saved /chat links. The global widget owns the only transcript.
@@ -62,11 +63,11 @@ export default function ChatLaunchClient() {
             <ul className="dw-rounds">
                 {CARE_TALK_TOPICS.map((topic) => (
                     <li key={topic.title}>
-                        <button type="button" onClick={() => openChatWidget()} className={`dw-round ${topic.tint}`}>
+                        <button type="button" onClick={() => openChatWidget({ initialQuestion: topic.question })} className={`dw-round ${topic.tint}`}>
                             <span className="dw-round-art" aria-hidden="true"><Image src={topic.art} alt="" width={112} height={112} /></span>
                             <strong className="dw-round-title">{topic.title}</strong>
                             <span className="dw-round-body">{topic.body}</span>
-                            <span className="dw-round-go">케어톡 열기 <i className="fa-solid fa-arrow-right text-[10px]" aria-hidden="true" /></span>
+                            <span className="dw-round-go">이 질문으로 물어보기 <i className="fa-solid fa-arrow-right text-[10px]" aria-hidden="true" /></span>
                         </button>
                     </li>
                 ))}
