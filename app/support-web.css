@@ -1,11 +1,11 @@
 /*
  * support-web.css — 웹 고객센터(공지사항 · 자주 묻는 질문 · 1:1 문의 · 교환·반품 안내) 크레파스 꾸밈 · 2026-10-23
  * ---------------------------------------------------------------------
- * 사이트 크레파스 결(AI 상담 · 커뮤니티 페이지와 같음): 고객센터 탭 알약 → 쿠션 머리 판(무지개 고리 + 민트 3D 고객센터 그림) → 발자국 →
+ * 사이트 크레파스 결(AI 상담 · 커뮤니티 페이지와 같음): 쿠션 머리 판(무지개 고리 + 크레파스 고객센터 그림 web-cs-*) → 발자국 →
  * 흰 · 파스텔 쿠션 판. 제목은 주아 + 세 색 크레파스 밑줄, 주 버튼 분홍 알약, 보조 버튼 흰 알약(점선 없음), 종이에 줄 없음.
  * 범위: 웹에서만(html:not(.ddb-app-mode)) · data-support-web 을 붙인 고객센터 main 안에서만.
  * 앱은 같은 페이지를 앱 꾸밈(appShopSkin "마이 탭 웹 화면")으로 보여 주므로 여기 규칙은 앱에 닿지 않음.
- * 웹 전용 요소(탭 · 고리 · 발자국 · 공지 날짜 · Q/A 동그라미 · 교환 단계)는 JSX 에서 hidden → 여기서 보이게.
+ * 웹 전용 요소(고리 · 발자국 · 공지 날짜 · Q/A 동그라미 · 교환 단계)는 JSX 에서 hidden → 여기서 보이게.
  * 문구 · 링크 · 버튼 동작(문의 접수 · 펼침)은 그대로, 모양만.
  */
 
@@ -19,45 +19,12 @@ html:not(.ddb-app-mode) main[data-support-web] {
     width: 100%;
     max-width: 1080px;
 
-    /* 파스텔 색 묶음(바탕 · 글자 · 테) — 탭 · 꼬리표 · 쿠션이 함께 씀 */
+    /* 파스텔 색 묶음(바탕 · 글자 · 테) — 꼬리표 · 쿠션이 함께 씀 */
     & .is-yellow, & [data-notice-tag="배송"], & [data-faq-cat="주문/결제"] { --cs-bg: #fff6e3; --cs-ink: #b86a08; --cs-ring: #f7d48a; }
     & .is-sky, & [data-notice-tag="안내"], & [data-faq-cat="배송"] { --cs-bg: #e9f4fb; --cs-ink: #0e7f93; --cs-ring: #a9d4ea; }
     & .is-pink, & [data-notice-tag="이벤트"], & [data-faq-cat="펫렌즈/맞춤 추천"] { --cs-bg: #ffeef3; --cs-ink: #d0436d; --cs-ring: #f7a8bf; }
     & .is-mint, & [data-faq-cat="교환/반품"] { --cs-bg: #e9f8f1; --cs-ink: #0f8a66; --cs-ring: #a8e0c6; }
     & .is-lav, & [data-faq-cat="회원"] { --cs-bg: #f3f0fe; --cs-ink: #6b51c9; --cs-ring: #cfc3f5; }
-
-    /* ── 고객센터 탭 알약 넷(지금 화면은 색 쿠션 + 테) ── */
-    & .cs-tabs {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 10px;
-        margin-bottom: 26px;
-    }
-
-    & .cs-tab {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        height: 52px;
-        padding: 0 22px 0 9px;
-        border-radius: 999px;
-        background: #fff;
-        color: #475569;
-        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
-        font-size: 16px;
-        box-shadow: 0 0 0 1.5px rgb(100 116 139 / 14%), 0 10px 18px -14px rgb(15 23 42 / 35%);
-        transition: transform 0.18s ease;
-    }
-
-    & .cs-tab img { width: 36px; height: 36px; object-fit: contain; }
-    & .cs-tab:hover { transform: translateY(-2px); }
-
-    & .cs-tab[aria-current="page"] {
-        background: var(--cs-bg);
-        color: var(--cs-ink);
-        box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 0 0 2.5px var(--cs-ring), 0 12px 20px -14px rgb(15 23 42 / 40%);
-    }
 
     /* ── 머리 판 — 영문 손글씨 꼬리표 · 주아 제목 + 세 색 밑줄 · 설명 · 무지개 고리 ── */
     /* 고객센터 머리 판은 낮게(2026-10-23 사용자 "카드 세로가 너무 커") — 고리 170px · 위아래 여백 줄임 */
@@ -718,10 +685,6 @@ html:not(.ddb-app-mode) main[data-support-web] {
 
 @media (max-width: 640px) {
     html:not(.ddb-app-mode) main[data-support-web] {
-        & .cs-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
-        & .cs-tab { justify-content: flex-start; height: 48px; padding-right: 12px; font-size: 14.5px; }
-        & .cs-tab img { width: 32px; height: 32px; }
-
         /* 공지 — 날짜를 카드 위 한 줄로, 점 줄은 숨김 */
         & .cs-notice { grid-template-columns: minmax(0, 1fr); padding-bottom: 18px; }
         & .cs-when { flex-direction: row; align-items: baseline; gap: 6px; padding: 0 0 8px 10px; }

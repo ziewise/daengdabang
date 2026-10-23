@@ -23,9 +23,9 @@ export const metadata: Metadata = {
 
 // 교환·반품 네 단계(웹 전용 요약) — 아래 "요청 가능 기간" · "환불 처리" 문구를 짧게 줄인 것
 const RETURN_STEPS = [
-    { title: "1:1 문의로 접수", body: "단순 변심은 상품 수령 후 7일 이내에 남겨 주세요.", art: "/images/ui/cs-inquiry-160.webp", tint: "is-pink" },
-    { title: "협의 후 발송", body: `반품사유 · 택배사 · 배송비 · 반품지를 협의한 뒤 ${RETURN_POLICY.designatedCarrier}로 보내 주세요.`, art: "/images/ui/cs-return-160.webp", tint: "is-mint" },
-    { title: "회수 · 검수", body: "도착한 상품의 상태를 확인해요.", art: "/images/ui/cs-check-160.webp", tint: "is-yellow" },
+    { title: "1:1 문의로 접수", body: "단순 변심은 상품 수령 후 7일 이내에 남겨 주세요.", art: "/images/ui/web-cs-inquiry-160.webp", tint: "is-pink" },
+    { title: "협의 후 발송", body: `반품사유 · 택배사 · 배송비 · 반품지를 협의한 뒤 ${RETURN_POLICY.designatedCarrier}로 보내 주세요.`, art: "/images/ui/web-cs-return-160.webp", tint: "is-mint" },
+    { title: "회수 · 검수", body: "도착한 상품의 상태를 확인해요.", art: "/images/ui/lab-summary-256.webp", tint: "is-yellow" },
     { title: "환불 진행", body: "검수가 끝나면 영업일 기준 3일 이내에 환불해요.", art: "/images/ui/goods-pay-ready-256.webp", tint: "is-lav" },
 ] as const;
 

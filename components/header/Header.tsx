@@ -32,7 +32,7 @@ import headerStyles from "./Header.module.css";
 
 type DropKey = "shop" | "daily" | "lab" | "cs" | null;
 
-// 고객센터 하위 메뉴 그림 — CS_LINKS 주소별 사용자 그림(public/images/ui/menu-cs-*-128.webp, 2026-10-20)
+// 고객센터 하위 메뉴 그림 — CS_LINKS 주소별 사용자 크레파스 그림(public/images/ui/web-cs-*-128.webp, 2026-10-23 교체 · 이전 menu-cs-* 는 커뮤니티 · 공모전이 계속 씀)
 const CS_MENU_ICON: Record<string, string> = {
     "/notice": "notice",
     "/faq": "faq",
@@ -221,12 +221,12 @@ export default function Header() {
                             onEnter={() => setOpenDrop("cs")}
                             onLeave={() => setOpenDrop(null)}
                         >
-                            {/* 고객센터 하위 메뉴 — 같은 크레파스 종이 + 알약 줄(사용자 그림 menu-cs-*, 2026-10-20). 항목 · 주소(CS_LINKS) 그대로, 그림은 주소로 고름 */}
+                            {/* 고객센터 하위 메뉴 — 같은 크레파스 종이 + 알약 줄(사용자 그림 web-cs-*, 2026-10-23 교체). 항목 · 주소(CS_LINKS) 그대로, 그림은 주소로 고름 */}
                             <ul className="ddb-menu-paper grid w-max gap-1.5 p-2.5">
                                 {CS_LINKS.map((item) => (
                                     <li key={item.href}>
                                         <Link href={item.href} className="ddb-menu-row">
-                                            <Image src={`/images/ui/menu-cs-${CS_MENU_ICON[item.href] ?? "notice"}-128.webp`} alt="" width={30} height={30} className="h-[30px] w-[30px] shrink-0 object-contain" />
+                                            <Image src={`/images/ui/web-cs-${CS_MENU_ICON[item.href] ?? "notice"}-128.webp`} alt="" width={30} height={30} className="h-[30px] w-[30px] shrink-0 object-contain" />
                                             <span>{menuLabel(item.label)}</span>
                                         </Link>
                                     </li>
