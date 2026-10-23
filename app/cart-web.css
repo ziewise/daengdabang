@@ -549,7 +549,11 @@ html:not(.ddb-app-mode) main[data-cart-web] {
         & .cart-option { margin-top: 6px; }
         & .cart-meta { margin-top: 12px; }
         & .cart-arrival { margin-top: 0; }
-        & .cart-pet { max-width: none; margin-top: 12px; }
+        /* 가격 · 수량 줄이 먼저, 그 아래 "누구를 위한" 메모(2026-10-24 사용자) — 메모 등록 버튼은 글 오른쪽 */
+        & .cart-pet { order: 2; max-width: none; margin-top: 14px; }
+        & .cart-pet label > div { flex-wrap: nowrap; }
+        & .cart-pet label > div > p { flex: 1; }
+        & .cart-pet-go { flex: none; }
         & .cart-foot { margin-top: 14px; }
         & .cart-price { font-size: 22px; }
         & .cart-del { top: 14px; right: 14px; padding: 5px 12px; }
