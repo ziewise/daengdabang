@@ -368,17 +368,18 @@ export default function MyPetHub() {
             {/* 구역 사이는 발자국 두 개(2026-10-22 사용자) */}
             <PawTrail />
 
-            {/* 그림책 부록 — 둥근 쿠션 셋(2026-10-22 사용자 선택 N2): 펫렌즈 · 행동·소리 · 케어톡(모두 기존 페이지) */}
+            {/* 함께 쓰는 기능 — 둥근 쿠션 셋(2026-10-22 사용자 선택 N2): 펫렌즈 · 행동·소리 · 케어톡(모두 기존 페이지).
+                2026-10-23 사용자 "그림책 문구 맞지 않잖아" — 부록 제목 · 문구에서 그림책 비유를 뺌 */}
             <section className="dw-appendix" aria-labelledby="dw-appendix-title">
                 <div className="dw-appendix-head">
-                    <p className="ddb-crayon-kicker dw-kicker">BOOK APPENDIX</p>
-                    <h2 id="dw-appendix-title" className="ddb-crayon-title ddb-crayon-underline dw-pages-title">그림책과 함께 쓰면 좋아요</h2>
+                    <p className="ddb-crayon-kicker dw-kicker">MORE CARE</p>
+                    <h2 id="dw-appendix-title" className="ddb-crayon-title ddb-crayon-underline dw-pages-title">{pet.name}의 기록과 함께 써 보세요</h2>
                 </div>
                 <div className="dw-rounds">
                     {[
                         { href: "/pet-lens/", art: "/images/ui/mypet-analysis-256.webp", title: "펫렌즈 사진 분석", body: "오늘 모습을 한 장으로 바로 살펴봐요.", go: "바로 살펴보기", tint: "is-pink" },
                         { href: "/pet-lens/?mode=observation#observation", art: "/images/ui/menu-lab-observation-128.webp", title: "행동·소리 분석", body: "궁금한 행동·소리 영상을 따로 관찰해요.", go: "열어 보기", tint: "is-lav" },
-                        { href: "/chat/", art: "/images/ui/mypet-caretalk-256.webp", title: "케어톡 상담", body: "그림책을 보다 궁금한 점을 물어봐요.", go: "물어보기", tint: "is-yellow" },
+                        { href: "/chat/", art: "/images/ui/mypet-caretalk-256.webp", title: "케어톡 상담", body: "기록을 보다 궁금한 점을 물어봐요.", go: "물어보기", tint: "is-yellow" },
                     ].map((item) => (
                         <Link key={item.href} href={item.href} className={`dw-round ${item.tint}`}>
                             <span className="dw-round-art" aria-hidden="true"><Image src={item.art} alt="" width={120} height={120} /></span>
