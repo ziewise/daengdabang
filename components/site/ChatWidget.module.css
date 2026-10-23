@@ -550,10 +550,11 @@
     }
 }
 
-/* ───────── 웹 쿠션 창(2026-10-23 사용자 선택 "M1 창 + M2 첫 화면") ─────────
+/* ───────── 웹 케어톡 — 크레파스 그림일기 창(2026-10-23 사용자 선택 C3) ─────────
    웹에서만(html:not(.ddb-app-mode)) — 앱은 위 기본 공책 창 그대로.
-   사이트 결: 분홍 머리 · 흰 대화 바탕 · 연보라 손님 말풍선 · 둥근 버튼 · 주아 제목, 긴 대화 글은 본문 글꼴.
-   가로줄 · 빨간 여백선 · 점선 · 스프링 구멍 · 테이프 없음. 손님 글은 흰 바탕 위 진한 글씨 / 연보라 바탕 위 흰 글씨(읽기 쉬움) */
+   크림 종이 · 세 색 크레파스 밑줄 제목 · 머리 별 · 하트 낙서 · 대화 뒤 사이트 장난감 벽지(연하게) ·
+   파스텔 테 말풍선(손님 = 분홍 테 · 케어톡 = 민트 테) · 사용자 그림 단추(사진 · 보내기) · 주아 제목, 긴 대화 글은 본문 글꼴.
+   가로줄 · 빨간 여백선 · 점선 · 스프링 구멍 · 테이프 없음. 말풍선은 밝은 바탕 위 진한 글씨(읽기 쉬움) */
 .headerAvatar,
 .headerSub,
 .welcome { display: none; }
@@ -562,10 +563,28 @@
     border: 0;
     outline: 0;
     border-radius: 30px;
-    background: #ffffff;
-    box-shadow: 0 0 0 1px rgba(124, 98, 214, 0.08), 0 34px 60px -30px rgba(90, 60, 170, 0.55);
+    background: #fffaf1;
+    box-shadow: 0 0 0 1px rgba(160, 120, 60, 0.1), 0 34px 60px -30px rgba(120, 80, 30, 0.45);
 }
-:global(html:not(.ddb-app-mode)) .panel::before { display: none; }
+/* 장난감 벽지 — 사이트 배경(components/site/ToyWallpaper)과 같은 그림, 대화 칸 뒤에만 연하게(입력 칸 · 머리가 덮음) */
+:global(html:not(.ddb-app-mode)) .panel::before {
+    inset: 76px 0 0;
+    border: 0;
+    border-radius: 0;
+    /* 흩어 놓기 — 양옆 줄 세움 대신 가운데까지 섞고 크기도 제각각(2026-10-23 사용자) */
+    background:
+        url("/images/ui/toys/toy-1a.webp") 8% 4% / 50px no-repeat,
+        url("/images/ui/toys/toy-6b.webp") 58% 9% / 38px no-repeat,
+        url("/images/ui/toys/toy-3b.webp") 94% 20% / 56px no-repeat,
+        url("/images/ui/toys/toy-8a.webp") 32% 28% / 42px no-repeat,
+        url("/images/ui/toys/toy-5a.webp") 3% 46% / 40px no-repeat,
+        url("/images/ui/toys/toy-7b.webp") 72% 44% / 48px no-repeat,
+        url("/images/ui/toys/toy-4a.webp") 44% 63% / 54px no-repeat,
+        url("/images/ui/toys/toy-2a.webp") 14% 78% / 44px no-repeat,
+        url("/images/ui/toys/toy-9a.webp") 88% 74% / 40px no-repeat,
+        url("/images/ui/toys/toy-1b.webp") 64% 92% / 36px no-repeat;
+    opacity: 0.32;
+}
 
 /* 머리 — 분홍 바탕 · 케어톡 그림 고리 · 주아 제목 · 답변 횟수 */
 :global(html:not(.ddb-app-mode)) .header {
@@ -573,7 +592,7 @@
     min-height: 76px;
     padding-top: 0;
     border-bottom: 0;
-    background: #ffeef3;
+    background: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2040%2040%27%3E%3Cpath%20fill%3D%27%23ffd48a%27%20d%3D%27M20%203l5%2011%2012%201-9%208%203%2012-11-7-11%207%203-12-9-8%2012-1z%27/%3E%3C/svg%3E") 74% 12px / 16px no-repeat, url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2040%2036%27%3E%3Cpath%20fill%3D%27%23f7a8bf%27%20d%3D%27M20%2034S2%2023%202%2012A9%209%200%200%201%2020%207a9%209%200%200%201%2018%205c0%2011-18%2022-18%2022z%27/%3E%3C/svg%3E") 81% 42px / 14px no-repeat, #fff3e3;
 }
 :global(html:not(.ddb-app-mode)) .header::before,
 :global(html:not(.ddb-app-mode)) .header::after,
@@ -595,6 +614,8 @@
     font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
     font-size: 1.2rem;
     font-weight: 400;
+    padding-bottom: 6px;
+    background: linear-gradient(90deg, #f7a8bf 0 33%, #ffd48a 33% 66%, #9cc9f0 66% 100%) left bottom / 100% 4px no-repeat;
     transform: none;
 }
 :global(html:not(.ddb-app-mode)) .headerSub { display: block; color: #e2557a; font: 800 11.5px var(--font-wanted-sans), sans-serif; }
@@ -620,24 +641,24 @@
 /* 대화 — 줄 없는 연한 바탕 · 말풍선은 둥글게(손님 = 연보라 바탕 흰 글씨, 케어톡 = 흰 바탕 진한 글씨) */
 :global(html:not(.ddb-app-mode)) .messageList {
     padding: 18px 16px;
-    background: #fdfbff;
+    background: transparent;
     scrollbar-color: rgba(124, 98, 214, 0.4) transparent;
 }
 :global(html:not(.ddb-app-mode)) .messageList::-webkit-scrollbar-thumb { background: rgba(124, 98, 214, 0.4); background-clip: padding-box; }
 :global(html:not(.ddb-app-mode)) .messageBubble { border: 0; letter-spacing: 0; }
 :global(html:not(.ddb-app-mode)) .userBubble {
-    border-radius: 20px 20px 6px 20px;
-    background: #7c62d6;
-    box-shadow: 0 10px 18px -14px rgba(90, 60, 170, 0.7);
-    color: #ffffff;
+    border-radius: 22px 18px 6px 22px;
+    background: #fff3f6;
+    box-shadow: 0 0 0 2.5px #f7a8bf;
+    color: #7a2b45;
     outline: 0;
 }
 :global(html:not(.ddb-app-mode)) .assistantBubble,
 :global(html:not(.ddb-app-mode)) .loadingBubble {
     border-color: transparent;
-    border-radius: 20px 20px 20px 6px;
+    border-radius: 18px 22px 22px 6px;
     background: #ffffff;
-    box-shadow: inset 0 0 0 1.5px #f1ecfb, 0 8px 16px -14px rgba(15, 23, 42, 0.45);
+    box-shadow: 0 0 0 2.5px #bfe8d6;
     color: #334155;
     outline: 0;
 }
@@ -654,7 +675,7 @@
 :global(html:not(.ddb-app-mode)) .welcomeRing { display: inline-grid; width: 104px; height: 104px; padding: 8px; border-radius: 999px; background: conic-gradient(#f7a8bf, #ffd48a, #9fe0c4, #9cc9f0, #c9b5f5, #f7a8bf); }
 :global(html:not(.ddb-app-mode)) .welcomeRing > span { display: grid; place-items: center; border-radius: 999px; background: #fff; }
 :global(html:not(.ddb-app-mode)) .welcomeRing img { width: 64px; height: 64px; object-fit: contain; }
-:global(html:not(.ddb-app-mode)) .welcomeTitle { margin-top: 12px; color: #1e293b; font: 400 22px var(--font-jua), var(--font-wanted-sans), sans-serif; }
+:global(html:not(.ddb-app-mode)) .welcomeTitle { display: table; margin: 12px auto 0; padding-bottom: 6px; background: linear-gradient(90deg, #f7a8bf 0 33%, #ffd48a 33% 66%, #9cc9f0 66% 100%) left bottom / 100% 4px no-repeat; color: #1e293b; font: 400 22px var(--font-jua), var(--font-wanted-sans), sans-serif; }
 :global(html:not(.ddb-app-mode)) .welcomeLead { margin-top: 4px; color: #64748b; font: 600 13.5px/1.6 var(--font-wanted-sans), sans-serif; }
 :global(html:not(.ddb-app-mode)) .welcomeList { display: grid; gap: 8px; margin: 18px 0 0; padding: 0; list-style: none; text-align: left; }
 :global(html:not(.ddb-app-mode)) .welcomeCard {
@@ -680,8 +701,8 @@
 /* 입력 — 흰 바탕 · 둥근 칸 · 분홍 보내기, 답변 횟수 · 5회 안내 줄은 연보라 글씨로 · 개인정보 안내는 작은 회색 */
 :global(html:not(.ddb-app-mode)) .composer {
     border-top: 0;
-    background: #ffffff;
-    box-shadow: 0 -10px 20px -18px rgba(15, 23, 42, 0.35);
+    background: #fff5e8;
+    box-shadow: 0 -10px 20px -18px rgba(120, 80, 30, 0.35);
 }
 :global(html:not(.ddb-app-mode)) .countLine { color: #7c62d6; font-weight: 800; } /* 답변 n/5 · 5회 후 새 상담 안내 — 꼭 보이게(2026-10-23 사용자) */
 :global(html:not(.ddb-app-mode)) .privacyLine { color: #94a3b8; }
@@ -689,8 +710,8 @@
 :global(html:not(.ddb-app-mode)) .input {
     border: 0;
     border-radius: 999px;
-    background: #f6f3fd;
-    box-shadow: none;
+    background: #ffffff;
+    box-shadow: 0 0 0 2px #f1e3cc;
     color: #1e293b;
     font-family: var(--font-wanted-sans), sans-serif;
     padding-inline: 16px;
@@ -705,7 +726,17 @@
 }
 :global(html:not(.ddb-app-mode)) .sendButton:hover:not(:disabled),
 :global(html:not(.ddb-app-mode)) .sendButton:focus-visible { background: #e2557a; box-shadow: inset 0 3px 0 rgba(255, 255, 255, 0.3), 0 12px 18px -10px rgba(200, 80, 120, 0.7); transform: translateY(-1px); }
-:global(html:not(.ddb-app-mode)) .resizeHandle[data-resize-edge="se"] { background: transparent; color: #c9b5f5; }
+:global(html:not(.ddb-app-mode)) .resizeHandle[data-resize-edge="se"] { background: transparent; color: #e7c9a0; }
+/* 보내기 단추 = 사용자 그림(웹케어톡보내기 → ui/caretalk-send-160.webp). 답변 중 "멈추기"(type=button)는 분홍 원 + 아이콘 그대로 */
+:global(html:not(.ddb-app-mode)) .sendButton[type="submit"] {
+    width: 46px;
+    background: url("/images/ui/caretalk-send-160.webp") center / contain no-repeat;
+    box-shadow: none;
+    filter: drop-shadow(0 6px 8px rgba(200, 80, 120, 0.28));
+}
+:global(html:not(.ddb-app-mode)) .sendButton[type="submit"]:hover:not(:disabled),
+:global(html:not(.ddb-app-mode)) .sendButton[type="submit"]:focus-visible { background: url("/images/ui/caretalk-send-160.webp") center / contain no-repeat; box-shadow: none; }
+:global(html:not(.ddb-app-mode)) .sendButton[type="submit"] > i { visibility: hidden; }
 
 /* 케어톡 단추(오른쪽 아래) — 분홍 둥근 단추, 열리면 연보라 */
 :global(html:not(.ddb-app-mode)) .trigger {
@@ -726,10 +757,49 @@
 
 /* 웹 쿠션 창 — 첫 화면 카드 글은 왼쪽 정렬 · 사진 첨부 단추는 둥근 연보라 · 사진 안내 글은 작은 회색(GenerationReferenceComposer 의 data- 표시로만 고름) */
 :global(html:not(.ddb-app-mode)) .welcomeText { text-align: left; }
-:global(html:not(.ddb-app-mode)) .composer :global([data-generation-reference-button]) { border: 0; border-radius: 999px; background: #f6f3fd; color: #7c62d6; }
-:global(html:not(.ddb-app-mode)) .composer :global([data-generation-reference-button]):hover { background: #efe9fc; }
+:global(html:not(.ddb-app-mode)) .composer :global([data-generation-reference-button]) {
+    width: 46px;
+    height: 46px;
+    border: 0;
+    border-radius: 999px;
+    background: url("/images/ui/caretalk-photo-160.webp") center / contain no-repeat;
+    filter: drop-shadow(0 6px 8px rgba(200, 80, 120, 0.25));
+}
+:global(html:not(.ddb-app-mode)) .composer :global([data-generation-reference-button]):hover { background: url("/images/ui/caretalk-photo-160.webp") center / contain no-repeat; transform: translateY(-1px); }
+:global(html:not(.ddb-app-mode)) .composer :global([data-generation-reference-button]) > * { visibility: hidden; }
 :global(html:not(.ddb-app-mode)) .composer :global([data-generation-reference-privacy-notice]) { color: #94a3b8; font-size: 11px; font-weight: 600; line-height: 1.5; }
-:global(html:not(.ddb-app-mode)) .messageList > :global(div[role="status"]) { border: 0; border-radius: 16px; background: #f6f3fd; color: #7c62d6; }
+:global(html:not(.ddb-app-mode)) .messageList > :global(div[role="status"]) { border: 0; border-radius: 16px; background: rgba(255, 255, 255, 0.85); color: #b08a5a; text-align: center; }
 /* 답변 5회를 마쳤을 때 안내 상자 — 문구 · 새 상담 시작 동작 그대로, 노랑 쿠션 + 분홍 알약 단추 */
 :global(html:not(.ddb-app-mode)) .composer > :global(div[role="status"]) { border: 0; border-radius: 18px; background: #fff6e3; color: #7a4a06; }
 :global(html:not(.ddb-app-mode)) .composer > :global(div[role="status"]) button { border-radius: 999px; background: #e9789a; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-weight: 400; }
+
+/* 웹 케어톡 글꼴 = 주아(대화 글 · 입력 칸까지 전부, 2026-10-23 사용자) — 글꼴 바꾸기 단추("가가")는 웹에서 뺌.
+   아이콘(Font Awesome <i>)은 제 글꼴 그대로. 주아는 한 굵기뿐이라 굵게 지정을 보통으로 맞춤 */
+:global(html:not(.ddb-app-mode)) .panel {
+    --chat-font-body: var(--font-jua), var(--font-wanted-sans), sans-serif;
+    --chat-font-accent: var(--chat-font-body);
+}
+:global(html:not(.ddb-app-mode)) .panel :not(i):not([class*="fa-"]) { font-family: var(--font-jua), var(--font-wanted-sans), sans-serif !important; font-weight: 400 !important; }
+:global(html:not(.ddb-app-mode)) .messageBubble,
+:global(html:not(.ddb-app-mode)) .panel[data-chat-font-mode="readable"] .messageBubble { font-size: 15.5px; line-height: 1.7; }
+:global(html:not(.ddb-app-mode)) .input { font-size: 15.5px; }
+:global(html:not(.ddb-app-mode)) .panel :global([data-chat-font-toggle]) { display: none; }
+
+/* 새 대화 · 닫기 단추와 입력 칸 — 말풍선과 같은 크레파스 결(크림 바탕 + 파스텔 테, 그림자 덩어리 없이, 2026-10-23 사용자) */
+:global(html:not(.ddb-app-mode)) .headerIconButton {
+    background: #fffaf1;
+    box-shadow: 0 0 0 2.5px #f3d9b8;
+    color: #b08a5a;
+}
+:global(html:not(.ddb-app-mode)) .headerIconButton:hover,
+:global(html:not(.ddb-app-mode)) .headerIconButton:focus-visible { background: #fff3f6; box-shadow: 0 0 0 2.5px #f7a8bf; color: #d9577f; transform: none; }
+:global(html:not(.ddb-app-mode)) .input {
+    background: #fffaf1;
+    box-shadow: 0 0 0 2.5px #f3d9b8;
+    color: #5a4636;
+}
+:global(html:not(.ddb-app-mode)) .input::placeholder { color: #c4a888; }
+:global(html:not(.ddb-app-mode)) .input:focus { background: #ffffff; box-shadow: 0 0 0 2.5px #f7a8bf; }
+/* 개인정보 안내 — "처리 안내 ›" 는 문장과 섞이지 않게 따로 한 줄 */
+:global(html:not(.ddb-app-mode)) .privacyLine a { display: block; width: fit-content; margin-top: 2px; }
+:global(html:not(.ddb-app-mode)) .privacyLine a::after { content: " ›"; }
