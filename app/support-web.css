@@ -412,6 +412,17 @@ html:not(.ddb-app-mode) main[data-support-web] {
         box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), inset 0 -8px 14px rgb(0 0 0 / 4%), 0 14px 22px -14px rgb(15 23 42 / 40%);
     }
 
+    /* 이메일 · 전화 그림 = 사용자 크레파스 배지 그림(웹메일문의 · 웹전화문의 → web-cs-mail/phone-256.webp, 2026-10-23).
+       그림 자체가 동그란 배지라 흰 동그라미 · 글꼴 아이콘은 숨기고 그림만 */
+    & .cs-contact-icon:is(.cs-contact.is-mail *, .cs-contact.is-phone *) {
+        background: url("/images/ui/web-cs-mail-256.webp") center / contain no-repeat;
+        box-shadow: none;
+        filter: drop-shadow(0 10px 12px rgb(15 23 42 / 16%));
+    }
+
+    & .cs-contact.is-phone .cs-contact-icon { background-image: url("/images/ui/web-cs-phone-256.webp"); }
+    & .cs-contact-icon > i { visibility: hidden; }
+
     & .cs-contact > span.text-base {
         color: var(--dw-ink);
         font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
@@ -594,6 +605,18 @@ html:not(.ddb-app-mode) main[data-support-web] {
         font-size: 19px;
         box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%);
     }
+
+    /* 문의 전 확인 셋 그림 = 사용자 크레파스 그림(웹질문 · 웹주문배송 · 웹반품, 2026-10-23) — 글꼴 아이콘 숨김 */
+    & .cs-help-link > span:first-child:is([class]) {
+        background: center / contain no-repeat;
+        box-shadow: none;
+        filter: drop-shadow(0 6px 8px rgb(15 23 42 / 14%));
+    }
+
+    & .cs-help-link[href^="/faq"] > span:first-child { background-image: url("/images/ui/web-cs-faq-160.webp"); }
+    & .cs-help-link[href^="/mypage"] > span:first-child { background-image: url("/images/ui/web-cs-orders-160.webp"); }
+    & .cs-help-link[href^="/return"] > span:first-child { background-image: url("/images/ui/web-cs-refund-160.webp"); }
+    & .cs-help-link > span:first-child > i { visibility: hidden; }
 
     & .cs-help-link b {
         color: var(--dw-ink);
