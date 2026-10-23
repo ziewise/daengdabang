@@ -344,6 +344,57 @@ html:not(.ddb-app-mode) main[data-search-page] {
         font-weight: 400;
     }
 
+    /* 다른 판매처 카드(ExternalProductCard xc-*) — 둥근 흰 쿠션 · 민트 테 알약 "판매처에서 보기 ↗".
+       가격은 굵은 검은 글씨 그대로(댕다방 상품의 크레파스 가격과 일부러 구별) */
+    & .sr-external .xc-card {
+        border: 0;
+        border-radius: 24px;
+        background: #fff;
+        box-shadow: 0 0 0 1.5px #eef2ef, 0 14px 24px -18px rgb(15 23 42 / 30%);
+    }
+
+    & .sr-external .xc-card:hover { box-shadow: 0 0 0 2px #a8e0c6, 0 14px 24px -18px rgb(15 23 42 / 30%); }
+
+    & .sr-external .xc-photo {
+        margin: 8px 8px 0;
+        border-radius: 18px;
+        background: #f6faf8;
+    }
+
+    & .sr-external .xc-rank {
+        background: #fff;
+        color: #0f8a66;
+        box-shadow: 0 0 0 1.5px #a8e0c6;
+    }
+
+    & .sr-external .xc-seller { color: #475569; box-shadow: 0 0 0 1px rgb(100 116 139 / 15%); }
+    & .sr-external .xc-body { padding: 12px 14px 14px; }
+
+    & .sr-external .xc-status {
+        background: #fff6e3;
+        color: #b86a08;
+    }
+
+    & .sr-external .xc-brand { color: #0f8a66; }
+
+    & .sr-external .xc-title {
+        color: #1e293b;
+        font-weight: 700;
+    }
+
+    & .sr-external .xc-total { color: #0f8a66; }
+
+    & .sr-external .xc-go {
+        height: 42px;
+        flex-direction: row-reverse;
+        border-radius: 999px;
+        background: #fff;
+        color: #0f8a66;
+        box-shadow: 0 0 0 2px #a8e0c6;
+    }
+
+    & .sr-external .xc-go:hover { background: #e9f8f1; color: #0b6f52; }
+
     & .sr-external button[aria-label*="더 보기"] {
         border: 0;
         border-radius: 999px;

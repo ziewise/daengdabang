@@ -1,5 +1,10 @@
 "use client";
 
+/*
+ * ExternalProductCard — 다른 판매처 상품 카드(협업자 기능: 사진 · 판매처 · 가격 · 근거점수 · 판매처 링크)
+ * 2026-10-23: 웹 검색 결과 페이지에서 크레파스 결로 맞추려고 xc-* 이름표만 붙임(꾸밈은 app/search-web.css 의 .sr-external 안).
+ * 다른 곳(전체상품 · 앱)은 그대로. 내용 · 순위 · 링크 · 기록 동작 바꾸지 않음.
+ */
 import Link from "next/link";
 import { useState } from "react";
 import { type ExternalProductResult } from "@/lib/external-products";
@@ -64,12 +69,12 @@ export default function ExternalProductCard({ product, query = "", comparisonRan
     ].filter(Boolean).join(" · ");
 
     return (
-        <article className="group overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+        <article className="xc-card group overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
             <Link
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="relative flex aspect-square items-center justify-center overflow-hidden bg-[#f7f2e8]"
+                className="xc-photo relative flex aspect-square items-center justify-center overflow-hidden bg-[#f7f2e8]"
                 aria-label={`${product.title} ${locale === "en" ? "open seller" : "판매처 보기"}`}
                 onClick={trackDirectClick}
             >
@@ -95,11 +100,11 @@ export default function ExternalProductCard({ product, query = "", comparisonRan
                         className="h-full w-full object-cover transition duration-150 group-hover:scale-[1.03]"
                     />
                 )}
-                <div className="absolute bottom-2 right-2 rounded-full bg-white/95 px-2 py-0.5 text-[10px] font-black text-neutral-700 shadow-sm">
+                <div className="xc-seller absolute bottom-2 right-2 rounded-full bg-white/95 px-2 py-0.5 text-[10px] font-black text-neutral-700 shadow-sm">
                     {product.sellerName || product.sourceName}
                 </div>
                 {typeof comparisonRank === "number" && typeof comparisonScore === "number" && (
-                    <div className="absolute left-2 top-2 rounded-full bg-emerald-700 px-2.5 py-1 text-[10px] font-black text-white shadow-sm">
+                    <div className="xc-rank absolute left-2 top-2 rounded-full bg-emerald-700 px-2.5 py-1 text-[10px] font-black text-white shadow-sm">
                         {locale === "en"
                             ? `Evidence score ${comparisonTied ? "joint " : ""}#${comparisonRank} · ${comparisonScore}`
                             : `근거점수 ${comparisonTied ? "공동 " : ""}${comparisonRank}위 · ${comparisonScore}점`}
@@ -107,20 +112,20 @@ export default function ExternalProductCard({ product, query = "", comparisonRan
                 )}
             </Link>
 
-            <div className="p-3">
-                <span className={`inline-flex rounded-full px-2 py-1 text-[10px] font-black ${badgeTone}`}>
+            <div className="xc-body p-3">
+                <span className={`xc-status inline-flex rounded-full px-2 py-1 text-[10px] font-black ${badgeTone}`}>
                     {statusLabel(product, locale)}
                 </span>
                 <div className="mt-2 flex min-w-0 items-center gap-1.5 text-[11px] font-black">
-                    <span className="truncate uppercase text-emerald-700">{product.brand}</span>
+                    <span className="xc-brand truncate uppercase text-emerald-700">{product.brand}</span>
                     <span className="h-1 w-1 shrink-0 rounded-full bg-neutral-300" />
                     <span className="truncate text-neutral-500">{product.sourceName}</span>
                 </div>
-                <h3 className="mt-2 min-h-[2.5rem] text-sm font-extrabold leading-5 text-neutral-950 line-clamp-2">
+                <h3 className="xc-title mt-2 min-h-[2.5rem] text-sm font-extrabold leading-5 text-neutral-950 line-clamp-2">
                     {product.title}
                 </h3>
                 <div className="mt-2">
-                    <p className={`${productPrice !== null ? "text-xl text-neutral-950" : "text-base text-neutral-700"} font-black leading-tight line-clamp-2`}>
+                    <p className={`xc-price ${productPrice !== null ? "text-xl text-neutral-950" : "text-base text-neutral-700"} font-black leading-tight line-clamp-2`}>
                         {productPrice !== null ? formatPrice(productPrice) : product.priceText}
                     </p>
                     {quantitySummary && (
@@ -142,7 +147,7 @@ export default function ExternalProductCard({ product, query = "", comparisonRan
                         <p className="mt-1 truncate text-[11px] font-bold text-neutral-500">{priceNote}</p>
                     )}
                     {productPrice !== null && payableTotal !== null && payableTotal !== productPrice && (
-                        <p className="mt-1 text-[11px] font-black text-emerald-700">
+                        <p className="xc-total mt-1 text-[11px] font-black text-emerald-700">
                             {locale === "en" ? "Estimated checkout" : "예상 결제금액"} {formatPrice(payableTotal)}
                         </p>
                     )}
@@ -160,7 +165,7 @@ export default function ExternalProductCard({ product, query = "", comparisonRan
                     href={href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-3 flex h-11 w-full items-center justify-center gap-2 rounded-md bg-neutral-950 text-sm font-black text-white transition hover:bg-emerald-700"
+                    className="xc-go mt-3 flex h-11 w-full items-center justify-center gap-2 rounded-md bg-neutral-950 text-sm font-black text-white transition hover:bg-emerald-700"
                     onClick={trackDirectClick}
                 >
                     <i className="fa-solid fa-arrow-up-right-from-square text-xs" />
