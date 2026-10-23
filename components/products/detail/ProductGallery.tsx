@@ -37,7 +37,7 @@ function ProductGalleryImages({ product: p, selectedColor }: Props) {
         <div className="space-y-3">
             <div
                 data-product-gallery
-                className={`relative aspect-square overflow-hidden rounded-lg border border-neutral-200 shadow-sm max-md:rounded-none max-md:border-x-0 max-md:border-t-0 ${activeImage ? "bg-white" : bestStyles[`ph${p.ph}`]}`}
+                className={`pd-main relative aspect-square overflow-hidden rounded-lg border border-neutral-200 shadow-sm max-md:rounded-none max-md:border-x-0 max-md:border-t-0 ${activeImage ? "bg-white" : bestStyles[`ph${p.ph}`]}`}
                 onMouseEnter={activate}
                 onMouseLeave={deactivate}
                 onFocus={activate}
@@ -81,7 +81,7 @@ function ProductGalleryImages({ product: p, selectedColor }: Props) {
             </div>
 
             {images.length > 0 && (images.length > 1 || selectedColor) && (
-                <div className="flex gap-2 overflow-x-auto pb-1">
+                <div className="pd-thumbs flex gap-2 overflow-x-auto pb-1">
                     {images.map((img, index) => {
                         const active = activeIdx === null ? !activeColor && index === 0 : index === activeIdx;
                         return (
@@ -92,7 +92,7 @@ function ProductGalleryImages({ product: p, selectedColor }: Props) {
                                 onMouseEnter={() => { previewColor(); setActiveIdx(index); }}
                                 aria-label={`상품 이미지 ${index + 1}`}
                                 aria-current={active}
-                                className={`relative h-16 w-16 shrink-0 overflow-hidden rounded-md bg-white transition md:h-20 md:w-20 ${
+                                className={`pd-thumb relative h-16 w-16 shrink-0 overflow-hidden rounded-md bg-white transition md:h-20 md:w-20 ${
                                     active
                                         ? "ring-2 ring-indigo-600 ring-offset-2"
                                         : "opacity-70 ring-1 ring-neutral-200 hover:opacity-100 hover:ring-indigo-300"

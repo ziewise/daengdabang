@@ -1,6 +1,11 @@
 "use client";
 
+/*
+ * ProductDetailClient — 상품 상세(사진 · 구매 정보 · 탭 · 관련 상품)
+ * 2026-10-24 웹 크레파스 결: pd-* 이름표만 붙임(꾸밈은 app/product-detail-web.css, 웹 html:not(.ddb-app-mode) 상품 상세 안에서만). 앱 · 동작 그대로.
+ */
 import { useEffect, useState } from "react";
+import "../../../product-detail-web.css";
 import type { CatalogProduct } from "@/lib/catalog";
 import { trackStorefrontEvent } from "@/lib/storefront-analytics";
 import ProductGallery from "@/components/products/detail/ProductGallery";

@@ -52,7 +52,7 @@ export default function ProductShareActions({ product }: { product: CatalogProdu
         "flex h-10 w-10 items-center justify-center rounded-md border border-neutral-200 bg-white text-neutral-600 transition hover:border-indigo-300 hover:text-indigo-700";
 
     return (
-        <div className="flex shrink-0 items-center gap-2">
+        <div className="pd-share flex shrink-0 items-center gap-2">
             {/* 링크 복사 — 복사 직후 체크(초록)로 잠깐 전환 */}
             <button
                 type="button"

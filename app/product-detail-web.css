@@ -1,0 +1,411 @@
+/*
+ * product-detail-web.css — 웹 상품 상세(/product/…) 크레파스 꾸밈 · 2026-10-24
+ * ---------------------------------------------------------------------
+ * 사이트 크레파스 결(장바구니 · 주문서와 같음):
+ *  - 사진: 흰 쿠션 큰 사진(둥근 모서리) · 작은 사진은 둥근 쿠션(지금 사진 분홍 테)
+ *  - 구매 정보: 세 색 손글씨 브랜드 · 주아 상품명 · 크레파스 가격 · 둥근 공유 단추 · 혜택(적립 · 코인 · 배송)은 크림 쿠션 판 ·
+ *    재고 안내 노랑 메모 · 색상 칩은 흰 쿠션 판(고른 색 분홍 테) · 입혀보기는 연보라 쿠션 단추 ·
+ *    찜(흰 동그라미) · 장바구니 담기(흰 알약) · 주 버튼(분홍 알약)
+ *  - 아래 탭 줄: 흰 알약 탭(지금 탭 분홍) · 구역 제목 주아 + 세 색 밑줄 · 상세 · 후기 · 배송/반품 판은 흰 쿠션
+ *  - 관련 상품: 영문 손글씨 + 주아 제목 · 하단 따라오는 바: 흰 쿠션 띠 + 알약 단추
+ * 범위: 웹(html:not(.ddb-app-mode)) · main[data-product-detail-content] 안에서만(앱은 appShopSkin 상세 꾸밈 그대로).
+ * 담기 · 구매 · 찜 · 공유 · 입혀보기 · 탭 이동 동작 그대로, 모양만.
+ */
+
+html:not(.ddb-app-mode) main[data-product-detail-content] {
+    --pd-cushion: inset 0 3px 0 rgb(255 255 255 / 90%), inset 0 -10px 18px rgb(0 0 0 / 3%), 0 22px 36px -24px rgb(15 23 42 / 32%);
+    --pd-underline: repeating-linear-gradient(94deg, rgb(8 145 178 / 62%) 0 14px, rgb(239 71 111 / 58%) 14px 28px, rgb(245 158 11 / 62%) 28px 42px);
+    --pd-crayon-ink: repeating-linear-gradient(172deg, #07849e 0 5px, #ef476f 5px 10px, #e98708 10px 15px);
+
+    /* ── 사진 ── */
+    & .pd-main {
+        border: 0;
+        border-radius: 36px;
+        box-shadow: var(--pd-cushion);
+    }
+
+    & .pd-thumbs { gap: 10px; padding: 6px 4px 8px; }
+
+    & .pd-thumb {
+        border-radius: 18px;
+        box-shadow: 0 0 0 1.5px #efe7dc;
+        --tw-ring-shadow: 0 0 #0000;
+        --tw-ring-offset-shadow: 0 0 #0000;
+    }
+
+    & .pd-thumb[aria-current="true"] { opacity: 1; box-shadow: 0 0 0 2.5px #e9789a, 0 8px 14px -10px rgb(200 80 120 / 60%); }
+
+    /* ── 구매 정보 ── */
+    & .pd-crumb { gap: 6px; }
+    & .pd-crumb a { padding: 4px 10px; border-radius: 999px; background: #fff; box-shadow: 0 0 0 1px rgb(100 116 139 / 12%); }
+    & .pd-crumb a:hover { color: #d0436d; }
+    & .pd-crumb i { color: #cbd5e1; }
+
+    & .pd-brand {
+        display: inline-block;
+        background-image: var(--pd-crayon-ink);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: #07849e;
+        font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+        font-size: 14px;
+        letter-spacing: 0.12em;
+        -webkit-text-fill-color: transparent;
+    }
+
+    & .pd-name {
+        color: #1e293b;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: clamp(26px, 2.4vw, 34px);
+        font-weight: 400;
+        line-height: 1.3;
+        word-break: keep-all;
+    }
+
+    & .pd-review-line { padding: 8px 14px; border-radius: 18px; background: #fff; box-shadow: 0 0 0 1px rgb(100 116 139 / 12%); }
+
+    /* 공유 단추 — 흰 동그라미 */
+    & .pd-share button {
+        width: 44px;
+        height: 44px;
+        border: 0;
+        border-radius: 999px;
+        background: #fff;
+        color: #64748b;
+        box-shadow: 0 0 0 1.5px #efe7dc, 0 8px 14px -12px rgb(15 23 42 / 35%);
+    }
+
+    & .pd-share button:hover { color: #d0436d; box-shadow: 0 0 0 2px #f7a8bf; }
+
+    & .pd-divider { display: none; }
+
+    /* 혜택(적립금 · 코인 · 배송) — 크림 쿠션 판 */
+    & .pd-benefits {
+        padding: 18px 20px;
+        border-radius: 26px;
+        background: #fffaf1;
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%), 0 0 0 1.5px #f6ead8;
+    }
+
+    & .pd-benefits > li + li { margin-top: 12px; padding-top: 12px; border-top: 1.5px solid #f3e7d4; }
+    & .pd-benefits i.fa-truck { color: #12a17a; }
+    & .pd-benefits a, & .pd-benefits button { color: #d0436d; }
+
+    /* 재고 · 본사 요청 안내 — 노랑 메모 */
+    & .pd-stock { border: 0; border-radius: 22px; background: #fff6e3; }
+
+    /* 색상 칩 판 — 흰 쿠션, 고른 색 분홍 테 */
+    & .pd-colors {
+        padding: 16px 18px;
+        border: 0;
+        border-radius: 26px;
+        background: #fff;
+        box-shadow: 0 0 0 1.5px #efe7dc;
+    }
+
+    & .pd-chip {
+        width: 48px;
+        height: 48px;
+        --tw-ring-shadow: 0 0 #0000;
+        --tw-ring-offset-shadow: 0 0 #0000;
+        box-shadow: 0 0 0 1.5px #e7dccb;
+    }
+
+    & .pd-chip[aria-current="true"] { box-shadow: 0 0 0 3px #fff, 0 0 0 5.5px #e9789a; }
+
+    /* 입혀보기 — 연보라 쿠션 단추(그림 · 문구 · 동작 그대로) */
+    & .pd-tryon {
+        padding: 12px 20px 12px 12px;
+        border-radius: 26px;
+        background: #f3f0fe;
+        color: #4c3a9a;
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%), 0 0 0 2px #cfc3f5, 0 12px 20px -14px rgb(124 98 214 / 55%);
+    }
+
+    & .pd-tryon > span:first-child { display: none; }
+    & .pd-tryon > span:nth-child(2) { border-radius: 16px; box-shadow: 0 0 0 2px #fff; }
+    & .pd-tryon > span:nth-child(3) > span:first-child { color: #7c62d6; }
+    & .pd-tryon > span:nth-child(3) > span:last-child { font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 17px; font-weight: 400; }
+    & .pd-tryon > i { color: #7c62d6; }
+
+    & .pd-prelaunch { padding: 10px 16px; border-radius: 16px; background: #e9f4fb; color: #0e5f73; font-weight: 700; }
+
+    /* 찜 · 장바구니 · 주 버튼 */
+    & .pd-actions { grid-template-columns: 58px 1fr 1fr; gap: 10px; }
+
+    & .pd-wish {
+        height: 58px;
+        border: 0;
+        border-radius: 999px;
+        background: #fff;
+        box-shadow: 0 0 0 1.5px #efe7dc, 0 8px 14px -12px rgb(15 23 42 / 35%);
+    }
+
+    & .pd-wish:hover, & .pd-wish[class*="border-rose-500"] { background: #ffeef3; color: #e2557a; box-shadow: 0 0 0 2px #f7a8bf; }
+
+    & .pd-cart {
+        height: 58px;
+        border: 0;
+        border-radius: 999px;
+        background: #fff;
+        color: #334155;
+        font-size: 16px;
+        box-shadow: 0 0 0 2px #f3d9b8, 0 8px 14px -12px rgb(15 23 42 / 35%);
+    }
+
+    & .pd-cart:hover:not(:disabled) { color: #d0436d; box-shadow: 0 0 0 2px #f7a8bf; }
+
+    & .pd-buy {
+        height: 58px;
+        border-radius: 999px;
+        background: #e9789a;
+        font-size: 16px;
+        box-shadow: 0 10px 20px -12px rgb(200 80 120 / 70%);
+    }
+
+    & .pd-buy:hover { background: #e26690; }
+
+    /* 따라오는 하단 바 — 흰 쿠션 띠 · 둥근 사진 · 알약 단추 */
+    & .pd-bar {
+        border-top: 0;
+        background: rgb(255 255 255 / 92%);
+        box-shadow: 0 -12px 28px -18px rgb(15 23 42 / 30%);
+    }
+
+    & .pd-bar-thumb { border: 0; border-radius: 14px; }
+    & .pd-bar-name { font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 15px; font-weight: 400; }
+    & .pd-bar-cart { border: 0; border-radius: 999px; box-shadow: 0 0 0 2px #f3d9b8; }
+    & .pd-bar-buy { border-radius: 999px; background: #e9789a; }
+    & .pd-bar-buy:hover { background: #e26690; }
+
+    /* ── 탭 줄 · 구역 ── */
+    & .pd-tabs {
+        border-top: 0;
+        border-bottom: 0;
+        background: rgb(248 250 252 / 92%);
+    }
+
+    & .pd-tabs > div { gap: 8px; padding: 10px 0; }
+
+    & .pd-tab {
+        padding: 10px 20px;
+        border-radius: 999px;
+        background: #fff;
+        box-shadow: 0 0 0 1.5px rgb(100 116 139 / 12%);
+    }
+
+    & .pd-tab[aria-current="true"] { background: #ffeef3; color: #d0436d; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%), 0 0 0 2px #f7a8bf; }
+    & .pd-tab > span.absolute { display: none; }
+    & .pd-tab > span:not(.absolute) { background: #fff; }
+
+    & .pd-sec-head { margin-bottom: 22px; }
+
+    & .pd-kicker {
+        display: block;
+        width: fit-content;
+        margin: 0 0 6px;
+        background-image: var(--pd-crayon-ink);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: #07849e;
+        font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        -webkit-text-fill-color: transparent;
+    }
+
+    & .pd-sec-title {
+        position: relative;
+        display: inline-block;
+        color: #1e293b;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 26px;
+        font-weight: 400;
+        isolation: isolate;
+    }
+
+    & .pd-sec-title::after {
+        content: "";
+        position: absolute;
+        right: 1%;
+        bottom: -0.1em;
+        left: 0;
+        z-index: -1;
+        height: 0.22em;
+        border-radius: 999px 70% 999px 60%;
+        background: var(--pd-underline);
+    }
+
+    /* 상세 설명 판 · 후기 판 · 배송/반품 판 — 흰 쿠션(안의 상세 그림 · 글은 그대로) */
+    & [data-product-detail-copy] { border-radius: 32px; box-shadow: var(--pd-cushion); }
+
+    & #delivery-return-policy {
+        border: 0;
+        border-radius: 32px;
+        box-shadow: var(--pd-cushion);
+    }
+
+    & #delivery-return-policy > h3 { color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 22px; font-weight: 400; }
+    & #delivery-return-policy h3:not(:first-child) { font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-weight: 400; }
+    & #delivery-return-policy section { border-top-color: #f1e9de; }
+    & #delivery-return-policy dt { color: #0f8a66; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-weight: 400; }
+
+    & [data-review-panel] > p:first-child { border-radius: 20px; background: #fffaf1; }
+    & [data-review-panel] section { border: 0; border-radius: 28px; box-shadow: var(--pd-cushion); }
+    & [data-review-panel] section[aria-label*="AI"], & [data-review-panel] section[aria-label*="요약"] { background: #f3f0fe; }
+    & [data-review-panel] h3 { font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-weight: 400; }
+    & [data-review-panel] article { border-radius: 20px; }
+    & [data-review-panel] .bg-indigo-500 { background: linear-gradient(90deg, #f7a8bf, #ffd48a 55%, #9cc9f0); }
+    & [data-review-panel] button { border-radius: 999px; }
+    /* 후기 없음 · 다른 시즌 후기 · 상세 준비 중 안내 — 점선 대신 흰 쿠션 */
+    & :is(#tab-review, #tab-detail) [class*="border-dashed"],
+    & #tab-review aside {
+        border: 0;
+        border-radius: 26px;
+        background: #fff;
+        box-shadow: var(--pd-cushion);
+    }
+
+    /* 상품 문의(Q&A) — 흰 쿠션 판 · 연보라 동그라미 · 분홍 "챗봇에 문의" 알약(같은 동작) */
+    & #tab-qna > div {
+        border: 0;
+        border-radius: 32px;
+        box-shadow: var(--pd-cushion);
+    }
+
+    & #tab-qna > div > div:first-child { width: 64px; height: 64px; background: #f3f0fe; color: #7c62d6; }
+    & #tab-qna h3 { font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 20px; font-weight: 400; }
+
+    & #tab-qna [class*="bg-neutral-950"] {
+        height: 48px;
+        padding: 0 24px;
+        border-radius: 999px;
+        background: #e9789a;
+        box-shadow: 0 10px 18px -12px rgb(200 80 120 / 70%);
+    }
+
+    & #tab-qna [class*="bg-neutral-950"]:hover { background: #e26690; }
+}
+
+/* ── 옵션 고르기 창(장바구니 담기 · 바로 구매, OptionSheet) — 크림 종이 창 · 주아 제목 · 크림 입력칸 · 분홍 알약(동작 그대로) ── */
+html:not(.ddb-app-mode) main[data-product-detail-content] [data-purchase-option-sheet] {
+    background: #fffaf1;
+    box-shadow: 0 -20px 50px -20px rgb(120 80 30 / 40%);
+
+    /* 머리 — 주아 제목 + 세 색 밑줄 · 크림 닫기 동그라미 */
+    & > div:first-child { border-bottom: 0; padding-top: 22px; }
+
+    & > div:first-child > h2 {
+        position: relative;
+        color: #1e293b;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 22px;
+        font-weight: 400;
+        isolation: isolate;
+    }
+
+    & > div:first-child > h2::after {
+        content: "";
+        position: absolute;
+        right: 1%;
+        bottom: -0.1em;
+        left: 0;
+        z-index: -1;
+        height: 0.22em;
+        border-radius: 999px 70% 999px 60%;
+        background: repeating-linear-gradient(94deg, rgb(8 145 178 / 62%) 0 14px, rgb(239 71 111 / 58%) 14px 28px, rgb(245 158 11 / 62%) 28px 42px);
+    }
+
+    & > div:first-child > button {
+        display: grid;
+        width: 40px;
+        height: 40px;
+        place-items: center;
+        border-radius: 999px;
+        background: #fff;
+        color: #c08a4a;
+        box-shadow: 0 0 0 1.5px #f3d9b8;
+    }
+
+    /* 사진 · 이름 */
+    & .relative.h-24.w-24 { border: 0; border-radius: 22px; box-shadow: 0 0 0 1.5px #efe7dc; }
+    & .min-w-0.flex-1 > p:first-child { color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 16px; font-weight: 400; }
+
+    /* 옵션 이름 · 색상 칩(고른 색 분홍 테) */
+    & :is(p, label)[class*="text-xs"][class*="font-black"] { color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 14px; font-weight: 400; }
+
+    & button[aria-current] { --tw-ring-shadow: 0 0 #0000; --tw-ring-offset-shadow: 0 0 #0000; box-shadow: 0 0 0 1.5px #e7dccb; }
+    & button[aria-current="true"] { box-shadow: 0 0 0 2.5px #fff, 0 0 0 4.5px #e9789a; }
+
+    /* 사이즈 고르기 · 수량 · 추가 — 크림 칸 · 알약 */
+    & select {
+        height: 48px;
+        border: 0;
+        border-radius: 999px;
+        background: #fff;
+        padding: 0 18px;
+        box-shadow: 0 0 0 2px #f3e3cc;
+    }
+
+    & select:focus { box-shadow: 0 0 0 2.5px #f7a8bf, 0 0 0 7px rgb(247 168 191 / 22%); }
+
+    & .inline-flex.h-11 { height: 46px; border: 0; border-radius: 999px; padding: 0 4px; box-shadow: 0 0 0 1.5px #f1e3cc; }
+    & .inline-flex.h-11 > button { width: 36px; height: 36px; border-radius: 999px; background: #ffeef3; color: #d0436d; }
+
+    & button.h-11.flex-1 {
+        height: 46px;
+        border: 0;
+        border-radius: 999px;
+        background: #fff;
+        color: #334155;
+        box-shadow: 0 0 0 2px #f3d9b8;
+    }
+
+    & ul > li { border-radius: 16px; background: #fff; box-shadow: 0 0 0 1.5px #f1e9de; }
+
+    /* 아래 합계 · 담기 */
+    & > div:last-child { border-top: 0; background: #fff; border-radius: 26px 26px 0 0; box-shadow: 0 -10px 24px -18px rgb(120 80 30 / 35%); }
+
+    & > div:last-child b[class*="text-2xl"] {
+        background: linear-gradient(102deg, #0891b2 0 31%, #ef476f 38% 67%, #f59e0b 75% 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+        font-size: 28px;
+        -webkit-text-fill-color: transparent;
+    }
+
+    & > div:last-child [class*="bg-indigo-50"] { border-radius: 16px; background: #f3f0fe; }
+
+    & > div:last-child button.h-12 {
+        height: 54px;
+        border-radius: 999px;
+        background: #e9789a;
+        box-shadow: 0 10px 18px -12px rgb(200 80 120 / 70%);
+    }
+
+    & > div:last-child button.h-12:hover:not(:disabled) { background: #e26690; }
+    & > div:last-child button.h-12:disabled { background: #f3c7d4; box-shadow: none; }
+}
+
+@media (min-width: 640px) {
+    html:not(.ddb-app-mode) main[data-product-detail-content] [data-purchase-option-sheet] { border-radius: 32px 0 0 32px; }
+}
+
+@media (max-width: 639px) {
+    html:not(.ddb-app-mode) main[data-product-detail-content] [data-purchase-option-sheet] { border-radius: 30px 30px 0 0; }
+}
+
+/* 휴대폰 — 사진은 화면 폭 그대로(둥근 모서리 없이), 버튼 높이 조금 낮게 */
+@media (max-width: 767px) {
+    html:not(.ddb-app-mode) main[data-product-detail-content] {
+        & .pd-main { border-radius: 0 0 32px 32px; }
+        & .pd-name { font-size: 24px; }
+        & .pd-actions { grid-template-columns: 52px 1fr 1fr; gap: 8px; }
+        & :is(.pd-wish, .pd-cart, .pd-buy) { height: 52px; font-size: 15px; }
+        & .pd-tabs > div { overflow-x: auto; }
+        & .pd-tab { flex: none; padding: 9px 16px; }
+        & .pd-sec-title { font-size: 22px; }
+    }
+}

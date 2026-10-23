@@ -41,7 +41,7 @@ export default function ProductTabs({ product: p }: Props) {
                 </section>
             )}
             <nav
-                className="sticky top-[var(--header-height)] z-20 -mx-4 border-y border-neutral-200 bg-background/95 px-4 backdrop-blur md:-mx-6 md:px-6"
+                className="pd-tabs sticky top-[var(--header-height)] z-20 -mx-4 border-y border-neutral-200 bg-background/95 px-4 backdrop-blur md:-mx-6 md:px-6"
                 aria-label={t("detailInfo")}
             >
                 <div className="mx-auto flex max-w-[1280px] gap-1">
@@ -51,7 +51,7 @@ export default function ProductTabs({ product: p }: Props) {
                             href={`#tab-${section.key}`}
                             onClick={() => setActive(section.key)}
                             aria-current={active === section.key}
-                            className={`relative px-4 py-4 text-sm font-black transition md:px-6 ${
+                            className={`pd-tab relative px-4 py-4 text-sm font-black transition md:px-6 ${
                                 active === section.key ? "text-neutral-950" : "text-neutral-500 hover:text-neutral-800"
                             }`}
                         >
@@ -95,8 +95,8 @@ export default function ProductTabs({ product: p }: Props) {
 
 function SectionTitle({ title, badge }: { title: string; badge?: string }) {
     return (
-        <header className="mb-5 flex items-baseline gap-2">
-            <h2 className="text-xl font-black tracking-tight text-neutral-950 md:text-2xl">{title}</h2>
+        <header className="pd-sec-head mb-5 flex items-baseline gap-2">
+            <h2 className="pd-sec-title text-xl font-black tracking-tight text-neutral-950 md:text-2xl">{title}</h2>
             {badge && <span className="text-sm font-bold text-neutral-400">{badge}</span>}
         </header>
     );

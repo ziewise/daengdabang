@@ -123,8 +123,9 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
 
     return (
         <>
-            <div className="space-y-6">
-                <nav className="flex flex-wrap items-center gap-1.5 text-xs font-bold text-neutral-500">
+            {/* 2026-10-24 웹 크레파스 결: pd-* 이름표만 붙임(꾸밈은 app/product-detail-web.css, 웹 html:not(.ddb-app-mode) 상품 상세 안에서만). 앱 · 동작 그대로. */}
+            <div className="pd-info space-y-6">
+                <nav className="pd-crumb flex flex-wrap items-center gap-1.5 text-xs font-bold text-neutral-500">
                     <Link href="/" className="hover:text-indigo-600">{t("home")}</Link>
                     <i className="fa-solid fa-chevron-right text-[8px]" />
                     <Link href={`/category/${p.category}`} className="hover:text-indigo-600">
@@ -137,10 +138,10 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
                 </nav>
 
                 <div>
-                    <p className="text-xs font-black uppercase tracking-[0.18em] text-indigo-600">
+                    <p className="pd-brand text-xs font-black uppercase tracking-[0.18em] text-indigo-600">
                         {p.brandEn || p.brandKo}
                     </p>
-                    <h1 className="mt-2 text-2xl font-black leading-tight text-neutral-950 md:text-3xl">
+                    <h1 className="pd-name mt-2 text-2xl font-black leading-tight text-neutral-950 md:text-3xl">
                         {displayName}
                     </h1>
                     {(bestRank !== null || isNew) && (
@@ -160,7 +161,7 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
                 </div>
 
                 {(p.externalReviewCount ?? 0) > 0 && (
-                    <div className="flex flex-wrap items-center gap-2 text-sm">
+                    <div className="pd-review-line flex flex-wrap items-center gap-2 text-sm">
                         <span className="text-xs text-neutral-500">{locale === "en" ? "External store reviews" : "외부 판매점 후기"}</span>
                         <i className="fa-solid fa-star text-amber-400" />
                         <span className="font-black">{p.externalReviewAverage?.toFixed(1) ?? '—'}</span>
@@ -189,7 +190,7 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
                 )}
 
                 {/* 가격 라인 */}
-                <div className="flex flex-wrap items-end justify-between gap-3">
+                <div className="pd-price-row flex flex-wrap items-end justify-between gap-3">
                     <div>
                         {p.discountRate > 0 && p.originalPrice && (
                             <div className="mb-1 flex items-center gap-2">
@@ -212,9 +213,9 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
                     <ProductShareActions product={p} />
                 </div>
 
-                <div className="h-px bg-neutral-200" />
+                <div className="pd-divider h-px bg-neutral-200" />
 
-                <ul className="space-y-2 text-sm text-neutral-700">
+                <ul className="pd-benefits space-y-2 text-sm text-neutral-700">
                     <li
                         className="flex flex-wrap items-center gap-x-3 gap-y-2"
                         data-daenglab-coin-estimate={daengLabCoins}
@@ -266,7 +267,7 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
 
                 <PurchaseEvidenceCard product={p} />
                 {(purchaseState.tracked || !purchaseState.purchasable) && (
-                    <div data-inventory-state={purchaseState.state} className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm">
+                    <div data-inventory-state={purchaseState.state} className="pd-stock rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm">
                         <p className="font-bold text-amber-950">{purchaseStateLabel(purchaseState, locale) || (locale === "en" ? "Availability varies by option." : "옵션별 판매 상태를 선택창에서 확인해 주세요.")}</p>
                         {purchaseState.sourceDate && <p className="mt-1 text-xs text-amber-800">{p.supplierCatalogSource === "jsk_approved_account" ? (locale === "en" ? "Supplier checked" : "본사 확인일") : (locale === "en" ? "Inventory sheet dated" : "재고표 기준일")}: {purchaseState.sourceDate}</p>}
                         {!purchaseState.purchasable && <button type="button" onClick={() => setSheetMode("cart")} className="mt-2 text-xs font-black underline">{locale === "en" ? "View option status" : "옵션별 재고 보기"}</button>}
@@ -289,7 +290,7 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
                         onClick={onTryOn}
                         data-pet-guide-target="try-on"
                         aria-label={locale === "en" ? "Preview this product on my dog" : "우리 아이에게 이 상품 입혀보기"}
-                        className="group relative inline-flex w-fit max-w-full items-center gap-3 overflow-hidden rounded-xl bg-gradient-to-r from-aurora-blue to-aurora-indigo px-4 py-3 text-left text-white shadow-[0_12px_28px_-12px_rgba(67,56,202,0.85)] transition duration-300 hover:-translate-y-0.5 hover:opacity-95 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-indigo-300 active:translate-y-0 motion-reduce:transform-none motion-reduce:transition-none"
+                        className="pd-tryon group relative inline-flex w-fit max-w-full items-center gap-3 overflow-hidden rounded-xl bg-gradient-to-r from-aurora-blue to-aurora-indigo px-4 py-3 text-left text-white shadow-[0_12px_28px_-12px_rgba(67,56,202,0.85)] transition duration-300 hover:-translate-y-0.5 hover:opacity-95 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-indigo-300 active:translate-y-0 motion-reduce:transform-none motion-reduce:transition-none"
                     >
                         <span
                             aria-hidden="true"
@@ -311,18 +312,18 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
                     </button>
                 )}
 
-                <p data-checkout-contract="prelaunch" className="text-xs font-medium leading-5 text-neutral-500">
+                <p data-checkout-contract="prelaunch" className="pd-prelaunch text-xs font-medium leading-5 text-neutral-500">
                     {locale === "en"
                         ? "Enjoy a first look. Orders open with our official launch."
                         : "지금은 미리보기 기간이에요. 주문은 정식 오픈 후에 만나요."}
                 </p>
 
                 {/* 메인 액션 — 누르면 옵션 시트. 이 영역이 화면 밖이면 하단 바 노출 */}
-                <div ref={actionRef} data-pet-guide-target="product-actions" className="grid grid-cols-[56px_1fr_1fr] gap-2">
+                <div ref={actionRef} data-pet-guide-target="product-actions" className="pd-actions grid grid-cols-[56px_1fr_1fr] gap-2">
                     <button
                         type="button"
                         onClick={() => toggleWishlist(p.id)}
-                        className={`flex h-14 items-center justify-center rounded-md border-2 transition ${
+                        className={`pd-wish flex h-14 items-center justify-center rounded-md border-2 transition ${
                             wished
                                 ? "border-rose-500 bg-rose-50 text-rose-600"
                                 : "border-neutral-200 bg-white text-neutral-500 hover:border-rose-300 hover:text-rose-600"
@@ -336,7 +337,7 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
                         type="button"
                         onClick={() => setSheetMode("cart")}
                         disabled={!purchaseState.purchasable}
-                        className="flex h-14 min-w-0 items-center justify-center gap-1.5 rounded-md border-2 border-neutral-200 bg-white px-1 text-base font-black transition hover:border-indigo-500 hover:text-indigo-700"
+                        className="pd-cart flex h-14 min-w-0 items-center justify-center gap-1.5 rounded-md border-2 border-neutral-200 bg-white px-1 text-base font-black transition hover:border-indigo-500 hover:text-indigo-700"
                     >
                         <i className="fa-solid fa-bag-shopping shrink-0 text-sm" />
                         <span className="break-keep whitespace-normal text-center leading-tight">{t("addToCart")}</span>
@@ -344,7 +345,7 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
                     <button
                         type="button"
                         onClick={openPrelaunchNotice}
-                        className="flex h-14 min-w-0 items-center justify-center gap-1.5 rounded-md bg-indigo-600 px-1 text-base font-black text-white transition hover:bg-indigo-700"
+                        className="pd-buy flex h-14 min-w-0 items-center justify-center gap-1.5 rounded-md bg-indigo-600 px-1 text-base font-black text-white transition hover:bg-indigo-700"
                     >
                         <i className="fa-solid fa-credit-card shrink-0 text-sm" />
                         <span className="break-keep whitespace-normal text-center leading-tight">{locale === "en" ? "Opening soon" : "오픈 준비 중"}</span>
@@ -354,12 +355,12 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
 
             {/* 스크롤 추적 하단 고정 바 — 버튼을 누르면 옵션 시트가 열린다 */}
             <div
-                className={`fixed inset-x-0 bottom-0 z-40 border-t border-white/60 bg-white/65 shadow-[0_-4px_16px_rgba(0,0,0,0.06)] backdrop-blur-xl transition-transform duration-300 ${
+                className={`pd-bar fixed inset-x-0 bottom-0 z-40 border-t border-white/60 bg-white/65 shadow-[0_-4px_16px_rgba(0,0,0,0.06)] backdrop-blur-xl transition-transform duration-300 ${
                     showBar ? "translate-y-0" : "pointer-events-none translate-y-full"
                 }`}
             >
                 <div className="mx-auto flex max-w-[1280px] items-center gap-3 px-4 py-2.5 md:px-6">
-                    <div className="relative hidden h-12 w-12 shrink-0 overflow-hidden rounded-md border border-neutral-200 bg-[#f7f2e8] sm:block">
+                    <div className="pd-bar-thumb relative hidden h-12 w-12 shrink-0 overflow-hidden rounded-md border border-neutral-200 bg-[#f7f2e8] sm:block">
                         {barImage ? (
                             <Image key={barImage} src={barImage} alt={displayName} fill sizes="48px" className="object-cover" />
                         ) : (
@@ -367,7 +368,7 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
                         )}
                     </div>
                     <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-black text-neutral-900">{displayName}</p>
+                        <p className="pd-bar-name truncate text-sm font-black text-neutral-900">{displayName}</p>
                         <div className="flex min-w-0 flex-col items-start gap-0.5 sm:flex-row sm:items-baseline sm:gap-1.5">
                             <span className={compactPriceBadgeClass}>
                                 {priceBadgeLabel}
@@ -379,7 +380,7 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
                         type="button"
                         onClick={() => setSheetMode("cart")}
                         disabled={!purchaseState.purchasable}
-                        className="h-11 shrink-0 rounded-md border-2 border-neutral-200 bg-white px-3 text-sm font-black text-neutral-800 transition hover:border-indigo-500 hover:text-indigo-700 sm:px-4"
+                        className="pd-bar-cart h-11 shrink-0 rounded-md border-2 border-neutral-200 bg-white px-3 text-sm font-black text-neutral-800 transition hover:border-indigo-500 hover:text-indigo-700 sm:px-4"
                     >
                         <i className="fa-solid fa-bag-shopping text-sm sm:mr-1.5" />
                         <span className="hidden sm:inline">{t("cart")}</span>
@@ -388,7 +389,7 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
                         type="button"
                         onClick={openPrelaunchNotice}
                         data-pet-guide-target="product-actions"
-                        className="h-11 shrink-0 rounded-md bg-indigo-600 px-4 text-sm font-black text-white transition hover:bg-indigo-700 sm:px-6"
+                        className="pd-bar-buy h-11 shrink-0 rounded-md bg-indigo-600 px-4 text-sm font-black text-white transition hover:bg-indigo-700 sm:px-6"
                     >
                         {locale === "en" ? "Opening soon" : "오픈 준비 중"}
                     </button>

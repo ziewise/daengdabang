@@ -28,9 +28,11 @@ export default function RelatedProducts({ product: p }: Props) {
     if (related.length === 0) return null;
 
     return (
-        <section className="mt-16 md:mt-20">
-            <header className="mb-5">
-                <h2 className="text-xl font-black tracking-tight text-neutral-950 md:text-2xl">
+        <section className="pd-related mt-16 md:mt-20">
+            <header className="pd-sec-head mb-5">
+                {/* 웹 전용 — 영문 손글씨 꼬리표 */}
+                <p className="hidden pd-kicker">YOU MAY ALSO LIKE</p>
+                <h2 className="pd-sec-title text-xl font-black tracking-tight text-neutral-950 md:text-2xl">
                     같이 보면 좋은 상품
                 </h2>
                 <p className="mt-1 text-sm font-bold text-neutral-500">

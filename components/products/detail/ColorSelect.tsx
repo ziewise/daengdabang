@@ -22,7 +22,7 @@ interface Props {
 export default function ColorSelect({ colors, colorIdx, onColorChange, className = "" }: Props) {
     if (colors.length === 0) return null;
     return (
-        <div data-pet-guide-target="color" className={`rounded-lg border border-neutral-200 bg-neutral-50 p-4 ${className}`}>
+        <div data-pet-guide-target="color" className={`pd-colors rounded-lg border border-neutral-200 bg-neutral-50 p-4 ${className}`}>
             <div className="flex flex-wrap gap-2">
                 {colors.map((c, i) => (
                     <button
@@ -32,7 +32,7 @@ export default function ColorSelect({ colors, colorIdx, onColorChange, className
                         aria-label={c.name}
                         aria-current={i === colorIdx}
                         title={c.name}
-                        className={`relative h-11 w-11 overflow-hidden rounded-full transition ${
+                        className={`pd-chip relative h-11 w-11 overflow-hidden rounded-full transition ${
                             i === colorIdx
                                 ? "ring-2 ring-indigo-600 ring-offset-2"
                                 : "ring-1 ring-neutral-300 hover:ring-indigo-300"
