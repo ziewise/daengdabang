@@ -3,7 +3,7 @@
  * ---------------------------------------------------------------------
  * 입력하면 카탈로그에서 즉시 매칭 결과 노출 (top 6).
  * 빈 입력 = 인기 검색어 + 최근 검색어.
- * 검색 결과 항목 클릭 OR submit 시 /products?q=... 로 이동.
+ * 검색 결과 항목 클릭 OR submit 시 웹은 /search/?q=...(검색 결과 페이지), 앱은 /products?q=... 로 이동.
  *
  * 2026-10-23 웹 크레파스 결: sm-* 이름표만 붙임(꾸밈은 ./search-modal-web.css, 웹 html:not(.ddb-app-mode) 에서만).
  * 앱은 appShopSkin 이 구조(> div:first-child 등)로 꾸미므로 요소 추가 · 순서 변경 없음. 검색 동작 · 문구 그대로.
@@ -23,6 +23,7 @@ import { PET_PRODUCT_RECOMMENDATION_REQUEST_EVENT } from "@/lib/pet-companion";
 import { useI18n } from "@/lib/i18n";
 import bestStyles from "@/components/main/best.module.css";
 import "./search-modal-web.css";
+import { searchHref } from "@/components/search/SearchParts";
 
 interface Props {
     open: boolean;
@@ -80,6 +81,11 @@ export default function SearchModal({ open, onClose, placeholder }: Props) {
         if (!t) return;
         searchRecent.add(t);
         onClose();
+        // 웹은 검색 결과 페이지(/search, 2026-10-23 사용자 결정), 앱은 지금처럼 상품 목록에서
+        if (!document.documentElement.classList.contains("ddb-app-mode")) {
+            router.push(searchHref(t));
+            return;
+        }
         router.push(`/products?q=${encodeURIComponent(t)}`);
     };
 

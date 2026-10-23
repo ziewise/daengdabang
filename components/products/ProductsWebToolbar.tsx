@@ -28,8 +28,8 @@ type SelectProps = {
     alignRight?: boolean;
 };
 
-/** 흰 알약 버튼 + 펼친 목록(크레파스 종이). 바깥 누름 · Esc · 고르면 닫힘, 위아래 화살표로 항목 이동 */
-function CrayonSelect({ label, value, options, placeholder, onChange, alignRight }: SelectProps) {
+/** 흰 알약 버튼 + 펼친 목록(크레파스 종이). 바깥 누름 · Esc · 고르면 닫힘, 위아래 화살표로 항목 이동 — 검색 결과 페이지(/search)도 같이 씀 */
+export function CrayonSelect({ label, value, options, placeholder, onChange, alignRight }: SelectProps) {
     const [open, setOpen] = useState(false);
     const rootRef = useRef<HTMLDivElement>(null);
     const listId = useId();

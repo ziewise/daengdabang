@@ -23,6 +23,7 @@ import DaengLabWordmark from "./DaengLabWordmark";
 import { useI18n } from "@/lib/i18n";
 import PwaInstallButton from "@/components/pwa/PwaInstallButton";
 import { Browser } from "@capacitor/browser";
+import { searchHref } from "@/components/search/SearchParts";
 
 interface Props {
     open: boolean;
@@ -37,7 +38,7 @@ export default function MobilePanel({ open, onClose }: Props) {
     const { t, menuLabel } = useI18n();
     const { isNativeApp, isReady: pwaReady, isStandalone } = usePwaInstall();
 
-    /** 검색 submit — /products?q=... 로 이동 + 패널 닫기 + 최근 검색어 등록 */
+    /** 검색 submit — 웹은 /search/?q=... 로 이동 + 패널 닫기 + 최근 검색어 등록 */
     const submitSearch = (e: React.FormEvent) => {
         e.preventDefault();
         const t = searchTerm.trim();
@@ -52,7 +53,8 @@ export default function MobilePanel({ open, onClose }: Props) {
             });
             return;
         }
-        router.push(`/products?q=${encodeURIComponent(t)}`);
+        // 웹 모바일 메뉴 검색 → 검색 결과 페이지(/search, 2026-10-23). 앱 안(isNativeApp)은 위 그대로
+        router.push(searchHref(t));
     };
 
     // 패널 열린 동안 body 스크롤 잠금 + Escape 키로 닫기
@@ -105,7 +107,7 @@ export default function MobilePanel({ open, onClose }: Props) {
                     </div>
                 </div>
 
-                {/* 검색 — submit 시 /products?q=... 로 이동 */}
+                {/* 검색 — submit 시 /search/?q=... 로 이동 */}
                 <div className="px-5 py-4 border-b border-neutral-100">
                     <form onSubmit={submitSearch} className="flex items-center gap-3 px-4 py-3 bg-neutral-100 rounded-xl">
                         <i className="fa-solid fa-magnifying-glass text-neutral-400" />

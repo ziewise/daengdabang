@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
     CATALOG,
     CATEGORY_LABEL,
@@ -29,11 +29,16 @@ import ExternalProductComparisonTable from "@/components/products/ExternalProduc
 import PaginatedProductGrid from "@/components/products/PaginatedProductGrid";
 import AppProductFilter from "@/components/app-shell/AppProductFilter";
 // 웹 상품 목록 머리 줄(제목 · 개수 + 검색 · 카테고리 · 정렬 흰 알약, 2026-10-22) — 앱은 아래 기존 머리글 · 필터 그대로
-import ProductsWebToolbar from "@/components/products/ProductsWebToolbar";
+import ProductsWebToolbar, { CrayonSelect } from "@/components/products/ProductsWebToolbar";
+// 웹 검색 결과 페이지(/search, 2026-10-23 사용자 결정 "검색은 별도 페이지") — variant="search" 일 때 머리 판 · 빈 결과 안내
+import { SearchHero, SearchOwnEmpty, searchHref } from "@/components/search/SearchParts";
+import { CrayonGrainFilter, PawTrail } from "@/components/daily/CrayonArt";
 
 type Props = {
     initialCategory?: CategorySlug;
     title?: string;
+    /** "search" = 웹 검색 결과 페이지(/search) 모양 — 목록 · 필터 · 정렬 · 다른 판매처 비교는 같고 머리 · 구역 배치만 검색용 */
+    variant?: "search";
 };
 
 type CategoryFilter = CategorySlug | "all";
@@ -75,8 +80,10 @@ function sortFromParams(params: SearchLike): SortKey {
     return isSort(value) ? value : "newest";
 }
 
-export default function ProductsClient({ initialCategory, title }: Props) {
+export default function ProductsClient({ initialCategory, title, variant }: Props) {
     const params = useSearchParams();
+    const router = useRouter();
+    const isSearchPage = variant === "search";
     const [query, setQuery] = useState(params.get("q") ?? "");
     const [category, setCategory] = useState<CategoryFilter>(categoryFromParams(params, initialCategory));
     const [subcategory, setSubcategory] = useState<SubcategoryFilter>(subcategoryFromParams(params));
@@ -95,6 +102,15 @@ export default function ProductsClient({ initialCategory, title }: Props) {
         setSubcategory(subcategoryFromParams(params));
         setSort(sortFromParams(params));
     }, [params, initialCategory]);
+
+    // 웹: 예전 /products/?q= 링크로 들어오면 검색 결과 페이지(/search)로 옮김 — 전체상품은 댕다방 상품만 보는 곳(2026-10-23).
+    // 앱(ddb-app-mode)은 지금처럼 이 페이지에서 검색. 제품군 페이지(initialCategory)는 그대로
+    useEffect(() => {
+        if (isSearchPage || initialCategory) return;
+        const q = params.get("q")?.trim();
+        if (!q || document.documentElement.classList.contains("ddb-app-mode")) return;
+        router.replace(searchHref(q));
+    }, [isSearchPage, initialCategory, params, router]);
 
     const availableSubcategories = useMemo(() => {
         return SUBCATEGORY_OPTIONS.filter((slug) => category === "all" || SUBCAT_TO_CAT[slug] === category);
@@ -187,6 +203,173 @@ export default function ProductsClient({ initialCategory, title }: Props) {
         return locale === "en" ? `${formattedCount} ${t("countSuffix")}` : `${formattedCount}${t("countSuffix")}`;
     };
     const heading = title ? menuLabel(title) : t("allProducts");
+
+    // 다른 판매처 가격 비교(협업자 기능) — 전체상품 · 검색 결과 페이지가 같은 덩어리를 씀
+    const externalSection = hasSearch ? (
+                <section className="mt-10 min-w-0 rounded-lg border border-neutral-200 bg-white p-4 shadow-sm">
+                    <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+                        <div>
+                            <p className="text-xs font-black uppercase tracking-[0.12em] text-emerald-700">Product Price Search</p>
+                            <h2 className="mt-1 text-xl font-black text-neutral-950">{t("priceCompare")}</h2>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <span className="rounded-full bg-neutral-100 px-2.5 py-1 text-xs font-black text-neutral-600">
+                                {externalLoading ? t("searching") : countText(externalProducts.length)}
+                            </span>
+                        </div>
+                    </div>
+                    {externalProducts.length > 0 ? (
+                        <>
+                            <ExternalProductComparisonTable products={externalProducts} query={query.trim()} />
+                            {referenceExternalProducts.length > 0 && (
+                                <div>
+                                    <div className="mb-3 flex flex-wrap items-end justify-between gap-2">
+                                        <div>
+                                            <h3 className="text-base font-black text-neutral-950">
+                                                {locale === "en" ? "More products from other sellers" : "외부 판매 상품 더 보기"}
+                                            </h3>
+                                            <p className="mt-1 text-xs font-bold text-neutral-500">
+                                                {locale === "en"
+                                                    ? "These listings include a product photo and observed price. Checkout totals can change with options and shipping."
+                                                    : "상품 사진과 판매가가 함께 확인된 결과입니다. 옵션과 배송비에 따라 결제금액은 달라질 수 있어요."}
+                                            </p>
+                                        </div>
+                                        <span className="rounded-full bg-amber-50 px-2.5 py-1 text-xs font-black text-amber-800">
+                                            {locale === "en" ? "External products" : "외부 상품"} {countText(referenceExternalProducts.length)}
+                                        </span>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                                        {visibleExternalRows.map((row) => (
+                                            <ExternalProductCard
+                                                key={row.product.id}
+                                                product={row.product}
+                                                query={query.trim()}
+                                                comparisonRank={row.position}
+                                                comparisonScore={row.assessment.score}
+                                                comparisonTied={row.isTied}
+                                            />
+                                        ))}
+                                    </div>
+                                    {visibleExternalRows.length < referenceExternalRows.length && (
+                                        <div className="mt-5 flex justify-center">
+                                            <button
+                                                type="button"
+                                                className="min-h-11 rounded-md border border-neutral-300 bg-white px-5 py-2.5 text-sm font-black text-neutral-800 transition hover:border-emerald-500 hover:text-emerald-800"
+                                                onClick={() => setExternalReveal({
+                                                    scope: externalScope,
+                                                    count: Math.min(revealedExternalCount + 20, referenceExternalRows.length),
+                                                })}
+                                                aria-label={locale === "en" ? `Show ${remainingExternalCount} more external products` : `외부 상품 ${remainingExternalCount}개 더 보기`}
+                                            >
+                                                {locale === "en"
+                                                    ? `Show more (${visibleExternalRows.length}/${referenceExternalRows.length})`
+                                                    : `${remainingExternalCount}개 더 보기 (${visibleExternalRows.length}/${referenceExternalRows.length})`}
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </>
+                    ) : (
+                        <div className="rounded-lg border border-dashed border-neutral-200 bg-neutral-50 px-4 py-8 text-center">
+                            <p className="text-sm font-black text-neutral-700">
+                                {externalLoading || !externalSearched ? t("externalCompareLoading") : t("externalCompareEmpty")}
+                            </p>
+                            <p className="mt-1 text-xs font-bold text-neutral-500">
+                                {t("externalCompareFeedNote")}
+                            </p>
+                        </div>
+                    )}
+                </section>
+    ) : null;
+
+    // 카테고리를 골라 0개일 때, 전체로 보면 나오는 개수(검색 결과 페이지 빈 안내용)
+    const hiddenByCategory = isSearchPage && hasSearch && products.length === 0 && category !== "all"
+        ? searchCatalog(query).length
+        : 0;
+
+    // ── 웹 검색 결과 페이지(/search) ── 머리 판 → 발자국 → 댕다방 상품(카테고리 · 정렬) → 발자국 → 다른 판매처 가격 비교
+    if (isSearchPage) {
+        return (
+            <main className="mx-auto w-full min-w-0 max-w-[1280px] px-4 py-8 md:px-6" data-daily-web data-search-page>
+                <CrayonGrainFilter />
+                <SearchHero
+                    query={query}
+                    ownCount={products.length}
+                    externalCount={externalProducts.length}
+                    externalLoading={externalLoading}
+                />
+                {hasSearch ? (
+                    <>
+                        <PawTrail />
+                        {/* 댕다방 상품 */}
+                        <section className="sr-section" aria-labelledby="sr-own-title">
+                            <div className="sr-head">
+                                <div>
+                                    <p className="sr-head-kicker">DAENGDABANG PRODUCTS</p>
+                                    <h2 id="sr-own-title" className="sr-head-title">
+                                        {locale === "en" ? "DaengDaBang products" : "댕다방 상품"} <b>{countText(products.length)}</b>
+                                    </h2>
+                                </div>
+                                <div className="sr-tools">
+                                    <CrayonSelect
+                                        label={t("categoryFilter")}
+                                        value={category}
+                                        options={[{ value: "all", label: t("all") }, ...CATEGORY_ORDER.map((slug) => ({ value: slug, label: categoryLabel(slug, CATEGORY_LABEL[slug]) }))]}
+                                        placeholder={{ value: "all", text: t("categoryFilter") }}
+                                        onChange={(value) => {
+                                            setCategory(value as CategoryFilter);
+                                            setSubcategory("all");
+                                        }}
+                                    />
+                                    <CrayonSelect
+                                        label={t("sort")}
+                                        value={sort}
+                                        options={WEB_SORT_OPTIONS.map((slug) => ({ value: slug, label: slug === "newest" && locale !== "en" ? "최신순" : menuLabel(SORT_LABEL[slug]) }))}
+                                        onChange={(value) => setSort(value as SortKey)}
+                                        alignRight
+                                    />
+                                </div>
+                            </div>
+                            {products.length > 0 ? (
+                                <PaginatedProductGrid
+                                    key={`${query}-${category}-${subcategory}-${sort}`}
+                                    products={products}
+                                />
+                            ) : (
+                                <SearchOwnEmpty
+                                    query={query.trim()}
+                                    hiddenByCategory={hiddenByCategory}
+                                    onShowAll={() => {
+                                        setCategory("all");
+                                        setSubcategory("all");
+                                    }}
+                                />
+                            )}
+                        </section>
+                        <PawTrail />
+                        {/* 다른 판매처 가격 비교 — 댕다방 상품이 아님을 머리에서 분명히 */}
+                        <section className="sr-section sr-external" aria-labelledby="sr-ext-title">
+                            <div className="sr-head">
+                                <div>
+                                    <p className="sr-head-kicker">PRICE COMPARE</p>
+                                    <h2 id="sr-ext-title" className="sr-head-title">
+                                        {locale === "en" ? "Other sellers" : "다른 판매처 가격 비교"} <b>{externalLoading ? t("searching") : countText(externalProducts.length)}</b>
+                                    </h2>
+                                    <p className="sr-head-note">
+                                        {locale === "en"
+                                            ? "These are not DaengDaBang products. Tapping one opens the seller in a new tab."
+                                            : "댕다방 상품이 아니에요. 누르면 판매처가 새 창으로 열려요."}
+                                    </p>
+                                </div>
+                            </div>
+                            {externalSection}
+                        </section>
+                    </>
+                ) : null}
+            </main>
+        );
+    }
 
     return (
         <main className="mx-auto w-full min-w-0 max-w-[1280px] px-4 py-8 md:px-6">
@@ -306,83 +489,7 @@ export default function ProductsClient({ initialCategory, title }: Props) {
                 </section>
             )}
 
-            {hasSearch && (
-                <section className="mt-10 min-w-0 rounded-lg border border-neutral-200 bg-white p-4 shadow-sm">
-                    <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
-                        <div>
-                            <p className="text-xs font-black uppercase tracking-[0.12em] text-emerald-700">Product Price Search</p>
-                            <h2 className="mt-1 text-xl font-black text-neutral-950">{t("priceCompare")}</h2>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <span className="rounded-full bg-neutral-100 px-2.5 py-1 text-xs font-black text-neutral-600">
-                                {externalLoading ? t("searching") : countText(externalProducts.length)}
-                            </span>
-                        </div>
-                    </div>
-                    {externalProducts.length > 0 ? (
-                        <>
-                            <ExternalProductComparisonTable products={externalProducts} query={query.trim()} />
-                            {referenceExternalProducts.length > 0 && (
-                                <div>
-                                    <div className="mb-3 flex flex-wrap items-end justify-between gap-2">
-                                        <div>
-                                            <h3 className="text-base font-black text-neutral-950">
-                                                {locale === "en" ? "More products from other sellers" : "외부 판매 상품 더 보기"}
-                                            </h3>
-                                            <p className="mt-1 text-xs font-bold text-neutral-500">
-                                                {locale === "en"
-                                                    ? "These listings include a product photo and observed price. Checkout totals can change with options and shipping."
-                                                    : "상품 사진과 판매가가 함께 확인된 결과입니다. 옵션과 배송비에 따라 결제금액은 달라질 수 있어요."}
-                                            </p>
-                                        </div>
-                                        <span className="rounded-full bg-amber-50 px-2.5 py-1 text-xs font-black text-amber-800">
-                                            {locale === "en" ? "External products" : "외부 상품"} {countText(referenceExternalProducts.length)}
-                                        </span>
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-                                        {visibleExternalRows.map((row) => (
-                                            <ExternalProductCard
-                                                key={row.product.id}
-                                                product={row.product}
-                                                query={query.trim()}
-                                                comparisonRank={row.position}
-                                                comparisonScore={row.assessment.score}
-                                                comparisonTied={row.isTied}
-                                            />
-                                        ))}
-                                    </div>
-                                    {visibleExternalRows.length < referenceExternalRows.length && (
-                                        <div className="mt-5 flex justify-center">
-                                            <button
-                                                type="button"
-                                                className="min-h-11 rounded-md border border-neutral-300 bg-white px-5 py-2.5 text-sm font-black text-neutral-800 transition hover:border-emerald-500 hover:text-emerald-800"
-                                                onClick={() => setExternalReveal({
-                                                    scope: externalScope,
-                                                    count: Math.min(revealedExternalCount + 20, referenceExternalRows.length),
-                                                })}
-                                                aria-label={locale === "en" ? `Show ${remainingExternalCount} more external products` : `외부 상품 ${remainingExternalCount}개 더 보기`}
-                                            >
-                                                {locale === "en"
-                                                    ? `Show more (${visibleExternalRows.length}/${referenceExternalRows.length})`
-                                                    : `${remainingExternalCount}개 더 보기 (${visibleExternalRows.length}/${referenceExternalRows.length})`}
-                                            </button>
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-                        </>
-                    ) : (
-                        <div className="rounded-lg border border-dashed border-neutral-200 bg-neutral-50 px-4 py-8 text-center">
-                            <p className="text-sm font-black text-neutral-700">
-                                {externalLoading || !externalSearched ? t("externalCompareLoading") : t("externalCompareEmpty")}
-                            </p>
-                            <p className="mt-1 text-xs font-bold text-neutral-500">
-                                {t("externalCompareFeedNote")}
-                            </p>
-                        </div>
-                    )}
-                </section>
-            )}
+            {externalSection}
 
             {products.length === 0 && !hasSearch && (
                 <div className="surface p-10 text-center">
