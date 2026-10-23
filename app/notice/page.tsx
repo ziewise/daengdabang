@@ -3,8 +3,13 @@
  * ---------------------------------------------------------------------
  * 고객센터 > 공지사항. 운영 공지 목록 (현재 mock — 추후 백엔드/CMS 연동).
  * 레이아웃은 약관/개인정보 페이지(app/terms)와 동일 톤으로 통일.
+ * 2026-10-23 웹 크레파스 결: 고객센터 탭 · 노랑 쿠션 머리 판(SupportTop) → 발자국 → 날짜 줄 소식(왼쪽 날짜 · 가운데 점 줄 · 오른쪽 흰 쿠션).
+ * 날짜 · 점 줄은 웹 전용(hidden → app/support-web.css), 앱은 기존 앱 꾸밈 그대로. 문구 · 순서 그대로.
  */
 import type { Metadata } from "next";
+import SupportTop, { SupportPaws } from "@/components/support/SupportTop";
+import "../daily-web.css";
+import "../support-web.css";
 
 export const metadata: Metadata = {
     title: "공지사항 | 댕다방",
@@ -33,21 +38,29 @@ const NOTICES = [
     },
 ];
 
+// 왼쪽 날짜("6월 16일" + 연도) — 날짜 글자(YYYY-MM-DD)를 그대로 나눔
+function noticeWhen(date: string) {
+    const [year, month, day] = date.split("-");
+    return { year, monthDay: `${Number(month)}월 ${Number(day)}일` };
+}
+
 export default function NoticePage() {
     return (
-        <main className="mx-auto max-w-[960px] px-4 py-10 md:px-6">
-            <p className="text-sm font-black text-aurora-indigo">NOTICE</p>
-            <h1 className="mt-2 text-3xl font-black tracking-tight text-foreground">공지사항</h1>
-            <p className="mt-3 text-sm font-bold leading-6 text-neutral-500">
-                댕다방의 새로운 소식과 안내를 확인하세요.
-            </p>
+        <main className="mx-auto max-w-[960px] px-4 py-10 md:px-6" data-daily-web data-support-web="notice">
+            <SupportTop current="notice" kicker="NOTICE" title="공지사항" lead="댕다방의 새로운 소식과 안내를 확인하세요." />
+            <SupportPaws />
 
-            <div className="mt-8 grid gap-4">
+            <div className="mt-8 grid gap-4 cs-notices">
                 {NOTICES.map((n) => (
                     <article
                         key={n.title}
-                        className="rounded-2xl bg-white/70 backdrop-blur border border-white/60 shadow-card p-5 md:p-6 hover:shadow-hover transition"
+                        data-notice-tag={n.tag}
+                        className="rounded-2xl bg-white/70 backdrop-blur border border-white/60 shadow-card p-5 md:p-6 hover:shadow-hover transition cs-notice"
                     >
+                        {/* 웹 전용 — 왼쪽 날짜 · 가운데 점 줄 */}
+                        <p className="hidden cs-when"><b>{noticeWhen(n.date).monthDay}</b><span>{noticeWhen(n.date).year}</span></p>
+                        <span className="hidden cs-rail" aria-hidden="true"><i /></span>
+                        <div className="cs-notice-card">
                         <div className="flex items-center gap-2 mb-2">
                             <span className="px-2 py-0.5 rounded-full bg-aurora-indigo/10 text-aurora-indigo text-[11px] font-extrabold">
                                 {n.tag}
@@ -56,6 +69,7 @@ export default function NoticePage() {
                         </div>
                         <h2 className="text-lg font-black text-foreground">{n.title}</h2>
                         <p className="mt-2 text-sm font-bold leading-7 text-neutral-600">{n.body}</p>
+                        </div>
                     </article>
                 ))}
             </div>

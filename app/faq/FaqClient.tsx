@@ -2,6 +2,7 @@
  * app/faq/FaqClient.tsx — 자주 묻는 질문 아코디언 (client)
  * ---------------------------------------------------------------------
  * 카테고리별 Q&A 를 아코디언으로 펼침/접기. 한 번에 하나만 열림.
+ * 2026-10-23 웹 크레파스 결: 흰 쿠션 · Q/A 동그라미(웹 전용 hidden) · 분류별 색 꼬리표(data-faq-cat). 펼침 동작 · 문구 · 링크 그대로.
  */
 "use client";
 
@@ -29,35 +30,39 @@ export default function FaqClient() {
     const [open, setOpen] = useState<number | null>(0);
 
     return (
-        <div className="mt-8 grid gap-2.5">
+        <div className="mt-8 grid gap-2.5 cs-faqs">
             {FAQS.map((f, i) => {
                 const isOpen = open === i;
                 return (
                     <div
                         key={f.q}
-                        className="rounded-2xl bg-white/70 backdrop-blur border border-white/60 shadow-card overflow-hidden"
+                        data-faq-cat={f.category}
+                        data-open={isOpen ? "" : undefined}
+                        className="rounded-2xl bg-white/70 backdrop-blur border border-white/60 shadow-card overflow-hidden cs-faq"
                     >
                         <button
                             type="button"
                             onClick={() => setOpen(isOpen ? null : i)}
                             aria-expanded={isOpen}
-                            className="w-full flex items-center gap-3 px-5 md:px-6 py-4 text-left hover:bg-aurora-indigo/[0.03] transition"
+                            className="w-full flex items-center gap-3 px-5 md:px-6 py-4 text-left hover:bg-aurora-indigo/[0.03] transition cs-faq-q"
                         >
-                            <span className="px-2 py-0.5 rounded-full bg-aurora-indigo/10 text-aurora-indigo text-[10px] font-extrabold shrink-0">
+                            <span className="hidden cs-qa" aria-hidden="true">Q</span>
+                            <span className="cs-faq-cat px-2 py-0.5 rounded-full bg-aurora-indigo/10 text-aurora-indigo text-[10px] font-extrabold shrink-0">
                                 {f.category}
                             </span>
                             <span className="flex-1 text-sm md:text-base font-black text-foreground">
                                 {f.q}
                             </span>
-                            <i className={`fa-solid fa-chevron-down text-xs text-neutral-400 transition-transform ${isOpen ? "rotate-180" : ""}`} />
+                            <i className={`cs-faq-chev fa-solid fa-chevron-down text-xs text-neutral-400 transition-transform ${isOpen ? "rotate-180" : ""}`} />
                         </button>
                         {isOpen && (
-                            <div className="px-5 md:px-6 pb-5 pt-0">
+                            <div className="px-5 md:px-6 pb-5 pt-0 cs-faq-a">
+                                <span className="hidden cs-qa is-a" aria-hidden="true">A</span>
                                 <p className="text-sm font-bold leading-7 text-neutral-600 border-t border-neutral-100 pt-4">
                                     {f.a}
                                 </p>
                                 {f.links?.length ? (
-                                    <div className="mt-3 flex flex-wrap gap-2">
+                                    <div className="mt-3 flex flex-wrap gap-2 cs-faq-links">
                                         {f.links.map((link) => (
                                             <Link
                                                 key={`${f.q}-${link.href}`}

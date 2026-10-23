@@ -1,5 +1,10 @@
 "use client";
 
+/*
+ * CustomerInquiryPanel — 1:1 문의(이메일 · 전화 쿠션 + 문의 쓰기 양식 + 접수 확인)
+ * 2026-10-23 웹 크레파스 결: cs-* 이름표만 붙임(꾸밈은 app/support-web.css, 웹 [data-support-web] 안에서만).
+ * 앱은 기존 클래스에 걸린 앱 꾸밈 그대로. 입력 · 접수 · 펼침 동작은 바꾸지 않음.
+ */
 import { FormEvent, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import CloudflareSafeEmail from "@/components/footer/CloudflareSafeEmail";
@@ -182,41 +187,41 @@ export default function CustomerInquiryPanel({ email, phone }: { email: string; 
 
     return (
         <>
-            <div className="mt-8 grid gap-4 sm:grid-cols-2">
+            <div className="mt-8 grid gap-4 sm:grid-cols-2 cs-contacts">
                 <button
                     type="button"
                     onClick={() => revealForm()}
                     aria-expanded={expanded}
                     aria-controls="inquiry-form"
-                    className="group rounded-2xl border border-white/60 bg-white/70 p-6 text-left shadow-card backdrop-blur transition hover:-translate-y-0.5 hover:border-aurora-indigo/30 hover:shadow-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aurora-indigo"
+                    className="cs-contact is-mail group rounded-2xl border border-white/60 bg-white/70 p-6 text-left shadow-card backdrop-blur transition hover:-translate-y-0.5 hover:border-aurora-indigo/30 hover:shadow-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aurora-indigo"
                 >
-                    <span className="mb-3 flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-aurora-blue to-aurora-indigo text-white">
+                    <span className="cs-contact-icon mb-3 flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-aurora-blue to-aurora-indigo text-white">
                         <i className="fa-solid fa-envelope" aria-hidden="true" />
                     </span>
                     <span className="block text-base font-black text-foreground">이메일 문의</span>
                     <span className="mt-1 block text-sm font-bold text-neutral-500">
                         이 페이지에서 바로 작성하고 접수할 수 있어요.
                     </span>
-                    <span className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-aurora-indigo/20 bg-aurora-indigo/5 px-3 py-1.5 text-sm font-extrabold text-aurora-indigo transition group-hover:border-aurora-indigo/40 group-hover:bg-aurora-indigo/10">
+                    <span className="cs-contact-go mt-3 inline-flex items-center gap-1.5 rounded-full border border-aurora-indigo/20 bg-aurora-indigo/5 px-3 py-1.5 text-sm font-extrabold text-aurora-indigo transition group-hover:border-aurora-indigo/40 group-hover:bg-aurora-indigo/10">
                         문의 작성하기 <i className="fa-solid fa-arrow-down text-[10px]" aria-hidden="true" />
                     </span>
-                    <span className="mt-2 block text-xs font-bold text-neutral-500">
+                    <span className="cs-contact-mail mt-2 block text-xs font-bold text-neutral-500">
                         <CloudflareSafeEmail email={email} />
                     </span>
                 </button>
 
                 <a
                     href={`tel:${phone}`}
-                    className="group rounded-2xl border border-white/60 bg-white/70 p-6 text-left shadow-card backdrop-blur transition hover:-translate-y-0.5 hover:border-aurora-indigo/30 hover:shadow-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aurora-indigo"
+                    className="cs-contact is-phone group rounded-2xl border border-white/60 bg-white/70 p-6 text-left shadow-card backdrop-blur transition hover:-translate-y-0.5 hover:border-aurora-indigo/30 hover:shadow-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aurora-indigo"
                 >
-                    <span className="mb-3 flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-aurora-indigo to-aurora-pink text-white">
+                    <span className="cs-contact-icon mb-3 flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-aurora-indigo to-aurora-pink text-white">
                         <i className="fa-solid fa-headset" aria-hidden="true" />
                     </span>
                     <span className="block text-base font-black text-foreground">전화 문의</span>
                     <span className="mt-1 block text-sm font-bold text-neutral-500">
                         평일 10:00 ~ 18:00 (주말·공휴일 휴무)
                     </span>
-                    <span className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-aurora-indigo/20 bg-white px-3 py-1.5 text-sm font-extrabold text-aurora-indigo transition group-hover:border-aurora-indigo/40 group-hover:bg-aurora-indigo/5">
+                    <span className="cs-contact-go mt-3 inline-flex items-center gap-1.5 rounded-full border border-aurora-indigo/20 bg-white px-3 py-1.5 text-sm font-extrabold text-aurora-indigo transition group-hover:border-aurora-indigo/40 group-hover:bg-aurora-indigo/5">
                         {phone} <i className="fa-solid fa-phone text-[10px]" aria-hidden="true" />
                     </span>
                 </a>
@@ -226,9 +231,9 @@ export default function CustomerInquiryPanel({ email, phone }: { email: string; 
                 <section
                     ref={formSectionRef}
                     id="inquiry-form"
-                    className="mt-6 scroll-mt-24 overflow-hidden rounded-2xl border-2 border-dashed border-aurora-indigo/25 bg-white/80 shadow-card backdrop-blur"
+                    className="cs-form mt-6 scroll-mt-24 overflow-hidden rounded-2xl border-2 border-dashed border-aurora-indigo/25 bg-white/80 shadow-card backdrop-blur"
                 >
-                    <div className="border-b border-aurora-indigo/10 bg-gradient-to-r from-orange-50 via-sky-50 to-indigo-50 px-5 py-4 sm:px-6">
+                    <div className="cs-form-head border-b border-aurora-indigo/10 bg-gradient-to-r from-orange-50 via-sky-50 to-indigo-50 px-5 py-4 sm:px-6">
                         <p className="text-xs font-black tracking-[0.18em] text-aurora-indigo">CRAYON CONTACT NOTE</p>
                         <div className="mt-1 flex items-start justify-between gap-4">
                             <div>
@@ -240,7 +245,7 @@ export default function CustomerInquiryPanel({ email, phone }: { email: string; 
                             <button
                                 type="button"
                                 onClick={() => setVisibility("closed")}
-                                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-aurora-indigo/20 bg-white text-neutral-600 transition hover:bg-indigo-50 hover:text-aurora-indigo"
+                                className="cs-form-close flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-aurora-indigo/20 bg-white text-neutral-600 transition hover:bg-indigo-50 hover:text-aurora-indigo"
                                 aria-label="문의 작성 접기"
                             >
                                 <i className="fa-solid fa-chevron-up text-xs" aria-hidden="true" />
@@ -250,7 +255,7 @@ export default function CustomerInquiryPanel({ email, phone }: { email: string; 
 
                     {receipt ? (
                         <div className="p-5 sm:p-6" role="status" aria-live="polite">
-                            <div className="rounded-2xl border border-emerald-200 bg-emerald-50/80 p-5">
+                            <div className="cs-receipt rounded-2xl border border-emerald-200 bg-emerald-50/80 p-5">
                                 <span className="flex h-11 w-11 items-center justify-center rounded-full bg-emerald-600 text-white">
                                     <i className="fa-solid fa-check" aria-hidden="true" />
                                 </span>
@@ -288,7 +293,7 @@ export default function CustomerInquiryPanel({ email, phone }: { email: string; 
                             </div>
                         </div>
                     ) : (
-                        <form onSubmit={submit} className="grid gap-5 p-5 sm:p-6">
+                        <form onSubmit={submit} className="cs-form-body grid gap-5 p-5 sm:p-6">
                             <div className="grid gap-4 sm:grid-cols-2">
                                 <label className="grid gap-1.5 text-sm font-extrabold text-neutral-800">
                                     문의 유형
@@ -413,7 +418,7 @@ export default function CustomerInquiryPanel({ email, phone }: { email: string; 
                                 />
                             </label>
 
-                            <label className="flex items-start gap-3 rounded-xl border border-indigo-100 bg-indigo-50/50 p-3 text-sm font-bold leading-6 text-neutral-700">
+                            <label className="cs-consent flex items-start gap-3 rounded-xl border border-indigo-100 bg-indigo-50/50 p-3 text-sm font-bold leading-6 text-neutral-700">
                                 <input
                                     required
                                     type="checkbox"
@@ -438,7 +443,7 @@ export default function CustomerInquiryPanel({ email, phone }: { email: string; 
                             <button
                                 type="submit"
                                 disabled={submitting}
-                                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-aurora-blue to-aurora-indigo px-5 py-3 text-base font-black text-white shadow-card transition hover:-translate-y-0.5 hover:shadow-hover disabled:cursor-not-allowed disabled:opacity-60"
+                                className="cs-submit inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-aurora-blue to-aurora-indigo px-5 py-3 text-base font-black text-white shadow-card transition hover:-translate-y-0.5 hover:shadow-hover disabled:cursor-not-allowed disabled:opacity-60"
                             >
                                 {submitting ? (
                                     <><i className="fa-solid fa-spinner animate-spin" aria-hidden="true" /> 접수하고 있어요…</>

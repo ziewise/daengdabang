@@ -1,0 +1,755 @@
+/*
+ * support-web.css — 웹 고객센터(공지사항 · 자주 묻는 질문 · 1:1 문의 · 교환·반품 안내) 크레파스 꾸밈 · 2026-10-23
+ * ---------------------------------------------------------------------
+ * 사이트 크레파스 결(AI 상담 · 커뮤니티 페이지와 같음): 고객센터 탭 알약 → 쿠션 머리 판(무지개 고리 + 민트 3D 고객센터 그림) → 발자국 →
+ * 흰 · 파스텔 쿠션 판. 제목은 주아 + 세 색 크레파스 밑줄, 주 버튼 분홍 알약, 보조 버튼 흰 알약(점선 없음), 종이에 줄 없음.
+ * 범위: 웹에서만(html:not(.ddb-app-mode)) · data-support-web 을 붙인 고객센터 main 안에서만.
+ * 앱은 같은 페이지를 앱 꾸밈(appShopSkin "마이 탭 웹 화면")으로 보여 주므로 여기 규칙은 앱에 닿지 않음.
+ * 웹 전용 요소(탭 · 고리 · 발자국 · 공지 날짜 · Q/A 동그라미 · 교환 단계)는 JSX 에서 hidden → 여기서 보이게.
+ * 문구 · 링크 · 버튼 동작(문의 접수 · 펼침)은 그대로, 모양만.
+ */
+
+html:not(.ddb-app-mode) main[data-support-web] {
+    /* 쿠션 그림자(dw-csheet 와 같은 결) · 세 색 밑줄 */
+    --cs-cushion: inset 0 3px 0 rgb(255 255 255 / 90%), inset 0 -10px 18px rgb(0 0 0 / 3%), 0 22px 36px -24px rgb(15 23 42 / 32%);
+    --cs-cushion-sm: inset 0 3px 0 rgb(255 255 255 / 90%), 0 14px 24px -18px rgb(15 23 42 / 30%);
+    --cs-underline: repeating-linear-gradient(94deg, rgb(8 145 178 / 62%) 0 14px, rgb(239 71 111 / 58%) 14px 28px, rgb(245 158 11 / 62%) 28px 42px);
+
+    /* 부모가 가운데 정렬 flex 라 내용 폭으로 줄어들지 않게 */
+    width: 100%;
+    max-width: 1080px;
+
+    /* 파스텔 색 묶음(바탕 · 글자 · 테) — 탭 · 꼬리표 · 쿠션이 함께 씀 */
+    & .is-yellow, & [data-notice-tag="배송"], & [data-faq-cat="주문/결제"] { --cs-bg: #fff6e3; --cs-ink: #b86a08; --cs-ring: #f7d48a; }
+    & .is-sky, & [data-notice-tag="안내"], & [data-faq-cat="배송"] { --cs-bg: #e9f4fb; --cs-ink: #0e7f93; --cs-ring: #a9d4ea; }
+    & .is-pink, & [data-notice-tag="이벤트"], & [data-faq-cat="펫렌즈/맞춤 추천"] { --cs-bg: #ffeef3; --cs-ink: #d0436d; --cs-ring: #f7a8bf; }
+    & .is-mint, & [data-faq-cat="교환/반품"] { --cs-bg: #e9f8f1; --cs-ink: #0f8a66; --cs-ring: #a8e0c6; }
+    & .is-lav, & [data-faq-cat="회원"] { --cs-bg: #f3f0fe; --cs-ink: #6b51c9; --cs-ring: #cfc3f5; }
+
+    /* ── 고객센터 탭 알약 넷(지금 화면은 색 쿠션 + 테) ── */
+    & .cs-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 26px;
+    }
+
+    & .cs-tab {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        height: 52px;
+        padding: 0 22px 0 9px;
+        border-radius: 999px;
+        background: #fff;
+        color: #475569;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 16px;
+        box-shadow: 0 0 0 1.5px rgb(100 116 139 / 14%), 0 10px 18px -14px rgb(15 23 42 / 35%);
+        transition: transform 0.18s ease;
+    }
+
+    & .cs-tab img { width: 36px; height: 36px; object-fit: contain; }
+    & .cs-tab:hover { transform: translateY(-2px); }
+
+    & .cs-tab[aria-current="page"] {
+        background: var(--cs-bg);
+        color: var(--cs-ink);
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 0 0 2.5px var(--cs-ring), 0 12px 20px -14px rgb(15 23 42 / 40%);
+    }
+
+    /* ── 머리 판 — 영문 손글씨 꼬리표 · 주아 제목 + 세 색 밑줄 · 설명 · 무지개 고리 ── */
+    /* 고객센터 머리 판은 낮게(2026-10-23 사용자 "카드 세로가 너무 커") — 고리 170px · 위아래 여백 줄임 */
+    & .cs-hero { padding: 30px 48px; }
+    & .cs-hero .cs-ring { --dw-ring: 170px; padding: 10px; }
+
+    & .cs-kicker {
+        display: inline-block;
+        margin: 0;
+        background-image: repeating-linear-gradient(172deg, #07849e 0 5px, #ef476f 5px 10px, #e98708 10px 15px);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: #07849e;
+        font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        -webkit-text-fill-color: transparent;
+    }
+
+    & .cs-title {
+        position: relative;
+        display: block;
+        width: fit-content;
+        margin-top: 10px;
+        color: var(--dw-ink);
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: clamp(30px, 3.4vw, 44px);
+        font-weight: 400;
+        line-height: 1.25;
+        letter-spacing: -0.02em;
+        isolation: isolate;
+        word-break: keep-all;
+    }
+
+    /* 세 색 크레파스 밑줄(.ddb-crayon-underline 과 같은 결) */
+    & :is(.cs-title, .cs-form-head h2, .cs-policy h3, .cs-refund h2)::after {
+        content: "";
+        position: absolute;
+        right: 1%;
+        bottom: -0.12em;
+        left: 0;
+        z-index: -1;
+        height: 0.2em;
+        border-radius: 999px 70% 999px 60%;
+        background: var(--cs-underline);
+    }
+
+    & .cs-lead {
+        max-width: 560px;
+        margin-top: 16px;
+        color: var(--dw-text);
+        font-size: 15px;
+        font-weight: 600;
+        line-height: 1.75;
+        word-break: keep-all;
+    }
+
+    & .cs-ring { display: grid; }
+
+    /* 머리 판 버튼 — 주 버튼 분홍 알약 · 보조 버튼 흰 알약 */
+    & .cs-actions { gap: 10px; margin-top: 24px; }
+
+    & .cs-cta {
+        min-height: 48px;
+        margin-top: 24px;
+        padding: 0 22px;
+        border: 0;
+        background: var(--dw-pink);
+        color: #fff;
+        font-size: 14px;
+        font-weight: 800;
+        box-shadow: 0 8px 18px -10px rgb(200 80 120 / 60%);
+    }
+
+    & .cs-actions .cs-cta { margin-top: 0; }
+
+    & .cs-cta:hover { border: 0; background: var(--dw-pink-deep); color: #fff; }
+
+    & .cs-cta-sub {
+        min-height: 48px;
+        padding: 0 20px;
+        border: 0;
+        background: #fff;
+        color: #334155;
+        font-size: 14px;
+        font-weight: 800;
+        box-shadow: 0 0 0 1.5px rgb(100 116 139 / 18%), 0 8px 16px -12px rgb(15 23 42 / 30%);
+    }
+
+    & .cs-cta-sub:hover { border: 0; background: #fff; }
+    & .cs-cta-sub i { color: #0e8aa0; }
+
+    /* 발자국 두 걸음 */
+    & .cs-paws { display: block; }
+
+    /* ── 공지사항 — 왼쪽 날짜 · 가운데 점 줄 · 오른쪽 흰 쿠션 ── */
+    & .cs-notices {
+        max-width: 900px;
+        margin: 6px auto 0;
+        gap: 0;
+    }
+
+    & .cs-notice {
+        display: grid;
+        grid-template-columns: 104px 34px minmax(0, 1fr);
+        gap: 0 14px;
+        padding: 0 0 24px;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        box-shadow: none;
+        backdrop-filter: none;
+    }
+
+    & .cs-notice:hover { box-shadow: none; }
+    & .cs-notice:last-child { padding-bottom: 0; }
+
+    & .cs-when {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        padding-top: 24px;
+        text-align: right;
+    }
+
+    & .cs-when b {
+        color: var(--dw-ink);
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 20px;
+        font-weight: 400;
+        white-space: nowrap;
+    }
+
+    & .cs-when span {
+        margin-top: 2px;
+        color: #94a3b8;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    & .cs-rail {
+        position: relative;
+        display: flex;
+        justify-content: center;
+    }
+
+    /* 점 줄 — 다음 소식까지 이어짐(마지막 소식은 점에서 멈춤) */
+    & .cs-rail::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: -24px;
+        left: 50%;
+        border-left: 3px dotted #f2b8c9;
+        transform: translateX(-50%);
+    }
+
+    & .cs-notice:first-child .cs-rail::before { top: 30px; }
+    & .cs-notice:last-child .cs-rail::before { bottom: auto; height: 30px; }
+
+    & .cs-rail i {
+        position: relative;
+        width: 18px;
+        height: 18px;
+        margin-top: 29px;
+        border-radius: 999px;
+        background: var(--cs-ring);
+        box-shadow: 0 0 0 4px #fff, 0 0 0 6px var(--cs-bg);
+    }
+
+    & .cs-notice-card {
+        padding: 26px 30px 28px;
+        border-radius: 34px;
+        background: #fff;
+        box-shadow: var(--cs-cushion);
+    }
+
+    /* 꼬리표는 소식 색 알약, 카드 안 날짜는 왼쪽 날짜와 겹쳐 숨김 */
+    & .cs-notice-card > div:first-child { margin-bottom: 10px; }
+
+    & .cs-notice-card > div:first-child > span:first-child {
+        padding: 5px 12px;
+        border-radius: 999px;
+        background: var(--cs-bg);
+        color: var(--cs-ink);
+        font-size: 12px;
+        font-weight: 800;
+    }
+
+    & .cs-notice-card > div:first-child > span:nth-child(2) { display: none; }
+
+    & .cs-notice-card h2 {
+        color: var(--dw-ink);
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 21px;
+        font-weight: 400;
+        line-height: 1.4;
+        word-break: keep-all;
+    }
+
+    & .cs-notice-card h2 + p {
+        margin-top: 8px;
+        color: var(--dw-text);
+        font-size: 14.5px;
+        font-weight: 600;
+        line-height: 1.8;
+        word-break: keep-all;
+    }
+
+    /* ── 자주 묻는 질문 — Q · A 흰 쿠션(분류마다 색) ── */
+    & .cs-faqs {
+        max-width: 900px;
+        margin: 6px auto 0;
+        gap: 14px;
+    }
+
+    & .cs-faq {
+        border: 0;
+        border-radius: 30px;
+        background: #fff;
+        box-shadow: var(--cs-cushion);
+        backdrop-filter: none;
+    }
+
+    & .cs-faq[data-open] { box-shadow: 0 0 0 2.5px var(--cs-ring), var(--cs-cushion); }
+
+    & .cs-faq-q {
+        gap: 14px;
+        padding: 16px 20px;
+    }
+
+    & .cs-faq-q:hover { background: transparent; }
+
+    /* Q · A 동그라미 — 분류 색 */
+    & .cs-qa {
+        display: grid;
+        flex: none;
+        width: 42px;
+        height: 42px;
+        place-items: center;
+        border-radius: 999px;
+        background: var(--cs-bg);
+        color: var(--cs-ink);
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 20px;
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%);
+    }
+
+    & .cs-qa.is-a { background: var(--cs-ink); color: #fff; box-shadow: none; }
+
+    /* 줄 순서: Q · 질문 · 분류 꼬리표 · 펼침 단추 */
+    & .cs-faq-q > span.flex-1 {
+        order: 1;
+        color: var(--dw-ink);
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 1.4;
+        word-break: keep-all;
+    }
+
+    & .cs-faq-cat {
+        order: 2;
+        padding: 5px 12px;
+        background: var(--cs-bg);
+        color: var(--cs-ink);
+        font-size: 12px;
+        font-weight: 800;
+    }
+
+    & .cs-faq-chev {
+        order: 3;
+        display: grid;
+        flex: none;
+        width: 34px;
+        height: 34px;
+        place-items: center;
+        border-radius: 999px;
+        background: #f8fafc;
+        color: #94a3b8;
+    }
+
+    & .cs-faq[data-open] .cs-faq-chev { background: var(--cs-bg); color: var(--cs-ink); }
+
+    /* 답 — A 동그라미 + 분류 색 말풍선 */
+    & .cs-faq-a {
+        display: grid;
+        grid-template-columns: 42px minmax(0, 1fr);
+        gap: 0 14px;
+        padding: 0 20px 22px;
+    }
+
+    & .cs-faq-a > p {
+        margin: 0;
+        padding: 14px 20px;
+        border: 0;
+        border-radius: 8px 24px 24px 24px;
+        background: var(--cs-bg);
+        color: #475569;
+        font-size: 14.5px;
+        font-weight: 600;
+        line-height: 1.8;
+        word-break: keep-all;
+    }
+
+    & .cs-faq-links { grid-column: 2; margin-top: 12px; }
+
+    & .cs-faq-links a {
+        min-height: 42px;
+        padding: 0 16px;
+        border: 0;
+        background: #fff;
+        color: var(--cs-ink);
+        box-shadow: 0 0 0 2px var(--cs-ring), 0 8px 14px -12px rgb(15 23 42 / 35%);
+    }
+
+    & .cs-faq-links a:hover { border: 0; background: var(--cs-bg); }
+
+    /* 목록 끝 안내 한 줄 */
+    & .cs-more {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: 10px 16px;
+        max-width: 900px;
+        margin: 30px auto 0;
+        padding: 16px 24px;
+        border-radius: 999px;
+        background: #f7f5fe;
+        color: #475569;
+        font-size: 14px;
+        font-weight: 700;
+        text-align: center;
+        word-break: keep-all;
+    }
+
+    & .cs-more a {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        height: 40px;
+        padding: 0 18px;
+        border-radius: 999px;
+        background: var(--dw-pink);
+        color: #fff;
+        font-size: 13px;
+        font-weight: 800;
+        box-shadow: 0 8px 16px -10px rgb(200 80 120 / 60%);
+    }
+
+    & .cs-more a:hover { background: var(--dw-pink-deep); }
+
+    /* ── 1:1 문의 — 이메일(노랑) · 전화(민트) 쿠션 ── */
+    & .cs-contacts { gap: 22px; margin-top: 6px; }
+
+    & .cs-contact {
+        display: grid;
+        grid-template-columns: 80px minmax(0, 1fr);
+        align-content: start;
+        column-gap: 20px;
+        padding: 30px 32px;
+        border: 0;
+        border-radius: 40px;
+        background: var(--cs-bg);
+        box-shadow: var(--cs-cushion);
+        backdrop-filter: none;
+    }
+
+    & .cs-contact.is-mail { --cs-bg: #fff6e3; --cs-ink: #d97f0e; --cs-ring: #f7d48a; }
+    & .cs-contact.is-phone { --cs-bg: #e9f8f1; --cs-ink: #12a17a; --cs-ring: #a8e0c6; }
+    & .cs-contact:hover { border: 0; box-shadow: var(--cs-cushion); transform: translateY(-3px); }
+    & .cs-contact > * { grid-column: 2; }
+
+    & .cs-contact-icon {
+        grid-column: 1;
+        grid-row: 1 / span 4;
+        width: 80px;
+        height: 80px;
+        margin: 0;
+        background: #fff;
+        color: var(--cs-ink);
+        font-size: 30px;
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), inset 0 -8px 14px rgb(0 0 0 / 4%), 0 14px 22px -14px rgb(15 23 42 / 40%);
+    }
+
+    & .cs-contact > span.text-base {
+        color: var(--dw-ink);
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 22px;
+        font-weight: 400;
+    }
+
+    & .cs-contact > span.text-base + span { color: #64748b; font-weight: 600; }
+
+    & .cs-contact-go {
+        justify-self: start;
+        min-height: 42px;
+        margin-top: 14px;
+        padding: 0 18px;
+        border: 0;
+        background: #fff;
+        color: var(--cs-ink);
+        font-size: 14px;
+        box-shadow: 0 0 0 2px var(--cs-ring);
+    }
+
+    & .cs-contact.is-mail .cs-contact-go { background: var(--dw-pink); color: #fff; box-shadow: 0 8px 18px -10px rgb(200 80 120 / 60%); }
+    & .cs-contact-mail { margin-top: 10px; color: #94a3b8; }
+
+    /* ── 문의 쓰기 판 — 흰 쿠션 · 분홍 머리 · 크림 입력칸 ── */
+    & .cs-form {
+        margin-top: 28px;
+        border: 0;
+        border-radius: 40px;
+        background: #fff;
+        box-shadow: var(--cs-cushion);
+        backdrop-filter: none;
+    }
+
+    & .cs-form-head {
+        padding: 28px 34px 24px;
+        border: 0;
+        background: #ffeef3;
+    }
+
+    & .cs-form-head > p:first-child {
+        display: inline-block;
+        background-image: repeating-linear-gradient(172deg, #07849e 0 5px, #ef476f 5px 10px, #e98708 10px 15px);
+        -webkit-background-clip: text;
+        background-clip: text;
+        font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+        font-size: 13px;
+        -webkit-text-fill-color: transparent;
+    }
+
+    & .cs-form-head h2 {
+        position: relative;
+        width: fit-content;
+        color: var(--dw-ink);
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 24px;
+        font-weight: 400;
+        isolation: isolate;
+    }
+
+    & .cs-form-head h2 + p { margin-top: 10px; color: #64748b; font-weight: 600; }
+
+    & .cs-form-close {
+        width: 42px;
+        height: 42px;
+        border: 0;
+        background: #fff;
+        color: #e2557a;
+        box-shadow: 0 0 0 2px #f7c4d3;
+    }
+
+    & .cs-form-close:hover { background: #fff; color: #d0436d; }
+
+    & .cs-form-body { gap: 20px; padding: 30px 34px 34px; }
+
+    & .cs-form-body label:not(.cs-consent) {
+        color: var(--dw-ink);
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 15.5px;
+        font-weight: 400;
+    }
+
+    /* "(선택)" · "(알면 입력)" 은 이름 옆 한 줄에(입력칸은 아래 줄 전체) — 두 칸 줄의 입력칸 높이가 맞게 */
+    & .cs-form-body label:not(.cs-consent) {
+        grid-template-columns: auto minmax(0, 1fr);
+        align-items: end;
+        column-gap: 6px;
+    }
+
+    & .cs-form-body label:not(.cs-consent) > :is(input, select, textarea) { grid-column: 1 / -1; }
+    & .cs-form-body label:not(.cs-consent) > span { font-family: var(--font-wanted-sans), sans-serif; font-size: 12.5px; font-weight: 700; }
+
+    & .cs-form-body :is(input:not([type="checkbox"]), select, textarea) {
+        min-height: 50px;
+        border: 0;
+        border-radius: 18px;
+        background: #fffaf1;
+        color: var(--dw-ink);
+        font-family: var(--font-wanted-sans), sans-serif;
+        font-weight: 600;
+        box-shadow: 0 0 0 2px #f3e3cc;
+    }
+
+    & .cs-form-body :is(input:not([type="checkbox"]), select) { padding: 0 16px; }
+    & .cs-form-body textarea { padding: 14px 16px; }
+    & .cs-form-body :is(input, textarea)::placeholder { color: #b8a58c; font-weight: 500; }
+
+    & .cs-form-body :is(input:not([type="checkbox"]), select, textarea):focus {
+        background: #fff;
+        box-shadow: 0 0 0 2.5px #f7a8bf, 0 0 0 7px rgb(247 168 191 / 22%);
+    }
+
+    & .cs-consent {
+        padding: 16px 20px;
+        border: 0;
+        border-radius: 24px;
+        background: #f7f5fe;
+        color: #475569;
+        font-weight: 600;
+    }
+
+    & .cs-consent input { accent-color: var(--dw-pink); }
+
+    & .cs-consent a {
+        border: 0;
+        background: #fff;
+        color: #6b51c9;
+        text-decoration: none;
+        box-shadow: 0 0 0 1.5px #cfc3f5;
+    }
+
+    & .cs-submit {
+        min-height: 56px;
+        border-radius: 999px;
+        background: var(--dw-pink);
+        font-size: 16px;
+        box-shadow: 0 12px 22px -12px rgb(200 80 120 / 70%);
+    }
+
+    & .cs-submit:hover:not(:disabled) { background: var(--dw-pink-deep); box-shadow: 0 12px 22px -12px rgb(200 80 120 / 70%); }
+
+    /* 접수 확인 — 민트 쿠션 */
+    & .cs-receipt {
+        padding: 28px 30px;
+        border: 0;
+        border-radius: 32px;
+        background: #e9f8f1;
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%);
+    }
+
+    & .cs-receipt h3 { font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 21px; font-weight: 400; }
+    & .cs-receipt > span:first-child { background: #12a17a; box-shadow: 0 0 0 4px #fff; }
+    & .cs-receipt button { min-height: 42px; border: 0; border-radius: 999px; background: #fff; box-shadow: 0 0 0 2px #a8e0c6; }
+
+    /* 문의 전 확인 셋 — 흰 알약 줄 */
+    & .cs-help {
+        gap: 14px;
+        margin-top: 26px;
+        padding: 0;
+        border: 0;
+        background: transparent;
+    }
+
+    & .cs-help-link {
+        min-height: 76px;
+        padding: 12px 22px 12px 12px;
+        border: 0;
+        border-radius: 999px;
+        background: #fff;
+        box-shadow: var(--cs-cushion-sm);
+    }
+
+    & .cs-help-link:hover { border: 0; background: #fff; transform: translateY(-2px); }
+
+    & .cs-help-link > span:first-child {
+        width: 52px;
+        height: 52px;
+        background: var(--cs-bg);
+        color: var(--cs-ink);
+        font-size: 19px;
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%);
+    }
+
+    & .cs-help-link b {
+        color: var(--dw-ink);
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 17px;
+        font-weight: 400;
+    }
+
+    & .cs-help-link > i { color: var(--cs-ink); }
+
+    /* ── 교환·반품 — 점선 네 단계 · 정책 구역 색 쿠션 ── */
+    & .cs-steps-wrap { display: block; }
+    & .cs-steps { --dw-step: 116px; }
+
+    & .cs-steps .dw-dstep-art {
+        background: var(--cs-bg);
+        box-shadow: inset 0 4px 0 rgb(255 255 255 / 90%), inset 0 -10px 18px rgb(0 0 0 / 4%), 0 18px 26px -20px rgb(15 23 42 / 35%);
+    }
+
+    & .cs-steps .dw-dstep-art img { width: 70%; height: 70%; }
+    & .cs-steps > li { --dw-no: var(--cs-ink); }
+    & .cs-steps .dw-dstep-body { max-width: 210px; }
+
+    & .cs-policy {
+        margin-top: 6px;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        box-shadow: none;
+    }
+
+    & .cs-policy > div:first-child { gap: 22px; }
+
+    /* 정책 구역마다 색 쿠션(배송 하늘 · 반품 안내 민트 · 기간 노랑 · 불가 사유 분홍 · 환불 연보라) */
+    & .cs-policy section {
+        padding: 30px 34px;
+        border: 0;
+        border-radius: 40px;
+        background: var(--cs-bg);
+        box-shadow: var(--cs-cushion);
+    }
+
+    & .cs-policy > div:first-child > section:nth-child(1) { --cs-bg: #e9f4fb; --cs-ink: #0e7f93; }
+    & .cs-policy > div:first-child > section:nth-child(2) { --cs-bg: #e9f8f1; --cs-ink: #0f8a66; }
+    & .cs-policy > div:first-child > section:nth-child(3) { --cs-bg: #fff6e3; --cs-ink: #b86a08; }
+    & .cs-policy > div:first-child > section:nth-child(4) { --cs-bg: #ffeef3; --cs-ink: #d0436d; }
+    & .cs-refund { margin-top: 22px; --cs-bg: #f3f0fe; --cs-ink: #6b51c9; }
+
+    & :is(.cs-policy h3, .cs-refund h2) {
+        position: relative;
+        width: fit-content;
+        margin-bottom: 6px;
+        color: var(--dw-ink);
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 22px;
+        font-weight: 400;
+        isolation: isolate;
+    }
+
+    & .cs-policy section :is(p, li, dd) { color: #475569; font-weight: 600; }
+
+    & .cs-policy dl { gap: 8px; }
+
+    & .cs-policy dl > div {
+        padding: 10px 18px;
+        border-radius: 18px;
+        background: rgb(255 255 255 / 75%);
+    }
+
+    & .cs-policy dt {
+        color: var(--cs-ink);
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-weight: 400;
+    }
+
+    & .cs-policy li::marker { color: var(--cs-ink); font-weight: 800; }
+}
+
+/* ── 태블릿 · 휴대폰 ── */
+@media (max-width: 860px) {
+    html:not(.ddb-app-mode) main[data-support-web] {
+        & .cs-hero { padding: 26px 22px 28px; gap: 18px; }
+        & .cs-hero .cs-ring { --dw-ring: 140px; }
+        & .cs-title { margin-inline: auto; }
+        & .cs-lead { margin-inline: auto; }
+        & .cs-actions { justify-content: center; }
+    }
+}
+
+@media (max-width: 640px) {
+    html:not(.ddb-app-mode) main[data-support-web] {
+        & .cs-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+        & .cs-tab { justify-content: flex-start; height: 48px; padding-right: 12px; font-size: 14.5px; }
+        & .cs-tab img { width: 32px; height: 32px; }
+
+        /* 공지 — 날짜를 카드 위 한 줄로, 점 줄은 숨김 */
+        & .cs-notice { grid-template-columns: minmax(0, 1fr); padding-bottom: 18px; }
+        & .cs-when { flex-direction: row; align-items: baseline; gap: 6px; padding: 0 0 8px 10px; }
+        & .cs-when b { font-size: 17px; }
+        & .cs-rail { display: none; }
+        & .cs-notice-card { padding: 22px 22px 24px; border-radius: 28px; }
+        & .cs-notice-card h2 { font-size: 19px; }
+
+        /* FAQ — 분류 꼬리표는 질문 위로 */
+        & .cs-faq-q { flex-wrap: wrap; padding: 14px 16px; gap: 10px; }
+        /* 첫 줄 = Q · 분류 꼬리표 · 펼침 단추(오른쪽 끝), 둘째 줄 = 질문 전체 폭 */
+        & .cs-faq-q > span.flex-1 { order: 4; flex-basis: 100%; font-size: 16.5px; }
+        & .cs-faq-cat { order: 0; }
+        & .cs-faq-chev { order: 1; margin-left: auto; }
+        & .cs-qa { width: 36px; height: 36px; font-size: 17px; }
+        & .cs-faq-a { grid-template-columns: 36px minmax(0, 1fr); gap: 0 10px; padding: 0 16px 18px; }
+        & .cs-more { border-radius: 28px; }
+
+        /* 문의 */
+        & .cs-contact { grid-template-columns: 64px minmax(0, 1fr); column-gap: 16px; padding: 24px 22px; border-radius: 32px; }
+        & .cs-contact-icon { width: 64px; height: 64px; font-size: 24px; }
+        & .cs-contact > span.text-base { font-size: 20px; }
+        & .cs-form { border-radius: 32px; }
+        & .cs-form-head { padding: 22px 22px 20px; }
+        & .cs-form-body { padding: 22px 20px 26px; }
+
+        /* 교환 */
+        & .cs-policy section { padding: 24px 20px; border-radius: 30px; }
+        & .cs-steps { --dw-step: 92px; }
+    }
+}
