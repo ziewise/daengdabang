@@ -284,3 +284,194 @@ html:not(.ddb-app-mode) [data-lab-web] {
         & [data-petlens-member-gate] > div { padding: 28px 20px 24px; border-radius: 34px !important; }
     }
 }
+
+/* ───────── 3부 · 행동·소리 분석(O1 · 2026-10-23 사용자 선택) ─────────
+   사진 분석(P3)과 같은 짝: ① 민트 "15초 촬영" 판 · ② 분홍 "촬영 상황 알려 주기" 판(같은 높이) → 발자국 →
+   코인 · 병원 먼저 띠 → 연보라 "이렇게 결과가 나와요"(예시) → 발자국 → 최근 분석.
+   코드 순서 · 동작은 그대로 두고 화면 순서(order) · 모양만. 펫렌즈 창(data-variant="modal") · 앱은 그대로 */
+html:not(.ddb-app-mode) [data-lab-web] [data-petlens-observation-experience][data-variant="page"] {
+    grid-template-columns: minmax(0, 420px) minmax(0, 1fr);
+    gap: 18px;
+
+    /* 화면 순서 */
+    & > * { grid-column: 1 / -1; }
+    & > .lab-obs-intro { display: none; }
+    & > [data-daenglab-observation-engine-warning] { order: 1; }
+    & > .lab-obs-pair { order: 2; }
+    & > .lab-obs-paw-a { order: 3; }
+    & > :is([data-daenglab-analysis-wallet], [data-petlens-emergency-preflight]) { order: 4; }
+    & > [data-daenglab-analysis-wallet] { grid-column: 1; }
+    & > [data-petlens-emergency-preflight] { grid-column: 2; }
+    & > .lab-obs-sample { order: 5; }
+    & > .lab-obs-paw-b { order: 6; }
+    & > [data-app-fold="history"] > [data-app-fold-body] > [data-petlens-observation-history] { order: 7; grid-column: 1 / -1; }
+    /* 발자국 — 판 사이 간격(18px)을 빼서 다른 페이지와 같은 두 걸음 간격 */
+    & > .lab-obs-paw { display: block; margin: -18px 0; }
+
+    /* 두 판 */
+    & .lab-obs-pair { gap: 22px; align-items: stretch; }
+    & .lab-obs-pair > .lab-obs-capture { align-content: start; gap: 14px; padding: 28px 30px; border-radius: 40px; background: #e9f8f1; box-shadow: var(--lab-cushion); }
+    & .lab-obs-pair > .lab-obs-info {
+        height: auto;
+        align-content: start;
+        gap: 18px;
+        padding: 28px 30px;
+        border: 0 !important;
+        border-radius: 40px !important;
+        background: #ffeef3;
+        box-shadow: var(--lab-cushion) !important;
+    }
+    & .lab-obs-pair .lab-pane-head { margin-bottom: 0; }
+
+    /* ① 뷰파인더 — 어두운 보랏빛 화면 · 모서리 괄호 · 15초 고리 · 권장 칩 · 영상 그림 */
+    & .lab-obs-capture [data-petlens-live-camera] {
+        border: 0 !important;
+        border-radius: 30px !important;
+        background: radial-gradient(circle at 50% 40%, #3a3550, #1e1b2e);
+        box-shadow: inset 0 0 0 6px rgb(255 255 255 / 8%), 0 18px 30px -20px rgb(15 23 42 / 60%) !important;
+    }
+    & .lab-vf-idle::before,
+    & .lab-vf-idle::after { content: ""; position: absolute; width: 46px; height: 46px; border: 4px solid rgb(255 255 255 / 75%); border-radius: 10px; pointer-events: none; }
+    & .lab-vf-idle::before { left: 22px; top: 22px; border-right: 0; border-bottom: 0; }
+    & .lab-vf-idle::after { right: 22px; bottom: 22px; border-left: 0; border-top: 0; }
+    & .lab-vf-icon { display: none; }
+    & .lab-vf-art { display: block !important; width: 84px; height: 84px; margin: 0 auto 4px; object-fit: contain; filter: drop-shadow(0 8px 14px rgb(0 0 0 / 35%)); }
+    & .lab-vf-idle p:first-of-type { font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 18px; font-weight: 400; }
+    & .lab-vf-idle p + p { font-size: 12px; }
+    & .lab-vf-timer {
+        position: absolute;
+        right: 20px;
+        top: 18px;
+        display: grid !important;
+        width: 58px;
+        height: 58px;
+        place-items: center;
+        border-radius: 999px;
+        background: conic-gradient(#f7a8bf 0 75%, rgb(255 255 255 / 18%) 0);
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 15px;
+    }
+    & .lab-vf-timer::before { content: ""; position: absolute; inset: 6px; border-radius: 999px; background: #2a2640; }
+    & .lab-vf-timer > span { position: relative; }
+    & .lab-vf-chip { position: absolute; left: 22px; bottom: 20px; display: inline-flex !important; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; background: rgb(255 255 255 / 14%); font-size: 12px; font-weight: 800; }
+    & .lab-vf-chip > i { width: 9px; height: 9px; border-radius: 999px; background: #ff6b8a; }
+    & [data-petlens-capture-controls] { gap: 10px; }
+    & [data-petlens-capture-controls] > button { min-height: 48px; font-size: 14px; }
+
+    /* 촬영 조건 알약(긴 안내 글 대신) — 빈 화면일 때 미리보기 방향 안내도 숨김 */
+    & .lab-obs-facts { display: flex !important; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+    & .lab-obs-facts > li { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 999px; background: rgb(255 255 255 / 85%); color: #475569; font-size: 12px; font-weight: 800; }
+    & .lab-obs-facts b { color: var(--lab-pink-deep); }
+    & .lab-obs-facts > .is-engine { color: #94a3b8; }
+    & .lab-obs-facts > .is-engine.is-ready { color: #12a17a; }
+    & .lab-obs-facts > .is-engine.is-unavailable { color: #b45309; }
+    & .lab-obs-note { display: none; }
+    & .lab-obs-capture:has(.lab-vf-idle) > [data-petlens-orientation-status] { display: none; }
+
+    /* ② 상황 판 — 상황 알약 · 대상견 알약 · 메모 · 동의 */
+    & .lab-obs-situation-select { display: none; }
+    & .lab-obs-situations { display: block !important; }
+    & .lab-obs-label,
+    & .lab-obs-info label > span.text-xs:first-child { display: block; margin-bottom: 8px; color: #64748b; font-size: 12px; font-weight: 800; }
+    & .lab-obs-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+    & .lab-obs-pills > button { padding: 7px 13px; border-radius: 999px; background: #fff; color: #475569; font-size: 12.5px; font-weight: 800; box-shadow: inset 0 0 0 1.5px #eef0f4; transition: transform 0.15s ease; }
+    & .lab-obs-pills > button:hover:not(:disabled) { transform: translateY(-1px); }
+    & .lab-obs-pills > button.is-on { background: #fff1f5; color: var(--lab-pink-deep); box-shadow: inset 0 0 0 2px #f7a8bf; }
+    & .lab-obs-pills > button:disabled { cursor: not-allowed; opacity: 0.55; }
+    & .lab-obs-info [data-daenglab-target-anchor-picker] { padding: 0 !important; border: 0 !important; background: transparent !important; box-shadow: none !important; }
+    & .lab-obs-info [data-daenglab-target-anchor-picker] > div:first-child p:first-child { color: #64748b; font-size: 12px; }
+    & .lab-obs-info [data-daenglab-target-anchor-picker] > div:first-child p + p { display: none; } /* 아래 요약 줄과 같은 말 — 한 번만 */
+    & .lab-obs-info [data-daenglab-target-anchor-picker] > div:first-child > span { box-shadow: inset 0 0 0 1.5px #eef0f4; }
+    & .lab-obs-info [data-daenglab-target-anchor-summary] { margin-top: 6px; color: #64748b; }
+    & .lab-obs-info :is([data-daenglab-target-anchor-action], [data-daenglab-clear-target-anchor]) { min-height: 36px; font-size: 12.5px; color: #475569; }
+    & .lab-obs-info [data-daenglab-single-dog-auto] {
+        min-height: 36px;
+        border: 0 !important;
+        border-radius: 999px !important;
+        background: #fff1f5 !important;
+        color: var(--lab-pink-deep) !important;
+        font-size: 12.5px;
+        box-shadow: inset 0 0 0 2px #f7a8bf !important;
+    }
+    & .lab-obs-info textarea { min-height: 84px; border-radius: 18px; }
+    & .lab-obs-info label:has(> input[type="checkbox"]) { border: 0 !important; border-radius: 18px !important; background: rgb(255 255 255 / 75%) !important; box-shadow: none !important; }
+    & .lab-obs-info .lab-obs-fine { padding: 0 4px !important; background: transparent !important; color: #94a3b8; }
+
+    /* 코인 · 병원 먼저 띠 — 노랑 · 분홍 쿠션 */
+    & > div[data-daenglab-analysis-wallet].border,
+    & > div[data-petlens-emergency-preflight].border { align-self: stretch; padding: 18px 24px !important; border: 0 !important; border-radius: 30px !important; box-shadow: var(--lab-cushion) !important; }
+    & > div[data-daenglab-analysis-wallet].border { background: #fff6d6 !important; }
+    & > div[data-petlens-emergency-preflight].border { position: relative; padding-left: 86px !important; background: #ffeef3 !important; }
+    & > div[data-petlens-emergency-preflight]::before { content: ""; position: absolute; left: 24px; top: 50%; width: 46px; height: 46px; translate: 0 -50%; background: url("/images/ui/lab-priority-160.webp") center / contain no-repeat; }
+    & > div[data-petlens-emergency-preflight] > p:first-child { color: var(--lab-ink); font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 16px; font-weight: 400; }
+    & > div[data-petlens-emergency-preflight] > p + p { color: #64748b; font-size: 12px; }
+
+    /* 결과 예시(연보라 판) */
+    & .lab-obs-sample { display: block !important; padding: 30px 34px !important; border-radius: 42px !important; }
+    & .lab-obs-sample-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+    & .lab-obs-sample-top h2 { margin-top: 6px; font-size: 26px; }
+    & .lab-obs-sample-tag { display: inline-flex; align-items: center; gap: 6px; padding: 5px 13px; border-radius: 999px; background: #fff; color: #7c62d6; font-size: 11.5px; font-weight: 800; box-shadow: 0 6px 12px -10px rgb(15 23 42 / 45%); }
+    & .lab-obs-chart { margin: 18px 0 0; padding: 16px 18px 10px; border-radius: 26px; background: #fff; box-shadow: 0 10px 18px -16px rgb(15 23 42 / 40%); }
+    & .lab-obs-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; color: #475569; font-size: 12px; font-weight: 800; }
+    & .lab-obs-legend i { display: inline-block; width: 22px; height: 5px; margin-right: 6px; border-radius: 99px; vertical-align: middle; }
+    & .lab-obs-legend small { margin-left: 4px; color: #94a3b8; font-size: 11px; }
+    & .lab-obs-legend em { margin-left: auto; color: #94a3b8; font-size: 11px; font-style: normal; }
+    & .lab-obs-plot { position: relative; margin-top: 10px; }
+    & .lab-obs-plot svg { display: block; width: 100%; height: 150px; }
+    & .lab-obs-peaks > span { position: absolute; width: 16px; height: 16px; border: 4px solid; border-radius: 999px; background: #fff; translate: -50% -50%; }
+    & .lab-obs-axis { display: flex; justify-content: space-between; margin-top: 4px; color: #94a3b8; font-size: 11px; font-weight: 800; }
+    & .lab-obs-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 14px 0 0; padding: 0; list-style: none; }
+    & .lab-obs-cards > li { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 24px; background: #fff; box-shadow: 0 10px 18px -16px rgb(15 23 42 / 40%); }
+    & .lab-obs-cards img { width: 52px; height: 52px; flex: none; object-fit: contain; }
+    & .lab-obs-cards small { display: block; color: #94a3b8; font-size: 11.5px; font-weight: 800; }
+    & .lab-obs-cards b { display: block; color: var(--lab-ink); font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 17px; font-weight: 400; }
+    & .lab-obs-cards em { font-size: 12px; font-style: normal; font-weight: 800; }
+    & .lab-obs-cards .is-pink em { color: var(--lab-pink-deep); }
+    & .lab-obs-cards .is-lav em { color: #7c62d6; }
+    & .lab-obs-cards .is-mint em { color: #12a17a; }
+    & .lab-obs-extras { display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0 0; padding: 0; list-style: none; }
+    & .lab-obs-extras > li { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px 6px 6px; border-radius: 999px; background: rgb(255 255 255 / 85%); color: #475569; font-size: 12.5px; font-weight: 800; }
+    & .lab-obs-extras img { width: 30px; height: 30px; object-fit: contain; }
+
+    /* 최근 분석 — 판 없이 제목 + 가로로 넘기는 기록 카드 */
+    & > [data-app-fold="history"] > [data-app-fold-body] > section[data-petlens-observation-history].border { padding: 0 4px !important; border: 0 !important; background: transparent !important; box-shadow: none !important; }
+    & [data-petlens-observation-history] > div:first-child p:first-child { color: var(--lab-ink); font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 20px; font-weight: 400; }
+    & [data-petlens-observation-history] > div:first-child p + p { font-size: 12px; }
+    & [data-petlens-observation-history] > div.grid { display: flex; gap: 12px; overflow-x: auto; padding: 4px 2px 12px; }
+    & [data-petlens-observation-history] button.rounded-xl { flex: none; width: 260px; padding: 14px 16px; border: 0; border-radius: 22px !important; background: #fff; box-shadow: 0 10px 18px -14px rgb(15 23 42 / 40%); }
+    & [data-petlens-observation-history] button.rounded-xl:hover { background: #fff; transform: translateY(-2px); }
+    & [data-petlens-observation-history] > p { border-radius: 20px; background: #fff; }
+}
+
+/* 행동·소리 — 넓은 화면은 두 판 나란히(촬영 판을 조금 넓게) */
+@media (min-width: 1024px) {
+    html:not(.ddb-app-mode) [data-lab-web] [data-petlens-observation-experience][data-variant="page"] .lab-obs-pair { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); }
+}
+
+/* 행동·소리 — 태블릿 이하: 코인 · 병원 띠 위아래, 예시 카드 한 줄씩 */
+@media (max-width: 900px) {
+    html:not(.ddb-app-mode) [data-lab-web] [data-petlens-observation-experience][data-variant="page"] {
+        & > :is([data-daenglab-analysis-wallet], [data-petlens-emergency-preflight]) { grid-column: 1 / -1; }
+        & .lab-obs-cards { grid-template-columns: minmax(0, 1fr); }
+    }
+}
+
+/* 행동·소리 — 휴대폰: 판 여백 줄이고 화면 위 칩은 숨김 */
+@media (max-width: 640px) {
+    html:not(.ddb-app-mode) [data-lab-web] [data-petlens-observation-experience][data-variant="page"] {
+        & .lab-obs-pair > :is(.lab-obs-capture, .lab-obs-info) { padding: 22px 16px; border-radius: 30px !important; }
+        & .lab-vf-chip { display: none !important; }
+        & .lab-vf-timer { right: 14px; top: 12px; width: 46px; height: 46px; font-size: 12.5px; }
+        & .lab-vf-art { width: 60px; height: 60px; }
+        & .lab-vf-idle p:first-of-type { padding: 0 26px; font-size: 15px; }
+        & .lab-vf-idle p + p { display: none; }
+        & .lab-vf-idle::before, & .lab-vf-idle::after { width: 32px; height: 32px; }
+        & .lab-vf-idle::before { left: 14px; top: 14px; }
+        & .lab-vf-idle::after { right: 14px; bottom: 14px; }
+        & > div[data-petlens-emergency-preflight].border { padding: 16px 18px 16px 74px !important; }
+        & > div[data-petlens-emergency-preflight]::before { left: 18px; width: 40px; height: 40px; }
+        & .lab-obs-sample { padding: 22px 16px !important; border-radius: 30px !important; }
+        & .lab-obs-sample-top h2 { font-size: 22px; }
+        & .lab-obs-plot svg { height: 120px; }
+    }
+}
