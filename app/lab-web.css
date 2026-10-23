@@ -697,7 +697,21 @@ html:not(.ddb-app-mode) [data-lab-web] .lab-result {
     & .lab-result-card > [data-petlens-result-profile-cta] { grid-column: 2; }
     & .lab-result-card:not(:has(> .lab-photo-pillar)) { grid-template-columns: minmax(0, 1fr); }
     & .lab-result-card:not(:has(> .lab-photo-pillar)) > * { grid-column: 1; }
-    & .lab-result-card > [data-petlens-result-profile-cta] { justify-self: start; margin-top: 8px !important; }
+    /* 내 아이 기록 링크 — 흰 알약 대신 "자세히 보기"와 같은 결의 글 링크 */
+    & .lab-result-card > a[data-petlens-result-profile-cta].btn-secondary {
+        justify-self: start;
+        width: auto;
+        min-height: 0;
+        margin-top: 14px !important;
+        padding: 0 !important;
+        border: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        color: #7c62d6;
+        font-size: 14px;
+        font-weight: 800;
+    }
+    & .lab-result-card > a[data-petlens-result-profile-cta]::after { content: "→"; margin-left: 2px; }
 
     /* 사진 기둥 */
     & .lab-photo-pillar figure { position: relative; margin: 0; }
@@ -737,9 +751,12 @@ html:not(.ddb-app-mode) [data-lab-web] .lab-result {
     & [data-petlens-result-hero] > div > div:first-child { display: flex; flex-direction: column; align-items: flex-start; }
     & [data-petlens-result-hero] > div > div:first-child > h3 { order: 1; margin-top: 0 !important; font-size: 34px !important; line-height: 1.25 !important; word-break: keep-all; }
     & [data-petlens-result-hero] > div > div:first-child > p:not(.lab-report-kicker) { order: 2; margin-top: 14px !important; max-width: 520px; color: #64748b; font-size: 15px; font-weight: 600; line-height: 1.8; }
-    & [data-petlens-result-hero] > div > div:first-child > div { order: 3; margin-top: 18px; gap: 8px; }
-    & [data-petlens-result-hero] > div > div:first-child > div > span { padding: 6px 14px; background: #fff !important; color: #475569; font-size: 12.5px; box-shadow: 0 6px 12px -10px rgb(15 23 42 / 45%); }
-    & [data-petlens-result-hero] > div > div:first-child > div > span:first-child { background: #f3f0fe !important; color: #7c62d6; }
+    /* 상태 칩 → 알약 없이 색 점 + 작은 글 한 줄(판 없는 글 흐름에 어울리게) */
+    & [data-petlens-result-hero] > div > div:first-child > div { order: 3; margin-top: 16px; gap: 6px 18px; }
+    & [data-petlens-result-hero] > div > div:first-child > div > span { display: inline-flex; align-items: center; gap: 7px; padding: 0; border-radius: 0; background: transparent !important; color: #64748b; font-size: 13.5px; font-weight: 800; box-shadow: none; }
+    & [data-petlens-result-hero] > div > div:first-child > div > span::before { content: ""; width: 8px; height: 8px; border-radius: 999px; background: #9fe0c4; }
+    & [data-petlens-result-hero] > div > div:first-child > div > span:nth-child(1)::before { background: #c9b5f5; }
+    & [data-petlens-result-hero] > div > div:first-child > div > span:nth-child(3)::before { background: #f7a8bf; }
     & [data-petlens-result-hero] > div > div:last-child:not(:first-child) { display: none; }
 
     /* 단락 제목 — 주아 + 세 색 밑줄 */
