@@ -742,6 +742,7 @@ html:not(.ddb-app-mode) [data-lab-web] .lab-result {
     & [data-petlens-result-confirmed-breed] > p:first-child { display: inline; margin-right: 8px; color: #94a3b8; font-size: 13px; font-weight: 800; }
     & [data-petlens-result-confirmed-breed] > div { display: inline-flex; margin: 0 !important; vertical-align: middle; }
     & [data-petlens-result-confirmed-breed] strong { font-size: 15px; color: #475569; }
+    & [data-petlens-result-confirmed-breed] > div > span { display: none; } /* "회원 확인" 알약 — 바로 앞 문구와 같은 뜻이라 숨김 */
     & [data-petlens-result-confirmed-breed] > p:last-child { display: none; }
     & [data-petlens-result-profile-notice] p { color: #94a3b8 !important; font-size: 13px; line-height: 1.6; }
 
@@ -784,10 +785,10 @@ html:not(.ddb-app-mode) [data-lab-web] .lab-result {
     & [data-petlens-result-breed-candidates] article { padding: 0 !important; border: 0 !important; background: transparent !important; box-shadow: none !important; }
     & [data-petlens-result-breed-candidates] article > p:first-child { display: none; }
     & [data-petlens-result-breed-candidates] article > p:nth-child(2) { display: inline; margin: 0 !important; color: #94a3b8; font-size: 15px; }
-    & [data-petlens-result-breed-candidates] article > span { margin: 0 0 0 6px !important; padding: 2px 8px; background: #f1f5f9 !important; color: #94a3b8; vertical-align: middle; }
+    & [data-petlens-result-breed-candidates] article > span { margin: 0 0 0 8px !important; padding: 0; border-radius: 0; background: transparent !important; color: #b8c0cc; font-size: 12.5px; vertical-align: baseline; } /* 알약 대신 작은 글 */
     & [data-petlens-result-breed-candidates] article:first-child { flex-basis: 100%; }
     & [data-petlens-result-breed-candidates] article:first-child > p:nth-child(2) { color: #7c62d6; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 32px; font-weight: 400; }
-    & [data-petlens-result-breed-candidates] article:first-child > span { background: #f3f0fe !important; color: #7c62d6; }
+    & [data-petlens-result-breed-candidates] article:first-child > span { background: transparent !important; color: #a48fe6; font-size: 14px; }
     & [data-petlens-result-breed-candidates] article > p:last-child:not(:nth-child(2)) { margin-top: 4px !important; color: #94a3b8; font-size: 13px; }
 
     /* 자세히 보기 단추 */
