@@ -2,7 +2,7 @@
  * PetLensObservationReport — 행동·소리 분석 결과 "한 장 리포트" 머리 판(웹 연구소 페이지 전용 · 2026-10-23 사용자 선택 R1)
  * ---------------------------------------------------------------------
  * 실제 분석 결과(PetObservationResult)만으로 그린다 — 지어낸 값 없음.
- *  - 요약 한 줄 · 우선 확인 상태 칩 · 촬영 품질 칩
+ *  - 요약 한 줄 · 우선 확인 상태 칩 · 촬영 품질 칩 · 결과 상태 그림(아이 사진 아님 — 등록한 아이가 아닌 강아지도 분석 가능)
  *  - 작은 그래프 하나: 분야(행동 · 소리 · 건강 · 우선 확인)마다 가장 강한 후보 1개의 시간별 근거를 겹쳐 그림.
  *    원래 결과 화면과 같은 규칙 — 확인된 시점만 직선으로 잇고, 한 시점뿐이면 짧은 선 + 점(가짜 추세 없음).
  *    아래에는 그 후보들의 근거가 된 순간(관찰)을 작은 표시로.
@@ -128,9 +128,15 @@ export default function PetLensObservationReport({ result }: { result: PetObserv
                         {qualityChips.map((chip) => <li key={chip}>{chip}</li>)}
                     </ul>
                 </div>
-                <span className="lab-obs-report-ring" aria-hidden="true">
-                    <span><Image src="/images/ui/lab-researcher-384.webp" alt="" width={96} height={96} /></span>
-                </span>
+                {/* 결과 상태 그림 — 영상 속 강아지가 등록한 아이가 아닐 수 있어 아이 사진 대신 리포트 그림(우선 확인이면 경고 그림) */}
+                <Image
+                    src={urgencyHigh ? "/images/ui/lab-priority-160.webp" : "/images/ui/lab-summary-256.webp"}
+                    alt=""
+                    width={140}
+                    height={140}
+                    className="lab-obs-report-art"
+                    aria-hidden="true"
+                />
             </div>
 
             {/* 그래프 하나 — 분야별 가장 강한 후보의 시간별 근거 */}
