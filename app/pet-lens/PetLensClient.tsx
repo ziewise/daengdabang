@@ -797,6 +797,7 @@ export default function PetLensClient() {
                     {result ? (
                         <div className="grid gap-5">
                             <div className="surface lab-result-card p-5">
+                                <LabPhotoPillar photoViews={photoViews} fallback={result.profile.photoDataUrl} name={result.profile.name} />
                                 <PetLensAnalysisSummary profile={result.profile} details={result.details} />
                                 <Link
                                     href="/my-pet/#health-report"
@@ -841,6 +842,43 @@ export default function PetLensClient() {
             </>
             )}
         </LabMain>
+    );
+}
+
+/**
+ * 사진 기둥(웹 연구소 페이지 전용 · 2026-10-23 사용자 선택 V1) — 사진 분석 결과 왼쪽에 이번에 넣은 방향 사진을 보여 준다.
+ * 첫 사진(보통 정면)은 크게, 나머지는 같은 크기로 한 줄. 넣은 사진이 없으면 대표 사진 한 장.
+ * 기본 hidden — app/lab-web.css 에서만 보이고, 앱 · 펫렌즈 창은 그대로.
+ */
+function LabPhotoPillar({ photoViews, fallback, name }: {
+    photoViews: Partial<Record<(typeof PETLENS_PHOTO_VIEWS)[number]["id"], { dataUrl: string }>>;
+    fallback?: string;
+    name?: string;
+}) {
+    const shots = PETLENS_PHOTO_VIEWS
+        .map((view) => ({ id: view.id, label: view.label, src: photoViews[view.id]?.dataUrl }))
+        .filter((shot): shot is { id: (typeof PETLENS_PHOTO_VIEWS)[number]["id"]; label: (typeof PETLENS_PHOTO_VIEWS)[number]["label"]; src: string } => Boolean(shot.src));
+    const list = shots.length > 0 ? shots : fallback ? [{ id: "front" as const, label: "대표 사진", src: fallback }] : [];
+    if (list.length === 0) return null;
+    const [main, ...rest] = list;
+    const who = name || "우리 아이";
+    return (
+        <div className="lab-photo-pillar hidden">
+            <figure className="lab-photo-pillar-main">
+                <Image src={main.src} alt={`${who} ${main.label} 사진`} width={640} height={800} unoptimized />
+                <figcaption>{main.label}</figcaption>
+            </figure>
+            {rest.length > 0 && (
+                <div className="lab-photo-pillar-row">
+                    {rest.map((shot) => (
+                        <figure key={shot.id}>
+                            <Image src={shot.src} alt={`${who} ${shot.label} 사진`} width={240} height={240} unoptimized />
+                            <figcaption>{shot.label}</figcaption>
+                        </figure>
+                    ))}
+                </div>
+            )}
+        </div>
     );
 }
 

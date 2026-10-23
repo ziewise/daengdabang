@@ -33,6 +33,9 @@ function InsightList({ items, icon = "fa-check" }: { items: string[]; icon?: str
 export default function PetLensAnalysisSummary({ profile, details }: Props) {
     // 앱 전용 "자세히 보기"(로컬 시안) — 웹에서는 버튼이 hidden · 감싼 틀이 display:contents 라 지금과 똑같이 전부 보임
     const [appMoreOpen, setAppMoreOpen] = useState(false);
+    // 웹 연구소 페이지 전용 "자세히 보기"(V1) — 보호자 확인할 점 · 상품 고른 기준만 접어 둠(앱 · 펫렌즈 창은 그대로)
+    const [webMoreOpen, setWebMoreOpen] = useState(false);
+    const hasWebMore = details.profileCandidates.length > 0 || details.ownerChecks.length > 0 || details.recommendationSignals.length > 0;
     const hasAppMore = Boolean(
         details.confirmedBreed ||
         details.breedCandidates.length > 0 ||
@@ -42,10 +45,12 @@ export default function PetLensAnalysisSummary({ profile, details }: Props) {
         details.recommendationSignals.length > 0,
     );
     return (
-        <div className="grid gap-3" data-petlens-trust-result data-status={details.status} data-app-more-open={appMoreOpen ? "true" : "false"}>
+        <div className="grid gap-3" data-petlens-trust-result data-status={details.status} data-app-more-open={appMoreOpen ? "true" : "false"} data-web-more-open={webMoreOpen ? "true" : "false"}>
             <section className={`rounded-2xl border p-4 sm:p-5 ${STATUS_STYLES[details.status]}`} data-petlens-result-hero>
                 <div className="flex items-start gap-4">
                     <div className="min-w-0 flex-1">
+                        {/* 웹 연구소 페이지 전용 이름표(lab-web.css) */}
+                        <p className="ddb-crayon-kicker dw-kicker lab-report-kicker hidden">사진 건강 리포트</p>
                         <div className="flex flex-wrap items-center gap-2 text-[11px] font-black">
                             <span className="rounded-full bg-white/80 px-2.5 py-1">{details.statusLabel}</span>
                             <span className="rounded-full bg-white/80 px-2.5 py-1">{details.photoQualityLabel}</span>
@@ -162,6 +167,17 @@ export default function PetLensAnalysisSummary({ profile, details }: Props) {
                 </section>
             )}
             </div>
+            {hasWebMore && (
+                <button
+                    type="button"
+                    className="lab-report-more hidden"
+                    aria-expanded={webMoreOpen}
+                    onClick={() => setWebMoreOpen((value) => !value)}
+                >
+                    <span>{webMoreOpen ? "자세히 접기" : "보호자가 확인할 점 · 상품 고른 기준 자세히 보기"}</span>
+                    <i className={`fa-solid ${webMoreOpen ? "fa-chevron-up" : "fa-chevron-down"}`} aria-hidden="true" />
+                </button>
+            )}
             {hasAppMore && (
                 <button
                     type="button"

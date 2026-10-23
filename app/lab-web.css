@@ -162,17 +162,13 @@ html:not(.ddb-app-mode) [data-lab-web] {
     & .lab-concerns label:has(input:checked) { background: #fff1f5; color: var(--lab-pink-deep); box-shadow: inset 0 0 0 2px #f7a8bf, 0 8px 14px -12px rgb(200 80 120 / 55%); }
     & .lab-concerns input { accent-color: var(--lab-pink); }
     & .lab-result { margin-top: 26px; }
-    & .surface.lab-empty, & .surface.lab-result-card { background: #f3f0fe !important; }
+    & .surface.lab-empty { background: #f3f0fe !important; }
     & .lab-empty { display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-rows: auto auto; column-gap: 20px; align-items: center; padding: 22px 30px !important; border-radius: 34px !important; background: #f3f0fe !important; text-align: left !important; }
     & .lab-empty > * { margin: 0 !important; }
     & .lab-empty-art { display: block !important; grid-row: 1 / span 2; width: 76px; height: 76px; object-fit: contain; }
     & .lab-empty h2 { align-self: end; font-size: 19px !important; }
     & .lab-empty p { align-self: start; }
-    & .lab-result-card { padding: 26px 28px !important; border-radius: 40px !important; background: #f3f0fe !important; }
-    & .lab-result-card [data-petlens-trust-result] { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
-    & .lab-result-card [data-petlens-trust-result] > [data-petlens-result-hero] { grid-column: 1 / -1; }
     & .lab-empty-icon { display: none; }
-    & .lab-result-card { border-radius: 36px !important; }
 
     /* AI 상담(/chat) — 머리 판 버튼 줄 · 둥근 쿠션(버튼) */
     & .lab-chat-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
@@ -279,7 +275,6 @@ html:not(.ddb-app-mode) [data-lab-web] {
         & .lab-mode-pills img { width: 26px; height: 26px; }
         & .lab-empty { padding: 18px 18px !important; column-gap: 14px; }
         & .lab-empty-art { width: 60px; height: 60px; }
-        & .lab-result-card { padding: 20px 14px !important; border-radius: 30px !important; }
         & .lab-form { padding: 20px 16px !important; border-radius: 30px !important; }
         & [data-petlens-member-gate] > div { padding: 28px 20px 24px; border-radius: 34px !important; }
     }
@@ -675,5 +670,136 @@ html:not(.ddb-app-mode) [data-lab-web] [data-variant="page"] [data-petlens-obser
         & .lab-obs-moments > li { font-size: 10px; padding: 3px 8px; }
         & .lab-obs-plot svg { height: 120px; }
         & > section:is([data-observation-urgency], [data-daenglab-bark-context-translator], [data-daenglab-nutrition-recommendations]).border { padding: 22px 16px !important; border-radius: 30px !important; }
+    }
+}
+
+/* ───────── 6부 · 사진 건강 분석 결과(V1 사진 기둥 · 2026-10-23 사용자 선택) ─────────
+   판을 쌓지 않음: 왼쪽 = 이번에 넣은 사진 기둥(첫 사진 크게 + 나머지 같은 크기 한 줄),
+   오른쪽 = 글 흐름(이름표 · 큰 제목 · 설명 · 칩 → 닮은 견종 → 보이는 것 → 오늘의 케어 → 다시 찍기),
+   각 단락은 세 색 밑줄 제목 + 옅은 선으로만 나눔. 보호자 확인할 점 · 상품 고른 기준은 "자세히 보기".
+   상품은 판 없이 가로로 넘기는 줄. 결과 조각 · 문구 · 동작은 그대로, 앱 · 펫렌즈 창도 그대로 */
+html:not(.ddb-app-mode) [data-lab-web] .lab-result {
+    --lab-stripe: linear-gradient(90deg, #f7a8bf 0 33%, #ffd48a 33% 66%, #9cc9f0 66% 100%);
+
+    /* 결과 판 → 판 없이 두 단(사진 기둥 | 글 흐름) */
+    & .surface.lab-result-card {
+        display: grid;
+        grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+        column-gap: 64px;
+        align-items: start;
+        padding: 0 !important;
+        border-radius: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+    }
+    & .lab-result-card > .lab-photo-pillar { display: grid !important; grid-column: 1; grid-row: 1 / span 2; gap: 16px; }
+    & .lab-result-card > [data-petlens-trust-result],
+    & .lab-result-card > [data-petlens-result-profile-cta] { grid-column: 2; }
+    & .lab-result-card:not(:has(> .lab-photo-pillar)) { grid-template-columns: minmax(0, 1fr); }
+    & .lab-result-card:not(:has(> .lab-photo-pillar)) > * { grid-column: 1; }
+    & .lab-result-card > [data-petlens-result-profile-cta] { justify-self: start; margin-top: 8px !important; }
+
+    /* 사진 기둥 */
+    & .lab-photo-pillar figure { position: relative; margin: 0; }
+    & .lab-photo-pillar img { display: block; width: 100%; height: auto; object-fit: cover; }
+    & .lab-photo-pillar-main img { aspect-ratio: 4 / 5; border-radius: 40px; box-shadow: 0 0 0 7px #fff, 0 24px 40px -26px rgb(15 23 42 / 50%); }
+    & .lab-photo-pillar-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+    & .lab-photo-pillar-row img { aspect-ratio: 1; border-radius: 26px; box-shadow: 0 0 0 5px #fff, 0 14px 22px -16px rgb(15 23 42 / 50%); }
+    & .lab-photo-pillar figcaption { position: absolute; left: 14px; bottom: 12px; padding: 4px 12px; border-radius: 999px; background: rgb(255 255 255 / 92%); color: #475569; font-size: 12px; font-weight: 800; }
+    & .lab-photo-pillar-row figcaption { left: 8px; bottom: 8px; padding: 3px 10px; font-size: 11px; }
+
+    /* 글 흐름 — 단락은 판 없이 옅은 선으로만 */
+    & [data-petlens-trust-result] { gap: 0 !important; }
+    & [data-petlens-trust-result] :is(section) { padding: 30px 0 !important; border: 0 !important; border-top: 2px solid rgb(124 98 214 / 12%) !important; border-radius: 0 !important; background: transparent !important; box-shadow: none !important; }
+    & [data-petlens-trust-result] > [data-petlens-result-hero] { padding-top: 0 !important; border-top: 0 !important; }
+    /* 웹 화면 순서 — 머리 → 닮은 견종(후보 · 등록 견종 · 안내) → 보이는 것 → 케어 → 다시 찍기 → 자세히 보기 */
+    & [data-petlens-trust-result] [data-petlens-result-hero] { order: 0; }
+    & [data-petlens-trust-result] [data-petlens-result-breed-candidates] { order: 1; }
+    & [data-petlens-trust-result] [data-petlens-result-confirmed-breed] { order: 2; }
+    & [data-petlens-trust-result] [data-petlens-result-profile-notice] { order: 3; }
+    & [data-petlens-trust-result] [data-petlens-result-observations] { order: 4; }
+    & [data-petlens-trust-result] [data-petlens-result-care] { order: 5; }
+    & [data-petlens-trust-result] [data-petlens-result-retake] { order: 6; }
+    & [data-petlens-trust-result] > .lab-report-more { order: 7; }
+    & [data-petlens-trust-result] :is([data-petlens-result-owner-checks], [data-petlens-result-signals]) { order: 8; }
+    & [data-petlens-trust-result][data-web-more-open="false"] :is([data-petlens-result-owner-checks], [data-petlens-result-signals]) { display: none; }
+    /* 등록 견종 · 안내는 닮은 견종 바로 아래 작은 줄(선 없이) */
+    & [data-petlens-trust-result] :is([data-petlens-result-confirmed-breed], [data-petlens-result-profile-notice]) { padding: 0 0 6px !important; border-top: 0 !important; }
+    & [data-petlens-result-confirmed-breed] > p:first-child { display: inline; margin-right: 8px; color: #94a3b8; font-size: 13px; font-weight: 800; }
+    & [data-petlens-result-confirmed-breed] > div { display: inline-flex; margin: 0 !important; vertical-align: middle; }
+    & [data-petlens-result-confirmed-breed] strong { font-size: 15px; color: #475569; }
+    & [data-petlens-result-confirmed-breed] > p:last-child { display: none; }
+    & [data-petlens-result-profile-notice] p { color: #94a3b8 !important; font-size: 13px; line-height: 1.6; }
+
+    /* 머리 — 이름표 · 큰 제목 · 설명 · 칩(칩은 맨 아래로), 작은 대표 사진은 기둥이 대신해 숨김 */
+    & .lab-report-kicker { display: inline-block !important; order: 0; margin-bottom: 6px; }
+    & [data-petlens-result-hero] > div { display: block; }
+    & [data-petlens-result-hero] > div > div:first-child { display: flex; flex-direction: column; align-items: flex-start; }
+    & [data-petlens-result-hero] > div > div:first-child > h3 { order: 1; margin-top: 0 !important; font-size: 34px !important; line-height: 1.25 !important; word-break: keep-all; }
+    & [data-petlens-result-hero] > div > div:first-child > p:not(.lab-report-kicker) { order: 2; margin-top: 14px !important; max-width: 520px; color: #64748b; font-size: 15px; font-weight: 600; line-height: 1.8; }
+    & [data-petlens-result-hero] > div > div:first-child > div { order: 3; margin-top: 18px; gap: 8px; }
+    & [data-petlens-result-hero] > div > div:first-child > div > span { padding: 6px 14px; background: #fff !important; color: #475569; font-size: 12.5px; box-shadow: 0 6px 12px -10px rgb(15 23 42 / 45%); }
+    & [data-petlens-result-hero] > div > div:first-child > div > span:first-child { background: #f3f0fe !important; color: #7c62d6; }
+    & [data-petlens-result-hero] > div > div:last-child:not(:first-child) { display: none; }
+
+    /* 단락 제목 — 주아 + 세 색 밑줄 */
+    & [data-petlens-trust-result] section:not([data-petlens-result-confirmed-breed]) > p.text-xs:first-child,
+    & [data-petlens-result-breed-candidates] > div:first-child > p {
+        display: inline-block;
+        margin-bottom: 14px !important;
+        padding-bottom: 8px;
+        background: var(--lab-stripe) left bottom / 100% 5px no-repeat;
+        color: var(--lab-ink) !important;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 24px !important;
+        font-weight: 400 !important;
+    }
+    & [data-petlens-result-breed-candidates] > div:first-child { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 14px; margin-bottom: 0 !important; }
+    & [data-petlens-result-breed-candidates] > div:first-child > span { color: #94a3b8; font-size: 12.5px; }
+
+    /* 목록 — 아이콘 없이 글만, 줄 간격 넉넉하게 */
+    & [data-petlens-trust-result] section ul.grid { gap: 2px; }
+    & [data-petlens-trust-result] section ul.grid li { gap: 0; color: #334155; font-size: 16px; line-height: 1.9; }
+    & [data-petlens-trust-result] section ul.grid li > i { display: none; }
+
+    /* 닮은 견종 — 첫 후보는 크게(보라), 나머지는 작은 회색 글 */
+    & [data-petlens-result-breed-candidates] > div.grid { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 18px; }
+    & [data-petlens-result-breed-candidates] article { padding: 0 !important; border: 0 !important; background: transparent !important; box-shadow: none !important; }
+    & [data-petlens-result-breed-candidates] article > p:first-child { display: none; }
+    & [data-petlens-result-breed-candidates] article > p:nth-child(2) { display: inline; margin: 0 !important; color: #94a3b8; font-size: 15px; }
+    & [data-petlens-result-breed-candidates] article > span { margin: 0 0 0 6px !important; padding: 2px 8px; background: #f1f5f9 !important; color: #94a3b8; vertical-align: middle; }
+    & [data-petlens-result-breed-candidates] article:first-child { flex-basis: 100%; }
+    & [data-petlens-result-breed-candidates] article:first-child > p:nth-child(2) { color: #7c62d6; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 32px; font-weight: 400; }
+    & [data-petlens-result-breed-candidates] article:first-child > span { background: #f3f0fe !important; color: #7c62d6; }
+    & [data-petlens-result-breed-candidates] article > p:last-child:not(:nth-child(2)) { margin-top: 4px !important; color: #94a3b8; font-size: 13px; }
+
+    /* 자세히 보기 단추 */
+    & .lab-report-more { display: inline-flex !important; align-items: center; gap: 8px; justify-self: start; margin-top: 22px; padding: 0; color: #7c62d6; font-size: 14px; font-weight: 800; }
+
+    /* 상품 — 판 없이 제목 + 가로로 넘기는 줄 */
+    & > div.grid { gap: 0; }
+    & .lab-products { margin-top: 56px; }
+    & .lab-products > div:first-child { margin-bottom: 18px !important; }
+    & .lab-products h2 { display: inline-block; padding-bottom: 8px; background: var(--lab-stripe) left bottom / 100% 5px no-repeat; font-size: 24px !important; }
+    & .lab-products > div.grid { display: flex !important; gap: 18px !important; overflow-x: auto; padding: 6px 4px 16px; scroll-snap-type: x mandatory; }
+    & .lab-products > div.grid > * { flex: none; width: 220px; scroll-snap-align: start; }
+    & > div.grid > div.border-amber-200 { margin-top: 40px; padding: 0 !important; border: 0 !important; background: transparent !important; box-shadow: none !important; }
+}
+
+/* 사진 결과 — 태블릿 이하: 사진 기둥 위, 글 흐름 아래 */
+@media (max-width: 1023px) {
+    html:not(.ddb-app-mode) [data-lab-web] .lab-result {
+        & .surface.lab-result-card { grid-template-columns: minmax(0, 1fr); row-gap: 28px; }
+        & .lab-result-card > * { grid-column: 1 !important; grid-row: auto !important; }
+        & .lab-photo-pillar { max-width: 520px; }
+    }
+}
+
+/* 사진 결과 — 휴대폰 */
+@media (max-width: 640px) {
+    html:not(.ddb-app-mode) [data-lab-web] .lab-result {
+        & [data-petlens-result-hero] > div > div:first-child > h3 { font-size: 27px !important; }
+        & .lab-products > div.grid > * { width: 170px; }
+        & .lab-photo-pillar-main img { border-radius: 30px; }
     }
 }
