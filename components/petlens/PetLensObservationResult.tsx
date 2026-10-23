@@ -7,6 +7,8 @@ import type {
     PetObservationUrgencyLevel,
 } from "@/lib/petlens-observation";
 import PetObservationNutritionRecommendations from "@/components/petlens/PetObservationNutritionRecommendations";
+import PetLensObservationReport from "@/components/petlens/PetLensObservationReport";
+import { PawTrail } from "@/components/daily/CrayonArt";
 
 
 const URGENCY_STYLE: Record<PetObservationUrgencyLevel, string> = {
@@ -1552,10 +1554,16 @@ export default function PetLensObservationResult({ result }: { result: PetObserv
     );
     // 앱 전용 접기 — 대상견 구분 보류 리포트는 그래프 칸 안에 있어 접지 않고 펼친 채로 시작
     const appTargetAmbiguous = result.analysisContractVersion >= 2 && result.quality.targetStatus === "ambiguous";
+    // 웹 연구소 페이지 전용 "근거 자세히 보기"(R1) — 상세 그래프 · 결과표 · 관찰 근거를 접어 둠(대상 구분 보류면 펼친 채)
+    const [webDetailsOpen, setWebDetailsOpen] = useState(appTargetAmbiguous);
 
     return (
-        <div className="grid min-w-0 max-w-full gap-4" data-petlens-observation-result>
+        <div className="grid min-w-0 max-w-full gap-4" data-petlens-observation-result data-web-details-open={webDetailsOpen ? "true" : "false"}>
             {highPriorityUrgency && <UrgencyGuidance result={result} highPriority />}
+            {/* 웹 연구소 페이지 전용(lab-web.css 가 보이게 · 순서도 거기서) — 한 장 리포트 머리 판 · 발자국 */}
+            <PetLensObservationReport result={result} />
+            <div className="lab-obs-paw lab-obs-paw-a hidden"><PawTrail /></div>
+            <div className="lab-obs-paw lab-obs-paw-b hidden"><PawTrail /></div>
             <OverallObservationSummary result={result} />
             <TargetAttributionPanel result={result} />
             <BarkContextTranslator result={result} />
@@ -1678,6 +1686,17 @@ export default function PetLensObservationResult({ result }: { result: PetObserv
                     </div>
                 </section>
             )}
+
+            {/* 웹 연구소 페이지 전용 — 상세 그래프 · 결과표 · 관찰 근거 펼치기(앱 · 펫렌즈 창은 원래대로 전부 보임) */}
+            <button
+                type="button"
+                className="lab-obs-details-toggle hidden"
+                aria-expanded={webDetailsOpen}
+                onClick={() => setWebDetailsOpen((open) => !open)}
+            >
+                <span>{webDetailsOpen ? "근거 접기" : "근거 자세히 보기"} · 관찰 {result.observations.length}개 · 분야별 그래프 · 결과표</span>
+                <i className={`fa-solid ${webDetailsOpen ? "fa-chevron-up" : "fa-chevron-down"}`} aria-hidden="true" />
+            </button>
 
             {result.retakeGuidance.length > 0 && (
                 <section className="rounded-2xl border border-sky-200 bg-sky-50 p-4" data-petlens-observation-retake>

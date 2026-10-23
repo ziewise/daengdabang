@@ -1121,8 +1121,8 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                     ? "분석에 사용할 행동·소리 근거가 충분하지 않아"
                     : "신뢰할 수 있는 분석 결과를 만들지 못해";
         return (
-            <section ref={experienceRootRef} tabIndex={-1} className="grid gap-4 outline-none" data-petlens-observation-experience data-variant={variant}>
-                <div className="flex flex-wrap items-center justify-between gap-3">
+            <section ref={experienceRootRef} tabIndex={-1} className="grid gap-4 outline-none" data-petlens-observation-experience data-variant={variant} data-observation-view="result">
+                <div className="flex flex-wrap items-center justify-between gap-3 lab-obs-result-bar">
                     <div>
                         <DaengLabServiceTitle
                             compact

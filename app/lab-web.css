@@ -541,3 +541,141 @@ html:not(.ddb-app-mode) [data-lab-web-dialog] {
         box-shadow: inset 0 0 0 1.5px #f6d6e0, 0 8px 16px -12px rgb(15 23 42 / 40%);
     }
 }
+
+/* ───────── 5부 · 행동·소리 분석 결과(R1 한 장 리포트 · 2026-10-23 사용자 선택) ─────────
+   맨 위 코인 칩 · 새로 관찰 → 연보라 리포트(요약 · 그래프 하나 · 분야 카드) → 발자국 →
+   민트 "할 일"(우선 확인 안내) · 분홍 짖음 맥락 번역 나란히 → 발자국 → 노랑 영양식 → 원본 삭제 안내 →
+   "근거 자세히 보기"(누르면 원래 상세 그래프 · 결과표 · 관찰 근거) → 메일 · 메모.
+   원래 결과 화면 조각은 그대로 두고 웹에서 순서(order) · 모양만. 앱 · 펫렌즈 창은 그대로 */
+html:not(.ddb-app-mode) [data-lab-web] [data-petlens-observation-experience][data-variant="page"][data-observation-view="result"] {
+    grid-template-columns: minmax(0, 1fr) auto;
+    row-gap: 22px;
+
+    /* 맨 위 줄 — 왼쪽 코인 칩 · 오른쪽 새로 관찰(제목은 리포트 판에) */
+    & > .lab-obs-result-bar { grid-row: 1; grid-column: 2; }
+    & > .lab-obs-result-bar > div:first-child { display: none; }
+    & > .lab-obs-result-bar > button { height: 42px; padding: 0 18px; font-size: 13.5px; }
+    & > div.rounded-xl[role="status"] { grid-row: 1; grid-column: 1; justify-self: start; align-self: center; padding: 8px 16px; border: 0; border-radius: 999px; background: #fff !important; color: #475569; font-size: 12.5px; box-shadow: 0 8px 14px -12px rgb(15 23 42 / 45%) !important; }
+    & > [data-daenglab-refund-notice] { grid-column: 1 / -1; border-radius: 30px !important; }
+    & > div.rounded-xl[role="status"] .ddb-daenglab-coin-brand { display: none; } /* "C 코인"만 */
+
+    /* 메일 받기 · 보호자 메모 — 하늘 · 연보라 쿠션 */
+    & > section[data-petlens-observation-email].border { padding: 26px 30px !important; border: 0 !important; border-radius: 36px !important; background: #e9f4fb !important; box-shadow: var(--lab-cushion) !important; }
+    & [data-daenglab-guardian-follow-up].border,
+    & [data-daenglab-guardian-refinement].border { padding: 26px 30px !important; border: 0 !important; border-radius: 36px !important; background: #f3f0fe !important; box-shadow: var(--lab-cushion) !important; }
+}
+
+html:not(.ddb-app-mode) [data-lab-web] [data-variant="page"] [data-petlens-observation-result] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+
+    & > * { grid-column: 1 / -1; }
+    & > [data-daenglab-overall-summary] { display: none; } /* 리포트 판 머리가 대신 */
+
+    /* 화면 순서 */
+    & > [data-daenglab-urgency-priority="high"] { order: 0; }
+    & > .lab-obs-report { order: 1; display: block !important; padding: 30px 34px !important; border-radius: 42px !important; }
+    & > .lab-obs-paw { display: block; margin: -22px 0; }
+    & > .lab-obs-paw-a { order: 2; }
+    /* 할 일(왼쪽) · 짖음 번역(오른쪽) — 둘 다 있을 때만 나란히 */
+    & > [data-daenglab-urgency-priority="routine"] { order: 3; }
+    & > [data-daenglab-bark-context-translator] { order: 4; }
+    &:has(> [data-daenglab-bark-context-translator]) > [data-daenglab-urgency-priority="routine"],
+    &:has(> [data-daenglab-urgency-priority="routine"]) > [data-daenglab-bark-context-translator] { grid-column: auto; }
+    & > :is([data-petlens-observation-retake], [data-daenglab-target-attribution="ambiguous"], [data-daenglab-target-attribution="not_visible"]) { order: 5; }
+    & > .lab-obs-paw-b { order: 6; }
+    & > [data-daenglab-nutrition-recommendations] { order: 7; }
+    & > [data-daenglab-video-retention-notice] { order: 8; }
+    & > .lab-obs-details-toggle { order: 9; }
+    /* 근거 자세히 — 상세 그래프 · 관찰 근거 · 대상 구분 · 증상 신호 목록(접힌 동안 숨김) */
+    & > :is([data-app-fold="flow"], [data-app-fold="evidence"]) > [data-app-fold-body] > *,
+    & > :is([data-petlens-observation-symptoms], [data-daenglab-target-attribution="identified"], [data-daenglab-target-attribution="legacy"]) { order: 10; }
+    &[data-web-details-open="false"] > :is([data-app-fold="flow"], [data-app-fold="evidence"], [data-petlens-observation-symptoms], [data-daenglab-target-attribution="identified"], [data-daenglab-target-attribution="legacy"]) { display: none; }
+
+    /* 리포트 판 머리 */
+    & .lab-obs-report-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: center; }
+    & .lab-obs-report-head h2 { margin-top: 6px; color: var(--lab-ink); font-size: 30px; line-height: 1.32; word-break: keep-all; }
+    & .lab-obs-report-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 0; padding: 0; list-style: none; }
+    & .lab-obs-report-chips > li { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 999px; background: #fff; color: #475569; font-size: 12px; font-weight: 800; box-shadow: 0 6px 12px -10px rgb(15 23 42 / 45%); }
+    & .lab-obs-report-chips > li.is-calm { background: #e9f8f1; color: #12a17a; }
+    & .lab-obs-report-chips > li.is-alert { background: #e2557a; color: #fff; }
+    & .lab-obs-report-ring { display: block; width: 150px; height: 150px; padding: 10px; border-radius: 999px; background: conic-gradient(#f7a8bf, #ffd48a, #9fe0c4, #9cc9f0, #c9b5f5, #f7a8bf); }
+    & .lab-obs-report-ring > span { display: grid; width: 100%; height: 100%; place-items: center; border-radius: 999px; background: #fff; }
+    & .lab-obs-report-ring img { width: 96px; height: 96px; object-fit: contain; }
+    & .lab-obs-report-chart { margin-top: 22px; }
+    /* 근거 순간 표시(그래프 아래 · 겹치지 않게 두 줄 번갈아) */
+    & .lab-obs-moments { position: relative; height: 58px; margin: 6px 0 0; padding: 0; list-style: none; }
+    & .lab-obs-moments > li { position: absolute; top: 0; translate: -50% 0; padding: 4px 10px; border-radius: 999px; background: #f8fafc; color: #475569; font-size: 11px; font-weight: 800; white-space: nowrap; box-shadow: inset 0 0 0 1.5px #eef0f4; }
+    & .lab-obs-moments > li.is-low { top: 28px; }
+    /* 분야 카드 */
+    & .lab-obs-groups { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 14px 0 0; padding: 0; list-style: none; }
+    & .lab-obs-groups > li { padding: 16px; border-radius: 24px; background: #fff; box-shadow: 0 10px 18px -16px rgb(15 23 42 / 40%); }
+    & .lab-obs-group-top { display: flex; align-items: center; gap: 10px; }
+    & .lab-obs-group-top img { width: 44px; height: 44px; flex: none; object-fit: contain; }
+    & .lab-obs-group-top small { display: block; color: #94a3b8; font-size: 11.5px; font-weight: 800; }
+    & .lab-obs-group-top b { display: block; color: var(--lab-ink); font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 17px; font-weight: 400; line-height: 1.3; word-break: keep-all; }
+    & .lab-obs-meter { position: relative; height: 8px; margin-top: 12px; overflow: hidden; border-radius: 99px; background: #f1f5f9; }
+    & .lab-obs-meter > i { position: absolute; inset: 0 auto 0 0; border-radius: 99px; background: var(--c); }
+    & .lab-obs-group-foot { display: flex; align-items: baseline; justify-content: space-between; margin-top: 6px; color: #64748b; font-size: 12px; font-weight: 800; }
+    & .lab-obs-group-foot > b { color: var(--c); font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 16px; font-weight: 400; }
+    & .lab-obs-group-more { margin-top: 6px; color: #94a3b8; font-size: 11.5px; font-weight: 700; }
+
+    /* 할 일(우선 확인 안내) — 단계에 맞는 쿠션 색 · 요약 문장은 리포트 머리와 같아 숨김 · 할 일은 체크 줄 */
+    & > section[data-observation-urgency].border { padding: 28px 30px !important; border: 0 !important; border-radius: 40px !important; box-shadow: var(--lab-cushion) !important; }
+    & > section[data-observation-urgency="observe"].border { background: #e9f8f1 !important; color: var(--lab-ink); }
+    & > section[data-observation-urgency="unclear"].border { background: #e9f4fb !important; color: var(--lab-ink); }
+    & > section[data-observation-urgency="same_day"].border { background: #fff6e3 !important; color: #7a4a06; }
+    & > section[data-observation-urgency="emergency"].border { background: #ffeef3 !important; color: #9c2f54; box-shadow: 0 0 0 3px #f7a8bf, var(--lab-cushion) !important; }
+    & [data-observation-urgency] h3 { font-size: 22px; }
+    & [data-observation-urgency] > h3 + p { display: none; }
+    & [data-observation-urgency] > div.rounded-xl { gap: 8px; padding: 0; background: transparent !important; }
+    & [data-observation-urgency] > div.rounded-xl > p { position: relative; padding: 12px 14px 12px 46px; border-radius: 18px; background: rgb(255 255 255 / 85%); color: #334155; font-size: 13.5px; }
+    & [data-observation-urgency] > div.rounded-xl > p::before { content: "✓"; position: absolute; left: 14px; top: 12px; display: grid; width: 22px; height: 22px; place-items: center; border-radius: 999px; background: #12a17a; color: #fff; font-size: 11px; }
+    & [data-observation-urgency] > div:first-child > span { background: #fff; }
+
+    /* 짖음 맥락 번역 — 분홍 쿠션, 후보 카드는 한 줄씩 흰 판 */
+    & > section[data-daenglab-bark-context-translator].border { padding: 28px 30px !important; border: 0 !important; border-radius: 40px !important; background: #ffeef3 !important; box-shadow: var(--lab-cushion) !important; }
+    & [data-daenglab-bark-context-translator] h3 { font-size: 22px; }
+    & [data-daenglab-bark-context-translator] .grid.sm\:grid-cols-2 { grid-template-columns: minmax(0, 1fr); }
+    & [data-daenglab-bark-context-translator] article { border: 0 !important; border-radius: 22px !important; box-shadow: 0 10px 18px -16px rgb(15 23 42 / 40%) !important; }
+
+    /* 대상 구분 못함 · 다시 찍기 안내 — 노랑 · 하늘 띠 */
+    & > section:is([data-daenglab-target-attribution="ambiguous"], [data-daenglab-target-attribution="not_visible"]).border { padding: 24px 28px !important; border: 0 !important; border-radius: 34px !important; background: #fff6e3 !important; box-shadow: var(--lab-cushion) !important; }
+    & > section[data-petlens-observation-retake].border { padding: 18px 24px !important; border: 0 !important; border-radius: 30px !important; background: #e9f4fb !important; box-shadow: var(--lab-cushion) !important; }
+
+    /* 영양식 비교 — 노랑 쿠션 */
+    & > section[data-daenglab-nutrition-recommendations].border { padding: 28px 30px !important; border: 0 !important; border-radius: 40px !important; background: #fff6e3 !important; box-shadow: var(--lab-cushion) !important; }
+    & [data-daenglab-nutrition-recommendations] h3 { font-size: 22px; }
+    & [data-daenglab-nutrition-recommendations] :is(a, button).bg-emerald-700 { border-radius: 999px !important; background: var(--lab-pink) !important; box-shadow: inset 0 3px 0 rgb(255 255 255 / 30%), 0 10px 16px -10px rgb(200 80 120 / 60%) !important; }
+
+    /* 원본 삭제 안내 — 판 없이 작은 줄 */
+    & > section[data-daenglab-video-retention-notice].border { padding: 4px 8px !important; border: 0 !important; background: transparent !important; box-shadow: none !important; }
+    & [data-daenglab-video-retention-notice] span.rounded-full { background: #fff; box-shadow: 0 6px 12px -10px rgb(15 23 42 / 45%); }
+
+    /* 근거 자세히 보기 단추 */
+    & > .lab-obs-details-toggle { display: flex !important; align-items: center; justify-content: space-between; gap: 12px; min-height: 52px; padding: 0 22px; border-radius: 22px; background: #fff; color: #475569; font-size: 14px; font-weight: 800; text-align: left; box-shadow: 0 8px 14px -12px rgb(15 23 42 / 40%); transition: transform 0.15s ease; }
+    & > .lab-obs-details-toggle:hover { transform: translateY(-1px); }
+    & > [data-app-fold="flow"] [data-daenglab-inference-confidence].border { border: 0 !important; border-radius: 36px !important; background: #fff !important; box-shadow: var(--lab-cushion) !important; }
+}
+
+/* 결과 — 태블릿 이하: 할 일 · 번역 위아래 */
+@media (max-width: 900px) {
+    html:not(.ddb-app-mode) [data-lab-web] [data-variant="page"] [data-petlens-observation-result] > * { grid-column: 1 / -1 !important; }
+}
+
+/* 결과 — 휴대폰 */
+@media (max-width: 640px) {
+    html:not(.ddb-app-mode) [data-lab-web] [data-variant="page"] [data-petlens-observation-result] {
+        & > .lab-obs-report { padding: 22px 16px !important; border-radius: 30px !important; }
+        & .lab-obs-report-head { grid-template-columns: minmax(0, 1fr); }
+        & .lab-obs-report-ring { display: none; }
+        & .lab-obs-report-head h2 { font-size: 22px; }
+        & .lab-obs-groups { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+        & .lab-obs-groups > li { padding: 12px; }
+        & .lab-obs-group-top img { width: 34px; height: 34px; }
+        & .lab-obs-group-top b { font-size: 15px; }
+        & .lab-obs-moments > li { font-size: 10px; padding: 3px 8px; }
+        & .lab-obs-plot svg { height: 120px; }
+        & > section:is([data-observation-urgency], [data-daenglab-bark-context-translator], [data-daenglab-nutrition-recommendations]).border { padding: 22px 16px !important; border-radius: 30px !important; }
+    }
+}
