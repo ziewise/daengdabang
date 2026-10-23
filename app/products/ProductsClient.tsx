@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
     CATALOG,
@@ -303,9 +304,10 @@ export default function ProductsClient({ initialCategory, title, variant }: Prop
                     <>
                         <PawTrail />
                         {/* 댕다방 상품 */}
-                        <section className="sr-section" aria-labelledby="sr-own-title">
+                        <section id="sr-own" className="sr-section" aria-labelledby="sr-own-title">
                             <div className="sr-head">
-                                <div>
+                                <span className="sr-head-art" aria-hidden="true"><Image src="/images/ui/header-cart-128.webp" alt="" width={48} height={48} /></span>
+                                <div className="sr-head-text">
                                     <p className="sr-head-kicker">DAENGDABANG PRODUCTS</p>
                                     <h2 id="sr-own-title" className="sr-head-title">
                                         {locale === "en" ? "DaengDaBang products" : "댕다방 상품"} <b>{countText(products.length)}</b>
@@ -349,20 +351,23 @@ export default function ProductsClient({ initialCategory, title, variant }: Prop
                         </section>
                         <PawTrail />
                         {/* 다른 판매처 가격 비교 — 댕다방 상품이 아님을 머리에서 분명히 */}
-                        <section className="sr-section sr-external" aria-labelledby="sr-ext-title">
+                        <section id="sr-ext" className="sr-section sr-external" aria-labelledby="sr-ext-title">
                             <div className="sr-head">
-                                <div>
+                                <span className="sr-head-art" aria-hidden="true"><Image src="/images/ui/goods-pay-ready-256.webp" alt="" width={48} height={48} /></span>
+                                <div className="sr-head-text">
                                     <p className="sr-head-kicker">PRICE COMPARE</p>
                                     <h2 id="sr-ext-title" className="sr-head-title">
                                         {locale === "en" ? "Other sellers" : "다른 판매처 가격 비교"} <b>{externalLoading ? t("searching") : countText(externalProducts.length)}</b>
                                     </h2>
-                                    <p className="sr-head-note">
-                                        {locale === "en"
-                                            ? "These are not DaengDaBang products. Tapping one opens the seller in a new tab."
-                                            : "댕다방 상품이 아니에요. 누르면 판매처가 새 창으로 열려요."}
-                                    </p>
                                 </div>
                             </div>
+                            {/* 안내 줄(민트) — 댕다방 상품이 아님 · 새 창 · 결제금액 달라질 수 있음 */}
+                            <p className="sr-note">
+                                <i className="fa-solid fa-circle-info" aria-hidden="true" />
+                                {locale === "en"
+                                    ? "These are not DaengDaBang products. Tapping one opens the seller in a new tab. Final totals can change with options and shipping."
+                                    : "댕다방 상품이 아니에요. 누르면 판매처가 새 창으로 열리고, 옵션과 배송비에 따라 결제금액은 달라질 수 있어요."}
+                            </p>
                             {externalSection}
                         </section>
                     </>

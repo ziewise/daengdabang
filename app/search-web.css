@@ -71,31 +71,52 @@ html:not(.ddb-app-mode) main[data-search-page] {
         line-height: 1.7;
     }
 
-    /* 결과 개수 — 흰 알약 둘 */
-    & .sr-summary {
+    /* 결과 한눈에 — 둥근 쿠션 둘(그림 동그라미 · 이름 · 큰 개수), 누르면 그 구역으로 */
+    & .sr-glance { display: flex; gap: 16px; }
+
+    & .sr-glance-item {
         display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-top: 16px;
-    }
-
-    & .sr-chip {
-        display: inline-flex;
+        width: 156px;
+        flex-direction: column;
         align-items: center;
-        gap: 6px;
-        height: 34px;
-        padding: 0 14px;
-        border-radius: 999px;
+        padding: 20px 14px 18px;
+        border-radius: 34px;
         background: #fff;
-        color: #475569;
-        font-size: 13px;
-        font-weight: 700;
-        box-shadow: 0 0 0 1.5px var(--sr-chip-ring);
+        text-align: center;
+        box-shadow: var(--sr-cushion);
+        transition: transform 0.18s ease;
     }
 
-    & .sr-chip b { color: var(--sr-chip-ink); font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 16px; font-weight: 400; }
-    & .sr-chip.is-own { --sr-chip-ring: #f7c4d3; --sr-chip-ink: #d0436d; }
-    & .sr-chip.is-ext { --sr-chip-ring: #a8e0c6; --sr-chip-ink: #0f8a66; }
+    & .sr-glance-item:hover { transform: translateY(-4px); }
+    & .sr-glance-item.is-own { --sr-ring: #f7a8bf; --sr-ink: #d0436d; --sr-tint: #ffeef3; }
+    & .sr-glance-item.is-ext { --sr-ring: #a8e0c6; --sr-ink: #0f8a66; --sr-tint: #e9f8f1; }
+
+    & .sr-glance-art {
+        display: grid;
+        width: 84px;
+        height: 84px;
+        place-items: center;
+        border-radius: 999px;
+        background: var(--sr-tint);
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 0 0 3px var(--sr-ring);
+    }
+
+    & .sr-glance-art img { width: 58px; height: 58px; object-fit: contain; }
+
+    & .sr-glance-label {
+        margin-top: 12px;
+        color: #475569;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 15px;
+    }
+
+    & .sr-glance-count {
+        color: var(--sr-ink);
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 34px;
+        font-weight: 400;
+        line-height: 1.15;
+    }
 
     /* 큰 검색칸 — 흰 알약 + 살구 테 · 안쪽 분홍 "검색" 알약 */
     & .sr-form {
@@ -218,14 +239,32 @@ html:not(.ddb-app-mode) main[data-search-page] {
     & .sr-ring img { width: 62%; height: 62%; }
 
     /* ── ②③ 구역 머리 — 주아 제목 + 세 색 밑줄 · 개수 · 오른쪽 카테고리 · 정렬 ── */
+    /* 구역 — 한눈에 쿠션으로 내려올 때 헤더에 가리지 않게 */
+    & .sr-section { scroll-margin-top: 96px; }
+
     & .sr-head {
         display: flex;
         flex-wrap: wrap;
-        align-items: flex-end;
-        justify-content: space-between;
-        gap: 14px 20px;
+        align-items: center;
+        gap: 14px 16px;
         margin-bottom: 22px;
     }
+
+    /* 구역 그림 — 흰 동그라미 3D 그림 */
+    & .sr-head-art {
+        display: grid;
+        flex: none;
+        width: 60px;
+        height: 60px;
+        place-items: center;
+        border-radius: 999px;
+        background: #fff;
+        box-shadow: 0 0 0 2.5px #f7c4d3, 0 10px 18px -12px rgb(15 23 42 / 35%);
+    }
+
+    & .sr-external .sr-head-art { box-shadow: 0 0 0 2.5px #a8e0c6, 0 10px 18px -12px rgb(15 23 42 / 35%); }
+    & .sr-head-art img { width: 44px; height: 44px; object-fit: contain; }
+    & .sr-head-text { min-width: 0; }
 
     & .sr-head-title {
         position: relative;
@@ -247,15 +286,26 @@ html:not(.ddb-app-mode) main[data-search-page] {
 
     & .sr-external .sr-head-title b { color: #0f8a66; }
 
-    & .sr-head-note {
-        margin-top: 10px;
-        color: #64748b;
+    /* 다른 판매처 안내 줄 — 민트 알약 */
+    & .sr-note {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        margin: -6px 0 22px;
+        padding: 12px 20px;
+        border-radius: 22px;
+        background: #e9f8f1;
+        color: #2f6b56;
         font-size: 13.5px;
         font-weight: 600;
+        line-height: 1.6;
+        word-break: keep-all;
     }
 
-    /* 카테고리 · 정렬 알약 — 점선 없이 흰 알약 + 연한 테 */
-    & .sr-tools { display: flex; gap: 10px; }
+    & .sr-note i { margin-top: 4px; color: #12a17a; }
+
+    /* 카테고리 · 정렬 알약 — 점선 없이 흰 알약 + 연한 테(오른쪽 끝) */
+    & .sr-tools { display: flex; gap: 10px; margin-left: auto; }
 
     & :is(.sr-tools .ddb-pl-pill, .sr-tools .ddb-pl-menu) {
         border: 0;
@@ -319,22 +369,26 @@ html:not(.ddb-app-mode) main[data-search-page] {
         font-weight: 800;
     }
 
-    /* ③ 다른 판매처 — 협업자 비교 판을 흰 쿠션으로(안쪽 머리는 위 구역 머리와 겹쳐 숨김) */
+    /* ③ 다른 판매처 — 협업자 비교 판의 흰 테두리 판은 걷어 내고(카드가 위 댕다방 카드와 같은 폭 격자에 오게),
+       안쪽 머리(Product Price Search · 외부 판매 상품 더 보기 · 개수)는 위 구역 머리 · 안내 줄과 겹쳐 숨김 */
     & .sr-external > section {
         margin-top: 0;
-        padding: 26px 28px 30px;
+        padding: 0;
         border: 0;
-        border-radius: 36px;
-        background: #fff;
-        box-shadow: var(--sr-cushion);
+        border-radius: 0;
+        background: transparent;
+        box-shadow: none;
     }
 
     & .sr-external > section > div:first-child { display: none; }
+    & .sr-external > section > div:has(> .grid) > div:first-child { display: none; }
 
+    /* 결과 없음 — 흰 쿠션 */
     & .sr-external .border-dashed {
         border: 0;
-        border-radius: 26px;
-        background: #fffaf1;
+        border-radius: 30px;
+        background: #fff;
+        box-shadow: var(--sr-cushion);
     }
 
     & .sr-external h3 {
@@ -346,20 +400,23 @@ html:not(.ddb-app-mode) main[data-search-page] {
 
     /* 다른 판매처 카드(ExternalProductCard xc-*) — 둥근 흰 쿠션 · 민트 테 알약 "판매처에서 보기 ↗".
        가격은 굵은 검은 글씨 그대로(댕다방 상품의 크레파스 가격과 일부러 구별) */
+    /* 카드 크기 통일(2026-10-24 사용자) — 모든 줄을 가장 긴 카드 높이로, 버튼은 늘 카드 맨 아래 */
+    & .sr-external .grid { grid-auto-rows: 1fr; align-items: stretch; }
+
+    /* 카드 모양 = 위 댕다방 상품 카드와 같게(둥근 모서리 16px · 사진 꽉 채움 · 같은 그림자) */
     & .sr-external .xc-card {
+        display: flex;
+        height: 100%;
+        flex-direction: column;
         border: 0;
-        border-radius: 24px;
+        border-radius: 16px;
         background: #fff;
-        box-shadow: 0 0 0 1.5px #eef2ef, 0 14px 24px -18px rgb(15 23 42 / 30%);
+        box-shadow: var(--shadow-card, 0 1px 2px rgb(15 23 42 / 4%), 0 12px 28px -18px rgb(15 23 42 / 22%));
     }
 
-    & .sr-external .xc-card:hover { box-shadow: 0 0 0 2px #a8e0c6, 0 14px 24px -18px rgb(15 23 42 / 30%); }
+    & .sr-external .xc-card:hover { box-shadow: 0 0 0 2px #a8e0c6, var(--shadow-card, 0 12px 28px -18px rgb(15 23 42 / 22%)); }
 
-    & .sr-external .xc-photo {
-        margin: 8px 8px 0;
-        border-radius: 18px;
-        background: #f6faf8;
-    }
+    & .sr-external .xc-photo { background: #f6faf8; }
 
     & .sr-external .xc-rank {
         background: #fff;
@@ -368,7 +425,17 @@ html:not(.ddb-app-mode) main[data-search-page] {
     }
 
     & .sr-external .xc-seller { color: #475569; box-shadow: 0 0 0 1px rgb(100 116 139 / 15%); }
-    & .sr-external .xc-body { padding: 12px 14px 14px; }
+    & .sr-external .xc-photo { flex: none; }
+
+    & .sr-external .xc-body {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        padding: 12px 14px 14px;
+    }
+
+    & .sr-external .xc-status { align-self: flex-start; }
+    & .sr-external .xc-body > :nth-last-child(2) { margin-bottom: 12px; }
 
     & .sr-external .xc-status {
         background: #fff6e3;
@@ -385,7 +452,9 @@ html:not(.ddb-app-mode) main[data-search-page] {
     & .sr-external .xc-total { color: #0f8a66; }
 
     & .sr-external .xc-go {
+        flex: none;
         height: 42px;
+        margin-top: auto;
         flex-direction: row-reverse;
         border-radius: 999px;
         background: #fff;
@@ -409,6 +478,12 @@ html:not(.ddb-app-mode) main[data-search-page] {
     html:not(.ddb-app-mode) main[data-search-page] {
         & .sr-hero { grid-template-columns: minmax(0, 1fr); padding: 30px 24px 28px; }
         & .sr-ring { display: none; }
+        /* 한눈에 쿠션 — 검색칸 아래 가로 둘(작게) */
+        & .sr-glance-item { width: auto; flex: 1; flex-direction: row; gap: 12px; padding: 12px 16px; border-radius: 26px; text-align: left; }
+        & .sr-glance-art { width: 52px; height: 52px; flex: none; }
+        & .sr-glance-art img { width: 38px; height: 38px; }
+        & .sr-glance-label { margin-top: 0; flex: 1; font-size: 14px; }
+        & .sr-glance-count { font-size: 26px; }
     }
 }
 
@@ -425,6 +500,14 @@ html:not(.ddb-app-mode) main[data-search-page] {
         & .sr-empty { grid-template-columns: minmax(0, 1fr); padding: 24px 20px; text-align: center; }
         & .sr-empty-art { margin: 0 auto; }
         & .sr-empty .sr-keywords { justify-content: center; }
-        & .sr-external > section { padding: 20px 14px 24px; border-radius: 28px; }
+        & .sr-head-art { width: 48px; height: 48px; }
+        & .sr-head-art img { width: 34px; height: 34px; }
+        /* 휴대폰 — 그림 · 이름 · 개수를 세로로(이름이 두 줄로 쪼개지지 않게) */
+        & .sr-glance { gap: 10px; }
+        & .sr-glance-item { flex-direction: column; gap: 4px; padding: 12px 8px; text-align: center; }
+        & .sr-glance-art { width: 46px; height: 46px; }
+        & .sr-glance-art img { width: 32px; height: 32px; }
+        & .sr-glance-label { flex: none; margin-top: 4px; font-size: 13px; white-space: nowrap; }
+        & .sr-glance-count { font-size: 22px; }
     }
 }

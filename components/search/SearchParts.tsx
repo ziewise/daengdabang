@@ -4,8 +4,9 @@
  * SearchParts — 웹 검색 결과 페이지(/search/?q=…) 부품 · 2026-10-23 사용자 결정 "검색은 별도 페이지"
  * ---------------------------------------------------------------------
  * 상품 목록 · 필터 · 정렬 · 다른 판매처 가격 비교는 ProductsClient(variant="search")가 그대로 맡고, 여기는 검색 페이지만의 겉:
- *  - SearchHero: 하늘 쿠션 머리 판 — 영문 손글씨 · "‘검색어’ 검색 결과"(주아 + 세 색 밑줄) · 결과 개수 알약 ·
- *    큰 흰 알약 검색칸(헤더 검색 3D 그림 + 분홍 "검색" 알약) · 인기 검색어 파스텔 알약 · 무지개 고리 돋보기 그림
+ *  - SearchHero: 하늘 쿠션 머리 판 — 영문 손글씨 · "‘검색어’ 검색 결과"(주아 + 세 색 밑줄) · 설명 ·
+ *    큰 흰 알약 검색칸(헤더 검색 3D 그림 + 분홍 "검색" 알약) · 인기 검색어 파스텔 알약 ·
+ *    오른쪽 "결과 한눈에" 둥근 쿠션 둘(댕다방 상품 · 다른 판매처 개수, 누르면 그 구역으로 · 2026-10-24 고도화) / 검색어 없으면 무지개 고리 돋보기
  *  - SearchOwnEmpty: 댕다방 상품이 없을 때 쿠션 안내(카테고리를 골라 0개면 "전체로 보기") + 인기 검색어
  * 검색 · 이동은 기존과 같은 방식(최근 검색어 저장 searchRecent + 주소 이동). 꾸밈은 app/search-web.css(웹 전용).
  */
@@ -88,16 +89,11 @@ export function SearchHero({ query, ownCount, externalCount, externalLoading }: 
                         <span className="sr-term">{en ? "What are you looking for?" : "무엇을 찾고 계세요?"}</span>
                     )}
                 </h1>
-                {hasQuery ? (
-                    <p className="sr-summary">
-                        <span className="sr-chip is-own">{en ? "DaengDaBang" : "댕다방 상품"} <b>{ownCount.toLocaleString("ko-KR")}</b></span>
-                        <span className="sr-chip is-ext">
-                            {en ? "Other sellers" : "다른 판매처"} <b>{externalLoading ? (en ? "…" : "찾는 중") : externalCount.toLocaleString("ko-KR")}</b>
-                        </span>
-                    </p>
-                ) : (
-                    <p className="sr-lead">{en ? "Search DaengDaBang products and compare prices from other sellers." : "댕다방 상품을 찾고, 다른 판매처 가격도 함께 비교해 드려요."}</p>
-                )}
+                <p className="sr-lead">
+                    {hasQuery
+                        ? (en ? "DaengDaBang products first, then prices from other sellers." : "댕다방 상품을 먼저 보여 드리고, 다른 판매처 가격도 함께 비교해 드려요.")
+                        : (en ? "Search DaengDaBang products and compare prices from other sellers." : "댕다방 상품을 찾고, 다른 판매처 가격도 함께 비교해 드려요.")}
+                </p>
 
                 {/* 큰 검색칸 — 헤더 검색 3D 그림 · 분홍 "검색" 알약 */}
                 <form onSubmit={submit} className="sr-form" role="search">
@@ -121,10 +117,26 @@ export function SearchHero({ query, ownCount, externalCount, externalLoading }: 
                 <SearchKeywordPills label={en ? "Popular" : "인기 검색어"} />
             </div>
 
-            {/* 무지개 크레파스 고리 + 돋보기 그림 */}
-            <span className="dw-rring sr-ring" aria-hidden="true">
-                <span><Image src="/images/ui/header-search-128.webp" alt="" width={128} height={128} priority /></span>
-            </span>
+            {hasQuery ? (
+                // 결과 한눈에 — 둥근 쿠션 둘(누르면 그 구역으로 내려감)
+                <nav className="sr-glance" aria-label={en ? "Results at a glance" : "결과 한눈에"}>
+                    <a href="#sr-own" className="sr-glance-item is-own">
+                        <span className="sr-glance-art" aria-hidden="true"><Image src="/images/ui/header-cart-128.webp" alt="" width={64} height={64} /></span>
+                        <span className="sr-glance-label">{en ? "DaengDaBang" : "댕다방 상품"}</span>
+                        <b className="sr-glance-count">{ownCount.toLocaleString("ko-KR")}</b>
+                    </a>
+                    <a href="#sr-ext" className="sr-glance-item is-ext">
+                        <span className="sr-glance-art" aria-hidden="true"><Image src="/images/ui/goods-pay-ready-256.webp" alt="" width={64} height={64} /></span>
+                        <span className="sr-glance-label">{en ? "Other sellers" : "다른 판매처"}</span>
+                        <b className="sr-glance-count">{externalLoading ? "…" : externalCount.toLocaleString("ko-KR")}</b>
+                    </a>
+                </nav>
+            ) : (
+                // 무지개 크레파스 고리 + 돋보기 그림(검색어 없을 때)
+                <span className="dw-rring sr-ring" aria-hidden="true">
+                    <span><Image src="/images/ui/header-search-128.webp" alt="" width={128} height={128} priority /></span>
+                </span>
+            )}
         </section>
     );
 }
