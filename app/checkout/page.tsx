@@ -1,7 +1,17 @@
 "use client";
 
+/*
+ * CheckoutPage — 주문서(/checkout): 배송지 · 배송 요청 · 예상 도착일 · 결제수단 · 주문 상품 요약 → 토스 테스트 결제창
+ * 2026-10-24 웹 크레파스 결(app/checkout-web.css, 웹 html:not(.ddb-app-mode) 에서만):
+ *  영문 손글씨 · 주아 제목 + 세 색 밑줄 · 주문 단계(장바구니 → 주문서 → 결제 완료, 지금 = 주문서) · 흰 쿠션 칸 · 파스텔 동그라미 아이콘 ·
+ *  크림 입력칸 · 결제수단 쿠션 카드(고른 것 분홍 테) · 주문 상품 요약에 상품 사진(웹 전용) · 크레파스 총 결제금액 · 분홍 결제 알약.
+ * 앱은 appShopSkin 이 section.surface · data-* · 순서로 꾸미므로 구조는 그대로, 이름표 · hidden 웹 요소만 더함.
+ * 결제 · 주문 생성 · 배송 검증 · 토스 결제창 동작과 안내 문구는 그대로.
+ */
 import { FormEvent, useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
+import "../checkout-web.css";
 import { loadTossPayments } from "@tosspayments/tosspayments-sdk";
 import ShippingDetailsSection from "@/components/checkout/ShippingDetailsSection";
 import { cartProducts } from "@/lib/shop";
@@ -365,20 +375,32 @@ export default function CheckoutPage() {
     };
 
     if (inventoryBlocked) {
-        return <main className="mx-auto max-w-[720px] px-4 py-14 text-center"><h1 className="text-xl font-black">{locale === "en" ? "Review unavailable cart options before checkout." : "구매할 수 없는 옵션이 있어 장바구니 확인이 필요합니다."}</h1><Link href="/cart" className="btn btn-primary mt-6">{locale === "en" ? "Review cart" : "장바구니 확인"}</Link></main>;
+        return <main className="mx-auto max-w-[720px] px-4 py-14 text-center" data-checkout-web="notice"><h1 className="co-notice-title text-xl font-black">{locale === "en" ? "Review unavailable cart options before checkout." : "구매할 수 없는 옵션이 있어 장바구니 확인이 필요합니다."}</h1><Link href="/cart" className="btn btn-primary mt-6">{locale === "en" ? "Review cart" : "장바구니 확인"}</Link></main>;
     }
     if (lines.length === 0) {
         return (
-            <main className="mx-auto max-w-[720px] px-4 py-14 text-center">
-                <h1 className="text-2xl font-black text-neutral-950">{t("noCheckoutItems")}</h1>
+            <main className="mx-auto max-w-[720px] px-4 py-14 text-center" data-checkout-web="notice">
+                {/* 웹 전용 — 무지개 고리 3D 장바구니 */}
+                <span className="hidden co-notice-art" aria-hidden="true">
+                    <Image src="/images/ui/header-cart-128.webp" alt="" width={96} height={96} />
+                </span>
+                <h1 className="co-notice-title text-2xl font-black text-neutral-950">{t("noCheckoutItems")}</h1>
                 <Link href="/products" className="btn btn-primary mt-6">{t("shopNow")}</Link>
             </main>
         );
     }
 
     return (
-        <main className="mx-auto max-w-[1080px] px-4 py-8 md:px-6">
-            <h1 className="text-3xl font-black tracking-tight text-neutral-950">{t("checkoutTitle")}</h1>
+        <main className="mx-auto max-w-[1080px] px-4 py-8 md:px-6" data-checkout-web="form">
+            {/* 웹 전용 — 영문 손글씨 꼬리표 */}
+            <p className="hidden co-kicker">CHECKOUT</p>
+            <h1 className="co-title text-3xl font-black tracking-tight text-neutral-950">{t("checkoutTitle")}</h1>
+            {/* 웹 전용 — 주문 단계(지금 = 주문서) */}
+            <ol className="hidden co-steps" aria-label={locale === "en" ? "Order steps" : "주문 단계"}>
+                <li className="is-done"><b><i className="fa-solid fa-check" aria-hidden="true" /></b>{t("cart")}</li>
+                <li className="is-on" aria-current="step"><b>2</b>{locale === "en" ? "Checkout" : "주문서"}</li>
+                <li><b>3</b>{locale === "en" ? "Done" : "결제 완료"}</li>
+            </ol>
             <div className="mt-4 rounded-xl border-2 border-sky-300 bg-sky-50 px-4 py-3" data-payment-mode="test">
                 <p className="text-sm font-black text-sky-950">
                     <i className="fa-solid fa-flask mr-2" />
@@ -547,14 +569,18 @@ export default function CheckoutPage() {
                 <aside className="surface h-fit p-5 lg:sticky lg:top-24">
                     <h2 className="text-lg font-black text-neutral-950">{t("orderedProducts")}</h2>
                     <div className="mt-4 grid gap-3">
-                        {lines.map(({ product, qty, color, size, subtotal }) => (
-                            <div key={`${product.id}-${color ?? ""}-${size ?? ""}`} className="flex items-start justify-between gap-3 text-sm">
-                                <span className="font-bold leading-5 text-neutral-700">
+                        {lines.map(({ product, qty, color, size, subtotal, image }) => (
+                            <div key={`${product.id}-${color ?? ""}-${size ?? ""}`} className="co-line flex items-start justify-between gap-3 text-sm">
+                                {/* 웹 전용 — 상품 사진 */}
+                                <span className="hidden co-line-thumb" aria-hidden="true">
+                                    {image ? <Image src={image} alt="" fill sizes="56px" className="object-cover" /> : <i className={`fa-solid ${product.icon}`} />}
+                                </span>
+                                <span className="co-line-name font-bold leading-5 text-neutral-700">
                                     {productName(product)}
                                     {color && <span className="text-neutral-400"> · {color}</span>}
                                     {size && <span className="text-neutral-400"> · {size}</span>} x {qty}
                                 </span>
-                                <b className="shrink-0 text-neutral-950">{formatPrice(subtotal)}</b>
+                                <b className="co-line-price shrink-0 text-neutral-950">{formatPrice(subtotal)}</b>
                             </div>
                         ))}
                     </div>
@@ -576,7 +602,7 @@ export default function CheckoutPage() {
                             </b>
                         </div>
                     </div>
-                    <div className="mt-4 flex items-center justify-between border-t border-neutral-200 pt-4">
+                    <div className="co-total mt-4 flex items-center justify-between border-t border-neutral-200 pt-4">
                         <span className="font-black">{t("totalPayment")}</span>
                         <b className="text-2xl font-black text-indigo-700">
                             {formatPrice(total + (deliveryQuote?.shippingFee ?? 0))}
@@ -607,7 +633,7 @@ export default function CheckoutPage() {
                     )}
                     <button
                         type="submit"
-                        className="btn btn-primary mt-5 w-full"
+                        className="co-pay btn btn-primary mt-5 w-full"
                         disabled={submitting || !signedInForPayment || (directEasyPay && !directTermsAccepted)}
                         data-payment-status="test_ready"
                     >

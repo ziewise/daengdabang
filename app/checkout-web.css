@@ -1,0 +1,332 @@
+/*
+ * checkout-web.css — 웹 주문서(/checkout) 크레파스 꾸밈 · 2026-10-24
+ * ---------------------------------------------------------------------
+ * 장바구니와 같은 결: 영문 손글씨 · 주아 제목 + 세 색 밑줄 · 주문 단계 알약(장바구니 ✓ → 주문서 → 결제 완료) ·
+ * 흰 쿠션 칸(머리 = 파스텔 동그라미 아이콘 + 주아 제목) · 크림 입력칸(살구 테, 누르면 분홍 테) · 결제수단 쿠션 카드(고른 것 분홍) ·
+ * 안내 상자 = 둥근 파스텔 메모 · 주문 상품 요약 = 사진 · 크레파스 총 결제금액 · 분홍 결제 알약. 점선 · 줄무늬 · 기울기 · 스티커 없음.
+ * 범위: 웹(html:not(.ddb-app-mode)) · main[data-checkout-web] 안에서만(앱은 appShopSkin 주문서 꾸밈 그대로).
+ * 입력 오류(빨간 테두리 · 문구)는 그대로 보이게 오류 칸은 덮지 않음. 결제 · 검증 동작 그대로, 모양만.
+ */
+
+html:not(.ddb-app-mode) main[data-checkout-web] {
+    --co-cushion: inset 0 3px 0 rgb(255 255 255 / 90%), inset 0 -10px 18px rgb(0 0 0 / 3%), 0 22px 36px -24px rgb(15 23 42 / 32%);
+    --co-underline: repeating-linear-gradient(94deg, rgb(8 145 178 / 62%) 0 14px, rgb(239 71 111 / 58%) 14px 28px, rgb(245 158 11 / 62%) 28px 42px);
+
+    /* ── 머리: 꼬리표 · 제목 · 단계 ── */
+    &[data-checkout-web="form"] { position: relative; padding-top: 34px; }
+
+    & .co-kicker {
+        display: block;
+        width: fit-content;
+        margin: 0;
+        background-image: repeating-linear-gradient(172deg, #07849e 0 5px, #ef476f 5px 10px, #e98708 10px 15px);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: #07849e;
+        font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        -webkit-text-fill-color: transparent;
+    }
+
+    & :is(.co-title, .co-notice-title, section.surface h2, legend#checkout-payment-method-title, aside.surface > h2) {
+        position: relative;
+        width: fit-content;
+        color: #1e293b;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-weight: 400;
+        isolation: isolate;
+    }
+
+    & :is(.co-title, .co-notice-title, aside.surface > h2)::after {
+        content: "";
+        position: absolute;
+        right: 1%;
+        bottom: -0.1em;
+        left: 0;
+        z-index: -1;
+        height: 0.22em;
+        border-radius: 999px 70% 999px 60%;
+        background: var(--co-underline);
+    }
+
+    & .co-title { display: inline-block; margin-top: 8px; font-size: 36px; }
+
+    & .co-steps {
+        position: absolute;
+        top: 46px;
+        right: 24px;
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    & .co-steps li {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        height: 38px;
+        padding: 0 14px 0 6px;
+        border-radius: 999px;
+        background: #fff;
+        color: #94a3b8;
+        font-size: 13px;
+        font-weight: 800;
+        box-shadow: 0 0 0 1.5px rgb(100 116 139 / 14%);
+    }
+
+    & .co-steps li + li::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: -15px;
+        width: 12px;
+        height: 3px;
+        border-radius: 999px;
+        background: #f2c6d3;
+        transform: translateY(-50%);
+    }
+
+    & .co-steps b {
+        display: grid;
+        width: 26px;
+        height: 26px;
+        place-items: center;
+        border-radius: 999px;
+        background: #f1f5f9;
+        color: #94a3b8;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 13px;
+        font-weight: 400;
+    }
+
+    & .co-steps b i { font-size: 11px; }
+    & .co-steps li.is-done { color: #0f8a66; }
+    & .co-steps li.is-done b { background: #e9f8f1; color: #12a17a; }
+    & .co-steps li.is-on { background: #ffeef3; color: #d0436d; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%), 0 0 0 2px #f7a8bf; }
+    & .co-steps li.is-on b { background: #e9789a; color: #fff; }
+
+    /* 테스트 모드 안내 — 하늘 쿠션 메모 */
+    & [data-payment-mode="test"] {
+        margin-top: 22px;
+        padding: 14px 20px;
+        border: 0;
+        border-radius: 24px;
+        background: #e9f4fb;
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%);
+    }
+
+    & form { gap: 26px; margin-top: 22px; }
+
+    /* ── 칸(배송지 · 배송 요청 · 예상 도착일 · 결제수단 · 저장된 배송지) — 흰 쿠션 ── */
+    & section.surface,
+    & aside.surface {
+        border: 0;
+        border-radius: 30px;
+        background: #fff;
+        box-shadow: var(--co-cushion);
+    }
+
+    /* 칸 머리 — 회색 띠 대신 투명, 아이콘은 파스텔 동그라미 */
+    & section.surface > div[class*="border-b"] {
+        padding: 22px 24px 6px;
+        border-bottom: 0;
+        background: transparent;
+    }
+
+    & section.surface span[class*="h-9"][class*="w-9"][class*="rounded-full"] {
+        width: 46px;
+        height: 46px;
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%);
+    }
+
+    & section.surface span[class*="h-9"][class*="w-9"] > i { font-size: 17px; }
+    & section[aria-labelledby$="-address-title"] span[class*="h-9"][class*="w-9"] { background: #ffeef3; color: #e2557a; }
+    & section[aria-labelledby$="-request-title"] span[class*="h-9"][class*="w-9"] { background: #e9f8f1; color: #12a17a; }
+    & section[aria-labelledby="checkout-delivery-estimate-title"] span[class*="h-9"][class*="w-9"] { background: #e9f4fb; color: #0e8aa0; }
+
+    & section.surface h2 { font-size: 21px; }
+    & section.surface > div[class*="border-b"] h2 + p { margin-top: 2px; color: #64748b; font-weight: 600; }
+
+    /* 칸 본문 여백(결제수단 칸은 칸 자체에 여백이 있어 안쪽 묶음은 0) */
+    & section.surface:not([aria-labelledby="checkout-payment-method-title"]) > fieldset,
+    & section.surface > div[aria-live] { padding: 18px 24px 24px; }
+    & section[aria-labelledby="checkout-payment-method-title"] > fieldset { padding: 0; }
+
+    /* 결제수단 칸 */
+    & section[aria-labelledby="checkout-payment-method-title"] { padding: 22px 24px 24px; }
+    & legend#checkout-payment-method-title { margin-bottom: 14px; font-size: 21px; }
+
+    /* 입력칸 이름 · 입력칸 — 크림 칸(오류 칸은 덮지 않음) */
+    & label[class*="text-xs"][class*="font-black"] {
+        color: #1e293b;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 14.5px;
+        font-weight: 400;
+    }
+
+    & label[class*="text-xs"][class*="font-black"] > span { font-family: var(--font-wanted-sans), sans-serif; font-size: 12px; font-weight: 700; }
+
+    & :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea):not([aria-invalid="true"]):not([class*="border-red"]) {
+        border-color: transparent;
+        border-radius: 16px;
+        background-color: #fffaf1;
+        box-shadow: 0 0 0 2px #f3e3cc;
+    }
+
+    & :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea):not([aria-invalid="true"]):not([class*="border-red"]):focus {
+        outline: none;
+        background-color: #fff;
+        box-shadow: 0 0 0 2.5px #f7a8bf, 0 0 0 7px rgb(247 168 191 / 22%);
+    }
+
+    & :is(input, select, textarea)::placeholder { color: #b8a58c; }
+    & input[type="checkbox"] { accent-color: #e9789a; }
+
+    /* 우편번호 찾기 — 연분홍 쿠션 알약 */
+    & button[class*="border-indigo-200"] {
+        border: 0;
+        border-radius: 999px;
+        background: #ffeef3;
+        color: #d0436d;
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%);
+    }
+
+    & button[class*="border-indigo-200"]:hover { background: #fde0e9; }
+
+    /* 결제수단 — 쿠션 카드(고른 것 분홍 테 + 연분홍, 쓸 수 없는 것 흐리게) */
+    & [role="radiogroup"] { gap: 10px; }
+
+    & button[data-payment-method] {
+        padding: 14px 14px 12px;
+        border: 0;
+        border-radius: 20px;
+        background: #fff;
+        box-shadow: 0 0 0 1.5px #efe7dc, 0 8px 14px -12px rgb(15 23 42 / 30%);
+        transition: transform 0.15s ease;
+    }
+
+    & button[data-payment-method]:not(:disabled):hover { transform: translateY(-2px); }
+    & button[data-payment-method][aria-checked="true"] { background: #fff3f6; box-shadow: 0 0 0 2.5px #e9789a, 0 10px 18px -12px rgb(200 80 120 / 45%); }
+    & button[data-payment-method][aria-checked="true"] i { color: #e2557a; }
+    & button[data-payment-method]:disabled { background: #f8f6f3; box-shadow: 0 0 0 1.5px #efe7dc; }
+    & button[data-payment-method] > span:first-child > span { color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 15px; font-weight: 400; }
+    & button[data-payment-method]:disabled > span:first-child > span { color: #a8a29e; }
+
+    /* 안내 상자 — 둥근 파스텔 메모(문구 · 색 계열 그대로) */
+    & :is(div, p, label):is([class*="bg-sky-50"], [class*="bg-amber-50"], [class*="bg-red-50"], [class*="bg-emerald-50"], [class*="bg-neutral-50"]):not([data-payment-mode]):not(section > div[class*="border-b"]) {
+        border: 0;
+        border-radius: 18px;
+    }
+
+    & label[class*="bg-neutral-50"] { background: #fff6e3; }
+
+    /* ── 주문 상품 요약 — 따라 내려오는 쿠션 ── */
+    & aside.surface { padding: 26px 24px 24px; }
+    & aside.surface > h2 { font-size: 23px; }
+
+    & .co-line { align-items: center; gap: 12px; }
+
+    & .co-line-thumb {
+        position: relative;
+        display: grid;
+        width: 56px;
+        height: 56px;
+        flex: none;
+        place-items: center;
+        overflow: hidden;
+        border-radius: 16px;
+        background: #f7f2e8;
+        color: #fff;
+    }
+
+    & .co-line-name { flex: 1; color: #334155; font-size: 13px; }
+    & .co-line-price { font-size: 14px; }
+
+    & aside.surface [class*="border-t"] { border-top: 0; }
+    & aside.surface > div.grid.border-t { margin-top: 16px; padding: 14px 16px; border-radius: 18px; background: #fffaf1; }
+
+    /* 총 결제 — 분홍 메모 · 크레파스 큰 가격 */
+    & .co-total {
+        margin-top: 12px;
+        padding: 14px 16px;
+        border-radius: 20px;
+        background: #fff3f6;
+    }
+
+    & .co-total > span { color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-weight: 400; }
+
+    & .co-total > b {
+        background: linear-gradient(102deg, #0891b2 0 31%, #ef476f 38% 67%, #f59e0b 75% 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+        font-size: 28px;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* 로그인하기 — 작은 분홍 알약 */
+    & aside [role="alert"] > a[class*="underline"] {
+        padding: 7px 16px;
+        border-radius: 999px;
+        background: #e9789a;
+        color: #fff;
+        text-decoration: none;
+    }
+
+    /* 분홍 결제 알약 */
+    & .co-pay,
+    &[data-checkout-web="notice"] .btn-primary {
+        height: 56px;
+        border-radius: 999px;
+        background: #e9789a;
+        color: #fff;
+        font-size: 16px;
+        box-shadow: 0 10px 20px -12px rgb(200 80 120 / 70%);
+    }
+
+    &[data-checkout-web="notice"] .btn-primary { height: 52px; padding: 0 30px; }
+    & .co-pay:hover:not(:disabled), &[data-checkout-web="notice"] .btn-primary:hover { background: #e26690; }
+    & .co-pay:disabled { background: #f3b8c9; box-shadow: none; }
+
+    /* ── 빈 주문서 · 장바구니 확인 안내 ── */
+    &[data-checkout-web="notice"] { padding-top: 56px; padding-bottom: 64px; }
+
+    & .co-notice-art {
+        display: grid;
+        width: 150px;
+        height: 150px;
+        margin: 0 auto 22px;
+        place-items: center;
+        border-radius: 999px;
+        background: #fff;
+        box-shadow: 0 0 0 10px #ffeef3, 0 22px 36px -24px rgb(15 23 42 / 32%);
+    }
+
+    & .co-notice-title { display: inline-block; font-size: 26px; }
+}
+
+/* 태블릿 · 휴대폰 */
+@media (max-width: 860px) {
+    html:not(.ddb-app-mode) main[data-checkout-web] {
+        & .co-steps { position: static; flex-wrap: wrap; margin-top: 14px; }
+    }
+}
+
+@media (max-width: 560px) {
+    html:not(.ddb-app-mode) main[data-checkout-web] {
+        & .co-title { font-size: 30px; }
+        & .co-steps li { height: 34px; padding-right: 10px; font-size: 12px; }
+        & section.surface > div[class*="border-b"] { padding: 18px 18px 4px; }
+        & section.surface:not([aria-labelledby="checkout-payment-method-title"]) > fieldset,
+        & section.surface > div[aria-live] { padding: 14px 18px 20px; }
+        & section[aria-labelledby="checkout-payment-method-title"] { padding: 18px 16px 20px; }
+        & :is(section.surface, aside.surface) { border-radius: 26px; }
+        & aside.surface { padding: 22px 18px 20px; }
+    }
+}
