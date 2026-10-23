@@ -631,12 +631,14 @@ html:not(.ddb-app-mode) main[data-support-web] {
     & .cs-steps-wrap { display: block; }
     & .cs-steps { --dw-step: 116px; }
 
+    /* 단계 그림이 동그란 배지 그림이라 동그라미 바탕 없이 그림이 자리를 채움 */
     & .cs-steps .dw-dstep-art {
-        background: var(--cs-bg);
-        box-shadow: inset 0 4px 0 rgb(255 255 255 / 90%), inset 0 -10px 18px rgb(0 0 0 / 4%), 0 18px 26px -20px rgb(15 23 42 / 35%);
+        background: transparent;
+        box-shadow: none;
+        filter: drop-shadow(0 12px 14px rgb(15 23 42 / 16%));
     }
 
-    & .cs-steps .dw-dstep-art img { width: 70%; height: 70%; }
+    & .cs-steps .dw-dstep-art img { width: 100%; height: 100%; }
     & .cs-steps > li { --dw-no: var(--cs-ink); }
     & .cs-steps .dw-dstep-body { max-width: 210px; }
 
