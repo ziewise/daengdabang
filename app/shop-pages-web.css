@@ -1,0 +1,84 @@
+/*
+ * shop-pages-web.css — 웹 쇼핑 메뉴 화면(신상품 · 브랜드 · 세트상품) 크레파스 머리 · 타일 꾸밈 · 2026-10-24
+ * ---------------------------------------------------------------------
+ * 댕다방 핫픽 · 전체상품과 같은 결: 영문 손글씨 꼬리표 · 주아 제목 + 세 색 밑줄 · 설명.
+ * 브랜드 타일 = 흰 쿠션(로고 판 둥글게 · 개수 파스텔 동그라미), 세트 개수 = 분홍 쿠션. 상품 · 세트 카드는 사이트 카드 그대로.
+ * 범위: 웹(html:not(.ddb-app-mode)) · main[data-shop-web] 안에서만(앱은 appShopSkin 그대로). 링크 · 동작 그대로.
+ */
+
+html:not(.ddb-app-mode) main[data-shop-web] {
+    /* 영문 꼬리표 — 세 색 크레파스 손글씨 */
+    & > p:first-child {
+        display: block;
+        width: fit-content;
+        background-image: repeating-linear-gradient(172deg, #07849e 0 5px, #ef476f 5px 10px, #e98708 10px 15px);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: #07849e;
+        font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+        font-size: 15px;
+        letter-spacing: 0.08em;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* 제목 — 주아 + 세 색 밑줄 */
+    & h1 {
+        position: relative;
+        display: block;
+        width: fit-content;
+        color: #1e293b;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: clamp(32px, 3.2vw, 42px);
+        font-weight: 400;
+        letter-spacing: -0.01em;
+        isolation: isolate;
+    }
+
+    & h1::after {
+        content: "";
+        position: absolute;
+        right: 1%;
+        bottom: -0.1em;
+        left: 0;
+        z-index: -1;
+        height: 0.22em;
+        border-radius: 999px 70% 999px 60%;
+        background: repeating-linear-gradient(94deg, rgb(8 145 178 / 62%) 0 14px, rgb(239 71 111 / 58%) 14px 28px, rgb(245 158 11 / 62%) 28px 42px);
+    }
+
+    & h1 + p { margin-top: 12px; color: #64748b; font-weight: 600; }
+
+    /* 세트 개수 — 분홍 쿠션 */
+    &[data-shop-web="bundles"] .surface {
+        border: 0;
+        border-radius: 24px;
+        background: #ffeef3;
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%), 0 12px 20px -16px rgb(200 80 120 / 55%);
+    }
+
+    &[data-shop-web="bundles"] .surface > p:first-child { color: #d0436d; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 26px; font-weight: 400; }
+
+    /* 브랜드 타일 — 흰 쿠션 · 둥근 로고 판 · 파스텔 개수 동그라미 */
+    &[data-shop-web="brands"] > div.grid { gap: 14px; margin-top: 28px; }
+
+    &[data-shop-web="brands"] > div.grid > a {
+        padding: 14px 16px 14px 14px;
+        border: 0;
+        border-radius: 26px;
+        background: #fff;
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 14px 26px -20px rgb(15 23 42 / 35%), 0 0 0 1px rgb(100 116 139 / 8%);
+    }
+
+    &[data-shop-web="brands"] > div.grid > a:hover { box-shadow: 0 0 0 2px #f7a8bf, 0 14px 26px -20px rgb(15 23 42 / 35%); }
+    &[data-shop-web="brands"] > div.grid > a > div > div:first-child { border-radius: 18px; }
+
+    &[data-shop-web="brands"] > div.grid > a h2 {
+        color: #1e293b;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 18px;
+        font-weight: 400;
+    }
+
+    &[data-shop-web="brands"] > div.grid > a > div > span:last-child { background: #ffeef3; color: #d0436d; }
+    &[data-shop-web="brands"] > div.grid > a:hover > div > span:last-child { background: #e9789a; color: #fff; }
+}

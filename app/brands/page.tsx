@@ -1,6 +1,8 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { listBrands } from "@/lib/catalog";
+// 웹 쇼핑 화면 크레파스 머리 · 타일 꾸밈(2026-10-24, data-shop-web 이름표만 · 앱은 닿지 않음)
+import "../shop-pages-web.css";
 
 export const metadata: Metadata = {
     title: "브랜드 | 댕다방",
@@ -57,7 +59,7 @@ export default function BrandsPage() {
     const brands = listBrands();
 
     return (
-        <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6">
+        <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6" data-shop-web="brands">
             <p className="text-sm font-black text-indigo-700">BRANDS</p>
             <h1 className="mt-2 text-3xl font-black tracking-tight text-neutral-950 md:text-4xl">브랜드</h1>
             <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

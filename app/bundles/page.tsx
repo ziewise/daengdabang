@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import BundleCard from "@/components/bundles/BundleCard";
 import LocalizedText from "@/components/i18n/LocalizedText";
 import { BUNDLES } from "@/lib/bundles";
+// 웹 쇼핑 화면 크레파스 머리 · 타일 꾸밈(2026-10-24, data-shop-web 이름표만 · 앱은 닿지 않음)
+import "../shop-pages-web.css";
 
 export const metadata: Metadata = {
     title: "묶음 기획전 | 댕다방",
@@ -10,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function BundlesPage() {
     return (
-        <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6">
+        <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6" data-shop-web="bundles">
             <p className="text-sm font-black text-indigo-700">PROMO</p>
             <div className="mt-2 flex flex-wrap items-start justify-between gap-3">
                 <div>
