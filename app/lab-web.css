@@ -290,7 +290,7 @@ html:not(.ddb-app-mode) [data-lab-web] {
    코인 · 병원 먼저 띠 → 연보라 "이렇게 결과가 나와요"(예시) → 발자국 → 최근 분석.
    코드 순서 · 동작은 그대로 두고 화면 순서(order) · 모양만. 펫렌즈 창(data-variant="modal") · 앱은 그대로 */
 html:not(.ddb-app-mode) [data-lab-web] [data-petlens-observation-experience][data-variant="page"] {
-    grid-template-columns: minmax(0, 420px) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
     gap: 18px;
 
     /* 화면 순서 */
@@ -401,6 +401,15 @@ html:not(.ddb-app-mode) [data-lab-web] [data-petlens-observation-experience][dat
     & > div[data-daenglab-analysis-wallet].border,
     & > div[data-petlens-emergency-preflight].border { align-self: stretch; padding: 18px 24px !important; border: 0 !important; border-radius: 30px !important; box-shadow: var(--lab-cushion) !important; }
     & > div[data-daenglab-analysis-wallet].border { background: #fff6d6 !important; }
+    /* 코인 띠 글씨 — 원래 12 · 10px 이라 작음: 제목 주아 16 · 설명 12.5 · 잔액 주아 28 분홍 */
+    & > [data-daenglab-analysis-wallet] p.text-xs { font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 16px; font-weight: 400; line-height: 1.4; }
+    & > [data-daenglab-analysis-wallet] p.text-xs + p { margin-top: 4px; color: #8a6d3b; font-size: 12.5px; line-height: 1.5; }
+    & > [data-daenglab-analysis-wallet] .text-right > strong { color: var(--lab-pink-deep); font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 28px; font-weight: 400; line-height: 1.1; }
+    & > [data-daenglab-analysis-wallet] .text-right > span { font-size: 12px; }
+    & > [data-daenglab-analysis-wallet] > div:first-child { flex-wrap: nowrap; }
+    & > [data-daenglab-analysis-wallet] > div:first-child > div:first-child { min-width: 0; }
+    & > [data-daenglab-analysis-wallet] .text-right { flex: none; }
+    & > [data-daenglab-analysis-wallet] > div.mt-3 > span { font-size: 12.5px; }
     & > div[data-petlens-emergency-preflight].border { position: relative; padding-left: 86px !important; background: #ffeef3 !important; }
     & > div[data-petlens-emergency-preflight]::before { content: ""; position: absolute; left: 24px; top: 50%; width: 46px; height: 46px; translate: 0 -50%; background: url("/images/ui/lab-priority-160.webp") center / contain no-repeat; }
     & > div[data-petlens-emergency-preflight] > p:first-child { color: var(--lab-ink); font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 16px; font-weight: 400; }
@@ -473,5 +482,59 @@ html:not(.ddb-app-mode) [data-lab-web] [data-petlens-observation-experience][dat
         & .lab-obs-sample { padding: 22px 16px !important; border-radius: 30px !important; }
         & .lab-obs-sample-top h2 { font-size: 22px; }
         & .lab-obs-plot svg { height: 120px; }
+    }
+}
+
+/* ───────── 4부 · 행동·소리 분석 확인 창(동의 먼저 · 오래 걸림 알림) ─────────
+   창은 화면 맨 위(body)에 따로 떠서 [data-lab-web] 밖 — 연구소 페이지에서 연 창에만 붙는 표시(data-lab-web-dialog)로 꾸밈.
+   분홍 쿠션 판 · 큰 그림(자물쇠 · 편지) · 주아 제목 · 분홍/흰 알약 버튼, 가운데 정렬. 문구 · 버튼 동작 그대로 */
+html:not(.ddb-app-mode) [data-lab-web-dialog] {
+    display: grid;
+    place-items: center;
+    background: rgb(30 27 46 / 42%);
+    backdrop-filter: blur(3px);
+
+    & > [role="alertdialog"] {
+        padding: 30px 28px 26px;
+        border: 0;
+        border-radius: 38px;
+        background: #ffeef3;
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 30px 60px -28px rgb(15 23 42 / 55%);
+        text-align: center;
+    }
+    /* 아이콘 칸 → 큰 그림(원래 아이콘은 숨김) */
+    & > [role="alertdialog"] > span[aria-hidden="true"]:first-child {
+        width: 96px;
+        height: 96px;
+        margin: 0 auto;
+        border-radius: 0;
+        background: url("/images/ui/lab-lock-256.webp") center / contain no-repeat;
+        filter: drop-shadow(0 10px 12px rgb(200 80 120 / 25%));
+    }
+    &[data-daenglab-deferred-choice] > [role="alertdialog"] > span[aria-hidden="true"]:first-child { background-image: url("/images/ui/lab-mail-160.webp"); }
+    & > [role="alertdialog"] > span[aria-hidden="true"]:first-child > i { visibility: hidden; }
+    & :is(h2, #daenglab-deferred-choice-title) { font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-weight: 400; color: #1e293b; }
+    & h2 { margin-top: 14px; font-size: 22px; line-height: 1.4; }
+    & #daenglab-deferred-choice-title { color: #e2557a; letter-spacing: 0.04em; }
+    & [role="alertdialog"] > p { color: #64748b; }
+    & .btn-primary {
+        min-height: 50px;
+        border: 0;
+        border-radius: 999px;
+        background: #e9789a;
+        color: #fff;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 17px;
+        font-weight: 400;
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 30%), 0 12px 20px -12px rgb(200 80 120 / 65%);
+    }
+    & .btn-primary:hover { background: #e2557a; }
+    & .btn-secondary {
+        min-height: 46px;
+        border: 0;
+        border-radius: 999px;
+        background: #fff;
+        color: #475569;
+        box-shadow: inset 0 0 0 1.5px #f6d6e0, 0 8px 16px -12px rgb(15 23 42 / 40%);
     }
 }

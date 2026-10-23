@@ -1537,6 +1537,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                     className="fixed inset-0 z-[2700] h-[100dvh] overflow-y-auto overscroll-contain bg-neutral-950/55 pl-[max(.75rem,env(safe-area-inset-left))] pr-[max(.75rem,env(safe-area-inset-right))] pt-[max(.75rem,env(safe-area-inset-top))] pb-[max(.75rem,env(safe-area-inset-bottom))] sm:grid sm:place-items-center"
                     data-daenglab-consent-prompt
                     data-ddb-managed-modal-layer
+                    data-lab-web-dialog={variant === "page" ? "" : undefined}
                 >
                     <div
                         ref={consentDialogRef}
@@ -1585,6 +1586,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                     className="fixed inset-0 z-[2750] h-[100dvh] overflow-y-auto overscroll-contain bg-neutral-950/60 pl-[max(.75rem,env(safe-area-inset-left))] pr-[max(.75rem,env(safe-area-inset-right))] pt-[max(.75rem,env(safe-area-inset-top))] pb-[max(.75rem,env(safe-area-inset-bottom))] sm:grid sm:place-items-center"
                     data-daenglab-deferred-choice
                     data-ddb-managed-modal-layer
+                    data-lab-web-dialog={variant === "page" ? "" : undefined}
                 >
                     <div
                         ref={deferredChoiceDialogRef}
