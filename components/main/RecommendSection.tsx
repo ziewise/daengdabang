@@ -86,35 +86,30 @@ export default function RecommendSection() {
             <div className="mx-auto max-w-[1400px] px-6">
                 <div className="mb-6 flex flex-col gap-4 md:mb-8 md:flex-row md:items-end md:justify-between">
                     <div className="max-w-3xl">
-                        <p className="ddb-crayon-kicker mb-1.5 text-[11px] md:text-xs">
-                            <i className="fa-solid fa-wand-magic-sparkles mr-1" />
-                            {showsEditorial ? "댕다방 추천 셀렉트" : "우리 아이 맞춤 추천"}
-                        </p>
-                        <h2 className="ddb-crayon-title mb-1.5 text-3xl md:text-4xl">
-                            <span className="ddb-crayon-underline">
-                                {personalizationEnabled && selectedPet && preferences?.enabled
-                                    ? `${petName}를 위한 추천`
-                                    : "상품 용도와 브랜드를 살펴 골랐어요"}
-                            </span>
+                        {/* 제목 — 다른 메인 구역(핫픽 · 대표 브랜드 · 신상품)과 같은 모양: 짧은 이름 + 아래 회색 한 줄(2026-10-23 사용자) */}
+                        <h2 className="mb-1.5 text-2xl font-black tracking-tight md:text-3xl">
+                            {personalizationEnabled && selectedPet && preferences?.enabled
+                                ? `${petName}를 위한 추천`
+                                : "댕다방 추천 셀렉트"}
                         </h2>
                         {!personalizationEnabled ? (
-                            <p className="text-sm font-bold leading-6 text-neutral-500">
+                            <p className="text-sm text-neutral-500">
                                 현재는 회원 정보를 사용하지 않는 댕다방 편집 추천을 보여드려요.
                             </p>
                         ) : !selectedPet ? (
-                            <p className="text-sm font-bold leading-6 text-neutral-500">
+                            <p className="text-sm text-neutral-500">
                                 반려견 프로필을 등록하면 체형·활동량·관심 케어를 반영할 수 있어요.
                             </p>
                         ) : !preferences ? (
-                            <p className="text-sm font-bold leading-6 text-neutral-500">
+                            <p className="text-sm text-neutral-500">
                                 {preferenceState.errorMessage || "추천 데이터 설정을 안전하게 확인하고 있어요."}
                             </p>
                         ) : !preferences.enabled ? (
-                            <p className="text-sm font-bold leading-6 text-neutral-500">
+                            <p className="text-sm text-neutral-500">
                                 맞춤 추천이 꺼져 있어 회원 정보가 아닌 편집 추천만 보여드려요.
                             </p>
                         ) : (
-                            <p className="text-sm font-bold leading-6 text-neutral-500">
+                            <p className="text-sm text-neutral-500">
                                 {personalizedResult?.mode === "personalized"
                                     ? "등록한 프로필과 사용에 동의한 펫렌즈 케어 신호를 함께 반영했어요."
                                     : "등록한 체형·활동량·관심 케어 프로필만 반영했어요."}
