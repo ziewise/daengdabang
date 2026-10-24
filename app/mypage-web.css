@@ -2328,3 +2328,91 @@ html:not(.ddb-app-mode) main:has(nav[aria-label="마이페이지 메뉴"]) [data
         & #signup-bonus-code { font-size: 22px; letter-spacing: 0.35em; }
     }
 }
+
+/* ═════════ 결제수단 관리 — 준비 중(app/mypage/payments · 2026-10-24 사용자 "메뉴는 두고 준비 중") ═════════
+   웹: 노랑 준비 중 판(3D 공구 그림 · 손글씨 COMING SOON · 주아 제목 + 세 색 밑줄 · 준비 중 배지) → 지금 결제하는 방법 세 단계(파스텔 동그라미 · 세 색 줄) →
+   민트 안전 안내 → 분홍 · 흰 알약 버튼. 사이드 메뉴 · 모바일 메뉴의 결제수단 관리에 작은 "준비 중" 표시. 앱은 그대로 */
+html:not(.ddb-app-mode) main:has(nav[aria-label="마이페이지 메뉴"]) {
+    & [data-pay-legacy] { display: none; }
+    & [data-pay-web] { display: grid; gap: 18px; }
+
+    /* 사이드 메뉴 — 결제수단 관리 "준비 중"(지금 보는 화면이면 › 표시가 대신) */
+    & nav[aria-label="마이페이지 메뉴"] li > a[href^="/mypage/payments"]:not([aria-current="page"])::after {
+        content: "준비 중";
+        margin-left: auto;
+        padding: 3px 9px;
+        border-radius: 999px;
+        background: #fff6e3;
+        color: #d98a12;
+        font-size: 10.5px;
+        font-weight: 800;
+        white-space: nowrap;
+    }
+}
+
+/* 모바일 전체 메뉴 시트 — 결제수단 관리 "준비 중" */
+html:not(.ddb-app-mode) .ddb-mpmenu .ddb-mpm-group a[href^="/mypage/payments"] { position: relative; }
+html:not(.ddb-app-mode) .ddb-mpmenu .ddb-mpm-group a[href^="/mypage/payments"]::after { content: "준비 중"; position: absolute; top: 6px; right: 6px; padding: 2px 7px; border-radius: 999px; background: #fff6e3; color: #d98a12; font-size: 9.5px; font-weight: 800; }
+
+[data-pay-web] .pw-hero {
+    position: relative;
+    display: grid;
+    grid-template-columns: 170px minmax(0, 1fr);
+    align-items: center;
+    gap: 26px;
+    padding: 30px 32px;
+    border-radius: 34px;
+    background: radial-gradient(90% 120% at 100% 0, rgb(255 238 243 / 85%) 0, transparent 50%), linear-gradient(120deg, #fff3d9 0%, #fff8e9 60%, #fffdf6 100%);
+    box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 26px 40px -30px rgb(184 106 8 / 45%);
+}
+
+[data-pay-web] .pw-hero-art { width: 170px; height: 170px; object-fit: contain; filter: drop-shadow(0 16px 18px rgb(184 106 8 / 25%)); animation: pw-bob 3.2s ease-in-out infinite; }
+[data-pay-web] .pw-kicker { display: inline-block; background: repeating-linear-gradient(172deg, #07849e 0 5px, #ef476f 5px 10px, #e98708 10px 15px); -webkit-background-clip: text; background-clip: text; font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.16em; -webkit-text-fill-color: transparent; }
+[data-pay-web] .pw-hero h2 { margin-top: 4px; color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 29px; font-weight: 400; line-height: 1.35; word-break: keep-all; }
+[data-pay-web] .pw-hero h2 span { position: relative; isolation: isolate; color: #d98a12; }
+[data-pay-web] .pw-hero h2 span::after { content: ""; position: absolute; right: 1%; bottom: -0.04em; left: 0; z-index: -1; height: 0.24em; border-radius: 999px 70% 999px 60%; background: repeating-linear-gradient(94deg, rgb(8 145 178 / 62%) 0 14px, rgb(239 71 111 / 58%) 14px 28px, rgb(245 158 11 / 62%) 28px 42px); opacity: 0.6; transform: rotate(-0.7deg) skewX(-7deg); }
+[data-pay-web] .pw-hero-text > p:not(.pw-kicker) { margin-top: 10px; color: #6b5a3e; font-size: 14.5px; font-weight: 600; line-height: 1.75; word-break: keep-all; }
+[data-pay-web] .pw-badge { position: absolute; top: 22px; right: 24px; display: inline-flex; align-items: center; gap: 7px; padding: 8px 15px; border-radius: 999px; background: #fff; color: #d98a12; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 14.5px; box-shadow: inset 0 0 0 2px #f5d38f, 0 10px 16px -12px rgb(184 106 8 / 60%); }
+
+[data-pay-web] .pw-sec { padding: 22px 24px 26px; border-radius: 30px; background: #fff; box-shadow: inset 0 3px 0 #fff, 0 0 0 1px #f2e9dd, 0 18px 30px -26px rgb(15 23 42 / 36%); }
+[data-pay-web] .pw-sec h2 { display: flex; align-items: center; gap: 10px; color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 20px; font-weight: 400; }
+[data-pay-web] .pw-no { display: grid; width: 34px; height: 34px; place-items: center; border-radius: 50%; background: #e9f4fb; color: #0e8aa0; font-size: 14px; }
+
+[data-pay-web] .pw-steps { position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 22px 0 0; padding: 0; list-style: none; }
+[data-pay-web] .pw-steps::before { content: ""; position: absolute; top: 33px; right: 16%; left: 16%; height: 5px; border-radius: 999px; background: repeating-linear-gradient(94deg, rgb(8 145 178 / 45%) 0 18px, rgb(239 71 111 / 42%) 18px 36px, rgb(245 158 11 / 48%) 36px 54px); }
+[data-pay-web] .pw-steps li { --st: #e9f4fb; --sk: #0e8aa0; position: relative; display: grid; justify-items: center; gap: 6px; text-align: center; }
+[data-pay-web] .pw-steps li:nth-child(2) { --st: #f3f0fe; --sk: #6b51c9; }
+[data-pay-web] .pw-steps li:nth-child(3) { --st: #e9f8f1; --sk: #12a17a; }
+[data-pay-web] .pw-step-icon { position: relative; z-index: 1; display: grid; width: 70px; height: 70px; place-items: center; border: 4px solid #fff; border-radius: 50%; background: var(--st); color: var(--sk); font-size: 22px; box-shadow: 0 12px 18px -12px rgb(15 23 42 / 45%); }
+[data-pay-web] .pw-step-icon b { position: absolute; top: -4px; right: -4px; display: grid; width: 24px; height: 24px; place-items: center; border: 2.5px solid #fff; border-radius: 50%; background: var(--sk); color: #fff; font-size: 11.5px; font-weight: 800; }
+[data-pay-web] .pw-steps strong { margin-top: 4px; color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 16px; font-weight: 400; }
+[data-pay-web] .pw-steps small { color: #64748b; font-size: 12.5px; font-weight: 600; line-height: 1.6; word-break: keep-all; }
+
+[data-pay-web] .pw-safe { display: flex; align-items: center; gap: 16px; padding: 18px 22px; border-radius: 26px; background: #e9f8f1; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
+[data-pay-web] .pw-safe img { flex: none; width: 58px; height: 58px; object-fit: contain; filter: drop-shadow(0 6px 8px rgb(15 23 42 / 14%)); }
+[data-pay-web] .pw-safe h3 { color: #0f8a69; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 17px; font-weight: 400; }
+[data-pay-web] .pw-safe p { margin-top: 3px; color: #3f5f55; font-size: 13px; font-weight: 600; line-height: 1.65; }
+
+[data-pay-web] .pw-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+[data-pay-web] .pw-go { display: inline-flex; align-items: center; gap: 8px; min-height: 50px; padding: 0 24px; border-radius: 999px; background: #e9789a; color: #fff; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 16px; box-shadow: inset 0 2px 0 rgb(255 255 255 / 28%), 0 14px 22px -14px rgb(200 80 120 / 80%); }
+[data-pay-web] .pw-sub { display: inline-flex; align-items: center; min-height: 50px; padding: 0 22px; border-radius: 999px; background: #fff; color: #475569; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 15.5px; box-shadow: inset 0 0 0 1.5px #ece3d6; }
+
+@keyframes pw-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+
+@media (prefers-reduced-motion: reduce) {
+    [data-pay-web] .pw-hero-art { animation: none; }
+}
+
+@media (max-width: 760px) {
+    [data-pay-web] .pw-hero { grid-template-columns: minmax(0, 1fr); justify-items: center; gap: 12px; padding: 26px 20px 24px; border-radius: 28px; text-align: center; }
+    [data-pay-web] .pw-hero-art { width: 120px; height: 120px; }
+    [data-pay-web] .pw-hero h2 { font-size: 23px; }
+    [data-pay-web] .pw-badge { position: static; margin-top: 12px; }
+    [data-pay-web] .pw-sec { padding: 18px 16px 20px; }
+    [data-pay-web] .pw-steps { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+    [data-pay-web] .pw-steps::before { display: none; }
+    [data-pay-web] .pw-steps li { grid-template-columns: 70px minmax(0, 1fr); grid-template-rows: auto auto; justify-items: start; column-gap: 14px; text-align: left; }
+    [data-pay-web] .pw-step-icon { grid-row: 1 / span 2; }
+    [data-pay-web] .pw-steps strong { align-self: end; margin-top: 0; }
+    [data-pay-web] .pw-actions > a { flex: 1 1 100%; justify-content: center; }
+}
