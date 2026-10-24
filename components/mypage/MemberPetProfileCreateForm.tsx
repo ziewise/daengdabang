@@ -1,7 +1,15 @@
+/**
+ * MemberPetProfileCreateForm — 마이페이지 "강아지 추가 등록 · 첫 강아지 등록하기"
+ * ---------------------------------------------------------------------
+ * 앱: 카드 안에서 등록 칸이 펼쳐짐(원래 그대로).
+ * 웹(2026-10-24 사용자): 같은 값 · 같은 검사 · 같은 저장을 화면 가운데 창(PetProfileModal)으로 띄움.
+ *   등록이 끝나면 창이 닫히고 카드에 안내 · 펫렌즈 버튼이 나옴(원래 흐름 그대로).
+ */
 "use client";
 
 import Link from "next/link";
-import { FormEvent, useId, useState } from "react";
+import { FormEvent, useCallback, useId, useRef, useState } from "react";
+import { focusLater, PetFormSection, PetProfileModal, PetProfileWebFields, usePetModalHost } from "@/components/mypage/PetProfileModal";
 import {
     customerApiErrorMessage,
     ddbApiReady,
@@ -46,6 +54,15 @@ export default function MemberPetProfileCreateForm({ initiallyOpen = false }: Pr
     const [saving, setSaving] = useState(false);
     const [success, setSuccess] = useState("");
     const [error, setError] = useState("");
+    // 웹이면 창(모달)으로 — 앱 화면은 카드 안 펼침 그대로
+    const modalHost = usePetModalHost(open);
+    const openRef = useRef<HTMLButtonElement>(null);
+    const titleId = useId();
+    const groupId = useId();
+    const closeModal = useCallback(() => {
+        setOpen(false);
+        focusLater(openRef);
+    }, []);
 
     const resetDraft = () => {
         setName("");
@@ -154,6 +171,81 @@ export default function MemberPetProfileCreateForm({ initiallyOpen = false }: Pr
         }
     };
 
+    // 웹 — 화면 가운데 등록 창(값 · 검사 · 저장은 위 submit 그대로)
+    if (open && modalHost) {
+        return (
+            <>
+                <div className="mt-4 grid gap-2">
+                    <button ref={openRef} type="button" className="btn btn-primary w-full" data-member-pet-create-open>
+                        {hasExistingPets ? "강아지 추가 등록" : "첫 강아지 등록하기"}
+                    </button>
+                </div>
+                <PetProfileModal
+                    host={modalHost}
+                    titleId={titleId}
+                    kicker="NEW FRIEND"
+                    name=""
+                    titleRest={hasExistingPets ? "새 강아지 등록" : "우리 아이 등록"}
+                    sub="직접 확인한 정보로 등록하면 펫렌즈와 댕다방 연구소가 같은 아이를 기준으로 분석해요."
+                    avatar={primaryPetLensPhotoEntry(photoViews)?.[1]?.dataUrl || "/images/ui/lab-dog-256.webp"}
+                    avatarIsPhoto={Boolean(primaryPetLensPhotoEntry(photoViews))}
+                    busy={saving}
+                    onClose={closeModal}
+                    onSubmit={submit}
+                    hint="필수는 이름 · 견종 · 동의 세 가지예요."
+                    submit={(
+                        <button type="submit" className="ddb-pf-save" disabled={saving || photoBusy}>
+                            <i className="fa-solid fa-check" aria-hidden="true" />
+                            {photoBusy ? "사진 준비 중…" : saving ? "프로필 저장 중…" : "프로필 등록 완료"}
+                        </button>
+                    )}
+                    formProps={{ "data-member-pet-create-form": true }}
+                >
+                    <PetProfileWebFields
+                        groupId={groupId}
+                        breedListId={breedListId}
+                        saving={saving}
+                        required
+                        name={name}
+                        onName={setName}
+                        breed={breed}
+                        onBreed={setBreed}
+                        photoViews={photoViews}
+                        onPhotoViews={setPhotoViews}
+                        onPhotoBusy={setPhotoBusy}
+                        onError={setError}
+                        size={size}
+                        onSize={setSize}
+                        age={age}
+                        onAge={setAge}
+                        weightKg={weightKg}
+                        onWeightKg={setWeightKg}
+                        weightPlaceholder="선택 입력"
+                        sex={sex}
+                        onSex={setSex}
+                        coat={coat}
+                        onCoat={setCoat}
+                        coatColor={coatColor}
+                        onCoatColor={setCoatColor}
+                        coatColorPlaceholder="예: 크림, 검정"
+                        activity={activity}
+                        onActivity={setActivity}
+                    />
+                    <PetFormSection icon="/images/ui/policy-info-192.webp" title="개인정보 동의" tone="lav">
+                        <label className="ddb-pf-consent">
+                            <input type="checkbox" checked={privacyConsent} onChange={(event) => setPrivacyConsent(event.target.checked)} />
+                            <span>
+                                반려견 프로필 저장을 위한 선택 개인정보 수집·이용에 동의합니다. <b className="ddb-pf-must">필수</b>{" "}
+                                <Link href="/privacy">내용 보기</Link>
+                            </span>
+                        </label>
+                    </PetFormSection>
+                    {error && <p role="alert" className="ddb-pf-msg is-error">{error}</p>}
+                </PetProfileModal>
+            </>
+        );
+    }
+
     if (!open) {
         return (
             <div className="mt-4 grid gap-2">
@@ -168,6 +260,7 @@ export default function MemberPetProfileCreateForm({ initiallyOpen = false }: Pr
                     </Link>
                 )}
                 <button
+                    ref={openRef}
                     type="button"
                     onClick={() => {
                         setOpen(true);

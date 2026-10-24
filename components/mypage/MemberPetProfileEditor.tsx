@@ -2,13 +2,13 @@
  * MemberPetProfileEditor — 마이페이지 반려견 "정보 수정"
  * ---------------------------------------------------------------------
  * 앱: 카드 안에서 입력 칸이 펼쳐짐(원래 그대로).
- * 웹(2026-10-24 사용자): 같은 입력 칸 · 같은 저장 동작을 화면 가운데 창(모달)으로 띄움 — 카드 자리는 그대로,
- *   흐린 뒤 화면 · Esc · 닫기(×)로 닫고 닫으면 "정보 수정" 버튼으로 초점이 돌아감. 꾸밈은 app/globals.css "반려견 정보 수정 창".
+ * 웹(2026-10-24 사용자): 같은 값 · 같은 저장 동작을 화면 가운데 창(PetProfileModal)으로 띄움 — 카드 자리는 그대로,
+ *   흐린 뒤 화면 · Esc · 닫기(×)로 닫고 닫으면 "정보 수정" 버튼으로 초점이 돌아감. 꾸밈은 app/globals.css "반려견 프로필 창".
  */
 "use client";
 
-import { FormEvent, useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
+import { FormEvent, useCallback, useId, useRef, useState } from "react";
+import { focusLater, PetProfileModal, PetProfileWebFields, usePetModalHost } from "@/components/mypage/PetProfileModal";
 import {
     customerApiErrorMessage,
     ddbApiReady,
@@ -58,38 +58,16 @@ export default function MemberPetProfileEditor({ pet, initiallyOpen = false }: P
     const [error, setError] = useState("");
     const weightEstimate = getPetLensWeightEstimate(pet.rawAnalysis);
     // 웹이면 창(모달)으로 — 앱 화면(html.ddb-app-mode)은 카드 안 펼침 그대로
-    const [modalHost, setModalHost] = useState<HTMLElement | null>(null);
+    const modalHost = usePetModalHost(open);
     const openRef = useRef<HTMLButtonElement>(null);
-    const closeRef = useRef<HTMLButtonElement>(null);
     const titleId = useId();
+    const groupId = useId();
 
-    // 화면 그리기 전에 판별 — 웹에서 카드 안 펼침이 한 순간 비치지 않게
-    useLayoutEffect(() => {
-        setModalHost(open && !document.documentElement.classList.contains("ddb-app-mode") ? document.body : null);
-    }, [open]);
-
+    // 창 닫기 — 닫힌 뒤 "정보 수정" 버튼으로 초점 되돌림
     const closeModal = useCallback(() => {
         setOpen(false);
-        // 창이 닫힌 뒤 "정보 수정" 버튼으로 초점 되돌림
-        requestAnimationFrame(() => openRef.current?.focus());
+        focusLater(openRef);
     }, []);
-
-    // 창이 열려 있는 동안: 뒤 화면 스크롤 잠금 · Esc 로 닫기(저장 중 제외) · 닫기 단추에 초점
-    useEffect(() => {
-        if (!modalHost) return;
-        const root = document.documentElement;
-        const previous = root.style.overflow;
-        root.style.overflow = "hidden";
-        closeRef.current?.focus();
-        return () => { root.style.overflow = previous; };
-    }, [modalHost]);
-
-    useEffect(() => {
-        if (!modalHost) return;
-        const onKey = (event: KeyboardEvent) => { if (event.key === "Escape" && !saving) closeModal(); };
-        window.addEventListener("keydown", onKey);
-        return () => window.removeEventListener("keydown", onKey);
-    }, [modalHost, closeModal, saving]);
 
     const submit = async (event: FormEvent) => {
         event.preventDefault();
@@ -314,31 +292,65 @@ export default function MemberPetProfileEditor({ pet, initiallyOpen = false }: P
 
     // 웹 — 화면 가운데 창(모달). 카드에는 "정보 수정" 버튼이 그대로 남음
     if (modalHost) {
+        const frontPhoto = primaryPetLensPhotoEntry(photoViews)?.[1]?.dataUrl;
         return (
             <>
                 {openButton}
-                {createPortal(
-                    <div className="ddb-petedit-modal" role="dialog" aria-modal="true" aria-labelledby={titleId}>
-                        <div className="ddb-pe-backdrop" onClick={() => { if (!saving) closeModal(); }} aria-hidden="true" />
-                        <form onSubmit={submit} className="ddb-pe-card" data-member-pet-editor>
-                            <header className="ddb-pe-head">
-                                <p className="ddb-pe-kicker">MY DOG</p>
-                                <h2 id={titleId}>{pet.name} 정보 수정</h2>
-                                <p className="ddb-pe-sub">사진 분석값은 후보예요. 직접 확인한 정보로 고쳐 주세요.</p>
-                                <button ref={closeRef} type="button" className="ddb-pe-close" onClick={closeModal} disabled={saving} aria-label={`${pet.name} 정보 수정 닫기`}>×</button>
-                            </header>
-                            <div className="ddb-pe-body">
-                                {fields}
-                                {messages}
-                            </div>
-                            <footer className="ddb-pe-foot">
-                                <button type="button" className="ddb-pe-cancel" onClick={closeModal} disabled={saving}>닫기</button>
-                                {saveButton}
-                            </footer>
-                        </form>
-                    </div>,
-                    modalHost,
-                )}
+                <PetProfileModal
+                    host={modalHost}
+                    titleId={titleId}
+                    kicker="MY DOG"
+                    name={pet.name}
+                    titleRest=" 정보 수정"
+                    sub="사진 분석값은 후보예요. 직접 확인한 정보로 고쳐 주세요."
+                    avatar={frontPhoto}
+                    avatarIsPhoto={Boolean(frontPhoto)}
+                    busy={saving}
+                    onClose={closeModal}
+                    onSubmit={submit}
+                    hint="저장하면 추천과 펫렌즈에 바로 반영돼요."
+                    submit={(
+                        <button type="submit" className="ddb-pf-save" disabled={saving || photoBusy}>
+                            <i className="fa-solid fa-check" aria-hidden="true" />
+                            {photoBusy ? "사진 준비 중…" : saving ? "저장 중" : "수정 정보 저장"}
+                        </button>
+                    )}
+                    formProps={{ "data-member-pet-editor": true }}
+                >
+                    <PetProfileWebFields
+                        groupId={groupId}
+                        breedListId={breedListId}
+                        saving={saving}
+                        name={pet.name}
+                        nameHelp="중복 프로필을 막기 위해 이름은 여기서 바꾸지 않아요."
+                        breed={breed}
+                        onBreed={setBreed}
+                        photoViews={photoViews}
+                        onPhotoViews={setPhotoViews}
+                        onPhotoBusy={setPhotoBusy}
+                        onError={setError}
+                        size={size}
+                        onSize={setSize}
+                        age={age}
+                        onAge={setAge}
+                        weightKg={weightKg}
+                        onWeightKg={setWeightKg}
+                        weightPlaceholder="직접 확인한 체중"
+                        weightHint={weightEstimate && (
+                            <span className="ddb-pf-help is-warn">예상 {weightEstimate.minKg}~{weightEstimate.maxKg}kg · 확인 필요</span>
+                        )}
+                        sex={sex}
+                        onSex={setSex}
+                        coat={coat}
+                        onCoat={setCoat}
+                        coatColor={coatColor}
+                        onCoatColor={setCoatColor}
+                        coatColorPlaceholder="예: 크림, 검정·갈색"
+                        activity={activity}
+                        onActivity={setActivity}
+                    />
+                    {messages}
+                </PetProfileModal>
             </>
         );
     }

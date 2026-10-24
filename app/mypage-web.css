@@ -1270,3 +1270,8 @@ html:not(.ddb-app-mode) main:has(nav[aria-label="마이페이지 메뉴"]) {
     & a[data-go="inside"]::after { content: "›"; margin-left: 6px; font-size: 1.15em; line-height: 1; }
     & a[data-go="out"]::after { content: "↗"; margin-left: 6px; font-size: 0.95em; opacity: 0.75; }
 }
+
+/* 코인 · 적립금 — 적립금 → 코인 전환 칸(2026-10-24 사용자): 숫자 올림 · 내림 화살표가 "P" 위에 겹쳐서,
+   칸 오른쪽 안쪽 여백을 넓혀 화살표를 P 왼쪽으로 옮김(화살표 · P 둘 다 그대로 보임). 앱은 그대로 */
+html:not(.ddb-app-mode) #daenglab-conversion-points { padding-right: 40px; }
+html:not(.ddb-app-mode) #daenglab-conversion-points + span { right: 16px; }
