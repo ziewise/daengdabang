@@ -1,0 +1,101 @@
+/*
+ * reviews-web.css — 웹 외부 판매점 후기 페이지(/reviews) 꾸밈 · 2026-10-25
+ * ---------------------------------------------------------------------
+ * main[data-reviews-web] 를 위아래 줄로 바꾸고 맨 끝 머리 판(components/reviews/ReviewsWebHero)을 맨 위로(order).
+ * 원래 꼬리표 · 제목 · 출처 문단은 머리 판이 같은 내용을 보여 주므로 웹에서만 숨김. 상품 목록 칸은 그대로.
+ *  - 노랑 별 파스텔 머리 판 · 출처 안내(크림) · 자주 나온 이야기 알약 · 후기 한마디 세 칸(따옴표 · 별 · 상품) · 목록 머리
+ * 앱(ddb-app-mode)은 머리 판을 숨기고 아무것도 바꾸지 않음. 스티커 요소 · 점선 없음.
+ */
+
+html.ddb-app-mode [data-reviews-hero] { display: none !important; }
+
+html:not(.ddb-app-mode) main[data-reviews-web] {
+    --rv-ink: #1e293b;
+    --rv-soft: #5b6476;
+    --rv-jua: var(--font-jua), var(--font-wanted-sans), sans-serif;
+    --rv-crayon: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+    --rv-cushion: inset 0 3px 0 rgb(255 255 255 / 90%), 0 0 0 1px #f2e9dd, 0 20px 34px -28px rgb(15 23 42 / 38%);
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    color: var(--rv-ink);
+
+    & > [data-reviews-hero] { order: -1; }
+    /* 위아래 줄 안의 칸이 화면보다 넓어지지 않게 */
+    & > * { min-width: 0; max-width: 100%; }
+    & .rv-top > * { min-width: 0; }
+    & > p:first-child, & > h1, & > h1 + p { display: none; }
+    & > div.grid { margin-top: 0 !important; }
+
+    & .rv-top { display: grid; gap: 18px; margin-bottom: 18px; }
+
+    /* 머리 판 */
+    & .rv-hero { display: grid; grid-template-columns: minmax(0, 1fr) 170px; align-items: center; gap: 24px; padding: 34px 42px 32px; border-radius: 36px; background: radial-gradient(80% 120% at 100% 0, rgb(255 240 244 / 90%) 0, transparent 55%), linear-gradient(120deg, #fff1d6 0%, #fff8ea 55%, #fffaf5 100%); box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 26px 40px -30px rgb(196 122 12 / 40%); }
+    & .rv-hero-text { display: grid; justify-items: start; gap: 4px; min-width: 0; }
+    & .rv-kicker { display: inline-block; background: repeating-linear-gradient(172deg, #07849e 0 5px, #ef476f 5px 10px, #e98708 10px 15px); -webkit-background-clip: text; background-clip: text; font-family: var(--rv-crayon); font-size: 13px; font-weight: 700; letter-spacing: 0.14em; -webkit-text-fill-color: transparent; }
+    & .rv-title { position: relative; display: grid; width: fit-content; margin: 2px 0 0; font-family: var(--rv-jua); font-size: clamp(30px, 3.2vw, 42px); font-weight: 400; line-height: 1.2; isolation: isolate; }
+    & .rv-title small { color: #b8700a; font-size: 0.45em; }
+    & .rv-title::after { content: ""; position: absolute; right: 1%; bottom: -0.06em; left: 0; z-index: -1; height: 0.22em; border-radius: 999px 70% 999px 60%; background: repeating-linear-gradient(94deg, rgb(8 145 178 / 62%) 0 14px, rgb(239 71 111 / 58%) 14px 28px, rgb(245 158 11 / 62%) 28px 42px); opacity: 0.65; transform: rotate(-0.6deg) skewX(-7deg); }
+    & .rv-lead { max-width: 600px; margin: 10px 0 0; color: #6b5a3e; font-size: 15px; font-weight: 600; line-height: 1.7; word-break: keep-all; }
+    & .rv-stats { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    & .rv-stats > span { display: inline-flex; align-items: center; gap: 7px; padding: 7px 15px; border-radius: 999px; background: #fff; color: #475569; font-size: 13px; font-weight: 700; box-shadow: 0 10px 16px -12px rgb(15 23 42 / 40%); }
+    & .rv-stats i { color: #e0a113; font-size: 12px; }
+    & .rv-stats b { color: #c47a0c; font-family: var(--rv-jua); font-size: 16px; font-weight: 400; }
+    & .rv-hero-art { display: grid; width: 170px; height: 170px; place-items: center; border-radius: 50%; background: rgb(255 255 255 / 75%); box-shadow: inset 0 3px 0 #fff, 0 18px 28px -22px rgb(15 23 42 / 40%); }
+    & .rv-hero-art img { width: 120px; height: 120px; object-fit: contain; animation: rv-bob 3.4s ease-in-out infinite; }
+
+    & .rv-source { display: flex; align-items: flex-start; gap: 10px; margin: 0; padding: 14px 18px; border-radius: 20px; background: #fbf7f1; color: #6b5a3e; font-size: 13px; font-weight: 600; line-height: 1.65; box-shadow: inset 0 0 0 1.5px #efe5d8; word-break: keep-all; }
+    & .rv-source i { margin-top: 3px; color: #c47a0c; }
+
+    & .rv-sec-t { margin: 0 0 10px; color: #334155; font-family: var(--rv-jua); font-size: 18px; }
+    & .rv-sec-t::before { content: "✦ "; color: #e9789a; }
+
+    /* 자주 나온 이야기 */
+    & .rv-themes > div { display: flex; flex-wrap: wrap; gap: 8px; }
+    & .rv-themes span { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; background: #fff; color: #334155; font-family: var(--rv-jua); font-size: 14.5px; box-shadow: var(--rv-cushion); }
+    & .rv-themes em { padding: 2px 9px; border-radius: 999px; background: #fff6e3; color: #b8700a; font-family: var(--font-wanted-sans), sans-serif; font-size: 11.5px; font-style: normal; font-weight: 800; }
+    & .rv-themes small { color: #94a3b8; font-family: var(--font-wanted-sans), sans-serif; font-size: 11px; font-weight: 800; }
+
+    /* 후기 한마디 */
+    & .rv-quotes > div { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+    & .rv-quote { --s: #fff6e3; position: relative; display: grid; align-content: start; gap: 12px; padding: 20px 20px 16px; border-radius: 28px; background: var(--s); color: var(--rv-ink); text-decoration: none; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); transition: transform 0.2s, box-shadow 0.2s; }
+    & .rv-quote[data-tone="pink"] { --s: #fff0f4; }
+    & .rv-quote[data-tone="sky"] { --s: #e9f4fb; }
+    & .rv-quote:hover { transform: translateY(-3px); box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%), 0 18px 28px -20px rgb(15 23 42 / 40%); }
+    & .rv-quote::before { content: "\201C"; position: absolute; top: 4px; right: 18px; color: rgb(255 255 255 / 90%); font-family: Georgia, serif; font-size: 72px; line-height: 1; }
+    & .rv-quote > * { min-width: 0; }
+    & .rv-quote-top { display: flex; align-items: center; gap: 8px; }
+    & .rv-stars { display: inline-flex; gap: 2px; color: #f5b324; font-size: 12px; }
+    & .rv-stars i.is-off { color: #e7dccb; }
+    & .rv-quote-top small { color: var(--rv-soft); font-size: 12px; font-weight: 800; }
+    & .rv-quote q { display: -webkit-box; overflow: hidden; color: #334155; font-family: var(--rv-jua); font-size: 16.5px; line-height: 1.55; quotes: none; word-break: keep-all; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
+    & .rv-quote-p { display: flex; align-items: center; gap: 10px; padding: 8px 12px 8px 8px; border-radius: 18px; background: rgb(255 255 255 / 80%); }
+    & .rv-quote-p img { flex: none; width: 40px; height: 40px; border-radius: 12px; background: #fbf7f1; object-fit: cover; }
+    & .rv-quote-p b { overflow: hidden; flex: 1; font-size: 12.5px; font-weight: 800; text-overflow: ellipsis; white-space: nowrap; }
+    & .rv-quote-p i { color: #c9bba7; font-size: 11px; }
+    & .rv-quote-note { margin: 8px 0 0; color: #94a3b8; font-size: 12px; font-weight: 700; }
+
+    /* 목록 머리 */
+    & .rv-list-h { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+    & .rv-list-h > span { display: grid; width: 40px; height: 40px; place-items: center; border-radius: 50%; background: #fff6e3; color: #d98a12; font-size: 15px; }
+    & .rv-list-h h2 { margin: 0; font-family: var(--rv-jua); font-size: 22px; font-weight: 400; }
+    & .rv-list-h em { padding: 4px 12px; border-radius: 999px; background: #fff6e3; color: #c47a0c; font-size: 12.5px; font-style: normal; font-weight: 800; }
+
+    @media (max-width: 860px) {
+        & .rv-quotes > div { display: flex; margin: 0 -16px; padding: 2px 16px 8px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: 16px; scrollbar-width: none; }
+        & .rv-quotes > div::-webkit-scrollbar { display: none; }
+        & .rv-quotes > div { align-items: flex-start; }
+        & .rv-quote { flex: none; width: 280px; scroll-snap-align: start; }
+    }
+    @media (max-width: 640px) {
+        & .rv-hero { grid-template-columns: minmax(0, 1fr) 84px; gap: 12px; padding: 24px 20px 22px; border-radius: 30px; }
+        & .rv-hero-art { width: 84px; height: 84px; align-self: start; }
+        & .rv-hero-art img { width: 60px; height: 60px; }
+        & .rv-lead { font-size: 13.5px; }
+        & .rv-stats { grid-column: 1 / -1; }
+        & .rv-stats > span { padding: 6px 11px; font-size: 12px; }
+    }
+}
+
+@keyframes rv-bob { 50% { transform: translateY(-6px); } }
+@media (prefers-reduced-motion: reduce) { html:not(.ddb-app-mode) main[data-reviews-web] .rv-hero-art img { animation: none; } }

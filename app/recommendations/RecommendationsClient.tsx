@@ -1,6 +1,14 @@
 "use client";
 
+/*
+ * 맞춤 추천(/recommendations) — 추천 계산 · 데이터 설정 · 숨기기 · 기록.
+ * 2026-10-25 웹은 새 겉모양(components/recommendation/RecommendationsWeb)으로 그림 — 값 · 함수는 이 파일 그대로 넘김. 앱은 아래 기존 화면.
+ */
+
 import Link from "next/link";
+import RecommendationsWeb from "@/components/recommendation/RecommendationsWeb";
+import { useWebScreen } from "@/hooks/useWebScreen";
+import { getBestProducts } from "@/lib/catalog/curations";
 import RecommendationPetSelector from "@/components/recommendation/RecommendationPetSelector";
 import RecommendationProductCard from "@/components/recommendation/RecommendationProductCard";
 import { useRecommendationAnalytics } from "@/hooks/useRecommendationAnalytics";
@@ -47,6 +55,7 @@ function groupItems(items: RecommendationItem[]) {
 
 export default function RecommendationsClient() {
     const { hydrated, user } = useAuth();
+    const webScreen = useWebScreen();
     const personalizationEnabled = recommendationPersonalizationEnabled(
         RECOMMENDATION_FEATURE_FLAGS,
         "full_page",
@@ -68,7 +77,11 @@ export default function RecommendationsClient() {
         })
         : null;
     const personalizedAvailable = Boolean(personalizationEnabled && user && selectedPet && preferences?.enabled && result);
-    const baseItems = personalizedAvailable ? result?.items ?? [] : editorialRecommendationItems(12);
+    // 개발 서버 전용 미리보기 — ?rcpreview 면 판매 상태와 상관없이 편집 추천 예시 12개(배포 빌드에는 없음)
+    const devPreview = process.env.NODE_ENV === "development" && typeof window !== "undefined" && new URLSearchParams(window.location.search).has("rcpreview");
+    const baseItems = devPreview
+        ? getBestProducts(12).map((product) => ({ ...editorialRecommendationItems(1)[0], product, reasonCodes: ["editorial_fallback" as const], reasonLabel: "상품 용도와 브랜드 구성을 살펴 고른 댕다방 편집 추천이에요.", sourceGroups: ["editorial" as const], cautionLabels: [], score: 0 }))
+        : personalizedAvailable ? result?.items ?? [] : editorialRecommendationItems(12);
     const mode = personalizedAvailable ? result?.mode ?? "editorial_fallback" : preferences?.enabled === false ? "disabled" : "editorial_fallback";
     const recommendationAnalytics = useRecommendationAnalytics({
         enabled: RECOMMENDATION_FEATURE_FLAGS.analytics && hydrated,
@@ -87,6 +100,66 @@ export default function RecommendationsClient() {
             // accepted it; the shared hook exposes a customer-safe message.
         }
     };
+
+    // 웹 — 새 겉모양(값 · 함수는 그대로)
+    if (webScreen && hydrated) {
+        const lead = !personalizationEnabled
+            ? "현재는 회원 정보를 사용하지 않는 댕다방 편집 추천을 보여드려요."
+            : !user
+                ? "로그인하면 등록한 반려견과 직접 선택한 데이터 사용 설정을 기준으로 추천해 드려요."
+                : !selectedPet
+                    ? "반려견 프로필을 등록하면 체형·활동량·관심사를 반영할 수 있어요."
+                    : !preferences
+                        ? preferenceState.errorMessage || "추천 데이터 설정을 안전하게 확인하고 있어요."
+                        : !preferences.enabled
+                            ? "맞춤 추천이 꺼져 있어 회원 정보를 사용하지 않는 편집 추천만 보여드려요."
+                            : result?.mode === "personalized"
+                                ? "프로필과 사용에 동의한 펫렌즈 케어 신호를 함께 반영했어요."
+                                : "등록한 프로필만 사용하고 펫렌즈 분석 원문은 반영하지 않았어요.";
+        const action = !personalizationEnabled ? null : !user
+            ? { title: "로그인 후 맞춤 추천을 켤 수 있어요", description: "비회원에게는 회원·반려견 정보를 사용하지 않는 편집 추천만 표시합니다.", href: "/auth/login/?redirect=%2Frecommendations%2F", label: "로그인", art: "header-login-128.webp" }
+            : !selectedPet
+                ? { title: "반려견 프로필을 먼저 등록해 주세요", description: "프로필이 없어도 아래 편집 추천과 일반 쇼핑은 계속 이용할 수 있어요.", href: "/mypage/#pet-profiles", label: "프로필 등록", art: "stickers/my-pets.webp" }
+                : preferences && !preferences.enabled
+                    ? { title: "맞춤 추천이 꺼져 있어요", description: "설정을 켜기 전에는 회원 정보를 사용하지 않는 편집 추천만 표시합니다.", href: "/mypage/recommendations/", label: "설정 확인", art: "stickers/companion-settings.webp" }
+                    : null;
+        const notices = [
+            ...(preferenceState.errorMessage && preferences ? [preferenceState.errorMessage] : []),
+            ...(result?.notices ?? []),
+        ];
+        return (
+            <RecommendationsWeb
+                title={personalizedAvailable ? `${selectedPet?.name || "우리 아이"} 맞춤 추천` : "댕다방 추천 셀렉트"}
+                lead={lead}
+                modeLabel={MODE_LABEL[mode]}
+                mode={mode}
+                personalizedAvailable={personalizedAvailable}
+                showPreferencesLink={RECOMMENDATION_FEATURE_FLAGS.preferences}
+                petSelector={personalizationEnabled && user && preferences && selectedPet ? {
+                    pets: user.pets,
+                    selectedPetProfileId: selectedPet.apiProfileId ?? null,
+                    disabled: !preferenceState.isReady || preferenceState.isSaving,
+                    onSelect: (profileId) => void selectPet(profileId),
+                } : null}
+                action={action}
+                checking={personalizationEnabled && user && selectedPet && !preferences ? {
+                    message: preferenceState.errorMessage || "추천 설정 확인 중",
+                    canRetry: preferenceState.status === "error",
+                    onRetry: () => void preferenceState.refresh(),
+                } : null}
+                notices={notices}
+                groups={groupItems(items)}
+                groupTitle={GROUP_TITLE}
+                runId={recommendationAnalytics.runId}
+                allHidden={items.length === 0 && baseItems.length > 0}
+                onResetHidden={recommendationAnalytics.resetHidden}
+                onProductClick={recommendationAnalytics.trackProductClick}
+                onReasonOpened={recommendationAnalytics.trackReasonOpened}
+                onHide={recommendationAnalytics.hideProduct}
+                mainAttrs={{ "data-recommendation-mode": mode, "data-recommendation-full-page-enabled": personalizationEnabled }}
+            />
+        );
+    }
 
     if (!hydrated) {
         return (

@@ -1,0 +1,129 @@
+/*
+ * recommend-web.css — 웹 맞춤 추천(components/recommendation/RecommendationsWeb) 꾸밈 · 2026-10-25
+ * ---------------------------------------------------------------------
+ * 파스텔 쿠션 결: 분홍~연보라 머리 판 · 이렇게 골라요 세 칸 · 다음 할 일 판 · 이유별 묶음(색 동그라미 · 주아 제목 · 개수 알약) ·
+ * 기존 추천 카드의 "이유" 칸은 연보라 쿠션으로(인디고 테두리 대신) · 빈 상태 크림 쿠션.
+ * 범위: main.rc-web(웹에서만 그려지는 부품) 안. 스티커 요소 · 점선 없음.
+ */
+
+.rc-web {
+    --rc-ink: #1e293b;
+    --rc-soft: #5b6476;
+    --rc-mute: #94a3b8;
+    --rc-cream: #fbf7f1;
+    --rc-pink: #e9789a;
+    --rc-pink-d: #d0436d;
+    --rc-jua: var(--font-jua), var(--font-wanted-sans), sans-serif;
+    --rc-crayon: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+    --rc-cushion: inset 0 3px 0 rgb(255 255 255 / 90%), 0 0 0 1px #f2e9dd, 0 20px 34px -28px rgb(15 23 42 / 38%);
+    display: grid;
+    gap: 18px;
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+    color: var(--rc-ink);
+}
+.rc-web [data-tone="pink"] { --t-soft: #fff0f4; --t-ink: #e2557a; }
+.rc-web [data-tone="sky"] { --t-soft: #e9f4fb; --t-ink: #0e8aa0; }
+.rc-web [data-tone="lav"] { --t-soft: #f3f0fe; --t-ink: #6b51c9; }
+.rc-web [data-tone="mint"] { --t-soft: #e9f8f1; --t-ink: #12a17a; }
+.rc-web [data-tone="yellow"] { --t-soft: #fff6e3; --t-ink: #d98a12; }
+
+/* 머리 판 */
+.rc-hero { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 24px; padding: 34px 40px 32px; border-radius: 36px; background: radial-gradient(80% 120% at 100% 0, rgb(243 240 254 / 95%) 0, transparent 55%), linear-gradient(120deg, #ffe9f0 0%, #fff4f7 55%, #fdf7ff 100%); box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 26px 40px -30px rgb(200 80 120 / 45%); }
+.rc-hero-text { display: grid; justify-items: start; gap: 4px; min-width: 0; }
+.rc-kicker { display: inline-block; background: repeating-linear-gradient(172deg, #07849e 0 5px, #ef476f 5px 10px, #e98708 10px 15px); -webkit-background-clip: text; background-clip: text; font-family: var(--rc-crayon); font-size: 13px; font-weight: 700; letter-spacing: 0.14em; -webkit-text-fill-color: transparent; }
+.rc-title { position: relative; width: fit-content; margin: 2px 0 0; font-family: var(--rc-jua); font-size: clamp(30px, 3.2vw, 42px); font-weight: 400; line-height: 1.25; isolation: isolate; }
+.rc-title::after { content: ""; position: absolute; right: 1%; bottom: -0.06em; left: 0; z-index: -1; height: 0.22em; border-radius: 999px 70% 999px 60%; background: repeating-linear-gradient(94deg, rgb(8 145 178 / 62%) 0 14px, rgb(239 71 111 / 58%) 14px 28px, rgb(245 158 11 / 62%) 28px 42px); opacity: 0.65; transform: rotate(-0.6deg) skewX(-7deg); }
+.rc-lead { max-width: 620px; margin: 10px 0 0; color: #6b5162; font-size: 15px; font-weight: 600; line-height: 1.7; word-break: keep-all; }
+.rc-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.rc-chips > span { display: inline-flex; align-items: center; gap: 7px; padding: 7px 14px; border-radius: 999px; background: #fff; color: #6b51c9; font-size: 12.5px; font-weight: 800; box-shadow: 0 10px 16px -12px rgb(15 23 42 / 40%); }
+.rc-chips > span.is-mint { color: #0f8a69; }
+.rc-hero-side { display: grid; justify-items: center; gap: 12px; }
+.rc-hero-art { display: grid; width: 160px; height: 160px; place-items: center; padding: 8px; border-radius: 50%; background: conic-gradient(from 20deg, #f7a8bf, #ffd08a, #a8e0c6, #a9d4ea, #cfc3f5, #f7a8bf); box-shadow: 0 22px 34px -22px rgb(15 23 42 / 45%); }
+.rc-hero-art img { width: 100%; height: 100%; padding: 22px; border-radius: 50%; background: #fff; object-fit: contain; animation: rc-bob 3.4s ease-in-out infinite; }
+.rc-manage { display: inline-flex; align-items: center; gap: 7px; padding: 8px 16px; border-radius: 999px; background: #fff; color: #6b51c9; font-family: var(--rc-jua); font-size: 14px; text-decoration: none; box-shadow: inset 0 0 0 2px #ddd3f6; transition: box-shadow 0.2s; }
+.rc-manage:hover { box-shadow: inset 0 0 0 2px #b9a8f0; }
+
+.rc-pets { display: flex; justify-content: center; padding: 14px 18px; border-radius: 26px; background: #fff; box-shadow: var(--rc-cushion); }
+
+/* 이렇게 골라요 */
+.rc-how { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 0; padding: 0; list-style: none; }
+.rc-how li { display: grid; grid-template-columns: 44px minmax(0, 1fr); column-gap: 12px; align-items: center; padding: 14px 18px; border-radius: 24px; background: var(--t-soft); box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
+.rc-how li > span { grid-row: span 2; display: grid; width: 44px; height: 44px; place-items: center; border-radius: 50%; background: #fff; color: var(--t-ink); font-size: 16px; box-shadow: 0 6px 10px -8px rgb(15 23 42 / 40%); }
+.rc-how b { font-family: var(--rc-jua); font-size: 16px; font-weight: 400; }
+.rc-how small { color: var(--rc-soft); font-size: 12.5px; font-weight: 700; line-height: 1.5; word-break: keep-all; }
+
+/* 다음 할 일 · 확인 중 */
+.rc-action { display: flex; align-items: center; gap: 16px; padding: 18px 22px; border-radius: 28px; background: #fff; box-shadow: var(--rc-cushion); }
+.rc-action-art { display: grid; flex: none; width: 60px; height: 60px; place-items: center; border-radius: 50%; background: #fff0f4; color: #d98a12; font-size: 22px; }
+.rc-action-art img { width: 46px; height: 46px; object-fit: contain; }
+.rc-action-text { display: grid; flex: 1; gap: 3px; min-width: 0; }
+.rc-action h2 { margin: 0; font-family: var(--rc-jua); font-size: 18.5px; font-weight: 400; }
+.rc-action p { margin: 0; color: var(--rc-soft); font-size: 13px; font-weight: 600; line-height: 1.6; word-break: keep-all; }
+.rc-action.is-amber { background: #fff8ea; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
+.rc-action.is-amber .rc-action-art { background: #fff; }
+.rc-notice { display: flex; align-items: flex-start; gap: 8px; margin: 0; padding: 12px 16px; border-radius: 18px; background: #e9f4fb; color: #0e6f82; font-size: 13px; font-weight: 700; line-height: 1.55; }
+.rc-notice i { margin-top: 3px; }
+
+/* 알약 단추 */
+.rc-pill { display: inline-flex; flex: none; align-items: center; justify-content: center; gap: 8px; min-height: 46px; padding: 0 22px; border: 0; border-radius: 999px; background: #fff; color: #334155; font-family: var(--rc-jua); font-size: 15.5px; text-decoration: none; cursor: pointer; box-shadow: inset 0 0 0 2px #e6dccf, 0 12px 20px -16px rgb(15 23 42 / 45%); transition: transform 0.2s, background 0.2s; }
+.rc-pill:hover { transform: translateY(-1px); }
+.rc-pill.is-pink { background: var(--rc-pink); color: #fff; box-shadow: inset 0 2px 0 rgb(255 255 255 / 28%), 0 14px 22px -14px rgb(200 80 120 / 80%); }
+.rc-pill.is-pink:hover { background: #e26690; }
+
+/* 이유별 묶음 */
+.rc-groups { display: grid; gap: 22px; }
+.rc-group { display: grid; gap: 16px; padding: 22px 24px 24px; border-radius: 32px; background: #fff; box-shadow: var(--rc-cushion); }
+.rc-group-h { display: flex; align-items: center; gap: 10px; }
+.rc-group-h > span { display: grid; flex: none; width: 40px; height: 40px; place-items: center; border-radius: 50%; background: var(--t-soft); color: var(--t-ink); font-size: 15px; }
+.rc-group-h h2 { margin: 0; font-family: var(--rc-jua); font-size: 21px; font-weight: 400; }
+.rc-group-h em { margin-left: auto; padding: 4px 12px; border-radius: 999px; background: var(--t-soft); color: var(--t-ink); font-size: 12.5px; font-style: normal; font-weight: 800; }
+.rc-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; }
+
+/* 기존 추천 카드의 이유 칸 — 연보라 쿠션 */
+/* 카드가 칸 높이를 다 차지해 이유 칸이 밀려나지 않게 — 위아래로 쌓고 상품 카드가 남는 높이를 채움 */
+.rc-web [data-recommendation-product] { display: flex; flex-direction: column; }
+.rc-web [data-recommendation-product] > article { flex: 1; height: auto !important; }
+.rc-web [data-recommendation-product] > div.mt-2 { margin-top: 8px; padding: 12px 14px; border: 0; border-radius: 18px; background: #f6f3fe; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
+.rc-web [data-recommendation-product] > div.mt-2 > p:first-child { color: #4b3a8f; font-weight: 700; }
+.rc-web [data-recommendation-product] details summary { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 999px; background: #fff; color: #6b51c9; font-weight: 800; text-decoration: none; }
+.rc-web [data-recommendation-product] details summary::-webkit-details-marker { display: none; }
+.rc-web [data-recommendation-product] details > div { margin-top: 8px; padding: 10px 12px; border: 0; border-radius: 14px; background: #fff; }
+.rc-web [data-recommendation-product] details a { color: #d0436d; }
+.rc-web [data-recommendation-product] > div.mt-2 > button { padding: 3px 10px; border-radius: 999px; background: rgb(255 255 255 / 70%); color: #8a7f70; text-decoration: none; }
+.rc-web [data-recommendation-product] > div.mt-2 > button:hover { color: #d0436d; text-decoration: none; }
+
+/* 빈 상태 */
+.rc-empty { display: grid; justify-items: center; gap: 6px; padding: 40px 24px 36px; border-radius: 32px; background: radial-gradient(70% 60% at 50% 0, #fff 0, transparent 70%), linear-gradient(160deg, #fff8ea, #fdf7ff 60%, #f2faf6); text-align: center; box-shadow: var(--rc-cushion); }
+.rc-empty img { width: 120px; height: 120px; object-fit: contain; }
+.rc-empty h2 { margin: 6px 0 0; font-family: var(--rc-jua); font-size: 22px; font-weight: 400; }
+.rc-empty p { margin: 0; color: var(--rc-soft); font-size: 14px; font-weight: 600; }
+.rc-empty > div { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 14px; }
+
+@keyframes rc-bob { 50% { transform: translateY(-6px); } }
+
+@media (max-width: 1100px) { .rc-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (max-width: 860px) {
+    .rc-how { grid-template-columns: minmax(0, 1fr); }
+    .rc-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+    .rc-web { gap: 14px; padding: 20px 16px 64px; }
+    .rc-hero { grid-template-columns: minmax(0, 1fr); padding: 26px 20px 22px; border-radius: 30px; }
+    .rc-hero-side { grid-row: 1; justify-items: start; grid-auto-flow: column; align-items: center; }
+    .rc-hero-art { width: 84px; height: 84px; padding: 5px; }
+    .rc-hero-art img { padding: 12px; }
+    .rc-lead { font-size: 13.5px; }
+    /* 이렇게 골라요 — 휴대폰은 옆으로 밀어 보기 */
+    .rc-how { display: flex; gap: 10px; margin: 0 -16px; padding: 2px 16px 6px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: 16px; scrollbar-width: none; }
+    .rc-how::-webkit-scrollbar { display: none; }
+    .rc-how li { flex: none; width: 250px; scroll-snap-align: start; }
+    .rc-action { flex-wrap: wrap; padding: 16px; }
+    .rc-action .rc-pill { width: 100%; }
+    .rc-group { padding: 18px 14px 18px; border-radius: 26px; }
+    .rc-group-h h2 { font-size: 18px; }
+    .rc-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+}
+@media (prefers-reduced-motion: reduce) { .rc-hero-art img { animation: none; } }
