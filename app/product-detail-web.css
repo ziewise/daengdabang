@@ -549,3 +549,107 @@ html:not(.ddb-app-mode) main[data-product-detail-content] :is(#tab-detail, #tab-
     margin-right: auto;
     margin-left: auto;
 }
+
+/* ═════════ P1 가격 띠 머리 · P3 폴더 탭(2026-10-24 사용자 확정) ═════════
+   P1: 구매 정보 카드 윗부분(경로 · 브랜드 · 이름 · 후기 · 가격)을 분홍 띠 하나로 묶고, 가격은 흰 알약 안에(주아 · 크레파스 색).
+   P3: 상세정보 · 외부 판매점 후기 · Q&A 이동 줄을 폴더 탭으로 — 탭마다 3D 그림, 고른 탭은 그 구역 띠 색(상세 하늘 · 후기 노랑 · Q&A 보라)으로
+       아래 색 줄과 이어짐. 이동 · 표시 동작은 그대로, 앱은 그대로 */
+html:not(.ddb-app-mode) main[data-product-detail-content] {
+    /* ── P1 ── */
+    & .pd-info { --pd-pad: 28px; padding-top: 0; overflow: hidden; }
+
+    & .pd-info > :is(nav.pd-crumb, nav.pd-crumb + div, .pd-review-line, .pd-price-row) {
+        margin-right: calc(var(--pd-pad) * -1);
+        margin-bottom: 0;
+        margin-left: calc(var(--pd-pad) * -1);
+        padding-right: var(--pd-pad);
+        padding-left: var(--pd-pad);
+        background: #ffeef3;
+    }
+
+    & .pd-info > nav.pd-crumb { padding-top: 22px; padding-bottom: 14px; }
+    & .pd-info > nav.pd-crumb + div { padding-bottom: 12px; }
+    & .pd-info > .pd-review-line { padding-bottom: 12px; }
+    & .pd-info > .pd-price-row { margin-bottom: 22px; padding-bottom: 22px; border-radius: 0 0 26px 26px; }
+    & .pd-info > .pd-divider { display: none; }
+    & .pd-info .pd-brand { color: #e2557a; }
+
+    /* 가격 — 흰 알약 안에 셀렉트 알약 + 주아 가격 */
+    & .pd-price-row > div > div:last-child {
+        align-items: center;
+        padding: 8px 22px 6px 12px;
+        border-radius: 999px;
+        background: #fff;
+        box-shadow: 0 10px 18px -14px rgb(200 80 120 / 60%);
+    }
+
+    & .pd-price-row .ddb-crayon-price { font-size: 40px; }
+
+    /* ── P3 폴더 탭 ── */
+    & .pd-tabs { padding-top: 14px; background: rgb(248 250 252 / 96%); }
+
+    & .pd-tabs > div {
+        --rail: #e9f4fb;
+        align-items: flex-end;
+        gap: 8px;
+        max-width: 1024px;
+        padding: 0;
+        border-bottom: 4px solid var(--rail);
+    }
+
+    & .pd-tabs:has(.pd-tab[href="#tab-review"][aria-current="true"]) > div { --rail: #fff6e3; }
+    & .pd-tabs:has(.pd-tab[href="#tab-qna"][aria-current="true"]) > div { --rail: #f3f0fe; }
+
+    & .pd-tab {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 52px;
+        padding: 10px 22px 10px 14px;
+        border-radius: 20px 20px 0 0;
+        background: #eef2f6;
+        color: #64748b;
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 70%);
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 16px;
+        font-weight: 400;
+        transition: background-color 0.15s ease, min-height 0.15s ease;
+    }
+
+    & .pd-tab:hover { background: #e4eaf1; color: #334155; }
+
+    & .pd-tab::before {
+        content: "";
+        width: 28px;
+        height: 28px;
+        flex: none;
+        background: var(--tb-art) center / contain no-repeat;
+        opacity: 0.75;
+    }
+
+    & .pd-tab[href="#tab-detail"] { --tb-art: url("/images/ui/lab-summary-256.webp"); --tb-bg: #e9f4fb; }
+    & .pd-tab[href="#tab-review"] { --tb-art: url("/images/ui/find-basics-256.webp"); --tb-bg: #fff6e3; }
+    & .pd-tab[href="#tab-qna"] { --tb-art: url("/images/ui/mypet-caretalk-256.webp"); --tb-bg: #f3f0fe; }
+
+    & .pd-tab[aria-current="true"] {
+        min-height: 60px;
+        background: var(--tb-bg);
+        color: #1e293b;
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%), 0 -8px 16px -12px rgb(15 23 42 / 25%);
+    }
+
+    & .pd-tab[aria-current="true"]::before { opacity: 1; }
+    & .pd-tab > span:not(.absolute) { background: #fff; }
+}
+
+@media (max-width: 640px) {
+    html:not(.ddb-app-mode) main[data-product-detail-content] {
+        & .pd-info { --pd-pad: 18px; }
+        & .pd-info > nav.pd-crumb { padding-top: 18px; }
+        & .pd-price-row .ddb-crayon-price { font-size: 32px; }
+        & .pd-tabs > div { gap: 5px; }
+        & .pd-tab { min-height: 46px; padding: 8px 14px 8px 10px; border-radius: 16px 16px 0 0; font-size: 14px; }
+        & .pd-tab::before { width: 22px; height: 22px; }
+        & .pd-tab[aria-current="true"] { min-height: 52px; }
+    }
+}
