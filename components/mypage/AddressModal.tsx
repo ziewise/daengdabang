@@ -3,16 +3,17 @@
  * ---------------------------------------------------------------------
  * 배송지 관리 화면(app/mypage/address)의 같은 입력값 · 같은 저장(create/updateCustomerAddress)을 창으로 보여 줌. 추가 · 수정 한 창.
  * 겉 틀은 반려견 프로필 창(.ddb-petform, app/globals.css), 안쪽 꾸밈은 app/mypage-web.css "배송지 창".
- *  - 배송지 이름: 집 · 회사 · 부모님 댁 알약(누르면 이름 칸에 채움) + 직접 입력
- *  - 받는 분 · 연락처
- *  - 주소: "주소 검색" → 창 안에 카카오(다음) 우편번호 검색이 펼쳐지고, 고르면 우편번호 · 도로명 주소가 채워지고 상세 주소 칸으로 초점.
+ *  - 배송지 이름: 집 · 회사 · 부모님 댁 알약(누르면 이름 칸에 채움) + 직접 입력 · 받는 분 · 연락처
+ *  - 주소: 우편번호 칸 + 옆 "주소 검색" 버튼 · 기본 주소 칸(둘 다 검색으로 채움, 누르면 검색 창) · 상세 주소
+ *    "주소 검색" → 주소 검색 전용 창(AddressSearchModal — 카카오(다음) 우편번호 검색)이 위에 열리고,
+ *    주소를 고르면 아래에 고른 주소가 보이고 "적용"을 누르면 우편번호 · 기본 주소가 채워진 뒤 상세 주소 칸으로 초점.
  *    검색을 불러오지 못하면(네트워크 · 차단) 우편번호 · 기본 주소를 직접 적을 수 있게 칸이 열림
  *  - 기본 배송지 켜기 단추 · 아래 버튼 줄(암호화 안내 · 닫기 · 분홍 저장)
  * 앱 화면은 이 창을 쓰지 않음(카드 아래 입력 칸 그대로).
  */
 "use client";
 
-import { useEffect, useId, useRef, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useId, useRef, useState, type FormEvent } from "react";
 import { createPortal } from "react-dom";
 import type { CustomerAddressInput } from "@/lib/customer-api";
 
@@ -66,6 +67,118 @@ function composeAddress(data: PostcodeData) {
     return extras.length ? `${base} (${extras.join(", ")})` : base;
 }
 
+type PickedAddress = { postalCode: string; address: string; other: string };
+
+/** 주소 검색 전용 창 — 검색 · 고르기 · 적용 */
+function AddressSearchModal({ onApply, onClose, onFailed }: { onApply: (picked: PickedAddress) => void; onClose: () => void; onFailed: () => void }) {
+    const titleId = useId();
+    const boxRef = useRef<HTMLDivElement>(null);
+    const closeRef = useRef<HTMLButtonElement>(null);
+    const applyRef = useRef<HTMLButtonElement>(null);
+    const [state, setState] = useState<"loading" | "ready" | "failed">("loading");
+    const [picked, setPicked] = useState<PickedAddress | null>(null);
+    const onFailedRef = useRef(onFailed);
+    useEffect(() => { onFailedRef.current = onFailed; }, [onFailed]);
+
+    // Esc 로 이 창만 닫기 · 닫기 단추에 초점
+    useEffect(() => {
+        closeRef.current?.focus();
+        const onKey = (event: KeyboardEvent) => {
+            if (event.key !== "Escape") return;
+            event.stopImmediatePropagation();
+            onClose();
+        };
+        window.addEventListener("keydown", onKey, true);
+        return () => window.removeEventListener("keydown", onKey, true);
+    }, [onClose]);
+
+    // 카카오 우편번호 검색을 창 안에 심음 — 고르면 아래 "고른 주소"에 보이고 적용을 기다림
+    useEffect(() => {
+        let active = true;
+        loadPostcode()
+            .then((Postcode) => {
+                if (!active || !boxRef.current) return;
+                boxRef.current.innerHTML = "";
+                new Postcode({
+                    width: "100%",
+                    height: "100%",
+                    animation: true,
+                    theme: {
+                        bgColor: "#FDFAF5",
+                        searchBgColor: "#FFFFFF",
+                        contentBgColor: "#FFFFFF",
+                        pageBgColor: "#FBF7F1",
+                        textColor: "#334155",
+                        queryTextColor: "#1E293B",
+                        postcodeTextColor: "#E2557A",
+                        emphTextColor: "#12A17A",
+                        outlineColor: "#EFE5D8",
+                    },
+                    oncomplete: (data) => {
+                        setPicked({
+                            postalCode: data.zonecode,
+                            address: composeAddress(data),
+                            other: data.userSelectedType === "J" ? (data.roadAddress || data.autoRoadAddress || "") : (data.jibunAddress || data.autoJibunAddress || ""),
+                        });
+                        requestAnimationFrame(() => applyRef.current?.focus());
+                    },
+                }).embed(boxRef.current, { autoClose: false });
+                setState("ready");
+            })
+            .catch(() => { if (active) { setState("failed"); onFailedRef.current(); } });
+        return () => { active = false; };
+    }, []);
+
+    return createPortal(
+        <div className="ddb-petform ddb-addrsearch" role="dialog" aria-modal="true" aria-labelledby={titleId}>
+            <div className="ddb-pf-backdrop" onClick={onClose} aria-hidden="true" />
+            <div className="ddb-pf-card">
+                <header className="ddb-pf-head">
+                    <span className="ddb-pf-avatar" aria-hidden="true">
+                        {/* eslint-disable-next-line @next/next/no-img-element -- 작은 3D 그림 */}
+                        <img src="/images/ui/stickers/my-address.webp" alt="" />
+                    </span>
+                    <div className="ddb-pf-titles">
+                        <p className="ddb-pf-kicker">ADDRESS SEARCH</p>
+                        <h2 id={titleId}><span className="ddb-pf-name">주소 검색</span></h2>
+                        <p className="ddb-pf-sub">도로명 · 건물명 · 지번으로 찾고, 고른 뒤 적용을 눌러 주세요.</p>
+                    </div>
+                    <button ref={closeRef} type="button" className="ddb-pf-close" onClick={onClose} aria-label="주소 검색 닫기">
+                        <i className="fa-solid fa-xmark" aria-hidden="true" />
+                    </button>
+                </header>
+                <div className="ddb-as-body">
+                    <div className="ddb-as-box" aria-live="polite">
+                        {/* 우편번호 검색을 심는 빈 상자 — React 가 안을 그리지 않음 */}
+                        <div ref={boxRef} className="ddb-addr-embed" />
+                        {state === "loading" && <p className="ddb-addr-loading"><i className="fa-solid fa-paw fa-bounce" aria-hidden="true" />주소 검색을 준비하고 있어요</p>}
+                        {state === "failed" && <p className="ddb-addr-loading">주소 검색을 불러오지 못했어요. 창을 닫고 주소를 직접 적어 주세요.</p>}
+                    </div>
+                </div>
+                {/* 고른 주소 + 적용 */}
+                <footer className="ddb-as-foot" data-picked={picked ? "" : undefined}>
+                    {picked ? (
+                        <div className="ddb-as-picked">
+                            <span className="ddb-addr-zip"><em>우편번호</em>{picked.postalCode}</span>
+                            <strong>{picked.address}</strong>
+                            {picked.other && <small>{picked.other}</small>}
+                        </div>
+                    ) : (
+                        <p className="ddb-as-hint"><i className="fa-solid fa-hand-pointer" aria-hidden="true" />검색 결과에서 주소를 누르면 여기에 보여요.</p>
+                    )}
+                    <div className="ddb-as-actions">
+                        <button type="button" className="ddb-pf-cancel" onClick={onClose}>닫기</button>
+                        <button ref={applyRef} type="button" className="ddb-pf-save" disabled={!picked} onClick={() => { if (picked) onApply(picked); }}>
+                            <i className="fa-solid fa-check" aria-hidden="true" />적용
+                        </button>
+                    </div>
+                </footer>
+            </div>
+        </div>,
+        document.body,
+    );
+}
+
 const LABEL_PRESETS = [
     { label: "집", icon: "fa-house" },
     { label: "회사", icon: "fa-building" },
@@ -87,21 +200,12 @@ type Props = {
 export default function AddressModal({ host, editing, form, onField, onSubmit, onClose, pending, error, saveDisabled }: Props) {
     const titleId = useId();
     const closeRef = useRef<HTMLButtonElement>(null);
-    const searchBoxRef = useRef<HTMLDivElement>(null);
     const detailRef = useRef<HTMLInputElement>(null);
-    const [searching, setSearching] = useState(!editing && !form.addressLine1);
-    const [searchState, setSearchState] = useState<"idle" | "loading" | "ready" | "failed">(!editing && !form.addressLine1 ? "loading" : "idle");
-    // 주소 검색 열기 — "준비 중" 표시부터
-    const openSearch = () => {
-        setSearchState("loading");
-        setSearching(true);
-    };
+    const [searchOpen, setSearchOpen] = useState(false);
+    // 검색을 못 불러오면 · 원하면 직접 적기
     const [manual, setManual] = useState(false);
-    // 검색 결과를 채우는 함수 — 화면이 다시 그려져도 검색창을 새로 심지 않게 참조로 둠
-    const onFieldRef = useRef(onField);
-    useEffect(() => { onFieldRef.current = onField; }, [onField]);
 
-    // 열려 있는 동안 뒤 화면 스크롤 잠금 · Esc 로 닫기(저장 중 제외) · 닫기 단추에 초점
+    // 열려 있는 동안 뒤 화면 스크롤 잠금 · 닫기 단추에 초점
     useEffect(() => {
         const root = document.documentElement;
         const previous = root.style.overflow;
@@ -109,51 +213,24 @@ export default function AddressModal({ host, editing, form, onField, onSubmit, o
         closeRef.current?.focus();
         return () => { root.style.overflow = previous; };
     }, []);
+    // Esc 로 닫기(저장 중 · 검색 창이 떠 있을 때 제외 — 검색 창이 먼저 닫힘)
     useEffect(() => {
-        const onKey = (event: KeyboardEvent) => { if (event.key === "Escape" && !pending) onClose(); };
+        const onKey = (event: KeyboardEvent) => { if (event.key === "Escape" && !pending && !searchOpen) onClose(); };
         window.addEventListener("keydown", onKey);
         return () => window.removeEventListener("keydown", onKey);
-    }, [pending, onClose]);
+    }, [pending, onClose, searchOpen]);
 
-    // 주소 검색 펼치기 — 창 안에 우편번호 검색을 심음
-    useEffect(() => {
-        if (!searching) return;
-        let active = true;
-        loadPostcode()
-            .then((Postcode) => {
-                if (!active || !searchBoxRef.current) return;
-                searchBoxRef.current.innerHTML = "";
-                new Postcode({
-                    width: "100%",
-                    height: "100%",
-                    animation: true,
-                    theme: {
-                        bgColor: "#FDFAF5",
-                        searchBgColor: "#FFFFFF",
-                        contentBgColor: "#FFFFFF",
-                        pageBgColor: "#FBF7F1",
-                        textColor: "#334155",
-                        queryTextColor: "#1E293B",
-                        postcodeTextColor: "#E2557A",
-                        emphTextColor: "#12A17A",
-                        outlineColor: "#EFE5D8",
-                    },
-                    oncomplete: (data) => {
-                        onFieldRef.current("postalCode", data.zonecode);
-                        onFieldRef.current("addressLine1", composeAddress(data));
-                        setSearching(false);
-                        setManual(false);
-                        requestAnimationFrame(() => detailRef.current?.focus());
-                    },
-                }).embed(searchBoxRef.current, { autoClose: false });
-                setSearchState("ready");
-            })
-            .catch(() => { if (active) { setSearchState("failed"); setManual(true); } });
-        return () => { active = false; };
-    }, [searching]);
-
-    const hasAddress = Boolean(form.postalCode || form.addressLine1);
     const presetActive = LABEL_PRESETS.some((preset) => preset.label === form.label);
+    const openSearch = () => { if (!pending) setSearchOpen(true); };
+    const closeSearch = useCallback(() => setSearchOpen(false), []);
+    const searchFailed = useCallback(() => setManual(true), []);
+    const apply = (picked: PickedAddress) => {
+        onField("postalCode", picked.postalCode);
+        onField("addressLine1", picked.address);
+        setSearchOpen(false);
+        setManual(false);
+        requestAnimationFrame(() => detailRef.current?.focus());
+    };
 
     return createPortal(
         <div className="ddb-petform ddb-addr" role="dialog" aria-modal="true" aria-labelledby={titleId}>
@@ -175,7 +252,7 @@ export default function AddressModal({ host, editing, form, onField, onSubmit, o
                 </header>
 
                 <div className="ddb-pf-body">
-                    {/* 배송지 이름 · 받는 분 */}
+                    {/* 배송지 이름 · 받는 분 · 연락처 */}
                     <section className="ddb-pf-sec" data-tone="pink">
                         <header className="ddb-pf-sec-head">
                             {/* eslint-disable-next-line @next/next/no-img-element -- 작은 3D 그림 */}
@@ -208,75 +285,57 @@ export default function AddressModal({ host, editing, form, onField, onSubmit, o
                         </div>
                     </section>
 
-                    {/* 주소 */}
+                    {/* 주소 — 우편번호 + 주소 검색 버튼 · 기본 주소 · 상세 주소 */}
                     <section className="ddb-pf-sec" data-tone="sky">
                         <header className="ddb-pf-sec-head">
                             {/* eslint-disable-next-line @next/next/no-img-element -- 작은 3D 그림 */}
                             <img src="/images/ui/stickers/my-address.webp" alt="" aria-hidden="true" />
                             <div>
                                 <h3>어디로 보낼까요?</h3>
-                                <p>도로명 · 건물명 · 지번으로 검색하면 우편번호까지 채워져요.</p>
+                                <p>주소 검색으로 우편번호와 기본 주소를 채우고, 상세 주소를 적어 주세요.</p>
                             </div>
                         </header>
-
-                        {/* 고른 주소 카드 */}
-                        {hasAddress && !searching && !manual && (
-                            <div className="ddb-addr-picked">
-                                <span className="ddb-addr-zip"><em>우편번호</em>{form.postalCode || "—"}</span>
-                                <strong>{form.addressLine1}</strong>
-                                <button type="button" onClick={openSearch} disabled={pending}><i className="fa-solid fa-magnifying-glass" aria-hidden="true" />다시 검색</button>
-                            </div>
-                        )}
-
-                        {/* 주소 검색 펼침 */}
-                        {searching ? (
-                            <div className="ddb-addr-search">
-                                <div className="ddb-addr-search-top">
-                                    <span><i className="fa-solid fa-magnifying-glass" aria-hidden="true" />주소 검색</span>
-                                    {hasAddress && <button type="button" onClick={() => setSearching(false)}>검색 닫기</button>}
-                                </div>
-                                <div className="ddb-addr-search-box" aria-live="polite">
-                                    {/* 우편번호 검색을 심는 빈 상자 — React 가 안을 그리지 않음(검색 화면이 직접 채움) */}
-                                    <div ref={searchBoxRef} className="ddb-addr-embed" />
-                                    {searchState === "loading" && <p className="ddb-addr-loading"><i className="fa-solid fa-paw fa-bounce" aria-hidden="true" />주소 검색을 준비하고 있어요</p>}
-                                    {searchState === "failed" && <p className="ddb-addr-loading">주소 검색을 불러오지 못했어요. 아래에 직접 적어 주세요.</p>}
-                                </div>
-                            </div>
-                        ) : !hasAddress && !manual ? (
-                            <button type="button" className="ddb-addr-find" onClick={openSearch} disabled={pending}>
-                                <i className="fa-solid fa-magnifying-glass" aria-hidden="true" />
-                                <span><b>주소 검색</b><small>우편번호와 기본 주소가 자동으로 채워져요</small></span>
-                                <i className="fa-solid fa-chevron-right" aria-hidden="true" />
-                            </button>
-                        ) : null}
-
-                        {/* 직접 입력(검색을 못 불러온 경우 · 원하면) */}
-                        {manual && (
-                            <div className="ddb-pf-grid ddb-addr-manual">
-                                <label className="ddb-pf-field">
-                                    <span className="ddb-pf-label">우편번호</span>
-                                    <input className="input" value={form.postalCode} onChange={(event) => onField("postalCode", event.target.value)} required maxLength={10} autoComplete="shipping postal-code" inputMode="numeric" />
-                                </label>
-                                <label className="ddb-pf-field ddb-pf-wide">
-                                    <span className="ddb-pf-label">기본 주소</span>
-                                    <input className="input" value={form.addressLine1} onChange={(event) => onField("addressLine1", event.target.value)} required maxLength={200} autoComplete="shipping address-line1" />
-                                </label>
-                            </div>
-                        )}
-
-                        {/* 숨은 필수 칸 — 검색으로 채운 값을 그대로 저장(직접 입력이 아닐 때) */}
-                        {!manual && (
-                            <>
-                                <input type="hidden" name="postalCode" value={form.postalCode} />
-                                <input type="hidden" name="addressLine1" value={form.addressLine1} />
-                            </>
-                        )}
-
-                        <label className="ddb-pf-field ddb-addr-detail">
-                            <span className="ddb-pf-label">상세 주소 <b className="ddb-addr-own">선택</b></span>
-                            <input ref={detailRef} className="input" value={form.addressLine2} onChange={(event) => onField("addressLine2", event.target.value)} maxLength={200} autoComplete="shipping address-line2" placeholder="동 · 호수 · 층 등" />
-                        </label>
-                        {!manual && <button type="button" className="ddb-addr-manual-link" onClick={() => { setManual(true); setSearching(false); }}>검색이 안 되면 직접 적기</button>}
+                        <div className="ddb-addr-fields">
+                            <label className="ddb-pf-field ddb-addr-zipfield">
+                                <span className="ddb-pf-label">우편번호</span>
+                                <span className="ddb-addr-ziprow">
+                                    <input
+                                        className="input"
+                                        value={form.postalCode}
+                                        onChange={(event) => onField("postalCode", event.target.value)}
+                                        readOnly={!manual}
+                                        onClick={() => { if (!manual) openSearch(); }}
+                                        required
+                                        maxLength={10}
+                                        autoComplete="shipping postal-code"
+                                        inputMode="numeric"
+                                        placeholder="우편번호"
+                                    />
+                                    <button type="button" className="ddb-addr-searchbtn" onClick={openSearch} disabled={pending}>
+                                        <i className="fa-solid fa-magnifying-glass" aria-hidden="true" />주소 검색
+                                    </button>
+                                </span>
+                            </label>
+                            <label className="ddb-pf-field">
+                                <span className="ddb-pf-label">기본 주소</span>
+                                <input
+                                    className="input"
+                                    value={form.addressLine1}
+                                    onChange={(event) => onField("addressLine1", event.target.value)}
+                                    readOnly={!manual}
+                                    onClick={() => { if (!manual && !form.addressLine1) openSearch(); }}
+                                    required
+                                    maxLength={200}
+                                    autoComplete="shipping address-line1"
+                                    placeholder="주소 검색을 누르면 채워져요"
+                                />
+                            </label>
+                            <label className="ddb-pf-field">
+                                <span className="ddb-pf-label">상세 주소 <b className="ddb-addr-own">선택</b></span>
+                                <input ref={detailRef} className="input" value={form.addressLine2} onChange={(event) => onField("addressLine2", event.target.value)} maxLength={200} autoComplete="shipping address-line2" placeholder="동 · 호수 · 층 등" />
+                            </label>
+                        </div>
+                        {!manual && <button type="button" className="ddb-addr-manual-link" onClick={() => setManual(true)}>검색이 안 되면 직접 적기</button>}
                     </section>
 
                     {/* 기본 배송지 */}
@@ -297,6 +356,7 @@ export default function AddressModal({ host, editing, form, onField, onSubmit, o
                     </button>
                 </footer>
             </form>
+            {searchOpen && <AddressSearchModal onApply={apply} onClose={closeSearch} onFailed={searchFailed} />}
         </div>,
         host,
     );
