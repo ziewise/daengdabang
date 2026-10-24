@@ -30,6 +30,9 @@ const HELLO_ART: Record<string, string> = {
     "추천 데이터 관리": "star",
     "결제수단 관리": "shield",
     "회원 탈퇴": "lock",
+    "건강 기록": "health",
+    "AI 분석": "lens",
+    "매일댕생활": "treasure",
 };
 
 export default function MypageSectionLayout({

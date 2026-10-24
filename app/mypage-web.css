@@ -860,3 +860,221 @@ html:not(.ddb-app-mode) main:has(nav[aria-label="마이페이지 메뉴"]) {
         & .mp-tabs b { position: absolute; top: 5px; right: 5px; min-width: 20px; padding: 0 5px; font-size: 10.5px; }
     }
 }
+
+/* ═════════ 우리 아이 AI 요약(건강 기록 · AI 분석 · 매일댕생활, 2026-10-24) ═════════
+   components/mypage/MypageAiSummary.tsx 의 mp-sum-* 모양. 카드 띠는 위 K5 결 그대로,
+   여기서는 안쪽 내용만: 주아 큰 제목 · 색 알약 · 크림 칸 · 주의 단계 색 상자 · 도장 7칸 · 진행 막대 · 빈 화면 그림.
+   두 칸 줄(mp-sum-row)은 높이를 맞춤(짧은 쪽 내용은 위에서부터, 칸 바닥은 같은 선). */
+html:not(.ddb-app-mode) main:has(nav[aria-label="마이페이지 메뉴"]) {
+    /* 그림 */
+    & [data-mp-art="health"], & [data-mp-sum-art="health"] { --mp-art: url("/images/ui/daily-hero-mypet-384.webp"); }
+    & [data-mp-art="lens"], & [data-mp-sum-art="lens"] { --mp-art: url("/images/ui/mypet-analysis-256.webp"); }
+    & [data-mp-art="treasure"], & [data-mp-sum-art="treasure"] { --mp-art: url("/images/ui/daily-hero-treasure-384.webp"); }
+    & [data-mp-sum-art="dog"] { --mp-art: url("/images/ui/stickers/my-pets.webp"); }
+    & [data-mp-sum-art="info"] { --mp-art: url("/images/ui/daily-checkin-256.webp"); }
+
+    /* 사이드 메뉴 — 웹 요약 화면 주소에도 같은 그림 */
+    & nav[aria-label="마이페이지 메뉴"] a[href^="/mypage/health"] { --ic: url("/images/ui/menu-daily-mypet-128.webp"); }
+    & nav[aria-label="마이페이지 메뉴"] a[href^="/mypage/ai"] { --ic: url("/images/ui/header-petlens-128.webp"); }
+    & nav[aria-label="마이페이지 메뉴"] a[href^="/mypage/daily"] { --ic: url("/images/ui/menu-daily-treasure-128.webp"); }
+
+    /* 색 이름표(data-tone) — 알약 · 상자 공통 */
+    & .mp-sum [data-tone="mint"] { --t-bg: #e9f8f1; --t-ink: #0f8a68; }
+    & .mp-sum [data-tone="pink"] { --t-bg: #fff0f4; --t-ink: #d0436d; }
+    & .mp-sum [data-tone="sky"] { --t-bg: #e9f4fb; --t-ink: #0e7f94; }
+    & .mp-sum [data-tone="yellow"] { --t-bg: #fff6e3; --t-ink: #c27a0e; }
+    & .mp-sum [data-tone="lav"] { --t-bg: #f3f0fe; --t-ink: #6b51c9; }
+    & .mp-sum [data-tone="red"] { --t-bg: #fff1f2; --t-ink: #be123c; }
+    & .mp-sum [data-tone="amber"] { --t-bg: #fff6e3; --t-ink: #b45309; }
+    & .mp-sum [data-tone="gray"] { --t-bg: #f1f5f9; --t-ink: #475569; }
+    & .mp-sum [data-tone] { background: var(--t-bg); }
+
+    /* 반려견 고르기 알약 */
+    & .mp-sum-pets { gap: 10px; margin-bottom: 20px; }
+
+    & .mp-sum-pets > button {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        padding: 6px 18px 6px 8px;
+        border: 0;
+        border-radius: 999px;
+        background: #fff;
+        color: #64748b;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 16px;
+        font-weight: 400;
+        box-shadow: 0 0 0 1.5px #efe7dc, 0 8px 14px -12px rgb(15 23 42 / 30%);
+    }
+
+    & .mp-sum-pets > button:not(:has(img))::before {
+        content: "";
+        width: 30px;
+        height: 30px;
+        margin-right: 8px;
+        border-radius: 999px;
+        background: #fff6e3 url("/images/ui/stickers/my-pets.webp") center / 22px no-repeat;
+    }
+
+    & .mp-sum-pets > button img { width: 30px; height: 30px; margin-right: 8px; }
+    & .mp-sum-pets > button[aria-checked="true"] { background: #ffeef3; color: #d0436d; box-shadow: 0 0 0 2px #f7a8bf, 0 10px 16px -12px rgb(200 80 120 / 55%); }
+
+    /* 요약 묶음 — 카드 사이 간격 · 두 칸 줄 높이 맞춤 */
+    & .mp-sum { gap: 22px; }
+    & .mp-sum-row { gap: 22px; align-items: stretch; }
+
+    /* 큰 제목 · 목록 */
+    & .mp-sum-title { color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 23px; font-weight: 400; line-height: 1.4; }
+    & .mp-sum-chips { gap: 8px; }
+    & .mp-sum-chip { padding: 5px 12px; border-radius: 999px; font-size: 12.5px; }
+    & .mp-sum-chip[data-tone] { color: var(--t-ink); }
+    & .mp-sum-chips li.mp-sum-chip { background: #f3f0fe; color: #6b51c9; }
+
+    & .mp-sum-list { gap: 8px; }
+
+    & .mp-sum-list li {
+        position: relative;
+        padding: 10px 14px 10px 36px;
+        border-radius: 14px;
+        background: #fffaf1;
+        line-height: 1.55;
+    }
+
+    & .mp-sum-list li::before {
+        content: "";
+        position: absolute;
+        top: 15px;
+        left: 14px;
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        background: #8fd8b8;
+        box-shadow: 0 0 0 3px #e9f8f1;
+    }
+
+    /* 지난주 비교 — 색 상자 3종 */
+    & .mp-sum-compare > div { padding: 14px 16px; border-radius: 18px; }
+    & .mp-sum-compare dt { color: var(--t-ink); font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 14px; font-weight: 400; }
+    & .mp-sum-compare dd { line-height: 1.55; }
+    & .mp-sum-note { padding: 18px; border-radius: 18px; background: #fffaf1; line-height: 1.7; }
+
+    /* 돌봄 할 일 — 번호 동그라미 크림 칸 */
+    & .mp-sum-steps li { display: flex; gap: 12px; align-items: flex-start; padding: 16px; border-radius: 18px; background: #fffaf1; }
+
+    & .mp-sum-steps li > b {
+        display: grid;
+        width: 28px;
+        height: 28px;
+        flex: none;
+        margin: 0;
+        place-items: center;
+        border-radius: 999px;
+        background: #fff;
+        color: #d98a12;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 15px;
+        font-weight: 400;
+        box-shadow: 0 0 0 2px #f7d48a;
+    }
+
+    /* 기록 목록 — 크림 줄, 맨 위(최근)는 색 테 */
+    & .mp-sum-timeline { gap: 8px; }
+    & .mp-sum-timeline li { min-height: 52px; padding: 12px 18px; border-radius: 16px; background: #fffaf1; }
+    & .mp-sum-timeline li[data-latest] { background: #fff; box-shadow: 0 0 0 2px #f1e6d6; }
+
+    & .mp-sum-timeline li[data-latest]::after {
+        content: "최근";
+        order: -1;
+        padding: 2px 8px;
+        border-radius: 999px;
+        background: #ffeef3;
+        color: #e2557a;
+        font-size: 11px;
+        font-weight: 900;
+    }
+
+    & .mp-sum-level { padding: 3px 10px; color: var(--t-ink); background: var(--t-bg) !important; }
+
+    /* 주의 단계 상자 */
+    & .mp-sum-urgency { padding: 16px 18px; border-radius: 18px; }
+    & .mp-sum-urgency > p:first-child { color: var(--t-ink); font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 15px; font-weight: 400; }
+
+    /* 남은 분석 · 코인 칸 */
+    & .mp-sum-wallet > div, & .mp-sum-coins > div { padding: 16px; border-radius: 20px; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
+    & .mp-sum-wallet > div > p:first-child, & .mp-sum-coins > div > p:first-child { color: var(--t-ink); }
+    & .mp-sum-big { margin-top: 2px; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-weight: 400; }
+    & .mp-sum-wallet > .btn { min-height: 46px; }
+
+    /* 출근도장 — 큰 연속 일수 · 7칸 도장 */
+    & .mp-sum-streak-hero { padding: 18px 10px; border-radius: 22px; background: #fffaf1; }
+    & .mp-sum-streak-hero .mp-sum-big { color: #e98708; font-size: 54px; line-height: 1.1; }
+    & .mp-sum-streak-hero [data-tone] { color: var(--t-ink); }
+    & .mp-sum-stamps { gap: 8px; }
+    & .mp-sum-stamps li { padding: 12px 4px; border-radius: 18px; background: #fffaf1; }
+    & .mp-sum-stamp { width: 40px; height: 40px; background: #fff; color: #cbd5e1; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 16px; font-weight: 400; box-shadow: 0 0 0 2px #f1e6d6; }
+    & .mp-sum-stamps li[data-claimed] .mp-sum-stamp { background: #f6b73c; color: #fff; box-shadow: 0 0 0 3px #fff, 0 6px 10px -6px rgb(217 138 18 / 70%); }
+    & .mp-sum-stamps li[data-today] { background: #fff; box-shadow: 0 0 0 2px #f7a8bf; }
+    & .mp-sum-stamps li[data-today] > span:first-child { color: #e2557a; }
+
+    /* 진행 막대 */
+    & .mp-sum-meters { gap: 18px; }
+    & .mp-sum-meter > div:last-child { height: 12px; background: #f5efe6; }
+    & .mp-sum-meter > div:last-child > span { background: var(--m-bar, #9b87e8); }
+    & .mp-sum-meter[data-tone="lav"] { --m-bar: linear-gradient(90deg, #b9a8f5, #8b74e0); }
+    & .mp-sum-meter[data-tone="yellow"] { --m-bar: linear-gradient(90deg, #fbd27a, #f0a72c); }
+    & .mp-sum-meter[data-tone="mint"] { --m-bar: linear-gradient(90deg, #9fe3c6, #34b98a); }
+    & .mp-sum-meter[data-tone] { background: none; }
+    & .mp-sum-meter span.font-black:first-child { font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-weight: 400; }
+
+    /* 오늘 할 일 */
+    & .mp-sum-tasks li { min-height: 60px; padding: 12px 16px; border-radius: 18px; background: #fffaf1; }
+    & .mp-sum-check { box-shadow: 0 0 0 2px #e2e8f0; color: #fff; }
+    & .mp-sum-tasks li[data-done] .mp-sum-check { background: #34b98a; box-shadow: 0 0 0 3px #e9f8f1; }
+    & .mp-sum-tasks li[data-done] .block:first-child { color: #94a3b8; text-decoration: line-through; }
+
+    /* 빈 화면 · 오류 — 흰 쿠션 + 큰 그림 */
+    & .mp-sum-empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 40px 24px 36px;
+        word-break: keep-all;
+    }
+
+    & .mp-sum-empty::before { content: ""; width: 112px; height: 112px; margin-bottom: 14px; background: var(--mp-art) center / contain no-repeat; filter: drop-shadow(0 10px 14px rgb(15 23 42 / 14%)); }
+    & .mp-sum-empty > p:first-of-type { color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 24px; font-weight: 400; }
+    & .mp-sum-empty .btn { min-height: 50px; padding: 0 30px; }
+
+    /* 불러오는 중 — 쿠션 자리 */
+    & .mp-sum-loading { gap: 22px; }
+    & .mp-sum-loading > .surface { height: 260px; }
+
+    /* 아래 이동 버튼 */
+    & .mp-sum-actions { gap: 12px; margin-top: 26px; }
+    & .mp-sum-actions .btn { min-height: 52px; padding: 0 30px; font-size: 15px; }
+}
+
+@media (max-width: 767px) {
+    html:not(.ddb-app-mode) main:has(nav[aria-label="마이페이지 메뉴"]) {
+        & .mp-sum-title { font-size: 20px; }
+        & .mp-sum-stamps { gap: 4px; }
+        & .mp-sum-stamps li { padding: 8px 2px; border-radius: 14px; }
+        & .mp-sum-stamp { width: 32px; height: 32px; font-size: 14px; }
+        & .mp-sum-streak-hero .mp-sum-big { font-size: 44px; }
+        & .mp-sum-actions .btn { flex: 1 1 100%; }
+        & .mp-sum-timeline li > span:first-child { width: auto; }
+        /* 지난 기록 줄 — 첫 줄 날짜 · 단계 알약, 둘째 줄 요약 글 */
+        & .mp-sum-timeline li > span.flex-1 { flex: 1 1 100%; order: 3; }
+        & .mp-sum-timeline li > span:last-child:not(.flex-1) { margin-left: auto; }
+    }
+}
+
+/* 머리 판 작은 제목(마이페이지 · MY 정보 · 우리 아이 AI) — 한글이라 손글씨체 대신 주아 분홍 글씨(손글씨 규칙보다 우선) */
+html:not(.ddb-app-mode) :is(main:has(nav[aria-label="마이페이지 메뉴"]), main[data-mypage-web]) :is(header, div)[data-mp-hello] p.text-indigo-700:first-child:has(+ h1) {
+    background: none;
+    color: #e2557a;
+    font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+    font-size: 15px;
+    letter-spacing: 0.02em;
+    -webkit-text-fill-color: currentColor;
+}

@@ -10,11 +10,20 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/lib/store";
 import { MYPAGE_MENU_GROUPS } from "@/lib/mypage-data";
+import { useAppMode } from "@/components/app-shell/useAppMode";
 // 웹 마이페이지 크레파스 꾸밈(2026-10-24) — 이 메뉴가 있는 화면 전체에 적용, 앱은 닿지 않음
 import "../../app/mypage-web.css";
 
+// 웹에서는 "우리 아이 AI" 항목을 마이페이지 안 요약 화면으로(결과를 모아 보기, 기능 화면은 요약 안 버튼으로 이동). 앱은 기능 화면 그대로
+const WEB_SUMMARY_HREF: Record<string, string> = {
+    "/my-pet": "/mypage/health/",
+    "/pet-lens": "/mypage/ai/",
+    "/treasure-mine/": "/mypage/daily/",
+};
+
 export default function MypageSidebar({ className = "" }: { className?: string }) {
     const pathname = usePathname();
+    const appMode = useAppMode(pathname ?? "");
     const router = useRouter();
     const { logout } = useAuth();
 
@@ -52,11 +61,12 @@ export default function MypageSidebar({ className = "" }: { className?: string }
                             </h2>
                             <ul className="grid grid-cols-2 gap-2 lg:grid-cols-1 lg:gap-1">
                                 {group.items.map((item) => {
-                                    const active = isActive(item.href);
+                                    const href = appMode ? item.href : WEB_SUMMARY_HREF[item.href] ?? item.href;
+                                    const active = isActive(href);
                                     return (
                                         <li key={item.href} className="min-w-0">
                                             <Link
-                                                href={item.href}
+                                                href={href}
                                                 aria-current={active ? "page" : undefined}
                                                 className={`flex min-h-11 items-center gap-2 rounded-xl px-2.5 py-2.5 text-left text-xs font-bold leading-5 transition sm:px-3 lg:gap-3 lg:px-4 lg:text-sm ${
                                                     active
