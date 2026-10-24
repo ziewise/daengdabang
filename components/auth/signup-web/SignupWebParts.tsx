@@ -80,6 +80,11 @@ export function SxShell({
     route,
     lead,
     children,
+    kicker = "JOIN DAENGDABANG",
+    title = "회원가입",
+    art = "logo-poodle-384.webp",
+    stepsLabel = "가입 단계",
+    footer,
 }: {
     steps: SxStep[];
     /** 지금 단계 번호(0부터). 모두 끝났으면 steps.length - 1 */
@@ -89,6 +94,13 @@ export function SxShell({
     /** 제목 아래 한 줄 */
     lead: string;
     children: ReactNode;
+    /** 2026-10-25 비밀번호 찾기 등 다른 단계 화면에서도 같은 틀을 쓰도록 — 머리 판 꼬리표 · 제목 · 그림 · 단계 이름 · 아래 안내(기본값은 회원가입 그대로) */
+    kicker?: string;
+    title?: string;
+    art?: string;
+    stepsLabel?: string;
+    /** 아래 안내 줄. 없으면 회원가입 기본(이미 회원이신가요? 로그인), null 이면 숨김 */
+    footer?: ReactNode | null;
 }) {
     const current = steps[Math.min(now, steps.length - 1)];
     const routeLabel = route ? PROVIDER_NAME[route] : "";
@@ -100,8 +112,8 @@ export function SxShell({
             {/* 분홍 머리 판 — 기존 웹 마이페이지 머리 판과 같은 결 */}
             <header className="sxw-hero">
                 <span className="sxw-hero-text">
-                    <span className="sxw-kicker">JOIN DAENGDABANG</span>
-                    <h1 className="sxw-title">회원가입</h1>
+                    <span className="sxw-kicker">{kicker}</span>
+                    <h1 className="sxw-title">{title}</h1>
                     <p className="sxw-lead">{lead}</p>
                     {routeLabel && (
                         <span className="sxw-route" data-route={route}>
@@ -111,11 +123,11 @@ export function SxShell({
                     )}
                 </span>
                 {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
-                <img className="sxw-hero-art" src={`${UI}logo-poodle-384.webp`} alt="" aria-hidden="true" />
+                <img className="sxw-hero-art" src={art.startsWith("/") ? art : `${UI}${art}`} alt="" aria-hidden="true" />
             </header>
 
             {/* 단계 줄 — 파스텔 동그라미 · 아이콘 · 번호 배지 · 세 색 크레파스 줄 */}
-            <nav className="sxw-hsteps" aria-label={`가입 단계 ${steps.length}단계 중 ${now + 1}단계 · ${current?.label || ""}`}>
+            <nav className="sxw-hsteps" aria-label={`${stepsLabel} ${steps.length}단계 중 ${now + 1}단계 · ${current?.label || ""}`}>
                 <ol style={{ gridTemplateColumns: `repeat(${steps.length}, minmax(0, 1fr))` }}>
                     {steps.map((step, index) => {
                         const state = index < now ? "done" : index === now ? "now" : "next";
@@ -141,7 +153,9 @@ export function SxShell({
 
             <div className="sxw-main">{children}</div>
 
-            {!finished && <p className="sxw-login">이미 회원이신가요?<Link href="/auth/login">로그인</Link></p>}
+            {footer === undefined
+                ? !finished && <p className="sxw-login">이미 회원이신가요?<Link href="/auth/login">로그인</Link></p>
+                : footer}
         </div>
     );
 }

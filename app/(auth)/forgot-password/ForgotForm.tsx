@@ -1,5 +1,11 @@
 "use client";
 
+/*
+ * 비밀번호 재설정(/forgot-password) — 이메일 → 인증번호 → 새 비밀번호 → 완료.
+ * 2026-10-25 웹은 회원가입과 같은 틀의 새 화면(components/auth/forgot-web/ForgotWebView)으로 그림 —
+ *   상태 · 요청 · 검사는 이 파일 그대로 넘겨주기만 함. 앱(ddb-app-mode)은 아래 기존 화면 그대로.
+ */
+
 import Link from "next/link";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import SignupBotChallenge, {
@@ -12,6 +18,9 @@ import {
     verifyPasswordReset,
 } from "@/lib/customer-api";
 import { useDdbApiReady } from "@/hooks/useDdbApiReady";
+// 웹 전용 화면(2026-10-25)
+import ForgotWebView from "@/components/auth/forgot-web/ForgotWebView";
+import { useWebScreen } from "@/hooks/useWebScreen";
 
 type Step = "email" | "code" | "password" | "done";
 
@@ -102,6 +111,7 @@ function formatSeconds(seconds: number) {
 
 export default function ForgotPasswordPage() {
     const apiReady = useDdbApiReady();
+    const webScreen = useWebScreen();
     const challengeConfigured = Boolean(signupTurnstileSiteKey());
     const [step, setStep] = useState<Step>("email");
     const [email, setEmail] = useState("");
@@ -114,6 +124,8 @@ export default function ForgotPasswordPage() {
     const [challengeResetKey, setChallengeResetKey] = useState(0);
     const [resendAt, setResendAt] = useState(0);
     const [expiresAt, setExpiresAt] = useState(0);
+    // 웹 남은 시간 막대의 전체 길이(초) — 화면 표시에만 씀
+    const [expiryTotal, setExpiryTotal] = useState(0);
     const [now, setNow] = useState(() => Date.now());
     const [loading, setLoading] = useState(false);
     const [notice, setNotice] = useState("");
@@ -127,8 +139,28 @@ export default function ForgotPasswordPage() {
         setRequestId(resume.requestId);
         setResendAt(resume.resendAt);
         setExpiresAt(resume.expiresAt);
+        setExpiryTotal(Math.max(1, Math.ceil((resume.expiresAt - Date.now()) / 1_000)));
         setStep("code");
         setNotice("진행 중이던 이메일 확인을 이어서 할 수 있습니다.");
+    }, []);
+
+    // 개발 서버 전용 미리보기(배포 빌드에는 없음): ?fxpreview=code|password|done 으로 단계 화면만 바로 보기 — 서버 요청 없음
+    useEffect(() => {
+        if (process.env.NODE_ENV !== "development") return;
+        const preview = new URLSearchParams(window.location.search).get("fxpreview");
+        if (preview !== "code" && preview !== "password" && preview !== "done") return;
+        const at = Date.now();
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- 개발 서버 전용 미리보기(주소를 읽은 뒤 한 번만 채움)
+        setEmail("daeng@example.com");
+        setRequestId("preview-request");
+        setResendAt(at + 42_000);
+        setExpiresAt(at + 248_000);
+        setExpiryTotal(300);
+        setNow(at);
+        if (preview === "password") setResetToken("preview-token");
+        setStep(preview);
+        if (preview === "code") setNotice("입력한 주소가 등록되어 있고 이메일 로그인이 가능한 계정이면 인증번호를 보내드립니다.");
+        if (preview === "password") setNotice("이메일 확인이 완료되었습니다. 10분 안에 새 비밀번호를 설정해 주세요.");
     }, []);
 
     useEffect(() => {
@@ -178,6 +210,7 @@ export default function ForgotPasswordPage() {
             setRequestId(response.requestId);
             setResendAt(resume.resendAt);
             setExpiresAt(resume.expiresAt);
+            setExpiryTotal(response.expiresInSeconds);
             setNow(requestedAt);
             setCode("");
             setStep("code");
@@ -270,6 +303,38 @@ export default function ForgotPasswordPage() {
         setBotToken("");
         setChallengeResetKey((value) => value + 1);
     };
+
+    if (webScreen) {
+        return (
+            <ForgotWebView
+                step={step}
+                apiReady={apiReady}
+                challengeConfigured={challengeConfigured}
+                email={email}
+                setEmail={setEmail}
+                code={code}
+                setCode={setCode}
+                codeRef={codeRef}
+                newPassword={newPassword}
+                setNewPassword={setNewPassword}
+                confirmPassword={confirmPassword}
+                setConfirmPassword={setConfirmPassword}
+                botToken={botToken}
+                setBotToken={setBotToken}
+                challengeResetKey={challengeResetKey}
+                resendSeconds={resendSeconds}
+                expirySeconds={expirySeconds}
+                expiryTotal={expiryTotal}
+                loading={loading}
+                notice={notice}
+                error={error}
+                sendCode={(event) => void sendCode(event)}
+                verifyCode={(event) => void verifyCode(event)}
+                setPassword={(event) => void setPassword(event)}
+                restart={restart}
+            />
+        );
+    }
 
     return (
         <div className="w-full max-w-md rounded-3xl bg-white px-6 py-8 shadow-card md:px-9 md:py-10">
