@@ -653,3 +653,51 @@ html:not(.ddb-app-mode) main[data-product-detail-content] {
         & .pd-tab[aria-current="true"] { min-height: 52px; }
     }
 }
+
+/* ═════════ 상세정보 더보기(2026-10-24 사용자 "일부만 보이고 더보기") ═════════
+   앱에 이미 있는 접기 기능(ProductTabs AppDetailFold — 버튼 · 흐림 · 펼침 상태)을 웹에서도 켬. 동작 코드는 그대로, 모양만.
+   상세 이미지 · 상세 문구가 있는 상품만(앱과 같은 조건): 처음엔 위쪽 1100px 만 보이고 아래는 바탕색으로 흐려짐,
+   가운데 "상세정보 더보기 ⌄" 흰 알약(분홍 글씨 · 주아) → 누르면 전부 펼치고 버튼은 "접기 ⌃" 로 */
+html:not(.ddb-app-mode) main[data-product-detail-content] [data-app-detail-fold]:has([data-supplier-original-detail], [data-product-detail-copy]) {
+    &[data-app-detail-fold="closed"] > [data-app-detail-fold-body] {
+        position: relative;
+        max-height: 1100px;
+        overflow: hidden;
+    }
+
+    & > [data-app-detail-fold-body] > [data-app-detail-fold-fade] {
+        display: block;
+        z-index: 5;
+        height: 260px;
+        background: linear-gradient(to top, #f7f8fb 8%, rgb(247 248 251 / 85%) 40%, rgb(247 248 251 / 0%) 100%) !important;
+    }
+
+    & > [data-app-detail-fold-toggle] { display: flex; margin-top: 18px; }
+    &[data-app-detail-fold="closed"] > [data-app-detail-fold-toggle] { position: relative; z-index: 6; margin-top: -64px; }
+
+    & > [data-app-detail-fold-toggle] button {
+        min-height: 54px;
+        gap: 10px;
+        padding: 0 34px;
+        border: 0;
+        border-radius: 999px;
+        background: #fff;
+        color: #d0436d;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 17px;
+        font-weight: 400;
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), inset 0 -8px 14px rgb(0 0 0 / 3%), 0 16px 26px -16px rgb(200 80 120 / 55%), 0 0 0 1.5px #f7c5d4;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    & > [data-app-detail-fold-toggle] button:hover { transform: translateY(-2px); box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 20px 30px -16px rgb(200 80 120 / 60%), 0 0 0 2px #f7a8bf; }
+    & > [data-app-detail-fold-toggle] button:focus-visible { outline: 3px solid #f7a8bf; outline-offset: 3px; }
+    & > [data-app-detail-fold-toggle] button > i { font-size: 12px; }
+}
+
+@media (max-width: 640px) {
+    html:not(.ddb-app-mode) main[data-product-detail-content] [data-app-detail-fold]:has([data-supplier-original-detail], [data-product-detail-copy]) {
+        &[data-app-detail-fold="closed"] > [data-app-detail-fold-body] { max-height: 760px; }
+        & > [data-app-detail-fold-toggle] button { min-height: 48px; padding: 0 26px; font-size: 15px; }
+    }
+}
