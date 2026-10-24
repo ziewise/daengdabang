@@ -120,6 +120,13 @@ function OrderLineView({ line, compact = false }: { line: TossOrderHistoryLine; 
                 </p>
             </div>
             {!compact && <b className="shrink-0 text-sm font-black text-neutral-950">{formatOrderAmount(line.lineAmount)}</b>}
+            {/* 웹 전용 — 목록 카드 상품 칸 오른쪽: 상품 금액 + 상품 보기(PC 빈 공간 채움, 앱에서는 숨김) */}
+            {compact && (
+                <span className="hidden mp-line-side">
+                    <b>{formatOrderAmount(line.lineAmount)}</b>
+                    {image && <Link href={image.href}>상품 보기</Link>}
+                </span>
+            )}
         </div>
     );
 }

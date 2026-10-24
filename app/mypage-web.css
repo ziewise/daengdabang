@@ -1224,3 +1224,43 @@ html:not(.ddb-app-mode) main:has(nav[aria-label="마이페이지 메뉴"]) {
         & .mp-order-steps li + li::before { top: 12px; }
     }
 }
+
+/* 주문 카드 상품 줄 — 크림 칸으로, PC 두 칸씩(홀수 마지막 · 한 개는 가로 전체), 칸 오른쪽에 상품 금액 + 상품 보기(2026-10-24 사용자 "PC에서 오른쪽이 허전") */
+html:not(.ddb-app-mode) main:has(nav[aria-label="마이페이지 메뉴"]) {
+    & article[data-order-mode] > div.grid { gap: 12px; margin-top: 16px; }
+
+    & article[data-order-mode] > div.grid > div {
+        align-items: center;
+        gap: 14px;
+        padding: 12px 18px 12px 12px;
+        border-radius: 20px;
+        background: #fffaf1;
+    }
+
+    & article[data-order-mode] > div.grid > div > a:first-child > span,
+    & article[data-order-mode] > div.grid > div > span:first-child { width: 72px; height: 72px; border: 0; border-radius: 16px; background: #fff; box-shadow: 0 6px 12px -9px rgb(15 23 42 / 35%); }
+
+    & article[data-order-mode] .mp-line-side {
+        display: grid;
+        flex: none;
+        justify-items: end;
+        gap: 6px;
+        margin-left: auto;
+    }
+
+    & article[data-order-mode] .mp-line-side > b { color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 18px; font-weight: 400; }
+    & article[data-order-mode] .mp-line-side > a { padding: 5px 12px; border-radius: 999px; background: #fff; color: #e2557a; font-size: 12px; font-weight: 800; box-shadow: 0 0 0 1.5px #f7d3df; }
+    & article[data-order-mode] .mp-line-side > a::after { content: " ›"; }
+    & article[data-order-mode] .mp-line-side > a:hover { background: #ffeef3; }
+
+    /* 상세 화면 상품 줄도 크림 칸 */
+    & [data-mp-card] > div.grid > div:has(> b) { align-items: center; padding: 12px 18px 12px 12px; border-radius: 20px; background: #fffaf1; }
+    & [data-mp-card] > div.grid > div:has(> b) > b { font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 18px; font-weight: 400; }
+}
+
+@media (min-width: 768px) {
+    html:not(.ddb-app-mode) main:has(nav[aria-label="마이페이지 메뉴"]) {
+        & article[data-order-mode] > div.grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        & article[data-order-mode] > div.grid > div:last-child:nth-child(odd) { grid-column: 1 / -1; }
+    }
+}
