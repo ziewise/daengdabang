@@ -4,6 +4,7 @@
  * 예전 디자인이 남아 있던 창들을 웹 파스텔 쿠션 결로(구조 · 문구 · 동작 그대로, 이름표 + CSS 만):
  *  - [data-policy-dialog]  반품/교환 안내 창(ReturnPolicyDialogLink): 분홍 띠 머리 · 3D 그림 · 회사 칸 크림 · 정책 구역 파스텔 쿠션 · 분홍/흰 알약
  *  - [data-region-modal]   언어 · 지역 창(RegionModal)
+ *  - [data-tryon-web]      상품 상세 "우리 아이에게 입혀보기" 창(PetTryOnPreview) — 화면이 많아 공통 규칙(머리 띠 · 알약 단추 · 파스텔 칸 · 점선 없음)
  *  - [data-purchase-evidence-card] · [data-purchase-evidence-dialog]  상품 상세 구매 참고 정보 카드 · 자세히 창(PurchaseEvidenceCard)
  * 웹 전용 3D 그림(data-modal-art)은 앱에서 숨김. 범위: html:not(.ddb-app-mode) 만 — 앱 화면 그대로.
  */
@@ -116,4 +117,36 @@ html:not(.ddb-app-mode) [data-purchase-evidence-dialog] {
     & section[class*="bg-indigo-50"] i { color: #e2557a; }
     & > div:last-child button { height: 52px; border-radius: 999px; background: #e9789a; font-family: var(--md-jua); font-size: 17px; font-weight: 400; box-shadow: inset 0 2px 0 rgb(255 255 255 / 28%), 0 14px 22px -14px rgb(200 80 120 / 80%); }
     & > div:last-child button:hover { background: #e26690; }
+}
+
+/* ───────── 입혀보기 창 ───────── */
+html:not(.ddb-app-mode) section[data-tryon-web] {
+    --md-jua: var(--font-jua), var(--font-wanted-sans), sans-serif;
+    border-radius: 34px;
+    box-shadow: 0 40px 80px -30px rgb(15 23 42 / 50%);
+
+    /* 머리 — 연보라 띠 · 손글씨 꼬리표 · 주아 제목 */
+    & > header { border: 0; background: radial-gradient(80% 140% at 100% 0, rgb(255 240 244 / 90%) 0, transparent 60%), linear-gradient(120deg, #f3f0fe, #f8f5ff 55%, #fdf7ff); box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
+    & > header p { width: fit-content; background: repeating-linear-gradient(172deg, #07849e 0 5px, #ef476f 5px 10px, #e98708 10px 15px); -webkit-background-clip: text; background-clip: text; font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif; font-size: 13px; letter-spacing: 0.08em; -webkit-text-fill-color: transparent; }
+    & > header span[class*="bg-indigo-50"] { background: #fff; color: #6b51c9; }
+    & > header h2 { font-family: var(--md-jua); font-weight: 400; }
+    & > header button { background: #fff; box-shadow: 0 6px 12px -8px rgb(15 23 42 / 40%); }
+
+    & :is(h3, h4) { font-family: var(--md-jua); font-weight: 400; }
+    /* 인디고 → 연보라 글씨 · 칸 */
+    & [class*="text-indigo-"] { color: #6b51c9; }
+    & [class*="bg-indigo-50"], & [class*="bg-indigo-100"] { border-color: transparent; background-color: #f3f0fe; }
+    & div[class*="rounded-xl"][class*="bg-indigo-50"], & div[class*="rounded-2xl"][class*="bg-indigo-50"] { border: 0; border-radius: 24px; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
+    & div[class*="rounded-xl"][class*="bg-amber-50"] { border: 0; border-radius: 24px; background: #fff6e3; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
+    /* 점선 칸 → 크림 쿠션(점선 없음) */
+    & .border-dashed { border: 0; border-radius: 28px; background: #fbf7f1; box-shadow: inset 0 0 0 1.5px #efe5d8; }
+    & .border-dashed > div:first-child[class*="rounded-full"] { background: #fff; color: #e2557a; box-shadow: 0 8px 14px -10px rgb(15 23 42 / 40%); }
+    /* 주요 단추 — 분홍 알약 */
+    & :is(button, a):is([class*="bg-indigo-6"], [class*="bg-indigo-7"], [class*="from-indigo"], [class*="bg-neutral-950"], [class*="bg-neutral-900"]) { border: 0; border-radius: 999px; background: #e9789a; color: #fff; font-family: var(--md-jua); font-weight: 400; box-shadow: inset 0 2px 0 rgb(255 255 255 / 28%), 0 14px 22px -14px rgb(200 80 120 / 80%); }
+    & :is(button, a):is([class*="bg-indigo-6"], [class*="bg-indigo-7"], [class*="from-indigo"], [class*="bg-neutral-950"], [class*="bg-neutral-900"]):hover:not(:disabled) { background: #e26690; }
+    & :is(button, a):is([class*="bg-indigo-6"], [class*="bg-indigo-7"], [class*="from-indigo"], [class*="bg-neutral-950"], [class*="bg-neutral-900"]):disabled { background: #f2c4d2; box-shadow: none; }
+    /* 보조 단추 — 흰 알약 */
+    & :is(button, a)[class*="border-neutral-2"][class*="bg-white"], & :is(button, a)[class*="border"][class*="bg-white"][class*="font-black"] { border: 0; border-radius: 999px; color: #334155; font-family: var(--md-jua); font-weight: 400; box-shadow: inset 0 0 0 2px #e6dccf; }
+    /* 진행 막대 · 점 — 연보라 */
+    & div:not(button)[class*="bg-indigo-6"], & div:not(button)[class*="bg-indigo-7"], & span[class*="bg-indigo-6"], & span[class*="bg-indigo-7"] { background-color: #8b76d8; }
 }

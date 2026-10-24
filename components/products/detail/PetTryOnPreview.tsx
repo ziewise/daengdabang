@@ -1,6 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+// 웹 겉모양(2026-10-25) — 입혀보기 창 꾸밈은 app/modal-web.css([data-tryon-web] 범위, 웹만). 앱 · 동작 그대로
+import "@/app/modal-web.css";
 import Link from "next/link";
 import Image from "next/image";
 import type { CatalogProduct } from "@/lib/catalog";
@@ -1005,6 +1007,7 @@ export default function PetTryOnPreview({
                 aria-modal="true"
                 aria-labelledby="pet-tryon-title"
                 className="relative my-auto w-full max-w-5xl overflow-hidden rounded-2xl bg-white shadow-2xl"
+                data-tryon-web
             >
                 <header className="flex items-start justify-between gap-4 border-b border-neutral-200 px-5 py-4 sm:px-6">
                     <div>
