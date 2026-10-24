@@ -1,6 +1,14 @@
 "use client";
 
+/**
+ * SignupEmailVerification — 가입 이메일 인증(20C 받기)
+ * 웹 마이페이지(2026-10-24 사용자): 동작은 그대로(발송 · 재발송 · 이메일 오타 수정 · 인증 완료), 웹 전용 요소만 더함 —
+ *   세 단계 표시(이메일 → 인증번호 → 20C), "메일이 안 왔나요?" 도움 판(다시 받기 · 주소 변경 버튼 = 같은 함수),
+ *   인증 완료 축하 판(+20C · 지갑 잔액 · 어디에 쓰는지 · 행동·소리 분석 바로 가기).
+ *   웹 전용 요소는 hidden → app/mypage-web.css "이메일 인증" 에서만 보임. 가입 화면 · 앱은 그대로.
+ */
 import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import {
     confirmSignupEmailVerification,
     DdbApiError,
@@ -339,6 +347,19 @@ export default function SignupEmailVerification({
             aria-labelledby="signup-email-verification-title"
             data-signup-email-verification
         >
+            {/* 웹 전용 — 세 단계(이메일 확인 → 인증번호 입력 → 20C 받기) */}
+            {!accountActivationRequired && (
+                <ol className="hidden" data-sev-steps aria-label="이메일 인증 단계">
+                    {["이메일 확인", "인증번호 입력", "20C 받기"].map((label, index) => {
+                        const current = completed ? 2 : verificationId ? 1 : 0;
+                        return (
+                            <li key={label} data-state={index < current ? "done" : index === current ? "now" : "next"}>
+                                <b aria-hidden="true">{index < current ? "✓" : index + 1}</b>{label}
+                            </li>
+                        );
+                    })}
+                </ol>
+            )}
             <div className="flex flex-wrap items-center gap-2">
                 <DaengLabCoinMark compact />
                 <h2 id="signup-email-verification-title" className="text-base font-black text-neutral-950">
@@ -359,7 +380,35 @@ export default function SignupEmailVerification({
                     <i className="fa-solid fa-circle-notch fa-spin mr-2" />가입 혜택을 확인하는 중입니다.
                 </p>
             ) : completed ? (
-                <div className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 p-4" role="status">
+                <>
+                {/* 웹 전용 — 인증 완료 축하 판(+20C · 지갑 잔액 · 쓰는 곳 안내) */}
+                {!accountActivationRequired && completed.status === "credited" && completed.awardedDaengLabCoins > 0 && (
+                    <div className="hidden" data-sev-done role="status">
+                        <div className="sev-done-burst" aria-hidden="true"><span>+{completed.awardedDaengLabCoins}C</span></div>
+                        <p className="sev-done-kicker">WELCOME COIN</p>
+                        <h3>이메일 인증 완료! {completed.awardedDaengLabCoins}C가 적립됐어요</h3>
+                        <p className="sev-done-sub">
+                            지갑에 바로 들어갔어요 · 지금 코인 <b>{completed.wallet.daengLabCoins.toLocaleString("ko-KR")}C</b> · 인증 이메일 {completed.maskedEmail}
+                        </p>
+                        <div className="sev-done-use">
+                            <p>이렇게 쓸 수 있어요</p>
+                            <ul>
+                                <li>
+                                    <i className="fa-solid fa-wave-square" aria-hidden="true" />
+                                    <span><b>행동·소리 분석</b> 1회 {completed.wallet.analysisCoinCost}C · 지금 {completed.wallet.analysesAvailable}회 분석할 수 있어요</span>
+                                </li>
+                                <li>
+                                    <i className="fa-solid fa-coins" aria-hidden="true" />
+                                    <span><b>적립금 전환</b> 적립금 {completed.wallet.pointConversionUnit.toLocaleString("ko-KR")}P를 {completed.wallet.coinConversionUnit}C로 바꿔 더 쓸 수 있어요</span>
+                                </li>
+                            </ul>
+                            <Link href="/pet-lens/?mode=observation" className="sev-done-go">
+                                <i className="fa-solid fa-paw" aria-hidden="true" />행동·소리 분석 하러 가기
+                            </Link>
+                        </div>
+                    </div>
+                )}
+                <div className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 p-4" role="status" data-sev-plain-done>
                     <p className="font-black text-emerald-900">
                         {accountActivationRequired
                             ? completed.awardedDaengLabCoins > 0
@@ -379,6 +428,7 @@ export default function SignupEmailVerification({
                         </button>
                     )}
                 </div>
+                </>
             ) : !accountActivationRequired && status && status.welcomeBonus.status !== "pending" ? (
                 <div className="mt-4 rounded-xl border border-neutral-200 bg-white p-4">
                     <p role="status" className="text-sm font-bold leading-6 text-neutral-700">
@@ -426,8 +476,10 @@ export default function SignupEmailVerification({
                         </label>
                         {verificationId ? (
                             !accountActivationRequired && (
-                                <button type="button" onClick={changeEmail} className="btn mt-auto h-11 border border-neutral-200 bg-white px-4 text-neutral-700">
-                                    이메일 오타 수정
+                                <button type="button" onClick={changeEmail} className="btn mt-auto h-11 border border-neutral-200 bg-white px-4 text-neutral-700" data-sev-change>
+                                    <span data-sev-app-label>이메일 오타 수정</span>
+                                    {/* 웹 전용 이름 */}
+                                    <span className="hidden" data-sev-web-label><i className="fa-solid fa-pen" aria-hidden="true" />주소 변경</span>
                                 </button>
                             )
                         ) : (
@@ -490,6 +542,26 @@ export default function SignupEmailVerification({
                                 </button>
                             </div>
                         </form>
+                    )}
+
+                    {/* 웹 전용 — 메일이 안 왔을 때: 스팸함 · 주소 확인 + 다시 받기 · 주소 변경(같은 함수) */}
+                    {verificationId && !accountActivationRequired && (
+                        <div className="hidden" data-sev-help>
+                            <p className="sev-help-title"><i className="fa-solid fa-envelope-open-text" aria-hidden="true" />메일이 안 왔나요?</p>
+                            <ul>
+                                <li>스팸함 · 프로모션함을 먼저 확인해 주세요.</li>
+                                <li>받는 주소가 <b>{maskedEmail}</b> 맞는지 확인해 주세요. 다르면 주소를 바꿔 다시 받을 수 있어요.</li>
+                            </ul>
+                            <div className="sev-help-actions">
+                                <button type="button" onClick={() => void requestCode()} disabled={requesting || resendSeconds > 0}>
+                                    <i className="fa-solid fa-rotate-right" aria-hidden="true" />
+                                    {requesting ? "보내는 중" : resendSeconds > 0 ? `${resendSeconds}초 후 다시 받기` : "인증번호 다시 받기"}
+                                </button>
+                                <button type="button" onClick={changeEmail}>
+                                    <i className="fa-solid fa-pen" aria-hidden="true" />이메일 주소 변경
+                                </button>
+                            </div>
+                        </div>
                     )}
                 </div>
             ) : null}

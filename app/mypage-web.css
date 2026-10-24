@@ -2190,3 +2190,140 @@ html:not(.ddb-app-mode) main:has(nav[aria-label="마이페이지 메뉴"]) {
     [data-rec-web] .rw-flow-art img { width: 38px; height: 38px; }
     [data-rec-web] .rw-tiles { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* 주문 내역 머리 판 "마이페이지로" — 웹은 사이드 메뉴(대시보드) · 모바일 메뉴 버튼이 있어 숨김(2026-10-24 사용자). 앱은 그대로 */
+html:not(.ddb-app-mode) main:has(nav[aria-label="마이페이지 메뉴"]) [data-mp-hello] > a[href="/mypage"] { display: none; }
+
+/* ═════════ 이메일 인증(components/auth/SignupEmailVerification.tsx) — 마이페이지 코인·적립금 · 2026-10-24 사용자 ═════════
+   세 단계 줄(이메일 확인 → 인증번호 입력 → 20C 받기, 지금 단계 분홍 · 끝난 단계 민트) · 주아 제목 · 크림 둥근 칸 ·
+   분홍 알약 받기/완료 · 흰 알약 "주소 변경" · 큰 6자리 칸 · 남은 시간 칩 · "메일이 안 왔나요?" 노랑 도움 판(다시 받기 · 주소 변경) ·
+   완료 축하 판(+20C 동전 · 지갑 잔액 · 쓰는 곳 · 행동·소리 분석 바로 가기). 동작은 그대로, 가입 화면 · 앱은 그대로 */
+html:not(.ddb-app-mode) main:has(nav[aria-label="마이페이지 메뉴"]) [data-daenglab-wallet] [data-signup-email-verification] {
+    padding: 22px 24px 24px;
+    border: 0;
+    border-radius: 28px;
+    background:
+        radial-gradient(90% 120% at 100% 0, rgb(255 238 243 / 85%) 0, transparent 50%),
+        linear-gradient(120deg, #f3f0fe 0%, #f8f5ff 60%, #fffaf1 100%);
+    box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 18px 30px -26px rgb(80 60 160 / 45%);
+
+    /* 세 단계 줄 */
+    & [data-sev-steps] { display: flex; align-items: center; gap: 8px; margin: 0 0 16px; padding: 0; list-style: none; }
+    & [data-sev-steps] li { display: inline-flex; align-items: center; gap: 7px; padding: 5px 13px 5px 5px; border-radius: 999px; background: rgb(255 255 255 / 70%); color: #94a3b8; font-size: 12.5px; font-weight: 800; white-space: nowrap; }
+    & [data-sev-steps] li + li::before { content: ""; width: 18px; height: 3px; margin: 0 4px 0 -12px; border-radius: 999px; background: #e3dcf3; }
+    & [data-sev-steps] li b { display: grid; width: 24px; height: 24px; place-items: center; border-radius: 50%; background: #efe9f8; color: #a99bd0; font-size: 12px; }
+    & [data-sev-steps] li[data-state="now"] { background: #fff; color: #e2557a; box-shadow: 0 8px 14px -10px rgb(200 80 120 / 60%); }
+    & [data-sev-steps] li[data-state="now"] b { background: #e9789a; color: #fff; }
+    & [data-sev-steps] li[data-state="done"] { color: #0f8a69; }
+    & [data-sev-steps] li[data-state="done"] b { background: #12a17a; color: #fff; }
+
+    /* 제목 · 설명 */
+    & h2#signup-email-verification-title { color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 21px; font-weight: 400; }
+    & > div:has(> h2) > span { background: #fff; color: #6b51c9; box-shadow: inset 0 0 0 1.5px #ddd3f6; }
+    & > p.text-xs { margin-top: 8px; color: #64748b; font-size: 13px; line-height: 1.7; }
+
+    /* 이메일 칸 · 버튼 */
+    & label > span.text-xs { margin-bottom: 7px; color: #334155; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 14.5px; font-weight: 400; }
+    & .input { height: 50px; border: 0; border-radius: 16px; background: #fffdf9; color: #1e293b; font-size: 15px; font-weight: 700; box-shadow: inset 0 0 0 1.5px #ece3d6; }
+    & .input:focus { outline: none; background: #fff; box-shadow: inset 0 0 0 2px #c4b5fd, 0 0 0 4px rgb(196 181 253 / 25%); }
+    & .input:disabled { background: #f4f1f8; color: #64748b; box-shadow: inset 0 0 0 1.5px #e7e1f3; }
+    & .btn.btn-primary { min-height: 50px; height: 50px; border: 0; border-radius: 999px; background: #e9789a; color: #fff; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 15.5px; font-weight: 400; box-shadow: inset 0 2px 0 rgb(255 255 255 / 28%), 0 12px 20px -12px rgb(200 80 120 / 80%); }
+    & .btn.btn-primary:disabled { background: #f2c2d1; box-shadow: none; opacity: 1; }
+    & [data-sev-change] { min-height: 50px; height: 50px; border: 0; border-radius: 999px; background: #fff; color: #6b51c9; box-shadow: inset 0 0 0 2px #ddd3f6; }
+    & [data-sev-change] [data-sev-app-label] { display: none; }
+    & [data-sev-change] [data-sev-web-label] { display: inline-flex; align-items: center; gap: 7px; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 15px; font-weight: 400; }
+    & [data-sev-change] [data-sev-web-label] i { font-size: 12px; }
+    & #signup-bonus-email-help { color: #8391a3; font-size: 12px; }
+
+    /* 인증번호 판 — 큰 6자리 칸 · 남은 시간 칩 */
+    & form { gap: 12px; padding: 18px 18px 16px; border: 0; border-radius: 22px; background: #fff; box-shadow: inset 0 3px 0 #fff, 0 0 0 1px #efe7f8, 0 14px 22px -18px rgb(80 60 160 / 40%); }
+    & #signup-bonus-code { height: 58px; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 26px; font-weight: 400; letter-spacing: 0.5em; text-align: center; }
+    & #signup-bonus-code::placeholder { font-family: var(--font-wanted-sans), sans-serif; font-size: 14px; letter-spacing: 0.1em; }
+    & form > div:first-child .btn.btn-primary { height: 58px; min-height: 58px; padding: 0 26px; }
+    & form > div:last-child > span { padding: 4px 12px; border-radius: 999px; background: #f3f0fe; color: #6b51c9; font-size: 12px; }
+    & form > div:last-child > span.text-rose-700 { background: #ffeef3; color: #c43d66; }
+    /* 작은 재전송 글자는 아래 도움 판 버튼으로 대신 */
+    & form > div:last-child > button { display: none; }
+
+    /* 메일이 안 왔나요? — 노랑 도움 판 */
+    & [data-sev-help] { display: grid; gap: 10px; padding: 16px 18px; border-radius: 22px; background: #fff6e3; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
+    & .sev-help-title { display: flex; align-items: center; gap: 8px; color: #b86a08; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 16px; }
+    & [data-sev-help] ul { display: grid; gap: 4px; margin: 0; padding-left: 20px; color: #6b5a3e; font-size: 13px; font-weight: 600; line-height: 1.65; list-style: disc; }
+    & [data-sev-help] li::marker { color: #f0a020; }
+    & .sev-help-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 2px; }
+
+    & .sev-help-actions button {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        min-height: 42px;
+        padding: 0 16px;
+        border: 0;
+        border-radius: 999px;
+        background: #fff;
+        color: #b86a08;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 14.5px;
+        cursor: pointer;
+        box-shadow: inset 0 0 0 1.5px #f5d38f, 0 8px 14px -10px rgb(184 106 8 / 45%);
+    }
+
+    & .sev-help-actions button:last-child { color: #6b51c9; box-shadow: inset 0 0 0 1.5px #ddd3f6, 0 8px 14px -10px rgb(80 60 160 / 45%); }
+    & .sev-help-actions button:disabled { color: #b8a58c; box-shadow: inset 0 0 0 1.5px #efe5d8; cursor: default; }
+
+    /* 안내 · 오류 줄 */
+    & p[role="status"].rounded-xl, & p[role="alert"] { padding: 11px 16px; border-radius: 16px; font-size: 13px; }
+
+    /* 완료 축하 판 — 기본 완료 글은 숨김 */
+    & [data-sev-done] + [data-sev-plain-done] { display: none; }
+
+    & [data-sev-done] {
+        display: grid;
+        justify-items: center;
+        gap: 6px;
+        margin-top: 16px;
+        padding: 26px 22px 22px;
+        border-radius: 26px;
+        background: radial-gradient(70% 90% at 50% 0, #fff 0, transparent 70%), linear-gradient(160deg, #e9f8f1 0%, #f4fbf8 60%, #fff6e3 100%);
+        text-align: center;
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 0 0 2px #bfe8d6;
+    }
+
+    & .sev-done-burst { position: relative; display: grid; width: 96px; height: 96px; place-items: center; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #ffe7a3, #f6b73c 60%, #e3951f); box-shadow: inset 0 -6px 0 rgb(0 0 0 / 8%), inset 0 4px 0 rgb(255 255 255 / 45%), 0 14px 24px -12px rgb(217 138 18 / 70%); animation: sev-pop 0.6s cubic-bezier(0.2, 1.4, 0.4, 1) both; }
+    & .sev-done-burst::before, & .sev-done-burst::after { content: "✦"; position: absolute; color: #f6b73c; font-size: 18px; animation: sev-twinkle 1.6s ease-in-out infinite; }
+    & .sev-done-burst::before { top: -6px; right: -12px; }
+    & .sev-done-burst::after { bottom: 4px; left: -16px; color: #e9789a; font-size: 14px; animation-delay: 0.5s; }
+    & .sev-done-burst span { color: #fff; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 26px; text-shadow: 0 2px 0 rgb(176 104 0 / 55%); }
+    & .sev-done-kicker { margin-top: 8px; color: #12a17a; font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif; font-size: 12.5px; font-weight: 700; letter-spacing: 0.16em; }
+    & [data-sev-done] h3 { color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 22px; font-weight: 400; }
+    & .sev-done-sub { color: #5b6b7f; font-size: 13px; font-weight: 600; }
+    & .sev-done-sub b { color: #0f8a69; font-weight: 900; }
+    & .sev-done-use { display: grid; justify-items: center; gap: 10px; width: min(520px, 100%); margin-top: 10px; padding: 16px; border-radius: 20px; background: #fff; box-shadow: 0 0 0 1px #e3f2ea; }
+    & .sev-done-use > p { color: #334155; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 15px; }
+    & .sev-done-use ul { display: grid; gap: 8px; width: 100%; margin: 0; padding: 0; list-style: none; text-align: left; }
+    & .sev-done-use li { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border-radius: 14px; background: #fbf8f3; color: #475569; font-size: 13px; font-weight: 600; line-height: 1.55; }
+    & .sev-done-use li i { display: grid; flex: none; width: 26px; height: 26px; place-items: center; border-radius: 50%; background: #e9f8f1; color: #12a17a; font-size: 12px; }
+    & .sev-done-use li b { margin-right: 4px; color: #1e293b; font-weight: 900; }
+    & .sev-done-go { display: inline-flex; align-items: center; gap: 8px; margin-top: 4px; padding: 12px 22px; border-radius: 999px; background: #e9789a; color: #fff; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 15.5px; box-shadow: 0 12px 20px -12px rgb(200 80 120 / 80%); }
+}
+
+@keyframes sev-pop { from { opacity: 0; transform: scale(0.4) rotate(-20deg); } }
+@keyframes sev-twinkle { 0%, 100% { opacity: 0.3; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.15); } }
+
+@media (prefers-reduced-motion: reduce) {
+    html:not(.ddb-app-mode) [data-signup-email-verification] .sev-done-burst,
+    html:not(.ddb-app-mode) [data-signup-email-verification] .sev-done-burst::before,
+    html:not(.ddb-app-mode) [data-signup-email-verification] .sev-done-burst::after { animation: none; }
+}
+
+@media (max-width: 640px) {
+    html:not(.ddb-app-mode) main:has(nav[aria-label="마이페이지 메뉴"]) [data-daenglab-wallet] [data-signup-email-verification] {
+        padding: 18px 16px 18px;
+        border-radius: 24px;
+
+        & [data-sev-steps] { gap: 4px; overflow-x: auto; }
+        & [data-sev-steps] li { padding: 4px 10px 4px 4px; font-size: 11.5px; }
+        & [data-sev-steps] li + li::before { width: 10px; margin: 0 2px 0 -8px; }
+        & #signup-bonus-code { font-size: 22px; letter-spacing: 0.35em; }
+    }
+}
