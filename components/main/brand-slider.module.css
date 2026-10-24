@@ -112,15 +112,15 @@
     :global(html:not(.ddb-app-mode)) .overlayLeft { background: linear-gradient(to right, rgb(15 23 42 / 50%) 0%, rgb(15 23 42 / 18%) 45%, transparent 70%); }
 }
 
-/* 웹 E2(2026-10-24 사용자 확정) — 액자를 더 두껍게(16px) + 바닥 두께 면(옅은 크림) + 사진 안쪽 얇은 그늘 + 깊은 바닥 그림자.
+/* 웹 E2(2026-10-24 사용자 확정) — 액자를 더 두껍게(16px) + 사진 안쪽 얇은 그늘 + 두 겹 깊은 바닥 그림자(아이보리 두께 면은 사용자 요청으로 뺌).
    위 흰 액자 묶음을 덮어씀. 기획전 · 인스타 피드도 같은 결(app/globals.css), 앱은 그대로 */
 :global(html:not(.ddb-app-mode)) .wrap {
     border-width: 16px;
     border-radius: 42px;
     box-shadow:
-        0 7px 0 -1px #f1e4d2,
-        0 8px 0 -1px rgb(15 23 42 / 6%),
-        0 34px 50px -28px rgb(15 23 42 / 48%),
+        0 2px 0 #fff,
+        0 38px 54px -28px rgb(15 23 42 / 50%),
+        0 14px 24px -14px rgb(15 23 42 / 24%),
         0 0 0 1px #efe6da;
 }
 
@@ -139,7 +139,7 @@
     :global(html:not(.ddb-app-mode)) .wrap {
         border-width: 8px;
         border-radius: 28px;
-        box-shadow: 0 5px 0 -1px #f1e4d2, 0 24px 34px -22px rgb(15 23 42 / 45%), 0 0 0 1px #efe6da;
+        box-shadow: 0 24px 34px -20px rgb(15 23 42 / 46%), 0 8px 14px -8px rgb(15 23 42 / 18%), 0 0 0 1px #efe6da;
     }
 
     :global(html:not(.ddb-app-mode)) .wrap::after { border-radius: 20px; }

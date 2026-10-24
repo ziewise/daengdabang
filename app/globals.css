@@ -3150,15 +3150,15 @@ html:not(.ddb-app-mode) section#promo {
 }
 
 /* ═════════ 메인 사진 카드 E2(2026-10-24 사용자 확정) — 기획전 · 인스타그램 피드 ═════════
-   두꺼운 흰 액자 + 바닥 두께 면(옅은 크림) + 사진 가장자리 얇은 안쪽 그늘 + 깊은 바닥 그림자. 올리면 살짝 떠오르며 바닥 면이 분홍.
+   두꺼운 흰 액자 + 사진 가장자리 얇은 안쪽 그늘 + 두 겹 깊은 바닥 그림자(아이보리 두께 면은 사용자 요청으로 뺌). 올리면 살짝 떠오르며 분홍 빛 그림자.
    대표 브랜드는 components/main/brand-slider.module.css 같은 결. 사진은 가리지 않음, 링크 · 동작 그대로, 앱은 그대로 */
 html:not(.ddb-app-mode) :is(section#promo, section#insta) a.group {
     border: 12px solid #fff;
     border-radius: 34px;
     box-shadow:
-        0 6px 0 -1px #f1e4d2,
-        0 7px 0 -1px rgb(15 23 42 / 6%),
-        0 30px 44px -26px rgb(15 23 42 / 46%),
+        0 2px 0 #fff,
+        0 32px 46px -26px rgb(15 23 42 / 50%),
+        0 12px 20px -12px rgb(15 23 42 / 22%),
         0 0 0 1px #efe6da;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -3176,8 +3176,8 @@ html:not(.ddb-app-mode) :is(section#promo, section#insta) a.group::after {
 html:not(.ddb-app-mode) :is(section#promo, section#insta) a.group:hover {
     transform: translateY(-4px);
     box-shadow:
-        0 10px 0 -1px #f7d3df,
-        0 34px 48px -24px rgb(200 80 120 / 45%),
+        0 40px 56px -26px rgb(200 80 120 / 48%),
+        0 16px 26px -14px rgb(15 23 42 / 20%),
         0 0 0 1.5px #f7c5d4;
 }
 
@@ -3195,7 +3195,7 @@ html:not(.ddb-app-mode) section#insta h2 {
     html:not(.ddb-app-mode) :is(section#promo, section#insta) a.group {
         border-width: 6px;
         border-radius: 24px;
-        box-shadow: 0 4px 0 -1px #f1e4d2, 0 20px 30px -20px rgb(15 23 42 / 42%), 0 0 0 1px #efe6da;
+        box-shadow: 0 22px 32px -20px rgb(15 23 42 / 46%), 0 8px 14px -8px rgb(15 23 42 / 18%), 0 0 0 1px #efe6da;
     }
 
     html:not(.ddb-app-mode) :is(section#promo, section#insta) a.group::after { border-radius: 18px; }
