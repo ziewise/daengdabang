@@ -1,16 +1,17 @@
 /**
- * SignupWebParts — 웹 새 회원가입 화면의 공용 조각(2026-10-24 사용자 "모든 갈림길 · 모든 단계 · 디테일까지")
+ * SignupWebParts — 웹 회원가입 공용 틀 · 조각(2026-10-24 2차: 사용자 "하나의 목적 · 일관성 · 구조 · 구성 · 문구 · 색상 · 모양 모두 다시")
  * ---------------------------------------------------------------------
- * 크레파스 결: 무지개 고리 댕다방 강아지 · 영문 손글씨 꼬리표 · 주아 제목 + 세 색 밑줄 · 흰 쿠션 카드 · 3D 그림 · 분홍 알약.
- * (스티커북 요소 — 테이프 · 와펜 · 기울어진 카드 · 점선 — 쓰지 않음)
- *  - SxTop        : 머리(고리 강아지 · JOIN DAENGDABANG · 회원가입 · 한 줄 설명)
- *  - SxSteps      : 단계 줄(끝난 단계 초록 체크 · 지금 단계 분홍) + 세 색 진행 막대
- *  - SxHead       : 카드 머리(3D 그림 · 꼬리표 · 제목 · 설명)
- *  - SxCheck      : 동그라미 체크(진짜 checkbox — 키보드 · 화면 읽기 그대로)
- *  - TermsPanel   : 전체 동의 · 필수(만 14세 · 이용약관 · 개인정보) · 선택(마케팅 이메일/문자) · 항목마다 "보기" 창
- *  - SxDocModal   : 약관 · 동의 내용 창(요약 · 표 · 전문 링크)
- *  - IdentityPanel: 휴대폰 본인인증 — 전 · 진행 중 · 완료 · 이미 가입 · 만 14세 미만 · 재가입 제한 · 취소 · 시간 초과 · 실패
- *  - SignupWebDone: 가입 완료(축하 · 이메일 인증 20C 안내 · 우리 아이 · 마케팅 수신 동의 결과 · 다음에 할 일)
+ * 모든 단계(가입 방법 → 약관 → 본인인증 → 계정 정보 → 우리 아이 → 완료, 간편가입도)가 같은 틀 하나를 씀.
+ *  - SxShell  : PC — 왼쪽 고정 안내판(댕다방 강아지 · 회원가입 제목 · 가입 방식 · 세로 단계 목록 · 가입 혜택 · 로그인)
+ *               + 오른쪽 단계 카드 / 모바일 — 위 작은 머리 + 진행 막대(지금 단계 이름)
+ *  - SxCard   : 단계 카드 = 머리(SxHead: 3D 그림 · 꼬리표 · 제목 · 한 줄 설명) → 묶음(SxBlock) → 아래 단추 줄(SxFoot)
+ *  - 고르기 조각: SxCheck(동그라미 체크) · SxPills(알약 하나 고르기) · SxChoice(큰 고르기 카드)
+ *  - TermsPanel · SxDocModal(약관 내용 창) · IdentityPanel(본인인증 전/진행/결과/갈림길) · SxBranch(갈림길 카드) · SignupWebDone(완료)
+ *
+ * 색 규칙(app/signup-web.css 와 같음)
+ *   분홍 = 고르기 · 다음 · 지금 단계 / 초록 = 완료 · 확인됨 / 연보라 = 혜택 · 안내 / 노랑 = 주의 / 장미 = 오류
+ *   공급자 색(카카오 노랑 · 네이버 초록 · 구글 흰)은 공급자 단추와 표시에만.
+ * 크레파스 결(종이 · 세 색 밑줄 · 영문 손글씨 · 3D 그림). 스티커북 요소(테이프 · 와펜 · 기울어진 카드 · 점선) 없음.
  */
 "use client";
 
@@ -35,78 +36,300 @@ export const PROVIDER_NAME: Record<string, string> = {
     google: "구글",
 };
 
-/* ───────── 머리 ───────── */
-export function SxTop({ lead, compact = false }: { lead: string; compact?: boolean }) {
-    return (
-        <header className={compact ? "sxw-top is-compact" : "sxw-top"}>
-            <span className="sxw-ring" aria-hidden="true">
-                {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
-                <span><img src={`${UI}logo-poodle-384.webp`} alt="" /></span>
-            </span>
-            <p className="sxw-kicker">JOIN DAENGDABANG</p>
-            <h1 className="sxw-title">회원가입</h1>
-            <p className="sxw-lead">{lead}</p>
-        </header>
-    );
+/* ═════════ 단계 목록 ═════════ */
+export type SxStep = { label: string; desc: string };
+
+/** 이메일 가입 단계(본인인증은 연동됐을 때만) */
+export function emailSteps(identity: boolean): SxStep[] {
+    return [
+        { label: "가입 방법", desc: "이메일 또는 간편 가입" },
+        { label: "약관 동의", desc: "필수 3가지" },
+        ...(identity ? [{ label: "본인인증", desc: "휴대폰 명의 확인" }] : []),
+        { label: "계정 정보", desc: "이메일 · 비밀번호" },
+        { label: "우리 아이", desc: "선택 · 나중에 해도 돼요" },
+        { label: "가입 완료", desc: "혜택 안내" },
+    ];
 }
 
-/* ───────── 단계 줄 ───────── */
-export function SxSteps({ labels, now }: { labels: string[]; now: number }) {
-    const percent = Math.round(((now + 1) / labels.length) * 100);
-    return (
-        <nav className="sxw-steps" aria-label={`가입 단계 ${labels.length}단계 중 ${now + 1}단계`}>
-            <ol>
-                {labels.map((label, index) => {
-                    const state = index < now ? "done" : index === now ? "now" : "next";
-                    return (
-                        <li key={label} data-state={state} aria-current={state === "now" ? "step" : undefined}>
-                            <b aria-hidden="true">{state === "done" ? <i className="fa-solid fa-check" /> : index + 1}</b>
-                            <span>{label}</span>
-                        </li>
-                    );
-                })}
-            </ol>
-            <span className="sxw-bar" aria-hidden="true"><span style={{ width: `${percent}%` }} /></span>
-        </nav>
-    );
+/** 간편 가입 단계 */
+export function socialSteps(providerLabel: string): SxStep[] {
+    return [
+        { label: "가입 방법", desc: "이메일 또는 간편 가입" },
+        { label: "약관 동의", desc: "필수 3가지 · 보안 확인" },
+        { label: `${providerLabel} 로그인`, desc: `${providerLabel} 화면에서 진행` },
+        { label: "정보 확인", desc: "받은 정보 확인" },
+        { label: "우리 아이", desc: "선택 · 나중에 해도 돼요" },
+        { label: "가입 완료", desc: "혜택 안내" },
+    ];
 }
 
-/* ───────── 카드 머리 ───────── */
-export function SxHead({ art, kicker, title, sub, aside }: { art: string; kicker: string; title: ReactNode; sub: ReactNode; aside?: ReactNode }) {
+/* ═════════ 틀 ═════════ */
+export function SxShell({
+    steps,
+    now,
+    route,
+    lead,
+    children,
+}: {
+    steps: SxStep[];
+    /** 지금 단계 번호(0부터). 모두 끝났으면 steps.length - 1 */
+    now: number;
+    /** 가입 방식(email · kakao · naver · google). 아직 안 골랐으면 없음 */
+    route?: string;
+    /** 안내판 제목 아래 한 줄 */
+    lead: string;
+    children: ReactNode;
+}) {
+    const current = steps[Math.min(now, steps.length - 1)];
+    // 마지막 단계(가입 완료)면 로그인 안내 · 혜택 카드를 숨기고 "가입했어요"로
+    const finished = now >= steps.length - 1;
+    const percent = Math.round(((now + 1) / steps.length) * 100);
+    const routeLabel = route ? PROVIDER_NAME[route] : "";
+
     return (
-        <div className="sxw-head">
-            {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
-            <img src={art.startsWith("/") ? art : `${UI}${art}`} alt="" aria-hidden="true" />
-            <div>
-                <p className="sxw-kicker">{kicker}</p>
-                <h2>{title}</h2>
-                <p>{sub}</p>
+        <div className="sxw-shell">
+            <aside className="sxw-side" aria-label="회원가입 진행">
+                <div className="sxw-brand">
+                    <span className="sxw-ring" aria-hidden="true">
+                        {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
+                        <span><img src={`${UI}logo-poodle-384.webp`} alt="" /></span>
+                    </span>
+                    <span className="sxw-brand-text">
+                        <span className="sxw-kicker">JOIN DAENGDABANG</span>
+                        <span className="sxw-title">회원가입</span>
+                    </span>
+                </div>
+                <p className="sxw-lead">{lead}</p>
+                {routeLabel && (
+                    <span className="sxw-route" data-route={route}>
+                        <ProviderMark provider={route || "email"} />
+                        {routeLabel}로 {finished ? "가입했어요" : "가입하고 있어요"}
+                    </span>
+                )}
+
+                <ol className="sxw-vsteps">
+                    {steps.map((step, index) => {
+                        const state = index < now ? "done" : index === now ? "now" : "next";
+                        return (
+                            <li key={step.label} data-state={state} aria-current={state === "now" ? "step" : undefined}>
+                                <b aria-hidden="true">{state === "done" ? <i className="fa-solid fa-check" /> : index + 1}</b>
+                                <span>
+                                    <strong>{step.label}</strong>
+                                    <small>{step.desc}</small>
+                                </span>
+                            </li>
+                        );
+                    })}
+                </ol>
+
+                {!finished && (
+                    <>
+                        <div className="sxw-side-bonus">
+                            {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
+                            <img src={`${UI}goods-pay-ready-256.webp`} alt="" aria-hidden="true" />
+                            <span>
+                                <b>가입 혜택 · 코인 20C</b>
+                                <small>가입 후 마이페이지에서 이메일을 인증하면 들어와요 · 행동·소리 분석 2회</small>
+                            </span>
+                        </div>
+                        <p className="sxw-side-login">이미 회원이신가요?<Link href="/auth/login">로그인</Link></p>
+                    </>
+                )}
+            </aside>
+
+            <div className="sxw-main">
+                {/* 모바일 — 지금 단계 · 진행 막대 */}
+                <div className="sxw-mbar" aria-hidden="true">
+                    <span className="sxw-mbar-t">
+                        <span className="sxw-mbar-n"><b>{Math.min(now + 1, steps.length)}</b>/{steps.length}</span>
+                        <strong>{current?.label}</strong>
+                        {routeLabel && <em data-route={route}><ProviderMark provider={route || "email"} />{routeLabel}</em>}
+                    </span>
+                    <span className="sxw-bar"><span style={{ width: `${percent}%` }} /></span>
+                </div>
+                {children}
             </div>
-            {aside}
         </div>
     );
 }
 
-/* ───────── 동그라미 체크 ───────── */
-export function SxCheck({ checked, onChange, tone = "pink", label, disabled }: { checked: boolean; onChange: (value: boolean) => void; tone?: "pink" | "mint"; label?: string; disabled?: boolean }) {
+/* ═════════ 카드 · 머리 · 묶음 · 아래 단추 줄 ═════════ */
+export function SxCard({ children, labelledBy, className = "", as = "section", onSubmit, screen }: {
+    children: ReactNode;
+    labelledBy: string;
+    className?: string;
+    as?: "section" | "form";
+    onSubmit?: (event: React.FormEvent<HTMLFormElement>) => void;
+    screen?: string;
+}) {
+    if (as === "form") {
+        return (
+            <form className={`sxw-card ${className}`} aria-labelledby={labelledBy} onSubmit={onSubmit} noValidate data-signup-screen={screen}>
+                {children}
+            </form>
+        );
+    }
+    return <section className={`sxw-card ${className}`} aria-labelledby={labelledBy} data-signup-screen={screen}>{children}</section>;
+}
+
+export function SxHead({ id, art, kicker, title, sub, aside }: { id: string; art: string; kicker: string; title: ReactNode; sub: ReactNode; aside?: ReactNode }) {
     return (
-        <span className="sxw-chk" data-tone={tone}>
+        <header className="sxw-head">
+            <span className="sxw-head-art" aria-hidden="true">
+                {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
+                <img src={art.startsWith("/") ? art : `${UI}${art}`} alt="" />
+            </span>
+            <span className="sxw-head-text">
+                <span className="sxw-kicker">{kicker}</span>
+                <h2 id={id}>{title}</h2>
+                <p>{sub}</p>
+            </span>
+            {aside}
+        </header>
+    );
+}
+
+/** 카드 안 묶음 — 작은 제목(아이콘 동그라미 · 주아) + 내용 */
+export function SxBlock({ icon, title, extra, children, className = "" }: { icon: string; title: string; extra?: ReactNode; children: ReactNode; className?: string }) {
+    return (
+        <section className={`sxw-block ${className}`}>
+            <h3 className="sxw-block-h">
+                <span aria-hidden="true"><i className={`fa-solid ${icon}`} /></span>
+                {title}
+                {extra}
+            </h3>
+            {children}
+        </section>
+    );
+}
+
+/** 아래 단추 줄 — 이전(흰 알약) · 다음(분홍 알약) · 아래 도움말 */
+export function SxFoot({ onPrev, prevLabel = "이전", children, hint }: { onPrev?: () => void; prevLabel?: string; children: ReactNode; hint?: ReactNode }) {
+    return (
+        <div className="sxw-foot-wrap">
+            <div className="sxw-foot">
+                {onPrev && (
+                    <button type="button" className="sxw-prev" onClick={onPrev}>
+                        <i className="fa-solid fa-chevron-left" aria-hidden="true" />{prevLabel}
+                    </button>
+                )}
+                {children}
+            </div>
+            {hint && <p className="sxw-foot-hint">{hint}</p>}
+        </div>
+    );
+}
+
+/* ═════════ 고르기 조각 ═════════ */
+/** 동그라미 체크 — 진짜 checkbox(키보드 · 화면 읽기 그대로), 고르면 분홍 */
+export function SxCheck({ checked, onChange, label, disabled }: { checked: boolean; onChange: (value: boolean) => void; label?: string; disabled?: boolean }) {
+    return (
+        <span className="sxw-chk">
             <input type="checkbox" checked={checked} onChange={(event) => onChange(event.target.checked)} aria-label={label} disabled={disabled} />
             <span aria-hidden="true"><i className="fa-solid fa-check" /></span>
         </span>
     );
 }
 
-/* ───────── 약관 · 동의 내용 창 ───────── */
+/** 알약 하나 고르기(라디오) — 크기 · 털 길이 · 성별 · 활동량 */
+export function SxPills<T extends string>({ label, name, value, options, onChange, hint }: { label: string; name: string; value: T; options: Array<[T, string]>; onChange: (value: T) => void; hint?: string }) {
+    return (
+        <div className="sxw-f">
+            <span className="sxw-label" id={`${name}-label`}>{label}</span>
+            <div className="sxw-pills" role="radiogroup" aria-labelledby={`${name}-label`} style={{ gridTemplateColumns: `repeat(${options.length}, minmax(0, 1fr))` }}>
+                {options.map(([optionValue, optionLabel]) => (
+                    <label key={optionValue} className={value === optionValue ? "is-on" : ""}>
+                        <input type="radio" name={name} checked={value === optionValue} onChange={() => onChange(optionValue)} />
+                        {optionLabel}
+                    </label>
+                ))}
+            </div>
+            {hint && <span className="sxw-hint">{hint}</span>}
+        </div>
+    );
+}
+
+/** 알림 줄 — rose 오류 · amber 주의 · lav 안내 · mint 완료 */
+export function SxNotice({ tone, icon, title, children }: { tone: "rose" | "amber" | "mint" | "lav"; icon: string; title?: string; children: ReactNode }) {
+    return (
+        <p className="sxw-notice" data-tone={tone} role={tone === "rose" ? "alert" : "status"}>
+            <span className="sxw-notice-i" aria-hidden="true"><i className={`fa-solid ${icon}`} /></span>
+            <span>{title && <b>{title}</b>}{children}</span>
+        </p>
+    );
+}
+
+/** 갈림길 카드 — 3D 그림 · 꼬리 이름 · 제목 · 설명 · (계정 표시) · 단추들. pink = 계정이 이미 있음 / gray = 가입할 수 없음 */
+export function SxBranch({ tone, art, tag, title, children, account, actions, branch }: {
+    tone: "pink" | "gray";
+    art: string;
+    tag: string;
+    title: string;
+    children: ReactNode;
+    account?: { text: string; provider: string };
+    actions?: ReactNode;
+    branch: string;
+}) {
+    return (
+        <div className="sxw-branch" data-tone={tone} role="alert" data-branch={branch}>
+            {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
+            <img src={`${UI}${art}`} alt="" aria-hidden="true" />
+            <div>
+                <p className="sxw-branch-k">{tag}</p>
+                <h3>{title}</h3>
+                <p>{children}</p>
+                {account && (
+                    <span className="sxw-acc">
+                        <i className="fa-solid fa-user" aria-hidden="true" />
+                        {account.text}
+                        <em data-provider={account.provider}>
+                            {PROVIDER_NAME[account.provider] || account.provider} {account.provider === "email" ? "가입" : "간편가입"}
+                        </em>
+                    </span>
+                )}
+                {actions && <span className="sxw-branch-go">{actions}</span>}
+            </div>
+        </div>
+    );
+}
+
+/** 공급자 표시(카카오 말풍선 · 네이버 N · 구글 G · 이메일 봉투) */
+export function ProviderMark({ provider }: { provider: string }) {
+    if (provider === "kakao") return <i className="fa-solid fa-comment" aria-hidden="true" />;
+    if (provider === "naver") return <span className="sxw-nv" aria-hidden="true">N</span>;
+    if (provider === "google") return <span className="sxw-gg" aria-hidden="true">G</span>;
+    return <i className="fa-solid fa-envelope" aria-hidden="true" />;
+}
+
+/* ═════════ 약관 · 동의 내용 창 ═════════ */
 export type SxDocKind = "age14" | "terms" | "privacy" | "marketing" | "petlens";
 
 const DOC_TITLE: Record<SxDocKind, string> = {
     age14: "만 14세 이상 확인",
-    terms: SIGNUP_TERMS_AGREEMENT.title.replace(/^\[필수\]\s*/, ""),
-    privacy: SIGNUP_REQUIRED_PRIVACY_CONSENT.title.replace(/^\[필수\]\s*/, ""),
+    terms: "이용약관 동의",
+    privacy: "개인정보 수집·이용 동의",
     marketing: "마케팅 정보 수신 동의",
-    petlens: SIGNUP_PETLENS_PRIVACY_CONSENT.title.replace(/^\[선택\]\s*/, ""),
+    petlens: "반려동물 정보 수집·이용 동의",
 };
+
+function DocTable({ rows, label }: { rows: ReadonlyArray<{ item: string; purpose: string; retention: string }>; label: string }) {
+    return (
+        <div className="sxw-doc-table" role="table" aria-label={label}>
+            <div role="row" className="is-head">
+                <span role="columnheader">수집 항목</span>
+                <span role="columnheader">이용 목적</span>
+                <span role="columnheader">보유 · 이용 기간</span>
+            </div>
+            {rows.map((row) => (
+                <div role="row" key={row.item}>
+                    <span role="cell">{row.item}</span>
+                    <span role="cell">{row.purpose}</span>
+                    <span role="cell">{row.retention}</span>
+                </div>
+            ))}
+        </div>
+    );
+}
 
 export function SxDocModal({ kind, onClose }: { kind: SxDocKind | null; onClose: () => void }) {
     const titleId = useId();
@@ -135,15 +358,17 @@ export function SxDocModal({ kind, onClose }: { kind: SxDocKind | null; onClose:
         <div className="sxw-doc" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
             <section className="sxw-doc-card" role="dialog" aria-modal="true" aria-labelledby={titleId}>
                 <header className="sxw-doc-head">
-                    {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
-                    <img src={`${UI}policy-info-192.webp`} alt="" aria-hidden="true" />
-                    <div>
-                        <p className="sxw-kicker">{required ? "REQUIRED" : "OPTIONAL"}</p>
+                    <span className="sxw-head-art is-small" aria-hidden="true">
+                        {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
+                        <img src={`${UI}policy-info-192.webp`} alt="" />
+                    </span>
+                    <span className="sxw-head-text">
+                        <span className="sxw-kicker">{required ? "REQUIRED" : "OPTIONAL"}</span>
                         <h2 id={titleId}>
                             <span className={required ? "sxw-req" : "sxw-opt"}>{required ? "필수" : "선택"}</span>
                             {DOC_TITLE[kind]}
                         </h2>
-                    </div>
+                    </span>
                     <button ref={closeRef} type="button" className="sxw-doc-x" onClick={onClose} aria-label="닫기">
                         <i className="fa-solid fa-xmark" aria-hidden="true" />
                     </button>
@@ -154,7 +379,7 @@ export function SxDocModal({ kind, onClose }: { kind: SxDocKind | null; onClose:
                         <>
                             <p>댕다방은 만 14세 이상만 가입할 수 있어요.</p>
                             <ul className="sxw-doc-list">
-                                <li>만 14세 미만은 개인정보 수집에 법정대리인(부모님 등)의 동의가 필요해요.</li>
+                                <li>만 14세 미만은 개인정보를 받을 때 법정대리인(부모님 등)의 동의가 필요해요.</li>
                                 <li>법정대리인 동의 절차를 갖추기 전까지는 만 14세 미만의 가입을 받지 않아요.</li>
                                 <li>사실과 다르게 동의한 것이 확인되면 계정 이용이 제한될 수 있어요.</li>
                             </ul>
@@ -162,7 +387,7 @@ export function SxDocModal({ kind, onClose }: { kind: SxDocKind | null; onClose:
                     )}
                     {kind === "terms" && (
                         <>
-                            <p>주요 내용을 먼저 확인하고, 전체 약관은 아래 단추로 볼 수 있어요.</p>
+                            <p>주요 내용을 먼저 보여 드려요. 전체 약관은 아래 단추로 볼 수 있어요.</p>
                             <ul className="sxw-doc-list">
                                 {SIGNUP_TERMS_AGREEMENT.summary.map((item) => <li key={item}>{item}</li>)}
                             </ul>
@@ -174,20 +399,7 @@ export function SxDocModal({ kind, onClose }: { kind: SxDocKind | null; onClose:
                     {kind === "privacy" && (
                         <>
                             <p>{SIGNUP_REQUIRED_PRIVACY_CONSENT.intro}</p>
-                            <div className="sxw-doc-table" role="table" aria-label="수집 항목 · 이용 목적 · 보유기간">
-                                <div role="row" className="is-head">
-                                    <span role="columnheader">수집 항목</span>
-                                    <span role="columnheader">이용 목적</span>
-                                    <span role="columnheader">보유 · 이용기간</span>
-                                </div>
-                                {SIGNUP_REQUIRED_PRIVACY_CONSENT.rows.map((row) => (
-                                    <div role="row" key={row.item}>
-                                        <span role="cell">{row.item}</span>
-                                        <span role="cell">{row.purpose}</span>
-                                        <span role="cell">{row.retention}</span>
-                                    </div>
-                                ))}
-                            </div>
+                            <DocTable rows={SIGNUP_REQUIRED_PRIVACY_CONSENT.rows} label="개인정보 수집 항목 · 이용 목적 · 보유 기간" />
                             <p className="sxw-doc-note">{SIGNUP_REQUIRED_PRIVACY_CONSENT.refusalNotice}</p>
                             <Link href={SIGNUP_REQUIRED_PRIVACY_CONSENT.href} target="_blank" rel="noopener" className="sxw-doc-full">
                                 개인정보처리방침 전문 보기 <i className="fa-solid fa-arrow-up-right-from-square" aria-hidden="true" />
@@ -197,38 +409,14 @@ export function SxDocModal({ kind, onClose }: { kind: SxDocKind | null; onClose:
                     {kind === "marketing" && (
                         <>
                             <p>새 상품 · 할인 · 이벤트 소식을 이메일이나 문자로 받아요. 동의하지 않아도 가입과 쇼핑은 똑같이 할 수 있어요.</p>
-                            <div className="sxw-doc-table" role="table" aria-label="마케팅 정보 수신 동의 내용">
-                                <div role="row" className="is-head">
-                                    <span role="columnheader">항목</span>
-                                    <span role="columnheader">이용 목적</span>
-                                    <span role="columnheader">보유 · 이용기간</span>
-                                </div>
-                                <div role="row">
-                                    <span role="cell">이메일 주소, 휴대전화번호</span>
-                                    <span role="cell">상품 · 할인 · 이벤트 등 광고성 정보 안내</span>
-                                    <span role="cell">동의 철회 또는 회원 탈퇴 시까지</span>
-                                </div>
-                            </div>
-                            <p className="sxw-doc-note">동의한 뒤에도 마이페이지 개인정보 수정에서 언제든 바꿀 수 있고, 처리 결과는 동의한 날짜와 함께 알려 드려요.</p>
+                            <DocTable rows={[{ item: "이메일 주소, 휴대전화번호", purpose: "상품 · 할인 · 이벤트 등 광고성 정보 안내", retention: "동의 철회 또는 회원 탈퇴 시까지" }]} label="마케팅 정보 수신 동의 내용" />
+                            <p className="sxw-doc-note">동의한 뒤에도 마이페이지에서 언제든 바꿀 수 있고, 처리 결과는 날짜와 함께 알려 드려요.</p>
                         </>
                     )}
                     {kind === "petlens" && (
                         <>
                             <p>{SIGNUP_PETLENS_PRIVACY_CONSENT.intro}</p>
-                            <div className="sxw-doc-table" role="table" aria-label="반려동물 정보 수집 · 이용 내용">
-                                <div role="row" className="is-head">
-                                    <span role="columnheader">수집 항목</span>
-                                    <span role="columnheader">이용 목적</span>
-                                    <span role="columnheader">보유 · 이용기간</span>
-                                </div>
-                                {SIGNUP_PETLENS_PRIVACY_CONSENT.rows.map((row) => (
-                                    <div role="row" key={row.item}>
-                                        <span role="cell">{row.item}</span>
-                                        <span role="cell">{row.purpose}</span>
-                                        <span role="cell">{row.retention}</span>
-                                    </div>
-                                ))}
-                            </div>
+                            <DocTable rows={SIGNUP_PETLENS_PRIVACY_CONSENT.rows} label="반려동물 정보 수집 · 이용 내용" />
                             <p className="sxw-doc-note">{SIGNUP_PETLENS_PRIVACY_CONSENT.refusalNotice}</p>
                         </>
                     )}
@@ -243,7 +431,7 @@ export function SxDocModal({ kind, onClose }: { kind: SxDocKind | null; onClose:
     );
 }
 
-/* ───────── 약관 동의 판 ───────── */
+/* ═════════ 약관 동의 판 ═════════ */
 export type TermsValue = {
     age14: boolean;
     terms: boolean;
@@ -251,88 +439,86 @@ export type TermsValue = {
     marketing: MarketingChoice;
 };
 
-export function TermsPanel({
-    value,
-    onChange,
-    marketingEnabled,
-    onOpenDoc,
-}: {
+const REQUIRED_ROWS: Array<{ key: "age14" | "terms" | "privacy"; label: string }> = [
+    { key: "age14", label: "만 14세 이상이에요" },
+    { key: "terms", label: "이용약관에 동의해요" },
+    { key: "privacy", label: "개인정보 수집·이용에 동의해요" },
+];
+
+/** 마케팅 수신 동의 한 줄(이메일 · 문자 따로 고르기) — 약관 판 · 간편가입 정보 확인에서 같이 씀 */
+export function MarketingRow({ value, onChange, onOpenDoc }: { value: MarketingChoice; onChange: (next: MarketingChoice) => void; onOpenDoc: () => void }) {
+    const any = value.email || value.sms;
+    return (
+        <li className={any ? "is-on" : ""}>
+            <label>
+                <SxCheck checked={any} onChange={(checked) => onChange({ email: checked, sms: checked })} />
+                <span className="sxw-opt">선택</span>
+                <span className="sxw-terms-t">마케팅 정보 수신에 동의해요</span>
+            </label>
+            <button type="button" className="sxw-view" onClick={onOpenDoc} aria-label="마케팅 정보 수신 동의 내용 보기">
+                내용 <i className="fa-solid fa-chevron-right" aria-hidden="true" />
+            </button>
+            <span className="sxw-channels" role="group" aria-label="받을 방법">
+                {([["email", "이메일"], ["sms", "문자(SMS)"]] as const).map(([key, label]) => (
+                    <label key={key} className={value[key] ? "is-on" : ""}>
+                        <input type="checkbox" checked={value[key]} onChange={(event) => onChange({ ...value, [key]: event.target.checked })} />
+                        <i className={value[key] ? "fa-solid fa-circle-check" : "fa-regular fa-circle"} aria-hidden="true" />
+                        {label}
+                    </label>
+                ))}
+            </span>
+        </li>
+    );
+}
+
+export function TermsPanel({ value, onChange, marketingEnabled, onOpenDoc }: {
     value: TermsValue;
     onChange: (next: TermsValue) => void;
     /** 마케팅 수신 동의 저장이 연동됐을 때만 칸이 나옴 */
     marketingEnabled: boolean;
     onOpenDoc: (kind: SxDocKind) => void;
 }) {
-    const marketingAny = value.marketing.email || value.marketing.sms;
-    const all = value.age14 && value.terms && value.privacy && (!marketingEnabled || (value.marketing.email && value.marketing.sms));
+    const requiredCount = REQUIRED_ROWS.filter((row) => value[row.key]).length;
+    const all = requiredCount === 3 && (!marketingEnabled || (value.marketing.email && value.marketing.sms));
     const setAll = (checked: boolean) => onChange({
         age14: checked,
         terms: checked,
         privacy: checked,
         marketing: marketingEnabled ? { email: checked, sms: checked } : value.marketing,
     });
-    const rows: Array<{ key: "age14" | "terms" | "privacy"; label: string; doc: SxDocKind }> = [
-        { key: "age14", label: "만 14세 이상입니다", doc: "age14" },
-        { key: "terms", label: "이용약관 동의", doc: "terms" },
-        { key: "privacy", label: "개인정보 수집·이용 동의", doc: "privacy" },
-    ];
 
     return (
         <div className="sxw-terms" data-signup-web-terms>
             <label className={all ? "sxw-all is-on" : "sxw-all"}>
                 <SxCheck checked={all} onChange={setAll} label="전체 동의" />
                 <span>
-                    <b>전체 동의</b>
-                    <small>{marketingEnabled ? "필수 · 선택 항목을 모두 포함해요" : "필수 항목을 모두 포함해요"}</small>
+                    <b>전체 동의할게요</b>
+                    <small>{marketingEnabled ? "필수 3가지와 선택 1가지를 한 번에 동의해요" : "필수 3가지를 한 번에 동의해요"}</small>
                 </span>
+                <em className={requiredCount === 3 ? "is-ok" : ""}>필수 {requiredCount}/3</em>
             </label>
             <ul>
-                {rows.map((row) => (
+                {REQUIRED_ROWS.map((row) => (
                     <li key={row.key} className={value[row.key] ? "is-on" : ""}>
                         <label>
                             <SxCheck checked={value[row.key]} onChange={(checked) => onChange({ ...value, [row.key]: checked })} />
                             <span className="sxw-req">필수</span>
                             <span className="sxw-terms-t">{row.label}</span>
                         </label>
-                        <button type="button" className="sxw-view" onClick={() => onOpenDoc(row.doc)} aria-label={`${row.label} 내용 보기`}>
-                            보기 <i className="fa-solid fa-chevron-right" aria-hidden="true" />
+                        <button type="button" className="sxw-view" onClick={() => onOpenDoc(row.key)} aria-label={`${row.label} 내용 보기`}>
+                            내용 <i className="fa-solid fa-chevron-right" aria-hidden="true" />
                         </button>
                     </li>
                 ))}
                 {marketingEnabled && (
-                    <li className={marketingAny ? "is-on sxw-mkt" : "sxw-mkt"}>
-                        <label>
-                            <SxCheck
-                                checked={marketingAny}
-                                onChange={(checked) => onChange({ ...value, marketing: { email: checked, sms: checked } })}
-                            />
-                            <span className="sxw-opt">선택</span>
-                            <span className="sxw-terms-t">마케팅 정보 수신 동의</span>
-                        </label>
-                        <button type="button" className="sxw-view" onClick={() => onOpenDoc("marketing")} aria-label="마케팅 정보 수신 동의 내용 보기">
-                            보기 <i className="fa-solid fa-chevron-right" aria-hidden="true" />
-                        </button>
-                        <span className="sxw-channels" role="group" aria-label="받을 방법">
-                            {([["email", "이메일", "fa-envelope"], ["sms", "문자(SMS)", "fa-comment-sms"]] as const).map(([key, label, icon]) => (
-                                <label key={key} className={value.marketing[key] ? "is-on" : ""}>
-                                    <input
-                                        type="checkbox"
-                                        checked={value.marketing[key]}
-                                        onChange={(event) => onChange({ ...value, marketing: { ...value.marketing, [key]: event.target.checked } })}
-                                    />
-                                    <i className={`fa-solid ${value.marketing[key] ? "fa-circle-check" : icon}`} aria-hidden="true" />
-                                    {label}
-                                </label>
-                            ))}
-                        </span>
-                    </li>
+                    <MarketingRow value={value.marketing} onChange={(marketing) => onChange({ ...value, marketing })} onOpenDoc={() => onOpenDoc("marketing")} />
                 )}
             </ul>
         </div>
     );
 }
 
-/* ───────── 휴대폰 본인인증 판 ───────── */
+/* ═════════ 휴대폰 본인인증 ═════════ */
 export type IdentityState =
     | { phase: "idle" }
     | { phase: "busy" }
@@ -350,65 +536,49 @@ export function identityPasses(state: IdentityState) {
 const formatDate = (value: string) => value.replace(/^(\d{4})-(\d{2})-(\d{2})$/, "$1. $2. $3");
 
 export function IdentityPanel({ state, onStart, onRestart }: { state: IdentityState; onStart: () => void; onRestart: () => void }) {
-    // 완료 · 갈림길
+    // 결과 — 완료 · 갈림길
     if (state.phase === "result" && state.result.status === "verified") {
         const result = state.result;
         if (result.existingAccount) {
-            const provider = PROVIDER_NAME[result.existingAccount.provider] || result.existingAccount.provider;
             const isEmail = result.existingAccount.provider === "email";
             return (
-                <div className="sxw-branch" data-tone="pink" role="alert" data-identity-branch="duplicate">
-                    {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
-                    <img src={`${UI}stickers/my-profile.webp`} alt="" aria-hidden="true" />
-                    <div>
-                        <p className="sxw-branch-k">이미 가입한 사람이에요</p>
-                        <h3>{result.name}님 이름으로 가입된 계정이 있어요</h3>
-                        <p>한 사람은 한 계정만 만들 수 있어요. 쓰던 계정으로 로그인해 주세요.</p>
-                        <span className="sxw-acc">
-                            <i className="fa-solid fa-user" aria-hidden="true" />
-                            {result.existingAccount.maskedAccount}
-                            <em data-provider={result.existingAccount.provider}>{provider} {isEmail ? "가입" : "간편가입"}</em>
-                        </span>
-                        <span className="sxw-branch-go">
+                <SxBranch
+                    tone="pink"
+                    branch="identity-duplicate"
+                    art="stickers/my-profile.webp"
+                    tag="이미 가입한 사람"
+                    title={`${result.name}님 명의로 가입된 계정이 있어요`}
+                    account={{ text: result.existingAccount.maskedAccount, provider: result.existingAccount.provider }}
+                    actions={(
+                        <>
                             <Link href="/auth/login" className="sxw-pill is-pink">그 계정으로 로그인</Link>
                             {isEmail && <Link href="/forgot-password" className="sxw-pill">비밀번호 찾기</Link>}
-                        </span>
-                    </div>
-                </div>
+                            <button type="button" className="sxw-pill" onClick={onRestart}>다른 명의로 인증</button>
+                        </>
+                    )}
+                >
+                    한 사람은 한 계정만 만들 수 있어요. 쓰던 계정으로 로그인해 주세요.
+                </SxBranch>
             );
         }
         if (!result.over14) {
             return (
-                <div className="sxw-branch" data-tone="gray" role="alert" data-identity-branch="under14">
-                    {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
-                    <img src={`${UI}stickers/login-lock.webp`} alt="" aria-hidden="true" />
-                    <div>
-                        <p className="sxw-branch-k">만 14세 미만</p>
-                        <h3>지금은 가입할 수 없어요</h3>
-                        <p>만 14세 미만은 법정대리인(부모님 등)의 동의가 있어야 가입할 수 있어요. 법정대리인 동의 절차를 갖추기 전까지는 가입을 받지 않아요.</p>
-                        <span className="sxw-branch-go"><Link href="/" className="sxw-pill">홈으로</Link></span>
-                    </div>
-                </div>
+                <SxBranch tone="gray" branch="identity-under14" art="stickers/login-lock.webp" tag="만 14세 미만" title="지금은 가입할 수 없어요" actions={<Link href="/" className="sxw-pill">홈으로</Link>}>
+                    만 14세 미만은 법정대리인(부모님 등)의 동의가 있어야 가입할 수 있어요. 법정대리인 동의 절차를 갖추기 전까지는 가입을 받지 않아요.
+                </SxBranch>
             );
         }
         if (result.rejoinBlockedUntil) {
             return (
-                <div className="sxw-branch" data-tone="gray" role="alert" data-identity-branch="rejoin">
-                    {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
-                    <img src={`${UI}policy-info-192.webp`} alt="" aria-hidden="true" />
-                    <div>
-                        <p className="sxw-branch-k">탈퇴 후 다시 가입</p>
-                        <h3>{formatDate(result.rejoinBlockedUntil)}부터 다시 가입할 수 있어요</h3>
-                        <p>가입 혜택을 여러 번 받는 일을 막기 위해, 탈퇴한 뒤 정해진 기간 동안은 같은 사람이 다시 가입할 수 없어요.</p>
-                        <span className="sxw-branch-go"><Link href="/inquiry/?category=other#inquiry-form" className="sxw-pill">1:1 문의하기</Link></span>
-                    </div>
-                </div>
+                <SxBranch tone="gray" branch="identity-rejoin" art="policy-info-192.webp" tag="탈퇴 후 다시 가입" title={`${formatDate(result.rejoinBlockedUntil)}부터 다시 가입할 수 있어요`} actions={<Link href="/inquiry/?category=other#inquiry-form" className="sxw-pill">1:1 문의하기</Link>}>
+                    가입 혜택을 여러 번 받는 일을 막기 위해, 탈퇴한 뒤 정해진 기간에는 같은 사람이 다시 가입할 수 없어요.
+                </SxBranch>
             );
         }
         return (
-            <div className="sxw-ok" role="status" data-identity-branch="verified">
+            <div className="sxw-ok" role="status" data-branch="identity-verified">
                 <span className="sxw-ok-big" aria-hidden="true"><i className="fa-solid fa-check" /></span>
-                <p className="sxw-kicker">VERIFIED</p>
+                <span className="sxw-kicker">VERIFIED</span>
                 <h3>본인인증이 끝났어요</h3>
                 <dl className="sxw-idres">
                     <div><dt>이름</dt><dd>{result.name}</dd></div>
@@ -425,64 +595,58 @@ export function IdentityPanel({ state, onStart, onRestart }: { state: IdentitySt
         );
     }
 
-    // 취소 · 시간 초과 · 실패 안내(아래에 다시 하기 단추)
+    // 취소 · 시간 초과 · 실패
     const notice = state.phase === "result" ? (
         state.result.status === "cancelled" ? { icon: "fa-circle-xmark", title: "본인인증을 취소했어요", text: "가입하려면 본인인증이 필요해요. 준비되면 다시 시작해 주세요." }
             : state.result.status === "expired" ? { icon: "fa-hourglass-end", title: "인증 시간이 지났어요", text: "보안을 위해 인증 창은 10분 동안만 열려 있어요. 다시 시작해 주세요." }
                 : state.result.status === "failed" ? { icon: "fa-triangle-exclamation", title: "본인인증을 마치지 못했어요", text: state.result.message || "통신사 확인 중 문제가 생겼어요. 잠시 후 다시 시도해 주세요." }
                     : null
     ) : null;
+    const busy = state.phase === "busy";
 
     return (
         <div className="sxw-idv">
-            <div>
-                {notice && (
-                    <p className="sxw-notice" data-tone="amber" role="alert" data-identity-branch="retry">
-                        <i className={`fa-solid ${notice.icon}`} aria-hidden="true" />
-                        <span><b>{notice.title}</b>{notice.text}</span>
-                    </p>
-                )}
-                <ul className="sxw-why">
-                    <li><i className="fa-solid fa-user-check" aria-hidden="true" /><span><b>중복 가입을 막아요</b> 이미 가입한 사람인지 확인해요.</span></li>
-                    <li><i className="fa-solid fa-cake-candles" aria-hidden="true" /><span><b>만 14세 이상인지 확인해요</b> 생년월일로 확인해요.</span></li>
-                    <li><i className="fa-solid fa-lock" aria-hidden="true" /><span><b>받는 정보</b> 이름 · 생년월일 · 성별 · 휴대폰 번호 · 중복가입 확인 정보(CI/DI)</span></li>
+            {notice && <SxNotice tone="amber" icon={notice.icon} title={notice.title}>{notice.text}</SxNotice>}
+
+            <SxBlock icon="fa-route" title="이렇게 진행돼요">
+                <ol className="sxw-timeline">
+                    <li data-owner="us">
+                        <b aria-hidden="true">1</b>
+                        <span><em>댕다방</em><strong>아래 단추를 눌러요</strong><small>인증기관 창이 새로 열려요.</small></span>
+                    </li>
+                    <li data-owner="agency">
+                        <b aria-hidden="true">2</b>
+                        <span><em>인증기관 창</em><strong>통신사를 고르고 정보를 넣어요</strong><small>이름 · 생년월일 · 휴대폰 번호를 넣고 문자 또는 PASS 앱으로 인증해요.</small></span>
+                    </li>
+                    <li data-owner="us">
+                        <b aria-hidden="true">3</b>
+                        <span><em>댕다방</em><strong>결과를 확인하고 다음으로</strong><small>이름과 휴대폰 번호는 다음 단계에 자동으로 채워져요.</small></span>
+                    </li>
+                </ol>
+            </SxBlock>
+
+            <SxBlock icon="fa-shield-halved" title="확인하는 것 · 받는 정보">
+                <ul className="sxw-facts">
+                    <li><i className="fa-solid fa-user-check" aria-hidden="true" /><span><b>중복 가입</b>이미 가입한 사람인지 확인해요.</span></li>
+                    <li><i className="fa-solid fa-cake-candles" aria-hidden="true" /><span><b>나이</b>만 14세 이상인지 확인해요.</span></li>
+                    <li><i className="fa-solid fa-lock" aria-hidden="true" /><span><b>받는 정보</b>이름 · 생년월일 · 성별 · 휴대폰 번호 · 중복가입 확인값(CI/DI). 주민등록번호는 받지 않아요.</span></li>
                 </ul>
-                <button type="button" className="sxw-idbtn" onClick={onStart} disabled={state.phase === "busy"} aria-busy={state.phase === "busy"}>
-                    <i className={state.phase === "busy" ? "fa-solid fa-circle-notch fa-spin" : "fa-solid fa-mobile-screen-button"} aria-hidden="true" />
-                    {state.phase === "busy" ? "인증 창에서 진행 중이에요" : notice ? "본인인증 다시 하기" : "휴대폰 본인인증 하기"}
-                    <small>{state.phase === "busy" ? "창을 닫으면 취소돼요" : "새 창이 열려요"}</small>
-                </button>
-                <span className="sxw-carriers" aria-label="인증할 수 있는 통신사">
-                    <span>SKT</span><span>KT</span><span>LG U+</span><span>알뜰폰</span><span>PASS 앱 · 문자</span>
+            </SxBlock>
+
+            <button type="button" className="sxw-cta" onClick={onStart} disabled={busy} aria-busy={busy} data-identity-start>
+                <span className="sxw-cta-i" aria-hidden="true"><i className={busy ? "fa-solid fa-circle-notch fa-spin" : "fa-solid fa-mobile-screen-button"} /></span>
+                <span>
+                    <b>{busy ? "인증 창에서 진행하고 있어요" : notice ? "본인인증 다시 하기" : "휴대폰 본인인증 시작"}</b>
+                    <small>{busy ? "창을 닫으면 취소돼요" : "SKT · KT · LG U+ · 알뜰폰 · PASS 앱"}</small>
                 </span>
-            </div>
-            <div className="sxw-phone" aria-hidden="true">
-                <div className="sxw-screen">
-                    <p className="sxw-screen-h"><b>인증</b>본인확인 창</p>
-                    <ol>
-                        <li><b>1</b>통신사 고르기</li>
-                        <li><b>2</b>PASS 앱 또는 문자로 인증</li>
-                        <li><b>3</b>이름 · 생년월일 · 번호 확인</li>
-                        <li><b>4</b>인증 끝 → 댕다방으로</li>
-                    </ol>
-                    <p className="sxw-screen-cap">본인확인 기관 창에서 진행돼요</p>
-                </div>
-            </div>
+                {!busy && <i className="fa-solid fa-arrow-up-right-from-square" aria-hidden="true" />}
+            </button>
         </div>
     );
 }
 
-/* ───────── 가입 완료 ───────── */
-export function SignupWebDone({
-    name,
-    pet,
-    providerLabel,
-    emailNeedsSetup,
-    marketing,
-    finishLabel,
-    onFinish,
-    onLeave,
-}: {
+/* ═════════ 가입 완료 ═════════ */
+export function SignupWebDone({ name, pet, providerLabel, emailNeedsSetup, marketing, finishLabel, onFinish, onLeave }: {
     name: string;
     pet?: PetProfile;
     /** 간편가입이면 공급자 이름(카카오 등) */
@@ -498,49 +662,55 @@ export function SignupWebDone({
 }) {
     const processed = marketing ? new Date(marketing.processedAt) : null;
     const channels = marketing ? [marketing.choice.email && "이메일", marketing.choice.sms && "문자(SMS)"].filter(Boolean).join(" · ") : "";
+    const sizeLabel = pet ? (pet.size === "small" ? "소형" : pet.size === "large" ? "대형" : "중형") : "";
 
     return (
-        <section className="sxw-card sxw-done" aria-labelledby="sxw-done-title" data-signup-web-done>
+        <section className="sxw-card sxw-done" aria-labelledby="sxw-done-title" data-signup-web-done data-signup-screen="done">
             <span className="sxw-confetti" aria-hidden="true" />
             <span className="sxw-ring is-big" aria-hidden="true">
                 {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                 <span><img src={`${UI}logo-poodle-384.webp`} alt="" /></span>
             </span>
-            <p className="sxw-kicker">WELCOME TO DAENGDABANG</p>
+            <span className="sxw-kicker">WELCOME TO DAENGDABANG</span>
             <h2 id="sxw-done-title">가입을 환영해요, <span className="sxw-u">{name}</span>님!</h2>
             <p className="sxw-done-sub">
-                {providerLabel ? `${providerLabel} 계정으로 가입했어요. 다음부터는 ${providerLabel} 버튼 하나로 로그인해요.` : "이제 이메일과 비밀번호로 로그인할 수 있어요."}
+                {providerLabel ? `다음부터는 ${providerLabel} 단추 하나로 로그인해요.` : "다음부터는 이메일과 비밀번호로 로그인해요."}
             </p>
 
             <div className="sxw-gifts">
                 <Link href="/mypage/#daenglab-wallet" className="sxw-gift" data-tone="lav" onClick={onLeave}>
-                    {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
-                    <img src={`${UI}goods-pay-ready-256.webp`} alt="" aria-hidden="true" />
+                    <span className="sxw-gift-art" aria-hidden="true">
+                        {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
+                        <img src={`${UI}goods-pay-ready-256.webp`} alt="" />
+                    </span>
                     <span>
-                        <b>{emailNeedsSetup ? "이메일 등록하고 +20C" : "이메일 인증하고 +20C"}</b>
-                        <small>마이페이지 코인 탭에서 {emailNeedsSetup ? "실제 이메일을 등록 · 인증" : "이메일을 인증"}하면 바로 들어와요 · 행동·소리 분석 2회</small>
+                        <em>가입 혜택</em>
+                        <b>{emailNeedsSetup ? "이메일 등록하고 20C 받기" : "이메일 인증하고 20C 받기"}</b>
+                        <small>마이페이지 코인 탭에서 {emailNeedsSetup ? "이메일을 등록 · 인증" : "인증"}하면 바로 들어와요</small>
                     </span>
                     <i className="fa-solid fa-chevron-right" aria-hidden="true" />
                 </Link>
                 {pet ? (
                     <div className="sxw-gift" data-tone="mint">
-                        {pet.photoDataUrl ? (
-                            // eslint-disable-next-line @next/next/no-img-element -- 회원 사진
-                            <img src={pet.photoDataUrl} alt="" aria-hidden="true" className="is-photo" />
-                        ) : (
-                            // eslint-disable-next-line @next/next/no-img-element -- 3D 그림
-                            <img src={`${UI}lab-dog-256.webp`} alt="" aria-hidden="true" />
-                        )}
-                        <span>
-                            <b>{pet.name} 등록 완료</b>
-                            <small>{[pet.breed, pet.size === "small" ? "소형" : pet.size === "large" ? "대형" : "중형", pet.age].filter(Boolean).join(" · ")}</small>
+                        <span className="sxw-gift-art" aria-hidden="true">
+                            {/* eslint-disable-next-line @next/next/no-img-element -- 회원 사진 · 3D 그림 */}
+                            <img src={pet.photoDataUrl || `${UI}lab-dog-256.webp`} alt="" className={pet.photoDataUrl ? "is-photo" : ""} />
                         </span>
+                        <span>
+                            <em>우리 아이</em>
+                            <b>{pet.name} 등록 완료</b>
+                            <small>{[pet.breed, sizeLabel, pet.age].filter(Boolean).join(" · ")}</small>
+                        </span>
+                        <i className="fa-solid fa-circle-check" aria-hidden="true" />
                     </div>
                 ) : (
                     <Link href="/mypage/#pet-profiles" className="sxw-gift" data-tone="mint" onClick={onLeave}>
-                        {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
-                        <img src={`${UI}lab-dog-256.webp`} alt="" aria-hidden="true" />
+                        <span className="sxw-gift-art" aria-hidden="true">
+                            {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
+                            <img src={`${UI}lab-dog-256.webp`} alt="" />
+                        </span>
                         <span>
+                            <em>우리 아이</em>
                             <b>우리 아이 등록하기</b>
                             <small>마이페이지에서 언제든 등록할 수 있어요</small>
                         </span>
@@ -553,17 +723,18 @@ export function SignupWebDone({
                 <p className="sxw-mkt-result" role="status">
                     <i className="fa-solid fa-envelope-circle-check" aria-hidden="true" />
                     <span>
-                        <b>마케팅 정보 수신 동의 처리 결과</b>
+                        <b>마케팅 정보 수신 동의 결과</b>
                         댕다방 · {processed.getFullYear()}년 {processed.getMonth() + 1}월 {processed.getDate()}일 · {channels} 수신에 동의했어요. 마이페이지에서 언제든 바꿀 수 있어요.
                     </span>
                 </p>
             )}
 
-            <div className="sxw-next3" aria-label="이어서 해 보기">
+            <p className="sxw-next3-t">이어서 해 보세요</p>
+            <div className="sxw-next3">
                 <Link href="/recommendations/" onClick={onLeave}>
                     {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                     <img src={`${UI}hotpick-outdoor-128.webp`} alt="" aria-hidden="true" />
-                    <span>{pet ? `${pet.name} 맞춤 상품` : "맞춤 상품 보기"}</span>
+                    <span>{pet ? `${pet.name} 맞춤 상품` : "맞춤 상품"}</span>
                 </Link>
                 <Link href="/mypage/daily/" onClick={onLeave}>
                     {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
@@ -584,25 +755,7 @@ export function SignupWebDone({
     );
 }
 
-/** 여러 단계에서 쓰는 알림 줄(오류 · 안내) */
-export function SxNotice({ tone, icon, title, children }: { tone: "rose" | "amber" | "mint" | "lav"; icon: string; title?: string; children: ReactNode }) {
-    return (
-        <p className="sxw-notice" data-tone={tone} role={tone === "rose" ? "alert" : "status"}>
-            <i className={`fa-solid ${icon}`} aria-hidden="true" />
-            <span>{title && <b>{title}</b>}{children}</span>
-        </p>
-    );
-}
-
-/** 공급자 표시(카카오 노랑 · 네이버 초록 · 구글 흰) */
-export function ProviderMark({ provider }: { provider: string }) {
-    if (provider === "kakao") return <i className="fa-solid fa-comment" aria-hidden="true" />;
-    if (provider === "naver") return <span className="sxw-nv" aria-hidden="true">N</span>;
-    if (provider === "google") return <span className="sxw-gg" aria-hidden="true">G</span>;
-    return <i className="fa-solid fa-envelope" aria-hidden="true" />;
-}
-
-/** 지금 화면 맨 위로(단계 바뀔 때) */
+/** 단계가 바뀌면 화면 맨 위로 */
 export function useScrollTopOn(key: string) {
     const first = useRef(true);
     useEffect(() => {
