@@ -1,0 +1,98 @@
+/*
+ * shop-list-web.css — 웹 상품 목록(전체상품 /products · 제품군 /category/*) 머리 판 · 카테고리 칸 · 세부 알약 · 2026-10-25
+ * ---------------------------------------------------------------------
+ * components/products/ShopListHero 꾸밈. 검색 결과 페이지 머리 판과 같은 파스텔 쿠션 결:
+ *  ① .pl-hero  : 제품군마다 다른 파스텔 판(data-tone) · 영문 손글씨 꼬리표 · 주아 제목 + 세 색 밑줄 · 소개 · 흰 알약 수치 ·
+ *                오른쪽 무지개 고리 안 3D 그림(살짝 떠오름)
+ *  ② .pl-cats  : 전체 + 제품군 다섯 칸(흰 쿠션 · 3D 그림 동그라미 · 이름 · 개수). 고른 칸은 분홍 고리 + 분홍 바탕
+ *  ③ .pl-subs  : 세부 카테고리 알약(크림 → 고르면 분홍)
+ * 머리 판에 제목이 있으므로 아래 머리 줄(ProductsWebToolbar)의 제목은 숨기고 개수 · 검색 · 카테고리 · 정렬만 남김.
+ * 범위: 웹(html:not(.ddb-app-mode)) · main[data-pl-page] 안. 앱에서는 머리 판을 통째로 숨김. 스티커 요소 · 점선 없음.
+ */
+
+/* 앱 — 머리 판 숨김(앱은 기존 머리글 · 필터 그대로) */
+html.ddb-app-mode [data-pl-hero] { display: none !important; }
+
+html:not(.ddb-app-mode) main[data-pl-page] {
+    --pl-jua: var(--font-jua), var(--font-wanted-sans), sans-serif;
+    --pl-crayon: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+    --pl-underline: repeating-linear-gradient(94deg, rgb(8 145 178 / 62%) 0 14px, rgb(239 71 111 / 58%) 14px 28px, rgb(245 158 11 / 62%) 28px 42px);
+    --pl-cushion: inset 0 3px 0 rgb(255 255 255 / 90%), 0 0 0 1px #f2e9dd, 0 22px 36px -28px rgb(15 23 42 / 40%);
+
+    & .pl-top { display: grid; gap: 18px; margin-bottom: 26px; }
+
+    /* ① 머리 판 */
+    & .pl-hero { --pl-a: #ffe9f0; --pl-b: #fff4f7; --pl-c: #fdf7ff; --pl-ink: #d0436d; position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 190px; align-items: center; gap: 24px; overflow: hidden; padding: 34px 44px 32px; border-radius: 36px; background: radial-gradient(80% 120% at 100% 0, rgb(255 255 255 / 70%) 0, transparent 60%), linear-gradient(120deg, var(--pl-a) 0%, var(--pl-b) 55%, var(--pl-c) 100%); box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 26px 40px -30px rgb(15 23 42 / 35%); }
+    & .pl-hero[data-tone="mint"] { --pl-a: #e3f6ec; --pl-b: #f0faf5; --pl-c: #f4fbff; --pl-ink: #0f8a69; }
+    & .pl-hero[data-tone="yellow"] { --pl-a: #fff1d6; --pl-b: #fff8ea; --pl-c: #fff9f4; --pl-ink: #c47a0c; }
+    & .pl-hero[data-tone="sky"] { --pl-a: #e3f1fa; --pl-b: #f0f7fc; --pl-c: #f6f4ff; --pl-ink: #0e8aa0; }
+    & .pl-hero[data-tone="lav"] { --pl-a: #ece7fd; --pl-b: #f5f2fe; --pl-c: #fdf5fa; --pl-ink: #6b51c9; }
+    & .pl-hero-text { position: relative; display: grid; justify-items: start; gap: 4px; min-width: 0; }
+    & .pl-kicker { display: inline-block; background: repeating-linear-gradient(172deg, #07849e 0 5px, #ef476f 5px 10px, #e98708 10px 15px); -webkit-background-clip: text; background-clip: text; font-family: var(--pl-crayon); font-size: 13px; font-weight: 700; letter-spacing: 0.14em; -webkit-text-fill-color: transparent; }
+    & .pl-title { position: relative; width: fit-content; margin: 2px 0 0; color: #1e293b; font-family: var(--pl-jua); font-size: clamp(30px, 3.2vw, 42px); font-weight: 400; line-height: 1.25; isolation: isolate; }
+    & .pl-title::after { content: ""; position: absolute; right: 1%; bottom: -0.06em; left: 0; z-index: -1; height: 0.22em; border-radius: 999px 70% 999px 60%; background: var(--pl-underline); opacity: 0.65; transform: rotate(-0.6deg) skewX(-7deg); }
+    & .pl-lead { max-width: 560px; margin: 10px 0 0; color: #5b6476; font-size: 15px; font-weight: 600; line-height: 1.7; word-break: keep-all; }
+    & .pl-stats { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    & .pl-stats > span { display: inline-flex; align-items: center; gap: 7px; padding: 7px 15px; border-radius: 999px; background: #fff; color: #475569; font-size: 13px; font-weight: 700; box-shadow: 0 10px 16px -12px rgb(15 23 42 / 40%); }
+    & .pl-stats i { color: var(--pl-ink); font-size: 12px; }
+    & .pl-stats b { color: var(--pl-ink); font-family: var(--pl-jua); font-size: 16px; font-weight: 400; }
+    /* 오른쪽 그림 — 무지개 고리 흰 동그라미 안 3D 그림 */
+    & .pl-hero-art { position: relative; display: grid; width: 180px; height: 180px; place-items: center; justify-self: end; padding: 8px; border-radius: 50%; background: conic-gradient(from 20deg, #f7a8bf, #ffd08a, #a8e0c6, #a9d4ea, #cfc3f5, #f7a8bf); box-shadow: 0 22px 34px -22px rgb(15 23 42 / 45%); }
+    & .pl-hero-art::before { content: ""; position: absolute; inset: 8px; border-radius: 50%; background: #fff; }
+    & .pl-hero-art img { position: relative; width: 118px; height: 118px; object-fit: contain; filter: drop-shadow(0 12px 14px rgb(15 23 42 / 18%)); animation: pl-bob 3.4s ease-in-out infinite; }
+
+    /* ② 카테고리 칸 */
+    & .pl-cats { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; }
+    & .pl-cat { display: grid; justify-items: center; gap: 4px; padding: 16px 8px 14px; border: 0; border-radius: 26px; background: #fff; color: #1e293b; text-align: center; text-decoration: none; cursor: pointer; box-shadow: var(--pl-cushion); transition: transform 0.2s, box-shadow 0.2s, background 0.2s; }
+    & .pl-cat:hover { transform: translateY(-3px); }
+    & .pl-cat-art { display: grid; width: 64px; height: 64px; place-items: center; border-radius: 50%; background: #fbf7f1; transition: transform 0.25s; }
+    & .pl-cat-art img { width: 50px; height: 50px; object-fit: contain; }
+    & .pl-cat:hover .pl-cat-art { transform: rotate(-6deg) scale(1.06); }
+    & .pl-cat b { margin-top: 4px; font-family: var(--pl-jua); font-size: 15.5px; font-weight: 400; line-height: 1.3; word-break: keep-all; }
+    & .pl-cat small { color: #94a3b8; font-size: 11.5px; font-weight: 800; }
+    & .pl-cat.is-on { background: #fff3f6; box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 0 0 3px #f7b6c9, 0 18px 28px -20px rgb(200 80 120 / 55%); }
+    & .pl-cat.is-on .pl-cat-art { background: #fff; }
+    & .pl-cat.is-on b { color: #d0436d; }
+    & .pl-cat.is-on small { color: #e2557a; }
+
+    /* ③ 세부 알약 */
+    & .pl-subs { display: flex; flex-wrap: wrap; gap: 8px; }
+    & .pl-subs button { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 16px; border: 0; border-radius: 999px; background: #fff; color: #475569; font-family: var(--pl-jua); font-size: 14.5px; cursor: pointer; box-shadow: inset 0 0 0 1.5px #efe5d8; transition: background 0.2s, box-shadow 0.2s, color 0.2s; }
+    & .pl-subs button small { padding: 1px 8px; border-radius: 999px; background: #fbf7f1; color: #94a3b8; font-family: var(--font-wanted-sans), sans-serif; font-size: 11px; font-weight: 800; }
+    & .pl-subs button:hover { box-shadow: inset 0 0 0 2px #f7c3d2; }
+    & .pl-subs button.is-on { background: #e9789a; color: #fff; box-shadow: 0 10px 18px -12px rgb(200 80 120 / 80%); }
+    & .pl-subs button.is-on small { background: rgb(255 255 255 / 25%); color: #fff; }
+
+    /* 머리 줄 — 제목은 머리 판에 있으니 숨기고 개수 · 도구만 */
+    & .ddb-pl-title { display: none; }
+    & .ddb-pl-head { align-items: center; }
+
+    @media (max-width: 1024px) {
+        & .pl-cats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+    @media (max-width: 640px) {
+        & .pl-hero { grid-template-columns: minmax(0, 1fr) 96px; gap: 12px; padding: 24px 20px 22px; border-radius: 30px; }
+        & .pl-hero-art { width: 96px; height: 96px; padding: 5px; align-self: start; }
+        & .pl-hero-art::before { inset: 5px; }
+        & .pl-hero-art img { width: 64px; height: 64px; }
+        & .pl-lead { font-size: 13.5px; }
+        & .pl-stats { flex-wrap: nowrap; gap: 6px; }
+        & .pl-stats > span { padding: 6px 11px; font-size: 12px; white-space: nowrap; }
+        & .pl-stats b { font-size: 14.5px; }
+        /* 휴대폰 — 카테고리 칸은 옆으로 밀어 보기 */
+        & .pl-cats { display: flex; gap: 10px; margin: 0 -16px; padding: 4px 16px 10px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: 16px; scrollbar-width: none; }
+        & .pl-cats::-webkit-scrollbar { display: none; }
+        & .pl-cat { flex: none; width: 92px; padding: 12px 6px 10px; border-radius: 22px; scroll-snap-align: start; }
+        & .pl-cat-art { width: 52px; height: 52px; }
+        & .pl-cat-art img { width: 40px; height: 40px; }
+        & .pl-cat b { font-size: 13.5px; }
+        & .pl-subs { flex-wrap: nowrap; margin: 0 -16px; padding: 0 16px 6px; overflow-x: auto; scrollbar-width: none; }
+        & .pl-subs::-webkit-scrollbar { display: none; }
+        & .pl-subs button { flex: none; }
+    }
+}
+
+@keyframes pl-bob { 50% { transform: translateY(-6px); } }
+@media (prefers-reduced-motion: reduce) {
+    html:not(.ddb-app-mode) main[data-pl-page] .pl-hero-art img { animation: none; }
+}

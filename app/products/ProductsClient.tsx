@@ -34,6 +34,9 @@ import ProductsWebToolbar, { CrayonSelect } from "@/components/products/Products
 // 웹 검색 결과 페이지(/search, 2026-10-23 사용자 결정 "검색은 별도 페이지") — variant="search" 일 때 머리 판 · 빈 결과 안내
 import { SearchHero, SearchOwnEmpty, searchHref } from "@/components/search/SearchParts";
 import { CrayonGrainFilter, PawTrail } from "@/components/daily/CrayonArt";
+// 웹 상품 목록 머리 판 · 카테고리 칸 · 세부 알약(2026-10-25) — 앱은 CSS 로 숨김
+import ShopListHero from "@/components/products/ShopListHero";
+import "../shop-list-web.css";
 
 type Props = {
     initialCategory?: CategorySlug;
@@ -377,7 +380,21 @@ export default function ProductsClient({ initialCategory, title, variant }: Prop
     }
 
     return (
-        <main className="mx-auto w-full min-w-0 max-w-[1280px] px-4 py-8 md:px-6">
+        <main className="mx-auto w-full min-w-0 max-w-[1280px] px-4 py-8 md:px-6" data-pl-page>
+            <ShopListHero
+                pageCategory={initialCategory}
+                category={category}
+                subcategory={subcategory}
+                title={heading}
+                visibleCount={visibleCount}
+                categoryLabel={categoryLabel}
+                subcategoryLabel={subcategoryLabel}
+                onCategory={(value) => {
+                    setCategory(value);
+                    setSubcategory("all");
+                }}
+                onSubcategory={setSubcategory}
+            />
             <ProductsWebToolbar
                 heading={heading}
                 countLabel={`${t("productCount")} ${countText(visibleCount)}`}
