@@ -224,7 +224,7 @@ function LoadingView() {
 
 function LoginGate({ orderId, expired = false }: { orderId: string; expired?: boolean }) {
     return (
-        <main className="mx-auto max-w-[680px] px-4 py-16 text-center">
+        <main className="mx-auto max-w-[680px] px-4 py-16 text-center" data-mypage-web="gate">
             <i className="fa-solid fa-lock text-5xl text-amber-500" aria-hidden="true" />
             <h1 className="mt-4 text-2xl font-black text-neutral-950">{expired ? "로그인이 만료되었습니다." : "로그인이 필요합니다."}</h1>
             <p className="mt-3 text-sm font-bold leading-6 text-neutral-600">

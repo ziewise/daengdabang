@@ -99,7 +99,7 @@ export default function MyPage() {
 
     if (!user) {
         return (
-            <main className="mx-auto max-w-[720px] px-4 py-14 text-center">
+            <main className="mx-auto max-w-[720px] px-4 py-14 text-center" data-mypage-web="gate">
                 <i className="fa-regular fa-user text-4xl text-neutral-300" />
                 <h1 className="mt-4 text-2xl font-black text-neutral-950">로그인이 필요합니다.</h1>
                 <div className="mt-6 flex justify-center gap-2">

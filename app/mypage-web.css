@@ -1078,3 +1078,69 @@ html:not(.ddb-app-mode) :is(main:has(nav[aria-label="마이페이지 메뉴"]), 
     letter-spacing: 0.02em;
     -webkit-text-fill-color: currentColor;
 }
+
+/* ═════════ 주문 내역 카드 K5 띠 머리 · 로그인 안내 카드(2026-10-24) ═════════ */
+html:not(.ddb-app-mode) main:has(nav[aria-label="마이페이지 메뉴"]) {
+    /* 주문 카드 — 머리 줄 = 하늘 띠(테스트 주문은 보라 띠), 날짜 주아 · 영문 꼬리표, 상태 · 상세보기는 흰 알약 */
+    & article[data-order-mode] { overflow: hidden; padding: 0 0 20px; }
+    & article[data-order-mode] > :not(header) { margin-right: 22px; margin-left: 22px; }
+
+    & article[data-order-mode] > header {
+        align-items: center;
+        margin-bottom: 4px;
+        padding: 16px 22px;
+        border-bottom: 0;
+        background: #e9f4fb;
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%);
+    }
+
+    & article[data-order-mode="test"] > header { background: #f3f0fe; }
+
+    & article[data-order-mode] > header > div:first-child::before {
+        content: "ORDER";
+        display: block;
+        color: #0e8aa0;
+        font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+    }
+
+    & article[data-order-mode="test"] > header > div:first-child::before { color: #6b51c9; }
+    & article[data-order-mode] > header > div:first-child > p:first-child { color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 19px; font-weight: 400; }
+    & article[data-order-mode] > header span[class*="rounded-full"] { border-color: transparent; background: #fff; }
+    & article[data-order-mode] > header a { padding: 6px 14px; border-radius: 999px; background: #fff; color: #0e8aa0; box-shadow: 0 6px 12px -9px rgb(15 23 42 / 35%); }
+
+    /* 배송 상태 상자 · 상품 그림 · 총액 */
+    & article[data-order-mode] > div[class*="rounded-xl"] { margin-top: 16px; padding: 14px 18px; border-color: transparent; border-radius: 18px; }
+    & article[data-order-mode] img { border-radius: 14px; }
+    & article[data-order-mode] > footer { border-top-color: #f3ece2; }
+    & article[data-order-mode] > footer b { font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 23px; font-weight: 400; }
+}
+
+/* 로그인 안내(마이페이지 · 주문 내역 · 하위 화면 공통) — 흰 쿠션 카드 + 분홍 띠 + 3D 자물쇠 그림, 주아 제목 · 분홍 알약 버튼 */
+html:not(.ddb-app-mode) main[data-mypage-web="gate"] {
+    width: calc(100% - 32px);
+    max-width: 560px;
+    margin: 56px auto 80px;
+    padding: 0 28px 34px;
+    overflow: hidden;
+    border-radius: 34px;
+    background: #fff;
+    box-shadow: var(--mp-cushion);
+
+    &::before {
+        content: "";
+        display: block;
+        height: 156px;
+        margin: 0 -28px;
+        background: url("/images/ui/stickers/login-lock.webp") center 24px / 108px no-repeat, #ffeef3;
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%);
+    }
+
+    & > i, & > span:first-child { display: none; }
+    & h1 { margin: 28px auto 0; font-size: 28px; }
+    & h1 + p { max-width: 400px; margin: 14px auto 0; color: #64748b; font-weight: 600; }
+    & > div:last-child, & > a.btn { margin-top: 26px; }
+    & .btn { min-height: 50px; padding: 0 28px; }
+}
