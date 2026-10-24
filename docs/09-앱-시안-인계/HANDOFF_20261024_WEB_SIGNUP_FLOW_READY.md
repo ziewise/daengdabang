@@ -47,6 +47,8 @@
 - `components/auth/signup-web/SignupWebFlow.tsx` — 단계 화면 본체.
 - `components/auth/signup-web/SignupWebParts.tsx` — 머리 · 단계 줄 · 약관 판 · 약관 창 · 본인인증 판 · 완료 화면.
 - `components/auth/signup-web/SocialSignupWebFinish.tsx` — 간편가입 돌아옴 화면 · 갈림길 카드.
+- `components/auth/signup-web/SignupPetFields.tsx` — "우리 아이" 입력(우리 아이 카드 · 사진 팁 · 사진 후보 카드 · 자주 고르는 견종 · 아이콘 알약 · 털 색).
+- 화면 틀: 위 머리 + 가로 단계 줄 + 가운데 카드 하나(사용자 요청으로 왼쪽 안내판 대신).
 - `app/auth/social-callback/page.tsx` — 웹이면 위 화면. 로그인 · 토큰 · 가입 기록 동작 그대로.
 - `components/auth/SocialAuthButtons.tsx` — 공급자 상태 확인 · 시작 동작을 `useSocialProviderStatus` · `beginSocialAuth` 로 꺼냄(동작 같음).
 - `lib/signup-flow.ts` — **연동 자리**(아래).

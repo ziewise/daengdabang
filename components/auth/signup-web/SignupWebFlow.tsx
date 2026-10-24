@@ -18,7 +18,6 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import SignupBotChallenge from "@/components/auth/SignupBotChallenge";
 import { beginSocialAuth, useSocialProviderStatus } from "@/components/auth/SocialAuthButtons";
 import type { SocialProvider } from "@/lib/customer-api";
-import { PET_BREEDS } from "@/lib/pet-companion-breeds";
 import { SIGNUP_PRIVACY_VERSION, SIGNUP_TERMS_VERSION } from "@/lib/signup-agreements";
 import {
     checkSignupEmail,
@@ -30,6 +29,7 @@ import {
     type MarketingChoice,
 } from "@/lib/signup-flow";
 import type { PetProfile, User } from "@/lib/store";
+import SignupPetFields from "@/components/auth/signup-web/SignupPetFields";
 import {
     emailSteps,
     IdentityPanel,
@@ -41,12 +41,10 @@ import {
     SxBlock,
     SxBranch,
     SxCard,
-    SxCheck,
     SxDocModal,
     SxFoot,
     SxHead,
     SxNotice,
-    SxPills,
     SxShell,
     TermsPanel,
     UI,
@@ -157,7 +155,6 @@ function passwordScore(value: string) {
 
 export default function SignupWebFlow(props: Props) {
     const { pet, done } = props;
-    const { photoViews: PET_PHOTO_VIEWS, concerns: CONCERN_OPTIONS, customBreed: CUSTOM_BREED_OPTION } = props.options;
     const [features] = useState(readSignupFlowFeatures);
     const providers = useSocialProviderStatus();
     const [screen, setScreen] = useState<Screen>("method");
@@ -306,17 +303,17 @@ export default function SignupWebFlow(props: Props) {
                     )}
                     <p className="sxw-note">간편 가입은 비밀번호 없이 공급자 계정으로 로그인해요. 공급자 화면에서 동의하면 댕다방으로 돌아와요.</p>
 
-                    {/* 모바일 — 안내판이 접혀 있어 혜택 · 로그인을 카드 아래에 */}
-                    <div className="sxw-only-m">
-                        <div className="sxw-side-bonus">
+                    {/* 가입 혜택 — 가입 방법 카드 아래 */}
+                    <div className="sxw-bonus">
+                        <span className="sxw-bonus-art" aria-hidden="true">
                             {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
-                            <img src={`${UI}goods-pay-ready-256.webp`} alt="" aria-hidden="true" />
-                            <span>
-                                <b>가입 혜택 · 코인 20C</b>
-                                <small>가입 후 마이페이지에서 이메일을 인증하면 들어와요</small>
-                            </span>
-                        </div>
-                        <p className="sxw-side-login">이미 회원이신가요?<Link href="/auth/login">로그인</Link></p>
+                            <img src={`${UI}goods-pay-ready-256.webp`} alt="" />
+                        </span>
+                        <span>
+                            <em>가입 혜택</em>
+                            <b>코인 20C · 행동·소리 분석 2회</b>
+                            <small>가입 후 마이페이지에서 이메일을 인증하면 바로 들어와요.</small>
+                        </span>
                     </div>
                 </SxCard>
             </SxShell>
@@ -654,7 +651,6 @@ export default function SignupWebFlow(props: Props) {
 
     /* ───────── ⑤ 우리 아이 + 마지막 확인 · 가입 ───────── */
     const canSubmit = Boolean(choice) && props.apiReady === true && props.botConfigured && Boolean(props.botToken) && !props.loading && !pet.photoLoading;
-    const photoCount = PET_PHOTO_VIEWS.filter((view) => pet.photos[view.id]).length;
     return (
         <SxShell steps={steps} now={now} route={route} lead="우리 아이를 함께 등록하면 꼭 맞는 상품을 먼저 보여 드려요.">
             <SxCard
@@ -697,121 +693,23 @@ export default function SignupWebFlow(props: Props) {
                 {tried && !choice && <SxNotice tone="rose" icon="fa-circle-exclamation">우리 아이를 지금 등록할지 골라 주세요.</SxNotice>}
 
                 {choice === "now" && (
-                    <div className="sxw-pet">
-                        <SxBlock icon="fa-camera" title="사진" extra={<em className="sxw-count">{photoCount}/4</em>}>
-                            <div className="sxw-shots" data-petlens-multiview-upload>
-                                {PET_PHOTO_VIEWS.map((view) => {
-                                    const photo = pet.photos[view.id];
-                                    return (
-                                        <label key={view.id} className={photo ? "sxw-shot is-on" : "sxw-shot"} data-petlens-photo-view={view.id}>
-                                            {/* eslint-disable-next-line @next/next/no-img-element -- 회원 사진 · 3D 그림 */}
-                                            <img src={photo ? photo.dataUrl : `${UI}mypet-view-${view.id}-160.webp`} alt={photo ? `${view.label} 반려견 사진` : ""} />
-                                            <small>{view.label}{view.id === "front" ? " · 대표" : ""}</small>
-                                            <em>{photo ? "다시 고르기" : view.helper}</em>
-                                            <input
-                                                type="file"
-                                                accept="image/*"
-                                                capture="environment"
-                                                disabled={pet.photoLoading || props.loading}
-                                                data-petlens-mobile-camera-capture
-                                                onChange={(event) => {
-                                                    pet.onPhoto(view.id, event.target.files?.[0]);
-                                                    event.currentTarget.value = "";
-                                                }}
-                                            />
-                                        </label>
-                                    );
-                                })}
-                            </div>
-                            {pet.photoLoading && <SxNotice tone="lav" icon="fa-circle-notch fa-spin">사진을 살펴보는 중이에요.</SxNotice>}
-                            {pet.photoError && <span className="sxw-err">{pet.photoError}</span>}
-                            {pet.analysisMessage && (
-                                <p className="sxw-ai" data-petlens-signup-draft-restored aria-live="polite">
-                                    <i className="fa-solid fa-wand-magic-sparkles" aria-hidden="true" />{pet.analysisMessage}
-                                </p>
-                            )}
-                            <span className="sxw-hint">모바일에서는 카메라가 바로 열려요. 네 방향을 다 찍으면 견종 · 체형 · 털색 후보를 더 꼼꼼히 확인해요.</span>
-                        </SxBlock>
-
-                        <SxBlock icon="fa-paw" title="기본 정보">
-                            <div className="sxw-form">
-                                <label className="sxw-f">
-                                    <span className="sxw-label">이름</span>
-                                    <input className="sxw-in" value={pet.name} onChange={(event) => pet.setName(event.target.value)} maxLength={80} placeholder="예: 몽이" />
-                                </label>
-                                <label className="sxw-f">
-                                    <span className="sxw-label">나이</span>
-                                    <input className="sxw-in" value={pet.age} onChange={(event) => pet.setAge(event.target.value)} maxLength={80} placeholder="예: 3살" />
-                                </label>
-                                <label className="sxw-f is-wide">
-                                    <span className="sxw-label">견종</span>
-                                    <select className="sxw-in" value={pet.breedId} onChange={(event) => pet.onBreedId(event.target.value)}>
-                                        <option value="">사진 분석 결과 확인 또는 직접 고르기</option>
-                                        <option value={CUSTOM_BREED_OPTION}>목록 외 견종 · 믹스견 직접 입력</option>
-                                        {PET_BREEDS.map((breed) => (
-                                            <option key={breed.id} value={breed.id}>{breed.ko} · {breed.en}</option>
-                                        ))}
-                                    </select>
-                                    <span className="sxw-hint">{pet.breedMessage || "사진 분석 결과는 후보예요. 실제 견종으로 확인해 주세요."}</span>
-                                </label>
-                                {pet.breedId === CUSTOM_BREED_OPTION && (
-                                    <label className="sxw-f is-wide">
-                                        <span className="sxw-label">실제 견종 또는 믹스견</span>
-                                        <input className="sxw-in" value={pet.breedCustom} onChange={(event) => pet.onBreedCustom(event.target.value)} maxLength={100} placeholder="예: 시바견, 골든두들, 믹스견" data-petlens-custom-breed />
-                                    </label>
-                                )}
-                                <SxPills label="크기" name="sxw-size" value={pet.size} onChange={pet.setSize} options={[["small", "소형"], ["medium", "중형"], ["large", "대형"]]} />
-                                <label className="sxw-f">
-                                    <span className="sxw-label">현재 체중 (kg)</span>
-                                    <span className="sxw-inwrap">
-                                        <input className="sxw-in" type="number" min="0.1" max="120" step="0.1" inputMode="decimal" value={pet.weightKg} onChange={(event) => pet.setWeightKg(event.target.value)} placeholder="직접 잰 체중" />
-                                        {pet.weightEstimate && <em className="is-amber">예상 {pet.weightEstimate.minKg}~{pet.weightEstimate.maxKg}kg</em>}
-                                    </span>
-                                    <span className="sxw-hint">{pet.weightEstimate ? "사진으로 본 예상이에요. 실제 체중을 넣어 주세요." : "사진으로 체중을 재지 않아요."}</span>
-                                </label>
-                            </div>
-                        </SxBlock>
-
-                        <SxBlock icon="fa-heart" title="몸과 성격">
-                            <div className="sxw-form">
-                                <SxPills label="털 길이" name="sxw-coat" value={pet.coat} onChange={pet.setCoat} options={[["short", "단모"], ["medium", "중모"], ["long", "장모"]]} />
-                                <label className="sxw-f">
-                                    <span className="sxw-label">털 색</span>
-                                    <span className="sxw-inwrap">
-                                        <input className="sxw-in" value={pet.coatColor} onChange={(event) => pet.onCoatColor(event.target.value)} maxLength={80} placeholder="예: 크림, 검정·갈색" />
-                                        {pet.coatColorFromAi && <em className="is-amber">사진 후보</em>}
-                                    </span>
-                                </label>
-                                <SxPills label="성별" name="sxw-sex" value={pet.sex} onChange={pet.setSex} options={[["female", "암컷"], ["male", "수컷"], ["unknown", "선택 안 함"]]} />
-                                <SxPills label="활동량" name="sxw-activity" value={pet.activity} onChange={pet.setActivity} options={[["low", "차분해요"], ["normal", "보통"], ["high", "활발해요"]]} />
-                                <div className="sxw-f is-wide">
-                                    <span className="sxw-label">관심 케어 <small>여러 개 골라도 돼요</small></span>
-                                    <span className="sxw-concerns">
-                                        {CONCERN_OPTIONS.map((concern) => {
-                                            const on = pet.concerns.includes(concern);
-                                            return (
-                                                <label key={concern} className={on ? "is-on" : ""}>
-                                                    <input type="checkbox" checked={on} onChange={() => pet.toggleConcern(concern)} />
-                                                    <i className={on ? "fa-solid fa-check" : "fa-solid fa-plus"} aria-hidden="true" />
-                                                    {concern}
-                                                </label>
-                                            );
-                                        })}
-                                    </span>
-                                </div>
-                            </div>
-                        </SxBlock>
-
-                        <div className={props.agreePetLens ? "sxw-consent is-on" : "sxw-consent"} data-signup-petlens-optional-consent>
-                            <label>
-                                <SxCheck checked={props.agreePetLens} onChange={props.setAgreePetLens} />
-                                <span>
-                                    <span className="sxw-opt">선택</span> 반려동물 정보 수집·이용에 동의해요
-                                    <small>사진 · 견종 · 체중 등을 맞춤 추천과 서비스 개선에만 써요. 동의하지 않으면 우리 아이 정보는 저장하지 않아요.</small>
-                                </span>
-                            </label>
-                            <button type="button" className="sxw-view" onClick={() => setDoc("petlens")}>내용 <i className="fa-solid fa-chevron-right" aria-hidden="true" /></button>
-                        </div>
+                    <SignupPetFields
+                        pet={pet}
+                        options={props.options}
+                        agreePetLens={props.agreePetLens}
+                        setAgreePetLens={props.setAgreePetLens}
+                        onOpenPetDoc={() => setDoc("petlens")}
+                        busy={props.loading}
+                    />
+                )}
+                {choice === "later" && (
+                    <div className="sxw-later">
+                        {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
+                        <img src={`${UI}mypet-analysis-256.webp`} alt="" aria-hidden="true" />
+                        <span>
+                            <b>마이페이지에서 언제든 등록할 수 있어요</b>
+                            <small>마이페이지 · 우리 아이에서 사진 네 방향과 정보를 넣으면 맞춤 추천과 펫렌즈 분석이 같은 아이를 기준으로 시작돼요.</small>
+                        </span>
                     </div>
                 )}
 

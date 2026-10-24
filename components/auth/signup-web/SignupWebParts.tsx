@@ -2,8 +2,8 @@
  * SignupWebParts — 웹 회원가입 공용 틀 · 조각(2026-10-24 2차: 사용자 "하나의 목적 · 일관성 · 구조 · 구성 · 문구 · 색상 · 모양 모두 다시")
  * ---------------------------------------------------------------------
  * 모든 단계(가입 방법 → 약관 → 본인인증 → 계정 정보 → 우리 아이 → 완료, 간편가입도)가 같은 틀 하나를 씀.
- *  - SxShell  : PC — 왼쪽 고정 안내판(댕다방 강아지 · 회원가입 제목 · 가입 방식 · 세로 단계 목록 · 가입 혜택 · 로그인)
- *               + 오른쪽 단계 카드 / 모바일 — 위 작은 머리 + 진행 막대(지금 단계 이름)
+ *  - SxShell  : 위 머리(댕다방 강아지 · 회원가입 · 한 줄 · 가입 방식) → 가로 단계 줄(번호 · 이름 · 설명) → 가운데 단계 카드 → 로그인 안내
+ *               (2026-10-24 사용자: 왼쪽 안내판은 카드 길이와 어긋나 보여 위 가로 단계로 바꿈) / 모바일 — 번호 줄 + 지금 단계 한 줄
  *  - SxCard   : 단계 카드 = 머리(SxHead: 3D 그림 · 꼬리표 · 제목 · 한 줄 설명) → 묶음(SxBlock) → 아래 단추 줄(SxFoot)
  *  - 고르기 조각: SxCheck(동그라미 체크) · SxPills(알약 하나 고르기) · SxChoice(큰 고르기 카드)
  *  - TermsPanel · SxDocModal(약관 내용 창) · IdentityPanel(본인인증 전/진행/결과/갈림길) · SxBranch(갈림길 카드) · SignupWebDone(완료)
@@ -63,7 +63,7 @@ export function socialSteps(providerLabel: string): SxStep[] {
     ];
 }
 
-/* ═════════ 틀 ═════════ */
+/* ═════════ 틀 — 위 머리 · 가로 단계 줄 · 가운데 카드 하나(2026-10-24 사용자 "사이드 대신 상단 단계") ═════════ */
 export function SxShell({
     steps,
     now,
@@ -76,29 +76,26 @@ export function SxShell({
     now: number;
     /** 가입 방식(email · kakao · naver · google). 아직 안 골랐으면 없음 */
     route?: string;
-    /** 안내판 제목 아래 한 줄 */
+    /** 제목 아래 한 줄 */
     lead: string;
     children: ReactNode;
 }) {
     const current = steps[Math.min(now, steps.length - 1)];
-    // 마지막 단계(가입 완료)면 로그인 안내 · 혜택 카드를 숨기고 "가입했어요"로
-    const finished = now >= steps.length - 1;
-    const percent = Math.round(((now + 1) / steps.length) * 100);
     const routeLabel = route ? PROVIDER_NAME[route] : "";
+    // 마지막 단계(가입 완료)면 로그인 안내를 숨기고 "가입했어요"로
+    const finished = now >= steps.length - 1;
 
     return (
         <div className="sxw-shell">
-            <aside className="sxw-side" aria-label="회원가입 진행">
-                <div className="sxw-brand">
-                    <span className="sxw-ring" aria-hidden="true">
-                        {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
-                        <span><img src={`${UI}logo-poodle-384.webp`} alt="" /></span>
-                    </span>
-                    <span className="sxw-brand-text">
-                        <span className="sxw-kicker">JOIN DAENGDABANG</span>
-                        <span className="sxw-title">회원가입</span>
-                    </span>
-                </div>
+            <header className="sxw-top">
+                <span className="sxw-ring" aria-hidden="true">
+                    {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
+                    <span><img src={`${UI}logo-poodle-384.webp`} alt="" /></span>
+                </span>
+                <span className="sxw-top-text">
+                    <span className="sxw-kicker">JOIN DAENGDABANG</span>
+                    <h1 className="sxw-title">회원가입</h1>
+                </span>
                 <p className="sxw-lead">{lead}</p>
                 {routeLabel && (
                     <span className="sxw-route" data-route={route}>
@@ -106,49 +103,32 @@ export function SxShell({
                         {routeLabel}로 {finished ? "가입했어요" : "가입하고 있어요"}
                     </span>
                 )}
+            </header>
 
-                <ol className="sxw-vsteps">
+            <nav className="sxw-hsteps" aria-label={`가입 단계 ${steps.length}단계 중 ${now + 1}단계 · ${current?.label || ""}`}>
+                <ol style={{ gridTemplateColumns: `repeat(${steps.length}, minmax(0, 1fr))` }}>
                     {steps.map((step, index) => {
                         const state = index < now ? "done" : index === now ? "now" : "next";
                         return (
                             <li key={step.label} data-state={state} aria-current={state === "now" ? "step" : undefined}>
                                 <b aria-hidden="true">{state === "done" ? <i className="fa-solid fa-check" /> : index + 1}</b>
-                                <span>
-                                    <strong>{step.label}</strong>
-                                    <small>{step.desc}</small>
-                                </span>
+                                <strong>{step.label}</strong>
+                                <small>{step.desc}</small>
                             </li>
                         );
                     })}
                 </ol>
+                {/* 모바일 — 지금 단계 이름 한 줄 */}
+                <p className="sxw-hsteps-now" aria-hidden="true">
+                    <span className="sxw-hsteps-n"><b>{Math.min(now + 1, steps.length)}</b>/{steps.length}</span>
+                    <strong>{current?.label}</strong>
+                    <small>{current?.desc}</small>
+                </p>
+            </nav>
 
-                {!finished && (
-                    <>
-                        <div className="sxw-side-bonus">
-                            {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
-                            <img src={`${UI}goods-pay-ready-256.webp`} alt="" aria-hidden="true" />
-                            <span>
-                                <b>가입 혜택 · 코인 20C</b>
-                                <small>가입 후 마이페이지에서 이메일을 인증하면 들어와요 · 행동·소리 분석 2회</small>
-                            </span>
-                        </div>
-                        <p className="sxw-side-login">이미 회원이신가요?<Link href="/auth/login">로그인</Link></p>
-                    </>
-                )}
-            </aside>
+            <div className="sxw-main">{children}</div>
 
-            <div className="sxw-main">
-                {/* 모바일 — 지금 단계 · 진행 막대 */}
-                <div className="sxw-mbar" aria-hidden="true">
-                    <span className="sxw-mbar-t">
-                        <span className="sxw-mbar-n"><b>{Math.min(now + 1, steps.length)}</b>/{steps.length}</span>
-                        <strong>{current?.label}</strong>
-                        {routeLabel && <em data-route={route}><ProviderMark provider={route || "email"} />{routeLabel}</em>}
-                    </span>
-                    <span className="sxw-bar"><span style={{ width: `${percent}%` }} /></span>
-                </div>
-                {children}
-            </div>
+            {!finished && <p className="sxw-login">이미 회원이신가요?<Link href="/auth/login">로그인</Link></p>}
         </div>
     );
 }
