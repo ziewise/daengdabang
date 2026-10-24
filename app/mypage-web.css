@@ -446,58 +446,6 @@ html:not(.ddb-app-mode) main:has(nav[aria-label="마이페이지 메뉴"]) {
     & nav[aria-label="마이페이지 메뉴"] > div:last-child button { min-height: 42px; color: #94a3b8; font-size: 13px; }
     & nav[aria-label="마이페이지 메뉴"] > div:last-child button:hover { background: #fff1f2; color: #e11d48; }
 
-    /* ── 인사 머리 + 한눈에 보기 4칸 ── */
-    & [data-mp-hello]:has(> .mp-stats) { padding-bottom: 24px; }
-    & [data-mp-hello]:has(> .mp-stats)::after { top: 24px; transform: none; }
-
-    & .mp-stats {
-        display: grid;
-        flex-basis: 100%;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 12px;
-        margin-top: 20px;
-    }
-
-    & .mp-stats > a {
-        display: grid;
-        grid-template-columns: 46px minmax(0, 1fr);
-        grid-template-rows: auto auto;
-        column-gap: 12px;
-        align-items: center;
-        padding: 14px 16px;
-        border-radius: 22px;
-        background: #fff;
-        box-shadow: inset 0 -4px 0 rgb(15 23 42 / 3%), 0 12px 20px -16px rgb(200 80 120 / 55%);
-        transition: transform 0.15s ease;
-    }
-
-    & .mp-stats > a:hover { transform: translateY(-2px); }
-
-    & .mp-stats > a::before {
-        content: "";
-        grid-row: 1 / 3;
-        width: 46px;
-        height: 46px;
-        background: var(--st-art) center / contain no-repeat;
-    }
-
-    & .mp-stats > a[data-mp-stat="dog"] { --st-art: url("/images/ui/stickers/my-pets.webp"); }
-    & .mp-stats > a[data-mp-stat="coin"] { --st-art: url("/images/ui/goods-pay-ready-256.webp"); }
-    & .mp-stats > a[data-mp-stat="cart"] { --st-art: url("/images/ui/header-cart-128.webp"); }
-    & .mp-stats > a[data-mp-stat="wish"] { --st-art: url("/images/ui/stickers/benefit-brand.webp"); }
-    & .mp-stats span { align-self: end; color: #94a3b8; font-size: 12.5px; font-weight: 700; }
-
-    & .mp-stats b {
-        align-self: start;
-        color: #1e293b;
-        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
-        font-size: 25px;
-        font-weight: 400;
-        line-height: 1.2;
-    }
-
-    & .mp-stats small { margin-left: 2px; color: #64748b; font-size: 14px; }
-
     /* ── 대시보드 — 가로 전체 폭으로 다시 쌓기 ── */
     & [data-mp-dash] { display: flex; flex-direction: column; gap: 26px; margin-top: 26px; }
     & [data-mp-dash] > section { display: contents; }
@@ -747,10 +695,6 @@ html:not(.ddb-app-mode) main:has(nav[aria-label="마이페이지 메뉴"]) {
 /* 좁은 화면 — 한눈에 보기 2×2 · 사이드 메뉴 그림 조금 작게 */
 @media (max-width: 767px) {
     html:not(.ddb-app-mode) main:has(nav[aria-label="마이페이지 메뉴"]) {
-        & .mp-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 16px; }
-        & .mp-stats > a { grid-template-columns: 38px minmax(0, 1fr); column-gap: 10px; padding: 12px; border-radius: 18px; }
-        & .mp-stats > a::before { width: 38px; height: 38px; }
-        & .mp-stats b { font-size: 21px; }
         & nav[aria-label="마이페이지 메뉴"] li > a { gap: 8px; min-height: 44px; padding: 5px 10px 5px 5px; font-size: 13px; }
         & nav[aria-label="마이페이지 메뉴"] li > a::before { width: 32px; height: 32px; background-size: 22px; }
         & nav[aria-label="마이페이지 메뉴"] li > a[aria-current="page"]::after { display: none; }
@@ -762,10 +706,8 @@ html:not(.ddb-app-mode) main:has(nav[aria-label="마이페이지 메뉴"]) {
     }
 }
 
-/* 2차 다듬기 — 요약 칸은 그림 아래까지 가로 전체 · 빈 결제 안내는 한 문단 · 찜/입혀볼 카드 높이 맞춤 · 띠 안 링크 한 줄 */
+/* 2차 다듬기 — 빈 결제 안내는 한 문단 · 찜/입혀볼 카드 높이 맞춤 · 띠 안 링크 한 줄 */
 html:not(.ddb-app-mode) main:has(nav[aria-label="마이페이지 메뉴"]) {
-    & [data-mp-hello] > .mp-stats { flex-basis: calc(100% + 120px); margin-right: -120px; }
-
     & [data-mp-slot="orders"] > p { display: block; }
     & [data-mp-slot="orders"] > p::before { display: block; margin: 0 auto 10px; }
 
@@ -778,8 +720,143 @@ html:not(.ddb-app-mode) main:has(nav[aria-label="마이페이지 메뉴"]) {
 
 @media (max-width: 767px) {
     html:not(.ddb-app-mode) main:has(nav[aria-label="마이페이지 메뉴"]) {
-        & [data-mp-hello] > .mp-stats { flex-basis: calc(100% + 84px); margin-right: -84px; }
-        & .mp-stats span { white-space: nowrap; }
         & [data-mp-slot="tryon"] > div.grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+}
+
+/* ═════════ MY 정보 하위 화면 틀 맞추기(2026-10-24) ═════════
+   공통 틀(MypageSectionLayout)은 머리 판이 사이드 메뉴 위 가로 전체에 깔려 대시보드 · 주문 내역과 배치가 달랐음.
+   웹에서만 대시보드와 같게: 넓은 화면 = 왼쪽 메뉴 | 오른쪽 머리 판 + 내용, 좁은 화면 = 메뉴 → 머리 판 → 내용.
+   마이페이지 main 은 어느 화면이든 가로 전체(최대 1280px)로 — 내용 길이에 따라 폭이 줄지 않게. */
+html:not(.ddb-app-mode) main:has(nav[aria-label="마이페이지 메뉴"]) { width: 100%; }
+
+html:not(.ddb-app-mode) main:has(> header[data-mp-hello]):has(nav[aria-label="마이페이지 메뉴"]) {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+    & > div:has(> aside) { display: contents; }
+    & > div > aside { order: -1; }
+    & > div > div.min-w-0 { min-width: 0; }
+}
+
+@media (min-width: 1024px) {
+    html:not(.ddb-app-mode) main:has(> header[data-mp-hello]):has(nav[aria-label="마이페이지 메뉴"]) {
+        display: grid;
+        grid-template-columns: 260px minmax(0, 1fr);
+        grid-template-rows: auto 1fr;
+        align-items: start;
+        gap: 24px;
+
+        & > div > aside { grid-column: 1; grid-row: 1 / span 2; }
+        & > header { grid-column: 2; grid-row: 1; }
+        & > div > div.min-w-0 { grid-column: 2; grid-row: 2; }
+    }
+}
+
+/* ═════════ 대시보드 폴더 탭(2026-10-24 사용자 선택 — "누가 봐도 탭") ═════════
+   카드 바로 위에 붙은 종이 폴더 탭 4개: 우리 아이(민트) · 코인·적립금(노랑) · 최근 결제(하늘) · 찜한 상품(분홍).
+   고른 탭 = 아래 카드 띠와 같은 색으로 이어지고 조금 더 높음, 안 고른 탭 = 회색 종이. 탭마다 3D 그림 · 주아 이름 · 개수 알약.
+   아래에는 고른 탭의 카드만 보임(찜 탭은 입혀볼 상품도 그 아래에). 숨김은 웹에서만, 지갑 등은 숨어도 계속 불러옴. */
+html:not(.ddb-app-mode) main:has(nav[aria-label="마이페이지 메뉴"]) {
+    & .mp-tabs {
+        position: relative;
+        z-index: 2;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        align-items: end;
+        gap: 8px;
+        margin-top: 26px;
+        padding: 0 26px;
+    }
+
+    & .mp-tabs > button {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        min-height: 56px;
+        padding: 10px 12px;
+        border: 0;
+        border-radius: 20px 20px 0 0;
+        background: #eef2f6;
+        color: #64748b;
+        font: inherit;
+        cursor: pointer;
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 70%);
+        transition: background-color 0.15s ease, min-height 0.15s ease;
+    }
+
+    & .mp-tabs > button:hover { background: #e4eaf1; color: #334155; }
+    & .mp-tabs > button:focus-visible { outline: 3px solid var(--tb-ink); outline-offset: -3px; }
+
+    & .mp-tabs > button::before {
+        content: "";
+        width: 30px;
+        height: 30px;
+        flex: none;
+        background: var(--tb-art) center / contain no-repeat;
+        opacity: 0.75;
+    }
+
+    & .mp-tabs > [data-mp-tabbtn="pets"] { --tb-art: url("/images/ui/stickers/my-pets.webp"); --tb-bg: #e9f8f1; --tb-ink: #12a17a; }
+    & .mp-tabs > [data-mp-tabbtn="wallet"] { --tb-art: url("/images/ui/goods-pay-ready-256.webp"); --tb-bg: #fff6e3; --tb-ink: #d98a12; }
+    & .mp-tabs > [data-mp-tabbtn="orders"] { --tb-art: url("/images/ui/stickers/my-orders.webp"); --tb-bg: #e9f4fb; --tb-ink: #0e8aa0; }
+    & .mp-tabs > [data-mp-tabbtn="wish"] { --tb-art: url("/images/ui/stickers/benefit-brand.webp"); --tb-bg: #ffeef3; --tb-ink: #e2557a; }
+
+    & .mp-tabs span {
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 17px;
+        font-weight: 400;
+        white-space: nowrap;
+    }
+
+    & .mp-tabs b {
+        min-width: 26px;
+        padding: 1px 8px;
+        border-radius: 999px;
+        background: #fff;
+        color: #94a3b8;
+        font-size: 12.5px;
+        font-weight: 800;
+        text-align: center;
+    }
+
+    /* 고른 탭 — 아래 카드 띠 색으로 이어짐(아래로 3px 덮어 띠 위 흰 줄을 가림) */
+    & .mp-tabs > button[aria-selected="true"] {
+        min-height: 66px;
+        margin-bottom: -3px;
+        padding-bottom: 13px;
+        background: var(--tb-bg);
+        color: #1e293b;
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%), 0 -8px 16px -12px rgb(15 23 42 / 30%);
+    }
+
+    & .mp-tabs > button[aria-selected="true"]::before { opacity: 1; }
+    & .mp-tabs > button[aria-selected="true"] b { color: var(--tb-ink); }
+
+    /* 탭 아래 카드 — 탭에 바로 붙음 */
+    & [data-mp-dash] { margin-top: 0; }
+
+    /* 고른 탭의 카드만 보이기 */
+    & [data-mp-dash]:not([data-mp-tab="pets"]) #pet-profiles,
+    & [data-mp-dash]:not([data-mp-tab="wallet"]) [data-daenglab-wallet],
+    & [data-mp-dash]:not([data-mp-tab="orders"]) [data-mp-slot="orders"],
+    & [data-mp-dash]:not([data-mp-tab="wish"]) :is([data-mp-slot="wish"], [data-mp-slot="tryon"]) { display: none; }
+
+    /* 찜 탭은 찜 먼저, 입혀볼 상품은 그 아래 */
+    & [data-mp-dash] [data-mp-slot="tryon"] { order: 6; }
+}
+
+/* 좁은 화면 — 탭은 그림 위 · 이름 아래, 개수는 오른쪽 위 작은 알약 */
+@media (max-width: 767px) {
+    html:not(.ddb-app-mode) main:has(nav[aria-label="마이페이지 메뉴"]) {
+        & .mp-tabs { gap: 5px; margin-top: 20px; padding: 0 14px; }
+        & .mp-tabs > button { flex-direction: column; gap: 3px; min-height: 66px; padding: 8px 4px; border-radius: 16px 16px 0 0; }
+        & .mp-tabs > button[aria-selected="true"] { min-height: 74px; padding-bottom: 11px; }
+        & .mp-tabs > button::before { width: 26px; height: 26px; }
+        & .mp-tabs span { font-size: 12.5px; }
+        & .mp-tabs b { position: absolute; top: 5px; right: 5px; min-width: 20px; padding: 0 5px; font-size: 10.5px; }
     }
 }

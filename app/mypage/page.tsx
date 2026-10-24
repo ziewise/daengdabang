@@ -56,6 +56,15 @@ function petKey(pet: PetProfile, index: number) {
         : `pet-profile-local-${index}-${pet.name}`;
 }
 
+// 웹 대시보드 탭(요약 4칸이 탭 단추) — 주소 #으로 들어오면 그 탭을 먼저 열기
+type DashTab = "pets" | "wallet" | "orders" | "wish";
+const HASH_TAB: Record<string, DashTab> = {
+    "#pet-profiles": "pets",
+    "#daenglab-wallet": "wallet",
+    "#mypage-orders": "orders",
+    "#mypage-wishlist": "wish",
+};
+
 function firstTryOnProduct(): CatalogProduct | undefined {
     return TRY_ON_PRODUCTS[0];
 }
@@ -83,6 +92,10 @@ export default function MyPage() {
         window.addEventListener("ddb:daenglab-wallet", onWallet);
         return () => window.removeEventListener("ddb:daenglab-wallet", onWallet);
     }, []);
+    // 웹에서 지금 보이는 대시보드 칸(앱은 이 값과 상관없이 모두 보임 — 숨김은 app/mypage-web.css 웹 전용)
+    const [dashTab, setDashTab] = useState<DashTab>(() => (
+        typeof window === "undefined" ? "pets" : HASH_TAB[window.location.hash] ?? "pets"
+    ));
 
     if (!user) {
         return (
@@ -111,17 +124,32 @@ export default function MyPage() {
                         {memberAccountDisplay(user.email, user.authProvider)}
                     </p>
                 </div>
-                {/* 웹 전용 — 한눈에 보기 4칸(우리 아이 · 연구소 코인 · 장바구니 · 찜), 누르면 그 자리로 이동. 앱에서는 숨김(hidden) */}
-                <nav className="hidden mp-stats" aria-label="내 활동 한눈에 보기">
-                    <a href="#pet-profiles" data-mp-stat="dog"><span>우리 아이</span><b>{user.pets.length}<small>마리</small></b></a>
-                    <a href="#daenglab-wallet" data-mp-stat="coin"><span>연구소 코인</span><b>{walletCoins ?? "–"}<small>C</small></b></a>
-                    <Link href="/cart" data-mp-stat="cart"><span>장바구니</span><b>{store.state.cart.length}<small>개</small></b></Link>
-                    <a href="#mypage-wishlist" data-mp-stat="wish"><span>찜한 상품</span><b>{wishedProducts.length}<small>개</small></b></a>
-                </nav>
+            </div>
+
+            {/* 웹 전용 — 대시보드 폴더 탭(우리 아이 · 연구소 코인 · 최근 결제 · 찜한 상품). 고른 탭 칸만 아래에 보임. 앱에서는 숨김(hidden) */}
+            <div className="hidden mp-tabs" role="tablist" aria-label="마이페이지 대시보드 보기">
+                {([
+                    { id: "pets", label: "우리 아이", value: user.pets.length, unit: "마리" },
+                    { id: "wallet", label: "코인 · 적립금", value: walletCoins ?? "–", unit: "C" },
+                    { id: "orders", label: "최근 결제", value: store.state.orders.length, unit: "건" },
+                    { id: "wish", label: "찜한 상품", value: wishedProducts.length, unit: "개" },
+                ] as const).map((tab) => (
+                    <button
+                        key={tab.id}
+                        type="button"
+                        role="tab"
+                        aria-selected={dashTab === tab.id}
+                        data-mp-tabbtn={tab.id}
+                        onClick={() => setDashTab(tab.id)}
+                    >
+                        <span>{tab.label}</span>
+                        <b>{tab.value}{tab.unit}</b>
+                    </button>
+                ))}
             </div>
 
             {/* data-mp-dash · data-mp-slot — 웹에서 칸을 가로 전체 폭으로 다시 쌓는 자리 이름표(app/mypage-web.css, 앱 그대로) */}
-            <div className="mt-6 grid gap-6 lg:grid-cols-[360px_1fr]" data-mp-dash>
+            <div className="mt-6 grid gap-6 lg:grid-cols-[360px_1fr]" data-mp-dash data-mp-tab={dashTab}>
                 <section className="grid gap-4">
                     <DaengLabWalletCard accessToken={user.apiAccessToken} accountEmail={user.email} />
                     <div id="pet-profiles" className="surface scroll-mt-24 p-5" data-mp-card>
@@ -210,7 +238,7 @@ export default function MyPage() {
                 </section>
 
                 <section className="grid gap-6">
-                    <div className="surface p-5" data-mp-card data-mp-slot="orders">
+                    <div id="mypage-orders" className="surface p-5" data-mp-card data-mp-slot="orders">
                         <div className="flex items-center justify-between gap-3" data-mp-band="sky" data-mp-art="cart">
                             <div>
                                 <h2 className="text-lg font-black text-neutral-950" data-mp-kicker="ORDERS">최근 결제</h2>
