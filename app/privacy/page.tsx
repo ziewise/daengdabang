@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import LegalWebHero from "@/components/legal/LegalWebHero";
 import type { ReactNode } from "react";
 import CloudflareSafeEmail from "@/components/footer/CloudflareSafeEmail";
 import { BUSINESS_INFO } from "@/lib/legal";
@@ -201,7 +202,9 @@ function DataTable({ headers, rows }: { headers: string[]; rows: string[][] }) {
 
 export default function PrivacyPage() {
     return (
-        <main className="mx-auto max-w-[1040px] px-4 py-10 md:px-6">
+        <main className="mx-auto max-w-[1040px] px-4 py-10 md:px-6" data-legal-web="privacy">
+            {/* 웹 머리 판 · 문서 탭 · 한눈에 보기(2026-10-25, 앱은 숨김) — 아래 법률 문구는 그대로 */}
+            <LegalWebHero kind="privacy" updatedAt={PRIVACY_UPDATED_AT} />
             <p className="text-sm font-black text-indigo-700">Privacy</p>
             <h1 className="mt-2 text-3xl font-black tracking-tight text-neutral-950">개인정보처리방침</h1>
             <p className="mt-3 text-sm font-bold leading-6 text-neutral-600">

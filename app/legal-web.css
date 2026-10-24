@@ -1,0 +1,163 @@
+/*
+ * legal-web.css — 웹 약관 · 방침 · 법적고지 문서 꾸밈 · 2026-10-25
+ * ---------------------------------------------------------------------
+ * 대상: /terms · /privacy · /legal · /legal/business · /legal/escrow 의 main[data-legal-web].
+ * 법률 문구 · 조항 번호 · 표 내용은 그대로, 웹 겉모양만:
+ *  - 위: 문서 탭 · 파스텔 머리 판 · 한눈에 보기(components/legal/LegalWebHero)
+ *  - 왼쪽: 따라오는 목차(흰 쿠션 · 읽는 곳 분홍 — LegalScrollSpy), 오른쪽: 들어가며(크림) + 조항마다 흰 쿠션 카드
+ *  - 조항 번호(①, 1.)는 분홍 글씨 · 표는 둥근 크림 머리 줄 · 링크는 분홍 밑줄
+ *  - 휴대폰: 한 줄 — 목차는 옆으로 밀어 보는 알약 줄
+ * 앱(ddb-app-mode)은 머리 판만 숨기고 아무것도 바꾸지 않음. 스티커 요소 · 점선 없음.
+ */
+
+html.ddb-app-mode [data-legal-hero] { display: none !important; }
+
+html:not(.ddb-app-mode) main[data-legal-web] {
+    --lw-ink: #1e293b;
+    --lw-soft: #5b6476;
+    --lw-mute: #94a3b8;
+    --lw-cream: #fbf7f1;
+    --lw-pink: #e9789a;
+    --lw-pink-d: #d0436d;
+    --lw-jua: var(--font-jua), var(--font-wanted-sans), sans-serif;
+    --lw-crayon: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+    --lw-cushion: inset 0 3px 0 rgb(255 255 255 / 90%), 0 0 0 1px #f2e9dd, 0 20px 34px -28px rgb(15 23 42 / 38%);
+    --lw-underline: repeating-linear-gradient(94deg, rgb(8 145 178 / 62%) 0 14px, rgb(239 71 111 / 58%) 14px 28px, rgb(245 158 11 / 62%) 28px 42px);
+    display: grid;
+    grid-template-columns: 250px minmax(0, 1fr);
+    column-gap: 28px;
+    row-gap: 0;
+    max-width: 1200px !important;
+    color: var(--lw-ink);
+
+    /* 머리 판 · 탭 · 한눈에 보기는 두 칸 다 */
+    & > [data-legal-hero] { grid-column: 1 / -1; }
+    /* 원래 꼬리표 · 제목은 머리 판으로 옮겨 보여 주므로 숨김(앱은 그대로) */
+    & > p:has(+ h1), & > h1 { display: none; }
+    /* 오른쪽 칸 — 들어가며 · 본문 */
+    & > :not([data-legal-hero]):not(nav) { grid-column: 2; min-width: 0; }
+
+    /* ───────── 위 ───────── */
+    & .lw-top { display: grid; gap: 16px; margin-bottom: 26px; }
+    & .lw-docs { display: flex; flex-wrap: wrap; gap: 8px; }
+    & .lw-docs a { display: inline-flex; align-items: center; gap: 7px; min-height: 40px; padding: 0 16px; border-radius: 999px; background: #fff; color: #475569; font-family: var(--lw-jua); font-size: 14.5px; text-decoration: none; box-shadow: inset 0 0 0 1.5px #efe5d8; transition: box-shadow 0.2s, color 0.2s; }
+    & .lw-docs a i { color: var(--lw-mute); font-size: 12px; }
+    /* 사이트 공통 "지금 페이지" 꼬리 아이콘은 문서 탭에서 빼기 */
+    & .lw-docs a::after { display: none !important; }
+    & .lw-docs a:hover { box-shadow: inset 0 0 0 2px #f7c3d2; }
+    & .lw-docs a.is-on { background: var(--lw-pink); color: #fff; box-shadow: 0 10px 18px -12px rgb(200 80 120 / 80%); }
+    & .lw-docs a.is-on i { color: #fff; }
+
+    & .lw-hero { --a: #e3f1fa; --b: #f0f7fc; --c: #f6f4ff; --ink: #0e8aa0; display: grid; grid-template-columns: minmax(0, 1fr) 150px; align-items: center; gap: 24px; padding: 32px 40px 30px; border-radius: 36px; background: radial-gradient(80% 120% at 100% 0, rgb(255 255 255 / 70%) 0, transparent 60%), linear-gradient(120deg, var(--a) 0%, var(--b) 55%, var(--c) 100%); box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 26px 40px -30px rgb(15 23 42 / 35%); }
+    & .lw-hero[data-tone="mint"] { --a: #e3f6ec; --b: #f0faf5; --c: #f4fbff; --ink: #0f8a69; }
+    & .lw-hero[data-tone="lav"] { --a: #ece7fd; --b: #f5f2fe; --c: #fdf5fa; --ink: #6b51c9; }
+    & .lw-hero[data-tone="yellow"] { --a: #fff1d6; --b: #fff8ea; --c: #fff9f4; --ink: #c47a0c; }
+    & .lw-hero-text { display: grid; justify-items: start; gap: 4px; min-width: 0; }
+    & .lw-kicker { display: inline-block; background: repeating-linear-gradient(172deg, #07849e 0 5px, #ef476f 5px 10px, #e98708 10px 15px); -webkit-background-clip: text; background-clip: text; font-family: var(--lw-crayon); font-size: 13px; font-weight: 700; letter-spacing: 0.14em; -webkit-text-fill-color: transparent; }
+    & .lw-title { position: relative; width: fit-content; margin-top: 2px; font-family: var(--lw-jua); font-size: clamp(30px, 3vw, 40px); line-height: 1.25; isolation: isolate; }
+    & .lw-title::after { content: ""; position: absolute; right: 1%; bottom: -0.06em; left: 0; z-index: -1; height: 0.22em; border-radius: 999px 70% 999px 60%; background: var(--lw-underline); opacity: 0.65; transform: rotate(-0.6deg) skewX(-7deg); }
+    & .lw-lead { max-width: 600px; margin-top: 8px; color: var(--lw-soft); font-size: 15px; font-weight: 600; line-height: 1.7; word-break: keep-all; }
+    & .lw-date { display: inline-flex; align-items: center; gap: 7px; margin-top: 12px; padding: 7px 15px; border-radius: 999px; background: #fff; color: #475569; font-size: 13px; font-weight: 800; box-shadow: 0 10px 16px -12px rgb(15 23 42 / 40%); }
+    & .lw-date i { color: var(--ink); }
+    & .lw-hero-art { display: grid; width: 150px; height: 150px; place-items: center; border-radius: 50%; background: rgb(255 255 255 / 75%); box-shadow: inset 0 3px 0 #fff, 0 18px 28px -22px rgb(15 23 42 / 40%); }
+    & .lw-hero-art img { width: 108px; height: 108px; object-fit: contain; filter: drop-shadow(0 12px 14px rgb(15 23 42 / 16%)); }
+
+    & .lw-glance { display: grid; gap: 10px; }
+    & .lw-glance-t { display: flex; align-items: center; gap: 6px; margin: 0; color: #475569; font-family: var(--lw-jua); font-size: 16px; }
+    & .lw-glance-t span { color: var(--lw-pink); }
+    & .lw-glance > div { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+    & .lw-glance a { --s: #e9f4fb; --i: #0e8aa0; position: relative; display: grid; justify-items: start; gap: 3px; padding: 16px 18px 16px; border-radius: 24px; background: var(--s); color: var(--lw-ink); text-decoration: none; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); transition: transform 0.2s, box-shadow 0.2s; }
+    & .lw-glance a[data-tone="pink"] { --s: #fff0f4; --i: #e2557a; }
+    & .lw-glance a[data-tone="lav"] { --s: #f3f0fe; --i: #6b51c9; }
+    & .lw-glance a[data-tone="mint"] { --s: #e9f8f1; --i: #12a17a; }
+    & .lw-glance a[data-tone="yellow"] { --s: #fff6e3; --i: #d98a12; }
+    & .lw-glance a:hover { transform: translateY(-2px); box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%), 0 14px 22px -16px rgb(15 23 42 / 40%); }
+    & .lw-glance-i { display: grid; width: 38px; height: 38px; place-items: center; margin-bottom: 4px; border-radius: 50%; background: #fff; color: var(--i); font-size: 15px; box-shadow: 0 6px 10px -8px rgb(15 23 42 / 40%); }
+    & .lw-glance b { font-family: var(--lw-jua); font-size: 16.5px; font-weight: 400; }
+    & .lw-glance small { color: var(--lw-soft); font-size: 12.5px; font-weight: 700; line-height: 1.5; word-break: keep-all; }
+    & .lw-glance-go { position: absolute; top: 18px; right: 18px; color: var(--i); font-size: 12px; opacity: 0.6; }
+
+    /* ───────── 들어가며(원래 첫 설명) ───────── */
+    & > h1 + p { margin: 0 0 16px !important; padding: 18px 22px; border-radius: 24px; background: var(--lw-cream); color: var(--lw-soft) !important; font-size: 14px !important; font-weight: 600 !important; line-height: 1.8 !important; box-shadow: inset 0 0 0 1.5px #efe5d8; word-break: keep-all; }
+
+    /* 이용약관의 첫 줄은 시행일뿐이라 머리 판 날짜와 겹침 — 웹에서는 숨김 */
+    &[data-legal-web="terms"] > h1 + p { display: none; }
+
+    /* ───────── 왼쪽 목차(따라옴) ───────── */
+    & > nav:not(.lw-docs) {
+        position: sticky;
+        top: calc(var(--header-height, 72px) + 18px);
+        grid-column: 1;
+        grid-row: 2 / span 60;
+        align-self: start;
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 2px !important;
+        max-height: calc(100vh - var(--header-height, 72px) - 40px);
+        margin: 0 !important;
+        padding: 16px 10px !important;
+        overflow-y: auto;
+        border: 0 !important;
+        border-radius: 26px !important;
+        background: #fff !important;
+        box-shadow: var(--lw-cushion);
+        scrollbar-width: thin;
+    }
+    & > nav:not(.lw-docs)::before { content: "목차"; display: block; padding: 0 12px 8px; color: var(--lw-mute); font-family: var(--lw-jua); font-size: 14px; }
+    & > nav:not(.lw-docs) a { display: block; padding: 8px 12px; border-radius: 14px; color: #475569; font-size: 13px; font-weight: 700; line-height: 1.45; text-decoration: none; word-break: keep-all; transition: background 0.2s, color 0.2s; }
+    & > nav:not(.lw-docs) a:hover { background: var(--lw-cream); color: var(--lw-ink); }
+    & > nav:not(.lw-docs) a[data-active] { background: #fff0f4; color: var(--lw-pink-d); font-weight: 800; box-shadow: inset 3px 0 0 var(--lw-pink); }
+
+    /* ───────── 본문 조항 — 흰 쿠션 카드 ───────── */
+    & section[id] { margin-top: 14px !important; padding: 24px 28px 26px !important; border: 0 !important; border-radius: 28px; background: #fff; box-shadow: var(--lw-cushion); scroll-margin-top: calc(var(--header-height, 72px) + 18px); }
+    & > div > section[id]:first-child, & > nav + section[id], & > p + section[id] { margin-top: 0 !important; }
+    & > div:has(> section[id]) { margin-top: 0 !important; gap: 14px !important; }
+    & > div:has(> section[id]) > section[id] { margin-top: 0 !important; }
+    & section[id] h2 { display: flex; align-items: center; gap: 10px; margin: 0; color: var(--lw-ink) !important; font-family: var(--lw-jua); font-size: 21px !important; font-weight: 400 !important; line-height: 1.35; }
+    & section[id] h2::before { content: ""; flex: none; width: 10px; height: 10px; border-radius: 50%; background: var(--lw-pink); box-shadow: 0 0 0 4px #ffe4ec; }
+    & section[id] h3 { margin-top: 22px !important; color: #334155 !important; font-family: var(--lw-jua); font-size: 16.5px !important; font-weight: 400 !important; }
+    & section[id] :is(p, li) { color: #475569 !important; font-weight: 600 !important; }
+    /* 조항 번호 ①·1. — 분홍 글씨 */
+    & [data-legal-marker] > span:first-child { color: var(--lw-pink-d) !important; font-family: var(--lw-jua); font-weight: 400 !important; }
+    & [data-legal-marker="item"] > span:first-child { color: #0e8aa0 !important; }
+    /* 목록 점 */
+    & section[id] ul li::marker { color: var(--lw-pink); }
+    /* 링크 — 분홍 밑줄 */
+    & section[id] a { color: var(--lw-pink-d) !important; text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 4px; }
+    & section[id] a:hover { color: #a8325a !important; }
+
+    /* 표 — 둥근 크림 머리 줄, 줄 사이 옅은 선 */
+    & section[id] .overflow-x-auto { border-radius: 20px; background: #fff; box-shadow: inset 0 0 0 1.5px #efe5d8; }
+    & section[id] table { border-collapse: separate !important; border-spacing: 0; }
+    & section[id] thead tr { border: 0 !important; background: var(--lw-cream); }
+    & section[id] thead th { padding: 12px 16px !important; color: #8a6e4b !important; font-size: 12.5px; font-weight: 800 !important; }
+    & section[id] tbody tr { border: 0 !important; }
+    & section[id] tbody :is(th, td) { padding: 14px 16px !important; border-top: 1.5px solid #f3ebe0; }
+    & section[id] tbody tr:first-child :is(th, td) { border-top: 0; }
+    & section[id] tbody th { color: var(--lw-ink) !important; background: #fdfbf7; }
+    /* 표 첫 칸(구분)은 글자 단위로 끊기지 않게 */
+    & section[id] tbody tr > :first-child { min-width: 96px; word-break: keep-all; }
+
+    @media (max-width: 960px) {
+        grid-template-columns: minmax(0, 1fr);
+        & > :not([data-legal-hero]):not(nav) { grid-column: 1; }
+        & .lw-glance > div { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        /* 목차 — 옆으로 밀어 보는 알약 줄 */
+        & > nav:not(.lw-docs) { position: static; grid-column: 1; grid-row: auto; display: flex !important; gap: 6px !important; max-height: none; margin: 0 -16px 16px !important; padding: 2px 16px 10px !important; overflow-x: auto; border-radius: 0 !important; background: none !important; box-shadow: none; scrollbar-width: none; }
+        & > nav:not(.lw-docs)::before { display: none; }
+        & > nav:not(.lw-docs) a { flex: none; padding: 8px 14px; border-radius: 999px; background: #fff; box-shadow: inset 0 0 0 1.5px #efe5d8; white-space: nowrap; }
+    }
+    @media (max-width: 640px) {
+        & .lw-docs { flex-wrap: nowrap; margin: 0 -16px; padding: 0 16px 4px; overflow-x: auto; scrollbar-width: none; }
+        & .lw-docs a { flex: none; }
+        & .lw-hero { grid-template-columns: minmax(0, 1fr) 84px; gap: 12px; padding: 24px 20px 22px; border-radius: 30px; }
+        & .lw-hero-art { width: 84px; height: 84px; align-self: start; }
+        & .lw-hero-art img { width: 60px; height: 60px; }
+        & .lw-lead { font-size: 13.5px; }
+        & .lw-glance > div { gap: 8px; }
+        & .lw-glance a { padding: 14px 14px; border-radius: 20px; }
+        & .lw-glance-go { display: none; }
+        & section[id] { padding: 20px 18px 22px !important; border-radius: 24px; }
+        & section[id] h2 { font-size: 18.5px !important; }
+    }
+}

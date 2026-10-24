@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import LegalWebHero from "@/components/legal/LegalWebHero";
 import { BUSINESS_INFO, LEGAL_UPDATED_AT } from "@/lib/legal";
 
 export const metadata: Metadata = {
@@ -293,7 +294,9 @@ function buildSectionMarkers(sectionIndex: number, lineCount: number): Array<Leg
 
 export default function TermsPage() {
     return (
-        <main className="mx-auto max-w-[960px] px-4 py-10 md:px-6">
+        <main className="mx-auto max-w-[960px] px-4 py-10 md:px-6" data-legal-web="terms">
+            {/* 웹 머리 판 · 문서 탭 · 한눈에 보기(2026-10-25, 앱은 숨김) — 아래 법률 문구는 그대로 */}
+            <LegalWebHero kind="terms" updatedAt={LEGAL_UPDATED_AT} />
             <p className="text-sm font-black text-indigo-700">Legal</p>
             <h1 className="mt-2 text-3xl font-black tracking-tight text-neutral-950">이용약관</h1>
             <p className="mt-3 text-sm font-bold leading-6 text-neutral-600">
