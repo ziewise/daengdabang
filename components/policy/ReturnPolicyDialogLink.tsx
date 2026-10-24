@@ -1,7 +1,15 @@
 "use client";
 
+/*
+ * 반품/교환 안내 창 — 푸터 · 상품 상세의 "환불·반품 정책" 링크.
+ * 2026-10-25 웹 겉모양: data-policy-dialog 이름표 · 웹 전용 3D 그림만 더하고 꾸밈은 app/modal-web.css(앱 그대로). 열고 닫기 동작 그대로.
+ */
+
+import "@/app/modal-web.css";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { useWebScreen } from "@/hooks/useWebScreen";
 import DeliveryReturnPolicyDetails from "@/components/policy/DeliveryReturnPolicyDetails";
 import { BUSINESS_INFO } from "@/lib/legal";
 
@@ -15,6 +23,8 @@ export default function ReturnPolicyDialogLink({
     const [open, setOpen] = useState(false);
     const openerRef = useRef<HTMLAnchorElement>(null);
     const closeRef = useRef<HTMLButtonElement>(null);
+    // 웹 — 창을 페이지 맨 바깥(body)에 붙임: 푸터 안에서 열면 푸터의 꾸밈(필터 등) 때문에 창이 푸터 칸 안에 갇혀 보이던 것 고침(앱은 그대로)
+    const webScreen = useWebScreen();
 
     useEffect(() => {
         if (!open) return;
@@ -48,7 +58,7 @@ export default function ReturnPolicyDialogLink({
                 {label}
             </a>
 
-            {open && (
+            {open && (webScreen ? (node: React.ReactNode) => createPortal(node, document.body) : (node: React.ReactNode) => node)(
                 <div
                     className="fixed inset-0 z-[2600] flex items-center justify-center bg-neutral-950/55 p-3 backdrop-blur-[2px] sm:p-6"
                     onMouseDown={(event) => {
@@ -60,8 +70,12 @@ export default function ReturnPolicyDialogLink({
                         aria-modal="true"
                         aria-labelledby="return-policy-dialog-title"
                         className="flex max-h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-white bg-white shadow-2xl"
+                        data-policy-dialog
                     >
                         <header className="flex items-start justify-between gap-4 border-b border-neutral-200 px-5 py-4 sm:px-6">
+                            {/* 웹 전용 3D 그림(앱은 숨김) */}
+                            {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
+                            <img src="/images/ui/web-cs-return-160.webp" alt="" aria-hidden="true" className="hidden" data-modal-art />
                             <div>
                                 <p className="text-xs font-black uppercase tracking-[0.18em] text-indigo-600">DDB SHOPPING POLICY</p>
                                 <h2 id="return-policy-dialog-title" className="mt-1 text-xl font-black text-neutral-950">반품/교환 안내</h2>

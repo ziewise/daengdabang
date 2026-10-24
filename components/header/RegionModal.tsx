@@ -9,9 +9,11 @@
  *   - 언어: 드롭다운(한국어 / ENGLISH) — 자동 적용 후 수동 변경 가능
  * 국가·언어는 향후 항목이 늘어날 수 있어 "드롭다운(스크롤)"으로 구성한다.
  * header 의 backdrop-blur 가 position:fixed 기준을 헤더로 가두므로 body 로 portal.
+ * 2026-10-25 웹 겉모양: data-region-modal 이름표만, 꾸밈은 app/modal-web.css(하늘 띠 머리 · 크림 알약 고르기 · 고른 줄 분홍). 앱 그대로.
  */
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import "@/app/modal-web.css";
 import Image from "next/image";
 import { useI18n, type Locale } from "@/lib/i18n";
 import { useRegion, COUNTRIES, type Country } from "@/lib/region";
@@ -128,6 +130,7 @@ export default function RegionModal({ open, onClose }: { open: boolean; onClose:
             aria-modal="true"
             aria-label={en ? "Country & language" : "국가 및 언어 선택"}
             onClick={onClose}
+            data-region-modal
         >
             <div
                 className="w-full max-w-sm rounded-3xl bg-white shadow-2xl animate-in fade-in zoom-in-95 duration-150"
