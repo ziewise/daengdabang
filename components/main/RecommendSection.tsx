@@ -196,13 +196,13 @@ export default function RecommendSection() {
 }
 
 // 추천이 비었을 때 안내 카드(2026-10-23 사용자 "전혀 어울리지 않아") — 점선 회색 상자 대신
-// 크림 쿠션 판 + 3D 그림 동그라미 + 주아 제목 + 짧은 설명 + 분홍 알약 단추. 문구 뜻 · 연결은 그대로
+// 연보라 쿠션 판(2026-10-24 — 크림은 바로 아래 상품 사진 액자 색과 같아 구분이 안 됨) + 흰 3D 그림 동그라미 + 주아 제목 + 짧은 설명 + 분홍 알약 단추. 문구 뜻 · 연결은 그대로
 const EMPTY_ACTION_CLASS = "inline-flex items-center gap-2 rounded-full bg-[#e9789a] px-5 py-2.5 text-sm font-black text-white shadow-[inset_0_3px_0_rgba(255,255,255,0.3),0_12px_20px_-12px_rgba(200,80,120,0.65)] transition hover:-translate-y-0.5 hover:bg-[#e2557a]";
 
 function RecommendEmptyCard({ art, title, body, children }: { art: string; title: string; body: string; children: React.ReactNode }) {
     return (
-        <div className="flex flex-col items-center gap-5 rounded-[36px] bg-[#fffaf1] px-6 py-8 text-center shadow-[inset_0_3px_0_rgba(255,255,255,0.9),0_20px_34px_-24px_rgba(120,80,30,0.35)] sm:flex-row sm:px-10 sm:text-left">
-            <span className="grid h-24 w-24 shrink-0 place-items-center rounded-full bg-[#ffeef3] shadow-[inset_0_4px_0_rgba(255,255,255,0.9)]" aria-hidden="true">
+        <div className="flex flex-col items-center gap-5 rounded-[36px] bg-[#f3f0fe] px-6 py-8 text-center shadow-[inset_0_3px_0_rgba(255,255,255,0.9),inset_0_-10px_18px_rgba(0,0,0,0.03),0_20px_34px_-24px_rgba(107,81,201,0.4)] sm:flex-row sm:px-10 sm:text-left">
+            <span className="grid h-24 w-24 shrink-0 place-items-center rounded-full bg-white shadow-[inset_0_-4px_0_rgba(107,81,201,0.06),0_10px_18px_-12px_rgba(107,81,201,0.45)]" aria-hidden="true">
                 <Image src={art} alt="" width={64} height={64} className="h-16 w-16 object-contain" />
             </span>
             <div className="min-w-0 flex-1">
