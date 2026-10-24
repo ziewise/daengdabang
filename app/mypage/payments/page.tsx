@@ -61,7 +61,7 @@ export default function MypagePaymentsPage() {
                 </section>
 
                 <div className="pw-actions">
-                    <Link href="/cart" className="pw-go"><i className="fa-solid fa-cart-shopping" aria-hidden="true" />장바구니에서 결제하기</Link>
+                    <Link href="/cart" className="pw-go"><i className="fa-solid fa-cart-shopping" aria-hidden="true" />장바구니</Link>
                     <Link href="/mypage/orders" className="pw-sub">주문 내역 확인</Link>
                 </div>
             </div>
