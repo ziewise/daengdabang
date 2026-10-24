@@ -1,6 +1,13 @@
 "use client";
 
+/**
+ * 마이페이지 추천 데이터 관리
+ * 앱: 아래 기존 화면 그대로.
+ * 웹(2026-10-24 사용자 "어중간한 화면을 비주얼하게"): RecommendationWebView — 같은 설정값 · 같은 저장(saveSetting)으로
+ *   상태 판 · 추천 재료 카드 · 아이 사진 고르기 · 데이터 관리 타일. 기존 블록(data-rec-legacy)은 웹에서만 숨김(app/mypage-web.css).
+ */
 import Link from "next/link";
+import RecommendationWebView from "@/components/mypage/RecommendationWebView";
 // 웹: 분석 결과 삭제 요청을 마이페이지 안 문의 창으로(2026-10-24, 앱 · 새 탭은 원래대로 문의 페이지)
 import MypageInquiryLink from "@/components/mypage/MypageInquiryLink";
 import { usePathname } from "next/navigation";
@@ -115,7 +122,16 @@ export default function MypageRecommendationPreferencesPage() {
                     </section>
                 ) : (
                     <>
-                        <section className="surface p-5 md:p-6" data-mp-card>
+                        {/* 웹 전용 화면(앱은 hidden) */}
+                        <RecommendationWebView
+                            preferences={preferences}
+                            disabled={disabled}
+                            saving={preferenceState.isSaving}
+                            pets={selectablePets}
+                            analysisHref={appMode ? "/health-report/" : "/mypage/ai/"}
+                            onSave={(patch, message) => void saveSetting(patch, message)}
+                        />
+                        <section className="surface p-5 md:p-6" data-mp-card data-rec-legacy>
                             <div className="flex items-start justify-between gap-4" data-mp-band="lav" data-mp-art="star">
                                 <div>
                                     <p className="text-xs font-black text-indigo-700">PERSONALIZATION</p>
@@ -136,7 +152,7 @@ export default function MypageRecommendationPreferencesPage() {
                             </div>
                         </section>
 
-                        <section className="surface divide-y divide-neutral-200 overflow-hidden">
+                        <section className="surface divide-y divide-neutral-200 overflow-hidden" data-rec-legacy>
                             <PreferenceRow
                                 icon="fa-dog"
                                 title="반려견 프로필"
@@ -178,7 +194,7 @@ export default function MypageRecommendationPreferencesPage() {
                             </PreferenceRow>
                         </section>
 
-                        <section className="surface p-5 md:p-6" data-mp-card>
+                        <section className="surface p-5 md:p-6" data-mp-card data-rec-legacy>
                             <h2 className="text-lg font-black text-neutral-950" data-mp-band="mint" data-mp-art="dog" data-mp-kicker="MY DOG">기본 추천 반려견</h2>
                             <p className="mt-1 text-sm font-bold leading-6 text-neutral-600">
                                 홈과 전체 추천에서 먼저 보여줄 반려견을 선택합니다. 최근 분석 시각으로 자동 변경하지 않습니다.
@@ -209,7 +225,7 @@ export default function MypageRecommendationPreferencesPage() {
                             )}
                         </section>
 
-                        <section className="surface p-5 md:p-6" data-mp-card>
+                        <section className="surface p-5 md:p-6" data-mp-card data-rec-legacy>
                             <h2 className="text-lg font-black text-neutral-950" data-mp-band="sky" data-mp-art="info" data-mp-kicker="STATUS">현재 사용 상태</h2>
                             <div className="mt-3 flex flex-wrap gap-2">
                                 {!preferences.enabled ? (
@@ -233,12 +249,13 @@ export default function MypageRecommendationPreferencesPage() {
                     <p
                         className={`rounded-xl border px-4 py-3 text-sm font-black ${preferenceState.errorMessage ? "border-amber-200 bg-amber-50 text-amber-900" : "border-emerald-200 bg-emerald-50 text-emerald-900"}`}
                         role="status"
+                        data-rec-feedback={preferenceState.errorMessage ? "warn" : "ok"}
                     >
                         {preferenceState.errorMessage || feedback}
                     </p>
                 ) : null}
 
-                <section className="surface p-5 md:p-6" data-mp-card>
+                <section className="surface p-5 md:p-6" data-mp-card data-rec-legacy={preferences ? "" : undefined}>
                     <h2 className="text-lg font-black text-neutral-950" data-mp-band="yellow" data-mp-art="memo" data-mp-kicker="MY DATA">원본 데이터 확인·수정</h2>
                     <p className="mt-1 text-sm font-bold leading-6 text-neutral-600">
                         추천 화면에서는 원문을 보여주지 않습니다. 아래 각 관리 화면에서 직접 확인하거나 수정할 수 있습니다.
