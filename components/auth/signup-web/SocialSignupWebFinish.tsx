@@ -14,6 +14,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import MemberPetProfileCreateForm from "@/components/mypage/MemberPetProfileCreateForm";
+import { goSocialPreview, SIGNUP_DEV, SignupDevPanel, type DevJumpGroup } from "@/components/auth/signup-web/SignupDevPanel";
 import { clearSignupEmailResume } from "@/lib/signup-email-verification";
 import {
     isPlaceholderEmail,
@@ -26,6 +27,7 @@ import {
 } from "@/lib/signup-flow";
 import { useAuth, type User } from "@/lib/store";
 import {
+    Hl,
     IdentityPanel,
     identityPasses,
     MarketingRow,
@@ -65,6 +67,12 @@ export default function SocialSignupWebFinish({ member, provider, onFinish }: { 
     const firstPet = current.pets[0];
     const canGoOn = !features.identity || identityPasses(identity);
     const marketingAny = marketing.email || marketing.sms;
+    const withDev = (node: React.ReactNode) => (
+        <>
+            {node}
+            {SIGNUP_DEV && <SignupDevPanel groups={socialDevGroups({ now: screen, set: setScreen })} />}
+        </>
+    );
 
     // 정보 확인 → 우리 아이 : 마케팅 수신 동의를 고른 경우에만 저장(연동됐을 때)
     const toPet = async () => {
@@ -80,7 +88,7 @@ export default function SocialSignupWebFinish({ member, provider, onFinish }: { 
 
     /* ───────── 가입 완료 ───────── */
     if (screen === "done") {
-        return (
+        return withDev(
             <SxShell steps={steps} now={5} route={provider} lead="가입이 모두 끝났어요.">
                 <SignupWebDone
                     name={current.name}
@@ -98,18 +106,18 @@ export default function SocialSignupWebFinish({ member, provider, onFinish }: { 
 
     /* ───────── 우리 아이 ───────── */
     if (screen === "pet") {
-        return (
+        return withDev(
             <SxShell steps={steps} now={4} route={provider} lead="우리 아이를 함께 등록하면 꼭 맞는 상품을 먼저 보여 드려요.">
                 <SxCard labelledBy="sxw-spet-title" screen="social-pet">
                     <SxHead
                         id="sxw-spet-title"
                         art="lab-dog-256.webp"
                         kicker="STEP 5 · MY DOG"
-                        title="우리 아이도 함께 등록할까요?"
+                        title={<><Hl>우리 아이</Hl>도 함께 등록할까요?</>}
                         sub="이름 · 견종만 있어도 등록할 수 있어요. 지금 안 해도 돼요."
                     />
                     {current.pets.length > 0 && (
-                        <SxBlock icon="fa-paw" title="등록한 아이">
+                        <SxBlock icon="fa-paw" title="등록한 아이" tone="mint">
                             <ul className="sxw-petlist">
                                 {current.pets.map((pet) => (
                                     <li key={pet.apiProfileId || pet.name}>
@@ -143,14 +151,14 @@ export default function SocialSignupWebFinish({ member, provider, onFinish }: { 
     }
 
     /* ───────── 정보 확인 ───────── */
-    return (
+    return withDev(
         <SxShell steps={steps} now={3} route={provider} lead={`${providerLabel}에서 받은 정보를 확인해 주세요.`}>
             <SxCard labelledBy="sxw-check-title" screen="social-check">
                 <SxHead
                     id="sxw-check-title"
                     art="policy-info-192.webp"
                     kicker="STEP 4 · CHECK"
-                    title="거의 다 됐어요!"
+                    title={<>거의 <Hl>다 됐어요</Hl>!</>}
                     sub={`${providerLabel} 계정이 연결됐어요. 받은 정보가 맞는지 확인해 주세요.`}
                 />
                 <div className="sxw-got" data-provider={provider}>
@@ -162,7 +170,7 @@ export default function SocialSignupWebFinish({ member, provider, onFinish }: { 
                     <em><ProviderMark provider={provider} />{providerLabel} 연결됨</em>
                 </div>
 
-                <SxBlock icon="fa-list-check" title="동의한 항목">
+                <SxBlock icon="fa-list-check" title="동의한 항목" tone="mint">
                     <span className="sxw-agreed">
                         <span><i className="fa-solid fa-check" aria-hidden="true" />만 14세 이상</span>
                         <span><i className="fa-solid fa-check" aria-hidden="true" />이용약관</span>
@@ -178,7 +186,7 @@ export default function SocialSignupWebFinish({ member, provider, onFinish }: { 
                 )}
 
                 {features.marketing && (
-                    <SxBlock icon="fa-bullhorn" title="선택 동의">
+                    <SxBlock icon="fa-bullhorn" title="선택 동의" tone="pink">
                         <div className="sxw-terms">
                             <ul className="is-flat">
                                 <MarketingRow value={marketing} onChange={setMarketing} onOpenDoc={() => setDoc("marketing")} />
@@ -188,7 +196,7 @@ export default function SocialSignupWebFinish({ member, provider, onFinish }: { 
                 )}
 
                 {features.identity && (
-                    <SxBlock icon="fa-mobile-screen-button" title="휴대폰 본인인증">
+                    <SxBlock icon="fa-mobile-screen-button" title="휴대폰 본인인증" tone="sky">
                         <IdentityPanel
                             state={identity}
                             onStart={() => {
@@ -210,6 +218,41 @@ export default function SocialSignupWebFinish({ member, provider, onFinish }: { 
             <SxDocModal kind={doc} onClose={() => setDoc(null)} />
         </SxShell>
     );
+}
+
+/** 개발 서버 "단계 바로 보기" — 간편가입 돌아옴 화면 · 갈림길로 이동 */
+function socialDevGroups(screens?: { now: Screen; set: (screen: Screen) => void }): DevJumpGroup[] {
+    if (!SIGNUP_DEV) return [];
+    return [
+        ...(screens ? [{
+            title: "간편가입 돌아옴",
+            items: [
+                { label: "④ 정보 확인", onClick: () => screens.set("check"), active: screens.now === "check" },
+                { label: "⑤ 우리 아이", onClick: () => screens.set("pet"), active: screens.now === "pet" },
+                { label: "⑥ 가입 완료", onClick: () => screens.set("done"), active: screens.now === "done" },
+            ],
+        }] : []),
+        {
+            title: "다른 결과",
+            items: [
+                { label: "새 가입(이메일 있음)", onClick: () => goSocialPreview("new") },
+                { label: "이메일 못 받음", onClick: () => goSocialPreview("no_email") },
+                { label: "이미 가입된 간편 계정", onClick: () => goSocialPreview("existing", "naver") },
+                { label: "동의 취소", onClick: () => goSocialPreview("cancelled") },
+                { label: "같은 이메일 가입", onClick: () => goSocialPreview("email_exists") },
+            ],
+        },
+        {
+            title: "이메일 가입으로",
+            items: [{
+                label: "가입 화면 처음으로",
+                onClick: () => {
+                    // eslint-disable-next-line @next/next/no-location-assign-relative-destination -- 개발 전용: 새로 불러와 미리보기 값을 다시 읽음
+                    window.location.assign(`${window.location.origin}/auth/signup/?sxpreview`);
+                },
+            }],
+        },
+    ];
 }
 
 /** 간편가입에서 돌아왔는데 새 가입이 아닌 경우 — 같은 틀(안내판 + 카드) */
@@ -235,6 +278,7 @@ export function SocialReturnWebNotice({ kind, provider, message, onContinue }: {
     const steps = socialSteps(providerLabel);
 
     return (
+        <>
         <SxShell steps={steps} now={kind === "existing" ? 5 : 2} route={provider || undefined} lead={kind === "existing" ? "다시 만나서 반가워요." : "간편 가입 결과를 알려 드려요."}>
             <SxCard labelledBy="sxw-return-title" className={`sxw-return is-${content.tone}`} screen={`social-${kind}`}>
                 <span className="sxw-return-art" aria-hidden="true">
@@ -269,5 +313,7 @@ export function SocialReturnWebNotice({ kind, provider, message, onContinue }: {
                 </div>
             </SxCard>
         </SxShell>
+        {SIGNUP_DEV && <SignupDevPanel groups={socialDevGroups()} />}
+        </>
     );
 }

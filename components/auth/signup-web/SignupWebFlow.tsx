@@ -22,6 +22,7 @@ import { SIGNUP_PRIVACY_VERSION, SIGNUP_TERMS_VERSION } from "@/lib/signup-agree
 import {
     checkSignupEmail,
     maskEmail,
+    previewIdentityResult,
     readSignupFlowFeatures,
     saveMarketingConsent,
     startIdentityVerification,
@@ -30,8 +31,10 @@ import {
 } from "@/lib/signup-flow";
 import type { PetProfile, User } from "@/lib/store";
 import SignupPetFields from "@/components/auth/signup-web/SignupPetFields";
+import { goSocialPreview, SIGNUP_DEV, SignupDevPanel, useSignupDevPreviewBoot, type DevJumpGroup } from "@/components/auth/signup-web/SignupDevPanel";
 import {
     emailSteps,
+    Hl,
     IdentityPanel,
     identityPasses,
     PROVIDER_NAME,
@@ -154,7 +157,7 @@ function passwordScore(value: string) {
 }
 
 export default function SignupWebFlow(props: Props) {
-    const { pet, done } = props;
+    const { pet } = props;
     const [features] = useState(readSignupFlowFeatures);
     const providers = useSocialProviderStatus();
     const [screen, setScreen] = useState<Screen>("method");
@@ -171,7 +174,11 @@ export default function SignupWebFlow(props: Props) {
     const [socialError, setSocialError] = useState("");
     const [marketingProcessedAt, setMarketingProcessedAt] = useState<string | null>(null);
     const marketingSavedRef = useRef(false);
+    // 개발 서버 "단계 바로 보기" — 완료 화면 미리보기용 회원(배포 빌드에서는 쓰이지 않음)
+    const [devDone, setDevDone] = useState<User | null>(null);
+    useSignupDevPreviewBoot();
 
+    const done = props.done ?? (devDone ? { member: devDone, onFinish: () => setDevDone(null), onLeave: () => undefined } : null);
     const isSocial = route !== "email";
     const providerLabel = isSocial ? PROVIDER_NAME[route] : "";
     const choice = petChoice ?? (pet.hasData ? "now" : null);
@@ -188,13 +195,91 @@ export default function SignupWebFlow(props: Props) {
     useScrollTopOn(done ? "done" : screen);
 
     // 가입이 끝나면 마케팅 수신 동의 저장(연동됐을 때만) → 완료 화면에 처리 결과 안내
+    const doneMember = done?.member;
     useEffect(() => {
-        if (!done || !features.marketing || marketingSavedRef.current) return;
+        if (!doneMember || !features.marketing || marketingSavedRef.current) return;
         marketingSavedRef.current = true;
-        void saveMarketingConsent(done.member.apiAccessToken, marketing).then((processedAt) => {
+        void saveMarketingConsent(doneMember.apiAccessToken, marketing).then((processedAt) => {
             if (processedAt) setMarketingProcessedAt(processedAt);
         });
-    }, [done, features.marketing, marketing]);
+    }, [doneMember, features.marketing, marketing]);
+
+    // 개발 서버 "단계 바로 보기" — 단계 · 갈림길로 바로 이동(가입 요청은 보내지 않음)
+    const jump = (next: Screen, nextRoute: Route = "email") => {
+        setDevDone(null);
+        setRoute(nextRoute);
+        props.clearError();
+        setTried(false);
+        setScreen(next);
+    };
+    const jumpIdentity = (kind: Parameters<typeof previewIdentityResult>[0]) => {
+        jump("identity");
+        const result = previewIdentityResult(kind);
+        setIdentity({ phase: "result", result });
+        if (result.status === "verified") props.setName(result.name);
+    };
+    const devGroups: DevJumpGroup[] = SIGNUP_DEV ? [
+        {
+            title: "이메일 가입 단계",
+            items: [
+                { label: "① 가입 방법", onClick: () => jump("method"), active: !done && screen === "method" },
+                { label: "② 약관", onClick: () => jump("terms"), active: !done && screen === "terms" && !isSocial },
+                { label: "③ 본인인증", onClick: () => { jump("identity"); setIdentity({ phase: "idle" }); }, active: !done && screen === "identity" },
+                { label: "④ 계정 정보", onClick: () => jump("account"), active: !done && screen === "account" },
+                { label: "⑤ 우리 아이", onClick: () => { jump("pet"); setPetChoice("now"); }, active: !done && screen === "pet" },
+                {
+                    label: "⑥ 가입 완료",
+                    active: Boolean(devDone),
+                    onClick: () => setDevDone({
+                        name: props.name.trim() || "김댕댕",
+                        email: props.email.trim() || "daeng@example.com",
+                        apiAccessToken: "preview-token",
+                        joinedAt: new Date().toISOString(),
+                        pets: [{ name: "몽이", breed: "토이 푸들", size: "small", age: "3살", coat: "medium", activity: "normal", concerns: [], photoDataUrl: "/images/reviews/r1.jpg" }],
+                    }),
+                },
+            ],
+        },
+        {
+            title: "본인인증 결과",
+            items: [
+                { label: "인증 완료", onClick: () => jumpIdentity("ok") },
+                { label: "이미 가입한 사람", onClick: () => jumpIdentity("duplicate") },
+                { label: "만 14세 미만", onClick: () => jumpIdentity("under14") },
+                { label: "재가입 제한", onClick: () => jumpIdentity("rejoin") },
+                { label: "취소", onClick: () => jumpIdentity("cancelled") },
+                { label: "실패", onClick: () => jumpIdentity("failed") },
+                { label: "시간 초과", onClick: () => jumpIdentity("expired") },
+            ],
+        },
+        {
+            title: "그 밖의 갈림길",
+            items: [
+                { label: "약관 안 고르고 다음", onClick: () => { jump("terms"); setTried(true); } },
+                { label: "이메일 중복", onClick: () => { jump("account"); props.setEmail("taken@example.com"); setEmailStatus("taken"); } },
+                { label: "우리 아이 나중에", onClick: () => { jump("pet"); setPetChoice("later"); } },
+            ],
+        },
+        {
+            title: "간편 가입",
+            items: [
+                { label: "카카오 약관", onClick: () => jump("terms", "kakao"), active: !done && screen === "terms" && route === "kakao" },
+                { label: "네이버 약관", onClick: () => jump("terms", "naver"), active: !done && screen === "terms" && route === "naver" },
+                { label: "구글 약관", onClick: () => jump("terms", "google"), active: !done && screen === "terms" && route === "google" },
+                { label: "돌아옴 · 정보 확인", onClick: () => goSocialPreview("new") },
+                { label: "이메일 못 받음", onClick: () => goSocialPreview("no_email") },
+                { label: "이미 가입된 간편 계정", onClick: () => goSocialPreview("existing", "naver") },
+                { label: "동의 취소", onClick: () => goSocialPreview("cancelled") },
+                { label: "같은 이메일 가입", onClick: () => goSocialPreview("email_exists") },
+            ],
+        },
+    ] : [];
+    const withDev = (node: React.ReactNode) => (
+        <>
+            {node}
+            {SIGNUP_DEV && <SignupDevPanel groups={devGroups} />}
+        </>
+    );
 
     const go = (next: Screen) => {
         props.clearError();
@@ -204,7 +289,7 @@ export default function SignupWebFlow(props: Props) {
 
     /* ───────── 가입 완료 ───────── */
     if (done) {
-        return (
+        return withDev(
             <SxShell steps={steps} now={now} route={route} lead="가입이 모두 끝났어요.">
                 <SignupWebDone
                     name={done.member.name}
@@ -228,14 +313,14 @@ export default function SignupWebFlow(props: Props) {
         };
         const connectionError = props.apiReady === true && providers.statusChecked && !providers.enabledByProvider;
         const emailFlow = emailSteps(features.identity).slice(1, -1).map((step) => step.label);
-        return (
+        return withDev(
             <SxShell steps={steps} now={0} lead="우리 아이 정보를 함께 등록하면 꼭 맞는 상품과 돌봄을 추천해 드려요.">
                 <SxCard labelledBy="sxw-method-title" screen="method">
                     <SxHead
                         id="sxw-method-title"
                         art="header-login-128.webp"
                         kicker={kicker("START")}
-                        title="어떻게 가입할까요?"
+                        title={<>어떻게 <Hl>가입</Hl>할까요?</>}
                         sub="이메일로 가입하거나, 쓰던 계정으로 바로 시작할 수 있어요."
                     />
                     {props.apiReady === false && (
@@ -324,14 +409,14 @@ export default function SignupWebFlow(props: Props) {
     if (screen === "terms") {
         const provider = SOCIAL.find((item) => item.id === route);
         const socialReady = requiredAgreed && Boolean(props.botToken) && props.botConfigured;
-        return (
+        return withDev(
             <SxShell steps={steps} now={now} route={route} lead={isSocial ? `${providerLabel} 계정으로 가입해요. 먼저 약관을 확인해 주세요.` : "가입 전에 꼭 필요한 약관을 확인해 주세요."}>
                 <SxCard labelledBy="sxw-terms-title" screen="terms">
                     <SxHead
                         id="sxw-terms-title"
                         art="policy-info-192.webp"
                         kicker={kicker("AGREEMENT")}
-                        title="약관에 동의해 주세요"
+                        title={<><Hl>약관</Hl>에 동의해 주세요</>}
                         sub="필수 3가지에 동의하면 다음으로 넘어가요. 내용은 항목마다 펼쳐 볼 수 있어요."
                     />
                     {isSocial && provider && (
@@ -419,14 +504,14 @@ export default function SignupWebFlow(props: Props) {
 
     /* ───────── ③ 휴대폰 본인인증 ───────── */
     if (screen === "identity") {
-        return (
+        return withDev(
             <SxShell steps={steps} now={now} route={route} lead={identityOk ? "본인인증이 끝났어요. 이어서 계정을 만들어요." : "한 사람이 한 계정만 만들 수 있도록 확인해요."}>
                 <SxCard labelledBy="sxw-id-title" screen="identity">
                     <SxHead
                         id="sxw-id-title"
                         art="web-cs-phone-256.webp"
                         kicker={kicker("IDENTITY")}
-                        title="휴대폰으로 본인인증 해 주세요"
+                        title={<>휴대폰으로 <Hl>본인인증</Hl> 해 주세요</>}
                         sub="내 명의 휴대폰으로 인증해요. 입력은 인증기관 창에서 해요."
                     />
                     <IdentityPanel
@@ -482,7 +567,7 @@ export default function SignupWebFlow(props: Props) {
             go("pet");
         };
 
-        return (
+        return withDev(
             <SxShell steps={steps} now={now} route={route} lead="로그인할 이메일과 비밀번호를 정해 주세요.">
                 <SxCard
                     as="form"
@@ -497,11 +582,11 @@ export default function SignupWebFlow(props: Props) {
                         id="sxw-acc-title"
                         art="stickers/my-profile.webp"
                         kicker={kicker("ACCOUNT")}
-                        title="계정 정보를 정해 주세요"
+                        title={<><Hl>계정 정보</Hl>를 정해 주세요</>}
                         sub={identityVerified ? "이름과 휴대폰은 본인인증 정보로 채워져요." : "이메일이 로그인 아이디가 돼요. 주문 안내도 이 주소로 보내 드려요."}
                     />
 
-                    <SxBlock icon="fa-user" title="내 정보">
+                    <SxBlock icon="fa-user" title="내 정보" tone="sky">
                         <div className="sxw-form">
                             <label className="sxw-f">
                                 <span className="sxw-label">이름</span>
@@ -534,7 +619,7 @@ export default function SignupWebFlow(props: Props) {
                         </div>
                     </SxBlock>
 
-                    <SxBlock icon="fa-key" title="로그인 정보">
+                    <SxBlock icon="fa-key" title="로그인 정보" tone="lav">
                         <div className="sxw-form">
                             <div className="sxw-f is-wide">
                                 <label className="sxw-label" htmlFor="sxw-email">이메일 <small>로그인 아이디</small></label>
@@ -651,7 +736,7 @@ export default function SignupWebFlow(props: Props) {
 
     /* ───────── ⑤ 우리 아이 + 마지막 확인 · 가입 ───────── */
     const canSubmit = Boolean(choice) && props.apiReady === true && props.botConfigured && Boolean(props.botToken) && !props.loading && !pet.photoLoading;
-    return (
+    return withDev(
         <SxShell steps={steps} now={now} route={route} lead="우리 아이를 함께 등록하면 꼭 맞는 상품을 먼저 보여 드려요.">
             <SxCard
                 as="form"
@@ -670,7 +755,7 @@ export default function SignupWebFlow(props: Props) {
                     id="sxw-pet-title"
                     art="lab-dog-256.webp"
                     kicker={kicker("MY DOG")}
-                    title="우리 아이도 함께 등록할까요?"
+                    title={<><Hl>우리 아이</Hl>도 함께 등록할까요?</>}
                     sub="사진 한 장만 있어도 견종 · 크기 후보를 찾아 드려요. 지금 안 해도 돼요."
                 />
 
@@ -713,7 +798,7 @@ export default function SignupWebFlow(props: Props) {
                     </div>
                 )}
 
-                <SxBlock icon="fa-clipboard-check" title="가입 전 마지막 확인" className="sxw-final">
+                <SxBlock icon="fa-clipboard-check" title="가입 전 마지막 확인" className="sxw-final" tone="mint">
                     <div className="sxw-summary">
                         <span className="sxw-av" aria-hidden="true">{(props.name.trim() || "댕").slice(0, 1)}</span>
                         <span className="sxw-summary-who">

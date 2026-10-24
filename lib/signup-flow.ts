@@ -25,7 +25,7 @@ export type SignupFlowFeatures = {
     marketing: boolean;
 };
 
-type SignupPreview = {
+export type SignupPreview = {
     identity?: "ok" | "duplicate" | "under14" | "rejoin" | "cancelled" | "failed" | "expired";
     email?: "ok" | "taken";
     social?: "new" | "existing" | "email_exists" | "cancelled" | "no_email";
@@ -109,6 +109,20 @@ const PREVIEW_IDENTITY_BASE = {
     carrier: "SKT",
 };
 
+/** 개발 미리보기 본인인증 결과(개발 서버의 미리보기 · "단계 바로 보기" 판에서만 씀) */
+export function previewIdentityResult(kind: NonNullable<SignupPreview["identity"]>): IdentityResult {
+    if (kind === "cancelled") return { status: "cancelled" };
+    if (kind === "expired") return { status: "expired" };
+    if (kind === "failed") return { status: "failed", message: "통신사 정보와 입력한 정보가 달라요." };
+    return {
+        ...PREVIEW_IDENTITY_BASE,
+        birthDate: kind === "under14" ? "2014-05-02" : PREVIEW_IDENTITY_BASE.birthDate,
+        over14: kind !== "under14",
+        existingAccount: kind === "duplicate" ? { maskedAccount: "ki****@gmail.com", provider: "kakao" } : undefined,
+        rejoinBlockedUntil: kind === "rejoin" ? "2026-11-20" : undefined,
+    };
+}
+
 /**
  * 인증사 창을 열고 결과를 기다림.
  * 연동 약속(협업자): POST /api/v1/auth/identity-verifications → { verification_id, auth_url }
@@ -119,17 +133,7 @@ export async function startIdentityVerification(): Promise<IdentityResult> {
     const preview = readSignupPreview();
     if (preview) {
         await wait(900);
-        const kind = preview.identity || "ok";
-        if (kind === "cancelled") return { status: "cancelled" };
-        if (kind === "expired") return { status: "expired" };
-        if (kind === "failed") return { status: "failed", message: "통신사 정보와 입력한 정보가 달라요." };
-        return {
-            ...PREVIEW_IDENTITY_BASE,
-            birthDate: kind === "under14" ? "2014-05-02" : PREVIEW_IDENTITY_BASE.birthDate,
-            over14: kind !== "under14",
-            existingAccount: kind === "duplicate" ? { maskedAccount: "ki****@gmail.com", provider: "kakao" } : undefined,
-            rejoinBlockedUntil: kind === "rejoin" ? "2026-11-20" : undefined,
-        };
+        return previewIdentityResult(preview.identity || "ok");
     }
 
     const startResponse = await fetch(apiUrl("/api/v1/auth/identity-verifications"), {

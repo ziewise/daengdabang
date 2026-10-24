@@ -112,7 +112,7 @@ export default function SignupPetFields({ pet, options, agreePetLens, setAgreePe
             </div>
 
             {/* 2) 사진 */}
-            <SxBlock icon="fa-camera" title="사진" extra={<em className="sxw-count">{photoCount}/4</em>}>
+            <SxBlock icon="fa-camera" tone="yellow" title="사진" extra={<em className="sxw-count">{photoCount}/4</em>}>
                 <ul className="sxw-phototips" aria-label="잘 나오는 사진">
                     <li><i className="fa-solid fa-sun" aria-hidden="true" />밝은 곳에서</li>
                     <li><i className="fa-solid fa-expand" aria-hidden="true" />몸 전체가 보이게</li>
@@ -174,7 +174,7 @@ export default function SignupPetFields({ pet, options, agreePetLens, setAgreePe
             )}
 
             {/* 4) 기본 정보 */}
-            <SxBlock icon="fa-paw" title="기본 정보">
+            <SxBlock icon="fa-paw" title="기본 정보" tone="sky">
                 <div className="sxw-form">
                     <label className="sxw-f">
                         <span className="sxw-label">이름</span>
@@ -238,7 +238,7 @@ export default function SignupPetFields({ pet, options, agreePetLens, setAgreePe
             </SxBlock>
 
             {/* 5) 몸과 성격 */}
-            <SxBlock icon="fa-heart" title="몸과 성격">
+            <SxBlock icon="fa-heart" title="몸과 성격" tone="pink">
                 <div className="sxw-form">
                     <IconPills
                         label="털 길이"

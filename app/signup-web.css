@@ -1,14 +1,17 @@
 /*
- * signup-web.css — 웹 회원가입(components/auth/signup-web) 꾸밈 · 2026-10-24 2차(하나의 틀 · 하나의 색 규칙)
+ * signup-web.css — 웹 회원가입(components/auth/signup-web) 꾸밈 · 2026-10-24 4차(기존 웹과 같은 "파스텔 쿠션" 결)
  * ---------------------------------------------------------------------
- * 틀: 위 머리(.sxw-top 강아지 · 회원가입 · 한 줄 · 가입 방식) → 가로 단계 줄(.sxw-hsteps) → 가운데 단계 카드(.sxw-card) → 로그인 안내
- *     (2026-10-24 사용자: 왼쪽 안내판은 카드 길이와 어긋나 보여 위 가로 단계로) · 모바일 — 번호 줄 + 지금 단계 한 줄
- * 카드: 머리(.sxw-head 3D 그림 동그라미 · 손글씨 꼬리표 · 주아 제목 · 한 줄) → 묶음(.sxw-block 작은 제목) → 아래 단추 줄(.sxw-foot)
- * 색 규칙: 분홍 = 고르기 · 다음 · 지금 단계 / 초록 = 완료 · 확인됨 / 연보라 = 혜택 · 안내 / 노랑 = 주의 / 장미 = 오류
- *          공급자 색(카카오 · 네이버 · 구글)은 공급자 단추 · 표시에만. 바탕 칸은 모두 크림.
- * 모양 규칙: 카드 34px · 안쪽 칸 20px · 입력칸 16px · 단추 · 칩은 알약(999px). 굵은 테 없음, 1.5~2px 안쪽 테만.
+ * 틀: 분홍 머리 판(.sxw-hero 손글씨 꼬리표 · 회원가입 + 세 색 밑줄 · 한 줄 · 가입 방식 · 오른쪽 큰 댕다방 강아지)
+ *     → 흰 판 위 단계 줄(.sxw-hsteps 단계마다 다른 파스텔 동그라미 · 아이콘 · 번호 배지 · 세 색 크레파스 줄)
+ *     → 단계 카드(.sxw-card) → 로그인 안내. 모바일은 작은 동그라미 줄 + 지금 단계 한 줄.
+ * 카드: 머리(.sxw-head 테두리 없는 큰 3D 그림 · 꼬리표 · 강조 단어(.sxw-hl 분홍 + 세 색 밑줄) 제목 · 한 줄)
+ *       → 묶음(.sxw-block[data-tone] 파스텔 판 + 위쪽 흰 반사광, 안의 칸 · 입력칸은 흰색) → 아래 단추 줄(.sxw-foot)
+ * 색: 분홍 · 하늘 · 연보라 · 민트 · 노랑(--t-soft · --t-ink · --t-ring)을 칸마다 돌려 씀 — 마이페이지 · 회원 탈퇴 · 결제수단과 같은 값.
+ *     고르면 분홍 채움 + 분홍 고리, 끝나면 민트, 혜택은 연보라, 주의는 노랑, 오류는 장미. 공급자 색은 공급자 단추 · 표시에만.
+ * 모양: 카드 34px · 파스텔 판 26px · 안쪽 칸 20px · 입력칸 16px · 단추 · 칩은 알약. 베이지 테두리 · 구분선 없이 채움 · 그림자로 나눔.
  * 크레파스 결(종이 · 세 색 밑줄 · 영문 손글씨 · 3D 그림). 스티커북 요소(테이프 · 와펜 · 기울어진 카드 · 점선) 없음.
  * 범위: .sxw(가입 화면 main) · .sxw-doc(약관 창) 안에서만 — 웹에서만 그려지는 부품이라 앱 화면과 섞이지 않음.
+ * 순서: 색 · 글꼴 → 틀 → 우리 아이 조각 → 카드 → 고르기 → 단계별 → 갈림길 · 완료 · 간편가입 → 약관 창 → 4차 파스텔 쿠션 결 → 움직임 → 모바일
  */
 
 /* 미리 만든 HTML(앱 기준 화면)이 웹에서 잠깐 보이지 않게 — 웹은 화면이 붙으면 새 가입 화면으로 바뀜 */
@@ -77,46 +80,53 @@ html:not(.ddb-app-mode) main[data-signup-web="form"] { visibility: hidden; }
 .sxw-ring img { width: 74%; height: 74%; object-fit: contain; }
 .sxw-ring.is-big { width: 118px; height: 118px; padding: 6px; margin: 0 auto; }
 
-/* ═════════ 틀 — 위 머리 · 가로 단계 줄 · 가운데 카드 하나 ═════════ */
-.sxw-shell { display: grid; gap: 18px; width: min(780px, 100%); margin: 0 auto; }
+/* ═════════ 틀 — 분홍 머리 판 · 단계 줄 · 단계 카드(4차: 기존 웹 마이페이지 · 회원 탈퇴 · 결제수단과 같은 결) ═════════ */
+.sxw-shell { display: grid; gap: 18px; width: min(820px, 100%); margin: 0 auto; }
 .sxw-main { display: grid; gap: 16px; min-width: 0; }
 
-/* 위 머리 — 고리 강아지 · 꼬리표 · 회원가입(세 색 밑줄) · 한 줄 · 가입 방식 */
-.sxw-top { display: grid; justify-items: center; gap: 6px; text-align: center; }
-.sxw-top > .sxw-ring { width: 76px; height: 76px; padding: 5px; }
-.sxw-top-text { display: grid; justify-items: center; gap: 2px; margin-top: 4px; }
-.sxw-title { width: fit-content; margin: 0; font-family: var(--sx-jua); font-size: 32px; font-weight: 400; line-height: 1.25; }
-.sxw-lead { margin: 2px 0 0; color: var(--sx-soft); font-size: 14px; font-weight: 600; line-height: 1.6; word-break: keep-all; }
-.sxw-route { display: inline-flex; align-items: center; gap: 8px; width: fit-content; margin-top: 4px; padding: 6px 14px; border-radius: 999px; background: var(--sx-pink-soft); color: var(--sx-pink-d); font-size: 12.5px; font-weight: 800; box-shadow: inset 0 0 0 1.5px var(--sx-pink-line); }
-.sxw-route[data-route="kakao"] { background: #fffbe0; color: #3a2e00; box-shadow: inset 0 0 0 1.5px #f3dc55; }
-.sxw-route[data-route="naver"] { background: #ebf9f1; color: #037a3a; box-shadow: inset 0 0 0 1.5px #a9e2c2; }
-.sxw-route[data-route="google"] { background: #f6f8fb; color: #334155; box-shadow: inset 0 0 0 1.5px #e2e8f0; }
+/* 파스텔 다섯 색 — 칸 채움(--t-soft) · 글자 · 아이콘(--t-ink) · 고리(--t-ring) */
+.sxw [data-tone="pink"], .sxw-doc [data-tone="pink"] { --t-soft: #fff0f4; --t-ink: #e2557a; --t-ring: #f7b6c9; }
+.sxw [data-tone="sky"] { --t-soft: #e9f4fb; --t-ink: #0e8aa0; --t-ring: #a9d4ea; }
+.sxw [data-tone="lav"] { --t-soft: #f3f0fe; --t-ink: #6b51c9; --t-ring: #cdbff5; }
+.sxw [data-tone="mint"] { --t-soft: #e9f8f1; --t-ink: #12a17a; --t-ring: #a8e0c6; }
+.sxw [data-tone="yellow"] { --t-soft: #fff6e3; --t-ink: #d98a12; --t-ring: #f5d38f; }
 
-/* 가로 단계 줄 — 번호 동그라미를 선으로 잇고, 끝난 단계 초록 · 지금 단계 분홍 · 남은 단계 회색 */
-.sxw-hsteps { padding: 18px 14px 16px; border-radius: 28px; background: var(--sx-paper); box-shadow: var(--sx-cushion); }
+/* 분홍 머리 판 — 손글씨 꼬리표 · 회원가입(세 색 밑줄) · 한 줄 · 가입 방식 · 오른쪽 큰 댕다방 강아지(살짝 떠오름) */
+.sxw-hero { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 150px; align-items: center; gap: 18px; padding: 26px 30px 26px 32px; border-radius: 34px; background: radial-gradient(90% 120% at 100% 0, rgb(243 240 254 / 95%) 0, transparent 55%), linear-gradient(120deg, #ffe9f0 0%, #fff2f6 55%, #fdf7ff 100%); box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 26px 40px -30px rgb(200 80 120 / 45%); }
+.sxw-hero-text { display: grid; justify-items: start; gap: 4px; min-width: 0; }
+.sxw-title { width: fit-content; margin: 2px 0 0; font-family: var(--sx-jua); font-size: 34px; font-weight: 400; line-height: 1.25; }
+.sxw-lead { margin: 4px 0 0; color: #6b5162; font-size: 14px; font-weight: 600; line-height: 1.7; word-break: keep-all; }
+.sxw-route { display: inline-flex; align-items: center; gap: 8px; width: fit-content; margin-top: 8px; padding: 6px 14px; border-radius: 999px; background: #fff; color: #e2557a; font-size: 12.5px; font-weight: 800; box-shadow: 0 10px 16px -12px rgb(200 80 120 / 60%); }
+.sxw-route[data-route="kakao"] { background: #fee500; color: #191919; }
+.sxw-route[data-route="naver"] { background: #03c75a; color: #fff; }
+.sxw-route[data-route="google"] { color: #334155; }
+.sxw-hero-art { width: 150px; height: 150px; object-fit: contain; filter: drop-shadow(0 16px 18px rgb(200 80 120 / 22%)); animation: sxw-bob 3.2s ease-in-out infinite; }
+
+/* 단계 줄 — 흰 판 위 파스텔 동그라미(아이콘 · 번호 배지) + 세 색 크레파스 줄(결제수단 "지금은 이렇게 결제해요"와 같은 결) */
+.sxw-hsteps { padding: 22px 16px 18px; border-radius: 30px; background: #fff; box-shadow: inset 0 3px 0 #fff, 0 0 0 1px #f2e9dd, 0 18px 30px -26px rgb(15 23 42 / 36%); }
 .sxw-hsteps ol { display: grid; margin: 0; padding: 0; list-style: none; }
-.sxw-hsteps li { position: relative; display: grid; justify-items: center; gap: 4px; padding: 0 4px; text-align: center; }
-.sxw-hsteps li + li::before { content: ""; position: absolute; top: 17px; right: calc(50% + 22px); left: calc(-50% + 22px); height: 3px; border-radius: 3px; background: #ece4d8; }
-.sxw-hsteps li[data-state="done"] + li::before,
-.sxw-hsteps li[data-state="now"]::before { background: var(--sx-mint-line); }
-.sxw-hsteps li[data-state="now"]::before { background: linear-gradient(90deg, var(--sx-mint-line), var(--sx-pink-line)); }
-.sxw-hsteps li > b { position: relative; z-index: 1; display: grid; width: 36px; height: 36px; place-items: center; border-radius: 50%; background: #fff; color: #b3a99c; font-size: 13px; box-shadow: inset 0 0 0 2px #ece4d8; transition: background 0.3s, box-shadow 0.3s; }
-.sxw-hsteps li > strong { margin-top: 4px; color: #8d96a5; font-family: var(--sx-jua); font-size: 14.5px; font-weight: 400; line-height: 1.3; word-break: keep-all; }
-.sxw-hsteps li > small { color: #b0b7c3; font-size: 11px; font-weight: 700; line-height: 1.4; word-break: keep-all; }
-.sxw-hsteps li[data-state="done"] b { background: var(--sx-mint); color: #fff; box-shadow: none; }
-.sxw-hsteps li[data-state="done"] strong { color: var(--sx-mint-d); }
-.sxw-hsteps li[data-state="now"] b { background: var(--sx-pink); color: #fff; box-shadow: 0 0 0 5px rgb(233 120 154 / 18%); }
-.sxw-hsteps li[data-state="now"] strong { color: var(--sx-pink-d); }
-.sxw-hsteps li[data-state="now"] small { color: #c58aa0; }
+.sxw-hsteps li { position: relative; display: grid; justify-items: center; align-content: start; gap: 3px; padding: 0 2px; text-align: center; }
+.sxw-hsteps li + li::before { content: ""; position: absolute; top: 28px; right: calc(50% + 34px); left: calc(-50% + 34px); height: 5px; border-radius: 999px; background: repeating-linear-gradient(94deg, rgb(8 145 178 / 45%) 0 18px, rgb(239 71 111 / 42%) 18px 36px, rgb(245 158 11 / 48%) 36px 54px); }
+.sxw-hsteps li[data-state="next"]::before { opacity: 0.3; }
+.sxw-hstep-i { position: relative; z-index: 1; display: grid; width: 60px; height: 60px; place-items: center; border: 4px solid #fff; border-radius: 50%; background: var(--t-soft); color: var(--t-ink); font-size: 19px; box-shadow: 0 12px 18px -12px rgb(15 23 42 / 45%); transition: transform 0.3s, opacity 0.3s; }
+.sxw-hstep-i > b { position: absolute; top: -5px; right: -5px; display: grid; width: 23px; height: 23px; place-items: center; border: 2.5px solid #fff; border-radius: 50%; background: var(--t-ink); color: #fff; font-size: 10.5px; font-weight: 800; }
+.sxw-hsteps li > strong { margin-top: 6px; color: #1e293b; font-family: var(--sx-jua); font-size: 15px; font-weight: 400; line-height: 1.3; word-break: keep-all; }
+.sxw-hsteps li > small { color: #64748b; font-size: 11px; font-weight: 600; line-height: 1.45; word-break: keep-all; }
+.sxw-hsteps li[data-state="done"] .sxw-hstep-i > b { background: var(--sx-mint); }
+.sxw-hsteps li[data-state="now"] .sxw-hstep-i { transform: scale(1.1); box-shadow: 0 0 0 4px var(--t-ring), 0 14px 22px -12px rgb(15 23 42 / 45%); }
+.sxw-hsteps li[data-state="now"] > strong { color: var(--t-ink); }
+.sxw-hsteps li[data-state="next"] .sxw-hstep-i { opacity: 0.45; box-shadow: none; }
+.sxw-hsteps li[data-state="next"] > strong { color: #94a3b8; }
+.sxw-hsteps li[data-state="next"] > small { color: #b0b7c3; }
 .sxw-hsteps-now { display: none; }
 
 /* 로그인 안내(카드 아래) */
 .sxw-login { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; margin: 2px 0 0; color: var(--sx-soft); font-size: 13.5px; font-weight: 700; }
-.sxw-login a { padding: 6px 16px; border-radius: 999px; background: var(--sx-pink-soft); color: var(--sx-pink-d); font-family: var(--sx-jua); font-size: 14px; box-shadow: inset 0 0 0 1.5px var(--sx-pink-line); }
+.sxw-login a { padding: 6px 16px; border-radius: 999px; background: #ffeef3; color: #d0436d; font-family: var(--sx-jua); font-size: 14px; }
 
-/* 가입 혜택(가입 방법 카드 아래) — 연보라 */
-.sxw-bonus { display: flex; align-items: center; gap: 14px; padding: 14px 18px; border-radius: 22px; background: var(--sx-lav-soft); box-shadow: inset 0 0 0 1.5px var(--sx-lav-line); }
-.sxw-bonus-art { display: grid; flex: none; width: 56px; height: 56px; place-items: center; border-radius: 50%; background: #fff; }
+/* 가입 혜택(가입 방법 카드 아래) — 연보라 쿠션 */
+.sxw-bonus { display: flex; align-items: center; gap: 14px; padding: 14px 18px; border-radius: 22px; background: #f3f0fe; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
+.sxw-bonus-art { display: grid; flex: none; width: 56px; height: 56px; place-items: center; border-radius: 50%; background: #fff; box-shadow: 0 8px 12px -10px rgb(15 23 42 / 40%); }
 .sxw-bonus-art img { width: 44px; height: 44px; object-fit: contain; }
 .sxw-bonus > span:last-child { display: grid; gap: 1px; min-width: 0; }
 .sxw-bonus em { width: fit-content; padding: 1px 9px; border-radius: 999px; background: #fff; color: var(--sx-lav); font-size: 11px; font-style: normal; font-weight: 800; }
@@ -125,6 +135,8 @@ html:not(.ddb-app-mode) main[data-signup-web="form"] { visibility: hidden; }
 
 .sxw-bar { display: block; height: 8px; overflow: hidden; border-radius: 999px; background: #efe9e0; }
 .sxw-bar > span { display: block; height: 100%; border-radius: 999px; background: repeating-linear-gradient(94deg, #7cc8de 0 16px, #f39bb4 16px 32px, #f7c76a 32px 48px); transition: width 0.5s ease; }
+
+@keyframes sxw-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
 
 /* ═════════ 우리 아이(3차) — 우리 아이 카드 · 사진 팁 · 후보 카드 · 견종 칩 · 아이콘 알약 · 털 색 · 나중에 안내 ═════════ */
 .sxw-petcard { display: grid; grid-template-columns: 96px minmax(0, 1fr) auto; align-items: center; gap: 18px; padding: 18px 20px; border-radius: 26px; background: linear-gradient(120deg, #fff8ec, #fff3f6 60%, #f6f2fe); box-shadow: inset 0 0 0 1.5px #f3e3cc, 0 18px 26px -24px rgb(15 23 42 / 45%); }
@@ -563,6 +575,142 @@ a.sxw-gift:hover { transform: translateY(-2px); }
 .sxw-doc-foot { display: flex; padding: 14px 22px 20px; }
 .sxw-doc .sxw-next { border: 0; cursor: pointer; }
 
+/* ═════════ 4차 — 파스텔 쿠션 결(기존 웹과 같게): 베이지 테두리 · 구분선을 빼고 파스텔로 채움 ═════════
+   - 묶음(.sxw-block[data-tone]) = 파스텔 판 + 위쪽 흰 반사광, 안의 칸 · 입력칸은 흰색
+   - 카드 머리 그림은 동그라미 틀 없이 크게, 제목 강조 단어(.sxw-hl)는 분홍 글자 + 세 색 밑줄
+   - 고르면 분홍 채움 + 분홍 고리, 끝나면 민트 채움(기존 회원 탈퇴 "마지막 확인"과 같은 결) */
+
+/* 카드 머리 — 구분선 없음 · 큰 3D 그림 · 강조 단어 */
+.sxw-card { gap: 20px; }
+.sxw-head { padding-bottom: 4px; border-bottom: 0; }
+img.sxw-head-art { flex: none; width: 92px; height: 92px; object-fit: contain; filter: drop-shadow(0 12px 14px rgb(15 23 42 / 18%)); }
+.sxw-head h2 { font-size: 27px; }
+.sxw-hl { position: relative; isolation: isolate; color: #e2557a; }
+.sxw-hl::after { content: ""; position: absolute; right: 1%; bottom: -0.04em; left: 0; z-index: -1; height: 0.24em; border-radius: 999px 70% 999px 60%; background: var(--sx-underline); opacity: 0.6; transform: rotate(-0.7deg) skewX(-7deg); }
+
+/* 묶음 — 파스텔 판 */
+.sxw-block[data-tone] { padding: 20px 20px 22px; border-radius: 26px; background: var(--t-soft); box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
+.sxw-block[data-tone] .sxw-block[data-tone] { padding: 16px; background: #fff; box-shadow: 0 10px 18px -16px rgb(15 23 42 / 40%); }
+.sxw-block-h { font-size: 18px; }
+.sxw-block-h > span { width: 34px; height: 34px; font-size: 14px; }
+.sxw-block[data-tone] > .sxw-block-h > span { background: #fff; color: var(--t-ink); box-shadow: 0 6px 10px -8px rgb(15 23 42 / 40%); }
+.sxw-block[data-tone] .sxw-count { background: #fff; }
+.sxw-block[data-tone] .sxw-in { background: #fff; box-shadow: inset 0 0 0 1.5px rgb(15 23 42 / 7%); }
+.sxw-block[data-tone] .sxw-in:focus { box-shadow: inset 0 0 0 2px #f2a9bf, 0 0 0 4px rgb(247 168 191 / 25%); }
+.sxw-block[data-tone] .sxw-in.is-lock { background: rgb(255 255 255 / 60%); box-shadow: none; }
+.sxw-block[data-tone] .sxw-pills { background: rgb(255 255 255 / 65%); }
+.sxw-block[data-tone] .sxw-hint { color: #7a8698; }
+.sxw-block[data-tone] .sxw-label small { color: #7a8698; }
+
+/* 아래 단추 줄 — 구분선 없음 */
+.sxw-foot-wrap { padding-top: 6px; border-top: 0; }
+.sxw-prev { box-shadow: inset 0 0 0 1.5px #ece3d6; }
+
+/* 알림 · 동그라미 체크 · 알약 — 테두리 대신 채움 */
+.sxw-notice[data-tone] { box-shadow: inset 0 3px 0 rgb(255 255 255 / 70%); }
+.sxw-chk > span { box-shadow: inset 0 0 0 2px #e6dccf; }
+.sxw-pills label.is-on { box-shadow: 0 0 0 2px #f7b6c9, 0 8px 14px -10px rgb(200 80 120 / 55%); }
+
+/* ① 가입 방법 — 분홍 쿠션 · 흰 동그라미 그림 */
+.sxw-way { background: linear-gradient(120deg, #ffe9f0, #fff4f7 70%); box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%), 0 18px 26px -22px rgb(200 80 120 / 55%); }
+.sxw-way:hover:not(:disabled) { box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%), 0 22px 30px -20px rgb(200 80 120 / 65%); }
+.sxw-way-art { box-shadow: 0 8px 12px -10px rgb(15 23 42 / 40%); }
+.sxw-way-flow > span { padding: 3px 10px; border-radius: 999px; background: rgb(255 255 255 / 75%); color: #8a5a6c; }
+.sxw-way-flow i { display: none; }
+.sxw-or::before, .sxw-or::after { background: repeating-linear-gradient(94deg, rgb(8 145 178 / 30%) 0 14px, rgb(239 71 111 / 28%) 14px 28px, rgb(245 158 11 / 32%) 28px 42px); height: 3px; }
+
+/* ② 약관 — 전체 동의 분홍 쿠션 · 항목 채움(고르면 분홍) */
+.sxw-provider, .sxw-provider[data-provider] { box-shadow: inset 0 3px 0 rgb(255 255 255 / 70%); }
+.sxw-all { background: #fff7ec; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
+.sxw-all.is-on { background: #ffeef3; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%), 0 14px 22px -18px rgb(200 80 120 / 55%); }
+.sxw-all em.is-ok { background: #e9f8f1; box-shadow: none; }
+.sxw-terms li { background: #faf7f2; box-shadow: none; }
+.sxw-terms li.is-on { background: #fff3f6; box-shadow: none; }
+.sxw-view { box-shadow: 0 4px 8px -6px rgb(15 23 42 / 35%); }
+.sxw-channels label { box-shadow: 0 4px 8px -6px rgb(15 23 42 / 30%); }
+.sxw-channels label.is-on { background: #ffeef3; box-shadow: none; }
+.sxw-bot [data-signup-bot-challenge] { background: #f3f0fe; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
+.sxw-block[data-tone] .sxw-bot [data-signup-bot-challenge] { background: #fff; box-shadow: 0 10px 18px -16px rgb(15 23 42 / 40%); }
+.sxw-bot [data-signup-bot-challenge-unavailable] { box-shadow: none; }
+
+/* ③ 본인인증 — 하늘 판 안 흰 카드(인증기관 창 단계만 연보라) · 노랑 판 안 흰 줄 */
+.sxw-block[data-tone] .sxw-timeline li { background: #fff; box-shadow: 0 10px 16px -14px rgb(15 23 42 / 40%); }
+.sxw-block[data-tone] .sxw-timeline li[data-owner="agency"] { background: #f3f0fe; box-shadow: inset 0 0 0 2px #ddd3f6; }
+.sxw-timeline b { box-shadow: none; background: #ffeef3; }
+.sxw-timeline li[data-owner="agency"] b { background: #fff; box-shadow: none; }
+.sxw-timeline em { background: #ffeef3; }
+.sxw-timeline li[data-owner="agency"] em { background: #fff; }
+.sxw-block[data-tone] .sxw-facts li { background: #fff; box-shadow: none; }
+.sxw-facts li > i { background: #fff6e3; color: #d98a12; }
+.sxw-ok { box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
+
+/* ④ 계정 정보 — 안내 칸 · 칩 채움 */
+.sxw-f-tip { background: rgb(255 255 255 / 75%); color: #0e7f94; box-shadow: none; }
+.sxw-mini { box-shadow: 0 0 0 2px #f7b6c9; }
+
+/* ⑤ 우리 아이 — 고르기 카드 · 사진 칸 · 후보 · 칩 · 동의 */
+.sxw-choice label { background: #faf7f2; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
+.sxw-choice label.is-on { background: #ffeef3; box-shadow: inset 0 0 0 2px #f7b6c9, 0 14px 22px -18px rgb(200 80 120 / 60%); }
+.sxw-choice img { padding: 4px; border-radius: 50%; background: #fff; box-shadow: 0 8px 12px -10px rgb(15 23 42 / 40%); }
+.sxw-petcard { background: radial-gradient(90% 120% at 100% 0, rgb(243 240 254 / 95%) 0, transparent 55%), linear-gradient(120deg, #fff6e3 0%, #fff2f6 60%, #fdf7ff 100%); box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 18px 28px -24px rgb(200 80 120 / 45%); }
+.sxw-petcard-photo { box-shadow: 0 0 0 4px #fff, 0 0 0 7px #f7b6c9, 0 14px 20px -12px rgb(15 23 42 / 40%); }
+.sxw-petcard-tags span { box-shadow: none; }
+.sxw-phototips li { background: #fff; box-shadow: none; }
+.sxw-block[data-tone] .sxw-shot { background: #fff; box-shadow: 0 10px 16px -14px rgb(15 23 42 / 40%); }
+.sxw-block[data-tone] .sxw-shot.is-on { box-shadow: 0 0 0 3px #f7b6c9, 0 10px 16px -12px rgb(200 80 120 / 50%); }
+.sxw-shot-add { box-shadow: none; background: #ffeef3; }
+.sxw-aicard { box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
+.sxw-breeds button { box-shadow: 0 4px 8px -6px rgb(15 23 42 / 30%); }
+.sxw-breeds button.is-on { background: #ffeef3; box-shadow: 0 0 0 2px #f7b6c9; }
+.sxw-swatches button { box-shadow: 0 4px 8px -6px rgb(15 23 42 / 35%); }
+.sxw-swatches button.is-on { box-shadow: 0 0 0 3px #e9789a; }
+.sxw-concerns label { box-shadow: 0 4px 8px -6px rgb(15 23 42 / 30%); }
+.sxw-concerns label.is-on { background: #ffeef3; box-shadow: 0 0 0 2px #f7b6c9; }
+.sxw-concern-i { background: #fff6e3; color: #d98a12; }
+.sxw-consent { background: #faf7f2; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
+.sxw-consent.is-on { background: #ffeef3; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
+.sxw-later { background: #e9f4fb; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
+.sxw-later img { padding: 6px; border-radius: 50%; background: #fff; }
+
+/* 마지막 확인 — 민트 판 안 흰 카드 */
+.sxw-final { padding-top: 20px; border-top: 0; }
+.sxw-block[data-tone] .sxw-summary { background: #fff; box-shadow: 0 10px 18px -16px rgb(15 23 42 / 40%); }
+.sxw-summary-chips em { background: #e9f8f1; box-shadow: none; }
+
+/* 갈림길 · 완료 · 간편가입 돌아옴 — 채움 */
+.sxw-branch[data-tone="pink"] { background: #fff0f4; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
+.sxw-branch[data-tone="gray"] { background: #f6f3ee; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
+.sxw-branch > img { padding: 6px; border-radius: 50%; background: #fff; box-shadow: 0 8px 12px -10px rgb(15 23 42 / 40%); }
+.sxw-pill { box-shadow: 0 4px 8px -6px rgb(15 23 42 / 30%); }
+.sxw-gift[data-tone="lav"] { background: #f3f0fe; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
+.sxw-gift[data-tone="mint"] { background: #e9f8f1; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
+.sxw-gift-art { background: #fff; box-shadow: 0 8px 12px -10px rgb(15 23 42 / 40%); }
+.sxw-gift[data-tone] em { background: #fff; }
+.sxw-got, .sxw-got[data-provider] { box-shadow: inset 0 3px 0 rgb(255 255 255 / 70%); }
+.sxw-block[data-tone] .sxw-agreed span { background: #fff; box-shadow: none; }
+.sxw-petlist li { background: #fff; box-shadow: none; }
+.sxw-petcreate { background: #fff6e3; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
+.sxw-petcreate-art img { box-shadow: 0 6px 10px -8px rgb(15 23 42 / 40%); }
+.sxw-return[class*="is-"] .sxw-return-art { box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
+
+/* 완료 · 간편가입 결과 카드 — 카드 간격 규칙(20px) 대신 각자 간격, 축하 그림은 테두리 없이 크게 */
+.sxw-card.sxw-done { gap: 0; }
+.sxw-card.sxw-return { gap: 4px; }
+.sxw-done-art { position: relative; width: 132px; height: 132px; object-fit: contain; filter: drop-shadow(0 16px 18px rgb(200 80 120 / 22%)); animation: sxw-pop 0.5s ease both; }
+
+/* ═════════ 개발 서버 전용 "단계 바로 보기" 판(SignupDevPanel — 배포 빌드에는 부품이 없음) ═════════ */
+.sxw-dev { position: fixed; bottom: 84px; left: 16px; z-index: 2147482000; display: grid; width: min(340px, calc(100vw - 32px)); max-height: calc(100vh - 140px); overflow: hidden; border-radius: 24px; background: #fff; box-shadow: 0 0 0 1px #f2e9dd, 0 24px 40px -20px rgb(15 23 42 / 45%); }
+.sxw-dev-toggle { display: flex; align-items: center; gap: 8px; padding: 12px 16px; border: 0; background: linear-gradient(120deg, #ffe9f0, #f3f0fe); color: #1e293b; font-family: var(--sx-jua); font-size: 15px; text-align: left; }
+.sxw-dev-toggle em { padding: 1px 8px; border-radius: 999px; background: #fff; color: #d98a12; font-family: var(--font-wanted-sans), sans-serif; font-size: 10.5px; font-style: normal; font-weight: 800; }
+.sxw-dev-toggle > i:last-child { margin-left: auto; color: #94a3b8; font-size: 12px; }
+.sxw-dev-body { display: grid; gap: 12px; overflow-y: auto; padding: 14px 16px 16px; }
+.sxw-dev-group p { margin: 0 0 6px; color: #64748b; font-size: 11.5px; font-weight: 800; }
+.sxw-dev-group span { display: flex; flex-wrap: wrap; gap: 5px; }
+.sxw-dev-group button { padding: 6px 11px; border: 0; border-radius: 999px; background: #faf7f2; color: #475569; font-size: 12px; font-weight: 800; cursor: pointer; }
+.sxw-dev-group button:hover { background: #fff0f4; color: #e2557a; }
+.sxw-dev-group button.is-on { background: #e9789a; color: #fff; }
+.sxw-dev-note { margin: 0; color: #94a3b8; font-size: 11px; font-weight: 700; line-height: 1.5; }
+
 /* ═════════ 움직임 ═════════ */
 @keyframes sxw-pop { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
 @keyframes sxw-up { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
@@ -573,13 +721,15 @@ a.sxw-gift:hover { transform: translateY(-2px); }
 @media (max-width: 680px) {
     .sxw { padding: 18px 12px 60px; }
     .sxw-shell { gap: 14px; }
-    .sxw-top > .sxw-ring { width: 60px; height: 60px; padding: 4px; }
-    .sxw-title { font-size: 26px; }
+    .sxw-hero { grid-template-columns: minmax(0, 1fr) 92px; gap: 10px; padding: 20px 18px 20px 20px; border-radius: 28px; }
+    .sxw-hero-art { width: 92px; height: 92px; }
+    .sxw-title { font-size: 27px; }
     .sxw-lead { font-size: 13px; }
     .sxw-hsteps { padding: 14px 10px 12px; border-radius: 24px; }
     .sxw-hsteps li { padding: 0; }
-    .sxw-hsteps li + li::before { top: 14px; right: calc(50% + 17px); left: calc(-50% + 17px); }
-    .sxw-hsteps li > b { width: 30px; height: 30px; font-size: 12px; }
+    .sxw-hsteps li + li::before { top: 20px; right: calc(50% + 23px); left: calc(-50% + 23px); height: 4px; }
+    .sxw-hstep-i { width: 44px; height: 44px; border-width: 3px; font-size: 15px; }
+    .sxw-hstep-i > b { top: -4px; right: -4px; width: 18px; height: 18px; border-width: 2px; font-size: 8.5px; }
     .sxw-hsteps li > strong, .sxw-hsteps li > small { display: none; }
     .sxw-hsteps-now { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center; gap: 2px 8px; margin: 12px 0 0; padding-top: 10px; border-top: 2px solid #f6efe5; }
     .sxw-hsteps-n { color: var(--sx-mute); font-size: 12.5px; font-weight: 800; }
@@ -591,8 +741,8 @@ a.sxw-gift:hover { transform: translateY(-2px); }
 @media (max-width: 600px) {
     .sxw-card { gap: 18px; padding: 22px 16px 20px; border-radius: 28px; }
     .sxw-head { align-items: flex-start; gap: 12px; padding-bottom: 16px; }
-    .sxw-head-art { width: 58px; height: 58px; }
-    .sxw-head-art img { width: 44px; height: 44px; }
+    img.sxw-head-art { width: 64px; height: 64px; }
+    .sxw-block[data-tone] { padding: 16px 14px 18px; border-radius: 22px; }
     .sxw-head h2 { font-size: 21px; }
     .sxw-head p { font-size: 13px; }
     .sxw-way { grid-template-columns: 58px minmax(0, 1fr) 38px; gap: 12px; padding: 14px; }
@@ -637,6 +787,6 @@ a.sxw-gift:hover { transform: translateY(-2px); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .sxw-ok-big, .sxw-pet, .sxw-branch, .sxw-aicard, .sxw-later, .sxw-shots-busy, .sxw-shots-busy i, .sxw-confetti, .sxw-done .sxw-ring, .sxw-return-art, .sxw-doc, .sxw-doc-card { animation: none; }
+    .sxw-hero-art, .sxw-done-art, .sxw-ok-big, .sxw-pet, .sxw-branch, .sxw-aicard, .sxw-later, .sxw-shots-busy, .sxw-shots-busy i, .sxw-confetti, .sxw-done .sxw-ring, .sxw-return-art, .sxw-doc, .sxw-doc-card { animation: none; }
     .sxw-bar > span { transition: none; }
 }

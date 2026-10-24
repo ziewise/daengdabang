@@ -1,16 +1,18 @@
 /**
- * SignupWebParts — 웹 회원가입 공용 틀 · 조각(2026-10-24 2차: 사용자 "하나의 목적 · 일관성 · 구조 · 구성 · 문구 · 색상 · 모양 모두 다시")
+ * SignupWebParts — 웹 회원가입 공용 틀 · 조각
  * ---------------------------------------------------------------------
- * 모든 단계(가입 방법 → 약관 → 본인인증 → 계정 정보 → 우리 아이 → 완료, 간편가입도)가 같은 틀 하나를 씀.
- *  - SxShell  : 위 머리(댕다방 강아지 · 회원가입 · 한 줄 · 가입 방식) → 가로 단계 줄(번호 · 이름 · 설명) → 가운데 단계 카드 → 로그인 안내
- *               (2026-10-24 사용자: 왼쪽 안내판은 카드 길이와 어긋나 보여 위 가로 단계로 바꿈) / 모바일 — 번호 줄 + 지금 단계 한 줄
- *  - SxCard   : 단계 카드 = 머리(SxHead: 3D 그림 · 꼬리표 · 제목 · 한 줄 설명) → 묶음(SxBlock) → 아래 단추 줄(SxFoot)
- *  - 고르기 조각: SxCheck(동그라미 체크) · SxPills(알약 하나 고르기) · SxChoice(큰 고르기 카드)
- *  - TermsPanel · SxDocModal(약관 내용 창) · IdentityPanel(본인인증 전/진행/결과/갈림길) · SxBranch(갈림길 카드) · SignupWebDone(완료)
+ * 2026-10-24 4차(사용자 "색상 · 카드 느낌 · 디테일이 지금까지 웹과 달라"): 기존 웹(마이페이지 · 회원 탈퇴 · 결제수단)의 "파스텔 쿠션" 결로.
+ *  - SxShell  : 분홍 머리 판(손글씨 꼬리표 · 회원가입 + 세 색 밑줄 · 한 줄 · 가입 방식 · 오른쪽 큰 댕다방 강아지)
+ *               → 흰 판 위 단계 줄(단계마다 다른 파스텔 동그라미 + 아이콘 + 번호 배지, 세 색 크레파스 줄로 이음)
+ *               → 단계 카드 → 로그인 안내. 모바일은 동그라미 줄 + 지금 단계 한 줄.
+ *  - SxCard   : 흰 쿠션 카드 = 머리(SxHead: 테두리 없는 큰 3D 그림 · 꼬리표 · 강조 단어(색 + 세 색 밑줄) 제목 · 한 줄)
+ *               → 묶음(SxBlock: 파스텔로 채운 판, 묶음마다 다른 색 · 아이콘 동그라미) → 아래 단추 줄(SxFoot)
+ *  - Hl       : 제목 안 강조 단어(분홍 글자 + 세 색 밑줄 — 기존 웹 "꼭 확인해 주세요"와 같은 결)
+ *  - 고르기 조각: SxCheck(동그라미 체크) · SxPills(알약 하나 고르기)
+ *  - TermsPanel · SxDocModal(약관 내용 창) · IdentityPanel(본인인증) · SxBranch(갈림길 카드) · SignupWebDone(완료)
  *
- * 색 규칙(app/signup-web.css 와 같음)
- *   분홍 = 고르기 · 다음 · 지금 단계 / 초록 = 완료 · 확인됨 / 연보라 = 혜택 · 안내 / 노랑 = 주의 / 장미 = 오류
- *   공급자 색(카카오 노랑 · 네이버 초록 · 구글 흰)은 공급자 단추와 표시에만.
+ * 색: 분홍 · 하늘 · 연보라 · 민트 · 노랑 다섯 파스텔을 칸마다 돌려 씀(채움, 베이지 테두리 없음).
+ *   고르면 분홍 · 끝나면 민트 · 혜택은 연보라 · 주의는 노랑 · 오류는 장미. 공급자 색은 공급자 단추 · 표시에만.
  * 크레파스 결(종이 · 세 색 밑줄 · 영문 손글씨 · 3D 그림). 스티커북 요소(테이프 · 와펜 · 기울어진 카드 · 점선) 없음.
  */
 "use client";
@@ -36,34 +38,42 @@ export const PROVIDER_NAME: Record<string, string> = {
     google: "구글",
 };
 
-/* ═════════ 단계 목록 ═════════ */
-export type SxStep = { label: string; desc: string };
+/** 파스텔 다섯 색(기존 웹과 같은 이름) */
+export type SxTone = "pink" | "sky" | "lav" | "mint" | "yellow";
+
+/* ═════════ 단계 목록 — 단계마다 아이콘 · 파스텔 색 ═════════ */
+export type SxStep = { label: string; desc: string; icon: string; tone: SxTone };
 
 /** 이메일 가입 단계(본인인증은 연동됐을 때만) */
 export function emailSteps(identity: boolean): SxStep[] {
     return [
-        { label: "가입 방법", desc: "이메일 또는 간편 가입" },
-        { label: "약관 동의", desc: "필수 3가지" },
-        ...(identity ? [{ label: "본인인증", desc: "휴대폰 명의 확인" }] : []),
-        { label: "계정 정보", desc: "이메일 · 비밀번호" },
-        { label: "우리 아이", desc: "선택 · 나중에 해도 돼요" },
-        { label: "가입 완료", desc: "혜택 안내" },
+        { label: "가입 방법", desc: "이메일 또는 간편 가입", icon: "fa-door-open", tone: "sky" },
+        { label: "약관 동의", desc: "필수 3가지", icon: "fa-file-signature", tone: "lav" },
+        ...(identity ? [{ label: "본인인증", desc: "휴대폰 명의 확인", icon: "fa-mobile-screen-button", tone: "yellow" as const }] : []),
+        { label: "계정 정보", desc: "이메일 · 비밀번호", icon: "fa-key", tone: "pink" },
+        { label: "우리 아이", desc: "선택 · 나중에 해도 돼요", icon: "fa-paw", tone: "mint" },
+        { label: "가입 완료", desc: "혜택 안내", icon: "fa-gift", tone: "pink" },
     ];
 }
 
 /** 간편 가입 단계 */
 export function socialSteps(providerLabel: string): SxStep[] {
     return [
-        { label: "가입 방법", desc: "이메일 또는 간편 가입" },
-        { label: "약관 동의", desc: "필수 3가지 · 보안 확인" },
-        { label: `${providerLabel} 로그인`, desc: `${providerLabel} 화면에서 진행` },
-        { label: "정보 확인", desc: "받은 정보 확인" },
-        { label: "우리 아이", desc: "선택 · 나중에 해도 돼요" },
-        { label: "가입 완료", desc: "혜택 안내" },
+        { label: "가입 방법", desc: "이메일 또는 간편 가입", icon: "fa-door-open", tone: "sky" },
+        { label: "약관 동의", desc: "필수 3가지 · 보안 확인", icon: "fa-file-signature", tone: "lav" },
+        { label: `${providerLabel} 로그인`, desc: `${providerLabel} 화면에서 진행`, icon: "fa-right-to-bracket", tone: "yellow" },
+        { label: "정보 확인", desc: "받은 정보 확인", icon: "fa-list-check", tone: "pink" },
+        { label: "우리 아이", desc: "선택 · 나중에 해도 돼요", icon: "fa-paw", tone: "mint" },
+        { label: "가입 완료", desc: "혜택 안내", icon: "fa-gift", tone: "pink" },
     ];
 }
 
-/* ═════════ 틀 — 위 머리 · 가로 단계 줄 · 가운데 카드 하나(2026-10-24 사용자 "사이드 대신 상단 단계") ═════════ */
+/** 제목 안 강조 단어 — 분홍 글자 + 세 색 밑줄 */
+export function Hl({ children }: { children: ReactNode }) {
+    return <span className="sxw-hl">{children}</span>;
+}
+
+/* ═════════ 틀 — 분홍 머리 판 · 단계 줄 · 단계 카드 ═════════ */
 export function SxShell({
     steps,
     now,
@@ -87,31 +97,34 @@ export function SxShell({
 
     return (
         <div className="sxw-shell">
-            <header className="sxw-top">
-                <span className="sxw-ring" aria-hidden="true">
-                    {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
-                    <span><img src={`${UI}logo-poodle-384.webp`} alt="" /></span>
-                </span>
-                <span className="sxw-top-text">
+            {/* 분홍 머리 판 — 기존 웹 마이페이지 머리 판과 같은 결 */}
+            <header className="sxw-hero">
+                <span className="sxw-hero-text">
                     <span className="sxw-kicker">JOIN DAENGDABANG</span>
                     <h1 className="sxw-title">회원가입</h1>
+                    <p className="sxw-lead">{lead}</p>
+                    {routeLabel && (
+                        <span className="sxw-route" data-route={route}>
+                            <ProviderMark provider={route || "email"} />
+                            {routeLabel}로 {finished ? "가입했어요" : "가입하고 있어요"}
+                        </span>
+                    )}
                 </span>
-                <p className="sxw-lead">{lead}</p>
-                {routeLabel && (
-                    <span className="sxw-route" data-route={route}>
-                        <ProviderMark provider={route || "email"} />
-                        {routeLabel}로 {finished ? "가입했어요" : "가입하고 있어요"}
-                    </span>
-                )}
+                {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
+                <img className="sxw-hero-art" src={`${UI}logo-poodle-384.webp`} alt="" aria-hidden="true" />
             </header>
 
+            {/* 단계 줄 — 파스텔 동그라미 · 아이콘 · 번호 배지 · 세 색 크레파스 줄 */}
             <nav className="sxw-hsteps" aria-label={`가입 단계 ${steps.length}단계 중 ${now + 1}단계 · ${current?.label || ""}`}>
                 <ol style={{ gridTemplateColumns: `repeat(${steps.length}, minmax(0, 1fr))` }}>
                     {steps.map((step, index) => {
                         const state = index < now ? "done" : index === now ? "now" : "next";
                         return (
-                            <li key={step.label} data-state={state} aria-current={state === "now" ? "step" : undefined}>
-                                <b aria-hidden="true">{state === "done" ? <i className="fa-solid fa-check" /> : index + 1}</b>
+                            <li key={step.label} data-state={state} data-tone={step.tone} aria-current={state === "now" ? "step" : undefined}>
+                                <span className="sxw-hstep-i" aria-hidden="true">
+                                    <i className={`fa-solid ${step.icon}`} />
+                                    <b>{state === "done" ? <i className="fa-solid fa-check" /> : index + 1}</b>
+                                </span>
                                 <strong>{step.label}</strong>
                                 <small>{step.desc}</small>
                             </li>
@@ -152,13 +165,12 @@ export function SxCard({ children, labelledBy, className = "", as = "section", o
     return <section className={`sxw-card ${className}`} aria-labelledby={labelledBy} data-signup-screen={screen}>{children}</section>;
 }
 
+/** 카드 머리 — 테두리 없는 큰 3D 그림 · 손글씨 꼬리표 · 제목(강조 단어는 Hl) · 한 줄 */
 export function SxHead({ id, art, kicker, title, sub, aside }: { id: string; art: string; kicker: string; title: ReactNode; sub: ReactNode; aside?: ReactNode }) {
     return (
         <header className="sxw-head">
-            <span className="sxw-head-art" aria-hidden="true">
-                {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
-                <img src={art.startsWith("/") ? art : `${UI}${art}`} alt="" />
-            </span>
+            {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
+            <img className="sxw-head-art" src={art.startsWith("/") ? art : `${UI}${art}`} alt="" aria-hidden="true" />
             <span className="sxw-head-text">
                 <span className="sxw-kicker">{kicker}</span>
                 <h2 id={id}>{title}</h2>
@@ -169,10 +181,10 @@ export function SxHead({ id, art, kicker, title, sub, aside }: { id: string; art
     );
 }
 
-/** 카드 안 묶음 — 작은 제목(아이콘 동그라미 · 주아) + 내용 */
-export function SxBlock({ icon, title, extra, children, className = "" }: { icon: string; title: string; extra?: ReactNode; children: ReactNode; className?: string }) {
+/** 카드 안 묶음 — 파스텔로 채운 판(tone) + 작은 제목(색 동그라미 아이콘 · 주아). tone 이 없으면 흰 바탕 그대로 */
+export function SxBlock({ icon, title, extra, children, className = "", tone }: { icon: string; title: string; extra?: ReactNode; children: ReactNode; className?: string; tone?: SxTone }) {
     return (
-        <section className={`sxw-block ${className}`}>
+        <section className={`sxw-block ${className}`} data-tone={tone}>
             <h3 className="sxw-block-h">
                 <span aria-hidden="true"><i className={`fa-solid ${icon}`} /></span>
                 {title}
@@ -588,7 +600,7 @@ export function IdentityPanel({ state, onStart, onRestart }: { state: IdentitySt
         <div className="sxw-idv">
             {notice && <SxNotice tone="amber" icon={notice.icon} title={notice.title}>{notice.text}</SxNotice>}
 
-            <SxBlock icon="fa-route" title="이렇게 진행돼요">
+            <SxBlock icon="fa-route" title="이렇게 진행돼요" tone="sky">
                 <ol className="sxw-timeline">
                     <li data-owner="us">
                         <b aria-hidden="true">1</b>
@@ -605,7 +617,7 @@ export function IdentityPanel({ state, onStart, onRestart }: { state: IdentitySt
                 </ol>
             </SxBlock>
 
-            <SxBlock icon="fa-shield-halved" title="확인하는 것 · 받는 정보">
+            <SxBlock icon="fa-shield-halved" title="확인하는 것 · 받는 정보" tone="yellow">
                 <ul className="sxw-facts">
                     <li><i className="fa-solid fa-user-check" aria-hidden="true" /><span><b>중복 가입</b>이미 가입한 사람인지 확인해요.</span></li>
                     <li><i className="fa-solid fa-cake-candles" aria-hidden="true" /><span><b>나이</b>만 14세 이상인지 확인해요.</span></li>
@@ -647,10 +659,9 @@ export function SignupWebDone({ name, pet, providerLabel, emailNeedsSetup, marke
     return (
         <section className="sxw-card sxw-done" aria-labelledby="sxw-done-title" data-signup-web-done data-signup-screen="done">
             <span className="sxw-confetti" aria-hidden="true" />
-            <span className="sxw-ring is-big" aria-hidden="true">
-                {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
-                <span><img src={`${UI}logo-poodle-384.webp`} alt="" /></span>
-            </span>
+            {/* 축하 그림 — 머리 판의 댕다방 강아지와 겹치지 않게 보물 상자(가입 혜택) 3D 그림 */}
+            {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
+            <img className="sxw-done-art" src={`${UI}daily-hero-treasure-384.webp`} alt="" aria-hidden="true" />
             <span className="sxw-kicker">WELCOME TO DAENGDABANG</span>
             <h2 id="sxw-done-title">가입을 환영해요, <span className="sxw-u">{name}</span>님!</h2>
             <p className="sxw-done-sub">
