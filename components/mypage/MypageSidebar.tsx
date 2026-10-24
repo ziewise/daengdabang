@@ -11,6 +11,8 @@ import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/lib/store";
 import { MYPAGE_MENU_GROUPS } from "@/lib/mypage-data";
 import { useAppMode } from "@/components/app-shell/useAppMode";
+// 모바일 웹: 사이드 메뉴 대신 헤더 아래 원형 버튼 + 전체 메뉴 시트(같은 항목 · 같은 로그아웃, 2026-10-24)
+import MypageMobileMenu from "@/components/mypage/MypageMobileMenu";
 // 웹 마이페이지 크레파스 꾸밈(2026-10-24) — 이 메뉴가 있는 화면 전체에 적용, 앱은 닿지 않음
 import "../../app/mypage-web.css";
 
@@ -98,6 +100,17 @@ export default function MypageSidebar({ className = "" }: { className?: string }
                     </button>
                 </div>
             </nav>
+            <MypageMobileMenu
+                groups={MYPAGE_MENU_GROUPS.map((group) => ({
+                    id: group.id,
+                    label: group.label,
+                    items: group.items.map((item) => {
+                        const href = appMode ? item.href : WEB_SUMMARY_HREF[item.href] ?? item.href;
+                        return { href, label: item.label, active: Boolean(isActive(href)) };
+                    }),
+                }))}
+                onLogout={handleLogout}
+            />
         </aside>
     );
 }
