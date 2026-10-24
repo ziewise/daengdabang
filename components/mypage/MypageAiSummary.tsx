@@ -89,7 +89,7 @@ function SumEmpty({ art, title, text, action }: { art: string; title: string; te
 function NeedLogin({ redirect }: { redirect: string }) {
     return (
         <SumEmpty
-            art="info"
+            art="lock"
             title="로그인 정보를 다시 확인해 주세요"
             text="서버에 연결할 로그인 정보가 없어 기록을 불러올 수 없어요. 다시 로그인하면 바로 보여요."
             action={{ href: `/auth/login?redirect=${encodeURIComponent(redirect)}`, label: "다시 로그인" }}

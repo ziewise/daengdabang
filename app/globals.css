@@ -387,9 +387,10 @@ body[data-petlens-capture-active="true"] [data-site-header] {
     width: 1.24em;
 }
 
-/* 웹 — 코인 표시 한글은 사이트 글꼴(주아)로. 손글씨 글꼴은 영문 꼬리표에만 씀. 앱은 그대로(2026-10-24) */
+/* 웹 — 코인 표시 · "댕다방 연구소" 이름 한글은 사이트 글꼴(주아)로. 손글씨 글꼴은 영문 꼬리표에만 씀. 앱은 그대로(2026-10-24) */
 html:not(.ddb-app-mode) .ddb-daenglab-coin-mark,
-html:not(.ddb-app-mode) .ddb-daenglab-coin-disc {
+html:not(.ddb-app-mode) .ddb-daenglab-coin-disc,
+html:not(.ddb-app-mode) .ddb-daenglab-wordmark {
     font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
     font-weight: 400;
 }
@@ -3078,5 +3079,110 @@ html:not(.ddb-app-mode) [data-products-filter] {
     .ddb-pl-pill {
         justify-content: space-between;
         width: 100%;
+    }
+}
+
+/* ═════════ 로그인 안내 카드 — 사이트 공통(2026-10-24 사용자 "로그인이 필요합니다 화면은 나오는 곳 모두 같게") ═════════
+   대상: 마이페이지 · 주문 내역 · MY 정보 하위 화면(main[data-mypage-web="gate"]), 결제 완료 화면 · 펫렌즈/연구소 회원 안내([data-login-gate]).
+   모양: 흰 쿠션 카드 + 위쪽 분홍 띠에 3D 자물쇠 그림 · 주아 제목 + 세 색 밑줄 · 회색 설명 · 분홍 알약(주) / 흰 알약(보조) 버튼.
+   원래 아이콘(자물쇠 동그라미 · 연구소 무지개 고리)은 숨김. 문구 · 링크 · 동작은 그대로, 앱은 닿지 않음.
+   연구소 꾸밈(app/lab-web.css)이 !important 로 칠해 둔 값을 이기려고 이름표를 세 번 겹쳐 씀. */
+html:not(.ddb-app-mode) :is(main[data-mypage-web="gate"], [data-login-gate][data-login-gate][data-login-gate]) {
+    position: relative;
+    width: calc(100% - 32px);
+    max-width: 560px !important;
+    padding: 0 28px 34px !important;
+    overflow: hidden;
+    border: 0 !important;
+    border-radius: 34px !important;
+    background: #fff !important;
+    box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), inset 0 -10px 18px rgb(0 0 0 / 3%), 0 22px 36px -24px rgb(15 23 42 / 32%) !important;
+    text-align: center;
+
+    /* 분홍 띠 + 3D 자물쇠 */
+    &::before {
+        content: "";
+        display: block;
+        height: 156px;
+        margin: 0 -28px;
+        background: url("/images/ui/stickers/login-lock.webp") center 24px / 108px no-repeat, #ffeef3;
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%);
+    }
+
+    & > :is(i, span:first-child), & .lab-gate-ring, & .lab-gate-icon { display: none !important; }
+
+    /* 제목 — 주아 + 세 색 밑줄 */
+    & :is(h1, h2) {
+        position: relative;
+        width: fit-content;
+        margin: 28px auto 0 !important;
+        color: #1e293b;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 28px !important;
+        font-weight: 400 !important;
+        line-height: 1.35;
+        isolation: isolate;
+    }
+
+    & :is(h1, h2)::after {
+        content: "";
+        position: absolute;
+        right: 1%;
+        bottom: -0.1em;
+        left: 0;
+        z-index: -1;
+        height: 0.22em;
+        border-radius: 999px 70% 999px 60%;
+        background: repeating-linear-gradient(94deg, rgb(8 145 178 / 62%) 0 14px, rgb(239 71 111 / 58%) 14px 28px, rgb(245 158 11 / 62%) 28px 42px);
+    }
+
+    /* 연구소 이름 표시가 있으면 제목 위에 */
+    & > [class*="justify-center"]:not(:last-child) { margin-top: 24px; }
+
+    & :is(h1, h2) + p {
+        max-width: 400px;
+        margin: 16px auto 0 !important;
+        color: #64748b;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1.7;
+        word-break: keep-all;
+    }
+
+    /* 버튼 줄 · 버튼 하나 */
+    & > div:last-child { display: flex !important; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 26px !important; }
+    & > a:last-child { margin-top: 26px !important; }
+
+    & :is(.btn, a[class*="min-h-12"]) {
+        display: inline-flex;
+        min-height: 50px;
+        align-items: center;
+        justify-content: center;
+        padding: 0 28px !important;
+        border: 0 !important;
+        border-radius: 999px !important;
+        font-size: 14.5px;
+        font-weight: 800;
+    }
+
+    /* 주 버튼 — 분홍 알약 */
+    & :is(.btn-primary, a[class*="bg-indigo-6"]) { background: #e9789a !important; color: #fff !important; box-shadow: 0 10px 18px -12px rgb(200 80 120 / 70%) !important; }
+    & :is(.btn-primary, a[class*="bg-indigo-6"]):hover { background: #e26690 !important; }
+
+    /* 보조 버튼 — 흰 알약 */
+    & :is(.btn-secondary, a[class*="border-indigo-2"]) { background: #fff !important; color: #334155 !important; box-shadow: 0 0 0 1.5px #efe7dc, 0 8px 14px -12px rgb(15 23 42 / 30%) !important; }
+}
+
+/* 화면 전체 안내(main)는 위아래 여백, 펫렌즈 · 연구소 안 카드는 제자리 가운데 */
+html:not(.ddb-app-mode) :is(main[data-mypage-web="gate"], main[data-login-gate]) { margin: 56px auto 80px; }
+html:not(.ddb-app-mode) div[data-login-gate][data-login-gate][data-login-gate] { margin: 0 auto; }
+
+@media (max-width: 640px) {
+    html:not(.ddb-app-mode) :is(main[data-mypage-web="gate"], [data-login-gate][data-login-gate][data-login-gate]) {
+        padding: 0 20px 28px !important;
+        border-radius: 28px !important;
+
+        &::before { height: 132px; margin: 0 -20px; background-size: 92px, auto; }
+        & :is(h1, h2) { font-size: 24px !important; }
     }
 }

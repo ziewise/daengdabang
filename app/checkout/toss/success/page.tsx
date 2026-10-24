@@ -143,7 +143,8 @@ export default function TossTestSuccessPage() {
 
     if (view.kind === "login_required") {
         return (
-            <main className="mx-auto max-w-[680px] px-4 py-14 text-center">
+            // data-login-gate — 웹 공통 로그인 안내 카드(app/globals.css), 앱은 그대로
+            <main className="mx-auto max-w-[680px] px-4 py-14 text-center" data-login-gate>
                 <i className="fa-solid fa-lock text-5xl text-amber-600" />
                 <h1 className="mt-4 text-2xl font-black text-neutral-950">로그인이 필요합니다.</h1>
                 <p className="mt-2 text-sm font-bold leading-6 text-neutral-600">

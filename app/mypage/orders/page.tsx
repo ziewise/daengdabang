@@ -124,6 +124,35 @@ function OrderLineView({ line, compact = false }: { line: TossOrderHistoryLine; 
     );
 }
 
+// 웹 진행 단계(결제 완료 → 상품 준비 → 배송중 → 배송 완료) — 상태 이름표로만 계산, 취소 · 실패 · 테스트 주문은 단계 없음
+const ORDER_STEPS = ["결제 완료", "상품 준비", "배송중", "배송 완료"] as const;
+
+function orderStage(order: TossOrderHistoryItem): number | null {
+    if (isTestOrder(order)) return null;
+    const label = orderStatusLabel(order);
+    if (label === "배송완료") return 3;
+    if (label === "배송중") return 2;
+    if (label === "상품 준비중") return 1;
+    if (label === "결제완료" || label === "주문 접수") return 0;
+    return null;
+}
+
+// 웹 전용 진행 단계 줄(앱에서는 숨김 · 꾸밈은 app/mypage-web.css)
+function OrderSteps({ order }: { order: TossOrderHistoryItem }) {
+    const stage = orderStage(order);
+    if (stage === null) return null;
+    return (
+        <ol className="hidden mp-order-steps" aria-label={`진행 단계: ${ORDER_STEPS[stage]}`}>
+            {ORDER_STEPS.map((step, index) => (
+                <li key={step} data-state={index < stage || stage === 3 ? "done" : index === stage ? "now" : "next"}>
+                    <span aria-hidden="true">{index < stage || stage === 3 ? "✓" : index + 1}</span>
+                    {step}
+                </li>
+            ))}
+        </ol>
+    );
+}
+
 function DeliverySummary({ order }: { order: TossOrderHistoryItem }) {
     const estimate = estimatedDeliveryLabel(order);
     if (isTestOrder(order)) {
@@ -144,6 +173,7 @@ function DeliverySummary({ order }: { order: TossOrderHistoryItem }) {
                 {orderStatusLabel(order)}
             </p>
             {estimate && <p className="mt-1 text-xs font-bold text-emerald-700">{estimate}</p>}
+            <OrderSteps order={order} />
         </div>
     );
 }
@@ -286,6 +316,16 @@ function OrderListView({
                 </div>
                 <Link href="/mypage" className="btn btn-secondary">마이페이지로</Link>
             </div>
+
+            {/* 웹 전용 — 주문 요약 4칸(불러온 주문 기준, 누르는 기능 없음). 앱에서는 숨김 */}
+            {orders.length > 0 && (
+                <dl className="hidden mp-order-stats">
+                    <div data-stat="all"><dt>전체 주문</dt><dd>{orders.length}<small>건</small></dd></div>
+                    <div data-stat="moving"><dt>준비 · 배송중</dt><dd>{orders.filter((order) => { const stage = orderStage(order); return stage === 1 || stage === 2; }).length}<small>건</small></dd></div>
+                    <div data-stat="done"><dt>배송 완료</dt><dd>{orders.filter((order) => orderStage(order) === 3).length}<small>건</small></dd></div>
+                    <div data-stat="sum"><dt>누적 결제</dt><dd>{formatOrderAmount(orders.filter((order) => !isTestOrder(order)).reduce((total, order) => total + order.amount, 0))}</dd></div>
+                </dl>
+            )}
 
             {orders.length > 0 && (
                 <div className="mt-6 rounded-2xl border border-neutral-200 bg-white p-3 shadow-sm sm:p-4">
@@ -444,6 +484,7 @@ function OrderDetailView({ order }: { order: TossOrderHistoryItem }) {
                     <LiveOrderActions order={order} />
                 </div>
                 {isTestOrder(order) && <DeliverySummary order={order} />}
+                <OrderSteps order={order} />
                 <div className="mt-5 grid gap-5 border-t border-neutral-100 pt-5">
                     {order.lines.length > 0 ? order.lines.map((line, index) => (
                         <OrderLineView key={`${line.productId}-${line.color ?? ""}-${line.size ?? ""}-${index}`} line={line} />

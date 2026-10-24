@@ -78,7 +78,8 @@ export default function PetLensMemberGate({ compact = false, reason, service = "
             data-petlens-member-gate
             data-daenglab-member-gate={daenglab || undefined}
         >
-            <div className={`w-full max-w-md rounded-3xl border p-6 shadow-sm ${daenglab ? "border-cyan-100 bg-gradient-to-br from-cyan-50 via-white to-rose-50" : "border-indigo-100 bg-indigo-50/70"}`}>
+            {/* data-login-gate — 로그인이 필요할 때만 웹 공통 로그인 안내 카드(app/globals.css), 프로필 · 견종 안내는 기존 모양 */}
+            <div data-login-gate={needsLogin || undefined} className={`w-full max-w-md rounded-3xl border p-6 shadow-sm ${daenglab ? "border-cyan-100 bg-gradient-to-br from-cyan-50 via-white to-rose-50" : "border-indigo-100 bg-indigo-50/70"}`}>
                 {/* 웹 연구소 페이지에서만 보이는 무지개 고리 그림(자물쇠 · 강아지) — 펫렌즈 창에서는 숨김(app/lab-web.css) */}
                 <span className="dw-rring lab-gate-ring hidden" aria-hidden="true">
                     <span><Image src={needsLogin ? "/images/ui/lab-lock-256.webp" : "/images/ui/lab-dog-256.webp"} alt="" width={96} height={96} /></span>
