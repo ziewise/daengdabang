@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import GrowthHub from "@/components/growth/GrowthHub";
+// 웹 매일 댕생활 꾸밈(보물광산 /treasure-mine 과 같은 화면 · 2026-10-25) — 빠져 있어 웹에서 큰 검은 발자국 그림이 그대로 보이던 것 고침. 웹에서만 적용(data-daily-web 범위)
+import "../daily-web.css";
 
 export const metadata: Metadata = {
     title: "매일댕생활 | 댕다방",
