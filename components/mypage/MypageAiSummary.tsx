@@ -17,6 +17,7 @@ import { useAuth, type PetProfile } from "@/lib/store";
 import { loadWeeklyPhotoAnalyses, type WeeklyPhotoAnalysisRecord } from "@/lib/weekly-photo-analysis";
 import { loadPetObservationHistory, type PetObservationHistoryItem } from "@/lib/petlens-observation";
 import {
+    getCustomerToken,
     loadDaengLabAttendance,
     loadDaengLabEngagement,
     loadDaengLabWallet,
@@ -84,6 +85,18 @@ function SumEmpty({ art, title, text, action }: { art: string; title: string; te
     );
 }
 
+// 서버 로그인 정보(토큰)가 없을 때 — 계속 "불러오는 중"에 머물지 않고 다시 로그인 안내
+function NeedLogin({ redirect }: { redirect: string }) {
+    return (
+        <SumEmpty
+            art="info"
+            title="로그인 정보를 다시 확인해 주세요"
+            text="서버에 연결할 로그인 정보가 없어 기록을 불러올 수 없어요. 다시 로그인하면 바로 보여요."
+            action={{ href: `/auth/login?redirect=${encodeURIComponent(redirect)}`, label: "다시 로그인" }}
+        />
+    );
+}
+
 // 불러오는 중 — 카드 자리 두 개(높이 고정이라 화면이 덜컹거리지 않음)
 function SumLoading() {
     return (
@@ -118,7 +131,8 @@ function usePetChoice() {
 
 export function HealthSummary() {
     const { user, pets, petId, setPetId } = usePetChoice();
-    const token = user?.apiAccessToken ?? "";
+    // 회원 정보 안 토큰이 없으면 따로 저장된 토큰(주문 내역 화면과 같은 방식)
+    const token = user ? user.apiAccessToken || getCustomerToken() : "";
     const [retry, setRetry] = useState(0);
     const key = `${petId ?? "none"}:${retry}`;
     const [loaded, setLoaded] = useState<Loaded<WeeklyPhotoAnalysisRecord[]>>({ key: "" });
@@ -133,6 +147,7 @@ export function HealthSummary() {
     }, [key, petId, token]);
 
     if (!user) return null;
+    if (!token) return <NeedLogin redirect="/mypage/health/" />;
     if (user.pets.length === 0) {
         return <SumEmpty art="dog" title="먼저 우리 아이를 등록해 주세요" text="반려견 프로필을 만들면 주간 사진 건강 체크 결과가 여기에 정리돼요." action={{ href: "/mypage/#pet-profiles", label: "반려견 등록하기" }} />;
     }
@@ -255,7 +270,8 @@ const CONFIDENCE = { high: "높음", medium: "보통", low: "낮음" } as const;
 
 export function AiSummary() {
     const { user, pets, petId, setPetId } = usePetChoice();
-    const token = user?.apiAccessToken ?? "";
+    // 회원 정보 안 토큰이 없으면 따로 저장된 토큰(주문 내역 화면과 같은 방식)
+    const token = user ? user.apiAccessToken || getCustomerToken() : "";
     const [retry, setRetry] = useState(0);
     const key = `${petId ?? "none"}:${retry}`;
     const [loaded, setLoaded] = useState<Loaded<PetObservationHistoryItem[]>>({ key: "" });
@@ -279,6 +295,7 @@ export function AiSummary() {
     }, [token]);
 
     if (!user) return null;
+    if (!token) return <NeedLogin redirect="/mypage/ai/" />;
     if (user.pets.length === 0) {
         return <SumEmpty art="dog" title="먼저 우리 아이를 등록해 주세요" text="반려견 프로필을 만들면 행동 · 소리 분석 결과가 여기에 정리돼요." action={{ href: "/mypage/#pet-profiles", label: "반려견 등록하기" }} />;
     }
@@ -405,7 +422,8 @@ function Meter({ label, value, max, tone }: { label: string; value: number; max:
 
 export function DailySummary() {
     const { user } = useAuth();
-    const token = user?.apiAccessToken ?? "";
+    // 회원 정보 안 토큰이 없으면 따로 저장된 토큰(주문 내역 화면과 같은 방식)
+    const token = user ? user.apiAccessToken || getCustomerToken() : "";
     const [retry, setRetry] = useState(0);
     const key = `${token ? "on" : "off"}:${retry}`;
     const [loaded, setLoaded] = useState<Loaded<{ attendance: DaengLabAttendance; engagement: DaengLabEngagement | null }>>({ key: "" });
@@ -420,6 +438,7 @@ export function DailySummary() {
     }, [key, token]);
 
     if (!user) return null;
+    if (!token) return <NeedLogin redirect="/mypage/daily/" />;
     const ready = loaded.key === key;
     if (!ready) return <><SumLoading /><SumActions primary={{ href: "/treasure-mine/", label: "매일댕생활 열기" }} /></>;
     if (loaded.error || !loaded.data) {
