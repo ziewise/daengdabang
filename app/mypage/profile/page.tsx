@@ -13,14 +13,12 @@ import {
 import { memberAccountDisplay } from "@/lib/member-account-display";
 import { useAuth, type User } from "@/lib/store";
 import PasswordChangeModal from "@/components/mypage/PasswordChangeModal";
+// 이름 정리 · 검사(앱 · 웹 같이 씀, lib 로 꺼냄 — 동작 같음)
+import { normalizedMemberName } from "@/lib/member-name";
+// 웹(2026-10-25): 한 번 더 확인 → 내 정보 · 로그인 보안 · 알림 수신 · 다른 정보(기존 기능 그대로). 앱은 아래 기존 화면
+import ProfileWebView from "@/components/mypage/ProfileWebView";
+import { useWebScreen } from "@/hooks/useWebScreen";
 
-function normalizedMemberName(value: string): string | null {
-    const normalized = value.normalize("NFKC");
-    if (/\p{C}/u.test(normalized)) return null;
-    const clean = normalized.replace(/\s+/g, " ").trim();
-    const length = Array.from(clean).length;
-    return length >= 2 && length <= 50 ? clean : null;
-}
 
 function ProfileEditor({
     user,
@@ -175,15 +173,23 @@ function ProfileEditor({
 
 export default function MypageProfilePage() {
     const { user, updateMemberName } = useAuth();
+    // 웹은 화면이 넓어진 만큼 설명도 바꿈(앱 설명은 그대로)
+    const webScreen = useWebScreen();
     if (!user) return <MypageLoginGate redirect="/mypage/profile/" />;
 
     return (
         <MypageSectionLayout
             eyebrow="MY 정보"
             title="개인정보 확인/수정"
-            description="현재 로그인한 회원의 기본 정보를 확인하고 이름을 안전하게 변경할 수 있습니다."
+            description={webScreen
+                ? "내 정보 · 로그인 보안 · 알림 수신을 한곳에서 확인하고 바꿀 수 있어요. 보호를 위해 들어올 때 한 번 더 확인해요."
+                : "현재 로그인한 회원의 기본 정보를 확인하고 이름을 안전하게 변경할 수 있습니다."}
         >
-            <ProfileEditor user={user} onSaved={updateMemberName} />
+            {/* 웹 — 새 개인정보 화면(앱에서는 hidden). 앱 — 기존 화면(웹에서는 data-pf-legacy 로 숨김) */}
+            <ProfileWebView user={user} onSavedName={updateMemberName} />
+            <div data-pf-legacy>
+                <ProfileEditor user={user} onSaved={updateMemberName} />
+            </div>
             {/* 앱 전용(로컬 시안): 앱에서는 마이페이지 메뉴를 숨기므로 회원 탈퇴를 정보 수정 맨 아래 작은 글씨로 둔다.
                 웹은 기존처럼 메뉴에 있으니 hidden — 앱 겉모양 CSS(appShopSkin.ts)에서만 보임. 기존 탈퇴 화면으로 연결 */}
             <p className="mt-6 hidden text-center" data-app-only-withdrawal="">
