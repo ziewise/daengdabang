@@ -156,6 +156,10 @@ html:not(.ddb-app-mode) main[data-campaign-web] {
 
     @media (max-width: 640px) {
         & > section:first-child > div { padding: 24px 18px !important; border-radius: 30px; }
+        /* 상품 네 칸 — 휴대폰도 두 칸씩 */
+        & > section:first-child > div > div.grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+        & > section:first-child a[href*="/product/"] { padding: 8px !important; border-radius: 20px !important; }
+        & > section:first-child a[href*="/product/"] p:first-of-type { font-size: 12.5px !important; }
     }
 }
 
