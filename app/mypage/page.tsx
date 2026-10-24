@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useSyncExternalStore } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { CATALOG, SUBCATEGORY_LABEL, formatKRW, type CatalogProduct } from "@/lib/catalog";
 import { cartProducts, findProduct, productHref } from "@/lib/shop";
 import { hasVerifiedPetPhoto, useAuth, useStore, type PetProfile } from "@/lib/store";
@@ -73,6 +73,16 @@ export default function MyPage() {
     const petLensReady = Boolean(user && hasPetLensReadyProfile(user.pets));
     const profileNeedingAttentionIndex = user?.pets.findIndex(petLensProfileNeedsAttention) ?? -1;
     const heroTryOnProduct = firstTryOnProduct();
+    // 웹 머리 요약 칸용 — 지갑 카드가 불러온 뒤 알려 주는 코인 잔액만 받아 보여 줌(읽기 전용, 서버 호출 없음)
+    const [walletCoins, setWalletCoins] = useState<number | null>(null);
+    useEffect(() => {
+        const onWallet = (event: Event) => {
+            const coins = (event as CustomEvent<{ daengLabCoins?: number }>).detail?.daengLabCoins;
+            if (typeof coins === "number") setWalletCoins(coins);
+        };
+        window.addEventListener("ddb:daenglab-wallet", onWallet);
+        return () => window.removeEventListener("ddb:daenglab-wallet", onWallet);
+    }, []);
 
     if (!user) {
         return (
@@ -101,9 +111,17 @@ export default function MyPage() {
                         {memberAccountDisplay(user.email, user.authProvider)}
                     </p>
                 </div>
+                {/* 웹 전용 — 한눈에 보기 4칸(우리 아이 · 연구소 코인 · 장바구니 · 찜), 누르면 그 자리로 이동. 앱에서는 숨김(hidden) */}
+                <nav className="hidden mp-stats" aria-label="내 활동 한눈에 보기">
+                    <a href="#pet-profiles" data-mp-stat="dog"><span>우리 아이</span><b>{user.pets.length}<small>마리</small></b></a>
+                    <a href="#daenglab-wallet" data-mp-stat="coin"><span>연구소 코인</span><b>{walletCoins ?? "–"}<small>C</small></b></a>
+                    <Link href="/cart" data-mp-stat="cart"><span>장바구니</span><b>{store.state.cart.length}<small>개</small></b></Link>
+                    <a href="#mypage-wishlist" data-mp-stat="wish"><span>찜한 상품</span><b>{wishedProducts.length}<small>개</small></b></a>
+                </nav>
             </div>
 
-            <div className="mt-6 grid gap-6 lg:grid-cols-[360px_1fr]">
+            {/* data-mp-dash · data-mp-slot — 웹에서 칸을 가로 전체 폭으로 다시 쌓는 자리 이름표(app/mypage-web.css, 앱 그대로) */}
+            <div className="mt-6 grid gap-6 lg:grid-cols-[360px_1fr]" data-mp-dash>
                 <section className="grid gap-4">
                     <DaengLabWalletCard accessToken={user.apiAccessToken} accountEmail={user.email} />
                     <div id="pet-profiles" className="surface scroll-mt-24 p-5" data-mp-card>
@@ -192,7 +210,7 @@ export default function MyPage() {
                 </section>
 
                 <section className="grid gap-6">
-                    <div className="surface p-5" data-mp-card>
+                    <div className="surface p-5" data-mp-card data-mp-slot="orders">
                         <div className="flex items-center justify-between gap-3" data-mp-band="sky" data-mp-art="cart">
                             <div>
                                 <h2 className="text-lg font-black text-neutral-950" data-mp-kicker="ORDERS">최근 결제</h2>
@@ -248,8 +266,8 @@ export default function MyPage() {
                     </div>
 
                     {hasTryOnProfile && (
-                        <div>
-                            <div className="mb-4 flex items-center justify-between gap-3" data-mp-row="lav">
+                        <div data-mp-slot="tryon">
+                            <div className="mb-4 flex items-center justify-between gap-3" data-mp-row="lav" data-mp-art="fit">
                                 <div>
                                     <p className="text-xs font-black text-indigo-700">PetLens Fit</p>
                                     <h2 className="text-lg font-black text-neutral-950">바로 입혀볼 상품</h2>
@@ -280,8 +298,8 @@ export default function MyPage() {
                         </div>
                     )}
 
-                    <div>
-                        <div className="mb-4 flex items-center justify-between" data-mp-row="pink">
+                    <div id="mypage-wishlist" data-mp-slot="wish">
+                        <div className="mb-4 flex items-center justify-between" data-mp-row="pink" data-mp-art="wish">
                             <h2 className="text-lg font-black text-neutral-950" data-mp-kicker="WISHLIST">찜한 상품</h2>
                             <Link href="/products" className="text-sm font-black text-indigo-700">상품 더보기</Link>
                         </div>

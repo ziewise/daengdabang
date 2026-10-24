@@ -338,3 +338,448 @@ html:not(.ddb-app-mode) :is(main:has(nav[aria-label="마이페이지 메뉴"]), 
     /* 결제 정보 총액 줄 — 칸 사이 틈 때문에 끊겨 보이던 윗줄을 한 줄로 */
     & [data-mp-card] dl[class*="grid-cols-"] { column-gap: 0; }
 }
+
+/* ═════════ 2026-10-24 2차 — 사이드 메뉴 · 대시보드 다시 짜기 ═════════
+   사이드 메뉴: 묶음마다 옅은 색 판(우리 아이 AI 민트 · 쇼핑 분홍 · MY 정보 하늘) + 영문 손글씨 꼬리표 + 항목마다 3D 그림 동그라미,
+               지금 화면은 흰 알약 + 색 테 + 오른쪽 꺾쇠.
+   대시보드: 좁은 열 · 넓은 열로 나누지 않고 모든 칸을 가로 전체 폭으로 쌓고(우리 아이 → 지갑 → 최근 결제 → 입혀볼 상품 → 찜),
+            칸 안에서 두 칸씩 나눔 → 비었을 때도 찼을 때도 양쪽 높이가 맞음. 빈 칸은 크림 판 + 그림 + 안내 한 줄.
+   그림은 기존 파일 경로만 씀(새 파일 없음). */
+html:not(.ddb-app-mode) main:has(nav[aria-label="마이페이지 메뉴"]) {
+    /* 띠 그림 추가 */
+    & [data-mp-art="wish"] { --mp-art: url("/images/ui/stickers/benefit-brand.webp"); }
+    & [data-mp-art="fit"] { --mp-art: url("/images/ui/pet-clothes-128.webp"); }
+
+    /* ── 사이드 메뉴 ── */
+    & nav[aria-label="마이페이지 메뉴"] { padding: 14px; }
+
+    & nav[aria-label="마이페이지 메뉴"] > section {
+        margin-top: 10px;
+        padding: 14px 10px 10px;
+        border-top: 0;
+        border-radius: 24px;
+        background: var(--grp-bg);
+    }
+
+    & nav[aria-label="마이페이지 메뉴"] > section:first-child { margin-top: 0; }
+    & nav[aria-label="마이페이지 메뉴"] > section[aria-labelledby="mypage-menu-care"] { --grp-bg: #f1fbf6; --grp-ink: #12a17a; --grp-ring: #a8e0c6; --grp-kicker: "MY DOG AI"; }
+    & nav[aria-label="마이페이지 메뉴"] > section[aria-labelledby="mypage-menu-shopping"] { --grp-bg: #fff4f7; --grp-ink: #e2557a; --grp-ring: #f7a8bf; --grp-kicker: "SHOPPING"; }
+    & nav[aria-label="마이페이지 메뉴"] > section[aria-labelledby="mypage-menu-account"] { --grp-bg: #f1f8fd; --grp-ink: #0e8aa0; --grp-ring: #a9d4ea; --grp-kicker: "MY INFO"; }
+
+    /* 묶음 이름 — 영문 손글씨 위 + 주아 */
+    & nav[aria-label="마이페이지 메뉴"] > section > h2 {
+        margin-bottom: 8px;
+        padding: 0 8px;
+        color: #334155;
+        font-size: 15px;
+        letter-spacing: 0;
+    }
+
+    & nav[aria-label="마이페이지 메뉴"] > section > h2::before {
+        content: var(--grp-kicker);
+        display: block;
+        color: var(--grp-ink);
+        font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        line-height: 1.5;
+    }
+
+    /* 항목 — 3D 그림 동그라미 + 글자 */
+    & nav[aria-label="마이페이지 메뉴"] li > a {
+        gap: 10px;
+        min-height: 48px;
+        padding: 6px 14px 6px 6px;
+        color: #475569;
+        font-size: 14px;
+    }
+
+    & nav[aria-label="마이페이지 메뉴"] li > a > i { display: none; }
+
+    & nav[aria-label="마이페이지 메뉴"] li > a::before {
+        content: "";
+        width: 36px;
+        height: 36px;
+        flex: none;
+        border-radius: 999px;
+        background: #fff var(--ic) center / 25px no-repeat;
+        box-shadow: inset 0 -3px 0 rgb(15 23 42 / 4%), 0 6px 10px -7px rgb(15 23 42 / 35%);
+    }
+
+    & nav[aria-label="마이페이지 메뉴"] a[href^="/my-pet"] { --ic: url("/images/ui/menu-daily-mypet-128.webp"); }
+    & nav[aria-label="마이페이지 메뉴"] a[href^="/pet-lens"] { --ic: url("/images/ui/header-petlens-128.webp"); }
+    & nav[aria-label="마이페이지 메뉴"] a[href^="/treasure-mine"] { --ic: url("/images/ui/menu-daily-treasure-128.webp"); }
+    & nav[aria-label="마이페이지 메뉴"] a:is([href="/mypage"], [href="/mypage/"]) { --ic: url("/images/ui/stickers/tab-my.webp"); }
+    & nav[aria-label="마이페이지 메뉴"] a[href^="/mypage/orders"] { --ic: url("/images/ui/stickers/my-orders.webp"); }
+    & nav[aria-label="마이페이지 메뉴"] a[href^="/mypage/profile"] { --ic: url("/images/ui/stickers/my-profile.webp"); }
+    & nav[aria-label="마이페이지 메뉴"] a[href^="/mypage/recommendations"] { --ic: url("/images/ui/stickers/my-recommend.webp"); }
+    & nav[aria-label="마이페이지 메뉴"] a[href^="/mypage/payments"] { --ic: url("/images/ui/stickers/my-payments.webp"); }
+    & nav[aria-label="마이페이지 메뉴"] a[href^="/mypage/address"] { --ic: url("/images/ui/stickers/my-address.webp"); }
+    & nav[aria-label="마이페이지 메뉴"] a[href^="/mypage/withdrawal"] { --ic: url("/images/ui/stickers/login-lock.webp"); }
+
+    & nav[aria-label="마이페이지 메뉴"] li > a:hover { background: rgb(255 255 255 / 75%); color: var(--grp-ink); }
+
+    /* 지금 화면 — 흰 알약 + 묶음 색 테 + 오른쪽 꺾쇠 */
+    & nav[aria-label="마이페이지 메뉴"] li > a[aria-current="page"] {
+        background: #fff;
+        color: var(--grp-ink);
+        box-shadow: 0 0 0 2px var(--grp-ring), 0 12px 18px -14px rgb(15 23 42 / 45%);
+    }
+
+    & nav[aria-label="마이페이지 메뉴"] li > a[aria-current="page"]::before { background-color: var(--grp-bg); }
+
+    & nav[aria-label="마이페이지 메뉴"] li > a[aria-current="page"]::after {
+        content: "";
+        width: 7px;
+        height: 7px;
+        flex: none;
+        margin-left: auto;
+        border-top: 2.5px solid currentColor;
+        border-right: 2.5px solid currentColor;
+        border-radius: 1px;
+        transform: rotate(45deg);
+    }
+
+    /* 로그아웃 — 맨 아래 조용한 회색 알약 */
+    & nav[aria-label="마이페이지 메뉴"] > div:last-child { margin-top: 10px; padding-top: 0; border-top: 0; }
+    & nav[aria-label="마이페이지 메뉴"] > div:last-child button { min-height: 42px; color: #94a3b8; font-size: 13px; }
+    & nav[aria-label="마이페이지 메뉴"] > div:last-child button:hover { background: #fff1f2; color: #e11d48; }
+
+    /* ── 인사 머리 + 한눈에 보기 4칸 ── */
+    & [data-mp-hello]:has(> .mp-stats) { padding-bottom: 24px; }
+    & [data-mp-hello]:has(> .mp-stats)::after { top: 24px; transform: none; }
+
+    & .mp-stats {
+        display: grid;
+        flex-basis: 100%;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 20px;
+    }
+
+    & .mp-stats > a {
+        display: grid;
+        grid-template-columns: 46px minmax(0, 1fr);
+        grid-template-rows: auto auto;
+        column-gap: 12px;
+        align-items: center;
+        padding: 14px 16px;
+        border-radius: 22px;
+        background: #fff;
+        box-shadow: inset 0 -4px 0 rgb(15 23 42 / 3%), 0 12px 20px -16px rgb(200 80 120 / 55%);
+        transition: transform 0.15s ease;
+    }
+
+    & .mp-stats > a:hover { transform: translateY(-2px); }
+
+    & .mp-stats > a::before {
+        content: "";
+        grid-row: 1 / 3;
+        width: 46px;
+        height: 46px;
+        background: var(--st-art) center / contain no-repeat;
+    }
+
+    & .mp-stats > a[data-mp-stat="dog"] { --st-art: url("/images/ui/stickers/my-pets.webp"); }
+    & .mp-stats > a[data-mp-stat="coin"] { --st-art: url("/images/ui/goods-pay-ready-256.webp"); }
+    & .mp-stats > a[data-mp-stat="cart"] { --st-art: url("/images/ui/header-cart-128.webp"); }
+    & .mp-stats > a[data-mp-stat="wish"] { --st-art: url("/images/ui/stickers/benefit-brand.webp"); }
+    & .mp-stats span { align-self: end; color: #94a3b8; font-size: 12.5px; font-weight: 700; }
+
+    & .mp-stats b {
+        align-self: start;
+        color: #1e293b;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 25px;
+        font-weight: 400;
+        line-height: 1.2;
+    }
+
+    & .mp-stats small { margin-left: 2px; color: #64748b; font-size: 14px; }
+
+    /* ── 대시보드 — 가로 전체 폭으로 다시 쌓기 ── */
+    & [data-mp-dash] { display: flex; flex-direction: column; gap: 26px; margin-top: 26px; }
+    & [data-mp-dash] > section { display: contents; }
+    & [data-mp-dash] #pet-profiles { order: 1; }
+    & [data-mp-dash] [data-daenglab-wallet] { order: 2; }
+    & [data-mp-dash] [data-mp-slot="orders"] { order: 3; }
+    & [data-mp-dash] [data-mp-slot="tryon"] { order: 4; }
+    & [data-mp-dash] [data-mp-slot="wish"] { order: 5; }
+    & [data-mp-dash] :is(#pet-profiles, #daenglab-wallet, [data-mp-slot]) { scroll-margin-top: calc(var(--header-height, 64px) + 20px); }
+
+    /* 우리 아이 — 칸 안을 두 칸 판으로(띠 · 버튼 줄은 가로 전체) */
+    & #pet-profiles[data-mp-card] { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; align-items: stretch; }
+    & #pet-profiles > * { grid-column: 1 / -1; margin-top: 0; margin-bottom: 0; }
+    & #pet-profiles > [data-mp-band] { margin-bottom: 2px; }
+    & #pet-profiles > div.grid:has(> article) { display: contents; }
+
+    /* 반려견 카드 — 사진 둥근 네모 · 주아 이름 · 견종 알약 · 정보 수정은 맨 아래 */
+    & #pet-profiles article { display: flex; flex-direction: column; gap: 14px; padding: 18px; border-radius: 24px; }
+    & #pet-profiles article > * { margin-top: 0; }
+    & #pet-profiles article > [data-member-pet-edit-open] { margin-top: auto; }
+    & #pet-profiles article > div.grid { grid-template-columns: 96px minmax(0, 1fr); gap: 16px; }
+
+    & #pet-profiles article > div.grid > div:first-child {
+        height: 96px;
+        border-radius: 26px;
+        background: #fff;
+        box-shadow: 0 0 0 3px #fff, 0 12px 18px -12px rgb(15 23 42 / 35%);
+    }
+
+    & #pet-profiles article > div.grid > div:first-child > div { background: url("/images/ui/stickers/my-pets.webp") center / 64% no-repeat; opacity: 0.55; }
+    & #pet-profiles article > div.grid > div:first-child > div > i { display: none; }
+    & #pet-profiles article h3 { color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 22px; font-weight: 400; line-height: 1.25; }
+
+    & #pet-profiles article h3 + p[class*="text-indigo"] {
+        display: inline-block;
+        margin-top: 4px;
+        padding: 2px 10px;
+        border-radius: 999px;
+        background: #e9f8f1;
+        color: #12a17a;
+        font-size: 12px;
+    }
+
+    & #pet-profiles article p:last-child[class*="text-indigo"] { color: #12a17a; }
+    & #pet-profiles article p:last-child[class*="text-indigo"]::before { content: "✓ "; }
+    & #pet-profiles article span[class*="bg-white"] { box-shadow: 0 0 0 1.5px #f1e6d6; }
+
+    /* 아직 없음(0마리) — 크림 판 + 큰 강아지 그림 */
+    & #pet-profiles > div[class*="border-dashed"] {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 22px 26px;
+        border-radius: 24px;
+        text-align: center;
+        word-break: keep-all;
+    }
+
+    & #pet-profiles > div[class*="border-dashed"]::before { content: ""; width: 92px; height: 92px; background: url("/images/ui/lab-dog-256.webp") center / contain no-repeat; }
+
+    /* 등록 버튼 칸(닫힘) — 크림 판 + 그림 + 한 줄 안내 + 버튼 */
+    & #pet-profiles > div:has(> [data-member-pet-create-open]) {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 22px;
+        border-radius: 24px;
+        background: linear-gradient(160deg, #fff6e3, #ffeef3);
+        text-align: center;
+    }
+
+    & #pet-profiles > div:has(> [data-member-pet-create-open])::before { content: ""; order: -2; width: 72px; height: 72px; background: url("/images/ui/stickers/my-pets.webp") center / contain no-repeat; }
+
+    & #pet-profiles > div:has(> [data-member-pet-create-open])::after {
+        content: "함께 사는 아이를 더 등록할 수 있어요";
+        order: -1;
+        color: #64748b;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    & #pet-profiles:has(> div[class*="border-dashed"]) > div:has(> [data-member-pet-create-open])::after { content: "이름과 견종만 있으면 바로 시작해요"; }
+    & #pet-profiles > div:has(> [data-member-pet-create-open]) > :is(button, a) { width: auto; min-width: 200px; padding: 0 26px; }
+    & #pet-profiles > div:has(> [data-member-pet-create-open]) > p { width: 100%; }
+
+    /* 펫렌즈 · 자동 피팅 버튼 */
+    & #pet-profiles > a.btn { min-height: 50px; }
+
+    /* 지갑 — 칸 안을 두 칸 판으로 */
+    & [data-daenglab-wallet] > div.p-5 { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; padding: 22px; }
+    & [data-daenglab-wallet] > div.p-5 > * { grid-column: 1 / -1; margin: 0; }
+
+    /* 잔액 3칸 — 노랑 · 보라 · 민트 판, 주아 큰 숫자 */
+    & [data-daenglab-wallet] > div.p-5 > div[class*="grid-cols-2"] { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+
+    & [data-daenglab-wallet] > div.p-5 > div[class*="grid-cols-2"] > div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        grid-column: auto;
+        padding: 16px 8px;
+        border-radius: 22px;
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%);
+    }
+
+    & [data-daenglab-wallet] > div.p-5 > div[class*="grid-cols-2"] > div[class*="bg-amber"] { background: #fff6e3; }
+    & [data-daenglab-wallet] > div.p-5 > div[class*="grid-cols-2"] > div[class*="bg-indigo"] { background: #f3f0fe; }
+    & [data-daenglab-wallet] > div.p-5 > div[class*="grid-cols-2"] > div[class*="bg-emerald"] { background: #e9f8f1; }
+    & [data-daenglab-wallet] > div.p-5 > div[class*="grid-cols-2"] span[class*="text-[10px]"] { font-size: 12px; }
+
+    & [data-daenglab-wallet] > div.p-5 > div[class*="grid-cols-2"] strong {
+        margin-top: 0;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 26px;
+        font-weight: 400;
+    }
+
+    /* 전환 · 지급 기준 · 최근 내역 — 크림 판 */
+    & [data-daenglab-wallet] > div.p-5 > form { padding: 16px 18px; }
+    & [data-daenglab-wallet] > div.p-5 > form > label { font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 15px; font-weight: 400; }
+    & [data-daenglab-wallet] > div.p-5 > details { padding: 12px 18px; }
+    & [data-daenglab-wallet] > div.p-5 > details summary { color: #6b51c9; }
+
+    & [data-daenglab-wallet] > div.p-5 > div[class*="border-t"] {
+        padding: 16px 18px;
+        border-top: 0;
+        border-radius: 20px;
+        background: #fffaf1;
+    }
+
+    & [data-daenglab-wallet] > div.p-5 > div[class*="border-t"] > p { color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 15px; font-weight: 400; }
+    & [data-daenglab-wallet] > div.p-5 > div[class*="border-t"] li { padding: 8px 12px; border-radius: 14px; background: #fff; }
+    & [data-daenglab-wallet] > div.p-5 > div[class*="border-t"] li > span:last-child { font-weight: 900; }
+
+    /* 가입 혜택 이메일 인증(새 회원) — 보라 판 */
+    & [data-daenglab-wallet] [data-signup-email-verification] { border: 0; border-radius: 24px; background: #f3f0fe; }
+
+    /* 최근 결제 — 주문 카드 크림 판 · 빈 칸 그림 안내 */
+    & [data-mp-slot="orders"] > div.grid { gap: 14px; margin-top: 0; }
+    & [data-mp-slot="orders"] article { display: flex; flex-direction: column; padding: 18px 20px; border-radius: 22px; }
+    & [data-mp-slot="orders"] article > p:last-child { margin-top: auto; padding-top: 10px; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 22px; font-weight: 400; }
+
+    & [data-mp-slot="orders"] > p {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        margin-top: 0;
+        padding: 24px 20px;
+        border-radius: 22px;
+        background: #fffaf1;
+        text-align: center;
+        word-break: keep-all;
+    }
+
+    & [data-mp-slot="orders"] > p::before { content: ""; width: 64px; height: 64px; margin-bottom: 6px; background: url("/images/ui/stickers/my-orders.webp") center / contain no-repeat; }
+
+    /* 입혀볼 상품 · 찜 — 흰 쿠션 카드 + 띠 머리 */
+    & [data-mp-slot]:is([data-mp-slot="wish"], [data-mp-slot="tryon"]) {
+        overflow: hidden;
+        padding: 0 22px 22px;
+        border-radius: 30px;
+        background: #fff;
+        box-shadow: var(--mp-cushion);
+    }
+
+    & [data-mp-slot] > [data-mp-row] {
+        position: relative;
+        margin: 0 -22px 20px;
+        padding: 18px 108px 18px 22px;
+        border-radius: 0;
+    }
+
+    & [data-mp-slot] > [data-mp-row][data-mp-art]::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        right: 24px;
+        width: 60px;
+        height: 60px;
+        transform: translateY(-50%);
+        background: var(--mp-art) center / contain no-repeat;
+        filter: drop-shadow(0 8px 10px rgb(15 23 42 / 15%));
+    }
+
+    /* 찜 비었을 때 — 크림 판 + 선물 그림 + 안내 */
+    & [data-mp-slot="wish"] > div.surface {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        padding: 26px 20px;
+        border-radius: 22px;
+        background: #fffaf1;
+        box-shadow: none;
+        text-align: center;
+    }
+
+    & [data-mp-slot="wish"] > div.surface::before { content: ""; width: 72px; height: 72px; margin-bottom: 4px; background: url("/images/ui/stickers/signup-gift.webp") center / contain no-repeat; }
+    & [data-mp-slot="wish"] > div.surface::after { content: "마음에 드는 상품의 하트를 누르면 여기에 모여요"; color: #94a3b8; font-size: 13px; font-weight: 700; }
+}
+
+/* 넓은 화면(768px~) — 칸 안 두 칸 나눔 */
+@media (min-width: 768px) {
+    html:not(.ddb-app-mode) main:has(nav[aria-label="마이페이지 메뉴"]) {
+        /* 우리 아이: 카드 두 칸씩. 등록 칸은 1마리 · 3마리처럼 홀수면 옆 칸 타일, 0 · 2마리처럼 짝수면 가로 띠 */
+        & #pet-profiles[data-mp-card] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        & #pet-profiles article, & #pet-profiles > div[class*="border-dashed"] { grid-column: auto; }
+        & #pet-profiles > div:has(> [data-member-pet-create-open]) { grid-column: auto; }
+
+        & #pet-profiles:has(> div.grid > article:last-child:nth-child(even)) > div:has(> [data-member-pet-create-open]) {
+            display: grid;
+            grid-column: 1 / -1;
+            grid-template-columns: 56px minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 16px;
+            padding: 14px 18px 14px 22px;
+            text-align: left;
+        }
+
+        & #pet-profiles:has(> div.grid > article:last-child:nth-child(even)) > div:has(> [data-member-pet-create-open])::before { width: 56px; height: 56px; }
+        & #pet-profiles:has(> div.grid > article:last-child:nth-child(even)) > div:has(> [data-member-pet-create-open]) > p { grid-column: 1 / -1; }
+
+        /* 펫렌즈 · 자동 피팅 두 버튼이 다 있으면 나란히 */
+        & #pet-profiles:has(> a.btn-secondary) > a.btn { grid-column: auto; }
+
+        /* 지갑: 잔액 3칸(왼쪽) | 전환(오른쪽), 최근 내역은 두 줄 목록, 지급 기준은 맨 아래 */
+        & [data-daenglab-wallet] > div.p-5 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        & [data-daenglab-wallet] > div.p-5 > div[class*="grid-cols-2"] { grid-column: 1; }
+        & [data-daenglab-wallet] > div.p-5 > form { grid-column: 2; }
+        & [data-daenglab-wallet] > div.p-5 > div[class*="border-t"] ul { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 10px; }
+        & [data-daenglab-wallet] > div.p-5 > details { order: 1; }
+        & [data-daenglab-wallet] > div.p-5 > p:last-child { order: 2; }
+
+        /* 최근 결제: 두 칸씩, 홀수 마지막은 가로 전체 */
+        & [data-mp-slot="orders"] > div.grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        & [data-mp-slot="orders"] > div.grid > article:last-child:nth-child(odd) { grid-column: 1 / -1; }
+    }
+}
+
+/* 좁은 화면 — 한눈에 보기 2×2 · 사이드 메뉴 그림 조금 작게 */
+@media (max-width: 767px) {
+    html:not(.ddb-app-mode) main:has(nav[aria-label="마이페이지 메뉴"]) {
+        & .mp-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 16px; }
+        & .mp-stats > a { grid-template-columns: 38px minmax(0, 1fr); column-gap: 10px; padding: 12px; border-radius: 18px; }
+        & .mp-stats > a::before { width: 38px; height: 38px; }
+        & .mp-stats b { font-size: 21px; }
+        & nav[aria-label="마이페이지 메뉴"] li > a { gap: 8px; min-height: 44px; padding: 5px 10px 5px 5px; font-size: 13px; }
+        & nav[aria-label="마이페이지 메뉴"] li > a::before { width: 32px; height: 32px; background-size: 22px; }
+        & nav[aria-label="마이페이지 메뉴"] li > a[aria-current="page"]::after { display: none; }
+        & [data-mp-slot]:is([data-mp-slot="wish"], [data-mp-slot="tryon"]) { padding: 0 16px 18px; }
+        & [data-mp-slot] > [data-mp-row] { margin: 0 -16px 16px; padding: 16px 78px 16px 16px; }
+        & [data-mp-slot] > [data-mp-row][data-mp-art]::after { right: 14px; width: 48px; height: 48px; }
+        & [data-daenglab-wallet] > div.p-5 { padding: 16px; }
+        & [data-daenglab-wallet] > div.p-5 > div[class*="grid-cols-2"] strong { font-size: 22px; }
+    }
+}
+
+/* 2차 다듬기 — 요약 칸은 그림 아래까지 가로 전체 · 빈 결제 안내는 한 문단 · 찜/입혀볼 카드 높이 맞춤 · 띠 안 링크 한 줄 */
+html:not(.ddb-app-mode) main:has(nav[aria-label="마이페이지 메뉴"]) {
+    & [data-mp-hello] > .mp-stats { flex-basis: calc(100% + 120px); margin-right: -120px; }
+
+    & [data-mp-slot="orders"] > p { display: block; }
+    & [data-mp-slot="orders"] > p::before { display: block; margin: 0 auto 10px; }
+
+    & [data-mp-slot="wish"] article[data-pet-product] { align-self: stretch; height: 100%; }
+    & [data-mp-slot="tryon"] > div.grid > a { display: flex; flex-direction: column; border-color: transparent; border-radius: 22px; background: #fffaf1; }
+    & [data-mp-slot="tryon"] > div.grid > a > div:first-child { border-radius: 16px; background: #fff; }
+
+    & [data-mp-band] > a, & [data-mp-row] > a { flex: none; white-space: nowrap; }
+}
+
+@media (max-width: 767px) {
+    html:not(.ddb-app-mode) main:has(nav[aria-label="마이페이지 메뉴"]) {
+        & [data-mp-hello] > .mp-stats { flex-basis: calc(100% + 84px); margin-right: -84px; }
+        & .mp-stats span { white-space: nowrap; }
+        & [data-mp-slot="tryon"] > div.grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+}
