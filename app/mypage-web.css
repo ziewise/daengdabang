@@ -2416,3 +2416,112 @@ html:not(.ddb-app-mode) .ddb-mpmenu .ddb-mpm-group a[href^="/mypage/payments"]::
     [data-pay-web] .pw-steps strong { align-self: end; margin-top: 0; }
     [data-pay-web] .pw-actions > a { flex: 1 1 100%; justify-content: center; }
 }
+
+/* ═════════ 회원 탈퇴(components/mypage/WithdrawalWebView.tsx · 2026-10-24 사용자 "비주얼하고 디테일까지") ═════════
+   웹: 분홍 · 보라 머리 판(BEFORE YOU GO · 주아 제목 + 세 색 밑줄 · 탈퇴할 계정 카드) → 탈퇴하면 이렇게 돼요(다시 볼 수 없는 것 칩 · 처리 방식 3D 카드 셋) →
+   탈퇴 대신(3D 타일 셋 · 기존 화면 링크) → 마지막 확인(① 동의 ② 비밀번호 ③ 확인 문구 — 단계 완료 표시 · 진행 칩) · 민트 "계속 이용하기" · 진한 분홍 "탈퇴 확정".
+   기존 양식은 웹에서 숨김. 동작 그대로, 앱은 그대로 */
+html:not(.ddb-app-mode) main:has(nav[aria-label="마이페이지 메뉴"]) {
+    & [data-wd-legacy] { display: none; }
+    & [data-wd-web] { display: grid; gap: 18px; }
+}
+
+[data-wd-web] .wd-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 360px);
+    align-items: center;
+    gap: 22px;
+    padding: 28px 30px;
+    border-radius: 34px;
+    background: radial-gradient(90% 120% at 100% 0, rgb(243 240 254 / 95%) 0, transparent 55%), linear-gradient(120deg, #ffe9f0 0%, #fff2f6 55%, #fdf7ff 100%);
+    box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 26px 40px -30px rgb(200 80 120 / 45%);
+}
+
+[data-wd-web] .wd-kicker { display: inline-block; background: repeating-linear-gradient(172deg, #07849e 0 5px, #ef476f 5px 10px, #e98708 10px 15px); -webkit-background-clip: text; background-clip: text; font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.16em; -webkit-text-fill-color: transparent; }
+[data-wd-web] .wd-hero h2 { margin-top: 4px; color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 28px; font-weight: 400; line-height: 1.35; word-break: keep-all; }
+[data-wd-web] .wd-hero h2 span { position: relative; isolation: isolate; color: #e2557a; }
+[data-wd-web] .wd-hero h2 span::after { content: ""; position: absolute; right: 1%; bottom: -0.04em; left: 0; z-index: -1; height: 0.24em; border-radius: 999px 70% 999px 60%; background: repeating-linear-gradient(94deg, rgb(8 145 178 / 62%) 0 14px, rgb(239 71 111 / 58%) 14px 28px, rgb(245 158 11 / 62%) 28px 42px); opacity: 0.6; transform: rotate(-0.7deg) skewX(-7deg); }
+[data-wd-web] .wd-hero-text > p:not(.wd-kicker) { margin-top: 8px; color: #6b5162; font-size: 14px; font-weight: 600; line-height: 1.7; word-break: keep-all; }
+[data-wd-web] .wd-account { display: flex; align-items: center; gap: 12px; padding: 14px 16px 14px 14px; border-radius: 24px; background: #fff; box-shadow: 0 0 0 1px #f6dce5, 0 16px 26px -20px rgb(200 80 120 / 50%); }
+[data-wd-web] .wd-account img { flex: none; width: 54px; height: 54px; padding: 6px; border-radius: 50%; background: #ffeef3; object-fit: contain; }
+[data-wd-web] .wd-account-text { display: grid; flex: 1; min-width: 0; gap: 1px; }
+[data-wd-web] .wd-account-text small { color: #c45b7c; font-size: 11px; font-weight: 800; }
+[data-wd-web] .wd-account-text b { color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 18px; font-weight: 400; }
+[data-wd-web] .wd-account-text em { overflow: hidden; color: #64748b; font-size: 12.5px; font-style: normal; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+[data-wd-web] .wd-provider { flex: none; align-self: flex-start; padding: 4px 10px; border-radius: 999px; background: #f3f0fe; color: #6b51c9; font-size: 11px; font-weight: 800; }
+
+/* 묶음 카드 · 제목 */
+[data-wd-web] .wd-sec { padding: 22px 24px 24px; border-radius: 30px; background: #fff; box-shadow: inset 0 3px 0 #fff, 0 0 0 1px #f2e9dd, 0 18px 30px -26px rgb(15 23 42 / 36%); }
+[data-wd-web] .wd-h { display: flex; align-items: center; gap: 10px; color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 20px; font-weight: 400; }
+[data-wd-web] .wd-h > span { display: grid; width: 34px; height: 34px; place-items: center; border-radius: 50%; background: #ffeef3; color: #e2557a; font-size: 14px; }
+[data-wd-web] .wd-alt .wd-h > span { background: #fff6e3; color: #d98a12; }
+[data-wd-web] .wd-final .wd-h > span { background: #f3f0fe; color: #6b51c9; }
+
+/* 다시 볼 수 없는 것 */
+[data-wd-web] .wd-lost { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-top: 16px; padding: 14px 16px; border-radius: 20px; background: #fff5f8; }
+[data-wd-web] .wd-lost > p { color: #c43d66; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 15px; }
+[data-wd-web] .wd-lost ul { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+[data-wd-web] .wd-lost li { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; background: #fff; color: #475569; font-size: 12.5px; font-weight: 800; text-decoration: line-through; text-decoration-color: rgb(226 85 122 / 55%); text-decoration-thickness: 2px; box-shadow: 0 0 0 1px #f6dce5; }
+[data-wd-web] .wd-lost li i { color: #e9789a; font-size: 11px; }
+
+/* 처리 방식 카드 셋 */
+[data-wd-web] .wd-handling { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 14px 0 0; padding: 0; list-style: none; }
+[data-wd-web] .wd-handling li { --t-soft: #ffeef3; display: grid; justify-items: start; align-content: start; gap: 6px; padding: 16px 16px 18px; border-radius: 22px; background: var(--t-soft); box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
+[data-wd-web] .wd-handling li[data-tone="lav"] { --t-soft: #f3f0fe; }
+[data-wd-web] .wd-handling li[data-tone="sky"] { --t-soft: #e9f4fb; }
+[data-wd-web] .wd-handling img { width: 52px; height: 52px; padding: 6px; border-radius: 50%; background: #fff; object-fit: contain; box-shadow: 0 8px 12px -10px rgb(15 23 42 / 40%); }
+[data-wd-web] .wd-handling b { margin-top: 4px; color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 16px; font-weight: 400; }
+[data-wd-web] .wd-handling small { color: #64748b; font-size: 12.5px; font-weight: 600; line-height: 1.6; word-break: keep-all; }
+
+/* 탈퇴 대신 */
+[data-wd-web] .wd-alt-links { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 16px; }
+[data-wd-web] .wd-alt-links a { --t-soft: #e9f8f1; display: flex; align-items: center; gap: 12px; padding: 12px 14px 12px 12px; border-radius: 22px; background: var(--t-soft); color: #1e293b; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); transition: transform 0.15s ease, box-shadow 0.15s ease; }
+[data-wd-web] .wd-alt-links a[data-tone="lav"] { --t-soft: #f3f0fe; }
+[data-wd-web] .wd-alt-links a[data-tone="sky"] { --t-soft: #e9f4fb; }
+[data-wd-web] .wd-alt-links a:hover { transform: translateY(-2px); box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%), 0 14px 22px -16px rgb(15 23 42 / 40%); }
+[data-wd-web] .wd-alt-links img { flex: none; width: 48px; height: 48px; padding: 6px; border-radius: 50%; background: #fff; object-fit: contain; }
+[data-wd-web] .wd-alt-links span { display: grid; gap: 2px; }
+[data-wd-web] .wd-alt-links b { font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 15px; font-weight: 400; }
+[data-wd-web] .wd-alt-links small { color: #7a8698; font-size: 11.5px; font-weight: 700; }
+
+/* 마지막 확인 */
+[data-wd-web] .wd-final-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+[data-wd-web] .wd-progress { padding: 5px 12px; border-radius: 999px; background: #f3f0fe; color: #6b51c9; font-size: 12px; font-weight: 800; }
+[data-wd-web] .wd-steps { display: grid; gap: 12px; margin: 18px 0 0; padding: 0; list-style: none; }
+[data-wd-web] .wd-steps > li { display: grid; grid-template-columns: 36px minmax(0, 1fr); align-items: start; gap: 12px; padding: 14px 16px; border-radius: 20px; background: #fbf8f3; box-shadow: inset 0 0 0 1.5px #f1e8dc; transition: background 0.2s ease, box-shadow 0.2s ease; }
+[data-wd-web] .wd-steps > li.is-done { background: #f2fbf7; box-shadow: inset 0 0 0 1.5px #bfe8d6; }
+[data-wd-web] .wd-no { display: grid; width: 32px; height: 32px; place-items: center; border-radius: 50%; background: #fff; color: #a0937f; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 15px; box-shadow: 0 0 0 1.5px #e9e0d3; }
+[data-wd-web] li.is-done .wd-no { background: #12a17a; color: #fff; font-size: 13px; box-shadow: none; }
+[data-wd-web] .wd-check { display: flex; align-items: flex-start; gap: 10px; color: #475569; font-size: 13.5px; font-weight: 700; line-height: 1.6; cursor: pointer; }
+[data-wd-web] .wd-check input { flex: none; width: 20px; height: 20px; margin-top: 2px; accent-color: #12a17a; cursor: pointer; }
+[data-wd-web] .wd-field { display: grid; gap: 7px; }
+[data-wd-web] .wd-field > span:first-child { color: #334155; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 14.5px; }
+[data-wd-web] .wd-field > span:first-child b { padding: 1px 8px; border-radius: 8px; background: #ffeef3; color: #e2557a; font-weight: 400; }
+[data-wd-web] .wd-field .input { height: 48px; border: 0; border-radius: 16px; background: #fff; color: #1e293b; font-size: 15px; font-weight: 700; box-shadow: inset 0 0 0 1.5px #ece3d6; }
+[data-wd-web] .wd-field .input:focus { outline: none; box-shadow: inset 0 0 0 2px #c4b5fd, 0 0 0 4px rgb(196 181 253 / 25%); }
+[data-wd-web] .wd-type { position: relative; display: block; }
+[data-wd-web] .wd-type .input { padding-right: 110px; }
+[data-wd-web] .wd-type em { position: absolute; top: 50%; right: 10px; transform: translateY(-50%); padding: 4px 10px; border-radius: 999px; background: #ffeef3; color: #c43d66; font-size: 11.5px; font-style: normal; font-weight: 800; }
+[data-wd-web] .wd-type em.is-ok { background: #e9f8f1; color: #0f8a69; }
+[data-wd-web] .wd-error { margin-top: 14px; padding: 12px 16px; border-radius: 16px; background: #ffeef3; color: #c43d66; font-size: 13.5px; font-weight: 800; }
+[data-wd-web] .wd-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; margin-top: 18px; }
+[data-wd-web] .wd-stay { display: inline-flex; align-items: center; gap: 8px; min-height: 50px; padding: 0 24px; border-radius: 999px; background: #12a17a; color: #fff; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 16px; box-shadow: inset 0 2px 0 rgb(255 255 255 / 25%), 0 14px 22px -14px rgb(18 120 90 / 80%); }
+[data-wd-web] .wd-stay i { font-size: 13px; }
+[data-wd-web] .wd-leave { min-height: 50px; padding: 0 24px; border: 0; border-radius: 999px; background: #d0436d; color: #fff; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 16px; cursor: pointer; box-shadow: inset 0 2px 0 rgb(255 255 255 / 20%), 0 14px 22px -14px rgb(200 60 100 / 85%); }
+[data-wd-web] .wd-leave:disabled { background: #f3d3dd; color: #fff; box-shadow: none; cursor: not-allowed; }
+[data-wd-web] .wd-foot { margin-top: 12px; color: #94a3b8; font-size: 12px; font-weight: 700; text-align: right; }
+[data-wd-web] .wd-foot a { color: #6b51c9; font-weight: 800; text-decoration: underline; text-underline-offset: 3px; }
+
+@media (max-width: 860px) {
+    [data-wd-web] .wd-hero { grid-template-columns: minmax(0, 1fr); padding: 24px 20px; border-radius: 28px; }
+    [data-wd-web] .wd-hero h2 { font-size: 23px; }
+    [data-wd-web] :is(.wd-handling, .wd-alt-links) { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 640px) {
+    [data-wd-web] .wd-sec { padding: 18px 16px 20px; border-radius: 26px; }
+    [data-wd-web] .wd-steps > li { grid-template-columns: 30px minmax(0, 1fr); padding: 12px; }
+    [data-wd-web] .wd-no { width: 28px; height: 28px; }
+    [data-wd-web] .wd-actions > * { flex: 1 1 100%; justify-content: center; }
+    [data-wd-web] .wd-foot { text-align: center; }
+}

@@ -1,6 +1,13 @@
 "use client";
 
+/**
+ * 마이페이지 회원 탈퇴
+ * 앱: 아래 기존 화면 그대로.
+ * 웹(2026-10-24 사용자): WithdrawalWebView — 같은 상태값 · 같은 탈퇴(submit)로 머리 판 · 탈퇴하면 이렇게 돼요 · 대신 해 볼 것 · 마지막 확인 단계.
+ *   기존 양식(data-wd-legacy)은 웹에서만 숨김(app/mypage-web.css).
+ */
 import { FormEvent, useState } from "react";
+import WithdrawalWebView from "@/components/mypage/WithdrawalWebView";
 import Link from "next/link";
 import MypageSectionLayout, { MypageLoginGate } from "@/components/mypage/MypageSectionLayout";
 import {
@@ -62,7 +69,24 @@ export default function MypageWithdrawalPage() {
             title="회원 탈퇴"
             description="계정 접근은 즉시 차단하고 개인정보는 가명화하며, 법정 보존 기록은 분리 보관합니다."
         >
-            <form className="surface overflow-hidden" aria-labelledby="withdrawal-heading" onSubmit={submit} data-mp-card="split">
+            {/* 웹 전용 화면(앱은 hidden) */}
+            <WithdrawalWebView
+                name={user.name}
+                account={memberAccountDisplay(user.email, user.authProvider)}
+                providerLabel={({ email: "이메일 가입", google: "구글 간편가입", kakao: "카카오 간편가입", naver: "네이버 간편가입" } as Record<string, string>)[user.authProvider || "email"] ?? "간편가입"}
+                isPasswordAccount={isPasswordAccount}
+                acknowledged={acknowledged}
+                onAcknowledged={setAcknowledged}
+                currentPassword={currentPassword}
+                onCurrentPassword={setCurrentPassword}
+                confirmation={confirmation}
+                onConfirmation={setConfirmation}
+                ready={ready}
+                submitting={submitting}
+                error={error}
+                onSubmit={submit}
+            />
+            <form className="surface overflow-hidden" aria-labelledby="withdrawal-heading" onSubmit={submit} data-mp-card="split" data-wd-legacy>
                 <div className="border-b border-red-100 bg-red-50/70 px-5 py-5 sm:px-6" data-mp-band="pink" data-mp-art="lock">
                     <h2 id="withdrawal-heading" className="text-xl font-black text-red-950">탈퇴 후에는 되돌릴 수 없습니다.</h2>
                     <p className="mt-2 text-sm font-bold leading-6 text-red-900">
