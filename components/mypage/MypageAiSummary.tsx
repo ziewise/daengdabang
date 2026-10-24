@@ -16,6 +16,8 @@ import Link from "next/link";
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { useAuth, type PetProfile } from "@/lib/store";
 import { loadWeeklyPhotoAnalyses, type WeeklyPhotoAnalysisRecord } from "@/lib/weekly-photo-analysis";
+// 건강 기록 전체 보기 — 페이지 이동 대신 건강 일기 창(2026-10-24)
+import HealthDiaryModal from "@/components/mypage/HealthDiaryModal";
 import { loadPetObservationHistory, type PetObservationHistoryItem } from "@/lib/petlens-observation";
 import {
     claimDaengLabAttendance,
@@ -111,10 +113,12 @@ function SumLoading() {
 }
 
 // 아래쪽 이동 버튼 줄 — 기능 화면으로(주 버튼) · 다른 요약으로(보조)
-function SumActions({ primary, secondary }: { primary: { href: string; label: string }; secondary?: { href: string; label: string } }) {
+function SumActions({ primary, secondary }: { primary: { href: string; label: string } | { onClick: () => void; label: string }; secondary?: { href: string; label: string } }) {
     return (
         <div className="mp-sum-actions mt-6 flex flex-wrap gap-3">
-            <Link href={primary.href} className="btn btn-primary">{primary.label}</Link>
+            {"href" in primary
+                ? <Link href={primary.href} className="btn btn-primary">{primary.label}</Link>
+                : <button type="button" onClick={primary.onClick} className="btn btn-primary">{primary.label}</button>}
             {secondary && <Link href={secondary.href} className="btn btn-secondary">{secondary.label}</Link>}
         </div>
     );
@@ -138,6 +142,8 @@ export function HealthSummary() {
     const [retry, setRetry] = useState(0);
     const key = `${petId ?? "none"}:${retry}`;
     const [loaded, setLoaded] = useState<Loaded<WeeklyPhotoAnalysisRecord[]>>({ key: "" });
+    // 건강 일기 창(전체 보기) — 열린 기록 id("" 이면 최근 기록부터), null 이면 닫힘
+    const [diary, setDiary] = useState<string | null>(null);
 
     useEffect(() => {
         if (!petId || !token) return;
@@ -245,16 +251,25 @@ export function HealthSummary() {
                         <ol className="mp-sum-timeline grid gap-2">
                             {records.map((record, index) => (
                                 <li key={record.id} className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-xl bg-neutral-50 px-4 py-3 text-sm" data-latest={index === 0 || undefined}>
-                                    <span className="w-28 shrink-0 font-black text-neutral-500">{dateLabel(record.analyzedAt)}</span>
-                                    <span className="min-w-0 flex-1 font-bold text-neutral-800">{record.title}</span>
-                                    {record.statusLabel && <span className="rounded-full bg-white px-2.5 py-0.5 text-xs font-black text-neutral-600">{record.statusLabel}</span>}
+                                    {/* 줄을 누르면 건강 일기 창에서 그 주가 펼쳐진 채로 열림 */}
+                                    <button type="button" className="mp-sum-rowbtn flex min-w-0 flex-1 flex-wrap items-center gap-x-3 gap-y-1 text-left" onClick={() => setDiary(record.id)}>
+                                        <span className="w-28 shrink-0 font-black text-neutral-500">{dateLabel(record.analyzedAt)}</span>
+                                        <span className="min-w-0 flex-1 font-bold text-neutral-800">{record.title}</span>
+                                        {record.statusLabel && <span className="rounded-full bg-white px-2.5 py-0.5 text-xs font-black text-neutral-600">{record.statusLabel}</span>}
+                                    </button>
                                 </li>
                             ))}
                         </ol>
                     </section>
                 </div>
             )}
-            <SumActions primary={{ href: "/my-pet", label: "건강 기록 전체 보기" }} secondary={{ href: "/mypage/ai/", label: "AI 분석 요약 보기" }} />
+            <SumActions
+                primary={latest ? { onClick: () => setDiary(""), label: "건강 기록 전체 보기" } : { href: "/my-pet", label: "건강 기록 전체 보기" }}
+                secondary={{ href: "/mypage/ai/", label: "AI 분석 요약 보기" }}
+            />
+            {diary !== null && pet && petId && (
+                <HealthDiaryModal pet={pet} petId={petId} token={token} openRecordId={diary || undefined} onClose={() => setDiary(null)} />
+            )}
         </>
     );
 }
