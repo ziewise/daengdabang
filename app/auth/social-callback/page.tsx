@@ -1,5 +1,12 @@
 "use client";
 
+/*
+ * 간편로그인 · 간편가입 돌아옴(/auth/social-callback)
+ * 2026-10-24 웹: 간편가입이면 새 단계 화면(정보 확인 → 우리 아이 → 완료 · components/auth/signup-web/SocialSignupWebFinish),
+ *   돌아왔지만 가입이 안 된 경우(동의 취소 · 이미 이메일로 가입 · 실패) · 이미 가입된 간편 계정은 갈림길 카드.
+ *   로그인 · 토큰 · 가입 기록 동작은 그대로. 앱은 기존 화면(이메일 인증 · 실패 안내) 그대로.
+ */
+
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -9,6 +16,10 @@ import { safeInternalRedirect } from "@/lib/internal-redirect";
 import SignupEmailVerification, { type SignupEmailVerificationResult } from "@/components/auth/SignupEmailVerification";
 import { clearSignupEmailResume, loadSignupEmailResume } from "@/lib/signup-email-verification";
 import { trackSignupCompleted } from "@/lib/storefront-analytics";
+import { readSocialReturnKind, type SocialReturnKind } from "@/lib/signup-flow";
+import { useWebScreen } from "@/hooks/useWebScreen";
+import SocialSignupWebFinish, { SocialReturnWebNotice } from "@/components/auth/signup-web/SocialSignupWebFinish";
+import "../../signup-web.css";
 
 const SOCIAL_PROVIDERS = new Set<SocialProvider>(["naver", "kakao", "google"]);
 
@@ -52,6 +63,10 @@ export default function SocialCallbackPage() {
         returnTo: string;
     } | null>(null);
     const processedRef = useRef(false);
+    // 웹 갈림길 — 새 가입 · 이미 가입된 간편 계정 · 동의 취소 · 이미 이메일로 가입 · 실패(앱은 안 씀)
+    const webScreen = useWebScreen();
+    const [returnKind, setReturnKind] = useState<SocialReturnKind>("new");
+    const [returnProvider, setReturnProvider] = useState("");
 
     useEffect(() => {
         if (!hydrated || processedRef.current) return;
@@ -60,6 +75,8 @@ export default function SocialCallbackPage() {
             const params = parseCallbackParams();
             const token = params.get("access_token") || params.get("token") || "";
             const resume = loadSignupEmailResume();
+            setReturnKind(readSocialReturnKind(params, Boolean(token)));
+            setReturnProvider(cleanSocialProvider(params.get("provider")) || (token ? providerFromJwt(token) : undefined) || "");
             if (!token) {
                 if (resume?.source === "social" && user?.apiAccessToken) {
                     setPendingVerification({ member: user, returnTo: resume.returnTo });
@@ -117,6 +134,30 @@ export default function SocialCallbackPage() {
         if (result.verifiedEmail) updateMemberEmail(result.verifiedEmail);
         finishSignup();
     };
+
+    // 웹 — 간편가입 새 단계 화면 · 갈림길 카드
+    if (webScreen && pendingVerification) {
+        return (
+            <main className="sxw" data-signup-flow>
+                {returnKind === "existing" ? (
+                    <SocialReturnWebNotice kind="existing" provider={returnProvider} onContinue={finishSignup} />
+                ) : (
+                    <SocialSignupWebFinish
+                        member={pendingVerification.member}
+                        provider={pendingVerification.member.authProvider || returnProvider}
+                        onFinish={finishSignup}
+                    />
+                )}
+            </main>
+        );
+    }
+    if (webScreen && error) {
+        return (
+            <main className="sxw" data-signup-flow>
+                <SocialReturnWebNotice kind={returnKind === "new" || returnKind === "existing" ? "failed" : returnKind} provider={returnProvider} message={error} />
+            </main>
+        );
+    }
 
     if (pendingVerification) {
         return (

@@ -31,25 +31,11 @@ const PROVIDERS: Array<{
     },
 ];
 
-export default function SocialAuthButtons({
-    mode,
-    variant = "full",
-    returnTo = "/mypage",
-    signupSecurity,
-}: {
-    mode: "login" | "signup";
-    /** full = 라벨 있는 직사각(기본) / compact = 로그인 카드용 원형 아이콘 */
-    variant?: "full" | "compact";
-    /** 인증을 시작한 기능으로 안전하게 복귀할 내부 경로 */
-    returnTo?: string;
-    /** 간편가입도 이메일 가입과 같은 필수 동의·봇 방지 확인을 통과해야 한다. */
-    signupSecurity?: {
-        botToken: string;
-        requiredConsentsAccepted: boolean;
-        termsVersion: string;
-        privacyVersion: string;
-    };
-}) {
+/**
+ * 간편로그인 · 간편가입 공급자(네이버 · 카카오 · 구글) 연결 상태 — 기존 버튼과 새 웹 가입 화면이 같이 씀(2026-10-24 꺼내기만, 동작 그대로).
+ * enabledByProvider: 공급자별 사용 가능 여부(못 불러오면 null) · statusChecked: 확인 끝남 · retryProviders: 다시 확인
+ */
+export function useSocialProviderStatus() {
     const apiReady = useDdbApiReady();
     const [enabledByProvider, setEnabledByProvider] = useState<Record<SocialProvider, boolean> | null>(null);
     const [statusChecked, setStatusChecked] = useState(false);
@@ -106,6 +92,56 @@ export default function SocialAuthButtons({
         return () => window.removeEventListener("online", retryWhenOnline);
     }, [enabledByProvider, statusChecked]);
 
+    return { apiReady, enabledByProvider, statusChecked, retryProviders };
+}
+
+/** 간편로그인 · 간편가입 시작 — 가입이면 돌아와서 이어 갈 표시를 남기고 공급자 화면으로 이동(기존 동작 그대로) */
+export function beginSocialAuth(
+    provider: SocialProvider,
+    mode: "login" | "signup",
+    returnTo: string,
+    signupSecurity?: { botToken: string; termsVersion: string; privacyVersion: string }
+) {
+    if (mode === "signup") {
+        saveSignupEmailResume({ source: "social", returnTo });
+    } else {
+        clearSignupEmailResume();
+    }
+    const started = mode === "signup" && signupSecurity
+        ? startSocialLogin(provider, returnTo, {
+            mode: "signup",
+            botToken: signupSecurity.botToken,
+            termsVersion: signupSecurity.termsVersion,
+            privacyVersion: signupSecurity.privacyVersion,
+        })
+        : startSocialLogin(provider, returnTo, { mode: "login" });
+    if (!started) {
+        clearSignupEmailResume();
+    }
+    return started;
+}
+
+export default function SocialAuthButtons({
+    mode,
+    variant = "full",
+    returnTo = "/mypage",
+    signupSecurity,
+}: {
+    mode: "login" | "signup";
+    /** full = 라벨 있는 직사각(기본) / compact = 로그인 카드용 원형 아이콘 */
+    variant?: "full" | "compact";
+    /** 인증을 시작한 기능으로 안전하게 복귀할 내부 경로 */
+    returnTo?: string;
+    /** 간편가입도 이메일 가입과 같은 필수 동의·봇 방지 확인을 통과해야 한다. */
+    signupSecurity?: {
+        botToken: string;
+        requiredConsentsAccepted: boolean;
+        termsVersion: string;
+        privacyVersion: string;
+    };
+}) {
+    const { apiReady, enabledByProvider, statusChecked, retryProviders } = useSocialProviderStatus();
+
     const disabledCount = useMemo(() => {
         if (apiReady !== true || !enabledByProvider) return 0;
         return PROVIDERS.filter((provider) => enabledByProvider[provider.id] === false).length;
@@ -133,22 +169,7 @@ export default function SocialAuthButtons({
             || enabledByProvider?.[provider] !== true
             || !signupSecurityReady
         ) return;
-        if (mode === "signup") {
-            saveSignupEmailResume({ source: "social", returnTo });
-        } else {
-            clearSignupEmailResume();
-        }
-        const started = mode === "signup" && signupSecurity
-            ? startSocialLogin(provider, returnTo, {
-                mode: "signup",
-                botToken: signupSecurity.botToken,
-                termsVersion: signupSecurity.termsVersion,
-                privacyVersion: signupSecurity.privacyVersion,
-            })
-            : startSocialLogin(provider, returnTo, { mode: "login" });
-        if (!started) {
-            clearSignupEmailResume();
-        }
+        beginSocialAuth(provider, mode, returnTo, mode === "signup" ? signupSecurity : undefined);
     };
 
     // compact — 로그인 카드용 원형 아이콘(라벨 없음, 비활성은 흐리게)

@@ -11,8 +11,10 @@ import Link from "next/link";
 // 그림 부품 — 이 파일은 브라우저 기본 Image(사진 읽기)도 쓰므로 이름을 NextImage 로
 import NextImage from "next/image";
 import "../../auth-web.css";
+import "../../signup-web.css";
 import {
     customerApiErrorMessage,
+    DdbApiError,
     ddbApiReady,
     loadPetProfilesSmart,
     loginCustomer,
@@ -47,6 +49,8 @@ import {
 } from "@/lib/pet-companion-breeds";
 import { useAuth, type PetProfile, type User } from "@/lib/store";
 import { useDdbApiReady } from "@/hooks/useDdbApiReady";
+import { useWebScreen } from "@/hooks/useWebScreen";
+import SignupWebFlow, { type SignupWebErrorKind } from "@/components/auth/signup-web/SignupWebFlow";
 import SocialAuthButtons from "@/components/auth/SocialAuthButtons";
 import SignupBotChallenge, { signupTurnstileSiteKey } from "@/components/auth/SignupBotChallenge";
 import SignupEmailVerification, { type SignupEmailVerificationResult } from "@/components/auth/SignupEmailVerification";
@@ -255,6 +259,8 @@ export default function SignupPage() {
     const [photoLoading, setPhotoLoading] = useState(false);
     const [photoError, setPhotoError] = useState("");
     const [error, setError] = useState("");
+    // 웹 새 가입 화면의 갈림길(이미 가입된 이메일 · 가입 불가 이메일) — 앱 화면은 안 씀
+    const [errorKind, setErrorKind] = useState<SignupWebErrorKind>("");
     const [loading, setLoading] = useState(false);
     const [pendingVerification, setPendingVerification] = useState<PendingVerification | null>(null);
     const [activationFinalizing, setActivationFinalizing] = useState(false);
@@ -268,6 +274,8 @@ export default function SignupPage() {
     const [botToken, setBotToken] = useState("");
     const [botResetKey, setBotResetKey] = useState(0);
     const apiReady = useDdbApiReady();
+    // 웹이면 단계별 새 가입 화면(SignupWebFlow), 앱이면 아래 한 장 화면 그대로
+    const webScreen = useWebScreen();
     const botChallengeConfigured = Boolean(signupTurnstileSiteKey());
     const requiredConsentsAccepted = agreeTerms && agreePrivacy;
     const signupSecurityReady = (
@@ -487,9 +495,27 @@ export default function SignupPage() {
         }
     };
 
-    const submit = async (event: FormEvent) => {
+    // 견종 고르기(앱 · 웹 같이 씀 — 원래 고르기 칸 동작 그대로 꺼냄)
+    const selectBreed = (nextBreedId: string) => {
+        setPetBreedId(nextBreedId);
+        setPetBreedSource(nextBreedId ? "manual" : "");
+        if (isPetBreedId(nextBreedId)) {
+            const selected = getPetBreedVisual(nextBreedId);
+            setPetBreedCustom("");
+            setPetBreedMessage(`선택됨: ${selected.ko} · ${selected.en}`);
+        } else if (nextBreedId === CUSTOM_BREED_OPTION) {
+            setPetBreedMessage("목록 외 견종 또는 믹스견 이름을 아래에 직접 입력해 주세요.");
+        } else {
+            setPetBreedCustom("");
+            setPetBreedMessage("");
+        }
+    };
+
+    // options.skipPet — 웹 새 가입 화면에서 "우리 아이는 나중에"를 고르면 입력해 둔 반려견 정보를 저장하지 않음(앱은 넘기지 않음 → 그대로)
+    const submit = async (event: FormEvent, options: { skipPet?: boolean } = {}) => {
         event.preventDefault();
         setError("");
+        setErrorKind("");
         if (!ddbApiReady()) {
             setCustomerToken();
             setError("지금은 회원가입 준비 중입니다. 잠시 후 다시 이용해 주세요.");
@@ -523,7 +549,7 @@ export default function SignupPage() {
         }
         const photoViewMeta = petPhotoViewMetadata(petPhotoViews);
         const primaryPhotoView = primaryPetPhotoEntry(petPhotoViews)?.[0];
-        const shouldCreatePet = Boolean(
+        const shouldCreatePet = !options.skipPet && Boolean(
             petName.trim() ||
             petPhotoDataUrl ||
             photoViewMeta.length > 0 ||
@@ -672,6 +698,9 @@ export default function SignupPage() {
             setBotToken("");
             setBotResetKey((value) => value + 1);
             setError(customerApiErrorMessage(err));
+            if (err instanceof DdbApiError) {
+                setErrorKind(err.status === 409 ? "email_taken" : err.apiCode === "signup_email_domain_not_allowed" ? "email_domain" : "");
+            }
         } finally {
             setLoading(false);
         }
@@ -761,6 +790,91 @@ export default function SignupPage() {
         if (result.verifiedEmail) updateMemberEmail(result.verifiedEmail);
         finishBonusSignup();
     };
+
+    // 웹 — 단계별 새 가입 화면(값 · 사진 분석 · 가입은 이 페이지 것 그대로). 가입이 끝나면(보너스 모드) 같은 부품이 완료 화면을 그림.
+    // 서버가 "이메일 확인 후 계정 열기"(activation) 방식이면 아래 기존 확인 화면을 그대로 씀.
+    if (webScreen && pendingVerification?.kind !== "activation") {
+        const hasPetData = Boolean(
+            petName.trim() || petPhotoDataUrl || Object.keys(petPhotoViews).length || petBreedId || petBreedCustom.trim() || petWeightKg.trim()
+        );
+        return (
+            <main className="sxw" data-signup-flow>
+                <SignupWebFlow
+                    apiReady={apiReady}
+                    returnTo={redirect || "/mypage"}
+                    name={name}
+                    setName={setName}
+                    email={email}
+                    setEmail={setEmail}
+                    password={password}
+                    setPassword={setPassword}
+                    agreeTerms={agreeTerms}
+                    setAgreeTerms={setAgreeTerms}
+                    agreePrivacy={agreePrivacy}
+                    setAgreePrivacy={setAgreePrivacy}
+                    agreePetLens={agreePetLensPrivacy}
+                    setAgreePetLens={setAgreePetLensPrivacy}
+                    botConfigured={botChallengeConfigured}
+                    botToken={botToken}
+                    setBotToken={setBotToken}
+                    botResetKey={botResetKey}
+                    pet={{
+                        name: petName,
+                        setName: setPetName,
+                        age: petAge,
+                        setAge: setPetAge,
+                        size: petSize,
+                        setSize: setPetSize,
+                        weightKg: petWeightKg,
+                        setWeightKg: setPetWeightKg,
+                        weightEstimate: petWeightEstimate,
+                        sex: petSex,
+                        setSex: setPetSex,
+                        coatColor: petCoatColor,
+                        onCoatColor: (value) => {
+                            setPetCoatColor(value);
+                            setPetCoatColorSource(value ? "manual" : "");
+                        },
+                        coatColorFromAi: petCoatColorSource === "ai",
+                        coat: petCoat,
+                        setCoat: setPetCoat,
+                        activity: petActivity,
+                        setActivity: setPetActivity,
+                        concerns: petConcerns,
+                        toggleConcern,
+                        photos: petPhotoViews,
+                        onPhoto: (viewId, file) => void handlePetPhotoView(viewId, file),
+                        photoLoading,
+                        photoError,
+                        breedId: petBreedId,
+                        onBreedId: selectBreed,
+                        breedCustom: petBreedCustom,
+                        onBreedCustom: (value) => {
+                            setPetBreedCustom(value);
+                            setPetBreedSource("manual");
+                        },
+                        breedMessage: petBreedMessage,
+                        analysisMessage: petAnalysisMessage,
+                        hasData: hasPetData,
+                    }}
+                    options={{ photoViews: PET_PHOTO_VIEWS, concerns: CONCERN_OPTIONS, customBreed: CUSTOM_BREED_OPTION }}
+                    loading={loading}
+                    error={error}
+                    errorKind={errorKind}
+                    clearError={() => {
+                        setError("");
+                        setErrorKind("");
+                    }}
+                    submit={(event, options) => void submit(event, options)}
+                    done={pendingVerification?.kind === "bonus" ? {
+                        member: pendingVerification.member,
+                        onFinish: finishBonusSignup,
+                        onLeave: clearSignupEmailResume,
+                    } : null}
+                />
+            </main>
+        );
+    }
 
     if (pendingVerification) {
         if (pendingVerification.kind === "activation") {
@@ -1056,21 +1170,7 @@ export default function SignupPage() {
                                 <span className="mb-1 block text-xs font-black text-neutral-500">견종 캐릭터</span>
                                 <select
                                     value={petBreedId}
-                                    onChange={(event) => {
-                                        const nextBreedId = event.target.value;
-                                        setPetBreedId(nextBreedId);
-                                        setPetBreedSource(event.target.value ? "manual" : "");
-                                        if (isPetBreedId(nextBreedId)) {
-                                            const selected = getPetBreedVisual(nextBreedId);
-                                            setPetBreedCustom("");
-                                            setPetBreedMessage(`선택됨: ${selected.ko} · ${selected.en}`);
-                                        } else if (nextBreedId === CUSTOM_BREED_OPTION) {
-                                            setPetBreedMessage("목록 외 견종 또는 믹스견 이름을 아래에 직접 입력해 주세요.");
-                                        } else {
-                                            setPetBreedCustom("");
-                                            setPetBreedMessage("");
-                                        }
-                                    }}
+                                    onChange={(event) => selectBreed(event.target.value)}
                                     className="input"
                                 >
                                     <option value="">사진 분석 결과 확인 또는 직접 선택</option>
