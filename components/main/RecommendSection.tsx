@@ -149,7 +149,8 @@ export default function RecommendSection() {
                     </p>
                 ) : null}
                 {personalizationEnabled && personalizedResult?.notices.map((notice) => (
-                    <p key={notice} className="mb-4 rounded-xl border border-sky-200 bg-sky-50 px-4 py-3 text-xs font-black leading-5 text-sky-900">
+                    // data-rec-notice — 웹은 아래 빈 상태 카드와 내용이 겹쳐 숨김(2026-10-24 사용자, app/globals.css)
+                    <p key={notice} className="mb-4 rounded-xl border border-sky-200 bg-sky-50 px-4 py-3 text-xs font-black leading-5 text-sky-900" data-rec-notice>
                         {notice}
                     </p>
                 ))}
