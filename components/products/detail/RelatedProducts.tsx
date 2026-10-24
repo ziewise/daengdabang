@@ -29,7 +29,7 @@ export default function RelatedProducts({ product: p }: Props) {
 
     return (
         <section className="pd-related mt-16 md:mt-20">
-            <header className="pd-sec-head mb-5">
+            <header className="pd-sec-head mb-5" data-pd-band="pink" data-pd-art="related">
                 {/* 웹 전용 — 영문 손글씨 꼬리표 */}
                 <p className="hidden pd-kicker">YOU MAY ALSO LIKE</p>
                 <h2 className="pd-sec-title text-xl font-black tracking-tight text-neutral-950 md:text-2xl">

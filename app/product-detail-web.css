@@ -409,3 +409,143 @@ html:not(.ddb-app-mode) main[data-product-detail-content] [data-purchase-option-
         & .pd-sec-title { font-size: 22px; }
     }
 }
+
+/* ───────── K5 색 띠 결(2026-10-24 사용자 선택 — 주문서 · 마이페이지와 같은 결) ─────────
+   오른쪽 구매 정보 = 흰 쿠션 판, 그 안 혜택(노랑 띠 · 동전 그림) · 색상(민트 띠) 묶음 머리,
+   아래 구역 제목(상세 · 후기 · Q&A · 배송/반품 · 같이 보면 좋은 상품) = 파스텔 띠 + 영문 손글씨 + 주아 제목 + 오른쪽 3D 그림 */
+html:not(.ddb-app-mode) main[data-product-detail-content] {
+    & [data-pd-band="pink"] { --pd-bg: #ffeef3; --pd-ink: #e2557a; }
+    & [data-pd-band="mint"] { --pd-bg: #e9f8f1; --pd-ink: #12a17a; }
+    & [data-pd-band="sky"] { --pd-bg: #e9f4fb; --pd-ink: #0e8aa0; }
+    & [data-pd-band="yellow"] { --pd-bg: #fff6e3; --pd-ink: #d98a12; }
+    & [data-pd-band="lav"] { --pd-bg: #f3f0fe; --pd-ink: #6b51c9; }
+    & [data-pd-art="detail"] { --pd-art: url("/images/ui/lab-summary-256.webp"); }
+    & [data-pd-art="review"] { --pd-art: url("/images/ui/find-basics-256.webp"); }
+    & [data-pd-art="qna"] { --pd-art: url("/images/ui/mypet-caretalk-256.webp"); }
+    & [data-pd-art="return"] { --pd-art: url("/images/ui/web-cs-step-ship-256.webp"); }
+    & [data-pd-art="related"] { --pd-art: url("/images/ui/header-cart-128.webp"); }
+
+    /* 오른쪽 구매 정보 — 흰 쿠션 판 */
+    & .pd-info {
+        padding: 28px 28px 26px;
+        border-radius: 36px;
+        background: #fff;
+        box-shadow: var(--pd-cushion);
+    }
+
+    /* 혜택 묶음 — 노랑 띠 머리 + 크림 몸통 */
+    & .pd-benefits-head {
+        position: relative;
+        display: block;
+        margin-bottom: 0;
+        padding: 14px 84px 14px 20px;
+        border-radius: 24px 24px 0 0;
+        background: #fff6e3;
+        color: #1e293b;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 17px;
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%);
+    }
+
+    & .pd-benefits-head::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        right: 18px;
+        width: 50px;
+        height: 50px;
+        transform: translateY(-50%);
+        background: url("/images/ui/goods-pay-ready-256.webp") center / contain no-repeat;
+        filter: drop-shadow(0 6px 8px rgb(15 23 42 / 14%));
+    }
+
+    & :is(.pd-benefits-head, .pd-colors-head) > span {
+        display: block;
+        font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        line-height: 1.4;
+    }
+
+    & .pd-benefits-head > span { color: #d98a12; }
+    & .pd-benefits-head + .pd-benefits { margin-top: 0; border-radius: 0 0 24px 24px; box-shadow: inset 0 0 0 1.5px #f6ead8; }
+
+    /* 색상 고르기 — 민트 띠 머리(판 위쪽 끝까지) */
+    & .pd-colors { padding: 0 18px 16px; overflow: hidden; }
+
+    & .pd-colors-head {
+        display: block;
+        margin: 0 -18px 14px;
+        padding: 12px 18px;
+        background: #e9f8f1;
+        color: #1e293b;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 16px;
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%);
+    }
+
+    & .pd-colors-head > span { color: #12a17a; }
+    & .pd-colors-head > b { margin-left: 4px; color: #12a17a; font-weight: 400; }
+
+    /* 구역 제목 띠 */
+    & :is(.pd-sec-head[data-pd-band], h3[data-pd-band]) {
+        position: relative;
+        display: block;
+        padding: 18px 120px 18px 24px;
+        border-radius: 28px;
+        background: var(--pd-bg);
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%), 0 16px 26px -22px rgb(15 23 42 / 30%);
+    }
+
+    & :is(.pd-sec-head[data-pd-band], h3[data-pd-band])::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        right: 26px;
+        width: 70px;
+        height: 70px;
+        transform: translateY(-50%);
+        background: var(--pd-art) center / contain no-repeat;
+        filter: drop-shadow(0 8px 10px rgb(15 23 42 / 15%));
+    }
+
+    & :is(.pd-sec-head[data-pd-kicker], h3[data-pd-kicker])::before {
+        content: attr(data-pd-kicker);
+        display: block;
+        color: var(--pd-ink);
+        font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        line-height: 1.5;
+    }
+
+    & .pd-sec-head[data-pd-band] .pd-sec-title::after { display: none; }
+    & .pd-sec-head[data-pd-band] .pd-sec-title { font-size: 25px; }
+    & .pd-sec-head[data-pd-band] > span { margin-left: 8px; color: var(--pd-ink); font-weight: 800; }
+    & .pd-sec-head[data-pd-band] .pd-kicker { background: none; color: var(--pd-ink); -webkit-text-fill-color: currentColor; }
+    & .pd-sec-head[data-pd-band] .pd-kicker + .pd-sec-title + p { margin-top: 4px; color: #64748b; }
+
+    /* 배송 · 반품 판 — 제목 띠가 판 위쪽 끝까지 */
+    & #delivery-return-policy { padding: 0 28px 28px; overflow: hidden; }
+    & #delivery-return-policy > h3[data-pd-band] { margin: 0 -28px 22px; border-radius: 0; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
+}
+
+@media (max-width: 767px) {
+    html:not(.ddb-app-mode) main[data-product-detail-content] {
+        & .pd-info { padding: 20px 18px 20px; border-radius: 28px; }
+        & :is(.pd-sec-head[data-pd-band], h3[data-pd-band]) { padding: 16px 84px 16px 18px; border-radius: 24px; }
+        & :is(.pd-sec-head[data-pd-band], h3[data-pd-band])::after { right: 16px; width: 52px; height: 52px; }
+        & .pd-sec-head[data-pd-band] .pd-sec-title { font-size: 21px; }
+        & #delivery-return-policy { padding: 0 18px 22px; }
+        & #delivery-return-policy > h3[data-pd-band] { margin: 0 -18px 18px; }
+    }
+}
+
+/* 탭 구역 띠는 상세 내용 폭(1024px)에 맞춰 가운데로 */
+html:not(.ddb-app-mode) main[data-product-detail-content] :is(#tab-detail, #tab-review, #tab-qna) > .pd-sec-head[data-pd-band] {
+    max-width: 1024px;
+    margin-right: auto;
+    margin-left: auto;
+}

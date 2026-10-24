@@ -9,7 +9,7 @@ export default function ProductDeliveryReturnPolicy() {
     if (locale === "en") {
         return (
             <section id="delivery-return-policy" className="mx-auto mt-10 max-w-3xl scroll-mt-32 rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm md:p-7">
-                <h3 className="text-xl font-black text-neutral-950">Delivery and return policy</h3>
+                <h3 className="text-xl font-black text-neutral-950" data-pd-band="mint" data-pd-art="return" data-pd-kicker="DELIVERY · RETURN">Delivery and return policy</h3>
                 <div className="mt-5 grid gap-6 text-sm font-bold leading-7 text-neutral-700">
                     <section>
                         <h4 className="font-black text-neutral-950">Delivery</h4>
@@ -28,7 +28,7 @@ export default function ProductDeliveryReturnPolicy() {
 
     return (
         <section id="delivery-return-policy" className="mx-auto mt-10 max-w-3xl scroll-mt-32 rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm md:p-7">
-            <h3 className="text-xl font-black text-neutral-950">배송 및 반품/교환 안내</h3>
+            <h3 className="text-xl font-black text-neutral-950" data-pd-band="mint" data-pd-art="return" data-pd-kicker="DELIVERY · RETURN">배송 및 반품/교환 안내</h3>
             <div className="mt-5">
                 <DeliveryReturnPolicyDetails />
             </div>

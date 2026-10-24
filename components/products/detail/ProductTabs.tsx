@@ -70,13 +70,13 @@ export default function ProductTabs({ product: p }: Props) {
             </nav>
 
             <section id="tab-detail" className="scroll-mt-32 pt-10">
-                <SectionTitle title={t("detailInfo")} />
+                <SectionTitle title={t("detailInfo")} tone="sky" art="detail" kicker="DETAIL" />
                 <AppDetailFold><DetailContent product={p} /></AppDetailFold>
                 <ProductDeliveryReturnPolicy />
             </section>
 
             <section id="tab-review" className="scroll-mt-32 pt-14">
-                <SectionTitle title={locale === "en" ? "External store reviews" : "외부 판매점 후기"} badge={reviewBadge} />
+                <SectionTitle title={locale === "en" ? "External store reviews" : "외부 판매점 후기"} badge={reviewBadge} tone="yellow" art="review" kicker="REVIEW" />
                 <ReviewContent product={p} />
                 {!!p.relatedExternalReviewProducts?.length && <aside className="mx-auto mt-6 max-w-3xl rounded-xl border border-neutral-200 p-5" aria-label={locale === "en" ? "Other seasons' external reviews" : "다른 시즌 상품의 외부 후기"}>
                     <h3 className="text-sm font-bold">{locale === "en" ? "Other seasons' external reviews" : "다른 시즌 상품의 외부 후기"}</h3>
@@ -86,16 +86,17 @@ export default function ProductTabs({ product: p }: Props) {
             </section>
 
             <section id="tab-qna" className="scroll-mt-32 pt-14">
-                <SectionTitle title={t("qna")} />
+                <SectionTitle title={t("qna")} tone="lav" art="qna" kicker="Q&A" />
                 <QnaContent product={p} />
             </section>
         </div>
     );
 }
 
-function SectionTitle({ title, badge }: { title: string; badge?: string }) {
+// 구역 제목 — tone · art · kicker 는 웹 K5 띠 머리용 이름표(꾸밈은 app/product-detail-web.css, 앱은 그대로)
+function SectionTitle({ title, badge, tone, art, kicker }: { title: string; badge?: string; tone?: string; art?: string; kicker?: string }) {
     return (
-        <header className="pd-sec-head mb-5 flex items-baseline gap-2">
+        <header className="pd-sec-head mb-5 flex items-baseline gap-2" data-pd-band={tone} data-pd-art={art} data-pd-kicker={kicker}>
             <h2 className="pd-sec-title text-xl font-black tracking-tight text-neutral-950 md:text-2xl">{title}</h2>
             {badge && <span className="text-sm font-bold text-neutral-400">{badge}</span>}
         </header>

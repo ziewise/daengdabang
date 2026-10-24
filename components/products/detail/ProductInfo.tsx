@@ -215,6 +215,8 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
 
                 <div className="pd-divider h-px bg-neutral-200" />
 
+                {/* 웹 전용 — 혜택 묶음 노랑 띠 머리(K5, 꾸밈은 app/product-detail-web.css) */}
+                <p className="hidden pd-benefits-head" aria-hidden="true"><span>BENEFIT</span>{locale === "en" ? "Rewards · shipping" : "적립 · 배송 혜택"}</p>
                 <ul className="pd-benefits space-y-2 text-sm text-neutral-700">
                     <li
                         className="flex flex-wrap items-center gap-x-3 gap-y-2"

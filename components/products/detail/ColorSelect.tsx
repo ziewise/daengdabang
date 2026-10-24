@@ -23,6 +23,8 @@ export default function ColorSelect({ colors, colorIdx, onColorChange, className
     if (colors.length === 0) return null;
     return (
         <div data-pet-guide-target="color" className={`pd-colors rounded-lg border border-neutral-200 bg-neutral-50 p-4 ${className}`}>
+            {/* 웹 전용 머리(K5 민트 띠 — 꾸밈은 app/product-detail-web.css) */}
+            <p className="hidden pd-colors-head" aria-hidden="true"><span>COLOR</span>색상 고르기 <b>{colors.length}</b></p>
             <div className="flex flex-wrap gap-2">
                 {colors.map((c, i) => (
                     <button
