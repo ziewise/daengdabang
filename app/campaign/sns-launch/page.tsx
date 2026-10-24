@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { CATALOG, getBestProducts, getNewProducts } from "@/lib/catalog";
 import { productHref } from "@/lib/shop";
+// 웹 겉모양(2026-10-25) — data-campaign-web 이름표만, 꾸밈은 app/biz-web.css(앱은 그대로)
+import "../../biz-web.css";
 
 export const metadata: Metadata = {
     title: "댕다방 시작하기 | 펫렌즈와 반려견 상품 추천",
@@ -31,7 +33,7 @@ const products = [
 
 export default function SnsLaunchCampaignPage() {
     return (
-        <main>
+        <main data-campaign-web>
             <section className="border-b border-neutral-200 bg-white">
                 <div className="mx-auto grid max-w-[1280px] gap-8 px-4 py-10 md:grid-cols-[1fr_0.9fr] md:px-6">
                     <div className="flex flex-col justify-center">

@@ -163,7 +163,7 @@ export default function BusinessInquiryPanel({ mode }: { mode: BusinessInquiryMo
 
     if (receipt) {
         return (
-            <section className="rounded-[28px] border border-emerald-200 bg-emerald-50/85 p-6 shadow-card sm:p-8" role="status" aria-live="polite">
+            <section className="rounded-[28px] border border-emerald-200 bg-emerald-50/85 p-6 shadow-card sm:p-8" role="status" aria-live="polite" data-biz-done>
                 <span className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-600 text-white">
                     <i className="fa-solid fa-check" aria-hidden="true" />
                 </span>
@@ -194,7 +194,7 @@ export default function BusinessInquiryPanel({ mode }: { mode: BusinessInquiryMo
     }
 
     return (
-        <section className="overflow-hidden rounded-[28px] border border-white/70 bg-white/85 shadow-card backdrop-blur">
+        <section className="overflow-hidden rounded-[28px] border border-white/70 bg-white/85 shadow-card backdrop-blur" data-biz-form>
             <div className="border-b border-indigo-100 bg-gradient-to-r from-orange-50 via-sky-50 to-indigo-50 px-5 py-5 sm:px-7 sm:py-6">
                 <p className="text-xs font-black tracking-[0.2em] text-aurora-indigo">{config.eyebrow}</p>
                 <h2 className="mt-2 text-2xl font-black tracking-tight text-foreground">{config.title}</h2>

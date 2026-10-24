@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import BusinessInquiryPanel from "@/components/contact/BusinessInquiryPanel";
+// 웹 겉모양(2026-10-25) — data-biz-web 이름표 · 웹 전용 3D 그림만, 꾸밈은 app/biz-web.css(앱은 그대로)
+import "../biz-web.css";
 
 export const metadata: Metadata = {
     title: "입점·제휴 문의 | 댕다방",
@@ -23,7 +25,7 @@ const proposalTypes = [
 
 export default function PartnerInquiryPage() {
     return (
-        <div className="mx-auto w-full max-w-[1180px] px-4 py-10 md:px-6 md:py-14">
+        <div className="mx-auto w-full max-w-[1180px] px-4 py-10 md:px-6 md:py-14" data-biz-web="partner">
             <section className="relative overflow-hidden rounded-[32px] border border-white/70 bg-[linear-gradient(135deg,rgba(255,247,237,.96),rgba(239,246,255,.94)_48%,rgba(238,242,255,.96))] px-6 py-10 shadow-card sm:px-10 sm:py-14">
                 <div aria-hidden="true" className="absolute -right-14 -top-16 h-48 w-48 rounded-full bg-orange-200/50 blur-3xl" />
                 <div aria-hidden="true" className="absolute -bottom-24 left-1/3 h-56 w-56 rounded-full bg-indigo-200/50 blur-3xl" />
@@ -45,6 +47,9 @@ export default function PartnerInquiryPage() {
                         </Link>
                     </div>
                 </div>
+                {/* 웹 전용 3D 그림(앱은 숨김) */}
+                {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
+                <img src="/images/ui/stickers/benefit-brand.webp" alt="" aria-hidden="true" className="hidden" data-biz-art />
             </section>
 
             <section className="mt-12" aria-labelledby="partner-types-title">

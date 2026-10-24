@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import BusinessInquiryPanel from "@/components/contact/BusinessInquiryPanel";
+// 웹 겉모양(2026-10-25) — data-biz-web 이름표 · 웹 전용 3D 그림만, 꾸밈은 app/biz-web.css(앱은 그대로)
+import "../biz-web.css";
 
 export const metadata: Metadata = {
     title: "대량 구매 문의 | 댕다방",
@@ -23,7 +25,7 @@ const checkItems = [
 
 export default function BulkOrderPage() {
     return (
-        <div className="mx-auto w-full max-w-[1180px] px-4 py-10 md:px-6 md:py-14">
+        <div className="mx-auto w-full max-w-[1180px] px-4 py-10 md:px-6 md:py-14" data-biz-web="bulk">
             <section className="overflow-hidden rounded-[32px] border border-white/70 bg-neutral-950 px-6 py-10 text-white shadow-card sm:px-10 sm:py-14">
                 <div className="grid items-end gap-8 lg:grid-cols-[1.35fr_0.65fr]">
                     <div>
@@ -39,6 +41,9 @@ export default function BulkOrderPage() {
                         </a>
                     </div>
                     <aside className="rounded-3xl border border-white/15 bg-white/10 p-5 backdrop-blur">
+                        {/* 웹 전용 3D 그림(앱은 숨김) */}
+                        {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
+                        <img src="/images/ui/stickers/benefit-goods.webp" alt="" aria-hidden="true" className="hidden" data-biz-art />
                         <p className="text-xs font-black tracking-[0.18em] text-sky-300">QUICK CHECK</p>
                         <ul className="mt-4 grid gap-3 text-sm font-bold leading-6 text-neutral-200">
                             {checkItems.map((item) => <li key={item} className="flex gap-2"><i className="fa-solid fa-check mt-1 text-xs text-orange-300" aria-hidden="true" /><span>{item}</span></li>)}

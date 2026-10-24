@@ -1,0 +1,163 @@
+/*
+ * biz-web.css — 웹 입점·제휴(/partner) · 대량 구매(/bulk-order) · 시작하기 캠페인(/campaign/sns-launch) 겉모양 · 2026-10-25
+ * ---------------------------------------------------------------------
+ * 예전 인디고 · 검정 판 → 웹 파스텔 쿠션 결. 구조(태그 · 순서)는 그대로 두고 CSS 로만(이름표 data-biz-web · data-campaign-web ·
+ * data-biz-form 과 웹 전용 3D 그림 data-biz-art). 앱(ddb-app-mode)은 appShopSkin 그대로.
+ *  - 머리 판: 입점은 살구~하늘, 대량 구매는 민트~하늘 파스텔 쿠션 · 주아 제목 · 분홍/흰 알약 · 오른쪽 3D 그림
+ *  - 이런 제안 · 목적 세 칸: 흰 쿠션 · 칸마다 다른 파스텔 아이콘 동그라미
+ *  - 검토 흐름 · 진행 안내: 연보라/하늘 쿠션 · 번호 분홍 동그라미 · 노랑 메모
+ *  - 문의 양식(BusinessInquiryPanel): 흰 쿠션 · 색 띠 머리 · 크림 입력칸 · 분홍 접수 알약 · 접수 완료 민트 쿠션
+ *  - 캠페인: 분홍 파스텔 머리 판 · 상품 네 칸 쿠션 · 세 단계 파스텔
+ */
+
+html.ddb-app-mode [data-biz-art] { display: none !important; }
+
+html:not(.ddb-app-mode) :is([data-biz-web], [data-campaign-web]) {
+    --bz-ink: #1e293b;
+    --bz-soft: #5b6476;
+    --bz-jua: var(--font-jua), var(--font-wanted-sans), sans-serif;
+    --bz-crayon: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+    --bz-cushion: inset 0 3px 0 rgb(255 255 255 / 90%), 0 0 0 1px #f2e9dd, 0 20px 34px -28px rgb(15 23 42 / 38%);
+    color: var(--bz-ink);
+
+    /* 영문 꼬리표 — 세 색 손글씨 */
+    & p[class*="tracking-[0.2"], & p[class*="tracking-[0.18"], & p[class*="tracking-[0.24"] {
+        display: inline-block;
+        width: fit-content;
+        background: repeating-linear-gradient(172deg, #07849e 0 5px, #ef476f 5px 10px, #e98708 10px 15px);
+        -webkit-background-clip: text;
+        background-clip: text;
+        font-family: var(--bz-crayon);
+        font-size: 13px;
+        letter-spacing: 0.14em;
+        -webkit-text-fill-color: transparent;
+    }
+    /* 제목 — 주아 */
+    & :is(h1, h2, h3) { font-family: var(--bz-jua); font-weight: 400 !important; letter-spacing: 0 !important; }
+}
+
+/* ───────── 입점 · 대량 구매 ───────── */
+html:not(.ddb-app-mode) [data-biz-web] {
+    /* 머리 판 */
+    & > section:first-child {
+        position: relative;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 200px;
+        align-items: center;
+        gap: 24px;
+        border: 0 !important;
+        border-radius: 36px !important;
+        background: radial-gradient(80% 120% at 100% 0, rgb(233 244 251 / 95%) 0, transparent 55%), linear-gradient(120deg, #fff1e3 0%, #fff7ef 50%, #f4f9fd 100%) !important;
+        color: var(--bz-ink) !important;
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 26px 40px -30px rgb(200 120 60 / 40%) !important;
+    }
+    &[data-biz-web="bulk"] > section:first-child { display: block; background: radial-gradient(80% 120% at 100% 0, rgb(243 240 254 / 90%) 0, transparent 55%), linear-gradient(120deg, #e3f6ec 0%, #f0faf5 50%, #f4f9fd 100%) !important; box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 26px 40px -30px rgb(18 120 90 / 40%) !important; }
+    & > section:first-child > div[class*="blur-3xl"] { display: none; }
+    & > section:first-child h1 { position: relative; width: fit-content; color: var(--bz-ink); font-size: clamp(30px, 3.4vw, 46px) !important; line-height: 1.25 !important; isolation: isolate; word-break: keep-all; }
+    & > section:first-child h1::after { content: ""; position: absolute; right: 1%; bottom: -0.04em; left: 0; z-index: -1; height: 0.18em; border-radius: 999px 70% 999px 60%; background: repeating-linear-gradient(94deg, rgb(8 145 178 / 62%) 0 14px, rgb(239 71 111 / 58%) 14px 28px, rgb(245 158 11 / 62%) 28px 42px); opacity: 0.55; transform: rotate(-0.6deg) skewX(-7deg); }
+    & > section:first-child h1 + p { color: #5b5a66 !important; font-weight: 600 !important; }
+    & > section:first-child img[data-biz-art] { display: block; justify-self: center; width: 180px; height: 180px; padding: 22px; border-radius: 50%; background: rgb(255 255 255 / 80%); object-fit: contain; box-shadow: inset 0 3px 0 #fff, 0 18px 28px -22px rgb(15 23 42 / 40%); animation: bz-bob 3.4s ease-in-out infinite; }
+    /* 머리 판 단추 — 분홍 · 흰 알약 */
+    & > section:first-child a[href^="#"] { min-height: 50px !important; padding: 0 24px !important; border: 0; background: #e9789a !important; color: #fff !important; font-family: var(--bz-jua); font-size: 16px !important; font-weight: 400 !important; box-shadow: inset 0 2px 0 rgb(255 255 255 / 28%), 0 14px 22px -14px rgb(200 80 120 / 80%); }
+    & > section:first-child a:not([href^="#"]) { min-height: 50px !important; padding: 0 22px !important; border: 0 !important; background: #fff !important; color: #334155 !important; font-family: var(--bz-jua); font-size: 16px !important; font-weight: 400 !important; box-shadow: inset 0 0 0 2px #e6dccf, 0 12px 20px -16px rgb(15 23 42 / 45%); }
+    /* 대량 구매 — 빠른 확인 칸 흰 쿠션 */
+    & > section:first-child aside { display: grid; justify-items: start; gap: 4px; border: 0 !important; border-radius: 28px !important; background: #fff !important; box-shadow: var(--bz-cushion); backdrop-filter: none; }
+    & > section:first-child aside img[data-biz-art] { display: block; width: 76px; height: 76px; margin-bottom: 4px; padding: 10px; border-radius: 50%; background: #e9f8f1; object-fit: contain; animation: none; }
+    & > section:first-child aside ul { color: #334155 !important; }
+    & > section:first-child aside ul i { color: #12a17a !important; }
+    & > section:first-child p.text-neutral-300 { color: #4f6475 !important; font-weight: 600 !important; }
+
+    /* 이런 제안 · 목적 세 칸 */
+    & > section:nth-of-type(2) h2 { font-size: clamp(24px, 2.4vw, 30px) !important; }
+    & > section:nth-of-type(2) article { border: 0 !important; border-radius: 28px !important; background: #fff !important; box-shadow: var(--bz-cushion) !important; backdrop-filter: none; transition: transform 0.2s; }
+    & > section:nth-of-type(2) article:hover { transform: translateY(-3px); }
+    & > section:nth-of-type(2) article > span:first-child { width: 52px !important; height: 52px !important; border-radius: 50% !important; background: #fff0f4 !important; color: #e2557a !important; font-size: 18px; }
+    & > section:nth-of-type(2) article:nth-child(2) > span:first-child { background: #e9f4fb !important; color: #0e8aa0 !important; }
+    & > section:nth-of-type(2) article:nth-child(3) > span:first-child { background: #e9f8f1 !important; color: #12a17a !important; }
+    & > section:nth-of-type(2) article h3 { font-size: 19px !important; }
+    & > section:nth-of-type(2) article p { color: var(--bz-soft) !important; font-weight: 600 !important; }
+
+    /* 검토 흐름(입점) · 진행 안내(대량 구매) */
+    & > section:nth-of-type(3) { border: 0 !important; border-radius: 34px !important; background: #f3f0fe !important; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
+    &[data-biz-web="bulk"] > section:nth-of-type(3) { background: #e9f4fb !important; }
+    & > section:nth-of-type(3) h2 { font-size: 26px !important; }
+    & > section:nth-of-type(3) div[class*="bg-amber-50"] { border: 0 !important; border-radius: 20px !important; background: #fff6e3 !important; color: #7a5a20 !important; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
+    & > section:nth-of-type(3) :is(li, div.rounded-2xl:not([class*="bg-amber"])) { border: 0 !important; border-radius: 24px !important; background: #fff !important; box-shadow: 0 14px 22px -18px rgb(15 23 42 / 40%) !important; }
+    & > section:nth-of-type(3) li > span:first-child { display: inline-grid; place-items: center; min-width: 34px; height: 34px; padding: 0 8px; border-radius: 999px; background: #fff0f4; color: #d0436d !important; font-family: var(--bz-jua); font-size: 14px; letter-spacing: 0 !important; }
+    & > section:nth-of-type(3) div > span[class*="rounded-full"] { width: 36px !important; height: 36px !important; background: #e9789a !important; font-family: var(--bz-jua); font-size: 15px !important; font-weight: 400 !important; }
+    & > section:nth-of-type(3) :is(li, div) p { color: var(--bz-soft) !important; font-weight: 600 !important; }
+
+    /* 아래 안내 줄(대량 구매) */
+    & > p:last-child a { color: #d0436d !important; }
+
+    @media (max-width: 768px) {
+        & > section:first-child { grid-template-columns: minmax(0, 1fr); }
+        & > section:first-child > img[data-biz-art] { grid-row: 1; justify-self: start; width: 96px; height: 96px; padding: 12px; }
+    }
+}
+
+/* ───────── 문의 양식(BusinessInquiryPanel) ───────── */
+html:not(.ddb-app-mode) [data-biz-web] section[data-biz-form] {
+    border: 0 !important;
+    border-radius: 34px !important;
+    background: #fff !important;
+    box-shadow: inset 0 3px 0 #fff, 0 0 0 1px #f2e9dd, 0 26px 40px -30px rgb(15 23 42 / 40%) !important;
+    backdrop-filter: none;
+
+    & > div:first-child { position: relative; padding: 24px 28px !important; border: 0 !important; background: radial-gradient(80% 140% at 100% 0, rgb(243 240 254 / 95%) 0, transparent 60%), linear-gradient(120deg, #fff0f4, #fff6f8 55%, #fdf7ff) !important; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
+    & > div:first-child h2 { font-size: 24px !important; }
+    & > div:first-child p:last-child { color: var(--bz-soft) !important; font-weight: 600 !important; }
+    & form { gap: 18px !important; padding: 26px 28px 28px !important; }
+    & label { color: #334155 !important; font-family: var(--bz-jua); font-size: 14.5px !important; font-weight: 400 !important; }
+    & label > span { font-family: var(--font-wanted-sans), sans-serif; font-size: 12px; font-weight: 700 !important; color: #94a3b8 !important; }
+    & :is(input:not([type="checkbox"]), select, textarea) { border: 0 !important; border-radius: 16px !important; background: #fbf7f1 !important; font-family: var(--font-wanted-sans), sans-serif; font-weight: 700 !important; box-shadow: inset 0 0 0 1.5px #efe5d8; transition: box-shadow 0.2s, background 0.2s; }
+    & :is(input:not([type="checkbox"]), select, textarea):focus { background: #fff !important; outline: none; box-shadow: inset 0 0 0 2px #f2a9bf, 0 0 0 4px rgb(247 168 191 / 25%) !important; }
+    /* 동의 칸 */
+    & label:has(> input[type="checkbox"]) { border: 0 !important; border-radius: 20px !important; background: #f6f3fe !important; color: #4b4467 !important; font-family: var(--font-wanted-sans), sans-serif; font-size: 13.5px !important; font-weight: 700 !important; }
+    & label:has(> input[type="checkbox"]) a { color: #d0436d !important; }
+    & input[type="checkbox"] { accent-color: #e9789a; width: 18px; height: 18px; }
+    /* 접수 단추 — 분홍 알약 */
+    & button[type="submit"] { min-height: 54px !important; padding: 0 28px !important; background: #e9789a !important; font-family: var(--bz-jua); font-size: 17px !important; font-weight: 400 !important; box-shadow: inset 0 2px 0 rgb(255 255 255 / 28%), 0 14px 22px -14px rgb(200 80 120 / 80%) !important; }
+    & button[type="submit"]:hover:not(:disabled) { background: #e26690 !important; }
+}
+/* 접수 완료 — 민트 쿠션 */
+html:not(.ddb-app-mode) [data-biz-web] section[data-biz-done] {
+    border: 0 !important;
+    border-radius: 34px !important;
+    background: radial-gradient(70% 60% at 50% 0, #fff 0, transparent 70%), linear-gradient(160deg, #e9f8f1, #f4fbff 60%, #f6f2fe) !important;
+    box-shadow: var(--bz-cushion) !important;
+    & h2 { font-size: 26px !important; color: var(--bz-ink) !important; }
+    & a, & button { border: 0 !important; background: #fff !important; font-family: var(--bz-jua); font-weight: 400 !important; box-shadow: inset 0 0 0 2px #a8e0c6 !important; }
+}
+
+/* ───────── 시작하기 캠페인 ───────── */
+html:not(.ddb-app-mode) main[data-campaign-web] {
+    & > section:first-child { border: 0 !important; background: transparent !important; }
+    & > section:first-child > div { margin-top: 28px; padding: 34px 40px !important; border-radius: 40px; background: radial-gradient(80% 120% at 100% 0, rgb(243 240 254 / 95%) 0, transparent 55%), linear-gradient(120deg, #ffe9f0 0%, #fff4f7 55%, #fdf7ff 100%); box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 26px 40px -30px rgb(200 80 120 / 45%); }
+    & > section:first-child > div { width: min(1280px, calc(100% - 32px)); }
+    & h1 { position: relative; width: fit-content; font-size: clamp(30px, 3.4vw, 46px) !important; line-height: 1.3 !important; isolation: isolate; word-break: keep-all; }
+    & h1 + p { color: var(--bz-soft) !important; font-weight: 600 !important; }
+    & p.text-indigo-700 { display: inline-block; width: fit-content; background: repeating-linear-gradient(172deg, #07849e 0 5px, #ef476f 5px 10px, #e98708 10px 15px); -webkit-background-clip: text; background-clip: text; font-family: var(--bz-crayon); letter-spacing: 0.12em; -webkit-text-fill-color: transparent; }
+    & .btn-primary { min-height: 50px; padding: 0 24px; border: 0; border-radius: 999px; background: #e9789a; color: #fff; font-family: var(--bz-jua); font-size: 16px; font-weight: 400; box-shadow: inset 0 2px 0 rgb(255 255 255 / 28%), 0 14px 22px -14px rgb(200 80 120 / 80%); }
+    & .btn-secondary { min-height: 50px; padding: 0 20px; border: 0; border-radius: 999px; background: #fff; color: #334155; font-family: var(--bz-jua); font-size: 16px; font-weight: 400; box-shadow: inset 0 0 0 2px #e6dccf, 0 12px 20px -16px rgb(15 23 42 / 45%); }
+    /* 상품 네 칸 */
+    & > section:first-child a[href*="/product/"] { border: 0 !important; border-radius: 26px !important; background: #fff !important; box-shadow: var(--bz-cushion); transition: transform 0.2s; }
+    & > section:first-child a[href*="/product/"]:hover { transform: translateY(-3px); }
+    & > section:first-child a[href*="/product/"] > div { border-radius: 20px !important; background: #fbf7f1 !important; }
+    & > section:first-child a[href*="/product/"] p:last-child { color: #e2557a !important; font-family: var(--bz-jua); font-size: 15px !important; font-weight: 400 !important; }
+    /* 세 단계 */
+    & > section:nth-of-type(2) { gap: 14px !important; }
+    & > section:nth-of-type(2) article { border: 0 !important; border-radius: 28px !important; background: #e9f4fb !important; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
+    & > section:nth-of-type(2) article:nth-child(2) { background: #fff0f4 !important; }
+    & > section:nth-of-type(2) article:nth-child(3) { background: #e9f8f1 !important; }
+    & > section:nth-of-type(2) article > span:first-child { width: 40px !important; height: 40px !important; background: #fff !important; color: #e2557a !important; font-family: var(--bz-jua); font-size: 17px !important; font-weight: 400 !important; box-shadow: 0 6px 10px -8px rgb(15 23 42 / 40%); }
+    & > section:nth-of-type(2) article h2 { font-size: 19px !important; }
+    & > section:nth-of-type(2) article p { color: var(--bz-soft) !important; font-weight: 600 !important; }
+
+    @media (max-width: 640px) {
+        & > section:first-child > div { padding: 24px 18px !important; border-radius: 30px; }
+    }
+}
+
+@keyframes bz-bob { 50% { transform: translateY(-6px); } }
+@media (prefers-reduced-motion: reduce) { html:not(.ddb-app-mode) [data-biz-web] img[data-biz-art] { animation: none; } }
