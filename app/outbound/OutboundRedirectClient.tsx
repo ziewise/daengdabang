@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef } from "react";
+import "../outbound-web.css";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -97,7 +98,8 @@ export default function OutboundRedirectClient() {
     };
 
     return (
-        <main className="flex min-h-[calc(100svh-var(--header-height))] items-center justify-center px-4 py-12">
+        // data-outbound-web — 웹 겉모양(app/outbound-web.css, 2026-10-25). 앱은 그대로
+        <main className="flex min-h-[calc(100svh-var(--header-height))] items-center justify-center px-4 py-12" data-outbound-web>
             <section className="w-full max-w-lg rounded-lg border border-neutral-200 bg-white p-6 text-center shadow-card">
                 <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-[#f7f2e8]">
                     <Image
