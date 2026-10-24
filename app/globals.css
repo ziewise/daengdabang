@@ -3201,6 +3201,17 @@ html:not(.ddb-app-mode) section#insta h2 {
     html:not(.ddb-app-mode) :is(section#promo, section#insta) a.group::after { border-radius: 18px; }
 }
 
+/* 메인 구역 보이는 순서(2026-10-24 사용자) — 대표 브랜드 → 매일 댕생활 → 기획전 → 신상품 → 인스타.
+   큰 사진 구역(브랜드 · 기획전)이 연달아 붙지 않게 사이에 파스텔 판(매일 댕생활)을 두고, 기획전에서 신상품으로 쇼핑 흐름을 잇는다.
+   코드 순서(app/page.tsx · 테스트가 지키는 순서)는 그대로 두고 웹 화면에서 보이는 순서만 바꿈. 앱은 그대로 */
+html:not(.ddb-app-mode) main:has(> section#promo) {
+    & > section[data-daily-mine-teaser] { order: 1; }
+    & > section#promo { order: 2; }
+    & > section#new { order: 3; }
+    & > section#insta { order: 4; }
+    & > :is(section#new, section#insta) ~ :not(section) { order: 5; }
+}
+
 @media (prefers-reduced-motion: reduce) {
     /* 개인정보 처리 안내 창 — 열림 움직임 끔 */
     .ddb-privacy-modal :is(.ddb-pm-backdrop, .ddb-pm-card) { animation: none; }
