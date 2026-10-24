@@ -387,6 +387,15 @@ body[data-petlens-capture-active="true"] [data-site-header] {
     width: 1.24em;
 }
 
+/* 웹 — 코인 표시 한글은 사이트 글꼴(주아)로. 손글씨 글꼴은 영문 꼬리표에만 씀. 앱은 그대로(2026-10-24) */
+html:not(.ddb-app-mode) .ddb-daenglab-coin-mark,
+html:not(.ddb-app-mode) .ddb-daenglab-coin-disc {
+    font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+    font-weight: 400;
+}
+
+html:not(.ddb-app-mode) :is(.ddb-daenglab-coin-brand, .ddb-daenglab-coin-copy) { letter-spacing: 0; }
+
 .ddb-daenglab-new-service {
     display: inline-flex;
     min-height: 15px;
