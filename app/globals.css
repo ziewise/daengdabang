@@ -3466,6 +3466,9 @@ html:not(.ddb-app-mode) section#insta {
     /* 개인정보 처리 안내 창 — 열림 움직임 끔 */
     .ddb-privacy-modal :is(.ddb-pm-backdrop, .ddb-pm-card) { animation: none; }
 
+    /* 반려견 정보 수정 창 — 열림 움직임 끔 */
+    .ddb-petedit-modal :is(.ddb-pe-backdrop, .ddb-pe-card) { animation: none; }
+
     .ddb-motion-lift,
     .ddb-attention-cta {
         animation: none !important;
@@ -4070,6 +4073,202 @@ html:not(.ddb-app-mode) .ddb-privacy-modal {
     .ddb-privacy-modal .ddb-pm-foot { padding: 12px 16px calc(14px + env(safe-area-inset-bottom)); }
     .ddb-privacy-modal .ddb-pm-page { padding: 10px 14px; font-size: 12.5px; }
     .ddb-privacy-modal .ddb-pm-ok { padding: 0 22px; }
+}
+
+/* ═════════ 반려견 정보 수정 창(components/mypage/MemberPetProfileEditor.tsx · 2026-10-24 사용자) ═════════
+   대시보드 "정보 수정" → 웹은 화면 가운데 창(앱은 카드 안 펼침 그대로). 개인정보 안내 창과 같은 결:
+   흐린 뒤 화면 + 흰 쿠션 창 · 민트 띠 머리(영문 손글씨 MY DOG · 주아 "몽이 정보 수정" · 설명 · 3D 반려견 사진 그림 · 흰 동그라미 닫기) ·
+   본문 = 주아 칸 이름 · 둥근 입력 칸 · 사진 칸은 크림 판(점선 없이 옅은 실선) · 아래 버튼 줄(흰 알약 닫기 · 분홍 알약 저장).
+   모바일은 아래에서 올라오는 시트. 점선 · 기울기 · 스티커 없음 */
+.ddb-petedit-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 2147483000;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+}
+
+.ddb-petedit-modal .ddb-pe-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgb(30 41 59 / 38%);
+    backdrop-filter: blur(3px);
+    animation: ddb-pm-fade 0.18s ease-out;
+}
+
+.ddb-petedit-modal .ddb-pe-card {
+    position: relative;
+    display: flex;
+    width: min(680px, 100%);
+    max-height: min(90vh, 920px);
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 34px;
+    background: #fff;
+    box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 40px 80px -30px rgb(15 23 42 / 55%);
+    animation: ddb-pm-pop 0.22s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+
+/* 머리 — 민트 띠 + 오른쪽 3D 반려견 사진 그림 */
+.ddb-petedit-modal .ddb-pe-head {
+    position: relative;
+    flex: none;
+    padding: 22px 150px 20px 30px;
+    background: #e9f8f1;
+    box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%);
+}
+
+.ddb-petedit-modal .ddb-pe-head::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 76px;
+    width: 64px;
+    height: 64px;
+    transform: translateY(-50%);
+    background: url("/images/ui/pet-photo-128.webp") center / contain no-repeat;
+    filter: drop-shadow(0 8px 10px rgb(15 23 42 / 15%));
+}
+
+.ddb-petedit-modal .ddb-pe-kicker { color: #12a17a; font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif; font-size: 12.5px; font-weight: 700; letter-spacing: 0.12em; }
+.ddb-petedit-modal .ddb-pe-head h2 { margin-top: 2px; color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 25px; font-weight: 400; line-height: 1.3; }
+.ddb-petedit-modal .ddb-pe-sub { margin-top: 4px; color: #64748b; font-size: 13px; font-weight: 600; }
+
+.ddb-petedit-modal .ddb-pe-close {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    display: grid;
+    width: 42px;
+    height: 42px;
+    place-items: center;
+    border: 0;
+    border-radius: 999px;
+    background: #fff;
+    color: #94a3b8;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    transform: translateY(-50%);
+    box-shadow: 0 8px 14px -10px rgb(15 23 42 / 40%);
+    transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.ddb-petedit-modal .ddb-pe-close:hover:not(:disabled) { color: #e2557a; transform: translateY(-50%) rotate(8deg); }
+.ddb-petedit-modal .ddb-pe-close:focus-visible { outline: 3px solid #a8e0c6; outline-offset: 2px; }
+
+/* 본문 — 창 안에서만 스크롤 · 칸 사이 여유 */
+.ddb-petedit-modal .ddb-pe-body {
+    display: grid;
+    flex: 1;
+    min-height: 0;
+    gap: 16px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 22px 30px 24px;
+    scrollbar-color: #a8e0c6 transparent;
+    scrollbar-width: thin;
+}
+
+/* 칸 이름 — 주아 · 도움말 — 회색 작은 글씨 */
+.ddb-petedit-modal .ddb-pe-body label > span:first-child { margin-bottom: 6px; color: #334155; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 14.5px; font-weight: 400; }
+.ddb-petedit-modal .ddb-pe-body label > span:not(:first-child) { color: #94a3b8; }
+.ddb-petedit-modal .ddb-pe-body label > span[class*="text-amber"] { color: #d98a12; }
+
+/* 입력 칸 — 둥근 흰 칸 · 옅은 크림 테 · 고르면 민트 테 */
+.ddb-petedit-modal .input {
+    min-height: 46px;
+    border: 0;
+    border-radius: 16px;
+    background: #fff;
+    color: #1e293b;
+    font-size: 14.5px;
+    font-weight: 600;
+    box-shadow: 0 0 0 1.5px #efe6da;
+    transition: box-shadow 0.15s ease;
+}
+
+.ddb-petedit-modal .input:focus { outline: none; box-shadow: 0 0 0 2.5px #7fd3b0, 0 6px 14px -10px rgb(18 161 122 / 50%); }
+.ddb-petedit-modal .input:disabled { background: #f8f5f0; color: #94a3b8; box-shadow: none; }
+
+/* 앞·뒤·좌·우 사진 칸 — 크림 판, 사진 칸은 점선 대신 옅은 실선 */
+.ddb-petedit-modal [data-member-pet-multiview-upload] { padding: 16px; border: 0; border-radius: 22px; background: #fffaf1; }
+.ddb-petedit-modal [data-member-pet-multiview-upload] p:first-child { color: #334155; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 14.5px; font-weight: 400; }
+.ddb-petedit-modal [data-member-pet-multiview-upload] span[class*="rounded-full"][class*="text-indigo"] { color: #12a17a; box-shadow: 0 0 0 1.5px #d6efe3; }
+.ddb-petedit-modal [data-petlens-photo-view] > span:first-child { color: #64748b; font-size: 11px; }
+
+.ddb-petedit-modal [data-petlens-photo-view] > span[class*="border-dashed"] {
+    border: 0;
+    border-radius: 18px;
+    box-shadow: 0 0 0 1.5px #f1e6d6;
+    transition: box-shadow 0.15s ease;
+}
+
+.ddb-petedit-modal [data-petlens-photo-view] > span[class*="border-dashed"]:hover { box-shadow: 0 0 0 2px #7fd3b0; }
+
+/* 저장 결과 안내 — 둥근 판 */
+.ddb-petedit-modal .ddb-pe-body > p[role] { border-radius: 16px; padding: 12px 16px; font-size: 13px; }
+
+/* 아래 버튼 줄 — 흰 알약 닫기 · 분홍 알약 저장 */
+.ddb-petedit-modal .ddb-pe-foot {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 22px 16px 30px;
+    border-top: 1.5px solid #f3ece2;
+    background: #fff;
+}
+
+.ddb-petedit-modal .ddb-pe-cancel {
+    flex: none;
+    min-height: 48px;
+    padding: 0 24px;
+    border: 0;
+    border-radius: 999px;
+    background: #fff;
+    color: #475569;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 0 0 1.5px #efe7dc;
+    transition: color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.ddb-petedit-modal .ddb-pe-cancel:hover:not(:disabled) { color: #12a17a; box-shadow: 0 0 0 1.5px #a8e0c6; }
+
+.ddb-petedit-modal .ddb-pe-foot .btn-primary {
+    flex: 1;
+    min-height: 48px;
+    border: 0;
+    border-radius: 999px;
+    background: #e9789a;
+    color: #fff;
+    font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    box-shadow: 0 10px 18px -12px rgb(200 80 120 / 70%);
+    transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.ddb-petedit-modal .ddb-pe-foot .btn-primary:hover:not(:disabled) { background: #e26690; transform: translateY(-1px); }
+.ddb-petedit-modal .ddb-pe-foot .btn-primary:disabled { background: #f3b8ca; box-shadow: none; }
+
+/* 모바일 — 아래에서 올라오는 시트 */
+@media (max-width: 640px) {
+    .ddb-petedit-modal { align-items: end; padding: 0; }
+
+    .ddb-petedit-modal .ddb-pe-card { width: 100%; max-height: 92vh; max-height: 92dvh; border-radius: 28px 28px 0 0; animation: ddb-pm-up 0.26s cubic-bezier(0.2, 0.9, 0.3, 1); }
+    .ddb-petedit-modal .ddb-pe-card::before { content: ""; position: absolute; top: 8px; left: 50%; z-index: 1; width: 44px; height: 5px; margin-left: -22px; border-radius: 999px; background: rgb(18 161 122 / 25%); }
+    .ddb-petedit-modal .ddb-pe-head { padding: 24px 110px 16px 20px; }
+    .ddb-petedit-modal .ddb-pe-head::after { right: 62px; width: 46px; height: 46px; }
+    .ddb-petedit-modal .ddb-pe-head h2 { font-size: 22px; }
+    .ddb-petedit-modal .ddb-pe-sub { font-size: 12px; }
+    .ddb-petedit-modal .ddb-pe-close { right: 12px; width: 38px; height: 38px; }
+    .ddb-petedit-modal .ddb-pe-body { padding: 18px 18px 20px; }
+    .ddb-petedit-modal .ddb-pe-foot { padding: 12px 16px calc(14px + env(safe-area-inset-bottom)); }
+    .ddb-petedit-modal .ddb-pe-cancel { padding: 0 18px; }
 }
 
 /* 창으로 열리는 개인정보처리방침 링크 — 작은 "창" 표시(푸터 · 창 안 링크 제외) */

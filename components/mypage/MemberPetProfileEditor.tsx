@@ -1,6 +1,14 @@
+/**
+ * MemberPetProfileEditor — 마이페이지 반려견 "정보 수정"
+ * ---------------------------------------------------------------------
+ * 앱: 카드 안에서 입력 칸이 펼쳐짐(원래 그대로).
+ * 웹(2026-10-24 사용자): 같은 입력 칸 · 같은 저장 동작을 화면 가운데 창(모달)으로 띄움 — 카드 자리는 그대로,
+ *   흐린 뒤 화면 · Esc · 닫기(×)로 닫고 닫으면 "정보 수정" 버튼으로 초점이 돌아감. 꾸밈은 app/globals.css "반려견 정보 수정 창".
+ */
 "use client";
 
-import { FormEvent, useId, useState } from "react";
+import { FormEvent, useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import {
     customerApiErrorMessage,
     ddbApiReady,
@@ -49,6 +57,39 @@ export default function MemberPetProfileEditor({ pet, initiallyOpen = false }: P
     const [success, setSuccess] = useState("");
     const [error, setError] = useState("");
     const weightEstimate = getPetLensWeightEstimate(pet.rawAnalysis);
+    // 웹이면 창(모달)으로 — 앱 화면(html.ddb-app-mode)은 카드 안 펼침 그대로
+    const [modalHost, setModalHost] = useState<HTMLElement | null>(null);
+    const openRef = useRef<HTMLButtonElement>(null);
+    const closeRef = useRef<HTMLButtonElement>(null);
+    const titleId = useId();
+
+    // 화면 그리기 전에 판별 — 웹에서 카드 안 펼침이 한 순간 비치지 않게
+    useLayoutEffect(() => {
+        setModalHost(open && !document.documentElement.classList.contains("ddb-app-mode") ? document.body : null);
+    }, [open]);
+
+    const closeModal = useCallback(() => {
+        setOpen(false);
+        // 창이 닫힌 뒤 "정보 수정" 버튼으로 초점 되돌림
+        requestAnimationFrame(() => openRef.current?.focus());
+    }, []);
+
+    // 창이 열려 있는 동안: 뒤 화면 스크롤 잠금 · Esc 로 닫기(저장 중 제외) · 닫기 단추에 초점
+    useEffect(() => {
+        if (!modalHost) return;
+        const root = document.documentElement;
+        const previous = root.style.overflow;
+        root.style.overflow = "hidden";
+        closeRef.current?.focus();
+        return () => { root.style.overflow = previous; };
+    }, [modalHost]);
+
+    useEffect(() => {
+        if (!modalHost) return;
+        const onKey = (event: KeyboardEvent) => { if (event.key === "Escape" && !saving) closeModal(); };
+        window.addEventListener("keydown", onKey);
+        return () => window.removeEventListener("keydown", onKey);
+    }, [modalHost, closeModal, saving]);
 
     const submit = async (event: FormEvent) => {
         event.preventDefault();
@@ -141,9 +182,10 @@ export default function MemberPetProfileEditor({ pet, initiallyOpen = false }: P
         }
     };
 
-    if (!open) {
-        return (
+    // "정보 수정" 버튼 — 앱은 닫혀 있을 때만, 웹은 창이 떠 있어도 카드 자리에 그대로
+    const openButton = (
             <button
+                ref={openRef}
                 type="button"
                 onClick={() => {
                     setOpen(true);
@@ -156,27 +198,13 @@ export default function MemberPetProfileEditor({ pet, initiallyOpen = false }: P
                 <i className="fa-solid fa-pen text-xs" />
                 정보 수정
             </button>
-        );
-    }
+    );
 
-    return (
-        <form onSubmit={submit} className="mt-3 grid gap-3 rounded-lg border border-indigo-200 bg-white p-3" data-member-pet-editor>
-            <div className="flex items-start justify-between gap-3">
-                <div>
-                    <p className="text-xs font-black text-indigo-700">회원 프로필 수정</p>
-                    <p className="mt-1 text-[11px] font-bold leading-5 text-neutral-500">
-                        사진 분석값은 후보입니다. 직접 확인한 정보로 고쳐 주세요.
-                    </p>
-                </div>
-                <button
-                    type="button"
-                    onClick={() => setOpen(false)}
-                    className="rounded-md px-2 py-1 text-xs font-black text-neutral-500 hover:bg-neutral-100"
-                >
-                    닫기
-                </button>
-            </div>
+    if (!open) return openButton;
 
+    // 입력 칸(이름 · 견종 · 사진 · 크기 · 나이 · 체중 · 성별 · 모질 · 털 색 · 활동량) — 앱 펼침과 웹 창이 같은 칸을 씀
+    const fields = (
+        <>
             <label>
                 <span className="mb-1 block text-xs font-black text-neutral-500">이름</span>
                 <input value={pet.name} className="input bg-neutral-100 text-neutral-500" readOnly disabled />
@@ -268,13 +296,75 @@ export default function MemberPetProfileEditor({ pet, initiallyOpen = false }: P
                     </select>
                 </label>
             </div>
+        </>
+    );
 
+    // 저장 결과 안내 · 저장 버튼
+    const messages = (
+        <>
             {success && <p role="status" className="rounded-md bg-emerald-50 px-3 py-2 text-xs font-black leading-5 text-emerald-700">{success}</p>}
             {error && <p role="alert" className="rounded-md bg-rose-50 px-3 py-2 text-xs font-black leading-5 text-rose-700">{error}</p>}
+        </>
+    );
+    const saveButton = (
+        <button type="submit" className="btn btn-primary w-full" disabled={saving || photoBusy}>
+            {photoBusy ? "사진 준비 중…" : saving ? "저장 중" : "수정 정보 저장"}
+        </button>
+    );
 
-            <button type="submit" className="btn btn-primary w-full" disabled={saving || photoBusy}>
-                {photoBusy ? "사진 준비 중…" : saving ? "저장 중" : "수정 정보 저장"}
-            </button>
+    // 웹 — 화면 가운데 창(모달). 카드에는 "정보 수정" 버튼이 그대로 남음
+    if (modalHost) {
+        return (
+            <>
+                {openButton}
+                {createPortal(
+                    <div className="ddb-petedit-modal" role="dialog" aria-modal="true" aria-labelledby={titleId}>
+                        <div className="ddb-pe-backdrop" onClick={() => { if (!saving) closeModal(); }} aria-hidden="true" />
+                        <form onSubmit={submit} className="ddb-pe-card" data-member-pet-editor>
+                            <header className="ddb-pe-head">
+                                <p className="ddb-pe-kicker">MY DOG</p>
+                                <h2 id={titleId}>{pet.name} 정보 수정</h2>
+                                <p className="ddb-pe-sub">사진 분석값은 후보예요. 직접 확인한 정보로 고쳐 주세요.</p>
+                                <button ref={closeRef} type="button" className="ddb-pe-close" onClick={closeModal} disabled={saving} aria-label={`${pet.name} 정보 수정 닫기`}>×</button>
+                            </header>
+                            <div className="ddb-pe-body">
+                                {fields}
+                                {messages}
+                            </div>
+                            <footer className="ddb-pe-foot">
+                                <button type="button" className="ddb-pe-cancel" onClick={closeModal} disabled={saving}>닫기</button>
+                                {saveButton}
+                            </footer>
+                        </form>
+                    </div>,
+                    modalHost,
+                )}
+            </>
+        );
+    }
+
+    // 앱 — 카드 안 펼침(원래 그대로)
+    return (
+        <form onSubmit={submit} className="mt-3 grid gap-3 rounded-lg border border-indigo-200 bg-white p-3" data-member-pet-editor>
+            <div className="flex items-start justify-between gap-3">
+                <div>
+                    <p className="text-xs font-black text-indigo-700">회원 프로필 수정</p>
+                    <p className="mt-1 text-[11px] font-bold leading-5 text-neutral-500">
+                        사진 분석값은 후보입니다. 직접 확인한 정보로 고쳐 주세요.
+                    </p>
+                </div>
+                <button
+                    type="button"
+                    onClick={() => setOpen(false)}
+                    className="rounded-md px-2 py-1 text-xs font-black text-neutral-500 hover:bg-neutral-100"
+                >
+                    닫기
+                </button>
+            </div>
+
+            {fields}
+            {messages}
+            {saveButton}
         </form>
     );
 }
