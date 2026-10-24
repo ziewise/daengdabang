@@ -1283,6 +1283,8 @@ html:not(.ddb-app-mode) main:has(nav[aria-label="마이페이지 메뉴"]) {
 html:not(.ddb-app-mode) main:has(nav[aria-label="마이페이지 메뉴"]) {
     & a[data-go="inside"]::after { content: "›"; margin-left: 6px; font-size: 1.15em; line-height: 1; }
     & a[data-go="out"]::after { content: "↗"; margin-left: 6px; font-size: 0.95em; opacity: 0.75; }
+    /* 마이페이지 안 창으로 열림(문의 창) — 개인정보 처리 안내와 같은 작은 "창" 표시 */
+    & a[data-go="modal"]::after { content: ""; display: inline-block; width: 0.85em; height: 0.85em; margin-left: 7px; vertical-align: -0.08em; background: currentColor; opacity: 0.75; -webkit-mask: url("data:image/svg+xml;utf8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22%3E%3Crect x=%221.5%22 y=%223%22 width=%2213%22 height=%2211%22 rx=%222.5%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.8%22/%3E%3Cpath d=%22M1.5 6.5h13%22 stroke=%22black%22 stroke-width=%221.8%22/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml;utf8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22%3E%3Crect x=%221.5%22 y=%223%22 width=%2213%22 height=%2211%22 rx=%222.5%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.8%22/%3E%3Cpath d=%22M1.5 6.5h13%22 stroke=%22black%22 stroke-width=%221.8%22/%3E%3C/svg%3E") center / contain no-repeat; }
 }
 
 /* 코인 · 적립금 — 적립금 → 코인 전환 칸(2026-10-24 사용자): 숫자 올림 · 내림 화살표가 "P" 위에 겹쳐서,
@@ -1587,4 +1589,154 @@ html:not(.ddb-app-mode) .mp-sum-rowbtn { border: 0; background: none; color: inh
 
 @media (prefers-reduced-motion: reduce) {
     .ddb-diary .ddb-dy-detail { animation: none; }
+}
+
+/* ═════════ 주문 도움 창(components/mypage/OrderHelpModal.tsx · 2026-10-24 사용자) — 배송 문의 · 교환·반품 안내 ═════════
+   겉 틀 = 반려견 프로필 창(.ddb-petform). 머리 색: 배송 문의 하늘 · 교환·반품 민트.
+   주문 표(흰 쿠션 · 상품 그림 · 주아 주문 이름 · 상태 칩 · 주문번호 알약) → 안내: 네 단계 배지(세 색 크레파스 줄로 이음) ·
+   정책 묶음 쿠션 카드(꼬리표 칸 + 값) · 환불 처리 민트 판 / 문의: 1:1 문의 양식(크림 둥근 칸 · 주아 칸 이름 · 보라 동의 판 · 분홍 알약 접수).
+   점선 · 기울기 없음 */
+.ddb-orderhelp[data-mode="inquiry"] .ddb-pf-head { background: radial-gradient(120% 140% at 100% 0, rgb(255 246 227 / 90%) 0, transparent 46%), linear-gradient(115deg, #dceff9 0%, #e9f4fb 58%, #f3f9fd 100%); }
+.ddb-orderhelp[data-mode="inquiry"] .ddb-pf-name { color: #0e7f93; }
+.ddb-orderhelp .ddb-pf-avatar img { width: 86%; height: 86%; }
+.ddb-orderhelp .ddb-pf-body { gap: 16px; }
+
+/* 주문 표 */
+.ddb-oh-ticket {
+    display: grid;
+    grid-template-columns: 76px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px 14px 14px;
+    border-radius: 24px;
+    background: #fff;
+    box-shadow: inset 0 3px 0 #fff, 0 0 0 1px #f2e9dd, 0 16px 26px -22px rgb(15 23 42 / 34%);
+}
+
+.ddb-oh-thumb { display: grid; width: 76px; height: 76px; place-items: center; overflow: hidden; border-radius: 20px; background: #fffaf1; color: #d6c4a8; font-size: 24px; box-shadow: inset 0 0 0 1.5px #f3eadc; }
+.ddb-oh-thumb img { width: 64px; height: 64px; object-fit: contain; }
+.ddb-oh-info { display: grid; min-width: 0; gap: 3px; }
+.ddb-oh-tag { color: #e2557a; font-size: 11.5px; font-weight: 800; }
+.ddb-oh-info strong { overflow: hidden; color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 17px; font-weight: 400; line-height: 1.35; text-overflow: ellipsis; white-space: nowrap; }
+.ddb-oh-meta { color: #8391a3; font-size: 12.5px; font-weight: 700; }
+.ddb-oh-side { display: grid; justify-items: end; gap: 7px; }
+.ddb-oh-status { padding: 5px 12px; border-radius: 999px; background: #e9f8f1; color: #0f8a69; font-size: 12px; font-weight: 800; white-space: nowrap; }
+.ddb-oh-no { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px 4px 4px; border-radius: 999px; background: #f6f2ec; color: #475569; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; font-weight: 700; white-space: nowrap; }
+.ddb-oh-no em { padding: 2px 8px; border-radius: 999px; background: #fff; color: #8391a3; font-family: var(--font-wanted-sans), sans-serif; font-size: 10.5px; font-style: normal; font-weight: 800; }
+
+/* 묶음 제목 — 번호 동그라미 + 주아 */
+.ddb-oh-sec { padding: 18px 20px 20px; border-radius: 26px; background: #fff; box-shadow: inset 0 3px 0 #fff, 0 0 0 1px #f2e9dd, 0 16px 26px -22px rgb(15 23 42 / 34%); }
+.ddb-oh-h { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 18px; font-weight: 400; }
+.ddb-oh-h span { display: grid; width: 28px; height: 28px; place-items: center; border-radius: 50%; background: #e9f8f1; color: #12a17a; font-size: 14px; box-shadow: inset 0 2px 0 rgb(255 255 255 / 85%); }
+
+/* 네 단계 — 크레파스 배지 + 세 색 줄 */
+.ddb-oh-steps { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin: 0; padding: 0; list-style: none; }
+
+.ddb-oh-steps::before {
+    content: "";
+    position: absolute;
+    top: 37px;
+    right: 12%;
+    left: 12%;
+    height: 5px;
+    border-radius: 999px;
+    background: repeating-linear-gradient(94deg, rgb(8 145 178 / 45%) 0 18px, rgb(239 71 111 / 42%) 18px 36px, rgb(245 158 11 / 48%) 36px 54px);
+}
+
+.ddb-oh-steps li { --st-bg: #f3f0fe; --st-ink: #6b51c9; position: relative; display: grid; justify-items: center; gap: 6px; text-align: center; }
+.ddb-oh-steps li.is-pink { --st-bg: #ffeef3; --st-ink: #e2557a; }
+.ddb-oh-steps li.is-mint { --st-bg: #e9f8f1; --st-ink: #12a17a; }
+.ddb-oh-steps li.is-yellow { --st-bg: #fff6e3; --st-ink: #d98a12; }
+.ddb-oh-badge { position: relative; z-index: 1; display: grid; width: 78px; height: 78px; place-items: center; border: 4px solid #fff; border-radius: 50%; background: var(--st-bg); box-shadow: 0 12px 18px -12px rgb(15 23 42 / 45%); }
+.ddb-oh-badge img { width: 58px; height: 58px; object-fit: contain; }
+.ddb-oh-badge b { position: absolute; top: -4px; right: -4px; display: grid; width: 24px; height: 24px; place-items: center; border: 2.5px solid #fff; border-radius: 50%; background: var(--st-ink); color: #fff; font-size: 11.5px; font-weight: 800; }
+.ddb-oh-steps strong { margin-top: 2px; color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 15px; font-weight: 400; }
+.ddb-oh-steps small { color: #64748b; font-size: 12px; font-weight: 600; line-height: 1.55; word-break: keep-all; }
+
+/* 정책 — 묶음마다 크림 판 · 꼬리표 칸 */
+.ddb-oh-policy > div { gap: 10px; color: #475569; font-size: 13.5px; line-height: 1.75; }
+.ddb-oh-policy section { padding: 14px 16px 15px; border: 0; border-radius: 20px; background: #fbf8f3; }
+.ddb-oh-policy section:first-child { padding-top: 14px; }
+.ddb-oh-policy h3 { color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 15.5px; font-weight: 400; }
+.ddb-oh-policy dl > div { grid-template-columns: 140px minmax(0, 1fr); align-items: start; gap: 10px; padding: 7px 0; border-top: 1px solid #f1e8dc; }
+.ddb-oh-policy dl > div:first-child { border-top: 0; }
+.ddb-oh-policy dt { justify-self: start; padding: 2px 10px; border-radius: 999px; background: #fff; color: #334155; font-size: 12px; font-weight: 800; box-shadow: 0 0 0 1px #efe5d8; }
+.ddb-oh-policy dd { color: #475569; font-weight: 600; }
+.ddb-oh-policy :is(ul, ol) { color: #64748b; font-weight: 600; }
+.ddb-oh-policy li::marker { color: #e9789a; font-weight: 800; }
+
+/* 환불 처리 — 민트 판 + 3D 그림 */
+.ddb-oh-refund { display: flex; align-items: center; gap: 16px; padding: 16px 20px; border-radius: 24px; background: #e9f8f1; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
+.ddb-oh-refund img { flex: none; width: 60px; height: 60px; object-fit: contain; filter: drop-shadow(0 6px 8px rgb(15 23 42 / 14%)); }
+.ddb-oh-refund h3 { color: #0f8a69; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 16px; font-weight: 400; }
+.ddb-oh-refund p { margin-top: 3px; color: #3f5f55; font-size: 13px; font-weight: 600; line-height: 1.65; }
+
+/* 문의 양식(창 안) — 크림 둥근 칸 · 주아 칸 이름 · 보라 동의 판 · 분홍 알약 접수 */
+.ddb-oh-form [data-inquiry-embedded] { padding: 18px 20px 20px; border-radius: 26px; background: #fff; box-shadow: inset 0 3px 0 #fff, 0 0 0 1px #f2e9dd, 0 16px 26px -22px rgb(15 23 42 / 34%); }
+.ddb-oh-form .cs-form-body { gap: 16px; padding: 0; }
+.ddb-oh-form .cs-form-body > div { gap: 14px; }
+.ddb-oh-form .cs-form-body label:not(.cs-consent) { gap: 7px; color: #334155; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 14.5px; font-weight: 400; }
+.ddb-oh-form .cs-form-body label:not(.cs-consent) { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 6px; }
+.ddb-oh-form .cs-form-body label:not(.cs-consent) > :is(input, select, textarea, datalist) { flex: 1 0 100%; }
+.ddb-oh-form .cs-form-body label:not(.cs-consent) > span { color: #a0937f; font-family: var(--font-wanted-sans), sans-serif; font-size: 11.5px; font-weight: 700; }
+
+.ddb-oh-form .cs-form-body :is(input:not([type="checkbox"]), select, textarea) {
+    width: 100%;
+    border: 0;
+    border-radius: 16px;
+    background: #fbf7f1;
+    color: #1e293b;
+    font-family: var(--font-wanted-sans), sans-serif;
+    font-size: 14.5px;
+    font-weight: 600;
+    box-shadow: inset 0 0 0 1.5px #efe5d8;
+    transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.ddb-oh-form .cs-form-body :is(input:not([type="checkbox"]), select) { height: 48px; padding: 0 16px; }
+.ddb-oh-form .cs-form-body textarea { min-height: 150px; padding: 14px 16px; line-height: 1.7; }
+.ddb-oh-form .cs-form-body :is(input, textarea)::placeholder { color: #b3a99c; font-weight: 500; }
+.ddb-oh-form .cs-form-body :is(input:not([type="checkbox"]), select, textarea):focus { outline: none; background: #fff; box-shadow: inset 0 0 0 2px #7fd3b0, 0 0 0 4px rgb(127 211 176 / 22%); }
+
+.ddb-oh-form .cs-consent { gap: 12px; padding: 14px 16px; border: 0; border-radius: 18px; background: #faf8ff; color: #475569; font-size: 13px; font-weight: 700; line-height: 1.6; }
+.ddb-oh-form .cs-consent input { width: 20px; height: 20px; margin-top: 2px; accent-color: #e9789a; }
+.ddb-oh-form .cs-consent a { border: 0; background: none; color: #6b51c9; }
+
+.ddb-oh-form .cs-submit {
+    min-height: 52px;
+    border-radius: 999px;
+    background: #e9789a;
+    font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+    font-size: 17px;
+    font-weight: 400;
+    box-shadow: inset 0 2px 0 rgb(255 255 255 / 28%), 0 14px 22px -14px rgb(200 80 120 / 80%);
+}
+
+.ddb-oh-form .cs-submit:hover:not(:disabled) { background: #e26690; transform: translateY(-1px); box-shadow: inset 0 2px 0 rgb(255 255 255 / 28%), 0 14px 22px -14px rgb(200 80 120 / 80%); }
+.ddb-oh-form [data-inquiry-embedded] p[role="alert"] { border: 0; border-radius: 16px; background: #ffeef3; color: #c43d66; }
+
+/* 접수 완료 — 민트 쿠션 */
+.ddb-oh-form [data-inquiry-embedded] > div[role="status"] { padding: 0; }
+.ddb-oh-form .cs-receipt { border: 0; border-radius: 22px; background: #e9f8f1; text-align: center; }
+.ddb-oh-form .cs-receipt > span:first-child { margin: 0 auto; background: #12a17a; }
+.ddb-oh-form .cs-receipt h3 { font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-weight: 400; }
+.ddb-oh-form .cs-receipt button { border: 0; background: #fff; box-shadow: 0 0 0 1.5px #a8e0c6; }
+
+/* 아래 버튼 줄 — 안내 다시 보기 */
+.ddb-oh-back { display: inline-flex; flex: 1; align-items: center; gap: 8px; min-height: 44px; padding: 0 6px; border: 0; background: none; color: #0f8a69; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 15px; cursor: pointer; }
+.ddb-oh-back i { font-size: 12px; }
+
+@media (max-width: 640px) {
+    .ddb-oh-ticket { grid-template-columns: 60px minmax(0, 1fr); gap: 12px; padding: 12px 14px 12px 12px; }
+    .ddb-oh-thumb { width: 60px; height: 60px; border-radius: 16px; }
+    .ddb-oh-thumb img { width: 50px; height: 50px; }
+    .ddb-oh-side { grid-column: 1 / -1; display: flex; justify-content: space-between; }
+    .ddb-oh-sec { padding: 16px 14px; border-radius: 22px; }
+    .ddb-oh-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 10px; }
+    .ddb-oh-steps::before { display: none; }
+    .ddb-oh-policy dl > div { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+    .ddb-oh-refund { align-items: flex-start; padding: 14px 16px; }
+    .ddb-oh-refund img { width: 48px; height: 48px; }
+    .ddb-oh-form [data-inquiry-embedded] { padding: 16px 14px; border-radius: 22px; }
+    .ddb-oh-form .cs-form-body > div { grid-template-columns: minmax(0, 1fr); }
 }

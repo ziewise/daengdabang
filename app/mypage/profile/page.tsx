@@ -1,6 +1,8 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+// 웹: 이메일·계정 변경 문의를 마이페이지 안 문의 창으로(2026-10-24, 앱 · 새 탭은 원래대로 문의 페이지)
+import MypageInquiryLink from "@/components/mypage/MypageInquiryLink";
 import Link from "next/link";
 import MypageSectionLayout, { MypageLoginGate } from "@/components/mypage/MypageSectionLayout";
 import {
@@ -133,9 +135,21 @@ function ProfileEditor({
                     >
                         {submitting ? "저장 중…" : "이름 변경 저장"}
                     </button>
-                    <Link href="/inquiry?category=other#inquiry-form" className="btn btn-secondary">
+                    <MypageInquiryLink
+                        href="/inquiry?category=other#inquiry-form"
+                        className="btn btn-secondary"
+                        preset={{
+                            kicker: "MY ACCOUNT",
+                            title: "이메일·계정 변경 문의",
+                            sub: "본인 확인 후 바꿔 드려요. 바꾸고 싶은 이메일이나 가입 계정을 적어 주세요.",
+                            art: "/images/ui/stickers/my-profile.webp",
+                            category: "other",
+                            subject: "[기타 문의] 이메일·계정 변경 요청",
+                            hint: "본인 확인을 위해 답변은 입력한 이메일로 보내 드려요.",
+                        }}
+                    >
                         이메일·계정 변경 문의
-                    </Link>
+                    </MypageInquiryLink>
                     {user.authProvider === "email" ? (
                         <button
                             type="button"

@@ -5,6 +5,8 @@ import Link from "next/link";
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import MypageSidebar from "@/components/mypage/MypageSidebar";
+// 웹: 배송 문의 · 교환·반품 안내를 마이페이지 안 창으로(2026-10-24)
+import OrderHelpModal from "@/components/mypage/OrderHelpModal";
 import { ddbApiBase } from "@/lib/ddb-api-base";
 import { getCustomerToken } from "@/lib/customer-api";
 import { findProduct, productHref, versionProductImage } from "@/lib/shop";
@@ -185,8 +187,25 @@ function DeliverySummary({ order }: { order: TossOrderHistoryItem }) {
     );
 }
 
+// 웹 · 보통 클릭이면 창으로(앱 화면 · 새 탭 · 가운데 클릭은 원래대로 페이지 이동)
+function opensInModal(event: React.MouseEvent) {
+    return !(event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)
+        && !document.documentElement.classList.contains("ddb-app-mode");
+}
+
 function LiveOrderActions({ order, className = "" }: { order: TossOrderHistoryItem; className?: string }) {
+    const [help, setHelp] = useState<"inquiry" | "return" | null>(null);
     if (isTestOrder(order)) return null;
+    const firstLine = order.lines[0];
+    const summary = {
+        orderId: order.orderId,
+        orderName: order.orderName,
+        firstLineName: firstLine?.name,
+        image: firstLine ? lineImage(firstLine)?.src : undefined,
+        dateLabel: `${orderDateLabel(order.createdAt ?? order.approvedAt)} 주문`,
+        amountLabel: formatOrderAmount(order.amount),
+        statusLabel: orderStatusLabel(order),
+    };
     return (
         <div className={`flex flex-wrap gap-2 ${className}`} data-live-fulfillment-actions="true">
             {order.delivery?.trackingUrl ? (
@@ -199,9 +218,10 @@ function LiveOrderActions({ order, className = "" }: { order: TossOrderHistoryIt
                     배송 조회
                 </a>
             ) : (
-                <Link href="/inquiry?category=delivery#inquiry-form" className="btn btn-secondary">배송 문의</Link>
+                <Link href="/inquiry?category=delivery#inquiry-form" className="btn btn-secondary" onClick={(event) => { if (opensInModal(event)) { event.preventDefault(); setHelp("inquiry"); } }}>배송 문의</Link>
             )}
-            <Link href="/return" className="btn btn-secondary">교환·반품 안내</Link>
+            <Link href="/return" className="btn btn-secondary" onClick={(event) => { if (opensInModal(event)) { event.preventDefault(); setHelp("return"); } }}>교환·반품 안내</Link>
+            {help && <OrderHelpModal order={summary} initialMode={help} onClose={() => setHelp(null)} />}
         </div>
     );
 }

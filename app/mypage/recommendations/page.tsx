@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+// 웹: 분석 결과 삭제 요청을 마이페이지 안 문의 창으로(2026-10-24, 앱 · 새 탭은 원래대로 문의 페이지)
+import MypageInquiryLink from "@/components/mypage/MypageInquiryLink";
 import { usePathname } from "next/navigation";
 import { useAppMode } from "@/components/app-shell/useAppMode";
 import { useState, type ReactNode } from "react";
@@ -246,7 +248,22 @@ export default function MypageRecommendationPreferencesPage() {
                         <Link href="/mypage/#pet-profiles" className="btn btn-secondary" data-go="inside">반려견 프로필 수정</Link>
                         {/* 분석 기록: 웹은 마이페이지 안 AI 분석 요약, 앱은 기존 리포트 화면 그대로 */}
                         <Link href={appMode ? "/health-report/" : "/mypage/ai/"} className="btn btn-secondary" data-go="inside">분석 기록 확인</Link>
-                        <Link href="/inquiry/?category=other#inquiry-form" className="btn btn-secondary" data-go="out">분석 결과 삭제 요청</Link>
+                        <MypageInquiryLink
+                            href="/inquiry/?category=other#inquiry-form"
+                            className="btn btn-secondary"
+                            data-go="modal"
+                            preset={{
+                                kicker: "MY DATA",
+                                title: "분석 결과 삭제 요청",
+                                sub: "지우고 싶은 분석 기록(반려견 이름 · 날짜)을 적어 주세요. 확인 후 처리 결과를 알려 드려요.",
+                                art: "/images/ui/lab-summary-256.webp",
+                                category: "other",
+                                subject: "[기타 문의] 분석 결과 삭제 요청",
+                                hint: "처리 결과는 입력한 이메일로 알려 드려요.",
+                            }}
+                        >
+                            분석 결과 삭제 요청
+                        </MypageInquiryLink>
                         <Link href="/privacy/" className="btn btn-secondary">개인정보 처리 안내</Link>
                     </div>
                 </section>

@@ -4,6 +4,9 @@
  * CustomerInquiryPanel — 1:1 문의(이메일 · 전화 쿠션 + 문의 쓰기 양식 + 접수 확인)
  * 2026-10-23 웹 크레파스 결: cs-* 이름표만 붙임(꾸밈은 app/support-web.css, 웹 [data-support-web] 안에서만).
  * 앱은 기존 클래스에 걸린 앱 꾸밈 그대로. 입력 · 접수 · 펼침 동작은 바꾸지 않음.
+ * embedded(2026-10-24): 웹 마이페이지 주문 내역 창(OrderHelpModal) 안에서 쓰는 모양 — 이메일 · 전화 카드와 양식 머리는 빼고
+ * 양식을 처음부터 펼치며, 문의 유형 · 주문번호 · 상품명을 미리 채움. 접수(submitCustomerSupportInquiry) · 검사 · 문구는 그대로.
+ * embedded 를 넘기지 않는 1:1 문의 페이지는 그대로.
  */
 import { FormEvent, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
@@ -88,7 +91,9 @@ function getInquiryLocationServerSnapshot() {
     return "";
 }
 
-export default function CustomerInquiryPanel({ email, phone }: { email: string; phone: string }) {
+type EmbeddedInquiry = { category: CustomerSupportCategory; orderNumber?: string; productName?: string; subject?: string };
+
+export default function CustomerInquiryPanel({ email, phone, embedded }: { email: string; phone: string; embedded?: EmbeddedInquiry }) {
     const { user } = useAuth();
     const store = useStore();
     const locationSnapshot = useSyncExternalStore(
@@ -98,7 +103,10 @@ export default function CustomerInquiryPanel({ email, phone }: { email: string; 
     );
     const [visibility, setVisibility] = useState<"default" | "open" | "closed">("default");
     const [selectedCategory, setSelectedCategory] = useState<CustomerSupportCategory | null>(null);
-    const [values, setValues] = useState<InquiryValues>(INITIAL_VALUES);
+    // 창 안(embedded)이면 주문번호 · 상품명을 미리 채움
+    const [values, setValues] = useState<InquiryValues>(() => (embedded
+        ? { ...INITIAL_VALUES, orderNumber: embedded.orderNumber ?? "", productName: embedded.productName ?? "", subject: embedded.subject ?? "" }
+        : INITIAL_VALUES));
     const [submitting, setSubmitting] = useState(false);
     const [receipt, setReceipt] = useState<CustomerSupportInquiryReceipt | null>(null);
     const [error, setError] = useState("");
@@ -107,10 +115,10 @@ export default function CustomerInquiryPanel({ email, phone }: { email: string; 
     const focusOnOpenRef = useRef(false);
     const [queryString, hash = ""] = locationSnapshot.split("#", 2);
     const searchParams = new URLSearchParams(queryString);
-    const requestedCategory = inquiryCategory(searchParams.get("category"));
+    const requestedCategory = embedded?.category ?? inquiryCategory(searchParams.get("category"));
     const openedFromChat = searchParams.get("source") === "chat";
     const requestedOpen = openedFromChat || Boolean(requestedCategory) || hash === "inquiry-form";
-    const expanded = visibility === "open" || (visibility === "default" && requestedOpen);
+    const expanded = Boolean(embedded) || visibility === "open" || (visibility === "default" && requestedOpen);
     const category = selectedCategory ?? requestedCategory ?? "other";
     const source = openedFromChat ? "chatbot" : "inquiry_page";
     const name = values.name ?? user?.name ?? "";
@@ -139,6 +147,8 @@ export default function CustomerInquiryPanel({ email, phone }: { email: string; 
     };
 
     useEffect(() => {
+        // 창 안에서는 페이지를 굴리지 않음
+        if (embedded) return;
         if (!expanded || (!focusOnOpenRef.current && !requestedOpen)) return;
         const openedHere = focusOnOpenRef.current;
         focusOnOpenRef.current = false;
@@ -147,7 +157,7 @@ export default function CustomerInquiryPanel({ email, phone }: { email: string; 
         if (!openedHere && document.documentElement.classList.contains("ddb-app-mode")) return;
         const frame = window.requestAnimationFrame(focusForm);
         return () => window.cancelAnimationFrame(frame);
-    }, [expanded, focusForm, requestedOpen]);
+    }, [embedded, expanded, focusForm, requestedOpen]);
 
     const submit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -187,6 +197,7 @@ export default function CustomerInquiryPanel({ email, phone }: { email: string; 
 
     return (
         <>
+            {!embedded && (
             <div className="mt-8 grid gap-4 sm:grid-cols-2 cs-contacts">
                 <button
                     type="button"
@@ -226,13 +237,16 @@ export default function CustomerInquiryPanel({ email, phone }: { email: string; 
                     </span>
                 </a>
             </div>
+            )}
 
             {expanded ? (
                 <section
                     ref={formSectionRef}
                     id="inquiry-form"
-                    className="cs-form mt-6 scroll-mt-24 overflow-hidden rounded-2xl border-2 border-dashed border-aurora-indigo/25 bg-white/80 shadow-card backdrop-blur"
+                    className={embedded ? "cs-form" : "cs-form mt-6 scroll-mt-24 overflow-hidden rounded-2xl border-2 border-dashed border-aurora-indigo/25 bg-white/80 shadow-card backdrop-blur"}
+                    data-inquiry-embedded={embedded ? "" : undefined}
                 >
+                    {!embedded && (
                     <div className="cs-form-head border-b border-aurora-indigo/10 bg-gradient-to-r from-orange-50 via-sky-50 to-indigo-50 px-5 py-4 sm:px-6">
                         <p className="text-xs font-black tracking-[0.18em] text-aurora-indigo">CRAYON CONTACT NOTE</p>
                         <div className="mt-1 flex items-start justify-between gap-4">
@@ -252,6 +266,7 @@ export default function CustomerInquiryPanel({ email, phone }: { email: string; 
                             </button>
                         </div>
                     </div>
+                    )}
 
                     {receipt ? (
                         <div className="p-5 sm:p-6" role="status" aria-live="polite">
