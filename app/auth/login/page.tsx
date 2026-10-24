@@ -32,6 +32,9 @@ import { petLensPostAuthDestination } from "@/lib/petlens-routing";
 import { useDdbApiReady } from "@/hooks/useDdbApiReady";
 import SocialAuthButtons from "@/components/auth/SocialAuthButtons";
 import BrandLogo from "@/components/header/BrandLogo";
+// 웹(2026-10-25): 구매 흐름(?redirect=/checkout…)으로 오면 "주문 로그인"(회원 주문 · 비회원 주문 갈림길). 앱 · 일반 로그인은 아래 기존 화면
+import CheckoutLoginWeb from "@/components/guest/CheckoutLoginWeb";
+import { useWebScreen } from "@/hooks/useWebScreen";
 
 const subscribeToLocation = () => () => {};
 const getServerRedirect = () => null;
@@ -50,6 +53,7 @@ export default function LoginPage() {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const apiReady = useDdbApiReady();
+    const webScreen = useWebScreen();
     // 구매 흐름 등에서 ?redirect=/checkout 로 넘어오면 로그인 또는 주문서 미리보기 후 그 경로로 보낸다.
     const redirect = useSyncExternalStore(subscribeToLocation, getClientRedirect, getServerRedirect);
     const checkoutRedirect = redirect && (
@@ -106,6 +110,26 @@ export default function LoginPage() {
             setLoading(false);
         }
     };
+
+    // 웹 · 구매 흐름 — 주문 로그인(같은 값 · 같은 로그인 동작)
+    if (webScreen && checkoutRedirect) {
+        return (
+            <CheckoutLoginWeb
+                email={email}
+                setEmail={setEmail}
+                password={password}
+                setPassword={setPassword}
+                showPw={showPw}
+                setShowPw={setShowPw}
+                error={error}
+                loading={loading}
+                apiReady={apiReady}
+                submit={submit}
+                checkoutRedirect={checkoutRedirect}
+                signupHref={signupHref}
+            />
+        );
+    }
 
     return (
         <div data-login-web className="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-[#fdf9f1] via-[#fbf3e7] to-[#faecd9] px-4 py-8">
@@ -252,6 +276,11 @@ export default function LoginPage() {
                             <i className="fa-solid fa-user-plus text-xs" />
                             회원가입
                             <i className="fa-solid fa-arrow-right text-[11px] transition-transform group-hover:translate-x-0.5" />
+                        </Link>
+                        {/* 웹 전용(2026-10-25) — 비회원 주문 조회(앱은 hidden 그대로, 꾸밈 app/auth-web.css) */}
+                        <Link href="/order-lookup" className="hidden lg-guest-lookup">
+                            <i className="fa-solid fa-magnifying-glass" aria-hidden="true" />
+                            비회원 주문 조회
                         </Link>
                     </div>
                 </div>

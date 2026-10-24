@@ -9,11 +9,28 @@
  *  결제수단 칸 머리(co-pay-head)와 주문 요약 머리(co-sum-head)는 웹 전용 요소(hidden → CSS).
  * 앱은 appShopSkin 이 section.surface · data-* · 순서로 꾸미므로 구조는 그대로, 이름표 · hidden 웹 요소만 더함.
  * 결제 · 주문 생성 · 배송 검증 · 토스 결제창 동작과 안내 문구는 그대로.
+ * 2026-10-25 웹 비회원 주문(components/guest/GuestCheckoutPanel · lib/guest-order): 로그인 안 했으면 회원/비회원 고르기 →
+ *  비회원 주문자 정보 · 주문 조회 비밀번호 · 필수 동의, 주문 요약 옆 결제 안내. 비회원 결제는 서버가 연결(NEXT_PUBLIC_GUEST_ORDER)될 때만
+ *  열리고, 그 전에는 지금처럼 로그인해야 결제됨. 앱에서는 hidden(꾸밈 app/guest-web.css).
  */
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import "../checkout-web.css";
+import "../guest-web.css";
+import { GuestBuyerForm, GuestChooser, GuestPayBox } from "@/components/guest/GuestCheckoutPanel";
+import {
+    createGuestTossOrder,
+    emptyGuestBuyer,
+    guestOrderEnabled,
+    maskPhone,
+    readGuestMode,
+    saveGuestPending,
+    subscribeGuestMode,
+    validateGuestBuyer,
+    type GuestBuyer,
+    type GuestBuyerErrors,
+} from "@/lib/guest-order";
 import { loadTossPayments } from "@tosspayments/tosspayments-sdk";
 import ShippingDetailsSection from "@/components/checkout/ShippingDetailsSection";
 import { cartProducts } from "@/lib/shop";
@@ -131,6 +148,11 @@ export default function CheckoutPage() {
     const [selectedAddressId, setSelectedAddressId] = useState("");
     const prefilledMemberRef = useRef("");
     const prefilledAddressRef = useRef("");
+    // 웹 비회원 주문 — "비회원으로 주문 중" 표시(이 탭) · 주문자 정보 · 서버 연결 여부(꺼져 있으면 결제는 지금처럼 로그인 뒤)
+    const guestMode = useSyncExternalStore(subscribeGuestMode, readGuestMode, () => false);
+    const guestFeature = useSyncExternalStore(subscribeGuestMode, guestOrderEnabled, () => process.env.NEXT_PUBLIC_GUEST_ORDER === "1");
+    const [guestBuyer, setGuestBuyer] = useState<GuestBuyer>(emptyGuestBuyer);
+    const [guestErrors, setGuestErrors] = useState<GuestBuyerErrors>({});
 
     useEffect(() => {
         const requestedMethod = new URLSearchParams(window.location.search).get("payment");
@@ -141,6 +163,9 @@ export default function CheckoutPage() {
     const accessToken = user?.apiAccessToken || getCustomerToken();
     const signedInForPayment = Boolean(user && accessToken);
     const loginHref = `/auth/login?redirect=${encodeURIComponent(checkoutHref(paymentMethod))}`;
+    const signupHref = `/auth/signup?redirect=${encodeURIComponent(checkoutHref(paymentMethod))}`;
+    // 비회원 결제 — 로그인 안 했고 · 비회원을 골랐고 · 서버가 연결됐을 때만
+    const guestCheckout = !signedInForPayment && guestMode && guestFeature;
     const directEasyPay = paymentMethod === "toss_pay" || paymentMethod === "naver_pay";
     const quoteRequestKey = accessToken
         ? `${accessToken}:${total}:${deliveryDraft.deliveryZone}`
@@ -259,11 +284,20 @@ export default function CheckoutPage() {
                 : "해당 결제수단은 아직 준비 중입니다. 신용·체크카드로 다시 선택했습니다.");
             return;
         }
-        if (!user || !accessToken) {
+        if ((!user || !accessToken) && !guestCheckout) {
             setPaymentError(locale === "en"
                 ? "Sign in again before starting a test payment."
                 : "테스트 결제를 시작하려면 먼저 로그인해 주세요.");
             return;
+        }
+        if (guestCheckout) {
+            const guestValidation = validateGuestBuyer(guestBuyer);
+            setGuestErrors(guestValidation.errors);
+            if (!guestValidation.ok) {
+                setPaymentError("주문하는 분 정보를 확인해 주세요.");
+                window.requestAnimationFrame(() => document.getElementById(`guest-buyer-${guestValidation.first}`)?.focus());
+                return;
+            }
         }
         if (directEasyPay && !directTermsAccepted) {
             setPaymentError(locale === "en"
@@ -286,7 +320,7 @@ export default function CheckoutPage() {
         setSubmitting(true);
         let pendingOrderId = "";
         try {
-            const order = await createTossTestOrder({
+            const orderPayload = {
                 lines: lines.map(({ product, qty, color, size }) => ({
                     productId: product.id,
                     qty,
@@ -299,7 +333,19 @@ export default function CheckoutPage() {
                     addressLine2: deliveryValidation.value.addressLine2 ?? "",
                     requestNote: deliveryValidation.value.requestNote ?? "",
                 },
-            }, accessToken);
+            };
+            // 회원은 기존 주문 만들기 그대로, 비회원은 연동 자리(lib/guest-order — 서버가 연결됐을 때만 여기까지 옴)
+            const guestOrder = guestCheckout ? await createGuestTossOrder(orderPayload, guestBuyer) : null;
+            const order = guestOrder ?? await createTossTestOrder(orderPayload, accessToken as string);
+            if (guestOrder) {
+                saveGuestPending({
+                    orderId: guestOrder.orderId,
+                    guestToken: guestOrder.guestToken,
+                    buyerName: guestBuyer.name.trim(),
+                    maskedPhone: maskPhone(guestBuyer.phone),
+                    email: guestBuyer.email.trim(),
+                });
+            }
 
             if (
                 order.mode !== "test"
@@ -341,7 +387,7 @@ export default function CheckoutPage() {
                 successUrl: tossCallbackUrl("/checkout/toss/success/"),
                 failUrl: tossCallbackUrl("/checkout/toss/fail/"),
                 customerName: order.delivery.recipientName,
-                customerEmail: user.email,
+                customerEmail: guestCheckout ? guestBuyer.email.trim() : user?.email,
                 customerMobilePhone: order.delivery.phone,
             };
 
@@ -364,7 +410,8 @@ export default function CheckoutPage() {
         } catch (error) {
             if (pendingOrderId) {
                 try {
-                    await cancelTossTestOrder(pendingOrderId, accessToken);
+                    // 비회원 주문 정리는 서버가 맡음(회원 토큰이 없음)
+                    if (!guestCheckout) await cancelTossTestOrder(pendingOrderId, accessToken);
                 } catch {
                     // A submitted/confirmed order must never be forced back to cancelled.
                     // The API accepts this cleanup only while no provider payment key exists.
@@ -416,6 +463,27 @@ export default function CheckoutPage() {
             </div>
             <form onSubmit={submit} className="mt-6 grid gap-6 lg:grid-cols-[1fr_320px]">
                 <section className="grid min-w-0 gap-4">
+                    {/* 웹 전용 — 로그인 안 했으면 회원/비회원 고르기 · 비회원 주문자 정보(앱은 hidden) */}
+                    {!signedInForPayment && (
+                        <div className="hidden" data-guest-web="checkout">
+                            {guestMode ? (
+                                <GuestBuyerForm
+                                    buyer={guestBuyer}
+                                    onChange={(next) => {
+                                        setGuestBuyer(next);
+                                        setGuestErrors({});
+                                        if (paymentError) setPaymentError("");
+                                    }}
+                                    errors={guestErrors}
+                                    loginHref={loginHref}
+                                    disabled={submitting}
+                                    onCopyToDelivery={() => changeDelivery({ ...deliveryDraft, recipientName: guestBuyer.name.trim(), phone: guestBuyer.phone.trim() })}
+                                />
+                            ) : (
+                                <GuestChooser loginHref={loginHref} />
+                            )}
+                        </div>
+                    )}
                     {savedAddresses.length > 0 && (
                         <section className="surface flex flex-wrap items-center gap-3 p-4" aria-label="저장된 배송지 선택">
                             <label htmlFor="checkout-saved-address" className="text-xs font-black text-neutral-600">
@@ -635,7 +703,12 @@ export default function CheckoutPage() {
                         </p>
                     )}
                     {!signedInForPayment && (
-                        <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-3 py-3" role="alert">
+                        <div className="hidden" data-guest-web="paybox-wrap">
+                            <GuestPayBox ready={guestFeature} guestMode={guestMode} loginHref={loginHref} signupHref={signupHref} />
+                        </div>
+                    )}
+                    {!signedInForPayment && (
+                        <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-3 py-3" role="alert" data-co-guest-legacy>
                             <p className="text-xs font-bold leading-5 text-amber-900">
                                 {locale === "en"
                                     ? "Sign in with the review test account to open the Toss Payments test window. Guest users can preview the order form only."
@@ -654,7 +727,7 @@ export default function CheckoutPage() {
                     <button
                         type="submit"
                         className="co-pay btn btn-primary mt-5 w-full"
-                        disabled={submitting || !signedInForPayment || (directEasyPay && !directTermsAccepted)}
+                        disabled={submitting || (!signedInForPayment && !guestCheckout) || (directEasyPay && !directTermsAccepted)}
                         data-payment-status="test_ready"
                     >
                         {submitting

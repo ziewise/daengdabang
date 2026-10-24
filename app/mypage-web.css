@@ -2726,3 +2726,8 @@ html:not(.ddb-app-mode) main:has(nav[aria-label="마이페이지 메뉴"]) {
 @media (prefers-reduced-motion: reduce) {
     [data-pf-web] .pf-panel, [data-pf-web] .pf-item-edit { animation: none; }
 }
+
+/* 마이페이지 로그인 안내 — 비회원 주문 조회 링크(웹 전용, 2026-10-25) */
+html:not(.ddb-app-mode) main[data-mypage-web="gate"] .mp-gate-guest { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; margin-top: 18px; color: #64748b; font-size: 13px; font-weight: 700; }
+html:not(.ddb-app-mode) main[data-mypage-web="gate"] .mp-gate-guest a { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 999px; background: #e9f4fb; color: #0e8aa0; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 14px; }
+html:not(.ddb-app-mode) main[data-mypage-web="gate"] .mp-gate-guest a i { font-size: 10px; }

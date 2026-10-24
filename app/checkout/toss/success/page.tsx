@@ -2,6 +2,9 @@
 /* eslint-disable react-hooks/set-state-in-effect -- this static callback page derives its state from redirect URL and hydrated cart state. */
 
 import { useEffect, useRef, useState } from "react";
+// 2026-10-25 비회원 결제 확인(서버가 연결됐을 때만 · lib/guest-order) → 비회원 주문 완료 화면
+import GuestOrderDone from "@/components/guest/GuestOrderDone";
+import { clearGuestPending, confirmGuestTossPayment, guestOrderEnabled, loadGuestPending, setGuestCheckoutMode } from "@/lib/guest-order";
 import Link from "next/link";
 import {
     confirmTossTestPayment,
@@ -27,7 +30,8 @@ type ViewState =
     | { kind: "pending"; retryHref: string }
     | { kind: "invalid"; message: string }
     | { kind: "failed"; message: string; retryHref?: string }
-    | { kind: "complete"; confirmation: TossTestPaymentConfirmation; orderId: string; amount: number };
+    | { kind: "complete"; confirmation: TossTestPaymentConfirmation; orderId: string; amount: number }
+    | { kind: "guest_complete"; orderId: string; amount: number; buyerName: string; email: string };
 
 export default function TossTestSuccessPage() {
     const { user } = useAuth();
@@ -39,6 +43,12 @@ export default function TossTestSuccessPage() {
         if (!cart.hydrated || startedRef.current) return;
 
         const query = new URLSearchParams(window.location.search);
+        // 개발 서버 전용 미리보기 — ?sxguestdone 이면 비회원 주문 완료 화면 예시(배포 빌드에서는 이 줄이 빠짐)
+        if (process.env.NODE_ENV === "development" && query.has("sxguestdone")) {
+            startedRef.current = true;
+            setView({ kind: "guest_complete", orderId: "DDB-20261025-1042", amount: 78000, buyerName: "김댕댕", email: "da****@example.com" });
+            return;
+        }
         const paymentKey = query.get("paymentKey");
         const orderId = query.get("orderId");
         const amount = parseTossAmount(query.get("amount"));
@@ -50,6 +60,21 @@ export default function TossTestSuccessPage() {
 
         const callbackPath = `${window.location.pathname}${window.location.search}`;
         const accessToken = user?.apiAccessToken || getCustomerToken();
+        // 비회원 결제 — 로그인 없이 결제했고 이 탭에 비회원 주문 표시가 있을 때만(서버 연결 전에는 여기 오지 않음)
+        const guestPending = !user && guestOrderEnabled() ? loadGuestPending(orderId) : null;
+        if (guestPending) {
+            startedRef.current = true;
+            confirmGuestTossPayment({ paymentKey, orderId, amount }, guestPending.guestToken)
+                .then((confirmed) => {
+                    if (confirmed.orderId !== orderId || confirmed.totalAmount !== amount) throw new Error("Unexpected guest confirmation");
+                    clearPendingTossTestPayment(orderId);
+                    clearGuestPending();
+                    setGuestCheckoutMode(false);
+                    setView({ kind: "guest_complete", orderId, amount, buyerName: guestPending.buyerName, email: guestPending.email });
+                })
+                .catch(() => setView({ kind: "failed", message: "비회원 결제를 확인하지 못했어요. 결제가 되었다면 1:1 문의에 주문번호를 남겨 주세요.", retryHref: callbackPath }));
+            return;
+        }
         if (!user || !accessToken) {
             startedRef.current = true;
             setView({
@@ -118,6 +143,10 @@ export default function TossTestSuccessPage() {
                 <p className="mt-2 text-sm font-bold text-neutral-600">서버가 주문번호와 금액을 다시 검증하고 있습니다.</p>
             </main>
         );
+    }
+
+    if (view.kind === "guest_complete") {
+        return <GuestOrderDone orderId={view.orderId} amount={view.amount} buyerName={view.buyerName} email={view.email} />;
     }
 
     if (view.kind === "complete") {

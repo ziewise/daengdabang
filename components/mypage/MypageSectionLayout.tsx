@@ -19,6 +19,11 @@ export function MypageLoginGate({ redirect }: { redirect: string }) {
                 <Link href={loginHref} className="btn btn-primary">로그인</Link>
                 <Link href="/mypage" className="btn btn-secondary">마이페이지로</Link>
             </div>
+            {/* 웹 전용(2026-10-25) — 가입 없이 주문한 분은 비회원 주문 조회로(앱은 hidden 그대로) */}
+            <p className="hidden mp-gate-guest">
+                비회원으로 주문하셨나요?
+                <Link href="/order-lookup">비회원 주문 조회<i className="fa-solid fa-chevron-right" aria-hidden="true" /></Link>
+            </p>
         </main>
     );
 }
