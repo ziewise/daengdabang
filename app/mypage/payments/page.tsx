@@ -14,7 +14,7 @@ export default function MypagePaymentsPage() {
             title="결제수단 관리"
             description="결제수단 저장 여부와 결제 단계의 이용 방법을 안내합니다."
         >
-            <section className="surface p-5 sm:p-7" aria-labelledby="payment-storage-heading">
+            <section className="surface p-5 sm:p-7" aria-labelledby="payment-storage-heading" data-mp-card="plain">
                 <div className="grid gap-5 sm:grid-cols-[72px_1fr] sm:items-start">
                     <span className="grid h-[72px] w-[72px] place-items-center rounded-2xl bg-indigo-50 text-2xl text-indigo-700" aria-hidden="true">
                         <i className="fa-solid fa-credit-card" />
@@ -36,8 +36,8 @@ export default function MypagePaymentsPage() {
                 </div>
             </section>
 
-            <section className="surface mt-4 p-5 sm:p-6" aria-labelledby="payment-flow-heading">
-                <h2 id="payment-flow-heading" className="text-lg font-black text-neutral-950">결제수단은 언제 선택하나요?</h2>
+            <section className="surface mt-4 p-5 sm:p-6" aria-labelledby="payment-flow-heading" data-mp-card>
+                <h2 id="payment-flow-heading" className="text-lg font-black text-neutral-950" data-mp-band="sky" data-mp-art="info" data-mp-kicker="HOW TO PAY">결제수단은 언제 선택하나요?</h2>
                 <ol className="mt-4 grid gap-3 text-sm font-bold leading-6 text-neutral-600 sm:grid-cols-3">
                     {[
                         ["1", "장바구니에서 결제할 상품을 선택합니다."],

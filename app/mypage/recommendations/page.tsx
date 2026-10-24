@@ -34,8 +34,9 @@ export default function MypageRecommendationPreferencesPage() {
                     className="surface p-5 md:p-6"
                     data-recommendation-preferences-page
                     data-recommendation-preferences-enabled="false"
+                    data-mp-card
                 >
-                    <h2 className="text-lg font-black text-neutral-950">추천 설정은 현재 비활성화되어 있어요</h2>
+                    <h2 className="text-lg font-black text-neutral-950" data-mp-band="lav" data-mp-art="star" data-mp-kicker="PERSONALIZATION">추천 설정은 현재 비활성화되어 있어요</h2>
                     <p className="mt-2 text-sm font-bold leading-6 text-neutral-600">
                         설정 API를 호출하거나 회원 정보를 추천에 사용하지 않습니다. 준비가 끝나면 이 화면에서 직접 켜고 끌 수 있어요.
                     </p>
@@ -93,8 +94,8 @@ export default function MypageRecommendationPreferencesPage() {
                 data-recommendation-preferences-enabled="true"
             >
                 {!preferences ? (
-                    <section className="surface p-5" role="status">
-                        <h2 className="font-black text-neutral-950">
+                    <section className="surface p-5" role="status" data-mp-card>
+                        <h2 className="font-black text-neutral-950" data-mp-band="lav" data-mp-art="star" data-mp-kicker="PERSONALIZATION">
                             {preferenceState.status === "error" ? "추천 설정을 불러오지 못했어요" : "추천 설정 확인 중"}
                         </h2>
                         <p className="mt-2 text-sm font-bold leading-6 text-neutral-600">
@@ -108,8 +109,8 @@ export default function MypageRecommendationPreferencesPage() {
                     </section>
                 ) : (
                     <>
-                        <section className="surface p-5 md:p-6">
-                            <div className="flex items-start justify-between gap-4">
+                        <section className="surface p-5 md:p-6" data-mp-card>
+                            <div className="flex items-start justify-between gap-4" data-mp-band="lav" data-mp-art="star">
                                 <div>
                                     <p className="text-xs font-black text-indigo-700">PERSONALIZATION</p>
                                     <h2 className="mt-1 text-xl font-black text-neutral-950">맞춤 추천 전체</h2>
@@ -171,8 +172,8 @@ export default function MypageRecommendationPreferencesPage() {
                             </PreferenceRow>
                         </section>
 
-                        <section className="surface p-5 md:p-6">
-                            <h2 className="text-lg font-black text-neutral-950">기본 추천 반려견</h2>
+                        <section className="surface p-5 md:p-6" data-mp-card>
+                            <h2 className="text-lg font-black text-neutral-950" data-mp-band="mint" data-mp-art="dog" data-mp-kicker="MY DOG">기본 추천 반려견</h2>
                             <p className="mt-1 text-sm font-bold leading-6 text-neutral-600">
                                 홈과 전체 추천에서 먼저 보여줄 반려견을 선택합니다. 최근 분석 시각으로 자동 변경하지 않습니다.
                             </p>
@@ -202,8 +203,8 @@ export default function MypageRecommendationPreferencesPage() {
                             )}
                         </section>
 
-                        <section className="surface p-5 md:p-6">
-                            <h2 className="text-lg font-black text-neutral-950">현재 사용 상태</h2>
+                        <section className="surface p-5 md:p-6" data-mp-card>
+                            <h2 className="text-lg font-black text-neutral-950" data-mp-band="sky" data-mp-art="info" data-mp-kicker="STATUS">현재 사용 상태</h2>
                             <div className="mt-3 flex flex-wrap gap-2">
                                 {!preferences.enabled ? (
                                     <StatusChip label="편집 추천만 사용" tone="neutral" />
@@ -231,8 +232,8 @@ export default function MypageRecommendationPreferencesPage() {
                     </p>
                 ) : null}
 
-                <section className="surface p-5 md:p-6">
-                    <h2 className="text-lg font-black text-neutral-950">원본 데이터 확인·수정</h2>
+                <section className="surface p-5 md:p-6" data-mp-card>
+                    <h2 className="text-lg font-black text-neutral-950" data-mp-band="yellow" data-mp-art="memo" data-mp-kicker="MY DATA">원본 데이터 확인·수정</h2>
                     <p className="mt-1 text-sm font-bold leading-6 text-neutral-600">
                         추천 화면에서는 원문을 보여주지 않습니다. 아래 각 관리 화면에서 직접 확인하거나 수정할 수 있습니다.
                     </p>

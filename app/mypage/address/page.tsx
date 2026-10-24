@@ -140,10 +140,10 @@ export default function MypageAddressPage() {
             description="자주 쓰는 배송지를 최대 10개까지 암호화해 저장하고 기본 배송지를 지정합니다."
         >
             <div className="grid gap-5">
-                <section className="surface p-5 sm:p-6" aria-labelledby="saved-address-heading">
-                    <div className="flex items-center justify-between gap-3">
+                <section className="surface p-5 sm:p-6" aria-labelledby="saved-address-heading" data-mp-card>
+                    <div className="flex items-center justify-between gap-3" data-mp-band="mint" data-mp-art="home">
                         <div>
-                            <h2 id="saved-address-heading" className="text-lg font-black text-neutral-950">저장된 배송지</h2>
+                            <h2 id="saved-address-heading" className="text-lg font-black text-neutral-950" data-mp-kicker="MY ADDRESS">저장된 배송지</h2>
                             <p className="mt-1 text-xs font-bold text-neutral-500">주소와 연락처는 서버에서 암호화해 보관합니다.</p>
                         </div>
                         <span className="rounded-full bg-neutral-100 px-3 py-1 text-xs font-black text-neutral-600">{addresses.length}/10</span>
@@ -183,8 +183,8 @@ export default function MypageAddressPage() {
                     )}
                 </section>
 
-                <form id="address-editor" className="surface scroll-mt-24 p-5 sm:p-6" onSubmit={submit}>
-                    <h2 className="text-lg font-black text-neutral-950">{editingId ? "배송지 수정" : "새 배송지 추가"}</h2>
+                <form id="address-editor" className="surface scroll-mt-24 p-5 sm:p-6" onSubmit={submit} data-mp-card>
+                    <h2 className="text-lg font-black text-neutral-950" data-mp-band="yellow" data-mp-art="memo" data-mp-kicker="ADDRESS">{editingId ? "배송지 수정" : "새 배송지 추가"}</h2>
                     <div className="mt-4 grid gap-4 sm:grid-cols-2">
                         <AddressField label="배송지 이름" value={form.label} onChange={(value) => update("label", value)} maxLength={40} placeholder="집, 회사" />
                         <AddressField label="받는 분" value={form.recipientName} onChange={(value) => update("recipientName", value)} maxLength={50} autoComplete="shipping name" />

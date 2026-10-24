@@ -127,8 +127,10 @@ export default function DaengLabWalletCard({ accessToken, accountEmail = "" }: P
             id="daenglab-wallet"
             className="surface scroll-mt-24 overflow-hidden border-indigo-100"
             data-daenglab-wallet
+            data-mp-card="split"
         >
-            <div className="bg-gradient-to-r from-cyan-50 via-rose-50 to-amber-50 px-5 py-4">
+            {/* 웹 K5 결 — 노랑 띠 머리 + 코인 그림(data-mp-band, 꾸밈은 app/mypage-web.css · 앱 그대로) */}
+            <div className="bg-gradient-to-r from-cyan-50 via-rose-50 to-amber-50 px-5 py-4" data-mp-band="yellow" data-mp-art="coin">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
                         <p className="text-[11px] font-black tracking-[0.16em] text-indigo-600">댕다방 연구소 지갑</p>

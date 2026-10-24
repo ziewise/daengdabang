@@ -62,8 +62,8 @@ export default function MypageWithdrawalPage() {
             title="회원 탈퇴"
             description="계정 접근은 즉시 차단하고 개인정보는 가명화하며, 법정 보존 기록은 분리 보관합니다."
         >
-            <form className="surface overflow-hidden" aria-labelledby="withdrawal-heading" onSubmit={submit}>
-                <div className="border-b border-red-100 bg-red-50/70 px-5 py-5 sm:px-6">
+            <form className="surface overflow-hidden" aria-labelledby="withdrawal-heading" onSubmit={submit} data-mp-card="split">
+                <div className="border-b border-red-100 bg-red-50/70 px-5 py-5 sm:px-6" data-mp-band="pink" data-mp-art="lock">
                     <h2 id="withdrawal-heading" className="text-xl font-black text-red-950">탈퇴 후에는 되돌릴 수 없습니다.</h2>
                     <p className="mt-2 text-sm font-bold leading-6 text-red-900">
                         반려견 프로필·분석 기록·커뮤니티 활동에 다시 접근할 수 없으며 현재 로그인된 모든 세션이 종료됩니다.

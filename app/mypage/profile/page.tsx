@@ -69,9 +69,9 @@ function ProfileEditor({
     };
 
     return (
-        <section className="surface overflow-hidden" aria-labelledby="profile-basic-heading">
-            <div className="border-b border-neutral-200 bg-neutral-50/80 px-5 py-4">
-                <h2 id="profile-basic-heading" className="text-lg font-black text-neutral-950">기본 정보</h2>
+        <section className="surface overflow-hidden" aria-labelledby="profile-basic-heading" data-mp-card="split">
+            <div className="border-b border-neutral-200 bg-neutral-50/80 px-5 py-4" data-mp-band="sky" data-mp-art="me">
+                <h2 id="profile-basic-heading" className="text-lg font-black text-neutral-950" data-mp-kicker="MY INFO">기본 정보</h2>
                 <p className="mt-1 text-xs font-bold leading-5 text-neutral-500">
                     이름만 직접 변경할 수 있으며 이메일·가입 계정 변경은 본인 확인이 필요합니다.
                 </p>

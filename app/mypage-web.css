@@ -168,3 +168,149 @@ html:not(.ddb-app-mode) main[data-mypage-web="gate"] {
     & h1 { margin: 18px auto 0; font-size: 28px; }
     & .btn { height: 50px; padding: 0 26px; }
 }
+
+/* ───────── K5 색 띠 머리(2026-10-24 사용자 선택 — 주문서와 같은 결) ─────────
+   카드 머리(data-mp-band)를 파스텔 띠로: 영문 손글씨(data-mp-kicker) · 주아 제목 · 설명 · 오른쪽 3D 그림(data-mp-art).
+   인사 머리(data-mp-hello) = 분홍 띠 판 + 큰 3D 그림, 묶음 머리(data-mp-row) = 둥근 파스텔 띠.
+   data-mp-card="true" 카드는 띠가 카드 끝까지 닿게 안쪽 여백을 맞추고, "split" 카드는 원래 머리 칸을 그대로 띠로. */
+html:not(.ddb-app-mode) :is(main:has(nav[aria-label="마이페이지 메뉴"]), main[data-mypage-web]) {
+    /* 색 · 그림 */
+    & [data-mp-band="pink"], & [data-mp-row="pink"] { --mp-bg: #ffeef3; --mp-ink: #e2557a; }
+    & [data-mp-band="mint"], & [data-mp-row="mint"] { --mp-bg: #e9f8f1; --mp-ink: #12a17a; }
+    & [data-mp-band="sky"], & [data-mp-row="sky"] { --mp-bg: #e9f4fb; --mp-ink: #0e8aa0; }
+    & [data-mp-band="yellow"], & [data-mp-row="yellow"] { --mp-bg: #fff6e3; --mp-ink: #d98a12; }
+    & [data-mp-band="lav"], & [data-mp-row="lav"] { --mp-bg: #f3f0fe; --mp-ink: #6b51c9; }
+    & [data-mp-art="dog"] { --mp-art: url("/images/ui/pet-photo-128.webp"); }
+    & [data-mp-art="cart"] { --mp-art: url("/images/ui/header-cart-128.webp"); }
+    & [data-mp-art="coin"] { --mp-art: url("/images/ui/goods-pay-ready-256.webp"); }
+    & [data-mp-art="home"] { --mp-art: url("/images/ui/pet-home-96.webp"); }
+    & [data-mp-art="memo"] { --mp-art: url("/images/ui/lab-summary-256.webp"); }
+    & [data-mp-art="me"] { --mp-art: url("/images/ui/header-mypage-128.webp"); }
+    & [data-mp-art="star"] { --mp-art: url("/images/ui/find-basics-256.webp"); }
+    & [data-mp-art="shield"] { --mp-art: url("/images/ui/goods-escrow-256.webp"); }
+    & [data-mp-art="info"] { --mp-art: url("/images/ui/daily-checkin-256.webp"); }
+    & [data-mp-art="lock"] { --mp-art: url("/images/ui/lab-lock-256.webp"); }
+
+    /* 카드 — 띠가 끝까지 닿게 */
+    & [data-mp-card] { overflow: hidden; }
+    & [data-mp-card="true"] { padding: 0 22px 22px; }
+    & [data-mp-card="true"] > [data-mp-band] { margin: 0 -22px 18px; }
+
+    /* 띠 머리 */
+    & [data-mp-band] {
+        position: relative;
+        padding: 18px 108px 18px 22px;
+        border-bottom: 0;
+        background: var(--mp-bg);
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%);
+    }
+
+    & [data-mp-band][data-mp-art]::after,
+    & [data-mp-hello]::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        right: 24px;
+        width: 64px;
+        height: 64px;
+        transform: translateY(-50%);
+        background: var(--mp-art) center / contain no-repeat;
+        filter: drop-shadow(0 8px 10px rgb(15 23 42 / 15%));
+    }
+
+    & :is([data-mp-band] h2, h2[data-mp-band], [data-mp-row] h2) {
+        color: #1e293b;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 22px;
+        font-weight: 400;
+        line-height: 1.3;
+    }
+
+    & [data-mp-band] :is(h2 + p, p + h2 + p) { color: #64748b; font-weight: 600; }
+    & [data-mp-band] > div > p:first-child, & [data-mp-band] > div > div > p:first-child:not(:only-child) { color: var(--mp-ink); }
+
+    /* 영문 손글씨 꼬리표 */
+    & [data-mp-kicker]::before {
+        content: attr(data-mp-kicker);
+        display: block;
+        color: var(--mp-ink, #e2557a);
+        font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+        font-size: 12.5px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        line-height: 1.5;
+    }
+
+    & [data-mp-band] [data-mp-kicker]::before, & [data-mp-row] [data-mp-kicker]::before { color: var(--mp-ink); }
+
+    /* 탈퇴 띠 — 경고 글자색은 그대로 진하게 */
+    & [data-mp-band="pink"] h2[class*="text-red"] { color: #9f1239; }
+
+    /* 띠 안 작은 알약(개수 등) — 흰 알약 */
+    & [data-mp-band] span[class*="rounded-full"] { background: #fff; color: var(--mp-ink); }
+    & [data-mp-band] button[class*="rounded-full"] { border: 0; background: #fff; color: var(--mp-ink); box-shadow: 0 0 0 1.5px rgb(255 255 255 / 0%), 0 6px 12px -8px rgb(15 23 42 / 30%); }
+    & [data-mp-band] a { color: var(--mp-ink); }
+
+    /* 인사 · 하위 화면 머리 — 분홍 띠 판 + 큰 3D 그림 */
+    & [data-mp-hello] {
+        position: relative;
+        padding: 26px 150px 26px 30px;
+        border-radius: 34px;
+        background: #ffeef3;
+        box-shadow: var(--mp-cushion);
+    }
+
+    & [data-mp-hello]::after { right: 32px; width: 104px; height: 104px; }
+    & [data-mp-hello] h1 { font-size: 36px; }
+
+    /* 묶음 머리(찜한 상품 · 바로 입혀볼 상품) — 둥근 파스텔 띠 */
+    & [data-mp-row] {
+        padding: 14px 22px;
+        border-radius: 24px;
+        background: var(--mp-bg);
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%);
+    }
+
+    & [data-mp-row] a { padding: 6px 14px; border-radius: 999px; background: #fff; color: var(--mp-ink); }
+    & [data-mp-row] p[class*="text-indigo"] { color: var(--mp-ink); font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif; letter-spacing: 0.08em; }
+
+    /* 결제수단 안내 카드(plain) — 큰 아이콘 네모를 노랑 동그라미로 */
+    & [data-mp-card="plain"] span[class*="h-[72px]"] { border-radius: 999px; background: #fff6e3; color: #d98a12; box-shadow: 0 0 0 3px #f7d48a; }
+}
+
+@media (max-width: 640px) {
+    html:not(.ddb-app-mode) :is(main:has(nav[aria-label="마이페이지 메뉴"]), main[data-mypage-web]) {
+        & [data-mp-card="true"] { padding: 0 16px 18px; }
+        & [data-mp-card="true"] > [data-mp-band] { margin: 0 -16px 16px; }
+        & [data-mp-band] { padding: 16px 78px 16px 16px; }
+        & [data-mp-band][data-mp-art]::after { right: 14px; width: 50px; height: 50px; }
+        & :is([data-mp-band] h2, h2[data-mp-band], [data-mp-row] h2) { font-size: 19px; }
+        & [data-mp-hello] { padding: 22px 104px 22px 20px; border-radius: 28px; }
+        & [data-mp-hello]::after { right: 16px; width: 76px; height: 76px; }
+        & [data-mp-hello] h1 { font-size: 30px; }
+    }
+}
+
+/* K5 다듬기 — 오른쪽 묶음은 위로 붙이기(카드가 왼쪽 길이만큼 늘어나지 않게) · 한글 꼬리표는 주아 분홍 글씨 */
+html:not(.ddb-app-mode) :is(main:has(nav[aria-label="마이페이지 메뉴"]), main[data-mypage-web]) {
+    & section.grid:has(> [data-mp-card]) { align-content: start; }
+
+    & [data-mp-hello] :is(div > p:first-child, > p:first-child):has(+ h1) {
+        background: none;
+        color: #e2557a;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 15px;
+        letter-spacing: 0.02em;
+        -webkit-text-fill-color: currentColor;
+    }
+}
+
+/* 하위 화면 머리(header 바로 아래 p) 한글 꼬리표도 주아 분홍 글씨로 */
+html:not(.ddb-app-mode) :is(main:has(nav[aria-label="마이페이지 메뉴"]), main[data-mypage-web]) [data-mp-hello] > p:first-child {
+    background: none;
+    color: #e2557a;
+    font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+    font-size: 15px;
+    letter-spacing: 0.02em;
+    -webkit-text-fill-color: currentColor;
+}

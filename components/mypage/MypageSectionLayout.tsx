@@ -23,6 +23,15 @@ export function MypageLoginGate({ redirect }: { redirect: string }) {
     );
 }
 
+// 웹 K5 결 — 하위 화면 머리 판의 3D 그림(제목으로 고름, 꾸밈은 app/mypage-web.css · 앱 그대로)
+const HELLO_ART: Record<string, string> = {
+    "배송지 관리": "home",
+    "개인정보 확인/수정": "me",
+    "추천 데이터 관리": "star",
+    "결제수단 관리": "shield",
+    "회원 탈퇴": "lock",
+};
+
 export default function MypageSectionLayout({
     eyebrow,
     title,
@@ -36,7 +45,7 @@ export default function MypageSectionLayout({
 }) {
     return (
         <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6">
-            <header>
+            <header data-mp-hello data-mp-art={HELLO_ART[title] ?? "me"}>
                 <p className="text-sm font-black text-indigo-700">{eyebrow}</p>
                 <h1 className="mt-1 text-3xl font-black tracking-tight text-neutral-950">{title}</h1>
                 <p className="mt-2 max-w-3xl text-sm font-bold leading-6 text-neutral-600">{description}</p>

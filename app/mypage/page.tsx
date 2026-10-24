@@ -92,7 +92,8 @@ export default function MyPage() {
             <div className="grid min-w-0 gap-6 lg:grid-cols-[260px_minmax(0,1fr)]">
                 <MypageSidebar />
                 <div className="min-w-0">
-            <div className="flex flex-wrap items-start justify-between gap-3">
+            {/* 2026-10-24 웹 K5 결: 인사 머리 = 분홍 띠 판 + 3D 그림(data-mp-hello · 꾸밈은 app/mypage-web.css, 앱 그대로) */}
+            <div className="flex flex-wrap items-start justify-between gap-3" data-mp-hello data-mp-art="me">
                 <div>
                     <p className="text-sm font-black text-indigo-700">마이페이지</p>
                     <h1 className="mt-2 text-3xl font-black tracking-tight text-neutral-950">{user.name}님</h1>
@@ -105,9 +106,9 @@ export default function MyPage() {
             <div className="mt-6 grid gap-6 lg:grid-cols-[360px_1fr]">
                 <section className="grid gap-4">
                     <DaengLabWalletCard accessToken={user.apiAccessToken} accountEmail={user.email} />
-                    <div id="pet-profiles" className="surface scroll-mt-24 p-5">
-                        <div className="flex items-center justify-between gap-3">
-                            <h2 className="text-lg font-black text-neutral-950">반려견 프로필</h2>
+                    <div id="pet-profiles" className="surface scroll-mt-24 p-5" data-mp-card>
+                        <div className="flex items-center justify-between gap-3" data-mp-band="mint" data-mp-art="dog">
+                            <h2 className="text-lg font-black text-neutral-950" data-mp-kicker="MY DOG">반려견 프로필</h2>
                             {hasTryOnProfile && (
                                 <span className="rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-black text-indigo-700">
                                     자동 피팅 준비
@@ -191,10 +192,10 @@ export default function MyPage() {
                 </section>
 
                 <section className="grid gap-6">
-                    <div className="surface p-5">
-                        <div className="flex items-center justify-between gap-3">
+                    <div className="surface p-5" data-mp-card>
+                        <div className="flex items-center justify-between gap-3" data-mp-band="sky" data-mp-art="cart">
                             <div>
-                                <h2 className="text-lg font-black text-neutral-950">최근 결제</h2>
+                                <h2 className="text-lg font-black text-neutral-950" data-mp-kicker="ORDERS">최근 결제</h2>
                                 <p className="mt-1 text-xs font-bold text-neutral-500">이 브라우저에서 완료한 결제만 빠르게 보여줍니다.</p>
                             </div>
                             <Link href="/mypage/orders/" className="text-sm font-black text-indigo-700 hover:underline">
@@ -248,7 +249,7 @@ export default function MyPage() {
 
                     {hasTryOnProfile && (
                         <div>
-                            <div className="mb-4 flex items-center justify-between gap-3">
+                            <div className="mb-4 flex items-center justify-between gap-3" data-mp-row="lav">
                                 <div>
                                     <p className="text-xs font-black text-indigo-700">PetLens Fit</p>
                                     <h2 className="text-lg font-black text-neutral-950">바로 입혀볼 상품</h2>
@@ -280,8 +281,8 @@ export default function MyPage() {
                     )}
 
                     <div>
-                        <div className="mb-4 flex items-center justify-between">
-                            <h2 className="text-lg font-black text-neutral-950">찜한 상품</h2>
+                        <div className="mb-4 flex items-center justify-between" data-mp-row="pink">
+                            <h2 className="text-lg font-black text-neutral-950" data-mp-kicker="WISHLIST">찜한 상품</h2>
                             <Link href="/products" className="text-sm font-black text-indigo-700">상품 더보기</Link>
                         </div>
                         {wishedProducts.length > 0 ? (
