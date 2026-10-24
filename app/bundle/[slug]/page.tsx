@@ -7,6 +7,7 @@ import DeferredBundleHeroVideo from "@/components/bundles/DeferredBundleHeroVide
 import { BUNDLES, bundleCustomerBadge, bundleImageCandidates, getBundleBySlug } from "@/lib/bundles";
 import { formatKRW } from "@/lib/catalog";
 import BundleAddButton from "./BundleAddButton";
+import "../../bundle-web.css";
 
 interface PageProps {
     params: Promise<{ slug: string }>;
@@ -36,7 +37,8 @@ export default async function BundleDetailPage({ params }: PageProps) {
         : (bundle.products.map((product) => product.image).filter(Boolean) as string[]).slice(0, 3);
 
     return (
-        <main>
+        // data-bundle-web — 웹 겉모양(app/bundle-web.css, 2026-10-25): 글은 왼쪽 파스텔 판, 사진 · 영상은 오른쪽 둥근 틀(영상 위 글자 없음). 앱은 그대로
+        <main data-bundle-web>
             <section className="relative overflow-hidden bg-neutral-950 text-white">
                 <div className="absolute inset-0">
                     {heroImage && <Image src={heroImage} alt="" fill sizes="100vw" className="object-cover opacity-72" priority />}

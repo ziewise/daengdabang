@@ -1,0 +1,98 @@
+/*
+ * bundle-web.css — 웹 세트 상세(/bundle/[slug]) 겉모양 · 2026-10-25
+ * ---------------------------------------------------------------------
+ * 예전: 화면 가득 어두운 사진 · 영상 위에 흰 글자. → 웹 파스텔 쿠션 결로:
+ *  ① 머리 판(분홍 파스텔 큰 쿠션): 왼쪽 = 세트 꼬리표 알약 · 주아 제목 · 이야기 · 흰 쿠션 가격 카드(세트가 · 할인 · 담기),
+ *     오른쪽 = 사진 · 영상 둥근 흰 테 틀(어두운 덮개 없음, 영상 위 글자 없음)
+ *  ② 아래: 추천 이유 = 연보라 쿠션(손글씨 꼬리표 · 주아 제목 · 포함/절약 줄), 쇼룸 사진 둥근 틀, 포함 상품 머리 주아 + 개수 알약
+ *  단추: 담기 = 분홍 알약, 다른 세트 = 흰 알약
+ * 구조(태그 · 순서)는 그대로 두고 CSS 로만 — 앱(ddb-app-mode)은 appShopSkin 그대로. 담기 동작 그대로.
+ */
+
+html:not(.ddb-app-mode) main[data-bundle-web] {
+    --bw-jua: var(--font-jua), var(--font-wanted-sans), sans-serif;
+    --bw-crayon: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+    --bw-cushion: inset 0 3px 0 rgb(255 255 255 / 90%), 0 0 0 1px #f2e9dd, 0 20px 34px -28px rgb(15 23 42 / 38%);
+    width: 100%;
+    color: #1e293b;
+
+    /* ① 머리 판 */
+    & > section:first-child {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 28px;
+        width: min(1280px, calc(100% - 32px));
+        margin: 28px auto 0;
+        padding: 28px;
+        border-radius: 40px;
+        background: radial-gradient(80% 120% at 100% 0, rgb(243 240 254 / 95%) 0, transparent 55%), linear-gradient(120deg, #ffe9f0 0%, #fff4f7 55%, #fdf7ff 100%);
+        color: #1e293b;
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 26px 40px -30px rgb(200 80 120 / 45%);
+    }
+    /* 사진 · 영상 — 오른쪽 둥근 틀 */
+    & > section:first-child > div.absolute {
+        position: relative;
+        inset: auto;
+        grid-column: 2;
+        grid-row: 1;
+        min-height: 460px;
+        overflow: hidden;
+        border: 6px solid #fff;
+        border-radius: 32px;
+        background: #fbf7f1;
+        box-shadow: 0 24px 36px -26px rgb(15 23 42 / 50%);
+    }
+    & > section:first-child > div.absolute > div[class*="bg-gradient"] { display: none; }
+    & > section:first-child > div.absolute img { opacity: 1 !important; }
+    & > section:first-child > div.absolute video { background: transparent !important; }
+    /* 글 — 왼쪽 */
+    & > section:first-child > div.relative {
+        grid-column: 1;
+        grid-row: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: center;
+        gap: 22px;
+        min-height: 0;
+        max-width: none;
+        margin: 0;
+        padding: 18px 6px 6px 14px;
+    }
+    & > section:first-child > div.relative > div:first-child { display: grid; justify-items: start; }
+    & > section:first-child > div.relative span.rounded-full { padding: 6px 14px; background: #fff !important; color: #d0436d !important; font-size: 12.5px; box-shadow: 0 10px 16px -12px rgb(200 80 120 / 55%); --tw-ring-shadow: 0 0 #0000; }
+    & > section:first-child > div.relative span.rounded-full + span.rounded-full { color: #6b51c9 !important; }
+    & > section:first-child h1 { position: relative; width: fit-content; margin-top: 16px; color: #1e293b; font-family: var(--bw-jua); font-size: clamp(32px, 3.4vw, 48px); font-weight: 400; line-height: 1.25; word-break: keep-all; isolation: isolate; }
+    & > section:first-child h1::after { content: ""; position: absolute; right: 1%; bottom: -0.04em; left: 0; z-index: -1; height: 0.2em; border-radius: 999px 70% 999px 60%; background: repeating-linear-gradient(94deg, rgb(8 145 178 / 62%) 0 14px, rgb(239 71 111 / 58%) 14px 28px, rgb(245 158 11 / 62%) 28px 42px); opacity: 0.6; transform: rotate(-0.6deg) skewX(-7deg); }
+    & > section:first-child h1 + p { margin-top: 14px; color: #5b6476; font-size: 15.5px; font-weight: 600; line-height: 1.8; word-break: keep-all; }
+    /* 가격 카드 — 흰 쿠션 */
+    & > section:first-child aside { padding: 22px 24px; border: 0; border-radius: 28px; background: #fff; box-shadow: var(--bw-cushion); backdrop-filter: none; }
+    & > section:first-child > div.relative aside span.rounded-full { background: #e9789a !important; color: #fff !important; box-shadow: none; font-family: var(--bw-jua); font-size: 15px; font-weight: 400; }
+    & > section:first-child aside .mt-3 { color: #5b6476; }
+
+    /* 단추 — 분홍 · 흰 알약 */
+    & .btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 50px; padding: 0 24px; border: 0; border-radius: 999px; background: #e9789a; color: #fff; font-family: var(--bw-jua); font-size: 16px; font-weight: 400; box-shadow: inset 0 2px 0 rgb(255 255 255 / 28%), 0 14px 22px -14px rgb(200 80 120 / 80%); }
+    & .btn-primary:hover { background: #e26690; }
+    & .btn-secondary { display: inline-flex; align-items: center; justify-content: center; min-height: 50px; padding: 0 22px; border: 0; border-radius: 999px; background: #fff; color: #334155; font-family: var(--bw-jua); font-size: 16px; font-weight: 400; box-shadow: inset 0 0 0 2px #e6dccf, 0 12px 20px -16px rgb(15 23 42 / 45%); }
+
+    /* ② 아래 */
+    & > section:nth-of-type(2) aside.surface { padding: 24px; border: 0; border-radius: 30px; background: #f3f0fe; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
+    & > section:nth-of-type(2) aside.surface > p:first-child { display: inline-block; background: repeating-linear-gradient(172deg, #07849e 0 5px, #ef476f 5px 10px, #e98708 10px 15px); -webkit-background-clip: text; background-clip: text; font-family: var(--bw-crayon); font-size: 14px; letter-spacing: 0.08em; -webkit-text-fill-color: transparent; }
+    & > section:nth-of-type(2) aside.surface h2 { font-family: var(--bw-jua); font-size: 23px; font-weight: 400; }
+    & > section:nth-of-type(2) aside.surface h2 + p { color: #5b5478; }
+    & > section:nth-of-type(2) aside.surface .grid > div { padding: 10px 14px; border-radius: 16px; background: #fff; }
+    & > section:nth-of-type(2) aside.surface .grid > div b { font-family: var(--bw-jua); font-size: 16px; font-weight: 400; }
+    & > section:nth-of-type(2) .aspect-\[4\/3\] { border: 0; border-radius: 26px; box-shadow: 0 18px 28px -22px rgb(15 23 42 / 45%); }
+    & > section:nth-of-type(2) section > div:first-child h2 { font-family: var(--bw-jua); font-size: 24px; font-weight: 400; }
+    & > section:nth-of-type(2) section > div:first-child span { padding: 4px 12px; border-radius: 999px; background: #fff0f4; color: #d0436d; font-size: 12.5px; }
+
+    @media (max-width: 860px) {
+        & > section:first-child { grid-template-columns: minmax(0, 1fr); gap: 18px; padding: 16px; border-radius: 30px; }
+        & > section:first-child > div.absolute { grid-column: 1; grid-row: 1; min-height: 240px; border-radius: 24px; }
+        & > section:first-child > div.relative { grid-row: 2; padding: 4px 6px 6px; }
+        & > section:first-child > div.relative > div:first-child { display: block; }
+        /* 쇼룸 사진 — 휴대폰은 옆으로 밀어 보기 */
+        & > section:nth-of-type(2) div.grid.gap-3:has(> .aspect-\[4\/3\]) { display: flex; margin: 0 -16px; padding: 0 16px 6px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: 16px; scrollbar-width: none; }
+        & > section:nth-of-type(2) .aspect-\[4\/3\] { flex: none; width: 78%; scroll-snap-align: start; }
+    }
+}
