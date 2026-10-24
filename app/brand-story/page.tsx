@@ -3,7 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import BrandStoryHeroVideo from "./BrandStoryHeroVideo";
 import styles from "./brand-story.module.css";
-// 웹 겉모양(2026-10-25) — data-story-web 이름표만, 꾸밈은 app/brand-story-web.css(앱은 그대로)
+// 웹 화면(2026-10-25 2차) — 웹은 BrandStoryWeb(장면 · 숫자 · 기준 · 흐름 · 약속), 아래 기존 구조는 앱 전용(app/brand-story-web.css 가 갈라 보여 줌)
+import BrandStoryWeb from "@/components/brand-story/BrandStoryWeb";
 import "../brand-story-web.css";
 
 export const metadata: Metadata = {
@@ -54,7 +55,8 @@ const promises = [
 
 export default function BrandStoryPage() {
     return (
-        <div className={styles.page} data-story-web>
+        <>
+        <div className={styles.page} data-story-legacy>
             <section className={styles.hero} aria-labelledby="brand-story-title">
                 <Image
                     src="/images/hero/clear-evening-story.webp"
@@ -193,5 +195,7 @@ export default function BrandStoryPage() {
                 </div>
             </section>
         </div>
+        <BrandStoryWeb />
+        </>
     );
 }
