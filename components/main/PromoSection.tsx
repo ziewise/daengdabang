@@ -11,6 +11,9 @@
  *   - image: 단일 정적 이미지
  *   - (미디어 없음): color 배경 + 아이콘 — 예: 세트 상품
  * 위에 다크 그라데이션 + 텍스트(타이틀·설명·CTA) 오버레이.
+ *
+ * 웹(2026-10-24 J5): 왼쪽 큰 사진 + 오른쪽 가로 사진 4장, 흰 액자 아래 여백에만 글(data-promo-cap).
+ * 사진 위 오버레이 글 · 그늘은 웹 CSS(app/globals.css)에서만 숨김 — 앱 화면 · 링크는 그대로.
  */
 "use client";
 
@@ -42,7 +45,7 @@ export default function PromoSection() {
                 {/* 1 featured + 4 small 그리드 — 헤더 드롭다운과 동일한 PROMO_CARDS 사용 */}
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 auto-rows-[130px] md:auto-rows-[200px] lg:auto-rows-[220px]">
                     {PROMO_CARDS.map((t, i) => (
-                        <PromoTileCard key={t.href} tile={t} priority={i === 0} />
+                        <PromoTileCard key={t.href} tile={t} priority={i === 0} index={i} />
                     ))}
                 </div>
             </div>
@@ -50,7 +53,7 @@ export default function PromoSection() {
     );
 }
 
-function PromoTileCard({ tile, priority }: { tile: PromoCard; priority: boolean }) {
+function PromoTileCard({ tile, priority, index }: { tile: PromoCard; priority: boolean; index: number }) {
     const isFeatured = !!tile.featured;
     // 섹션은 긴 제목(titleFull) 우선, 없으면 공용 title
     const title = tile.titleFull ?? tile.title;
@@ -61,8 +64,21 @@ function PromoTileCard({ tile, priority }: { tile: PromoCard; priority: boolean 
                 isFeatured ? "col-span-2 md:col-span-2 md:row-span-2" : ""
             }`}
         >
-            {/* 배경 미디어 — video / images[] / image / (없으면) color+아이콘 */}
-            <PromoMedia tile={tile} isFeatured={isFeatured} priority={priority} />
+            {/* 배경 미디어 — video / images[] / image / (없으면) color+아이콘.
+                사진 틀(data-promo-photo): 앱은 칸 전체 그대로, 웹은 흰 액자 안 사진 자리(아래 글 칸만큼 비움) */}
+            <span data-promo-photo className="absolute inset-0 block">
+                <PromoMedia tile={tile} isFeatured={isFeatured} priority={priority} />
+            </span>
+
+            {/* 웹 전용 액자 아래 글(앱은 hidden) — 번호 · 제목 · 설명 · 보러 가기. 웹은 사진 위 글자 없이 여기만 보임 */}
+            <span data-promo-cap className="hidden">
+                <span data-promo-no>{String(index + 1).padStart(2, "0")}</span>
+                <span data-promo-title>{tile.title}</span>
+                <span data-promo-desc>{tile.desc}</span>
+                <span data-promo-go>
+                    {isFeatured ? "기획전 보러 가기" : "보러 가기"} <i className="fa-solid fa-arrow-right" aria-hidden="true" />
+                </span>
+            </span>
 
             {/* 다크 그라데이션 (텍스트 가독성) */}
             <div

@@ -13,7 +13,8 @@ export default function MobileAppInstallStrip() {
             : "설치 방법 보기";
 
     return (
-        <section className="px-4 pt-4 md:hidden" aria-label="댕다방 앱 설치">
+        // data-home-install-strip: 웹 메인에서는 숨김(2026-10-24 사용자, app/globals.css) — 설치는 모바일 메뉴 "댕다방 앱 설치"로
+        <section className="px-4 pt-4 md:hidden" aria-label="댕다방 앱 설치" data-home-install-strip>
             <div className="ddb-crayon-paper mx-auto flex max-w-3xl items-center gap-3 rounded-2xl border p-3">
                 <span className="ddb-crayon-icon grid h-11 w-11 shrink-0 place-items-center rounded-xl" data-crayon-tone="teal">
                     <i className="fa-solid fa-mobile-screen-button" aria-hidden="true" />

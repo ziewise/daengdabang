@@ -3201,6 +3201,157 @@ html:not(.ddb-app-mode) section#insta h2 {
     html:not(.ddb-app-mode) :is(section#promo, section#insta) a.group::after { border-radius: 18px; }
 }
 
+/* ═════════ 메인 기획전 J5(2026-10-24 사용자 확정) — 사진이 주인공 ═════════
+   PC = 왼쪽 큰 사진(활동견 셀렉션 영상) + 오른쪽 가로 사진 4장(2×2), 태블릿 · 모바일 = 큰 사진 아래 2×2.
+   사진 위 글자 · 그늘은 숨기고, 흰 액자(E2 깊이) 아래 여백에만 글: 번호(칸 색) · 주아 제목 · 설명 · 보러 가기.
+   누르면 해당 기획전 페이지로 이동(링크 그대로), 올리면 액자가 살짝 뜨고 사진이 조금 커짐. 앱은 그대로 */
+html:not(.ddb-app-mode) section#promo {
+    --promo-cap: 58px;
+
+    & div.grid { gap: 20px; grid-auto-rows: 262px; }
+
+    /* 칸 색(번호 · 보러 가기 글자) — 민트 · 하늘 · 보라 · 노랑 · 분홍 */
+    & a.group:nth-child(1) { --promo-ink: #12a17a; --promo-pos: 45% 50%; }
+    & a.group:nth-child(2) { --promo-ink: #0e8aa0; --promo-pos: 74% 50%; }
+    & a.group:nth-child(3) { --promo-ink: #6b51c9; --promo-pos: 50% 50%; }
+    & a.group:nth-child(4) { --promo-ink: #d98a12; --promo-pos: 42% 50%; }
+    & a.group:nth-child(5) { --promo-ink: #e2557a; --promo-pos: 56% 50%; }
+
+    /* 흰 액자 바탕 — 사진 아래 글 칸도 흰색 */
+    & a.group { background: #fff; }
+    & a.group[class*="row-span-2"] { --promo-cap: 76px; }
+
+    /* 사진 자리 — 아래 글 칸만큼 비우고 둥글게 · 주인공이 가운데 오게 */
+    & a.group > [data-promo-photo] {
+        bottom: var(--promo-cap);
+        overflow: hidden;
+        border-radius: 22px;
+        background: #f1ece4;
+    }
+
+    & a.group > [data-promo-photo] :is(img, video) {
+        object-position: var(--promo-pos, 50% 50%);
+        transition: transform 0.5s ease, opacity 0.7s ease;
+    }
+
+    & a.group:hover > [data-promo-photo] :is(img, video) { transform: scale(1.04); }
+
+    /* 사진 안쪽 그늘(E2)도 사진 자리에만 */
+    & a.group::after { bottom: var(--promo-cap); }
+
+    /* 사진 위 글자 · 그늘 · 버튼은 웹에서 숨김(아래 글 칸으로 옮김) */
+    & a.group > div.absolute.inset-0[class*="bg-gradient"],
+    & a.group > div.absolute.z-10,
+    & a.group > span.absolute.z-10 { display: none; }
+
+    /* 액자 아래 글 칸 */
+    & a.group > [data-promo-cap] {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        display: flex;
+        height: var(--promo-cap);
+        align-items: center;
+        gap: 10px;
+        padding: 4px 6px 0;
+    }
+
+    & [data-promo-no] {
+        flex: none;
+        color: var(--promo-ink);
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 16px;
+    }
+
+    & [data-promo-title] {
+        flex: none;
+        color: #1e293b;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 19px;
+        white-space: nowrap;
+    }
+
+    & [data-promo-desc] {
+        min-width: 0;
+        overflow: hidden;
+        color: #64748b;
+        font-size: 14px;
+        font-weight: 600;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    /* 작은 칸은 설명 없이 번호 · 제목 · 보러 가기만 */
+    & a.group:not([class*="row-span-2"]) [data-promo-desc] { display: none; }
+
+    & [data-promo-go] {
+        display: inline-flex;
+        flex: none;
+        align-items: center;
+        gap: 6px;
+        margin-left: auto;
+        color: var(--promo-ink);
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 14px;
+        white-space: nowrap;
+    }
+
+    & [data-promo-go] i { font-size: 11px; transition: transform 0.2s ease; }
+    & a.group:hover [data-promo-go] i { transform: translateX(3px); }
+
+    /* 큰 칸 글 — 번호 · 제목 크게, 설명 한 줄, 분홍 알약 버튼 */
+    & a.group[class*="row-span-2"] > [data-promo-cap] { gap: 14px; padding: 6px 4px 0 10px; }
+    & a.group[class*="row-span-2"] [data-promo-no] { font-size: 21px; }
+    & a.group[class*="row-span-2"] [data-promo-title] { font-size: 25px; }
+    & a.group[class*="row-span-2"] [data-promo-desc] { font-size: 14.5px; }
+
+    & a.group[class*="row-span-2"] [data-promo-go] {
+        padding: 12px 22px;
+        border-radius: 999px;
+        background: #e9789a;
+        color: #fff;
+        font-size: 16px;
+        box-shadow: 0 14px 22px -14px rgb(200 80 120 / 75%), inset 0 2px 0 rgb(255 255 255 / 30%);
+    }
+}
+
+/* PC — 왼쪽 큰 사진(두 줄 높이 · 폭 3/5) + 오른쪽 2×2 */
+@media (min-width: 1024px) {
+    html:not(.ddb-app-mode) section#promo {
+        & div.grid { grid-template-columns: minmax(0, 3fr) repeat(2, minmax(0, 1fr)); }
+        & a.group[class*="row-span-2"] { grid-column: 1; grid-row: 1 / span 2; }
+    }
+}
+
+/* 태블릿 — 큰 사진 한 줄 가득(두 줄 높이) 아래 2×2 */
+@media (min-width: 768px) and (max-width: 1023px) {
+    html:not(.ddb-app-mode) section#promo div.grid { gap: 18px; grid-auto-rows: 230px; }
+}
+
+/* 모바일 — 액자 얇게 · 글 칸 낮게, 큰 칸은 제목 + 알약, 작은 칸은 번호 + 제목만 */
+@media (max-width: 767px) {
+    html:not(.ddb-app-mode) section#promo {
+        --promo-cap: 44px;
+
+        & div.grid { gap: 12px; grid-auto-rows: 168px; }
+        & a.group[class*="row-span-2"] { --promo-cap: 54px; grid-row: span 2; }
+        & a.group > [data-promo-photo] { border-radius: 18px; }
+        & a.group > [data-promo-cap] { gap: 6px; padding: 2px 4px 0; }
+        & [data-promo-no] { font-size: 13px; }
+        & [data-promo-title] { font-size: 15px; }
+        & a.group:not([class*="row-span-2"]) [data-promo-go] { display: none; }
+        & a.group[class*="row-span-2"] [data-promo-desc] { display: none; }
+        & a.group[class*="row-span-2"] > [data-promo-cap] { gap: 8px; padding: 4px 2px 0 6px; }
+        & a.group[class*="row-span-2"] [data-promo-no] { font-size: 16px; }
+        & a.group[class*="row-span-2"] [data-promo-title] { font-size: 19px; }
+        & a.group[class*="row-span-2"] [data-promo-go] { padding: 9px 15px; font-size: 13.5px; }
+    }
+}
+
+/* 모바일 웹 메인 "댕다방을 앱처럼 바로 열기" 띠 — 이제 보일 필요 없음(2026-10-24 사용자). 설치는 모바일 메뉴 "댕다방 앱 설치"로 그대로 */
+html:not(.ddb-app-mode) [data-home-install-strip] { display: none; }
+
 /* 메인 구역 보이는 순서(2026-10-24 사용자) — 대표 브랜드 → 매일 댕생활 → 기획전 → 신상품 → 인스타.
    큰 사진 구역(브랜드 · 기획전)이 연달아 붙지 않게 사이에 파스텔 판(매일 댕생활)을 두고, 기획전에서 신상품으로 쇼핑 흐름을 잇는다.
    코드 순서(app/page.tsx · 테스트가 지키는 순서)는 그대로 두고 웹 화면에서 보이는 순서만 바꿈. 앱은 그대로 */
