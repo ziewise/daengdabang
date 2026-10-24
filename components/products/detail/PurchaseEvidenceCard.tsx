@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useId, useMemo, useRef, useState } from "react";
+// 웹 겉모양(2026-10-25) — 카드 · 자세히 창 꾸밈은 app/modal-web.css(data-purchase-evidence-* 범위, 웹만). 앱 그대로
+import "@/app/modal-web.css";
 import { createPortal } from "react-dom";
 import type { CatalogProduct } from "@/lib/catalog";
 import { useI18n } from "@/lib/i18n";
