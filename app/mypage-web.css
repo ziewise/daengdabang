@@ -314,3 +314,27 @@ html:not(.ddb-app-mode) :is(main:has(nav[aria-label="마이페이지 메뉴"]), 
     letter-spacing: 0.02em;
     -webkit-text-fill-color: currentColor;
 }
+
+/* 주문 내역 · 상세 — 흰 판(rounded-2xl 흰 칸)도 쿠션으로, 점선 빈 칸은 실선 없는 흰 쿠션 */
+html:not(.ddb-app-mode) :is(main:has(nav[aria-label="마이페이지 메뉴"]), main[data-mypage-web]) {
+    & :is(section, div)[class*="rounded-2xl"][class*="border"][class*="bg-white"] {
+        border-color: transparent;
+        border-radius: 30px;
+        box-shadow: var(--mp-cushion);
+    }
+
+    & section[class*="border-dashed"] { border-style: solid; border-color: transparent; }
+
+    /* 주문 카드(목록) — 회색 테두리 대신 흰 쿠션 */
+    & article[data-order-mode] {
+        border-color: transparent;
+        border-radius: 28px;
+        box-shadow: var(--mp-cushion);
+    }
+
+    /* 상세 주문 상태 판 — 띠 머리 바로 아래 상품 목록의 윗줄은 띠가 대신하니 지움 */
+    & [data-mp-card] > div.grid[class*="border-t"] { border-top: 0; padding-top: 0; }
+
+    /* 결제 정보 총액 줄 — 칸 사이 틈 때문에 끊겨 보이던 윗줄을 한 줄로 */
+    & [data-mp-card] dl[class*="grid-cols-"] { column-gap: 0; }
+}

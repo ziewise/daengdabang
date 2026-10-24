@@ -277,7 +277,8 @@ function OrderListView({
 
     return (
         <div>
-            <div className="flex flex-wrap items-end justify-between gap-3">
+            {/* 웹 K5 결 — 주문 내역 머리 분홍 띠 판 + 장바구니 그림(data-mp-hello, 꾸밈은 app/mypage-web.css · 앱 그대로) */}
+            <div className="flex flex-wrap items-end justify-between gap-3" data-mp-hello data-mp-art="cart">
                 <div>
                     <p className="text-sm font-black text-indigo-700">MY ORDERS</p>
                     <h1 className="mt-1 text-3xl font-black tracking-tight text-neutral-950">주문 내역</h1>
@@ -378,9 +379,9 @@ function DeliveryDetail({ order }: { order: TossOrderHistoryItem }) {
     const request = delivery ? deliveryRequestText(delivery) : "";
     const testOrder = isTestOrder(order);
     return (
-        <section className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm sm:p-6">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-                <h2 className="text-lg font-black text-neutral-950">받는 사람 정보</h2>
+        <section className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm sm:p-6" data-mp-card>
+            <div className="flex flex-wrap items-center justify-between gap-2" data-mp-band="mint" data-mp-art="home">
+                <h2 className="text-lg font-black text-neutral-950" data-mp-kicker="DELIVERY">받는 사람 정보</h2>
                 {testOrder && <span className="rounded-full bg-sky-50 px-2.5 py-1 text-xs font-black text-sky-700">화면 검증용</span>}
             </div>
             {testOrder && (
@@ -418,7 +419,8 @@ function OrderDetailView({ order }: { order: TossOrderHistoryItem }) {
             <Link href="/mypage/orders/" className="inline-flex items-center gap-2 text-sm font-black text-indigo-700 hover:underline">
                 <i className="fa-solid fa-arrow-left" aria-hidden="true" /> 주문 목록
             </Link>
-            <div className="mt-5 flex flex-wrap items-start justify-between gap-3">
+            {/* 웹 K5 결 — 주문 상세 머리 분홍 띠 판 + 메모 그림(data-mp-hello, 꾸밈은 app/mypage-web.css · 앱 그대로) */}
+            <div className="mt-5 flex flex-wrap items-start justify-between gap-3" data-mp-hello data-mp-art="memo">
                 <div>
                     <p className="text-sm font-black text-indigo-700">ORDER DETAIL</p>
                     <h1 className="mt-1 text-3xl font-black tracking-tight text-neutral-950">주문 상세</h1>
@@ -431,10 +433,10 @@ function OrderDetailView({ order }: { order: TossOrderHistoryItem }) {
                 </span>
             </div>
 
-            <section className="mt-6 rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm sm:p-6">
-                <div className="flex flex-wrap items-center justify-between gap-3">
+            <section className="mt-6 rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm sm:p-6" data-mp-card>
+                <div className="flex flex-wrap items-center justify-between gap-3" data-mp-band="sky" data-mp-art="cart">
                     <div>
-                        <h2 className="text-lg font-black text-neutral-950">{orderStatusLabel(order)}</h2>
+                        <h2 className="text-lg font-black text-neutral-950" data-mp-kicker="ORDER STATUS">{orderStatusLabel(order)}</h2>
                         {!isTestOrder(order) && estimatedDeliveryLabel(order) && (
                             <p className="mt-1 text-sm font-black text-emerald-700">{estimatedDeliveryLabel(order)}</p>
                         )}
@@ -453,8 +455,8 @@ function OrderDetailView({ order }: { order: TossOrderHistoryItem }) {
 
             <div className="mt-5 grid gap-5 lg:grid-cols-2">
                 <DeliveryDetail order={order} />
-                <section className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm sm:p-6">
-                    <h2 className="text-lg font-black text-neutral-950">결제 정보</h2>
+                <section className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm sm:p-6" data-mp-card>
+                    <h2 className="text-lg font-black text-neutral-950" data-mp-band="yellow" data-mp-art="coin" data-mp-kicker="PAYMENT">결제 정보</h2>
                     <dl className="mt-4 grid grid-cols-[1fr_auto] gap-x-4 gap-y-3 text-sm">
                         <dt className="font-bold text-neutral-500">결제수단</dt>
                         <dd className="text-right font-black text-neutral-900">{paymentMethodLabel(order.paymentMethod)}</dd>
