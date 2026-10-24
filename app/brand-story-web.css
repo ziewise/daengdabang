@@ -1,0 +1,117 @@
+/*
+ * brand-story-web.css — 웹 브랜드 스토리(/brand-story) 겉모양 · 2026-10-25
+ * ---------------------------------------------------------------------
+ * 예전: 어두운 사진 · 영상 위 흰 글자, 남색 판, 보라~주황 띠. → 웹 파스텔 쿠션 결로(구조 · 글 그대로, CSS 로만):
+ *  ① 머리 판: 분홍~연보라 파스텔 · 왼쪽 손글씨 꼬리표 · 주아 제목 + 세 색 밑줄 · 분홍/흰 알약, 오른쪽 둥근 흰 테 사진 · 영상(글자 없음)
+ *  ② 첫 질문: 흰 쿠션 카드
+ *  ③ 네 가지 기준: 흰 쿠션 카드 · 칸마다 다른 파스텔 아이콘 동그라미 · 번호 알약
+ *  ④ 큐레이션 흐름: 연보라 쿠션 · 분홍 번호 동그라미 · 흰 줄 칸
+ *  ⑤ 기술: 둥근 흰 테 사진 · 분홍 밑줄 링크
+ *  ⑥ 약속: 민트~하늘 쿠션 · 흰 칸 · 분홍 번호
+ *  ⑦ 마무리: 노랑~분홍 파스텔 판 · 분홍/흰 알약
+ * 범위: html:not(.ddb-app-mode) [data-story-web] — 앱은 그대로.
+ */
+
+html:not(.ddb-app-mode) [data-story-web] {
+    --sw-jua: var(--font-jua), var(--font-wanted-sans), sans-serif;
+    --sw-crayon: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+    --sw-cushion: inset 0 3px 0 rgb(255 255 255 / 90%), 0 0 0 1px #f2e9dd, 0 22px 36px -28px rgb(15 23 42 / 38%);
+    --sw-underline: repeating-linear-gradient(94deg, rgb(8 145 178 / 62%) 0 14px, rgb(239 71 111 / 58%) 14px 28px, rgb(245 158 11 / 62%) 28px 42px);
+
+    /* 제목 · 꼬리표 공통 */
+    & :is(h1, h2, h3) { font-family: var(--sw-jua); font-weight: 400 !important; letter-spacing: 0 !important; }
+    & :is([class*="Kicker"], [class*="eyebrow"]) {
+        width: fit-content;
+        background: repeating-linear-gradient(172deg, #07849e 0 5px, #ef476f 5px 10px, #e98708 10px 15px);
+        -webkit-background-clip: text;
+        background-clip: text;
+        font-family: var(--sw-crayon);
+        font-size: 14px;
+        letter-spacing: 0.14em;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* ① 머리 판 */
+    & > section:nth-of-type(1) {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        align-items: center;
+        min-height: 560px;
+        border: 0;
+        background: radial-gradient(80% 120% at 100% 0, rgb(243 240 254 / 95%) 0, transparent 55%), linear-gradient(120deg, #ffe9f0 0%, #fff4f7 55%, #fdf7ff 100%);
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 26px 40px -30px rgb(200 80 120 / 45%);
+    }
+    /* 사진 · 영상 — 오른쪽 둥근 틀 */
+    & > section:nth-of-type(1) > :is(img, video) {
+        top: 28px !important;
+        right: 28px !important;
+        bottom: 28px !important;
+        left: auto !important;
+        width: calc(50% - 42px) !important;
+        height: auto !important;
+        border: 6px solid #fff;
+        border-radius: 32px;
+        box-shadow: 0 24px 36px -26px rgb(15 23 42 / 50%);
+        z-index: 0 !important;
+    }
+    & > section:nth-of-type(1) > video { background: transparent; }
+    & > section:nth-of-type(1) > div:not(:last-child):first-of-type:empty, & > section:nth-of-type(1) > div:empty { display: none; }
+    & > section:nth-of-type(1) > div:has(> h1) { width: auto; padding: 48px 20px 48px 56px; color: #1e293b; }
+    & > section:nth-of-type(1) h1 { position: relative; width: fit-content; color: #1e293b; font-size: clamp(38px, 4.4vw, 60px) !important; line-height: 1.22 !important; isolation: isolate; }
+    & > section:nth-of-type(1) h1::after { content: ""; position: absolute; right: 2%; bottom: 0.02em; left: 0; z-index: -1; height: 0.16em; border-radius: 999px 70% 999px 60%; background: var(--sw-underline); opacity: 0.6; transform: rotate(-0.6deg) skewX(-7deg); }
+    & > section:nth-of-type(1) h1 + p { color: #6b5162; font-weight: 600; }
+    & > section:nth-of-type(1) a:first-child { background: #e9789a; color: #fff; font-family: var(--sw-jua); font-weight: 400; box-shadow: inset 0 2px 0 rgb(255 255 255 / 28%), 0 14px 22px -14px rgb(200 80 120 / 80%); }
+    & > section:nth-of-type(1) a + a { border: 0; background: #fff; color: #334155; font-family: var(--sw-jua); font-weight: 400; box-shadow: inset 0 0 0 2px #e6dccf, 0 12px 20px -16px rgb(15 23 42 / 45%); backdrop-filter: none; }
+    /* 사진 아래 영문 한 줄 — 사진 틀 아래쪽 흰 알약 */
+    & > section:nth-of-type(1) > p:last-child { right: 52px; bottom: 46px; z-index: 1; padding: 7px 14px; border-radius: 999px; background: rgb(255 255 255 / 90%); color: #6b51c9; }
+
+    /* ② 첫 질문 */
+    & > section:nth-of-type(2) { margin-top: 32px; padding: 44px 48px; border-radius: 36px; background: #fff; box-shadow: var(--sw-cushion); }
+    & > section:nth-of-type(2) h2 { color: #1e293b; }
+
+    /* ③ 네 가지 기준 */
+    & > section:nth-of-type(3) article { border: 0; border-radius: 30px; background: #fff; box-shadow: var(--sw-cushion); transition: transform 0.2s; }
+    & > section:nth-of-type(3) article:hover { transform: translateY(-3px); }
+    & > section:nth-of-type(3) article > div:first-child span { padding: 4px 11px; border-radius: 999px; background: #fbf7f1; color: #b08d5f; font-family: var(--sw-jua); font-size: 13px; letter-spacing: 0; }
+    & > section:nth-of-type(3) article > div:first-child i { width: 52px; height: 52px; border-radius: 50%; background: #fff0f4; color: #e2557a; }
+    & > section:nth-of-type(3) article:nth-child(2) > div:first-child i { background: #e9f4fb; color: #0e8aa0; }
+    & > section:nth-of-type(3) article:nth-child(3) > div:first-child i { background: #fff6e3; color: #d98a12; }
+    & > section:nth-of-type(3) article:nth-child(4) > div:first-child i { background: #e9f8f1; color: #12a17a; }
+    & > section:nth-of-type(3) article h3 { margin-top: 44px; font-size: 21px; }
+    & > section:nth-of-type(3) article p { font-weight: 600; }
+
+    /* ④ 큐레이션 흐름 — 연보라 쿠션 */
+    & > section:nth-of-type(4) { background: #f3f0fe; color: #1e293b; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
+    & > section:nth-of-type(4) > div:first-child > p:last-child { color: #5b5478; font-weight: 600; }
+    & > section:nth-of-type(4) ol { gap: 10px; }
+    & > section:nth-of-type(4) li { align-items: center; padding: 16px 18px; border: 0 !important; border-radius: 22px; background: #fff; box-shadow: 0 12px 20px -18px rgb(15 23 42 / 40%); }
+    & > section:nth-of-type(4) li > span { display: grid; width: 40px; height: 40px; place-items: center; border-radius: 50%; background: #fff0f4; color: #d0436d; font-family: var(--sw-jua); font-size: 15px; letter-spacing: 0; }
+    & > section:nth-of-type(4) li p { color: #5b6476; font-weight: 600; }
+
+    /* ⑤ 기술 */
+    & > section:nth-of-type(5) [class*="largePhoto"], & > section:nth-of-type(5) [class*="smallPhoto"] { border: 6px solid #fff; border-radius: 32px; box-shadow: 0 24px 36px -26px rgb(15 23 42 / 50%); }
+    & > section:nth-of-type(5) [class*="photoNote"] { color: #6b51c9; font-family: var(--sw-crayon); font-size: 12px; }
+    & > section:nth-of-type(5) a { border-bottom: 0; padding: 10px 18px; border-radius: 999px; background: #fff; color: #d0436d; font-family: var(--sw-jua); font-size: 15px; font-weight: 400; box-shadow: inset 0 0 0 2px #f7c3d2; }
+
+    /* ⑥ 약속 — 민트~하늘 쿠션 */
+    & > section:nth-of-type(6) { border: 0; background: linear-gradient(135deg, #e9f8f1, #f0f7fc); box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
+    & > section:nth-of-type(6) article { padding: 22px; border: 0; border-radius: 26px; background: #fff; box-shadow: 0 14px 22px -18px rgb(15 23 42 / 40%); }
+    & > section:nth-of-type(6) article span { width: 38px; height: 38px; background: #e9789a; font-family: var(--sw-jua); font-size: 15px; font-weight: 400; }
+    & > section:nth-of-type(6) article h3 { margin-top: 18px; font-size: 18px; }
+    & > section:nth-of-type(6) article p { font-weight: 600; }
+
+    /* ⑦ 마무리 — 노랑~분홍 파스텔 */
+    & > section:nth-of-type(7) { background: radial-gradient(80% 120% at 100% 0, rgb(255 240 244 / 95%) 0, transparent 55%), linear-gradient(120deg, #fff1d6, #fff6ea 55%, #fff4f7); color: #1e293b; box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 22px 36px -28px rgb(196 122 12 / 40%); }
+    & > section:nth-of-type(7) p { color: #8a6e4b; font-family: var(--sw-crayon); font-size: 15px; }
+    & > section:nth-of-type(7) a { border: 0; background: #fff; color: #334155; font-family: var(--sw-jua); font-size: 16px; font-weight: 400; box-shadow: inset 0 0 0 2px #e6dccf; backdrop-filter: none; }
+    & > section:nth-of-type(7) a:first-child { background: #e9789a; color: #fff; box-shadow: inset 0 2px 0 rgb(255 255 255 / 28%), 0 14px 22px -14px rgb(200 80 120 / 80%); }
+
+    @media (max-width: 860px) {
+        & > section:nth-of-type(1) { grid-template-columns: minmax(0, 1fr); align-items: start; min-height: 0; padding-top: 280px; }
+        & > section:nth-of-type(1) > :is(img, video) { top: 16px !important; right: 16px !important; bottom: auto !important; left: 16px !important; width: calc(100% - 32px) !important; height: 250px !important; }
+        & > section:nth-of-type(1) > div:has(> h1) { position: static; padding: 20px 22px 30px; }
+        & > section:nth-of-type(1) h1 { font-size: clamp(32px, 9vw, 42px) !important; }
+        & > section:nth-of-type(1) > p:last-child { top: 214px; right: 30px; bottom: auto; }
+        & > section:nth-of-type(2) { padding: 28px 22px; border-radius: 28px; }
+    }
+}

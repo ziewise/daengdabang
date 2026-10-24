@@ -3,6 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import BrandStoryHeroVideo from "./BrandStoryHeroVideo";
 import styles from "./brand-story.module.css";
+// 웹 겉모양(2026-10-25) — data-story-web 이름표만, 꾸밈은 app/brand-story-web.css(앱은 그대로)
+import "../brand-story-web.css";
 
 export const metadata: Metadata = {
     title: "브랜드 스토리 | 댕다방",
@@ -52,7 +54,7 @@ const promises = [
 
 export default function BrandStoryPage() {
     return (
-        <div className={styles.page}>
+        <div className={styles.page} data-story-web>
             <section className={styles.hero} aria-labelledby="brand-story-title">
                 <Image
                     src="/images/hero/clear-evening-story.webp"
