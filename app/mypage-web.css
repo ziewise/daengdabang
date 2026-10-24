@@ -1264,3 +1264,9 @@ html:not(.ddb-app-mode) main:has(nav[aria-label="마이페이지 메뉴"]) {
         & article[data-order-mode] > div.grid > div:last-child:nth-child(odd) { grid-column: 1 / -1; }
     }
 }
+
+/* 추천 데이터 관리 — 버튼 이동 방식 표시: 마이페이지 안(›) · 다른 화면(↗) · 개인정보는 창 표시(app/globals.css) */
+html:not(.ddb-app-mode) main:has(nav[aria-label="마이페이지 메뉴"]) {
+    & a[data-go="inside"]::after { content: "›"; margin-left: 6px; font-size: 1.15em; line-height: 1; }
+    & a[data-go="out"]::after { content: "↗"; margin-left: 6px; font-size: 0.95em; opacity: 0.75; }
+}

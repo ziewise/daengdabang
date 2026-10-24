@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useAppMode } from "@/components/app-shell/useAppMode";
 import { useState, type ReactNode } from "react";
 import MypageSectionLayout, { MypageLoginGate } from "@/components/mypage/MypageSectionLayout";
 import { useRecommendationPreferences } from "@/hooks/useRecommendationPreferences";
@@ -14,6 +16,8 @@ export default function MypageRecommendationPreferencesPage() {
     const preferenceState = useRecommendationPreferences();
     const [feedback, setFeedback] = useState("");
     const preferences = preferenceState.preferences;
+    // 앱/웹 구분 — 웹은 "분석 기록 확인"을 마이페이지 안 요약으로
+    const appMode = useAppMode(usePathname() ?? "");
 
     if (!hydrated) {
         return (
@@ -238,9 +242,11 @@ export default function MypageRecommendationPreferencesPage() {
                         추천 화면에서는 원문을 보여주지 않습니다. 아래 각 관리 화면에서 직접 확인하거나 수정할 수 있습니다.
                     </p>
                     <div className="mt-4 flex flex-wrap gap-2">
-                        <Link href="/mypage/#pet-profiles" className="btn btn-secondary">반려견 프로필 수정</Link>
-                        <Link href="/health-report/" className="btn btn-secondary">분석 기록 확인</Link>
-                        <Link href="/inquiry/?category=other#inquiry-form" className="btn btn-secondary">분석 결과 삭제 요청</Link>
+                        {/* data-go — 웹에서 이동 방식 표시(inside 마이페이지 안 › · out 다른 화면 ↗ · 개인정보는 창), 꾸밈은 app/mypage-web.css */}
+                        <Link href="/mypage/#pet-profiles" className="btn btn-secondary" data-go="inside">반려견 프로필 수정</Link>
+                        {/* 분석 기록: 웹은 마이페이지 안 AI 분석 요약, 앱은 기존 리포트 화면 그대로 */}
+                        <Link href={appMode ? "/health-report/" : "/mypage/ai/"} className="btn btn-secondary" data-go="inside">분석 기록 확인</Link>
+                        <Link href="/inquiry/?category=other#inquiry-form" className="btn btn-secondary" data-go="out">분석 결과 삭제 요청</Link>
                         <Link href="/privacy/" className="btn btn-secondary">개인정보 처리 안내</Link>
                     </div>
                 </section>

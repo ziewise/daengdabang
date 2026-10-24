@@ -3186,3 +3186,218 @@ html:not(.ddb-app-mode) div[data-login-gate][data-login-gate][data-login-gate] {
         & :is(h1, h2) { font-size: 24px !important; }
     }
 }
+
+/* ═════════ 개인정보 처리 안내 창(components/site/PrivacyNoticeModal.tsx · 2026-10-24) ═════════
+   웹 크레파스 K5 결: 흐린 뒤 화면 + 흰 쿠션 창 · 보라 띠 머리(영문 손글씨 PRIVACY · 주아 제목 · 설명 · 3D 안내 그림) ·
+   본문 = 크림 목차 알약 · 조항마다 주아 제목 + 옅은 실선 · 조항 번호 분홍 · 표는 크림 머리 둥근 표 · 아래 버튼 줄(흰 알약 · 분홍 알약).
+   모바일은 아래에서 올라오는 시트. 점선 · 기울기 · 스티커 없음 */
+html:not(.ddb-app-mode) .ddb-privacy-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 2147483000;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+}
+
+.ddb-privacy-modal .ddb-pm-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgb(30 41 59 / 38%);
+    backdrop-filter: blur(3px);
+    animation: ddb-pm-fade 0.18s ease-out;
+}
+
+.ddb-privacy-modal .ddb-pm-card {
+    position: relative;
+    display: flex;
+    width: min(780px, 100%);
+    height: min(86vh, 880px);
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 34px;
+    background: #fff;
+    box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 40px 80px -30px rgb(15 23 42 / 55%);
+    animation: ddb-pm-pop 0.22s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+
+/* 머리 — 보라 띠 + 오른쪽 3D 안내 그림 */
+.ddb-privacy-modal .ddb-pm-head {
+    position: relative;
+    flex: none;
+    padding: 22px 150px 20px 30px;
+    background: #f3f0fe;
+    box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%);
+}
+
+.ddb-privacy-modal .ddb-pm-head::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 76px;
+    width: 64px;
+    height: 64px;
+    transform: translateY(-50%);
+    background: url("/images/ui/policy-info-192.webp") center / contain no-repeat;
+    filter: drop-shadow(0 8px 10px rgb(15 23 42 / 15%));
+}
+
+.ddb-privacy-modal .ddb-pm-kicker { color: #6b51c9; font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif; font-size: 12.5px; font-weight: 700; letter-spacing: 0.12em; }
+.ddb-privacy-modal .ddb-pm-head h2 { margin-top: 2px; color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 25px; font-weight: 400; line-height: 1.3; }
+.ddb-privacy-modal .ddb-pm-sub { margin-top: 4px; color: #64748b; font-size: 13px; font-weight: 600; }
+
+.ddb-privacy-modal .ddb-pm-close {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    display: grid;
+    width: 42px;
+    height: 42px;
+    place-items: center;
+    border: 0;
+    border-radius: 999px;
+    background: #fff;
+    color: #94a3b8;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    transform: translateY(-50%);
+    box-shadow: 0 8px 14px -10px rgb(15 23 42 / 40%);
+    transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.ddb-privacy-modal .ddb-pm-close:hover { color: #e2557a; transform: translateY(-50%) rotate(8deg); }
+.ddb-privacy-modal .ddb-pm-close:focus-visible { outline: 3px solid #c4b5fd; outline-offset: 2px; }
+
+/* 본문 — 창 안에서만 스크롤 */
+.ddb-privacy-modal .ddb-pm-body {
+    position: relative;
+    flex: 1;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 6px 30px 28px;
+    scrollbar-color: #f7b6c9 transparent;
+    scrollbar-width: thin;
+}
+
+.ddb-privacy-modal .ddb-pm-state { padding: 60px 10px; color: #64748b; font-size: 14px; font-weight: 700; text-align: center; }
+
+/* 방침 본문 결 */
+.ddb-privacy-modal .ddb-pm-doc p:has(+ nav) { margin-top: 18px; color: #64748b; font-size: 13.5px; line-height: 1.8; }
+
+/* 목차 — 크림 판 안 흰 알약 */
+.ddb-privacy-modal .ddb-pm-doc nav {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    margin-top: 18px;
+    padding: 14px;
+    border: 0;
+    border-radius: 22px;
+    background: #fffaf1;
+}
+
+.ddb-privacy-modal .ddb-pm-doc nav a {
+    display: block;
+    overflow: hidden;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: #fff;
+    color: #475569;
+    font-size: 12.5px;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    box-shadow: 0 0 0 1px #f1e6d6;
+    transition: color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.ddb-privacy-modal .ddb-pm-doc nav a:hover { color: #e2557a; box-shadow: 0 0 0 1.5px #f7a8bf; }
+
+/* 조항 — 옅은 실선 · 주아 제목 · 분홍 조항 번호 */
+.ddb-privacy-modal .ddb-pm-doc section { margin-top: 26px; padding-top: 22px; border-top: 1.5px solid #f3ece2; scroll-margin-top: 12px; }
+.ddb-privacy-modal .ddb-pm-doc h2 { color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 20px; font-weight: 400; }
+.ddb-privacy-modal .ddb-pm-doc h3 { margin-top: 18px; color: #334155; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 16px; font-weight: 400; }
+.ddb-privacy-modal .ddb-pm-doc :is(p, li) { color: #475569; font-size: 13.5px; line-height: 1.8; }
+.ddb-privacy-modal .ddb-pm-doc [data-legal-marker] > span:first-child { color: #e2557a; }
+.ddb-privacy-modal .ddb-pm-doc a:not(nav a) { color: #d0436d; font-weight: 800; }
+
+/* 표 — 크림 머리 · 둥근 테 · 가로로 넘치면 옆으로 밀어 보기 */
+.ddb-privacy-modal .ddb-pm-doc div:has(> table) { margin-top: 12px; overflow-x: auto; border-radius: 18px; box-shadow: 0 0 0 1.5px #f1e6d6; }
+.ddb-privacy-modal .ddb-pm-doc table { min-width: 620px; border-collapse: collapse; font-size: 12.5px; }
+.ddb-privacy-modal .ddb-pm-doc thead tr { border: 0; background: #fffaf1; }
+.ddb-privacy-modal .ddb-pm-doc th { padding: 11px 14px; color: #8a6a3a; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 13px; font-weight: 400; }
+.ddb-privacy-modal .ddb-pm-doc td { padding: 12px 14px; line-height: 1.65; }
+.ddb-privacy-modal .ddb-pm-doc tbody tr { border-bottom: 1px solid #f6efe5; }
+.ddb-privacy-modal .ddb-pm-doc tbody tr:last-child { border-bottom: 0; }
+
+/* 아래 버튼 줄 */
+.ddb-privacy-modal .ddb-pm-foot {
+    display: flex;
+    flex: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 22px 16px 30px;
+    border-top: 1.5px solid #f3ece2;
+    background: #fff;
+}
+
+.ddb-privacy-modal .ddb-pm-page { padding: 11px 20px; border-radius: 999px; color: #475569; font-size: 13.5px; font-weight: 800; box-shadow: 0 0 0 1.5px #efe7dc; transition: color 0.15s ease, box-shadow 0.15s ease; }
+.ddb-privacy-modal .ddb-pm-page:hover { color: #6b51c9; box-shadow: 0 0 0 1.5px #c4b5fd; }
+
+.ddb-privacy-modal .ddb-pm-ok {
+    min-height: 48px;
+    padding: 0 30px;
+    border: 0;
+    border-radius: 999px;
+    background: #e9789a;
+    color: #fff;
+    font-size: 14.5px;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 10px 18px -12px rgb(200 80 120 / 70%);
+    transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.ddb-privacy-modal .ddb-pm-ok:hover { background: #e26690; transform: translateY(-1px); }
+
+@keyframes ddb-pm-fade { from { opacity: 0; } }
+@keyframes ddb-pm-pop { from { opacity: 0; transform: translateY(14px) scale(0.98); } }
+@keyframes ddb-pm-up { from { transform: translateY(100%); } }
+
+/* 모바일 — 아래에서 올라오는 시트 */
+@media (max-width: 640px) {
+    html:not(.ddb-app-mode) .ddb-privacy-modal { align-items: end; padding: 0; }
+
+    .ddb-privacy-modal .ddb-pm-card { width: 100%; height: 90vh; height: 90dvh; border-radius: 28px 28px 0 0; animation: ddb-pm-up 0.26s cubic-bezier(0.2, 0.9, 0.3, 1); }
+    .ddb-privacy-modal .ddb-pm-card::before { content: ""; position: absolute; top: 8px; left: 50%; z-index: 1; width: 44px; height: 5px; margin-left: -22px; border-radius: 999px; background: rgb(107 81 201 / 25%); }
+    .ddb-privacy-modal .ddb-pm-head { padding: 24px 110px 16px 20px; }
+    .ddb-privacy-modal .ddb-pm-head::after { right: 62px; width: 46px; height: 46px; }
+    .ddb-privacy-modal .ddb-pm-head h2 { font-size: 22px; }
+    .ddb-privacy-modal .ddb-pm-sub { font-size: 12px; }
+    .ddb-privacy-modal .ddb-pm-close { right: 12px; width: 38px; height: 38px; }
+    .ddb-privacy-modal .ddb-pm-body { padding: 4px 18px 22px; }
+    .ddb-privacy-modal .ddb-pm-doc nav { grid-template-columns: minmax(0, 1fr); }
+    .ddb-privacy-modal .ddb-pm-foot { padding: 12px 16px calc(14px + env(safe-area-inset-bottom)); }
+    .ddb-privacy-modal .ddb-pm-page { padding: 10px 14px; font-size: 12.5px; }
+    .ddb-privacy-modal .ddb-pm-ok { padding: 0 22px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ddb-privacy-modal :is(.ddb-pm-backdrop, .ddb-pm-card) { animation: none; }
+}
+
+/* 창으로 열리는 개인정보처리방침 링크 — 작은 "창" 표시(푸터 · 창 안 링크 제외) */
+html:not(.ddb-app-mode) a[href^="/privacy"]:not([data-privacy-page]):not(footer a):not(.ddb-privacy-modal a)::after {
+    content: "";
+    display: inline-block;
+    width: 0.85em;
+    height: 0.85em;
+    margin-left: 0.3em;
+    vertical-align: -0.08em;
+    background: currentColor;
+    opacity: 0.75;
+    -webkit-mask: url("data:image/svg+xml;utf8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22%3E%3Crect x=%221.5%22 y=%223%22 width=%2213%22 height=%2211%22 rx=%222.5%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.8%22/%3E%3Cpath d=%22M1.5 6.5h13%22 stroke=%22black%22 stroke-width=%221.8%22/%3E%3C/svg%3E") center / contain no-repeat;
+    mask: url("data:image/svg+xml;utf8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22%3E%3Crect x=%221.5%22 y=%223%22 width=%2213%22 height=%2211%22 rx=%222.5%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.8%22/%3E%3Cpath d=%22M1.5 6.5h13%22 stroke=%22black%22 stroke-width=%221.8%22/%3E%3C/svg%3E") center / contain no-repeat;
+}

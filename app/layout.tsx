@@ -17,6 +17,8 @@ import { PetTryOnTaskProvider } from "@/lib/pet-tryon-background";
 import StorefrontAnalyticsTracker from "@/components/analytics/StorefrontAnalyticsTracker";
 import { PwaInstallProvider } from "@/components/pwa/PwaInstallProvider";
 import NativeAppBridge from "@/components/native/NativeAppBridge";
+// 웹 개인정보 처리 안내 창 — 본문 속 방침 링크를 페이지 이동 대신 창으로(앱은 그대로)
+import PrivacyNoticeModal from "@/components/site/PrivacyNoticeModal";
 
 // 우리 글로벌 폰트 — 헤더/로고/본문이 의존하는 --font-* 변수 제공
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"], display: "swap" });
@@ -208,6 +210,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                                     <PetTryOnTaskProvider>
                                         {/* 경로별로 헤더/푸터/도크 토글 — 로그인 등 풀스크린 페이지는 크롬 없이 */}
                                         <ConditionalChrome>{children}</ConditionalChrome>
+                                        <PrivacyNoticeModal />
                                     </PetTryOnTaskProvider>
                                 </PetLensModalProvider>
                             </StoreProvider>
