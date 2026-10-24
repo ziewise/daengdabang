@@ -195,7 +195,7 @@ export default function NewArrivalsSection() {
                 <div className="flex justify-end mt-6 md:mt-7">
                     <Link
                         href="/new"
-                        className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-white border border-neutral-200 hover:border-aurora-indigo hover:text-aurora-indigo text-xs md:text-sm font-extrabold shadow-card transition"
+                        className="ddb-more-pill inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-white border border-neutral-200 hover:border-aurora-indigo hover:text-aurora-indigo text-xs md:text-sm font-extrabold shadow-card transition"
                     >
                         {locale === "en" ? "View New Arrivals" : "신상품 보기"}
                         <i className="fa-solid fa-arrow-right text-[10px]" />

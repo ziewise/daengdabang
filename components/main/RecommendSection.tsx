@@ -128,7 +128,8 @@ export default function RecommendSection() {
                         <Link
                             href={personalizationEnabled && !selectedPet ? "/mypage/#pet-profiles" : "/recommendations/"}
                             // 점선 공용 링크(ddb-crayon-link) 대신 크레파스 테 알약 — 이 단추만(2026-10-23 사용자)
-                            className="inline-flex items-center gap-1.5 rounded-full bg-[#fffaf1] px-5 py-2.5 text-xs text-[#d9577f] shadow-[0_0_0_2.5px_#f3d9b8] transition [font-family:var(--font-jua),var(--font-wanted-sans),sans-serif] hover:shadow-[0_0_0_2.5px_#f7a8bf] md:text-sm"
+                            // ddb-more-pill — 웹에서는 흰 입체 쿠션 "더 보기" 알약(2026-10-24, app/globals.css)
+                            className="ddb-more-pill inline-flex items-center gap-1.5 rounded-full bg-[#fffaf1] px-5 py-2.5 text-xs text-[#d9577f] shadow-[0_0_0_2.5px_#f3d9b8] transition [font-family:var(--font-jua),var(--font-wanted-sans),sans-serif] hover:shadow-[0_0_0_2.5px_#f7a8bf] md:text-sm"
                         >
                             {personalizationEnabled && !selectedPet ? "프로필 등록하기" : "추천 전체 보기"}
                             <i className="fa-solid fa-arrow-right text-[10px]" />
@@ -181,7 +182,7 @@ export default function RecommendSection() {
                     </RecommendEmptyCard>
                 ) : (
                     <RecommendEmptyCard
-                        art="/images/ui/shop-menu-all-128.webp"
+                        art="/images/ui/web-no-match-192.webp"
                         title="현재 안전 기준을 통과한 맞춤 상품이 없어요."
                         body="추천할 상품을 꼼꼼히 살펴보는 중이에요. 그동안 전체 상품에서 직접 둘러봐 주세요."
                     >
