@@ -2778,6 +2778,9 @@ article[data-pet-product="true"] > div:has(> [role="group"]) {
 }
 
 @media (prefers-reduced-motion: reduce) {
+    /* 개인정보 처리 안내 창 — 열림 움직임 끔 */
+    .ddb-privacy-modal :is(.ddb-pm-backdrop, .ddb-pm-card) { animation: none; }
+
     .ddb-motion-lift,
     .ddb-attention-cta {
         animation: none !important;
@@ -3382,10 +3385,6 @@ html:not(.ddb-app-mode) .ddb-privacy-modal {
     .ddb-privacy-modal .ddb-pm-foot { padding: 12px 16px calc(14px + env(safe-area-inset-bottom)); }
     .ddb-privacy-modal .ddb-pm-page { padding: 10px 14px; font-size: 12.5px; }
     .ddb-privacy-modal .ddb-pm-ok { padding: 0 22px; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .ddb-privacy-modal :is(.ddb-pm-backdrop, .ddb-pm-card) { animation: none; }
 }
 
 /* 창으로 열리는 개인정보처리방침 링크 — 작은 "창" 표시(푸터 · 창 안 링크 제외) */
