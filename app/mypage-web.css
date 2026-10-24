@@ -2229,7 +2229,8 @@ html:not(.ddb-app-mode) main:has(nav[aria-label="마이페이지 메뉴"]) [data
     & .input:disabled { background: #f4f1f8; color: #64748b; box-shadow: inset 0 0 0 1.5px #e7e1f3; }
     & .btn.btn-primary { min-height: 50px; height: 50px; border: 0; border-radius: 999px; background: #e9789a; color: #fff; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 15.5px; font-weight: 400; box-shadow: inset 0 2px 0 rgb(255 255 255 / 28%), 0 12px 20px -12px rgb(200 80 120 / 80%); }
     & .btn.btn-primary:disabled { background: #f2c2d1; box-shadow: none; opacity: 1; }
-    & [data-sev-change] { min-height: 50px; height: 50px; border: 0; border-radius: 999px; background: #fff; color: #6b51c9; box-shadow: inset 0 0 0 2px #ddd3f6; }
+    /* 이메일 칸 옆 "이메일 오타 수정"은 아래 "메일이 안 왔나요?" 판의 "이메일 주소 변경"과 겹쳐 웹에서 숨김(2026-10-24 사용자) */
+    & [data-sev-change] { display: none; }
     & [data-sev-change] [data-sev-app-label] { display: none; }
     & [data-sev-change] [data-sev-web-label] { display: inline-flex; align-items: center; gap: 7px; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 15px; font-weight: 400; }
     & [data-sev-change] [data-sev-web-label] i { font-size: 12px; }
