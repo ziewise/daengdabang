@@ -3028,6 +3028,127 @@ html:not(.ddb-app-mode) section#new > div {
     & > div:first-child > div:last-child > button:hover { color: #d0436d; transform: translateY(-2px); box-shadow: 0 14px 22px -14px rgb(200 80 120 / 50%), 0 0 0 1.5px #f7c5d4; }
 }
 
+/* ═════════ 메인 대표 브랜드 · 기획전 — 흰 액자 · 주아체 · 입체감(2026-10-24 사용자 확정 D1) ═════════
+   사진은 가리지 않고 글자는 사진 위 그대로. 둘레 = 흰 입체 쿠션 액자, 그늘 = 글자 쪽만 옅게,
+   제목 = 주아 흰 글씨 + 부드러운 그림자, 작은 영문 꼬리표 = 연분홍 손글씨, 버튼 = 흰 알약 분홍 주아 글씨, 작은 칸 화살표 = 흰 동그라미.
+   브랜드 액자 · 그늘은 components/main/brand-slider.module.css. 링크 · 동작은 그대로, 앱은 그대로 */
+html:not(.ddb-app-mode) section#brand {
+    & h3.drop-shadow-md {
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-weight: 400;
+        letter-spacing: -0.01em;
+        text-shadow: 0 2px 12px rgb(15 23 42 / 35%);
+        filter: none;
+    }
+
+    & div.absolute.z-10:has(> h3) > p:first-child {
+        color: #ffd3e0;
+        font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-shadow: 0 1px 6px rgb(15 23 42 / 40%);
+    }
+
+    & div.absolute.z-10:has(> h3) > p:not(:first-child) { font-weight: 600; text-shadow: 0 1px 8px rgb(15 23 42 / 45%); filter: none; }
+
+    & a[data-brand-cta] {
+        gap: 8px;
+        background: #fff;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-weight: 400;
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 95%), 0 12px 22px -12px rgb(15 23 42 / 55%);
+        transition: transform 0.15s ease;
+    }
+
+    & a[data-brand-cta]:hover { background: #fff; transform: translateY(-2px); }
+}
+
+/* 브랜드 버튼 글자색 — 원래 코드의 고정 색(!)보다 앞서도록 바탕 층에서 분홍으로 */
+@layer base {
+    html:not(.ddb-app-mode) section#brand a[data-brand-cta] { color: #d0436d !important; }
+}
+
+@media (min-width: 768px) {
+    html:not(.ddb-app-mode) section#brand h3.drop-shadow-md { font-size: 44px; }
+    html:not(.ddb-app-mode) section#brand a[data-brand-cta] { padding: 12px 22px; font-size: 15px; }
+}
+
+html:not(.ddb-app-mode) section#promo {
+    /* 칸 — 흰 입체 쿠션 액자 */
+    & a.group {
+        border: 7px solid #fff;
+        border-radius: 28px;
+        box-shadow:
+            inset 0 4px 0 rgb(255 255 255 / 95%),
+            0 22px 34px -24px rgb(15 23 42 / 38%),
+            0 0 0 1px #f4ece1;
+    }
+
+    & a.group:hover {
+        box-shadow:
+            inset 0 4px 0 #fff,
+            0 26px 38px -24px rgb(200 80 120 / 45%),
+            0 0 0 1.5px #f7c5d4;
+    }
+
+    /* 그늘 — 글자 쪽만 옅게 */
+    & a.group:not([class*="row-span-2"]) > div.absolute.inset-0[class*="bg-gradient"] {
+        background-image: linear-gradient(to top, rgb(15 23 42 / 55%) 0%, rgb(15 23 42 / 18%) 30%, transparent 48%);
+    }
+
+    & a.group[class*="row-span-2"] > div.absolute.inset-0[class*="bg-gradient"] {
+        background-image: linear-gradient(115deg, rgb(15 23 42 / 48%) 0%, rgb(15 23 42 / 16%) 34%, transparent 56%);
+    }
+
+    /* 제목 · 꼬리표 · 설명 */
+    & a.group h3 {
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-weight: 400;
+        letter-spacing: -0.01em;
+        text-shadow: 0 2px 12px rgb(15 23 42 / 35%);
+        filter: none;
+    }
+
+    & a.group > div.absolute.z-10 > p:first-child:not(:last-child) {
+        color: #ffd3e0;
+        font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-shadow: 0 1px 6px rgb(15 23 42 / 40%);
+    }
+
+    & a.group > div.absolute.z-10 > p:last-child { font-weight: 600; text-shadow: 0 1px 8px rgb(15 23 42 / 45%); filter: none; }
+
+    /* 큰 칸 버튼 — 흰 알약 분홍 주아 / 작은 칸 화살표 — 흰 동그라미 분홍 */
+    & a.group[class*="row-span-2"] > span.absolute.z-10 {
+        gap: 8px;
+        background: #fff;
+        color: #d0436d;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-weight: 400;
+        box-shadow: inset 0 3px 0 #fff, 0 12px 22px -12px rgb(15 23 42 / 55%);
+    }
+
+    & a.group:not([class*="row-span-2"]) > span.absolute.z-10 {
+        background: #fff;
+        color: #e2557a;
+        box-shadow: 0 10px 18px -10px rgb(15 23 42 / 55%);
+    }
+}
+
+@media (min-width: 768px) {
+    html:not(.ddb-app-mode) section#promo {
+        & a.group[class*="row-span-2"] h3 { font-size: 40px; }
+        & a.group:not([class*="row-span-2"]) h3 { font-size: 22px; }
+        & a.group[class*="row-span-2"] > span.absolute.z-10 { padding: 11px 20px; font-size: 15px; }
+        & a.group:not([class*="row-span-2"]) > span.absolute.z-10 { width: 38px; height: 38px; }
+    }
+}
+
+@media (max-width: 767px) {
+    html:not(.ddb-app-mode) section#promo a.group { border-width: 5px; border-radius: 22px; }
+}
+
 @media (prefers-reduced-motion: reduce) {
     /* 개인정보 처리 안내 창 — 열림 움직임 끔 */
     .ddb-privacy-modal :is(.ddb-pm-backdrop, .ddb-pm-card) { animation: none; }

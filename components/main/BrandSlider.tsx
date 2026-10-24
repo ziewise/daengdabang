@@ -144,6 +144,8 @@ export default function BrandSlider() {
                         </p>
                         <Link
                             href={current.href}
+                            // data-brand-cta — 웹 흰 알약 · 분홍 주아 글씨(app/globals.css), 앱은 그대로
+                            data-brand-cta=""
                             className="inline-flex items-center gap-1.5 md:gap-2 px-3 md:px-5 py-1.5 md:py-2.5 rounded-full bg-white text-neutral-900! text-[11px] md:text-sm font-extrabold hover:bg-neutral-100 shadow-md transition"
                         >
                             {current.cta}
