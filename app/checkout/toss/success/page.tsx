@@ -6,6 +6,9 @@ import { useEffect, useRef, useState } from "react";
 import GuestOrderDone from "@/components/guest/GuestOrderDone";
 import { clearGuestPending, confirmGuestTossPayment, guestOrderEnabled, loadGuestPending, setGuestCheckoutMode } from "@/lib/guest-order";
 import Link from "next/link";
+// 2026-10-25 웹 결제 결과 화면(회원) — 웹에서만 새 겉모양, 확인 · 장바구니 정리 · 주문 저장은 이 파일 그대로
+import { PaymentDoneWeb, PaymentStateWeb } from "@/components/checkout/PaymentResultWeb";
+import { useWebScreen } from "@/hooks/useWebScreen";
 import {
     confirmTossTestPayment,
     DdbApiError,
@@ -38,6 +41,7 @@ export default function TossTestSuccessPage() {
     const cart = useCart();
     const startedRef = useRef(false);
     const [view, setView] = useState<ViewState>({ kind: "checking" });
+    const webScreen = useWebScreen();
 
     useEffect(() => {
         if (!cart.hydrated || startedRef.current) return;
@@ -47,6 +51,38 @@ export default function TossTestSuccessPage() {
         if (process.env.NODE_ENV === "development" && query.has("sxguestdone")) {
             startedRef.current = true;
             setView({ kind: "guest_complete", orderId: "DDB-20261025-1042", amount: 78000, buyerName: "김댕댕", email: "da****@example.com" });
+            return;
+        }
+        // 개발 서버 전용 미리보기 — ?pwpreview=done|checking|login|pending|failed|invalid (서버 요청 · 장바구니 변경 없음)
+        const pwPreview = process.env.NODE_ENV === "development" ? query.get("pwpreview") : null;
+        if (pwPreview) {
+            startedRef.current = true;
+            if (pwPreview === "done") {
+                setView({
+                    kind: "complete",
+                    orderId: "DDB-20261025-2210",
+                    amount: 158000,
+                    confirmation: {
+                        orderId: "DDB-20261025-2210",
+                        paymentKey: "preview",
+                        totalAmount: 158000,
+                        status: "test_paid",
+                        providerStatus: "DONE",
+                        mode: "test",
+                        paymentMethod: "card",
+                        approvedAt: new Date().toISOString(),
+                        lines: [
+                            { productId: "rw_remix_cactus_tug_26fw", qty: 2 },
+                            { productId: cart.state.cart[0]?.productId || "rw_remix_cactus_tug_26fw", qty: 1 },
+                        ],
+                        delivery: { recipientName: "김댕댕", phone: "01012345678", postalCode: "04001", addressLine1: "서울 마포구 월드컵북로 396", addressLine2: "3층", deliveryZone: "mainland", requestCode: "front_door", requestNote: "" },
+                        quote: { shippingFee: 0, currency: "KRW", estimatedStartDate: "2026-10-28", estimatedEndDate: "2026-10-29", policyVersion: "preview", fulfillmentMode: "test_no_shipment", isSimulation: true },
+                    },
+                });
+            } else if (pwPreview === "login") setView({ kind: "login_required", loginHref: "/auth/login" });
+            else if (pwPreview === "pending") setView({ kind: "pending", retryHref: window.location.pathname });
+            else if (pwPreview === "failed") setView({ kind: "failed", message: "서버에서 테스트 결제를 확인하지 못했습니다. 장바구니는 변경하지 않았습니다.", retryHref: window.location.pathname });
+            else if (pwPreview === "invalid") setView({ kind: "invalid", message: "결제 결과 주소의 필수 값이 올바르지 않습니다." });
             return;
         }
         const paymentKey = query.get("paymentKey");
@@ -134,6 +170,14 @@ export default function TossTestSuccessPage() {
                 });
             });
     }, [cart, user]);
+
+    // 웹 — 새 겉모양(비회원 완료와 같은 결). 앱은 아래 기존 화면 그대로
+    if (webScreen && view.kind !== "guest_complete") {
+        if (view.kind === "complete") {
+            return <PaymentDoneWeb confirmation={view.confirmation} orderId={view.orderId} amount={view.amount} userName={user?.name} />;
+        }
+        return <PaymentStateWeb view={view} />;
+    }
 
     if (view.kind === "checking") {
         return (

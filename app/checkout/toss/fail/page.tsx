@@ -1,7 +1,14 @@
 "use client";
 
+/*
+ * 토스 테스트 결제 실패(/checkout/toss/fail) — 주문 취소 요청 · 기다리던 결제 표시 지우기는 그대로.
+ * 2026-10-25 웹은 새 겉모양(components/checkout/PaymentResultWeb 의 PaymentFailWeb), 앱은 아래 기존 화면.
+ */
+
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { PaymentFailWeb } from "@/components/checkout/PaymentResultWeb";
+import { useWebScreen } from "@/hooks/useWebScreen";
 import { cancelTossTestOrder, getCustomerToken } from "@/lib/customer-api";
 import {
     clearPendingTossTestPayment,
@@ -16,6 +23,7 @@ export default function TossTestFailPage() {
         message: "테스트 결제가 완료되지 않았습니다.",
         orderId: "",
     });
+    const webScreen = useWebScreen();
 
     useEffect(() => {
         const query = new URLSearchParams(window.location.search);
@@ -33,6 +41,8 @@ export default function TossTestFailPage() {
             orderId: isTossOrderId(orderId) ? orderId : "",
         });
     }, []);
+
+    if (webScreen) return <PaymentFailWeb code={detail.code} message={detail.message} orderId={detail.orderId} />;
 
     return (
         <main className="mx-auto max-w-[680px] px-4 py-14 text-center" data-payment-status="test_failed">
