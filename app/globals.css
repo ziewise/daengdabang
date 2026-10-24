@@ -4446,6 +4446,11 @@ html:not(.ddb-app-mode) a[href^="/privacy"]:not([data-privacy-page]):not(footer 
     mask: url("data:image/svg+xml;utf8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22%3E%3Crect x=%221.5%22 y=%223%22 width=%2213%22 height=%2211%22 rx=%222.5%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.8%22/%3E%3Cpath d=%22M1.5 6.5h13%22 stroke=%22black%22 stroke-width=%221.8%22/%3E%3C/svg%3E") center / contain no-repeat;
 }
 
+/* 웹 추천 카드(RecommendationProductCard · 2026-10-25) — 상품 카드가 칸 높이를 다 차지해 아래 "추천 이유" 칸이 밀려나지 않게
+   위아래로 쌓고 상품 카드가 남는 높이를 채움(메인 추천 칸 · 추천 페이지 공통, 앱은 그대로) */
+html:not(.ddb-app-mode) [data-recommendation-product] { display: flex; flex-direction: column; }
+html:not(.ddb-app-mode) [data-recommendation-product] > article { flex: 1; height: auto !important; }
+
 /* ═════════ 추천할 반려견 고르기(components/recommendation/RecommendationPetSelector.tsx · 2026-10-24 사용자) ═════════
    웹: 드롭다운 대신 아이 사진 동그라미 + 주아 이름 + 견종 칩(고른 아이는 분홍 테 · 체크), 메인 추천 · 추천 전체 화면 같이.
    메인 추천의 파란 안내 줄(펫렌즈 반영 상태 · 추천 상품 없음)은 아래 빈 상태 카드와 겹쳐 웹에서 숨김. 앱은 그대로 */
