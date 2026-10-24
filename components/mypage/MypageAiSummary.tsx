@@ -4,19 +4,21 @@
  * 건강 기록 · AI 분석 · 매일댕생활 기능 화면에 쌓인 결과를 마이페이지 안에서 한눈에 정리해 보여 준다.
  *  - HealthSummary : 주간 사진 건강 체크(최근 결과 · 지난주 비교 · 돌봄 할 일 · 주간 기록)
  *  - AiSummary     : 행동·소리 분석(최근 결과 · 주의 단계 · 후보 · 지난 분석) + 남은 분석 횟수
- *  - DailySummary  : 출근도장(연속 일수 · 이번 주 도장) · 레벨 · 오늘 할 일 · 코인
+ *  - DailySummary  : 출근도장(보물광산 "이번 주 출석" 판 그대로 — 요일 스티커 · 오늘 칸 붙이기) · 레벨 · 오늘 할 일 · 코인
  * 모두 읽기 전용 — 이미 있는 불러오기 함수(GET)만 쓰고, 저장 · 분석 · 도장 찍기는 각 기능 화면 버튼으로 이동해서 한다.
  * 꾸밈: 카드 띠(data-mp-card · data-mp-band · data-mp-art · data-mp-kicker)는 app/mypage-web.css K5 결 그대로,
  *       요약 전용 모양은 mp-sum-* 이름(같은 파일 "우리 아이 AI 요약" 묶음).
  */
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { useAuth, type PetProfile } from "@/lib/store";
 import { loadWeeklyPhotoAnalyses, type WeeklyPhotoAnalysisRecord } from "@/lib/weekly-photo-analysis";
 import { loadPetObservationHistory, type PetObservationHistoryItem } from "@/lib/petlens-observation";
 import {
+    claimDaengLabAttendance,
     getCustomerToken,
     loadDaengLabAttendance,
     loadDaengLabEngagement,
@@ -405,6 +407,17 @@ function dayParts(businessDate: string) {
     return { weekday: WEEKDAY[date.getUTCDay()], day: d || 0 };
 }
 
+// 요일별 출근 스티커(보물광산 "이번 주 출석"과 같은 그림) — 도장 찍은 날 칸에 붙음
+const DAY_STICKER: Record<string, string> = {
+    월: "/images/ui/stickers/sticker-mon.webp",
+    화: "/images/ui/stickers/sticker-tue.webp",
+    수: "/images/ui/stickers/sticker-wed.webp",
+    목: "/images/ui/stickers/sticker-thu.webp",
+    금: "/images/ui/stickers/sticker-fri.webp",
+    토: "/images/ui/stickers/sticker-sat.webp",
+    일: "/images/ui/stickers/sticker-sun.webp",
+};
+
 function Meter({ label, value, max, tone }: { label: string; value: number; max: number; tone: string }) {
     const percent = Math.max(0, Math.min(100, Math.round((value / Math.max(1, max)) * 100)));
     return (
@@ -427,6 +440,10 @@ export function DailySummary() {
     const [retry, setRetry] = useState(0);
     const key = `${token ? "on" : "off"}:${retry}`;
     const [loaded, setLoaded] = useState<Loaded<{ attendance: DaengLabAttendance; engagement: DaengLabEngagement | null }>>({ key: "" });
+    // 오늘 칸 "붙이기" — 보물광산과 같은 출근도장 기능(claimDaengLabAttendance)
+    const [claiming, setClaiming] = useState(false);
+    const [notice, setNotice] = useState("");
+    const [slam, setSlam] = useState(false);
 
     useEffect(() => {
         if (!token) return;
@@ -454,40 +471,77 @@ export function DailySummary() {
     const days = attendance.recentDays.slice(-7);
     const weekClaimed = days.filter((day) => day.claimed).length;
 
+    // 오늘 도장 찍기 — 서버가 한국 시간 기준으로 하루 한 번만 지급(보물광산과 같은 흐름)
+    const onStamp = async () => {
+        if (attendance.claimedToday || claiming) return;
+        setClaiming(true);
+        setNotice("");
+        try {
+            const next = await claimDaengLabAttendance(token);
+            window.dispatchEvent(new CustomEvent("ddb:daenglab-wallet", { detail: next.wallet }));
+            const nextEngagement = await loadDaengLabEngagement(token).catch(() => engagement);
+            setLoaded({ key, data: { attendance: next, engagement: nextEngagement } });
+            if (next.newlyClaimed) {
+                setSlam(true);
+                setNotice(`출근 완료! 댕다방 연구소 코인 ${attendance.dailyRewardDaengLabCoins}개가 지급됐어요.`);
+            } else {
+                setNotice("오늘 출근도장은 이미 찍혀 있어요. 내일 다시 만나요!");
+            }
+        } catch (reason) {
+            setNotice(reason instanceof Error ? reason.message : "출근도장을 찍지 못했습니다.");
+        } finally {
+            setClaiming(false);
+        }
+    };
+
     return (
         <>
             <div className="mp-sum grid gap-5">
-                {/* 연속 출근 + 이번 주 도장 */}
-                <section className="surface p-5" data-mp-card>
-                    <div data-mp-band="yellow" data-mp-art="treasure">
-                        <h2 className="text-lg font-black text-neutral-950" data-mp-kicker="STREAK">출근도장</h2>
-                        <p className="mt-1 text-xs font-bold text-neutral-500">하루 한 번 도장 · {attendance.dailyRewardDaengLabCoins}C 적립</p>
-                    </div>
-                    <div className="mp-sum-streak grid gap-5 md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] md:items-center">
-                        <div className="mp-sum-streak-hero text-center">
-                            <p className="text-sm font-black text-neutral-500">연속 출근</p>
-                            <p className="mp-sum-big text-5xl font-black text-amber-600">{attendance.currentStreak}<small className="text-xl">일</small></p>
-                            <p className={`mt-2 inline-block rounded-full px-3 py-1 text-xs font-black ${attendance.claimedToday ? "bg-emerald-50 text-emerald-700" : "bg-rose-50 text-rose-700"}`} data-tone={attendance.claimedToday ? "mint" : "pink"}>
-                                {attendance.claimedToday ? "오늘 도장 완료" : "오늘 도장이 아직이에요"}
-                            </p>
+                {/* 출근도장 — 보물광산 "이번 주 출석" 판 그대로(2026-10-24 사용자): 요일 스티커 · 오늘 칸 누르면 도장(같은 서버 기능) ·
+                    연속 출근 · 보유 코인 · 하루 도장 코인 칩. 꾸밈은 app/daily-web.css(data-daily-web 범위) 그대로 */}
+                <div data-daily-web data-mp-stamp>
+                    <div className="dw-csheet is-yellow dw-dial-week">
+                        <div className="dw-dial-week-head">
+                            <div>
+                                <p className="ddb-crayon-kicker dw-kicker">THIS WEEK</p>
+                                <h2 className="dw-tlogin-title">이번 주 출석 {engagement?.weeklyAttendanceProgress ?? weekClaimed}/{engagement?.weeklyAttendanceTarget ?? 7}</h2>
+                            </div>
+                            <div className="dw-dial-chips">
+                                <span className="dw-chip">{attendance.currentStreak}일 연속 출근</span>
+                                <span className="dw-chip">{attendance.wallet.daengLabCoins.toLocaleString("ko-KR")}C 보유</span>
+                                <span className="dw-chip">하루 도장 코인 {attendance.dailyRewardDaengLabCoins}개</span>
+                            </div>
                         </div>
-                        <div>
-                            <p className="mb-2 text-xs font-black text-neutral-500">최근 7일 · {weekClaimed}번 출근</p>
-                            <ol className="mp-sum-stamps grid grid-cols-7 gap-2">
-                                {days.map((day) => {
-                                    const { weekday, day: dayNo } = dayParts(day.businessDate);
-                                    const today = day.businessDate === attendance.businessDate;
-                                    return (
-                                        <li key={day.businessDate} className="grid place-items-center gap-1 rounded-xl bg-neutral-50 py-3 text-center" data-claimed={day.claimed || undefined} data-today={today || undefined}>
-                                            <span className="text-[11px] font-black text-neutral-400">{weekday}</span>
-                                            <span className="mp-sum-stamp grid h-9 w-9 place-items-center rounded-full text-sm font-black" aria-label={day.claimed ? "출근" : "미출근"}>{day.claimed ? "✓" : dayNo}</span>
-                                        </li>
-                                    );
-                                })}
-                            </ol>
-                        </div>
+                        <ol className="dw-dsteps" aria-label="최근 7일 출근도장">
+                            {days.map((day, index) => {
+                                const isToday = day.businessDate === attendance.businessDate;
+                                const { weekday } = dayParts(day.businessDate);
+                                const sticker = DAY_STICKER[weekday];
+                                // 붙은 스티커 기울기(칸마다 조금씩, 보물광산과 같은 계산) · 방금 찍은 오늘은 쾅 붙는 움직임
+                                const tilt = `${((index * 37) % 13) - 6}deg`;
+                                return (
+                                    <li key={day.businessDate} className={`${day.claimed ? "is-claimed" : ""} ${isToday ? "is-today" : ""}`}>
+                                        {day.claimed && sticker ? (
+                                            <span className="dw-dstep-art dw-dial-stuck">
+                                                <Image src={sticker} alt="" width={88} height={88} className={isToday && slam ? "dw-dial-slam" : ""} style={{ "--dw-tilt": tilt } as CSSProperties} />
+                                            </span>
+                                        ) : isToday && !attendance.claimedToday ? (
+                                            <button type="button" onClick={() => void onStamp()} disabled={claiming} className="dw-dstep-art dw-dial-slot" aria-label={`오늘 출근 도장 찍고 코인 ${attendance.dailyRewardDaengLabCoins}개 받기`}>
+                                                <span>{claiming ? "꾹…" : "붙이기"}</span>
+                                            </button>
+                                        ) : (
+                                            <span className="dw-dstep-art dw-dial-empty" aria-hidden="true" />
+                                        )}
+                                        <span className="dw-dstep-title">{isToday ? "오늘" : weekday}</span>
+                                        <span className="sr-only">{day.claimed ? "도장 찍음" : "도장 없음"}</span>
+                                    </li>
+                                );
+                            })}
+                        </ol>
+                        {notice ? <p className="dw-dial-notice" role="status">{notice}</p> : null}
+                        <p className="dw-dial-rule"><i className="fa-solid fa-shield-heart" aria-hidden="true" /> 도장 날짜와 보상은 한국 시간 기준으로 서버가 확인하며, 같은 날 여러 번 눌러도 한 번만 지급됩니다.</p>
                     </div>
-                </section>
+                </div>
 
                 <div className="mp-sum-row grid gap-5 md:grid-cols-2">
                     {/* 레벨 · 진행 */}
@@ -540,7 +594,7 @@ export function DailySummary() {
                     </section>
                 </div>
             </div>
-            <SumActions primary={{ href: "/treasure-mine/", label: attendance.claimedToday ? "매일댕생활 열기" : "출근도장 찍으러 가기" }} secondary={{ href: "/mypage/health/", label: "건강 기록 요약 보기" }} />
+            <SumActions primary={{ href: "/treasure-mine/", label: "매일댕생활 열기" }} secondary={{ href: "/mypage/health/", label: "건강 기록 요약 보기" }} />
         </>
     );
 }

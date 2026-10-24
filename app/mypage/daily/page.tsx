@@ -8,6 +8,8 @@
 import MypageSectionLayout, { MypageLoginGate } from "@/components/mypage/MypageSectionLayout";
 import { DailySummary } from "@/components/mypage/MypageAiSummary";
 import { useAuth } from "@/lib/store";
+// 출근도장 판 = 보물광산 "이번 주 출석"과 같은 꾸밈(data-daily-web 범위, 웹에서만)
+import "../../daily-web.css";
 
 export default function MypageDailySummaryPage() {
     const { user } = useAuth();
