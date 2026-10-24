@@ -6,6 +6,8 @@
  */
 import { useEffect, useState } from "react";
 import "../../../product-detail-web.css";
+// 웹 창 꾸밈(입혀보기 · 구매 참고 정보 · 반품 안내 창, 2026-10-25) — 웹만 적용
+import "../../../modal-web.css";
 import type { CatalogProduct } from "@/lib/catalog";
 import { trackStorefrontEvent } from "@/lib/storefront-analytics";
 import ProductGallery from "@/components/products/detail/ProductGallery";
