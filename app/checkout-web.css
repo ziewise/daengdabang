@@ -39,7 +39,7 @@ html:not(.ddb-app-mode) main[data-checkout-web] {
         isolation: isolate;
     }
 
-    & :is(.co-title, .co-notice-title, aside.surface > h2)::after {
+    & :is(.co-title, .co-notice-title)::after {
         content: "";
         position: absolute;
         right: 1%;
@@ -132,35 +132,124 @@ html:not(.ddb-app-mode) main[data-checkout-web] {
         box-shadow: var(--co-cushion);
     }
 
-    /* 칸 머리 — 회색 띠 대신 투명, 아이콘은 파스텔 동그라미 */
-    & section.surface > div[class*="border-b"] {
-        padding: 22px 24px 6px;
-        border-bottom: 0;
-        background: transparent;
+    /* ── K5 색 띠 머리(2026-10-24 사용자 선택) ──
+       칸마다 파스텔 띠: 번호 동그라미(흰 바탕 · 색 테) · STEP 손글씨 · 주아 제목 · 설명 · 오른쪽 3D 그림.
+       번호는 CSS 숫자 세기(costep) — 칸 순서 그대로 1 배송지 · 2 배송 요청 · 3 예상 도착일 · 4 결제수단. 칸 사이는 작은 발자국 */
+    & form > section { counter-reset: costep; gap: 46px; }
+    & [data-checkout-delivery-section] { gap: 46px; }
+
+    & section.surface[aria-labelledby] { position: relative; overflow: visible; counter-increment: costep; }
+    & section.surface[aria-labelledby$="-address-title"] { --co-bg: #ffeef3; --co-ink: #e2557a; --co-ring: #f7a8bf; --co-art: url("/images/ui/pet-home-96.webp"); }
+    & section.surface[aria-labelledby$="-request-title"] { --co-bg: #e9f8f1; --co-ink: #12a17a; --co-ring: #a8e0c6; --co-art: url("/images/ui/lab-summary-256.webp"); }
+    & section.surface[aria-labelledby="checkout-delivery-estimate-title"] { --co-bg: #e9f4fb; --co-ink: #0e8aa0; --co-ring: #a9d4ea; --co-art: url("/images/ui/daily-checkin-256.webp"); }
+    & section.surface[aria-labelledby="checkout-payment-method-title"] { --co-bg: #fff6e3; --co-ink: #d98a12; --co-ring: #f7d48a; --co-art: url("/images/ui/goods-escrow-256.webp"); padding: 0; }
+
+    /* 칸 사이 발자국(둘째 칸부터 위쪽에) */
+    & :is(section[aria-labelledby$="-request-title"], section[aria-labelledby="checkout-delivery-estimate-title"], section[aria-labelledby="checkout-payment-method-title"])::before {
+        content: "";
+        position: absolute;
+        top: -40px;
+        left: 50%;
+        width: 60px;
+        height: 34px;
+        transform: translateX(-50%);
+        background:
+            url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cg fill='%23f6c3d2'%3E%3Cellipse cx='20' cy='26' rx='9' ry='7.5'/%3E%3Ccircle cx='10' cy='14' r='4'/%3E%3Ccircle cx='17' cy='9' r='4'/%3E%3Ccircle cx='25' cy='9' r='4'/%3E%3Ccircle cx='31' cy='14' r='4'/%3E%3C/g%3E%3C/svg%3E") 6px 4px / 22px no-repeat,
+            url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cg fill='%23f9d6e0'%3E%3Cellipse cx='20' cy='26' rx='9' ry='7.5'/%3E%3Ccircle cx='10' cy='14' r='4'/%3E%3Ccircle cx='17' cy='9' r='4'/%3E%3Ccircle cx='25' cy='9' r='4'/%3E%3Ccircle cx='31' cy='14' r='4'/%3E%3C/g%3E%3C/svg%3E") 30px 12px / 18px no-repeat;
     }
 
-    & section.surface span[class*="h-9"][class*="w-9"][class*="rounded-full"] {
-        width: 46px;
-        height: 46px;
+    /* 띠 머리 — 기존 칸 머리(배송지 · 요청 · 도착일)와 결제수단 웹 머리(co-pay-head) */
+    & :is(section.surface[aria-labelledby] > div[class*="border-b"], .co-pay-head) {
+        position: relative;
+        padding: 18px 104px 18px 22px;
+        border-bottom: 0;
+        border-radius: 30px 30px 0 0;
+        background: var(--co-bg);
         box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%);
     }
 
-    & section.surface span[class*="h-9"][class*="w-9"] > i { font-size: 17px; }
-    & section[aria-labelledby$="-address-title"] span[class*="h-9"][class*="w-9"] { background: #ffeef3; color: #e2557a; }
-    & section[aria-labelledby$="-request-title"] span[class*="h-9"][class*="w-9"] { background: #e9f8f1; color: #12a17a; }
-    & section[aria-labelledby="checkout-delivery-estimate-title"] span[class*="h-9"][class*="w-9"] { background: #e9f4fb; color: #0e8aa0; }
+    /* 결제수단 웹 머리는 번호 · 글을 한 줄로(위 띠 규칙보다 우선) */
+    & section.surface[aria-labelledby] > .co-pay-head { display: flex; align-items: center; gap: 12px; }
 
-    & section.surface h2 { font-size: 21px; }
-    & section.surface > div[class*="border-b"] h2 + p { margin-top: 2px; color: #64748b; font-weight: 600; }
+    /* 오른쪽 3D 그림 */
+    & :is(section.surface[aria-labelledby] > div[class*="border-b"], .co-pay-head)::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        right: 22px;
+        width: 64px;
+        height: 64px;
+        transform: translateY(-50%);
+        background: var(--co-art) center / contain no-repeat;
+        filter: drop-shadow(0 8px 10px rgb(15 23 42 / 15%));
+    }
 
-    /* 칸 본문 여백(결제수단 칸은 칸 자체에 여백이 있어 안쪽 묶음은 0) */
+    /* 배송지 칸은 머리 안에 테스트 안내가 있어 그림을 위쪽에 */
+    & section[aria-labelledby$="-address-title"] > div[class*="border-b"]::after { top: 46px; }
+
+    /* 번호 동그라미 — 기존 아이콘 동그라미 자리에 숫자 */
+    & :is(section.surface[aria-labelledby] > div[class*="border-b"] span[class*="h-9"][class*="w-9"], .co-pay-ico) {
+        display: grid;
+        width: 52px;
+        height: 52px;
+        flex: none;
+        place-items: center;
+        border-radius: 999px;
+        background: #fff;
+        color: var(--co-ink);
+        box-shadow: 0 0 0 3px var(--co-ring);
+    }
+
+    & :is(section.surface[aria-labelledby] > div[class*="border-b"] span[class*="h-9"][class*="w-9"], .co-pay-ico) > i { display: none; }
+
+    & :is(section.surface[aria-labelledby] > div[class*="border-b"] span[class*="h-9"][class*="w-9"], .co-pay-ico)::before {
+        content: counter(costep);
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 24px;
+    }
+
+    & section.surface[aria-labelledby] > div[class*="border-b"] > div.flex { align-items: center; gap: 12px; }
+
+    /* STEP 손글씨 + 주아 제목 + 설명 */
+    & :is(section.surface[aria-labelledby] > div[class*="border-b"] h2, .co-pay-title) {
+        color: #1e293b;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 23px;
+        font-weight: 400;
+        line-height: 1.3;
+    }
+
+    & :is(section.surface[aria-labelledby] > div[class*="border-b"] h2, .co-pay-title)::before {
+        content: "STEP " counter(costep);
+        display: block;
+        color: var(--co-ink);
+        font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        line-height: 1.4;
+    }
+
+    & :is(section.surface[aria-labelledby] > div[class*="border-b"] h2 + p, .co-pay-desc) { margin-top: 2px; color: #64748b; font-size: 13px; font-weight: 600; }
+
+    /* 배송지 머리 안 테스트 안내 — 흰 메모 */
+    & section[aria-labelledby$="-address-title"] > div[class*="border-b"] p[class*="bg-sky-50"] { background: rgb(255 255 255 / 75%); }
+
+    /* 결제수단 — 웹 머리를 쓰고 원래 legend 는 화면 읽기용으로만 남김 */
+    & legend#checkout-payment-method-title {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+    }
+
+    & section[aria-labelledby="checkout-payment-method-title"] > fieldset { padding: 20px 24px 24px; }
+
+    /* 칸 본문 여백 */
     & section.surface:not([aria-labelledby="checkout-payment-method-title"]) > fieldset,
-    & section.surface > div[aria-live] { padding: 18px 24px 24px; }
-    & section[aria-labelledby="checkout-payment-method-title"] > fieldset { padding: 0; }
-
-    /* 결제수단 칸 */
-    & section[aria-labelledby="checkout-payment-method-title"] { padding: 22px 24px 24px; }
-    & legend#checkout-payment-method-title { margin-bottom: 14px; font-size: 21px; }
+    & section.surface > div[aria-live] { padding: 20px 24px 24px; }
 
     /* 입력칸 이름 · 입력칸 — 크림 칸(오류 칸은 덮지 않음) */
     & label[class*="text-xs"][class*="font-black"] {
@@ -226,9 +315,47 @@ html:not(.ddb-app-mode) main[data-checkout-web] {
 
     & label[class*="bg-neutral-50"] { background: #fff6e3; }
 
-    /* ── 주문 상품 요약 — 따라 내려오는 쿠션 ── */
-    & aside.surface { padding: 26px 24px 24px; }
-    & aside.surface > h2 { font-size: 23px; }
+    /* ── 주문 상품 요약 — 따라 내려오는 쿠션 · 머리 = 무지개 고리 장바구니 + MY ORDER + 담은 상품 수(K5) ── */
+    & aside.surface { padding: 24px 24px 24px; }
+
+    & .co-sum-head { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+
+    & .co-sum-ring {
+        display: grid;
+        width: 60px;
+        height: 60px;
+        flex: none;
+        padding: 5px;
+        border-radius: 999px;
+        background: conic-gradient(from 20deg, #f7a8bf, #ffd08a, #a8e0c6, #a9d4ea, #cfc3f5, #f7a8bf);
+    }
+
+    & .co-sum-ring > span { display: grid; place-items: center; border-radius: 999px; background: #fff; }
+    & .co-sum-ring img { width: 70%; height: 70%; object-fit: contain; }
+
+    & .co-sum-kicker {
+        background-image: repeating-linear-gradient(172deg, #07849e 0 5px, #ef476f 5px 10px, #e98708 10px 15px);
+        -webkit-background-clip: text;
+        background-clip: text;
+        font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        -webkit-text-fill-color: transparent;
+    }
+
+    & .co-sum-title { color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 19px; }
+    & .co-sum-title b { color: #d0436d; font-weight: 400; }
+
+    /* 원래 "주문 상품" 제목은 화면 읽기용으로만 */
+    & aside.surface > h2 {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+    }
 
     & .co-line { align-items: center; gap: 12px; }
 
@@ -309,6 +436,9 @@ html:not(.ddb-app-mode) main[data-checkout-web] {
     }
 
     & .co-notice-title { display: inline-block; font-size: 26px; }
+
+    /* 웹 전용 머리 보이기 */
+    & :is(.co-pay-head, .co-sum-head) { display: flex; }
 }
 
 /* 태블릿 · 휴대폰 */
@@ -321,11 +451,15 @@ html:not(.ddb-app-mode) main[data-checkout-web] {
 @media (max-width: 560px) {
     html:not(.ddb-app-mode) main[data-checkout-web] {
         & .co-title { font-size: 30px; }
+        /* 띠 머리 — 그림 작게 · 오른쪽 여백 줄임 */
+        & :is(section.surface[aria-labelledby] > div[class*="border-b"], .co-pay-head) { padding: 16px 76px 16px 16px; border-radius: 26px 26px 0 0; }
+        & :is(section.surface[aria-labelledby] > div[class*="border-b"], .co-pay-head)::after { right: 14px; width: 50px; height: 50px; }
+        & :is(section.surface[aria-labelledby] > div[class*="border-b"] span[class*="h-9"][class*="w-9"], .co-pay-ico) { width: 44px; height: 44px; }
+        & :is(section.surface[aria-labelledby] > div[class*="border-b"] h2, .co-pay-title) { font-size: 20px; }
+        & section[aria-labelledby="checkout-payment-method-title"] > fieldset { padding: 16px 16px 20px; }
         & .co-steps li { height: 34px; padding-right: 10px; font-size: 12px; }
-        & section.surface > div[class*="border-b"] { padding: 18px 18px 4px; }
         & section.surface:not([aria-labelledby="checkout-payment-method-title"]) > fieldset,
         & section.surface > div[aria-live] { padding: 14px 18px 20px; }
-        & section[aria-labelledby="checkout-payment-method-title"] { padding: 18px 16px 20px; }
         & :is(section.surface, aside.surface) { border-radius: 26px; }
         & aside.surface { padding: 22px 18px 20px; }
     }

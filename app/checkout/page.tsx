@@ -5,6 +5,8 @@
  * 2026-10-24 웹 크레파스 결(app/checkout-web.css, 웹 html:not(.ddb-app-mode) 에서만):
  *  영문 손글씨 · 주아 제목 + 세 색 밑줄 · 주문 단계(장바구니 → 주문서 → 결제 완료, 지금 = 주문서) · 흰 쿠션 칸 · 파스텔 동그라미 아이콘 ·
  *  크림 입력칸 · 결제수단 쿠션 카드(고른 것 분홍 테) · 주문 상품 요약에 상품 사진(웹 전용) · 크레파스 총 결제금액 · 분홍 결제 알약.
+ *  2026-10-24 사용자 선택 K5 "색 띠 머리": 칸마다 파스텔 띠 머리(번호 · STEP 손글씨 · 주아 제목 · 설명 · 3D 그림), 칸 사이 발자국.
+ *  결제수단 칸 머리(co-pay-head)와 주문 요약 머리(co-sum-head)는 웹 전용 요소(hidden → CSS).
  * 앱은 appShopSkin 이 section.surface · data-* · 순서로 꾸미므로 구조는 그대로, 이름표 · hidden 웹 요소만 더함.
  * 결제 · 주문 생성 · 배송 검증 · 토스 결제창 동작과 안내 문구는 그대로.
  */
@@ -490,6 +492,16 @@ export default function CheckoutPage() {
                     </section>
 
                     <section className="surface p-5" aria-labelledby="checkout-payment-method-title">
+                        {/* 웹 전용 — 다른 칸과 같은 색 띠 머리(제목은 아래 legend 가 화면 읽기용으로 그대로 맡음) */}
+                        <div className="hidden co-pay-head" aria-hidden="true">
+                            <span className="co-pay-ico"><i className="fa-solid fa-credit-card" /></span>
+                            <div>
+                                <p className="co-pay-title">{t("paymentMethod")}</p>
+                                <p className="co-pay-desc">
+                                    {locale === "en" ? "Payment continues in the Toss Payments secure window." : "결제는 토스페이먼츠 보안 결제창에서 이어져요."}
+                                </p>
+                            </div>
+                        </div>
                         <fieldset>
                         <legend id="checkout-payment-method-title" className="mb-3 block text-lg font-black text-neutral-950">{t("paymentMethod")}</legend>
                         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3" role="radiogroup" aria-label={t("paymentMethod")}>
@@ -567,6 +579,14 @@ export default function CheckoutPage() {
                     </section>
                 </section>
                 <aside className="surface h-fit p-5 lg:sticky lg:top-24">
+                    {/* 웹 전용 — 주문 요약 머리(무지개 고리 장바구니 · MY ORDER · 담은 상품 수) */}
+                    <div className="hidden co-sum-head" aria-hidden="true">
+                        <span className="co-sum-ring"><span><Image src="/images/ui/header-cart-128.webp" alt="" width={48} height={48} /></span></span>
+                        <div>
+                            <p className="co-sum-kicker">MY ORDER</p>
+                            <p className="co-sum-title">{locale === "en" ? <>Items <b>{lines.length}</b></> : <>담은 상품 <b>{lines.length}</b>개</>}</p>
+                        </div>
+                    </div>
                     <h2 className="text-lg font-black text-neutral-950">{t("orderedProducts")}</h2>
                     <div className="mt-4 grid gap-3">
                         {lines.map(({ product, qty, color, size, subtotal, image }) => (
