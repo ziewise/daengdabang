@@ -1,0 +1,43 @@
+/*
+ * notfound-web.css — 웹 404(페이지를 찾을 수 없음) 꾸밈 · 2026-10-25
+ * ---------------------------------------------------------------------
+ * 파스텔 쿠션 판 · 3D 그림(살짝 떠오름) · 손글씨 꼬리표 · 주아 제목 + 세 색 밑줄 · 안내 · 분홍/흰 알약 · 바로가기 네 칸(파스텔).
+ * 웹 전용 조각(hidden)은 여기서만 보이게. 범위: html:not(.ddb-app-mode) main[data-notfound-web] — 앱은 그대로.
+ */
+
+html:not(.ddb-app-mode) main[data-notfound-web] {
+    display: grid;
+    justify-items: center;
+    gap: 6px;
+    width: min(760px, calc(100% - 32px));
+    margin: 40px auto 80px;
+    padding: 40px 32px 34px;
+    border-radius: 40px;
+    background: radial-gradient(70% 60% at 50% 0, #fff 0, transparent 70%), linear-gradient(160deg, #f2f8fc, #f6f2fe 55%, #fff3f6);
+    box-shadow: inset 0 3px 0 #fff, 0 0 0 1px #f2e9dd, 0 30px 44px -30px rgb(15 23 42 / 40%);
+
+    & > i.fa-compass { display: none; }
+    & .nf-art { display: block; width: 140px; height: 140px; object-fit: contain; filter: drop-shadow(0 16px 18px rgb(91 69 184 / 22%)); animation: nf-bob 3.4s ease-in-out infinite; }
+    & .nf-kicker { display: block; width: fit-content; margin: 8px 0 0; background: repeating-linear-gradient(172deg, #07849e 0 5px, #ef476f 5px 10px, #e98708 10px 15px); -webkit-background-clip: text; background-clip: text; font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif; font-size: 14px; letter-spacing: 0.14em; -webkit-text-fill-color: transparent; }
+    & h1 { position: relative; width: fit-content; margin: 2px 0 0; color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: clamp(26px, 3vw, 34px); font-weight: 400; isolation: isolate; }
+    & h1::after { content: ""; position: absolute; right: 1%; bottom: -0.06em; left: 0; z-index: -1; height: 0.22em; border-radius: 999px 70% 999px 60%; background: repeating-linear-gradient(94deg, rgb(8 145 178 / 62%) 0 14px, rgb(239 71 111 / 58%) 14px 28px, rgb(245 158 11 / 62%) 28px 42px); opacity: 0.6; transform: rotate(-0.6deg) skewX(-7deg); }
+    & .nf-lead { display: block; margin: 8px 0 0; color: #5b6476; font-size: 14.5px; font-weight: 600; line-height: 1.7; word-break: keep-all; }
+    & .btn { min-height: 50px; padding: 0 26px; border: 0; border-radius: 999px; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 16px; font-weight: 400; }
+    & .btn-primary { background: #e9789a; color: #fff; box-shadow: inset 0 2px 0 rgb(255 255 255 / 28%), 0 14px 22px -14px rgb(200 80 120 / 80%); }
+    & .btn-secondary { background: #fff; color: #334155; box-shadow: inset 0 0 0 2px #e6dccf; }
+    & .nf-quick { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; width: 100%; margin-top: 26px; }
+    & .nf-quick a { display: grid; justify-items: center; gap: 2px; padding: 14px 8px; border-radius: 24px; background: #fff; color: #1e293b; text-decoration: none; box-shadow: 0 14px 22px -18px rgb(15 23 42 / 40%); transition: transform 0.2s; }
+    & .nf-quick a:hover { transform: translateY(-3px); }
+    & .nf-quick img { width: 48px; height: 48px; object-fit: contain; }
+    & .nf-quick b { margin-top: 4px; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 15px; font-weight: 400; }
+    & .nf-quick small { color: #94a3b8; font-size: 11.5px; font-weight: 700; word-break: keep-all; }
+
+    @media (max-width: 640px) {
+        padding: 30px 18px 26px;
+        border-radius: 32px;
+        & .nf-quick { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+}
+
+@keyframes nf-bob { 50% { transform: translateY(-6px); } }
+@media (prefers-reduced-motion: reduce) { html:not(.ddb-app-mode) main[data-notfound-web] .nf-art { animation: none; } }
