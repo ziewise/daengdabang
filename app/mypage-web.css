@@ -555,6 +555,20 @@ html:not(.ddb-app-mode) main:has(nav[aria-label="마이페이지 메뉴"]) {
     & [data-daenglab-wallet] > div.p-5 > div[class*="grid-cols-2"] > div[class*="bg-emerald"] { background: #e9f8f1; }
     & [data-daenglab-wallet] > div.p-5 > div[class*="grid-cols-2"] span[class*="text-[10px]"] { font-size: 12px; }
 
+    /* 보라 칸 이름 — "댕다방 연구소 ⓒ 코인" 대신 옆 칸(적립금 · 분석 가능)과 같은 작은 글자 "코인"만(2026-10-24 사용자) */
+    & [data-daenglab-wallet] > div.p-5 > div[class*="grid-cols-2"] > div[class*="bg-indigo"] [data-daenglab-coin-mark] :is(.ddb-daenglab-coin-brand, .ddb-daenglab-coin-disc) { display: none; }
+
+    & [data-daenglab-wallet] > div.p-5 > div[class*="grid-cols-2"] > div[class*="bg-indigo"] .ddb-daenglab-coin-copy {
+        background: none;
+        color: #4338ca;
+        font-family: var(--font-wanted-sans), sans-serif;
+        font-size: 12px;
+        font-weight: 900;
+        letter-spacing: 0;
+        filter: none;
+        -webkit-text-fill-color: currentColor;
+    }
+
     & [data-daenglab-wallet] > div.p-5 > div[class*="grid-cols-2"] strong {
         margin-top: 0;
         font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
