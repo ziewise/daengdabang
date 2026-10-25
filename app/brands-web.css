@@ -2,7 +2,7 @@
  * brands-web.css — 웹 브랜드 목록(/brands) 2차 · 2026-10-25
  * ---------------------------------------------------------------------
  * 쓰는 곳: components/brands/BrandsWebHub.tsx(.bwh-*). 웹에서만 새 본문을 켜고 예전 목록(앱용)은 숨김.
- * 구성: 머리 판 · 대표 브랜드 3곳(브랜드 색 큰 판) · 분류별 파스텔 선반(왼쪽 3D 그림 머리 · 오른쪽 브랜드 카드).
+ * 구성: 머리 판 · 대표 브랜드 3곳(브랜드 색 큰 판 · 휴대폰은 겹친 카드를 눌러 넘김 — BrandFeaturedDeck) · 분류별 파스텔 선반(왼쪽 3D 그림 머리 · 오른쪽 브랜드 카드).
  * 상품 사진 없이 브랜드 색 · 이름만. 흰/파스텔 쿠션 · 주아 · 세 색 밑줄 · 분홍/흰 알약(스티커 요소 없음).
  */
 
@@ -71,8 +71,15 @@ html:not(.ddb-app-mode) .bwh {
     & .bwh-feature-foot { display: flex; align-items: center; justify-content: space-between; }
     & .bwh-count { padding: 6px 14px; border-radius: 999px; background: rgb(255 255 255 / 92%); color: #5b6476; font-size: 13px; font-weight: 700; }
     & .bwh-count b { color: #d0436d; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 16px; font-weight: 400; }
-    & .bwh-arrow { display: grid; width: 42px; height: 42px; place-items: center; border-radius: 50%; background: #fff; color: #1e293b; font-size: 14px; box-shadow: 0 8px 14px -10px rgb(15 23 42 / 60%); transition: transform 0.2s, background 0.2s, color 0.2s; }
-    & .bwh-feature:hover .bwh-arrow { background: #e9789a; color: #fff; transform: translateX(3px); }
+    /* 브랜드 보기 — PC 는 동그란 화살표, 링크가 카드 전체를 덮어 어디를 눌러도 이동(휴대폰은 아래에서 알약으로 바꿈) */
+    & .bwh-feature-go { display: grid; width: 42px; height: 42px; place-items: center; border-radius: 50%; background: #fff; color: #1e293b; font-size: 14px; text-decoration: none; box-shadow: 0 8px 14px -10px rgb(15 23 42 / 60%); transition: transform 0.2s, background 0.2s, color 0.2s; }
+    & .bwh-feature-go::before { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: 34px; }
+    & .bwh-feature-go-text { display: none; }
+    & .bwh-feature:hover .bwh-feature-go { background: #e9789a; color: #fff; transform: translateX(3px); }
+    & .bwh-feature:has(.bwh-feature-go:focus-visible) { outline: 3px solid #f7c3d2; outline-offset: 3px; }
+    & .bwh-feature-go:focus-visible { outline: none; }
+    /* 점 줄 · 이전/다음 · 안내는 휴대폰에서만 */
+    & .bwh-deck-nav { display: none; }
 
     /* ── 분류별 선반 ── */
     & .bwh-shelf {
@@ -113,7 +120,7 @@ html:not(.ddb-app-mode) .bwh {
     & .bwh-card-plate { display: grid; place-items: center; aspect-ratio: 5 / 2; padding: 6px 10px; border-radius: 16px; background: var(--b-bg); color: var(--b-fg); font-size: 12.5px; font-weight: 900; letter-spacing: 0.14em; line-height: 1.2; text-align: center; box-shadow: inset 0 -4px 0 var(--b-line); }
     & .bwh-card-name { padding: 0 4px; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 17px; line-height: 1.3; }
     & .bwh-card-count { position: absolute; right: 10px; bottom: 12px; min-width: 28px; padding: 2px 8px; border-radius: 999px; background: #fff0f4; color: #d0436d; font-size: 12px; font-weight: 800; text-align: center; }
-    & :is(.bwh-feature, .bwh-card, .bwh-stats a):focus-visible { outline: 3px solid #f7c3d2; outline-offset: 3px; }
+    & :is(.bwh-card, .bwh-stats a):focus-visible { outline: 3px solid #f7c3d2; outline-offset: 3px; }
 }
 
 @media (max-width: 960px) {
@@ -133,12 +140,30 @@ html:not(.ddb-app-mode) .bwh {
         & .bwh-hero h1 { font-size: 26px; }
         & .bwh-lead { font-size: 14px; }
         & .bwh-hero-art { display: none; }
-        & .bwh-featured { display: flex; gap: 12px; overflow-x: auto; margin: 0 -16px; padding: 6px 16px 14px; scroll-snap-type: x mandatory; scroll-padding-inline: 16px; scrollbar-width: none; }
-        & .bwh-feature { flex: none; width: 80%; padding: 22px 18px 18px; border-radius: 28px; scroll-snap-align: start; }
+        /* 대표 브랜드 — 옆으로 밀지 않고 세 장을 겹쳐 쌓음(브랜드 스토리 다섯 장면과 같은 방식).
+           뒤 카드는 브랜드 색 띠만 위로 조금씩 보이고, 맨 앞 카드를 누르면 맨 뒤로 감. 이동은 "브랜드 보기" 알약만 */
+        & .bwh-featured { position: relative; display: block; height: 244px; margin-top: 6px; }
+        & .bwh-feature { position: absolute; right: 0; bottom: 0; left: 0; height: 214px; min-height: 0; padding: 22px 18px 18px; border-radius: 28px; cursor: pointer; transform-origin: 50% 0; transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.45s, box-shadow 0.3s; -webkit-tap-highlight-color: transparent; }
+        & .bwh-feature[data-pos="0"] { z-index: 3; }
+        & .bwh-feature[data-pos="1"] { z-index: 2; transform: translateY(-15px) scale(0.94); box-shadow: inset 0 0 0 2px var(--b-line), 0 12px 18px -14px rgb(15 23 42 / 35%); }
+        & .bwh-feature[data-pos="2"] { z-index: 1; transform: translateY(-29px) scale(0.88); box-shadow: inset 0 0 0 2px var(--b-line), 0 8px 14px -12px rgb(15 23 42 / 30%); } /* 연한 브랜드 색도 띠가 보이게 테두리 */
+        & .bwh-feature:not([data-pos="0"]) > * { visibility: hidden; } /* 뒤 카드는 색 띠만 */
+        & .bwh-feature[data-pos="0"]:active { transform: scale(0.98); }
+        & .bwh-feature-go::before { display: none; } /* 휴대폰은 카드 누르기 = 다음 브랜드 */
+        & .bwh-feature-go { position: relative; z-index: 1; display: inline-flex; width: auto; height: auto; gap: 7px; padding: 9px 15px; border-radius: 999px; font-size: 13px; font-weight: 800; }
+        & .bwh-feature-go-text { display: inline; }
+        & .bwh-feature:hover .bwh-feature-go { transform: none; background: #fff; color: #1e293b; }
+        & .bwh-feature-go:active { background: #e9789a !important; color: #fff !important; }
+        & .bwh-deck-nav { display: grid; grid-template-columns: auto auto auto; justify-content: center; align-items: center; gap: 8px 14px; margin-top: 12px; }
+        & .bwh-deck-nav button { display: grid; width: 40px; height: 40px; place-items: center; border: 0; border-radius: 50%; background: #fff; color: #64748b; cursor: pointer; box-shadow: 0 8px 14px -10px rgb(15 23 42 / 45%), inset 0 0 0 1.5px #efe5d8; }
+        & .bwh-deck-dots { display: flex; gap: 6px; }
+        & .bwh-deck-dots i { width: 8px; height: 8px; border-radius: 999px; background: #f7c3d2; transition: width 0.3s; }
+        & .bwh-deck-dots i.is-on { width: 24px; background: #e9789a; }
+        & .bwh-deck-tap { grid-column: 1 / -1; display: inline-flex; justify-content: center; align-items: center; gap: 6px; color: #94a3b8; font-size: 12px; font-weight: 700; }
         & .bwh-wordmark { font-size: 22px; padding-right: 60px; }
         & .bwh-wordmark::after { right: 60px; }
         & .bwh-feature-body b { font-size: 20px; }
-        & .bwh-feature:hover, & .bwh-card:hover { transform: none; }
+        & .bwh-feature[data-pos="0"]:hover, & .bwh-card:hover { transform: none; } /* 누른 뒤 남는 hover 가 뒤 카드 겹침을 풀지 않게 맨 앞만 */
         & .bwh-shelf { padding: 16px 14px; border-radius: 28px; }
         & .bwh-shelf-head h2 { font-size: 19px; }
         & .bwh-shelf-head small { font-size: 12px; }

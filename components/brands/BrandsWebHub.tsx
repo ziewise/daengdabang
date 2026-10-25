@@ -4,6 +4,7 @@
  * 사용자: "나열만 한 느낌" → 1차(상품 사진 카드) → "제품까지 보여줄 필요 없어, 브랜드 카드만으로 구조를 색다르게".
  *  - 머리 판: 꼬리표 · "댕다방이 고른 브랜드 N곳"(세 색 밑줄) · 소개 · 브랜드/상품 수 알약 · 고르는 기준 보기 · 3D 그림
  *  - 대표 브랜드 3곳(상품 많은 순): 브랜드 색을 크게 칠한 판 + 큰 영문 이름 · 한글 이름 · 한 줄 소개 · 상품 수
+ *    (BrandFeaturedDeck — 휴대폰에서는 겹친 카드를 눌러 한 장씩 넘김, 2026-10-26)
  *  - 분류별 선반: 산책/아웃도어 · 먹거리 · 생활용품 · 장난감 · 케어 — 파스텔 선반 하나에 그 분류가 주력인 브랜드 카드
  *    (브랜드는 상품이 가장 많은 분류 선반 한 곳에만, 대표 3곳은 위에서 보여서 선반에서는 뺌)
  *  - 브랜드 카드: 브랜드 색 로고 판 · 한글 이름 · 상품 수 — 상품 사진 없음
@@ -14,6 +15,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { BrandVisual } from "@/lib/brand-visual";
+import BrandFeaturedDeck from "./BrandFeaturedDeck";
 import "@/app/brands-web.css";
 
 export type BrandHubItem = {
@@ -72,28 +74,8 @@ export default function BrandsWebHub({ brands, productTotal, categoryTabs }: Pro
                 </span>
             </header>
 
-            {/* 대표 브랜드 — 브랜드 색 큰 판 */}
-            <section className="bwh-featured" aria-label="대표 브랜드">
-                {featured.map((brand, index) => (
-                    <Link
-                        key={brand.slug}
-                        href={`/brand/${brand.slug}`}
-                        className="bwh-feature"
-                        style={{ ["--b-bg" as string]: brand.visual.bg, ["--b-fg" as string]: brand.visual.fg, ["--b-line" as string]: brand.visual.line }}
-                    >
-                        <span className="bwh-feature-rank">BEST {index + 1}</span>
-                        <span className="bwh-wordmark">{brand.visual.label ?? brand.en}</span>
-                        <span className="bwh-feature-body">
-                            <b>{brand.ko || brand.en}</b>
-                            {brand.tagline ? <span>{brand.tagline}</span> : null}
-                        </span>
-                        <span className="bwh-feature-foot">
-                            <span className="bwh-count">상품 <b>{brand.count}</b></span>
-                            <span className="bwh-arrow" aria-hidden="true"><i className="fa-solid fa-arrow-right" /></span>
-                        </span>
-                    </Link>
-                ))}
-            </section>
+            {/* 대표 브랜드 — 브랜드 색 큰 판(PC 세 장 나란히 · 휴대폰 겹친 카드를 눌러 한 장씩) */}
+            <BrandFeaturedDeck brands={featured} />
 
             {/* 분류별 선반 */}
             {shelves.map((shelf) => {
