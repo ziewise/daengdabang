@@ -67,10 +67,22 @@ html:not(.ddb-app-mode) main[data-pl-page] {
     & .ddb-pl-title { display: none; }
     & .ddb-pl-head { align-items: center; }
 
+    /* 2026-10-25 사용자: PC 와 휴대폰(640px 이하)에서 보이는 것을 나눔
+       - 머리 판 상품 · 브랜드 수 알약: 휴대폰에서만
+       - 카테고리 칸 · 세부 알약: PC 에서만(휴대폰은 아래 머리 줄의 카테고리 고르기로)
+       - 머리 줄: 개수 글자는 머리 판과 겹쳐 숨김. PC 는 검색 · 정렬만(카테고리는 위 칸으로), 휴대폰은 검색 · 카테고리 · 정렬 그대로 */
+    & .pl-stats { display: none; }
+    & .ddb-pl-titlebox { display: none; }
+    & .ddb-pl-head { justify-content: flex-end; }
+    & .ddb-pl-tools > .ddb-pl-select:first-of-type { display: none; }
+
     @media (max-width: 1024px) {
         & .pl-cats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     }
     @media (max-width: 640px) {
+        & .pl-stats { display: flex; }
+        & :is(.pl-cats, .pl-subs) { display: none !important; }
+        & .ddb-pl-tools > .ddb-pl-select:first-of-type { display: block; }
         & .pl-hero { grid-template-columns: minmax(0, 1fr) 96px; gap: 12px; padding: 24px 20px 22px; border-radius: 30px; }
         & .pl-hero-art { width: 96px; height: 96px; padding: 5px; align-self: start; }
         & .pl-hero-art::before { inset: 5px; }
