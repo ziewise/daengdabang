@@ -1,0 +1,152 @@
+/*
+ * showcase-compose-web.css — 댕자랑 "오늘의 한 장 올리기"(ShowcaseComposer) 웹 꾸밈 · 2026-10-25 고도화
+ * ---------------------------------------------------------------------
+ * 크레파스 웹 결: 민트 쿠션 판 · 주아 제목(세 색 밑줄) · 세 단계 진행 알약 · 왼쪽 폴라로이드(무지개 크레파스 테) + 피드 미리보기
+ * · 오른쪽 크림 입력 칸 · 노랑 주제 카드 · 민트(필수)/보라(선택) 동의 카드 · 분홍 알약 올리기.
+ * 점선 · 괘선 · 스티커 없음. 범위: html:not(.ddb-app-mode) 만(이 화면은 웹 전용).
+ */
+
+html:not(.ddb-app-mode) .scw {
+    --scw-ink: #1e293b;
+    --scw-soft: #5b6476;
+    --scw-jua: var(--font-jua), var(--font-wanted-sans), sans-serif;
+    --scw-pink: #e9789a;
+    --scw-cream: #fbf7f1;
+    --scw-line: #efe5d8;
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr); /* 안의 칸이 판 밖으로 넘치지 않게 */
+    gap: 26px;
+    padding: 34px 38px 36px;
+    border-radius: 40px;
+    background:
+        radial-gradient(70% 60% at 100% 0, rgb(255 240 244 / 85%) 0, transparent 60%),
+        radial-gradient(60% 50% at 0 100%, rgb(255 246 227 / 80%) 0, transparent 60%),
+        linear-gradient(140deg, #e9f8f1, #f3fbf7 55%, #f6f2fe);
+    box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 0 0 1px #e3f1ea, 0 26px 40px -30px rgb(18 120 90 / 40%);
+    color: var(--scw-ink);
+
+    /* ───── 머리 ───── */
+    & .scw-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: 14px 20px; }
+    & .scw-head-text { display: grid; gap: 6px; min-width: 0; }
+    & .scw-kicker { font-size: 14px; }
+    & .scw-title { font-family: var(--scw-jua); font-size: clamp(28px, 3vw, 38px); font-weight: 400; line-height: 1.25; }
+    & .scw-title em { position: relative; color: #d0436d; font-style: normal; white-space: nowrap; isolation: isolate; }
+    & .scw-title em::after { content: ""; position: absolute; right: 0; bottom: -0.02em; left: 0; z-index: -1; height: 0.22em; border-radius: 999px 70% 999px 60%; background: repeating-linear-gradient(94deg, rgb(8 145 178 / 62%) 0 12px, rgb(239 71 111 / 58%) 12px 24px, rgb(245 158 11 / 62%) 24px 36px); opacity: 0.55; transform: rotate(-0.6deg); }
+    & .scw-sub { color: var(--scw-soft); font-size: 14.5px; font-weight: 600; line-height: 1.7; word-break: keep-all; }
+    & .scw-badge { display: inline-flex; align-items: center; gap: 7px; padding: 9px 16px; border-radius: 999px; background: #fff; color: #12a17a; font-family: var(--scw-jua); font-size: 14px; white-space: nowrap; box-shadow: inset 0 0 0 2px #bfe8d6, 0 8px 14px -10px rgb(18 120 90 / 45%); }
+    /* 세 단계 — 채운 단계는 민트로 바뀜 */
+    & .scw-steps { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 8px; margin: 2px 0 0; padding: 0; list-style: none; }
+    & .scw-steps li { display: inline-flex; align-items: center; gap: 8px; padding: 6px 15px 6px 6px; border-radius: 999px; background: rgb(255 255 255 / 80%); color: #64748b; font-family: var(--scw-jua); font-size: 14px; box-shadow: 0 6px 12px -10px rgb(15 23 42 / 35%); transition: background 0.25s, color 0.25s; }
+    & .scw-steps li b { display: grid; width: 26px; height: 26px; place-items: center; border-radius: 50%; background: #eef2f6; color: #94a3b8; font-size: 13px; font-weight: 400; transition: background 0.25s, color 0.25s; }
+    & .scw-steps li.is-done { background: #fff; color: #0f7f62; }
+    & .scw-steps li.is-done b { background: #2bb38c; color: #fff; }
+
+    /* ───── 본문 두 칸 ───── */
+    & > *, & .scw-grid > * { min-width: 0; }
+    & .scw-grid { display: grid; grid-template-columns: minmax(260px, 0.78fr) minmax(0, 1.22fr); align-items: start; gap: 28px; }
+    & .scw-label { display: inline-flex; align-items: center; gap: 8px; color: #334155; font-family: var(--scw-jua); font-size: 16px; }
+    & .scw-label.is-plain { font-size: 15px; }
+    & .scw-label.is-plain > i { color: #e9a23b; font-size: 13px; }
+    & .scw-no { display: grid; width: 24px; height: 24px; place-items: center; border-radius: 50%; background: var(--scw-pink); color: #fff; font-size: 13px; box-shadow: 0 4px 8px -4px rgb(200 80 120 / 70%); }
+    & .scw-opt { color: #94a3b8; font-family: var(--font-wanted-sans), sans-serif; font-size: 12px; font-weight: 700; }
+
+    /* 왼쪽 — 폴라로이드 */
+    & .scw-photo-col { display: grid; gap: 10px; min-width: 0; }
+    & .scw-polaroid { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; padding: 14px 14px 18px; border-radius: 30px; background: #fff; box-shadow: inset 0 3px 0 #fff, 0 0 0 1px #f2e9dd, 0 22px 34px -24px rgb(15 23 42 / 45%); transform: rotate(-0.6deg); }
+    & .scw-polaroid::before { content: ""; position: absolute; inset: -6px; z-index: -1; border-radius: 36px; background: conic-gradient(from 20deg, #f7a8bf, #ffd08a, #a8e0c6, #a9d4ea, #cfc3f5, #f7a8bf); opacity: 0.55; }
+    & .scw-drop { display: grid; aspect-ratio: 1; justify-items: center; align-content: center; gap: 10px; padding: 20px; border-radius: 22px; background: radial-gradient(70% 60% at 50% 30%, #fff 0, transparent 70%), var(--scw-cream); text-align: center; cursor: pointer; box-shadow: inset 0 0 0 1.5px var(--scw-line); transition: background 0.2s, box-shadow 0.2s; }
+    & .scw-drop:hover { background: radial-gradient(70% 60% at 50% 30%, #fff 0, transparent 70%), #fff4f7; box-shadow: inset 0 0 0 2px #f7c3d2; }
+    & .scw-drop-ring { display: grid; width: 112px; height: 112px; place-items: center; border-radius: 50%; background: #fff; box-shadow: 0 0 0 5px #fde3ea, 0 14px 22px -14px rgb(15 23 42 / 40%); animation: scw-bob 3.4s ease-in-out infinite; }
+    & .scw-drop-ring img { width: 78px; height: 78px; object-fit: contain; }
+    & .scw-drop strong { margin-top: 4px; color: var(--scw-ink); font-family: var(--scw-jua); font-size: 19px; font-weight: 400; }
+    & .scw-drop-pill { display: inline-flex; align-items: center; gap: 8px; min-height: 42px; padding: 0 20px; border-radius: 999px; background: var(--scw-pink); color: #fff; font-family: var(--scw-jua); font-size: 15px; box-shadow: inset 0 2px 0 rgb(255 255 255 / 28%), 0 12px 18px -12px rgb(200 80 120 / 80%); }
+    & .scw-tips { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+    & .scw-tips small { display: inline-flex; align-items: center; gap: 5px; padding: 4px 11px; border-radius: 999px; background: #fff; color: #6b5a40; font-size: 11.5px; font-weight: 700; }
+    & .scw-tips i { color: #e9a23b; font-size: 10px; }
+    & .scw-drop-note { color: #94a3b8; font-size: 11.5px; font-weight: 700; }
+    & .scw-photo { position: relative; overflow: hidden; border-radius: 22px; background: var(--scw-cream); }
+    & .scw-photo img { display: block; }
+    & .scw-photo-x { position: absolute; top: 10px; right: 10px; display: grid; width: 38px; height: 38px; place-items: center; border: 0; border-radius: 50%; background: rgb(255 255 255 / 92%); color: #64748b; font-size: 15px; cursor: pointer; box-shadow: 0 6px 12px -8px rgb(15 23 42 / 50%); }
+    & .scw-photo-x:hover { background: #fff0f4; color: #d0436d; }
+    /* 피드 미리보기(폴라로이드 아래 글씨) */
+    & .scw-preview { display: grid; gap: 4px; padding: 0 6px; }
+    & .scw-preview-name { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px; color: var(--scw-ink); font-family: var(--scw-jua); font-size: 15px; }
+    & .scw-preview-name > i { color: var(--scw-pink); font-size: 12px; }
+    & .scw-preview-name small { padding: 2px 9px; border-radius: 999px; background: #e9f4fb; color: #0e7f93; font-family: var(--font-wanted-sans), sans-serif; font-size: 11px; font-weight: 800; }
+    & .scw-preview-text { display: -webkit-box; overflow: hidden; color: var(--scw-soft); font-size: 13px; font-weight: 600; line-height: 1.6; word-break: keep-all; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+    & .scw-preview-text.is-empty { color: #b6bfcb; }
+    & .scw-repick { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; border: 0; border-radius: 999px; background: #fff; color: #334155; font-family: var(--scw-jua); font-size: 15px; cursor: pointer; box-shadow: inset 0 0 0 2px #f0e6d8; transition: transform 0.2s; }
+    & .scw-repick:hover { transform: translateY(-2px); }
+
+    /* 오른쪽 — 입력 칸 */
+    & .scw-fields { display: grid; gap: 18px; min-width: 0; }
+    & .scw-field { display: grid; gap: 8px; min-width: 0; }
+    & .scw-field-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    & .scw-count { padding: 3px 10px; border-radius: 999px; background: #fff; color: #94a3b8; font-size: 11.5px; font-weight: 800; }
+    & .scw-count.is-near { color: #d0436d; }
+    & .scw-two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    & .scw-input { width: 100%; min-width: 0; min-height: 52px; padding: 12px 16px; border: 0; border-radius: 18px; background: var(--scw-cream); color: var(--scw-ink); font-family: var(--font-wanted-sans), sans-serif; font-size: 15px; font-weight: 700; box-shadow: inset 0 0 0 1.5px var(--scw-line); transition: box-shadow 0.2s, background 0.2s; }
+    & .scw-input::placeholder { color: #a8a29e; font-weight: 600; }
+    & .scw-input:focus { outline: none; background: #fff; box-shadow: inset 0 0 0 2px #f2a9bf, 0 0 0 4px rgb(247 168 191 / 25%); }
+    & .scw-textarea { min-height: 150px; resize: vertical; line-height: 1.7; }
+    & .scw-select { appearance: none; padding-right: 40px; background-image: linear-gradient(45deg, transparent 50%, #94a3b8 50%), linear-gradient(135deg, #94a3b8 50%, transparent 50%); background-position: calc(100% - 22px) 50%, calc(100% - 16px) 50%; background-size: 6px 6px; background-repeat: no-repeat; cursor: pointer; }
+
+    /* 체크 — 분홍 */
+    & .scw-check { flex: none; width: 20px; height: 20px; margin-top: 2px; accent-color: var(--scw-pink); cursor: pointer; }
+
+    /* 오늘의 댕주제 — 노랑 카드 */
+    & .scw-topic { display: grid; grid-template-columns: auto auto minmax(0, 1fr); align-items: center; gap: 12px; padding: 14px 18px; border-radius: 24px; background: #fff6e1; cursor: pointer; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); transition: box-shadow 0.2s; }
+    & .scw-topic.is-on { box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%), inset 0 0 0 2px #f5cf7a; }
+    & .scw-topic-art { width: 52px; height: 52px; object-fit: contain; }
+    & .scw-topic strong { display: block; color: #8a5a06; font-family: var(--scw-jua); font-size: 16px; font-weight: 400; }
+    & .scw-topic span > span { display: block; margin-top: 3px; color: #8a6e4b; font-size: 12.5px; font-weight: 600; line-height: 1.6; word-break: keep-all; }
+
+    /* 동의 — 민트(필수) · 보라(선택) 카드 */
+    & .scw-consents { display: grid; gap: 10px; }
+    & .scw-consent { display: flex; align-items: flex-start; gap: 12px; padding: 14px 18px; border-radius: 22px; color: #475569; font-size: 12.5px; font-weight: 600; line-height: 1.7; word-break: keep-all; cursor: pointer; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); transition: box-shadow 0.2s; }
+    & .scw-consent.is-must { background: #e7f7ef; }
+    & .scw-consent.is-opt { background: #f3f0fe; }
+    & .scw-consent.is-must.is-on { box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%), inset 0 0 0 2px #9ddcc2; }
+    & .scw-consent.is-opt.is-on { box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%), inset 0 0 0 2px #cfc3f5; }
+    & .scw-tag { display: inline-block; margin-right: 4px; padding: 1px 9px; border-radius: 999px; background: #fff; font-family: var(--scw-jua); font-size: 12.5px; font-weight: 400; }
+    & .scw-tag.is-must { color: #0f7f62; }
+    & .scw-tag.is-opt { color: #6b51c9; }
+    & .scw-link { color: #d0436d; font-weight: 800; text-decoration: underline; text-underline-offset: 2px; }
+
+    /* 진행 · 안내 · 올리기 */
+    & .scw-progress > div { height: 10px; overflow: hidden; border-radius: 999px; background: #fff; box-shadow: inset 0 0 0 1.5px var(--scw-line); }
+    & .scw-progress > div > span { display: block; height: 100%; border-radius: 999px; background: repeating-linear-gradient(94deg, #7cc8dd 0 14px, #f39bb4 14px 28px, #f6c46a 28px 42px); transition: width 0.3s; }
+    & .scw-progress p { margin-top: 6px; color: #64748b; font-size: 12px; font-weight: 800; text-align: right; }
+    & .scw-status { min-height: 1em; color: #0f7f62; font-size: 13px; font-weight: 700; line-height: 1.6; }
+    & .scw-status:empty { display: none; }
+    & .scw-status.is-error { color: #c4314f; }
+    & .scw-submit { display: inline-flex; align-items: center; justify-content: center; gap: 10px; width: 100%; min-height: 60px; border: 0; border-radius: 999px; background: var(--scw-pink); color: #fff; font-family: var(--scw-jua); font-size: 19px; cursor: pointer; box-shadow: inset 0 2px 0 rgb(255 255 255 / 28%), 0 16px 26px -14px rgb(200 80 120 / 80%); transition: transform 0.2s, background 0.2s; }
+    & .scw-submit:hover:not(:disabled) { background: #e26690; transform: translateY(-2px); }
+    & .scw-submit:active:not(:disabled) { transform: scale(0.98); }
+    & .scw-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+    & :is(.scw-submit, .scw-repick, .scw-drop, .scw-photo-x):focus-visible { outline: 3px solid #f7c3d2; outline-offset: 3px; }
+}
+@keyframes scw-bob { 50% { transform: translateY(-5px); } }
+@media (prefers-reduced-motion: reduce) { html:not(.ddb-app-mode) .scw .scw-drop-ring { animation: none; } }
+
+/* 태블릿 — 한 줄로 */
+@media (max-width: 900px) {
+    html:not(.ddb-app-mode) .scw .scw-grid { grid-template-columns: minmax(0, 1fr); }
+    html:not(.ddb-app-mode) .scw .scw-photo-col { width: min(100%, 420px); justify-self: center; }
+}
+/* 휴대폰 */
+@media (max-width: 640px) {
+    html:not(.ddb-app-mode) .scw { gap: 20px; padding: 24px 16px 26px; border-radius: 32px; }
+    html:not(.ddb-app-mode) .scw .scw-head { grid-template-columns: minmax(0, 1fr); }
+    html:not(.ddb-app-mode) .scw .scw-badge { justify-self: start; }
+    html:not(.ddb-app-mode) .scw .scw-steps li { padding-right: 12px; font-size: 13px; }
+    html:not(.ddb-app-mode) .scw .scw-two { grid-template-columns: minmax(0, 1fr); }
+    html:not(.ddb-app-mode) .scw .scw-topic { grid-template-columns: auto minmax(0, 1fr); }
+    html:not(.ddb-app-mode) .scw .scw-topic-art { display: none; }
+    /* 정사각 칸이 내용 높이만큼 옆으로 넓어지던 것 막기 — 휴대폰은 높이를 내용에 맞춤 */
+    html:not(.ddb-app-mode) .scw .scw-polaroid { grid-template-columns: minmax(0, 1fr); transform: none; }
+    html:not(.ddb-app-mode) .scw .scw-drop { aspect-ratio: auto; min-height: 320px; padding: 26px 14px; }
+    html:not(.ddb-app-mode) .scw .scw-drop-ring { width: 96px; height: 96px; }
+    html:not(.ddb-app-mode) .scw .scw-drop-ring img { width: 66px; height: 66px; }
+}
