@@ -491,6 +491,11 @@ export default function GoodsContest({
                     </div>
                 </div>
 
+                {/* 영상 머리 끝 표시(화면에 안 보임) — 배포 검사 scripts/verify-goods-contest-build-output.mjs 가
+                    영상 머리 다음의 `<div class="ddb-crayon-paper` 를 기준으로 영상 부분을 잘라 확인함.
+                    2026-10-22 안내 판을 연보라 표지로 바꾸며 그 판이 사라져 검사가 실패하던 것(2026-10-26 복구). 지우지 말 것 */}
+                <div className="ddb-crayon-paper hidden" aria-hidden="true" data-goods-hero-end />
+
                 {/* 안내 — 연보라 크레파스 표지(2026-10-22 사용자 선택 G1): 왼쪽 제목 · 칩 · 결제 없음 손글씨, 오른쪽 "500" 무지개 고리, 아래 점선으로 이은 4단계. CSS 는 app/daily-web.css */}
                 <CrayonGrainFilter />
                 <div className="dw-ccover is-lav dw-gcover mt-8">
