@@ -2924,6 +2924,15 @@ html:not(.ddb-app-mode) article[data-pet-product="true"] {
     }
 }
 
+/* 상품 카드 크기 맞추기(2026-10-25 사용자 "카드 사이즈가 다른 것들도 있고") — 웹만
+   ① 외부 판매점 후기 줄은 후기가 없어도 같은 높이(두 줄)를 차지 → 어느 카드든 가격 줄이 같은 자리
+   ② 카드 목록 그리드의 모든 줄을 가장 높은 줄에 맞춤(재고 알약 · 이름 길이와 상관없이 카드 크기 같음) */
+html:not(.ddb-app-mode) article[data-pet-product="true"] > a > div > div:last-child { min-height: 36px; align-content: flex-start; }
+html:not(.ddb-app-mode) .grid:has(> article[data-pet-product="true"]) { grid-auto-rows: 1fr; }
+@media (max-width: 640px) {
+    html:not(.ddb-app-mode) article[data-pet-product="true"] > a > div > div:last-child { min-height: 32px; }
+}
+
 /* 상품 카드가 든 가로 밀기 줄(메인 신상품 등) — 카드 입체 그림자가 줄 아래에서 잘리지 않게 여백 */
 html:not(.ddb-app-mode) .overflow-x-auto:has(> div > article[data-pet-product="true"]) { padding: 6px 4px 28px; margin-bottom: -20px; }
 
