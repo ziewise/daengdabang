@@ -5007,3 +5007,10 @@ html:not(.ddb-app-mode) [data-daily-web] {
         & .dw-sc-join .dw-tlogin-title, & .dw-sc-join .dw-tlogin-body { text-align: center; }
     }
 }
+
+/* 2026-10-25 웹 페이지 폭 1232 통일 — 커뮤니티 바깥 틀 1280(안쪽 1232, 앱은 그대로) */
+html:not(.ddb-app-mode) main[data-community-page] { max-width: 1280px; }
+/* 2026-10-25 웹 페이지 폭 1232 통일 — 보물광산(GrowthHub) · 우리 아이(MyPetHub)의 1200 틀(안쪽 1152~1200) → 안쪽 1232 */
+html:not(.ddb-app-mode) main[data-growth-motion-scope] .max-w-\[1200px\]:not(.px-4) { max-width: 1232px; }
+html:not(.ddb-app-mode) main[data-growth-motion-scope] .max-w-\[1200px\].px-4 { max-width: 1280px; }
+html:not(.ddb-app-mode) main[data-my-pet-hub] { max-width: 1280px; }

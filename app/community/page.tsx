@@ -44,7 +44,7 @@ const COMMUNITY_LINKS = [
 export default function CommunityPage() {
     // 웹 매일 댕생활 "기록 결"(2026-10-22 사용자 선택 C1) — 분홍 쿠션 머리 판(왼쪽 제목 · 오른쪽 무지개 크레파스 테 그림) + 발자국 + 점선으로 이은 둥근 쿠션 바로가기 넷. 문구 · 링크 그대로
     return (
-        <main className="mx-auto w-full max-w-[1248px] px-4 py-10 md:px-6 md:py-14" data-daily-web>
+        <main className="mx-auto w-full max-w-[1248px] px-4 py-10 md:px-6 md:py-14" data-daily-web data-community-page>
             <CrayonGrainFilter />
             <section className="dw-csheet is-pink dw-chero">
                 <div className="min-w-0">
