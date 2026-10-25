@@ -1,8 +1,14 @@
 /**
  * MobilePanel — 모바일 슬라이드 메뉴 (오버레이 + 우측 패널)
  * ---------------------------------------------------------------------
- * 헤더의 햄버거 버튼 → open=true → 우측에서 슬라이드 인.
- * 검색 input + 메뉴 리스트 + 카테고리 expand.
+ * 헤더의 햄버거 버튼 → open=true → 우측에서 슬라이드 인. (앱은 AppShell 이라 이 메뉴가 없음 — 웹 전용)
+ * 2026-10-25 웹 크레파스 결 개편(사용자 "모바일 메뉴가 보기 안 좋음"):
+ *  - 머리: 로고 · 언어 · 닫기(흰 동그라미) / 크림 검색 알약 / 장바구니 · 마이페이지(로그인) 두 칸
+ *  - 큰 메뉴는 파스텔 쿠션 카드(3D 그림 · 주아 글자). 펼치면 흰 판 안에:
+ *      쇼핑 = 네 칸(전체 · 핫픽 · 신상품 · 브랜드) + 분류마다 그림 제목 · 하위 알약(길게 늘어지던 목록을 압축)
+ *      매일 댕생활 · 고객센터 · 연구소 = 2×2 그림 칸
+ *  - 댕자랑 · 앱 설치는 바로 가는 카드. 주소 · 기능(검색 · 챗봇 열기 · 앱 설치 · 언어)은 그대로.
+ * 꾸밈: app/mobile-menu-web.css(.mpn-*)
  */
 "use client";
 
@@ -24,6 +30,28 @@ import { useI18n } from "@/lib/i18n";
 import PwaInstallButton from "@/components/pwa/PwaInstallButton";
 import { Browser } from "@capacitor/browser";
 import { searchHref } from "@/components/search/SearchParts";
+import "@/app/mobile-menu-web.css";
+
+const UI = "/images/ui/";
+
+/** 분류(산책 · 먹거리 · 생활 · 놀이 · 케어) 그림 — 분류 주소 끝 이름으로 */
+const CATEGORY_ART: Record<string, string> = {
+    outdoor: "hotpick-outdoor-128.webp",
+    food: "hotpick-food-128.webp",
+    life: "hotpick-life-128.webp",
+    toy: "hotpick-toy-128.webp",
+    care: "hotpick-care-128.webp",
+};
+
+/** 고객센터 칸 그림 — 주소로 */
+const CS_ART: Record<string, string> = {
+    "/notice": "menu-cs-notice-128.webp",
+    "/faq": "menu-cs-faq-128.webp",
+    "/inquiry": "menu-cs-inquiry-128.webp",
+    "/return": "menu-cs-return-128.webp",
+};
+
+type Tone = "teal" | "coral" | "orange" | "pink" | "yellow" | "sky" | "lav";
 
 interface Props {
     open: boolean;
@@ -69,11 +97,13 @@ export default function MobilePanel({ open, onClose }: Props) {
         };
     }, [open, onClose]);
 
+    const member = hydrated && isLoggedIn;
+
     return (
         <>
             {/* 오버레이 */}
             <div
-                className={`fixed inset-0 z-[1500] bg-black/40 backdrop-blur-sm transition-opacity ${
+                className={`mpn-overlay fixed inset-0 z-[1500] transition-opacity ${
                     open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
                 }`}
                 onClick={onClose}
@@ -82,7 +112,7 @@ export default function MobilePanel({ open, onClose }: Props) {
 
             {/* 슬라이드 패널 */}
             <aside
-                className={`fixed top-0 right-0 bottom-0 z-[1501] w-[88vw] max-w-[380px] bg-white shadow-modal transform transition-transform duration-300 ease-out flex flex-col ${
+                className={`mpn fixed top-0 right-0 bottom-0 z-[1501] transform transition-transform duration-300 ease-out flex flex-col ${
                     open ? "translate-x-0" : "translate-x-full"
                 }`}
                 role="dialog"
@@ -91,209 +121,220 @@ export default function MobilePanel({ open, onClose }: Props) {
                 aria-hidden={!open}
                 inert={open ? undefined : true}
             >
-                {/* 헤더 */}
-                <div className="flex items-center justify-between px-5 h-[var(--header-height)] border-b border-neutral-200">
+                {/* 머리 — 로고 · 언어 · 닫기 */}
+                <div className="mpn-head">
                     <BrandLogo />
-                    <div className="flex items-center gap-2">
+                    <div className="mpn-head-tools">
                         <LanguageSwitcher compact />
-                        <button
-                            type="button"
-                            onClick={onClose}
-                            className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-neutral-100"
-                            aria-label={t("close")}
-                        >
-                            <i className="fa-solid fa-xmark text-lg" />
+                        <button type="button" onClick={onClose} className="mpn-close" aria-label={t("close")}>
+                            <i className="fa-solid fa-xmark" />
                         </button>
                     </div>
                 </div>
 
-                {/* 검색 — submit 시 /search/?q=... 로 이동 */}
-                <div className="px-5 py-4 border-b border-neutral-100">
-                    <form onSubmit={submitSearch} className="flex items-center gap-3 px-4 py-3 bg-neutral-100 rounded-xl">
-                        <i className="fa-solid fa-magnifying-glass text-neutral-400" />
+                <div className="mpn-scroll">
+                    {/* 검색 — submit 시 /search/?q=... 로 이동 */}
+                    <form onSubmit={submitSearch} className="mpn-search">
+                        <i className="fa-solid fa-magnifying-glass" aria-hidden="true" />
                         <input
                             type="search"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             placeholder={t("searchPlaceholder")}
-                            className="flex-1 bg-transparent text-sm placeholder:text-neutral-400 outline-none"
                         />
                         {searchTerm && (
-                            <button
-                                type="submit"
-                                className="text-aurora-indigo text-xs font-extrabold"
-                                aria-label={t("search")}
-                            >
+                            <button type="submit" aria-label={t("search")}>
                                 {t("search")}
                             </button>
                         )}
                     </form>
-                </div>
 
-                {/* 메뉴 리스트 — 스크롤 가능 */}
-                <nav className="flex-1 overflow-y-auto px-3 py-3">
-                    <MobileGroup
-                        label={t("shop")}
-                        expanded={expanded === "shop"}
-                        onToggle={() => setExpanded(expanded === "shop" ? null : "shop")}
-                        crayon
-                    >
-                        <SubLink href="/products/" icon="fa-store" onClick={onClose}>{t("allProducts")}</SubLink>
-                        <SubLink href="/best/" icon="fa-trophy" onClick={onClose}>{t("best")}</SubLink>
-                        <SubLink href="/new/" icon="fa-sparkles" onClick={onClose}>{t("new")}</SubLink>
-                        <SubLink href="/brands/" icon="fa-tags" onClick={onClose}>{t("brand")}</SubLink>
-                        {CATEGORY_GROUPS.map((g) => (
-                            <div key={g.title} className="mb-3 last:mb-0">
-                                <p className="px-4 pt-2 pb-1 text-[11px] font-extrabold text-neutral-400 uppercase tracking-wider">
-                                    {menuLabel(g.title)}
-                                </p>
-                                {g.items.map((it) => (
-                                    <SubLink key={it.label} href={it.href} onClick={onClose}>
-                                        {menuLabel(it.label)}
+                    {/* 장바구니 · 마이페이지(로그인) — 맨 위 두 칸
+                        로그인/마이페이지 — hydrate 후 인증 상태 반영(hydrate 전엔 로그인 표시, 깜빡임 최소화) · 로그인은 /auth/login */}
+                    <div className="mpn-quick">
+                        <MobileLink href="/cart" icon="fa-bag-shopping" art="header-cart-128.webp" onClick={onClose} quick>{t("cart")}</MobileLink>
+                        {member ? (
+                            <MobileLink href="/mypage" icon="fa-user" art="header-mypage-128.webp" onClick={onClose} quick>{t("mypage")}</MobileLink>
+                        ) : (
+                            <MobileLink href="/auth/login" icon="fa-right-to-bracket" art="header-login-128.webp" onClick={onClose} quick>{t("login")}</MobileLink>
+                        )}
+                    </div>
+
+                    {/* 큰 메뉴 */}
+                    <nav className="mpn-nav" aria-label={t("menu")}>
+                        <MobileGroup
+                            label={t("shop")}
+                            art="shop-menu-set-128.webp"
+                            tone="pink"
+                            expanded={expanded === "shop"}
+                            onToggle={() => setExpanded(expanded === "shop" ? null : "shop")}
+                        >
+                            <div className="mpn-tiles">
+                                <SubLink href="/products/" icon="fa-store" art="shop-menu-all-128.webp" onClick={onClose}>{t("allProducts")}</SubLink>
+                                <SubLink href="/best/" icon="fa-trophy" art="shop-menu-hotpick-128.webp" onClick={onClose}>{t("best")}</SubLink>
+                                <SubLink href="/new/" icon="fa-sparkles" art="shop-menu-new-128.webp" onClick={onClose}>{t("new")}</SubLink>
+                                <SubLink href="/brands/" icon="fa-tags" art="shop-menu-brand-128.webp" onClick={onClose}>{t("brand")}</SubLink>
+                            </div>
+                            {CATEGORY_GROUPS.map((g) => (
+                                <div key={g.title} className="mpn-cat">
+                                    <Link href={g.href} onClick={onClose} className="mpn-cat-head">
+                                        {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
+                                        <img src={`${UI}${CATEGORY_ART[g.href.split("/").pop() || ""] || "shop-menu-all-128.webp"}`} alt="" aria-hidden="true" />
+                                        <b>{menuLabel(g.title)}</b>
+                                        <i className="fa-solid fa-chevron-right" aria-hidden="true" />
+                                    </Link>
+                                    <div className="mpn-pills">
+                                        {g.items.map((it) => (
+                                            <SubLink key={it.label} href={it.href} onClick={onClose} pill>
+                                                {menuLabel(it.label)}
+                                            </SubLink>
+                                        ))}
+                                    </div>
+                                </div>
+                            ))}
+                        </MobileGroup>
+
+                        <MobileGroup
+                            label={t("dailyLife")}
+                            art="daily-hero-treasure-384.webp"
+                            tone="yellow"
+                            expanded={expanded === "daily"}
+                            onToggle={() => setExpanded(expanded === "daily" ? null : "daily")}
+                        >
+                            <div className="mpn-tiles">
+                                <SubLink href="/treasure-mine/" icon="fa-gem" art="menu-daily-treasure-128.webp" onClick={onClose}>보물광산 · 오늘의 루틴</SubLink>
+                                <SubLink href="/goods-contest/" icon="fa-gift" art="menu-daily-goods-128.webp" onClick={onClose}>굿즈 500명 공모전 · 진행 중</SubLink>
+                                <SubLink href="/my-pet/" icon="fa-dog" art="menu-daily-mypet-128.webp" onClick={onClose}>{t("myPet")}</SubLink>
+                                <SubLink href="/community/" icon="fa-people-group" art="menu-daily-community-128.webp" onClick={onClose}>{t("community")}</SubLink>
+                            </div>
+                        </MobileGroup>
+
+                        <MobileLink href="/daeng-showcase/" icon="fa-images" art="showcase-hero-640.webp" onClick={onClose} crayon tone="coral">
+                            댕자랑
+                        </MobileLink>
+
+                        <MobileGroup
+                            label={t("customerCenter")}
+                            art="web-cs-inquiry-128.webp"
+                            tone="sky"
+                            expanded={expanded === "cs"}
+                            onToggle={() => setExpanded(expanded === "cs" ? null : "cs")}
+                        >
+                            <div className="mpn-tiles">
+                                {CS_LINKS.map((item) => (
+                                    <SubLink key={item.href} href={item.href} icon={item.icon} art={CS_ART[item.href]} onClick={onClose}>
+                                        {menuLabel(item.label)}
                                     </SubLink>
                                 ))}
                             </div>
-                        ))}
-                    </MobileGroup>
+                        </MobileGroup>
 
-                    <MobileGroup
-                        label={t("dailyLife")}
-                        expanded={expanded === "daily"}
-                        onToggle={() => setExpanded(expanded === "daily" ? null : "daily")}
-                        crayon
-                    >
-                        <SubLink href="/treasure-mine/" icon="fa-gem" onClick={onClose}>보물광산 · 오늘의 루틴</SubLink>
-                        <SubLink href="/goods-contest/" icon="fa-gift" onClick={onClose}>굿즈 500명 공모전 · 진행 중</SubLink>
-                        <SubLink href="/my-pet/" icon="fa-dog" onClick={onClose}>{t("myPet")}</SubLink>
-                        <SubLink href="/community/" icon="fa-people-group" onClick={onClose}>{t("community")}</SubLink>
-                    </MobileGroup>
-                    <MobileLink href="/daeng-showcase/" icon="fa-images" onClick={onClose} crayon tone="coral">
-                        댕자랑
-                    </MobileLink>
-                    <MobileGroup
-                        label={t("customerCenter")}
-                        expanded={expanded === "cs"}
-                        onToggle={() => setExpanded(expanded === "cs" ? null : "cs")}
-                        crayon
-                    >
-                        {CS_LINKS.map((item) => (
-                            <SubLink key={item.href} href={item.href} icon={item.icon} onClick={onClose}>
-                                {menuLabel(item.label)}
-                            </SubLink>
-                        ))}
-                    </MobileGroup>
-                    <MobileGroup
-                        label={<DaengLabWordmark label={t("daengLab")} compact />}
-                        expanded={expanded === "lab"}
-                        onToggle={() => setExpanded(expanded === "lab" ? null : "lab")}
-                        crayon
-                    >
-                        <SubLink href="/pet-lens/" icon="fa-camera-retro" onClick={onClose}>사진 건강 분석</SubLink>
-                        <SubLink href="/pet-lens/?mode=observation" icon="fa-wave-square" onClick={onClose}>울음소리·행동 분석</SubLink>
-                        <SubLink href="/health-report/" icon="fa-chart-line" onClick={onClose}>건강 변화 리포트</SubLink>
-                        <SubLink href="/chat/" icon="fa-comment-dots" onClick={onClose}>AI 상담</SubLink>
-                    </MobileGroup>
-
-                    {pwaReady && (isNativeApp || isStandalone) ? (
-                        <MobileLink href="/app/" icon="fa-house" onClick={onClose} crayon tone="teal">
-                            댕다방 앱 홈
-                        </MobileLink>
-                    ) : (
-                        <PwaInstallButton
-                            onBeforeInstall={onClose}
-                            className="flex w-full items-center gap-3 rounded-xl px-4 py-3.5 text-left text-base font-bold text-foreground hover:bg-neutral-50"
+                        <MobileGroup
+                            label={<DaengLabWordmark label={t("daengLab")} compact />}
+                            art="header-petlens-128.webp"
+                            tone="lav"
+                            expanded={expanded === "lab"}
+                            onToggle={() => setExpanded(expanded === "lab" ? null : "lab")}
                         >
-                            <span className="ddb-crayon-icon grid h-7 w-7 shrink-0 place-items-center rounded-lg text-white" data-crayon-tone="teal">
-                                <i className="fa-solid fa-mobile-screen-button text-[11px]" aria-hidden="true" />
-                            </span>
-                            <span>댕다방 앱 설치</span>
-                            <i className="fa-solid fa-chevron-right ml-auto text-[10px] text-neutral-300" aria-hidden="true" />
-                        </PwaInstallButton>
-                    )}
+                            <div className="mpn-tiles">
+                                <SubLink href="/pet-lens/" icon="fa-camera-retro" art="lab-tab-photo-160.webp" onClick={onClose}>사진 건강 분석</SubLink>
+                                <SubLink href="/pet-lens/?mode=observation" icon="fa-wave-square" art="menu-lab-observation-128.webp" onClick={onClose}>울음소리·행동 분석</SubLink>
+                                <SubLink href="/health-report/" icon="fa-chart-line" art="menu-lab-report-128.webp" onClick={onClose}>건강 변화 리포트</SubLink>
+                                <SubLink href="/chat/" icon="fa-comment-dots" art="caretalk-web-128.webp" onClick={onClose}>AI 상담</SubLink>
+                            </div>
+                        </MobileGroup>
 
-                    {/* 장바구니 — 협업자 장바구니 페이지 */}
-                    <MobileLink href="/cart" icon="fa-bag-shopping" onClick={onClose}>{t("cart")}</MobileLink>
-
-                    {/* 로그인/마이페이지 — hydrate 후 인증 상태 반영
-                        hydrate 전엔 placeholder 로 로그인 표시 (깜빡임 최소화, mismatch 없음)
-                        로그인은 협업자 소셜 로그인 페이지(/auth/login) 사용 */}
-                    {hydrated && isLoggedIn ? (
-                        <MobileLink href="/mypage" icon="fa-user" onClick={onClose}>{t("mypage")}</MobileLink>
-                    ) : (
-                        <MobileLink href="/auth/login" icon="fa-right-to-bracket" onClick={onClose}>{t("login")}</MobileLink>
-                    )}
-                </nav>
+                        {pwaReady && (isNativeApp || isStandalone) ? (
+                            <MobileLink href="/app/" icon="fa-house" art="header-app-install.webp" onClick={onClose} crayon tone="teal">
+                                댕다방 앱 홈
+                            </MobileLink>
+                        ) : (
+                            <PwaInstallButton onBeforeInstall={onClose} className="mpn-card" data-tone="teal">
+                                <span className="mpn-card-art" aria-hidden="true">
+                                    {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
+                                    <img src={`${UI}header-app-install.webp`} alt="" />
+                                </span>
+                                <span className="mpn-card-label">댕다방 앱 설치</span>
+                                <i className="fa-solid fa-chevron-right mpn-card-go" aria-hidden="true" />
+                            </PwaInstallButton>
+                        )}
+                    </nav>
+                </div>
             </aside>
         </>
     );
 }
 
+/** 바로 가는 카드(댕자랑 · 앱 홈) 또는 맨 위 두 칸(quick: 장바구니 · 마이페이지/로그인) */
 function MobileLink({
     href,
     icon,
+    art,
     children,
     onClick,
     crayon = false,
     tone = "teal",
+    quick = false,
 }: {
     href: string;
     icon?: string;
+    art?: string;
     children: React.ReactNode;
     onClick: () => void;
     crayon?: boolean;
-    tone?: "teal" | "coral" | "orange";
+    tone?: Tone;
+    quick?: boolean;
 }) {
     return (
-        <Link
-            href={href}
-            onClick={onClick}
-            className={`flex items-center gap-3 rounded-xl px-4 py-3.5 text-sm font-bold text-foreground hover:bg-neutral-50 ${crayon ? "text-base" : ""}`}
-        >
-            {icon && (crayon ? (
-                <span className="ddb-crayon-icon grid h-7 w-7 shrink-0 place-items-center rounded-lg text-white" data-crayon-tone={tone}>
-                    <i className={`fa-solid ${icon} text-[11px]`} aria-hidden="true" />
-                </span>
-            ) : (
-                <i className={`fa-solid ${icon} w-4 text-center text-aurora-indigo`} aria-hidden="true" />
-            ))}
-            <span>{children}</span>
-            <i className="fa-solid fa-chevron-right text-[10px] text-neutral-300 ml-auto" />
+        <Link href={href} onClick={onClick} className={quick ? "mpn-quick-item" : "mpn-card"} data-tone={crayon ? tone : undefined}>
+            <span className={quick ? "mpn-quick-art" : "mpn-card-art"} aria-hidden="true">
+                {art ? (
+                    // eslint-disable-next-line @next/next/no-img-element -- 3D 그림
+                    <img src={`${UI}${art}`} alt="" />
+                ) : icon ? <i className={`fa-solid ${icon}`} /> : null}
+            </span>
+            <span className={quick ? "mpn-quick-label" : "mpn-card-label"}>{children}</span>
+            {!quick ? <i className="fa-solid fa-chevron-right mpn-card-go" aria-hidden="true" /> : null}
         </Link>
     );
 }
 
+/** 펼치는 큰 메뉴 카드 — 머리(3D 그림 · 주아 글자 · 꺾쇠) + 펼친 흰 판 */
 function MobileGroup({
     label,
+    art,
+    tone,
     expanded,
     onToggle,
     children,
-    crayon = false,
 }: {
     label: React.ReactNode;
+    art: string;
+    tone: Tone;
     expanded: boolean;
     onToggle: () => void;
     children: React.ReactNode;
-    crayon?: boolean;
 }) {
     const panelId = useId();
 
     return (
-        <div className="my-1">
+        <div className={expanded ? "mpn-group is-open" : "mpn-group"} data-tone={tone}>
             <button
                 type="button"
                 onClick={onToggle}
                 aria-expanded={expanded}
                 aria-controls={panelId}
-                className={`w-full flex items-center gap-3 rounded-xl px-4 py-3.5 text-sm font-bold text-foreground hover:bg-neutral-50 ${crayon ? "text-base" : ""}`}
+                className="mpn-card is-group"
             >
-                {/* 아이콘 없는 그룹 — 아이콘 자리(w-4) 만큼 빈 공간 차지해서
-                    아이콘 있는 항목(베스트/신상품/장바구니/마이페이지)과 텍스트 시작 위치 정렬 */}
-                <span className={crayon ? "w-7 shrink-0" : "w-4 shrink-0"} aria-hidden="true" />
-                <span>{label}</span>
-                <i className={`fa-solid fa-chevron-down text-[10px] text-neutral-400 ml-auto transition-transform ${expanded ? "rotate-180" : ""}`} />
+                <span className="mpn-card-art" aria-hidden="true">
+                    {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
+                    <img src={`${UI}${art}`} alt="" />
+                </span>
+                <span className="mpn-card-label">{label}</span>
+                <i className="fa-solid fa-chevron-down mpn-card-go" aria-hidden="true" />
             </button>
             {expanded && (
-                <div id={panelId} className="ml-2 mt-1 mb-2 pl-2 border-l-2 border-neutral-100 animate-in fade-in slide-in-from-top-1 duration-150">
+                <div id={panelId} className="mpn-panel">
                     {children}
                 </div>
             )}
@@ -301,16 +342,21 @@ function MobileGroup({
     );
 }
 
+/** 펼친 판 안의 칸 — 그림 칸(art) 또는 하위 분류 알약(pill). /chat/ 은 떠 있는 케어톡이 있으면 그 창을 엶 */
 function SubLink({
     href,
     icon,
+    art,
     children,
     onClick,
+    pill = false,
 }: {
     href: string;
     icon?: string;
+    art?: string;
     children: React.ReactNode;
     onClick: () => void;
+    pill?: boolean;
 }) {
     return (
         <Link
@@ -322,9 +368,16 @@ function SubLink({
                 event.preventDefault();
                 openChatWidget();
             }}
-            className="flex items-center gap-2.5 px-4 py-2.5 text-xs text-neutral-600 hover:text-aurora-indigo rounded-lg"
+            className={pill ? "mpn-pill" : "mpn-tile"}
         >
-            {icon && <i className={`fa-solid ${icon} text-neutral-400 w-3 text-center text-[10px]`} />}
+            {!pill ? (
+                <span className="mpn-tile-art" aria-hidden="true">
+                    {art ? (
+                        // eslint-disable-next-line @next/next/no-img-element -- 3D 그림
+                        <img src={`${UI}${art}`} alt="" />
+                    ) : icon ? <i className={`fa-solid ${icon}`} /> : null}
+                </span>
+            ) : null}
             <span>{children}</span>
         </Link>
     );
