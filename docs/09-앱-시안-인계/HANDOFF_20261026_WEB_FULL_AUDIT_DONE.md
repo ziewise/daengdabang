@@ -146,10 +146,19 @@
 9. **원래 있던 문법 경고** — 이번에 고친 줄이 아님
    - `ForgotForm.tsx` 142 · 179, `PetRegisterModal.tsx` 70 · 82(`set-state-in-effect`)
 10. **시즌 기획전 겨울 그림** — 12월 1일 전에 필요(지금은 가을 그림이 대신 나옴).
+11. **앱 묶음 크기 46.26MB(한도 40MB)** — 앱 패키지 검사(`native-package-validation`)가 실패해요.
+    - 10월 22일 기록은 39.34MB였어요. 그 뒤로 웹 작업 그림 · 글꼴 · 코드가 쌓였어요.
+    - 오늘 밤 수정분은 수백 KB 수준이에요.
+    - 예: `public/fonts`에 예전 원티드 산스 한 덩어리(1.29MB)와 새로 나눈 글꼴(1.32MB)이 함께 들어가요.
+    - 묶음 대상 설정(`scripts/prepare-native-web.mjs`)은 배포 설정이라 손대지 않았어요. 웹 배포(`deploy.yml`)와는 별개예요.
+12. **굿즈 공모전 빌드 검사**(`verify-goods-contest-build-output.mjs`, 웹 배포 단계) — 어제 빌드에서도 같은 실패예요(오늘 수정 무관).
+    - 오류: 'goods hero markup is missing'
+    - 원인: 검사가 찾는 `<div class="ddb-crayon-paper` 표시가 페이지에 없음
+    - 협업자 굿즈 화면 쪽 확인이 필요해요.
 
 ## 4. 검사
 
 - `npm test` 930개 통과, `tsc` 오류 0
 - 고친 파일 eslint: 원래 있던 경고 · 오류만 남음
-- 배포용 빌드(`npm run build`) 통과
+- 배포용 빌드(`npm run build`) 통과, 배포 결과에서 탭 제목 · 검색 창 확인(4100)
 - 고친 뒤 비회원 · 회원 전체 재촬영 확인
