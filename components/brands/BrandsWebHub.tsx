@@ -1,20 +1,18 @@
-"use client";
-
 /**
- * BrandsWebHub — 웹 브랜드 목록(/brands) 본문 · 2026-10-25
+ * BrandsWebHub — 웹 브랜드 목록(/brands) 본문 2차 · 2026-10-25
  * ---------------------------------------------------------------------
- * 사용자: "그냥 나열만 쭈욱 해놓은 느낌" → 웹 크레파스 결로 다시.
- *  - 머리 판: 꼬리표 · "댕다방이 고른 브랜드 N곳"(세 색 밑줄) · 소개 · 브랜드/상품 수 알약 · 3D 그림
- *  - 대표 브랜드 3곳(상품 많은 순): 큰 쿠션 카드 — 로고 판 · 한 줄 소개 · 분류 알약 · 대표 상품 사진 4장 · 브랜드관 가기
- *  - 분류 고르기 알약(전체 · 산책/아웃도어 · 먹거리 …): 그 분류 상품이 있는 브랜드만
- *  - 브랜드 카드: 로고 판 · 이름 · 주로 파는 분류 · 대표 상품 사진 3장 · 상품 수
+ * 사용자: "나열만 한 느낌" → 1차(상품 사진 카드) → "제품까지 보여줄 필요 없어, 브랜드 카드만으로 구조를 색다르게".
+ *  - 머리 판: 꼬리표 · "댕다방이 고른 브랜드 N곳"(세 색 밑줄) · 소개 · 브랜드/상품 수 알약 · 고르는 기준 보기 · 3D 그림
+ *  - 대표 브랜드 3곳(상품 많은 순): 브랜드 색을 크게 칠한 판 + 큰 영문 이름 · 한글 이름 · 한 줄 소개 · 상품 수
+ *  - 분류별 선반: 산책/아웃도어 · 먹거리 · 생활용품 · 장난감 · 케어 — 파스텔 선반 하나에 그 분류가 주력인 브랜드 카드
+ *    (브랜드는 상품이 가장 많은 분류 선반 한 곳에만, 대표 3곳은 위에서 보여서 선반에서는 뺌)
+ *  - 브랜드 카드: 브랜드 색 로고 판 · 한글 이름 · 상품 수 — 상품 사진 없음
  * 자료는 서버(app/brands/page.tsx)가 상품 목록에서 만들어 넘김. 링크는 기존 브랜드 상세(/brand/[slug]) 그대로.
- * 웹에서만 보임(기본 hidden, app/brands-web.css 가 웹에서 켬) — 앱은 기존 목록 그대로.
+ * 웹에서만 보임(기본 hidden, app/brands-web.css 가 웹에서 켬) — 앱은 기존 목록 그대로. 상태 없음(서버에서 그림).
  */
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
 import type { BrandVisual } from "@/lib/brand-visual";
 import "@/app/brands-web.css";
 
@@ -26,7 +24,6 @@ export type BrandHubItem = {
     visual: BrandVisual;
     tagline?: string;
     categories: Array<{ slug: string; label: string; count: number }>;
-    thumbs: string[];
 };
 
 type Props = {
@@ -35,36 +32,22 @@ type Props = {
     categoryTabs: Array<{ slug: string; label: string }>;
 };
 
-/** 로고 판 — 브랜드 색 바탕 · 영문 글자 */
-function LogoPlate({ brand, big = false }: { brand: BrandHubItem; big?: boolean }) {
-    return (
-        <span className="bwh-logo" data-big={big ? "" : undefined} style={{ background: brand.visual.bg, color: brand.visual.fg, boxShadow: `inset 0 -4px 0 ${brand.visual.line}` }}>
-            {brand.visual.label ?? brand.en}
-        </span>
-    );
-}
-
-/** 대표 상품 사진 줄 */
-function Thumbs({ brand, max }: { brand: BrandHubItem; max: number }) {
-    return (
-        <span className="bwh-thumbs" aria-hidden="true">
-            {brand.thumbs.slice(0, max).map((src) => (
-                <span key={src} className="bwh-thumb">
-                    <Image src={src} alt="" fill sizes="96px" className="object-contain" />
-                </span>
-            ))}
-        </span>
-    );
-}
+/** 선반마다 3D 그림 · 파스텔 색 · 한 줄 */
+const SHELF: Record<string, { art: string; tone: string; line: string }> = {
+    outdoor: { art: "hotpick-outdoor-128.webp", tone: "mint", line: "산책 · 여행 · 아웃도어를 함께하는 브랜드" },
+    food: { art: "hotpick-food-128.webp", tone: "yellow", line: "사료 · 간식 · 영양을 고민한 브랜드" },
+    life: { art: "hotpick-life-128.webp", tone: "sky", line: "집에서의 하루를 편하게 만드는 브랜드" },
+    toy: { art: "hotpick-toy-128.webp", tone: "lav", line: "놀이 시간을 즐겁게 만드는 브랜드" },
+    care: { art: "hotpick-care-128.webp", tone: "pink", line: "목욕 · 위생 · 관리를 돕는 브랜드" },
+};
 
 export default function BrandsWebHub({ brands, productTotal, categoryTabs }: Props) {
-    const [tab, setTab] = useState("all");
     const featured = brands.slice(0, 3);
-    const list = useMemo(
-        () => (tab === "all" ? brands.slice(3) : brands.filter((brand) => brand.categories.some((category) => category.slug === tab))),
-        [brands, tab],
-    );
-    const tabCount = (slug: string) => (slug === "all" ? brands.length : brands.filter((brand) => brand.categories.some((category) => category.slug === slug)).length);
+    const rest = brands.slice(3);
+    // 브랜드마다 상품이 가장 많은 분류 선반 한 곳
+    const shelves = categoryTabs
+        .map((category) => ({ ...category, brands: rest.filter((brand) => brand.categories[0]?.slug === category.slug) }))
+        .filter((shelf) => shelf.brands.length > 0);
 
     return (
         <div className="bwh hidden" data-brands-web>
@@ -75,7 +58,7 @@ export default function BrandsWebHub({ brands, productTotal, categoryTabs }: Pro
                     <h1>
                         댕다방이 고른 브랜드 <em>{brands.length}곳</em>
                     </h1>
-                    <p className="bwh-lead">우리 아이의 하루에 꼭 맞는지 살펴보고 고른 브랜드예요. 브랜드마다 대표 상품을 바로 둘러보세요.</p>
+                    <p className="bwh-lead">우리 아이의 하루에 꼭 맞는지 살펴보고 고른 브랜드예요. 무엇을 만드는 브랜드인지 선반별로 모아 두었어요.</p>
                     <ul className="bwh-stats">
                         <li><i className="fa-solid fa-tags" aria-hidden="true" /> 브랜드 <b>{brands.length}</b></li>
                         <li><i className="fa-solid fa-box-open" aria-hidden="true" /> 상품 <b>{productTotal}</b></li>
@@ -89,64 +72,56 @@ export default function BrandsWebHub({ brands, productTotal, categoryTabs }: Pro
                 </span>
             </header>
 
-            {/* 대표 브랜드 */}
+            {/* 대표 브랜드 — 브랜드 색 큰 판 */}
             <section className="bwh-featured" aria-label="대표 브랜드">
                 {featured.map((brand, index) => (
-                    <Link key={brand.slug} href={`/brand/${brand.slug}`} className="bwh-feature" data-pos={index}>
-                        <span className="bwh-feature-top">
-                            <LogoPlate brand={brand} big />
-                            <span className="bwh-feature-rank">BEST {index + 1}</span>
-                        </span>
-                        <span className="bwh-feature-name">
+                    <Link
+                        key={brand.slug}
+                        href={`/brand/${brand.slug}`}
+                        className="bwh-feature"
+                        style={{ ["--b-bg" as string]: brand.visual.bg, ["--b-fg" as string]: brand.visual.fg, ["--b-line" as string]: brand.visual.line }}
+                    >
+                        <span className="bwh-feature-rank">BEST {index + 1}</span>
+                        <span className="bwh-wordmark">{brand.visual.label ?? brand.en}</span>
+                        <span className="bwh-feature-body">
                             <b>{brand.ko || brand.en}</b>
-                            <small>{brand.en}</small>
+                            {brand.tagline ? <span>{brand.tagline}</span> : null}
                         </span>
-                        {brand.tagline ? <span className="bwh-feature-line">{brand.tagline}</span> : null}
-                        <span className="bwh-cats">
-                            {brand.categories.slice(0, 3).map((category) => (
-                                <span key={category.slug}>{category.label} <b>{category.count}</b></span>
-                            ))}
-                        </span>
-                        <Thumbs brand={brand} max={4} />
-                        <span className="bwh-go">
-                            상품 {brand.count}개 보러 가기 <i className="fa-solid fa-arrow-right" aria-hidden="true" />
+                        <span className="bwh-feature-foot">
+                            <span className="bwh-count">상품 <b>{brand.count}</b></span>
+                            <span className="bwh-arrow" aria-hidden="true"><i className="fa-solid fa-arrow-right" /></span>
                         </span>
                     </Link>
                 ))}
             </section>
 
-            {/* 분류 고르기 */}
-            <div className="bwh-tabs" role="tablist" aria-label="분류별 브랜드">
-                {[{ slug: "all", label: "모든 브랜드" }, ...categoryTabs].map((item) => (
-                    <button key={item.slug} type="button" role="tab" aria-selected={tab === item.slug} onClick={() => setTab(item.slug)}>
-                        {item.label} <b>{tabCount(item.slug)}</b>
-                    </button>
-                ))}
-            </div>
-
-            {/* 브랜드 카드 */}
-            <ul className="bwh-grid" key={tab}>
-                {list.map((brand) => (
-                    <li key={brand.slug}>
-                        <Link href={`/brand/${brand.slug}`} className="bwh-card">
-                            <LogoPlate brand={brand} />
-                            <span className="bwh-card-name">
-                                <b>{brand.ko || brand.en}</b>
-                                <small>{brand.en}</small>
+            {/* 분류별 선반 */}
+            {shelves.map((shelf) => {
+                const look = SHELF[shelf.slug] ?? SHELF.life;
+                return (
+                    <section key={shelf.slug} className="bwh-shelf" data-tone={look.tone} aria-labelledby={`bwh-shelf-${shelf.slug}`}>
+                        <header className="bwh-shelf-head">
+                            <Image src={`/images/ui/${look.art}`} alt="" width={64} height={64} />
+                            <span>
+                                <h2 id={`bwh-shelf-${shelf.slug}`}>{shelf.label}</h2>
+                                <small>{look.line}</small>
                             </span>
-                            <span className="bwh-cats is-small">
-                                {brand.categories.slice(0, 2).map((category) => (
-                                    <span key={category.slug}>{category.label}</span>
-                                ))}
-                            </span>
-                            <Thumbs brand={brand} max={3} />
-                            <span className="bwh-card-foot">
-                                상품 <b>{brand.count}</b>개 <i className="fa-solid fa-chevron-right" aria-hidden="true" />
-                            </span>
-                        </Link>
-                    </li>
-                ))}
-            </ul>
+                            <b className="bwh-shelf-count">{shelf.brands.length}</b>
+                        </header>
+                        <ul className="bwh-cards">
+                            {shelf.brands.map((brand) => (
+                                <li key={brand.slug}>
+                                    <Link href={`/brand/${brand.slug}`} className="bwh-card" style={{ ["--b-bg" as string]: brand.visual.bg, ["--b-fg" as string]: brand.visual.fg, ["--b-line" as string]: brand.visual.line }}>
+                                        <span className="bwh-card-plate">{brand.visual.label ?? brand.en}</span>
+                                        <span className="bwh-card-name">{brand.ko || brand.en}</span>
+                                        <span className="bwh-card-count">{brand.count}</span>
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </section>
+                );
+            })}
         </div>
     );
 }

@@ -1,7 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { CATALOG, CATEGORY_LABEL, listBrands } from "@/lib/catalog";
-import { productCardImage } from "@/lib/catalog/card-image";
 import { CATEGORY_ORDER } from "@/lib/shop";
 // 웹 브랜드 목록(2026-10-25 사용자 "나열만 한 느낌") — 맨 끝에 두고 웹에서만 보임(앱은 아래 기존 목록 그대로)
 import BrandsWebHub, { type BrandHubItem } from "@/components/brands/BrandsWebHub";
@@ -22,7 +21,7 @@ const BRAND_TAGLINE: Record<string, string> = {
     yora: "곤충 단백질로 만든 사료 · 간식",
 };
 
-/** 웹 브랜드 목록 자료 — 브랜드마다 분류별 상품 수 · 대표 상품 사진(카드 사진) */
+/** 웹 브랜드 목록 자료 — 브랜드마다 분류별 상품 수(가장 많은 분류 = 그 브랜드의 선반) */
 function buildHub(brands: ReturnType<typeof listBrands>): BrandHubItem[] {
     return brands.map((brand) => {
         const products = CATALOG.filter((product) => product.brandSlug === brand.slug);
@@ -30,8 +29,7 @@ function buildHub(brands: ReturnType<typeof listBrands>): BrandHubItem[] {
             .map((slug) => ({ slug, label: CATEGORY_LABEL[slug], count: products.filter((product) => product.category === slug).length }))
             .filter((item) => item.count > 0)
             .sort((a, b) => b.count - a.count);
-        const thumbs = [...new Set(products.map((product) => productCardImage(product) ?? product.image).filter((src): src is string => Boolean(src)))].slice(0, 4);
-        return { slug: brand.slug, ko: brand.ko, en: brand.en, count: brand.count, visual: brandStyle(brand.slug, brand.en), tagline: BRAND_TAGLINE[brand.slug], categories, thumbs };
+        return { slug: brand.slug, ko: brand.ko, en: brand.en, count: brand.count, visual: brandStyle(brand.slug, brand.en), tagline: BRAND_TAGLINE[brand.slug], categories };
     });
 }
 
