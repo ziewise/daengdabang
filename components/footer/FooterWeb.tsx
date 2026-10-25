@@ -4,7 +4,7 @@
  * 웹(html:not(.ddb-app-mode))에서만 그려짐(Footer.tsx 가 고름). 앱은 기존 푸터 그대로.
  * 항목은 기존 푸터와 똑같음(더한 메뉴 없음): 로고 · 한 줄 소개 · 회사 링크 셋(FOOTER_META_LINKS) · 뉴스레터(기존 NewsletterForm) ·
  *   고객센터 전화/시간/메일 · SNS 다섯 · 사업자 정보 · 법적 링크 여덟(환불·반품은 기존 안내 창) · 저작권.
- * 모양: 화면 가로 전체를 채우는 파스텔 띠(위 모서리 둥글게 · 위쪽 세 색 크레파스 줄) 위에 댕다방 강아지가 걸터앉음.
+ * 모양: 화면 가로 전체를 채우는 파스텔 띠(위 모서리 둥글게 · 위쪽 세 색 크레파스 줄)(위 강아지 얼굴은 2026-10-25 뺌).
  *  ① 세 기둥 : [로고 · 소개 · 회사 링크 세 줄] [고객센터 흰 카드] [소식 받기 카드 + SNS 카드] — 높이를 맞춤
  *  ② 사업자 정보 : 두 줄 글(회사 · 신고 / 주소 · 운영)
  *  ③ 아래 띠 : 가로 전체 크림 띠 — 법적 링크 · 저작권
@@ -47,10 +47,7 @@ export default function FooterWeb() {
     return (
         <footer className="fw" data-footer-web>
             <div className="fw-band">
-                {/* 띠 위에 걸터앉은 댕다방 강아지 */}
-                {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
-                <img className="fw-mascot" src={`${UI}logo-poodle-384.webp`} alt="" aria-hidden="true" />
-
+                {/* 2026-10-25 띠 위 오른쪽 강아지 얼굴(fw-mascot) 뺌 — 사용자 요청 */}
                 <div className="fw-wrap">
                     {/* ① 세 기둥 */}
                     <div className="fw-grid">
