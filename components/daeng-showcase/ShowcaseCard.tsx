@@ -7,7 +7,9 @@
  * → 뼈다귀 응원 · 공유 · 신고/삭제 → 보호자(프로필 · 팔로우). 기능 · 문구는 그대로, 꾸밈은 app/daily-web.css "댕자랑" 묶음.
  */
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+// 카드를 누르면 크게 보기 창(2026-10-25 웹)
+import ShowcasePostDialog from "./ShowcasePostDialog";
 import {
     deleteShowcasePost,
     reportShowcasePost,
@@ -76,6 +78,9 @@ export default function ShowcaseCard({
     const [captionExpanded, setCaptionExpanded] = useState(false);
     const [captionOverflows, setCaptionOverflows] = useState(false);
     const captionRef = useRef<HTMLParagraphElement>(null);
+    // 크게 보기 창(사진 · 이야기를 누르면 열림)
+    const [detailOpen, setDetailOpen] = useState(false);
+    const closeDetail = useCallback(() => setDetailOpen(false), []);
 
     useEffect(() => {
         if (captionExpanded) return;
@@ -215,7 +220,8 @@ export default function ShowcaseCard({
         >
             {/* 사진 — 카드 위를 꽉 채우는 둥근 사각(얇은 흰 테), 주제 참여 글은 사진 위에 주제 표시 */}
             <div className="dw-sc-photo">
-                <span className="dw-sc-frame">
+                {/* 사진을 누르면 크게 보기 창 */}
+                <button type="button" className="dw-sc-frame dw-sc-open" onClick={() => setDetailOpen(true)} aria-haspopup="dialog" aria-label={`${post.pet?.name || post.author.displayName}의 댕자랑 크게 보기`}>
                     {/* eslint-disable-next-line @next/next/no-img-element -- API provides canonical dimensions and deletion-aware public media URLs. */}
                     <img
                         src={post.imageUrl}
@@ -226,7 +232,7 @@ export default function ShowcaseCard({
                         decoding="async"
                         className="aspect-square w-full bg-[#f6f3ee] object-cover"
                     />
-                </span>
+                </button>
                 {post.topic ? (
                     <span className="dw-sc-topic-tag"><i className="fa-solid fa-hashtag" aria-hidden="true" />{post.topic.title}</span>
                 ) : null}
@@ -242,7 +248,11 @@ export default function ShowcaseCard({
                 <p
                     ref={captionRef}
                     id={`caption-${post.postId}`}
-                    className={`whitespace-pre-wrap break-words ${captionExpanded ? "" : "line-clamp-3"}`}
+                    className={`whitespace-pre-wrap break-words ${captionExpanded ? "" : "line-clamp-3"} dw-sc-caption-open`}
+                    // 이야기를 눌러도 크게 보기 창(글자 고르기 · 더보기 단추는 그대로)
+                    onClick={() => {
+                        if (!window.getSelection()?.toString()) setDetailOpen(true);
+                    }}
                 >
                     {post.caption}
                 </p>
@@ -310,6 +320,33 @@ export default function ShowcaseCard({
                     </button>
                 ) : null}
             </div>
+
+            {/* 크게 보기 창 — 단추는 이 카드의 기존 함수 그대로(공유 · 신고 · 프로필 · 삭제는 창을 닫고 부름) */}
+            <ShowcasePostDialog
+                post={post}
+                open={detailOpen}
+                onClose={closeDetail}
+                busy={busy}
+                createdLabel={formatCreatedAt(post.createdAt)}
+                onBone={toggleBone}
+                onFollow={toggleFollow}
+                onShare={() => {
+                    setDetailOpen(false);
+                    onShare(post);
+                }}
+                onOpenAuthor={() => {
+                    setDetailOpen(false);
+                    onOpenAuthor(post.author.authorId);
+                }}
+                onReport={() => {
+                    setDetailOpen(false);
+                    openReport();
+                }}
+                onDelete={() => {
+                    setDetailOpen(false);
+                    void removePost();
+                }}
+            />
 
             {reportOpen ? (
                 <div className="fixed inset-0 z-[2100] grid place-items-center bg-black/45 p-4" role="presentation" onMouseDown={(event) => {

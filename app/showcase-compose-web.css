@@ -190,3 +190,75 @@ html:not(.ddb-app-mode) .scm {
     html:not(.ddb-app-mode) .scm .scm-textarea { min-height: 130px; }
     html:not(.ddb-app-mode) .scm .scm-foot { padding: 14px 18px calc(16px + env(safe-area-inset-bottom)); }
 }
+
+/* ───────── 댕자랑 카드 → 크게 보기 창(ShowcasePostDialog) · 2026-10-25 ─────────
+   카드 사진 · 이야기를 누르면 열림. PC 사진 | 글(글만 스크롤) · 휴대폰 아래서 올라오는 판. */
+html:not(.ddb-app-mode) .dw-sc-open { width: 100%; border: 0; cursor: pointer; transition: transform 0.25s; }
+html:not(.ddb-app-mode) .dw-sc-open:hover { transform: translateY(-3px); }
+html:not(.ddb-app-mode) .dw-sc-open:active { transform: scale(0.98); }
+html:not(.ddb-app-mode) .dw-sc-open:focus-visible { outline: 3px solid #f7c3d2; outline-offset: 3px; }
+html:not(.ddb-app-mode) .dw-sc-caption-open { cursor: pointer; }
+
+html:not(.ddb-app-mode) .spd-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2080; /* 프로필(2090) · 신고(2100) · 공유(2150) 창보다 아래 — 그 창들은 이 창을 닫고 열림 */
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    background: rgb(15 23 42 / 55%);
+    backdrop-filter: blur(3px);
+}
+html:not(.ddb-app-mode) .spd {
+    --spd-jua: var(--font-jua), var(--font-wanted-sans), sans-serif;
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr);
+    width: min(1040px, 100%);
+    max-height: calc(100dvh - 48px);
+    overflow: hidden;
+    border-radius: 34px;
+    background: #fff;
+    box-shadow: 0 40px 80px -30px rgb(15 23 42 / 60%);
+    animation: scm-pop 0.28s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+    color: #1e293b;
+
+    & .spd-close { position: absolute; top: 14px; right: 14px; z-index: 3; display: grid; width: 42px; height: 42px; place-items: center; border: 0; border-radius: 50%; background: rgb(255 255 255 / 94%); color: #64748b; font-size: 18px; cursor: pointer; box-shadow: 0 6px 12px -8px rgb(15 23 42 / 50%); }
+    & .spd-close:hover { background: #fff0f4; color: #d0436d; }
+
+    /* 사진 — 정사각 칸 안에 잘림 없이(contain) · 크림 바탕 */
+    & .spd-photo { position: relative; display: grid; place-items: center; min-height: 0; background: #f6f3ee; }
+    & .spd-photo img { width: 100%; height: 100%; max-height: calc(100dvh - 48px); object-fit: contain; }
+    & .spd-topic { position: absolute; top: 16px; left: 16px; display: inline-flex; align-items: center; gap: 5px; padding: 6px 13px; border-radius: 999px; background: #ffd58a; color: #6b4300; font-family: var(--spd-jua); font-size: 14px; box-shadow: 0 6px 12px -8px rgb(15 23 42 / 40%); }
+
+    /* 글 — 보호자 / 아이 이름 / 이야기(스크롤) / 단추 */
+    & .spd-side { display: grid; grid-template-rows: auto auto minmax(0, 1fr) auto; gap: 14px; min-height: 0; padding: 26px 26px 22px; }
+    & .spd-author { display: flex; align-items: center; gap: 10px; padding-right: 48px; }
+    & .spd-author-btn { display: flex; flex: 1; min-width: 0; align-items: center; gap: 10px; border: 0; background: none; text-align: left; cursor: pointer; }
+    & .spd-avatar { display: grid; flex: none; width: 42px; height: 42px; place-items: center; border-radius: 50%; background: #ffe2ea; color: #d0436d; font-family: var(--spd-jua); font-size: 18px; }
+    & .spd-author-text { display: grid; min-width: 0; }
+    & .spd-author-text b { overflow: hidden; color: #1e293b; font-family: var(--spd-jua); font-size: 16px; font-weight: 400; white-space: nowrap; text-overflow: ellipsis; }
+    & .spd-author-text b small { margin-left: 6px; padding: 1px 8px; border-radius: 999px; background: #e9f8f1; color: #0f8a66; font-size: 11px; }
+    & .spd-author-text span { color: #94a3b8; font-size: 12px; font-weight: 700; }
+    & .spd-follow { flex: none; min-height: 34px; padding: 0 14px; border: 0; border-radius: 999px; background: #e9789a; color: #fff; font-family: var(--spd-jua); font-size: 13.5px; cursor: pointer; }
+    & .spd-follow.is-on { background: #fff; color: #64748b; box-shadow: inset 0 0 0 1.5px #e5e7eb; }
+    & .spd-pet { color: #1e293b; font-family: var(--spd-jua); font-size: 24px; line-height: 1.2; }
+    & .spd-pet small { margin-left: 8px; color: #0e7f93; font-size: 14px; }
+    & .spd-caption { min-height: 0; overflow-y: auto; overscroll-behavior: contain; color: #334155; font-size: 15px; font-weight: 600; line-height: 1.85; white-space: pre-wrap; word-break: keep-all; overflow-wrap: anywhere; }
+    & .spd-acts { display: flex; align-items: center; gap: 8px; padding-top: 14px; box-shadow: inset 0 1px 0 #f1ede6; }
+    & .spd-bone { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 18px; border: 0; border-radius: 999px; background: #fff0f4; color: #d0436d; font-family: var(--spd-jua); font-size: 16px; cursor: pointer; transition: transform 0.2s, background 0.2s; }
+    & .spd-bone.is-on { background: #e9789a; color: #fff; }
+    & .spd-bone:active { transform: scale(0.95); }
+    & .spd-mini { display: grid; min-width: 44px; height: 44px; place-items: center; padding: 0 12px; border: 0; border-radius: 999px; background: #f6f4f0; color: #64748b; font-size: 15px; cursor: pointer; }
+    & .spd-mini.is-text { font-family: var(--spd-jua); font-size: 13.5px; }
+    & .spd-mini:hover { background: #fff0f4; color: #d0436d; }
+    & :is(.spd-bone, .spd-mini, .spd-follow, .spd-close, .spd-author-btn):focus-visible { outline: 3px solid #f7c3d2; outline-offset: 2px; }
+}
+@media (prefers-reduced-motion: reduce) { html:not(.ddb-app-mode) .spd { animation: none; } html:not(.ddb-app-mode) .dw-sc-open:hover { transform: none; } }
+@media (max-width: 760px) {
+    html:not(.ddb-app-mode) .spd-overlay { align-items: end; padding: 0; }
+    html:not(.ddb-app-mode) .spd { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); width: 100%; max-height: 94dvh; border-radius: 28px 28px 0 0; }
+    html:not(.ddb-app-mode) .spd .spd-photo img { max-height: 52dvh; }
+    html:not(.ddb-app-mode) .spd .spd-side { padding: 18px 18px calc(16px + env(safe-area-inset-bottom)); }
+    html:not(.ddb-app-mode) .spd .spd-pet { font-size: 21px; }
+}
