@@ -10,6 +10,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+// "교환·반품 접수하기" — 웹은 페이지 이동 없이 접수 창(마이페이지 · 자주 묻는 질문과 같은 창 · 같은 양식), 앱 · 새 탭은 원래대로 이동(2026-10-25)
+import MypageInquiryLink from "@/components/mypage/MypageInquiryLink";
 import DeliveryReturnPolicyDetails from "@/components/policy/DeliveryReturnPolicyDetails";
 import SupportTop, { SupportPaws } from "@/components/support/SupportTop";
 // 교환·반품 네 단계 — 마이페이지 주문 내역 창(OrderHelpModal)과 같이 씀
@@ -23,6 +25,15 @@ export const metadata: Metadata = {
 };
 
 
+/** 교환·반품 안내에서 여는 접수 창 머리(문의 유형은 "교환·반품") */
+const RETURN_INQUIRY = {
+    kicker: "RETURN REQUEST",
+    title: "교환·반품 접수하기",
+    sub: "사유와 상품 상태를 적어 주시면 협의 방법을 이메일로 안내해 드려요.",
+    art: "/images/ui/web-cs-return-160.webp",
+    category: "exchange" as const,
+};
+
 export default function ReturnPage() {
     return (
         <main className="mx-auto max-w-[960px] px-4 py-10 md:px-6" data-daily-web data-support-web="return">
@@ -33,12 +44,13 @@ export default function ReturnPage() {
                 lead="안심하고 쇼핑하실 수 있도록 교환·반품 기준을 안내드립니다. 아래 버튼에서 바로 신청할 수 있습니다."
             >
                 <div className="mt-4 flex flex-wrap gap-2 cs-actions">
-                    <Link
+                    <MypageInquiryLink
                         href="/inquiry?category=exchange#inquiry-form"
+                        preset={RETURN_INQUIRY}
                         className="cs-cta inline-flex min-h-10 items-center gap-2 rounded-full border border-aurora-indigo/20 bg-white/85 px-4 py-2 text-sm font-extrabold text-aurora-indigo shadow-sm transition hover:-translate-y-0.5 hover:border-aurora-indigo/40 hover:bg-indigo-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aurora-indigo"
                     >
                         <i className="fa-solid fa-envelope" aria-hidden="true" /> 교환·반품 접수하기 <i className="fa-solid fa-chevron-right text-[9px]" aria-hidden="true" />
-                    </Link>
+                    </MypageInquiryLink>
                     <Link
                         href="/faq"
                         className="cs-cta-sub inline-flex min-h-10 items-center gap-2 rounded-full border border-neutral-200 bg-white/70 px-4 py-2 text-sm font-extrabold text-neutral-700 shadow-sm transition hover:-translate-y-0.5 hover:border-neutral-300 hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aurora-indigo"
