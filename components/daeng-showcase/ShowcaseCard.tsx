@@ -324,6 +324,7 @@ export default function ShowcaseCard({
             {/* 크게 보기 창 — 단추는 이 카드의 기존 함수 그대로(공유 · 신고 · 프로필 · 삭제는 창을 닫고 부름) */}
             <ShowcasePostDialog
                 post={post}
+                tint={tint}
                 open={detailOpen}
                 onClose={closeDetail}
                 busy={busy}

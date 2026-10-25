@@ -199,6 +199,9 @@ html:not(.ddb-app-mode) .dw-sc-open:active { transform: scale(0.98); }
 html:not(.ddb-app-mode) .dw-sc-open:focus-visible { outline: 3px solid #f7c3d2; outline-offset: 3px; }
 html:not(.ddb-app-mode) .dw-sc-caption-open { cursor: pointer; }
 
+
+/* 크게 보기 창 2차(2026-10-25 사용자 "촌스럽고 올드 · 웹 컨셉과 안 맞음") — 카드 색 파스텔 쿠션 종이 · 무지개 크레파스 테 사진
+   · 주아 이름(세 색 밑줄) · 흰 말풍선 이야기 · 흰 보호자 칸 · 분홍 응원 알약. 점선 · 괘선 · 스티커 없음 */
 html:not(.ddb-app-mode) .spd-overlay {
     position: fixed;
     inset: 0;
@@ -206,59 +209,91 @@ html:not(.ddb-app-mode) .spd-overlay {
     display: grid;
     place-items: center;
     padding: 24px;
-    background: rgb(15 23 42 / 55%);
-    backdrop-filter: blur(3px);
+    background: rgb(15 23 42 / 52%);
+    backdrop-filter: blur(4px);
 }
 html:not(.ddb-app-mode) .spd {
     --spd-jua: var(--font-jua), var(--font-wanted-sans), sans-serif;
+    --t-bg: #ffeef3; --t-bg2: #fff7f9; --t-ink: #d0436d; --t-soft: #fbd3df;
     position: relative;
     display: grid;
-    grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr);
-    width: min(1040px, 100%);
+    grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+    align-items: center;
+    gap: 34px;
+    width: min(1000px, 100%);
     max-height: calc(100dvh - 48px);
-    overflow: hidden;
-    border-radius: 34px;
-    background: #fff;
-    box-shadow: 0 40px 80px -30px rgb(15 23 42 / 60%);
-    animation: scm-pop 0.28s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+    padding: 30px;
+    border-radius: 40px;
+    background: radial-gradient(60% 60% at 100% 0, rgb(255 255 255 / 75%) 0, transparent 60%), radial-gradient(50% 50% at 0 100%, rgb(255 255 255 / 55%) 0, transparent 60%), linear-gradient(150deg, var(--t-bg), var(--t-bg2));
+    box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 40px 80px -30px rgb(15 23 42 / 60%);
+    animation: scm-pop 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.2);
     color: #1e293b;
+    &.is-mint { --t-bg: #e7f7ef; --t-bg2: #f4fbf7; --t-ink: #0f8a66; --t-soft: #bfe8d6; }
+    &.is-yellow { --t-bg: #fff4dc; --t-bg2: #fffaef; --t-ink: #b86a08; --t-soft: #f7dca0; }
+    &.is-sky { --t-bg: #e6f3fb; --t-bg2: #f3f9fd; --t-ink: #0e7f93; --t-soft: #bfe0f0; }
+    &.is-lav { --t-bg: #f0ecfe; --t-bg2: #f8f6ff; --t-ink: #6b51c9; --t-soft: #d8cff8; }
 
-    & .spd-close { position: absolute; top: 14px; right: 14px; z-index: 3; display: grid; width: 42px; height: 42px; place-items: center; border: 0; border-radius: 50%; background: rgb(255 255 255 / 94%); color: #64748b; font-size: 18px; cursor: pointer; box-shadow: 0 6px 12px -8px rgb(15 23 42 / 50%); }
-    & .spd-close:hover { background: #fff0f4; color: #d0436d; }
+    & .spd-close { position: absolute; top: 16px; right: 16px; z-index: 3; display: grid; width: 44px; height: 44px; place-items: center; border: 0; border-radius: 50%; background: #fff; color: #64748b; font-size: 18px; cursor: pointer; box-shadow: 0 8px 16px -10px rgb(15 23 42 / 50%); transition: transform 0.2s, color 0.2s; }
+    & .spd-close:hover { color: var(--t-ink); transform: rotate(90deg); }
 
-    /* 사진 — 정사각 칸 안에 잘림 없이(contain) · 크림 바탕 */
-    & .spd-photo { position: relative; display: grid; place-items: center; min-height: 0; background: #f6f3ee; }
-    & .spd-photo img { width: 100%; height: 100%; max-height: calc(100dvh - 48px); object-fit: contain; }
-    & .spd-topic { position: absolute; top: 16px; left: 16px; display: inline-flex; align-items: center; gap: 5px; padding: 6px 13px; border-radius: 999px; background: #ffd58a; color: #6b4300; font-family: var(--spd-jua); font-size: 14px; box-shadow: 0 6px 12px -8px rgb(15 23 42 / 40%); }
+    /* 사진 — 무지개 크레파스 테 · 흰 안테 · 정사각 */
+    & .spd-photo { position: relative; min-width: 0; }
+    & .spd-frame { position: relative; display: block; padding: 12px; border-radius: 36px; isolation: isolate; }
+    & .spd-frame::before { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: 36px; background: conic-gradient(from 20deg, #f7a8bf, #ffd08a, #a8e0c6, #a9d4ea, #cfc3f5, #f7a8bf); filter: url(#dw-crayon-grain); }
+    & .spd-frame::after { content: ""; position: absolute; inset: 7px; z-index: -1; border-radius: 30px; background: #fff; }
+    & .spd-frame img { display: block; width: 100%; aspect-ratio: 1; max-height: calc(100dvh - 160px); border-radius: 24px; background: #f6f3ee; object-fit: cover; }
+    & .spd-topic { position: absolute; top: -12px; left: 50%; z-index: 2; display: inline-flex; align-items: center; gap: 6px; padding: 8px 18px; border-radius: 999px; background: #e9789a; color: #fff; font-family: var(--spd-jua); font-size: 15px; white-space: nowrap; transform: translateX(-50%); box-shadow: 0 10px 18px -10px rgb(200 80 120 / 70%); }
+    & .spd-topic i { font-size: 12px; }
 
-    /* 글 — 보호자 / 아이 이름 / 이야기(스크롤) / 단추 */
-    & .spd-side { display: grid; grid-template-rows: auto auto minmax(0, 1fr) auto; gap: 14px; min-height: 0; padding: 26px 26px 22px; }
-    & .spd-author { display: flex; align-items: center; gap: 10px; padding-right: 48px; }
+    /* 글 */
+    & .spd-side { display: grid; align-content: center; gap: 16px; min-width: 0; max-height: calc(100dvh - 108px); padding-right: 30px; }
+    & .spd-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; }
+    & .spd-kicker { font-size: 13.5px; }
+    & .spd-date { padding: 3px 10px; border-radius: 999px; background: rgb(255 255 255 / 75%); color: #94a3b8; font-size: 12px; font-weight: 800; }
+    & .spd-name { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; }
+    & .spd-name > span { position: relative; color: #1e293b; font-family: var(--spd-jua); font-size: clamp(30px, 3.2vw, 40px); font-weight: 400; line-height: 1.15; isolation: isolate; }
+    & .spd-name > span::after { content: ""; position: absolute; right: -2px; bottom: 0.02em; left: -2px; z-index: -1; height: 0.24em; border-radius: 999px 70% 999px 60%; background: repeating-linear-gradient(94deg, rgb(8 145 178 / 62%) 0 12px, rgb(239 71 111 / 58%) 12px 24px, rgb(245 158 11 / 62%) 24px 36px); opacity: 0.5; transform: rotate(-0.6deg); }
+    & .spd-name small { padding: 4px 12px; border-radius: 999px; background: #fff; color: var(--t-ink); font-family: var(--spd-jua); font-size: 14px; }
+
+    /* 이야기 — 흰 말풍선 쿠션(왼쪽 위 꼬리) · 큰 따옴표 */
+    & .spd-bubble { position: relative; min-height: 0; padding: 26px 26px 22px; border-radius: 30px; background: #fff; box-shadow: inset 0 3px 0 #fff, 0 16px 26px -20px rgb(15 23 42 / 40%); }
+    & .spd-bubble::before { content: ""; position: absolute; top: -9px; left: 34px; width: 22px; height: 22px; border-radius: 4px; background: #fff; transform: rotate(45deg); }
+    & .spd-quote { position: absolute; top: 6px; left: 18px; color: var(--t-soft); font-family: Georgia, serif; font-size: 58px; line-height: 1; pointer-events: none; }
+    & .spd-caption { position: relative; max-height: 32vh; overflow-y: auto; overscroll-behavior: contain; padding-left: 26px; color: #334155; font-size: 16px; font-weight: 600; line-height: 1.85; white-space: pre-wrap; word-break: keep-all; overflow-wrap: anywhere; }
+
+    /* 보호자 */
+    & .spd-author { display: flex; align-items: center; gap: 10px; padding: 10px 10px 10px 12px; border-radius: 999px; background: rgb(255 255 255 / 82%); box-shadow: 0 10px 18px -16px rgb(15 23 42 / 45%); }
     & .spd-author-btn { display: flex; flex: 1; min-width: 0; align-items: center; gap: 10px; border: 0; background: none; text-align: left; cursor: pointer; }
-    & .spd-avatar { display: grid; flex: none; width: 42px; height: 42px; place-items: center; border-radius: 50%; background: #ffe2ea; color: #d0436d; font-family: var(--spd-jua); font-size: 18px; }
+    & .spd-avatar { display: grid; flex: none; width: 42px; height: 42px; place-items: center; border-radius: 50%; background: var(--t-bg); color: var(--t-ink); font-family: var(--spd-jua); font-size: 18px; box-shadow: inset 0 0 0 2px var(--t-soft); }
     & .spd-author-text { display: grid; min-width: 0; }
     & .spd-author-text b { overflow: hidden; color: #1e293b; font-family: var(--spd-jua); font-size: 16px; font-weight: 400; white-space: nowrap; text-overflow: ellipsis; }
     & .spd-author-text b small { margin-left: 6px; padding: 1px 8px; border-radius: 999px; background: #e9f8f1; color: #0f8a66; font-size: 11px; }
     & .spd-author-text span { color: #94a3b8; font-size: 12px; font-weight: 700; }
-    & .spd-follow { flex: none; min-height: 34px; padding: 0 14px; border: 0; border-radius: 999px; background: #e9789a; color: #fff; font-family: var(--spd-jua); font-size: 13.5px; cursor: pointer; }
+    & .spd-follow { display: inline-flex; flex: none; align-items: center; gap: 6px; min-height: 38px; padding: 0 16px; border: 0; border-radius: 999px; background: var(--t-ink); color: #fff; font-family: var(--spd-jua); font-size: 14px; cursor: pointer; transition: transform 0.2s; }
+    & .spd-follow i { font-size: 11px; }
     & .spd-follow.is-on { background: #fff; color: #64748b; box-shadow: inset 0 0 0 1.5px #e5e7eb; }
-    & .spd-pet { color: #1e293b; font-family: var(--spd-jua); font-size: 24px; line-height: 1.2; }
-    & .spd-pet small { margin-left: 8px; color: #0e7f93; font-size: 14px; }
-    & .spd-caption { min-height: 0; overflow-y: auto; overscroll-behavior: contain; color: #334155; font-size: 15px; font-weight: 600; line-height: 1.85; white-space: pre-wrap; word-break: keep-all; overflow-wrap: anywhere; }
-    & .spd-acts { display: flex; align-items: center; gap: 8px; padding-top: 14px; box-shadow: inset 0 1px 0 #f1ede6; }
-    & .spd-bone { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 18px; border: 0; border-radius: 999px; background: #fff0f4; color: #d0436d; font-family: var(--spd-jua); font-size: 16px; cursor: pointer; transition: transform 0.2s, background 0.2s; }
-    & .spd-bone.is-on { background: #e9789a; color: #fff; }
-    & .spd-bone:active { transform: scale(0.95); }
-    & .spd-mini { display: grid; min-width: 44px; height: 44px; place-items: center; padding: 0 12px; border: 0; border-radius: 999px; background: #f6f4f0; color: #64748b; font-size: 15px; cursor: pointer; }
-    & .spd-mini.is-text { font-family: var(--spd-jua); font-size: 13.5px; }
-    & .spd-mini:hover { background: #fff0f4; color: #d0436d; }
+    & .spd-follow:active { transform: scale(0.96); }
+
+    /* 응원 · 공유 · 신고 */
+    & .spd-acts { display: flex; align-items: center; gap: 10px; }
+    & .spd-bone { display: inline-flex; flex: 1; align-items: center; justify-content: center; gap: 9px; min-height: 54px; padding: 0 22px; border: 0; border-radius: 999px; background: linear-gradient(180deg, #ef8aa8, #e66f93); color: #fff; font-family: var(--spd-jua); font-size: 17px; cursor: pointer; box-shadow: inset 0 2px 0 rgb(255 255 255 / 28%), 0 14px 22px -14px rgb(200 80 120 / 85%); transition: transform 0.2s; }
+    & .spd-bone b { padding: 2px 10px; border-radius: 999px; background: rgb(255 255 255 / 28%); font-weight: 400; }
+    & .spd-bone.is-on { background: #fff; color: #d0436d; box-shadow: inset 0 0 0 2px #f7c3d2; }
+    & .spd-bone.is-on b { background: #ffe9f0; }
+    & .spd-bone:hover:not(:disabled) { transform: translateY(-2px); }
+    & .spd-bone:active:not(:disabled) { transform: scale(0.97); }
+    & .spd-mini { display: grid; flex: none; min-width: 54px; height: 54px; place-items: center; padding: 0 14px; border: 0; border-radius: 999px; background: #fff; color: #64748b; font-size: 17px; cursor: pointer; box-shadow: 0 10px 18px -14px rgb(15 23 42 / 45%); transition: transform 0.2s, color 0.2s; }
+    & .spd-mini.is-text { font-family: var(--spd-jua); font-size: 14px; }
+    & .spd-mini:hover { color: var(--t-ink); transform: translateY(-2px); }
     & :is(.spd-bone, .spd-mini, .spd-follow, .spd-close, .spd-author-btn):focus-visible { outline: 3px solid #f7c3d2; outline-offset: 2px; }
 }
 @media (prefers-reduced-motion: reduce) { html:not(.ddb-app-mode) .spd { animation: none; } html:not(.ddb-app-mode) .dw-sc-open:hover { transform: none; } }
 @media (max-width: 760px) {
     html:not(.ddb-app-mode) .spd-overlay { align-items: end; padding: 0; }
-    html:not(.ddb-app-mode) .spd { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); width: 100%; max-height: 94dvh; border-radius: 28px 28px 0 0; }
-    html:not(.ddb-app-mode) .spd .spd-photo img { max-height: 52dvh; }
-    html:not(.ddb-app-mode) .spd .spd-side { padding: 18px 18px calc(16px + env(safe-area-inset-bottom)); }
-    html:not(.ddb-app-mode) .spd .spd-pet { font-size: 21px; }
+    html:not(.ddb-app-mode) .spd { grid-template-columns: minmax(0, 1fr); gap: 18px; width: 100%; max-height: 94dvh; overflow-y: auto; padding: 26px 18px calc(18px + env(safe-area-inset-bottom)); border-radius: 30px 30px 0 0; }
+    html:not(.ddb-app-mode) .spd .spd-close { top: 12px; right: 12px; width: 40px; height: 40px; }
+    html:not(.ddb-app-mode) .spd .spd-photo { width: min(100%, 360px); justify-self: center; margin-top: 10px; }
+    html:not(.ddb-app-mode) .spd .spd-side { max-height: none; padding-right: 0; }
+    html:not(.ddb-app-mode) .spd .spd-name > span { font-size: 28px; }
+    html:not(.ddb-app-mode) .spd .spd-caption { max-height: none; font-size: 15px; }
 }
