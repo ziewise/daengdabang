@@ -172,8 +172,8 @@ export function BulkWebIntro() {
                     <h1 id="bzw-bulk-title" className="bzw-title">여러 아이를 위한 주문도<br /><em className="bzw-hl">한 건처럼</em> 세심하게.</h1>
                     <p className="bzw-lead">기업·기관·단체의 대량 구매는 상품과 수량만으로 끝나지 않습니다. 사용 목적, 예산, 일정과 배송 조건을 함께 살펴 가능한 범위를 안내드립니다.</p>
                     <div className="bzw-actions">
-                        <a href="#bulk-order-form" className="bzw-pill is-pink">상담 내용 작성하기<i className="fa-solid fa-arrow-down" aria-hidden="true" /></a>
-                        <Link href="/products" className="bzw-pill">상품 먼저 둘러보기</Link>
+                        {/* 2026-10-25 "상담 내용 작성하기" 뺌(아래 카드 단추 → 상담 신청 창, 입점과 같은 방식 · 사용자 요청) */}
+                        <Link href="/products" className="bzw-pill is-pink">상품 먼저 둘러보기<i className="fa-solid fa-arrow-right" aria-hidden="true" /></Link>
                     </div>
                 </div>
                 {/* 빠른 확인 메모 */}
