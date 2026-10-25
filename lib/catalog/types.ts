@@ -131,7 +131,8 @@ export type SubcategorySlug =
     | "hygiene"
     | "etc";
 
-export type PromoSlug = "active" | "rainy" | "eye" | "food" | "seasonal";
+// season · walk: 웹 기획전(2026-10-25) — 상품은 lib/promo-season.ts 가 고름(상품마다 붙는 promos 에는 없음)
+export type PromoSlug = "active" | "rainy" | "eye" | "food" | "seasonal" | "season" | "walk";
 export type BestPeriod = "realtime" | "daily" | "weekly" | "monthly";
 
 export type SortKey =

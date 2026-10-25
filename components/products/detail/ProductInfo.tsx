@@ -152,7 +152,7 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
                                 </span>
                             )}
                             {isNew && (
-                                <span className="rounded-full bg-indigo-600 px-2.5 py-1 text-[11px] font-black text-white">
+                                <span className="pd-new rounded-full bg-indigo-600 px-2.5 py-1 text-[11px] font-black text-white">
                                     NEW
                                 </span>
                             )}
@@ -174,7 +174,7 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
                 )}
 
                 {twinStat && twinStat.sampleSize >= 5 && typeof twinStat.repurchaseRate === "number" && (
-                    <div className="rounded-lg border border-indigo-100 bg-indigo-50/70 px-4 py-3">
+                    <div className="pd-twin rounded-lg border border-indigo-100 bg-indigo-50/70 px-4 py-3">
                         <div className="flex flex-wrap items-center justify-between gap-2">
                             <span className="text-xs font-black text-indigo-700">{t("twin")}</span>
                             <span className="rounded-full bg-white px-2.5 py-1 text-[11px] font-black text-indigo-700">
@@ -408,9 +408,11 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
                 onCommitted={handleCommitted}
             />
 
-            {/* 담기 완료 토스트 */}
+            {/* 담기 완료 토스트(웹: 흰 쿠션 알약 — app/product-detail-web.css .pd-toast).
+                role="status" — 화면 읽기 프로그램이 "장바구니에 담았어요"를 알려 줌(2026-10-26, 모양 그대로) */}
             <div
-                className={`fixed left-1/2 z-[70] -translate-x-1/2 rounded-full bg-neutral-950 px-5 py-2.5 text-sm font-black text-white shadow-lg transition-all duration-300 ${
+                role="status"
+                className={`pd-toast fixed left-1/2 z-[70] -translate-x-1/2 rounded-full bg-neutral-950 px-5 py-2.5 text-sm font-black text-white shadow-lg transition-all duration-300 ${
                     toast ? "bottom-24 opacity-100" : "pointer-events-none bottom-16 opacity-0"
                 }`}
             >

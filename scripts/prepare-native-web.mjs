@@ -147,6 +147,25 @@ async function removeWebOnlyOnnxRuntimeMedia() {
     }
 }
 
+// 앱 묶음 40MB 한도(2026-10-26 사용자 승인): 묶음 폴더 안에 있지만 앱 화면이 쓰지 않는 큰 파일만 뺀다.
+// 웹에는 그대로 배포되고(out/), 지우는 파일은 없음. 앱이 쓰는 파일을 실수로 빼면 아래 verifyReferencedAssets 가 막는다.
+const nativeExcludedFiles = [
+    // 예전 원티드 산스 한 덩어리(1.26MB) — 지금은 fonts/wanted/ 세 조각을 씀(app/globals.css), 원본 보관용
+    "fonts/WantedSansVariable.woff2",
+    // 연구소 상징 원본 PNG(1.92MB) — 화면은 daengdabang-research-lab-symbol-nav.webp 만 씀
+    "images/brand/daengdabang-research-lab-symbol.png",
+    // 견종 얼굴 영상 원본(장당 1.9MB) — 웹 홈 전용. 앱 쇼핑 홈 배지는 images/breeds/badge/*-240.mp4
+    "images/breeds/englishbulldog.mp4",
+    "images/breeds/poodle.mp4",
+    "images/breeds/welshcorgi.mp4",
+];
+
+async function removeNativeExcludedFiles() {
+    for (const relativePath of nativeExcludedFiles) {
+        await rm(path.join(nativeRoot, relativePath), { force: true });
+    }
+}
+
 async function directorySize(directory) {
     let bytes = 0;
     for (const entry of await readdir(directory, { withFileTypes: true })) {
@@ -172,6 +191,7 @@ await writeFile(path.join(nativeRoot, "index.html"), launchDocument, "utf8");
 // Native product pages run the same graph through Core ML/NNAPI. The browser
 // WebGPU/WASM artifacts are intentionally omitted from the install package.
 await removeWebOnlyOnnxRuntimeMedia();
+await removeNativeExcludedFiles();
 await verifyReferencedAssets();
 
 const bytes = await directorySize(nativeRoot);
