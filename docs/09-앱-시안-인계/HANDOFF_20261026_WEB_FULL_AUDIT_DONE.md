@@ -146,15 +146,17 @@
 9. **원래 있던 문법 경고** — 이번에 고친 줄이 아님
    - `ForgotForm.tsx` 142 · 179, `PetRegisterModal.tsx` 70 · 82(`set-state-in-effect`)
 10. **시즌 기획전 겨울 그림** — 12월 1일 전에 필요(지금은 가을 그림이 대신 나옴).
-11. **앱 묶음 크기 46.26MB(한도 40MB)** — 앱 패키지 검사(`native-package-validation`)가 실패해요.
-    - 10월 22일 기록은 39.34MB였어요. 그 뒤로 웹 작업 그림 · 글꼴 · 코드가 쌓였어요.
-    - 오늘 밤 수정분은 수백 KB 수준이에요.
-    - 예: `public/fonts`에 예전 원티드 산스 한 덩어리(1.29MB)와 새로 나눈 글꼴(1.32MB)이 함께 들어가요.
-    - 묶음 대상 설정(`scripts/prepare-native-web.mjs`)은 배포 설정이라 손대지 않았어요. 웹 배포(`deploy.yml`)와는 별개예요.
-12. **굿즈 공모전 빌드 검사**(`verify-goods-contest-build-output.mjs`, 웹 배포 단계) — 원인은 우리 작업(협업자 아님)
-    - ① 영상 머리 끝 기준점(`<div class="ddb-crayon-paper`) — 10-22 굿즈 새 모양 때 사라짐. 2026-10-26 안 보이는 표시로 복구, 통과(128e2244).
-    - ② 헤더 그림 이름 — 검사는 옛 이름 `pet-lens-128.webp` · `lang-globe-128.webp`를 찾음. 10-18 헤더 3D 아이콘 작업 때 `header-petlens-128.webp` · `header-lang-128.webp`로 바뀜. 남은 실패는 이 두 줄(15 · 16)뿐.
-      - 제안: 예전 상표 그림 테스트처럼 검사가 새 이름도 받게 넓히기(사용자 승인 필요)
+11. **앱 묶음 크기 46.26MB → 37.49MB(한도 40MB) — 해결(2026-10-26 사용자 승인)**
+    - `scripts/prepare-native-web.mjs` `nativeExcludedFiles`: 앱이 안 쓰는 큰 파일만 앱 묶음에서 뺌(웹 배포 · 파일은 그대로)
+      - 예전 원티드 글꼴 원본 1.26MB(`fonts/WantedSansVariable.woff2`)
+      - 연구소 상징 원본 PNG 1.92MB
+      - 견종 얼굴 영상 원본 3개 5.7MB
+    - 앱 쇼핑 홈 견종 배지(지름 약 70px) → 새 240px 배지 영상(`public/images/breeds/badge/*-240.mp4`, 장당 약 100KB, 가운데 자름)
+      - `ShopHero.tsx` 경로만 바꿈. 웹 홈은 원본 그대로.
+    - 빠진 파일 검사(`verifyReferencedAssets`) 통과
+12. **굿즈 공모전 빌드 검사** — 원인은 우리 작업, 해결(통과)
+    - ① 영상 머리 끝 기준점: 10-22 굿즈 새 모양 때 사라짐 → 안 보이는 표시로 복구(128e2244)
+    - ② 헤더 그림 이름: 10-18 헤더 3D 아이콘(`header-petlens` · `header-lang`) → 검사가 새 이름도 받게 넓힘(사용자 승인)
 
 ## 4. 검사
 

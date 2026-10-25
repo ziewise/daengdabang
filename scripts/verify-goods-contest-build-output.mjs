@@ -12,8 +12,9 @@ const goodsHeroEnd = html.indexOf('<div class="ddb-crayon-paper', goodsHeroMarke
 assert.ok(goodsHeroMarker >= 0 && goodsHeroStart >= 0 && goodsHeroEnd > goodsHeroStart, "goods hero markup is missing");
 const goodsHeroHtml = html.slice(goodsHeroStart, goodsHeroEnd);
 
-assert.match(html, /\/images\/ui\/pet-lens-128\.webp/);
-assert.match(html, /\/images\/ui\/lang-globe-128\.webp/);
+// 헤더 그림: 예전 이름 또는 2026-10-18 헤더 3D 아이콘 이름(header-*) — 둘 다 webp 여야 함
+assert.match(html, /\/images\/ui\/(?:pet-lens|header-petlens)-128\.webp/);
+assert.match(html, /\/images\/ui\/(?:lang-globe|header-lang)-128\.webp/);
 assert.doesNotMatch(html, /\/images\/ui\/(?:pet-lens|lang-globe)\.png/);
 assert.match(goodsHeroHtml, /\/images\/goods\/goods-hero-lifestyle\.webp/);
 assert.match(goodsHeroHtml, /\/videos\/goods-contest-hero\.mp4/);

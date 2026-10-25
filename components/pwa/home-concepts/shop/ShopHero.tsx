@@ -123,7 +123,9 @@ export default function ShopHero() {
     // 영상 주소 — 네이티브 앱은 운영 사이트 파일, 화면 준비 전엔 빈 사진 자리(useShopMedia)
     const media = useShopMedia();
     const video = media?.(pickHeroVideo(context.weather, context.timeBucket, true)); // 앱 = 세로(모바일) 영상
-    const breedVideo = media?.(pickHeroBreedVideo(context.weather, context.timeBucket));
+    // 견종 얼굴 배지(지름 약 70px) — 1280×720 원본(장당 1.9MB) 대신 가운데를 자른 240px 배지 영상(장당 약 100KB, 2026-10-26 앱 묶음 줄이기).
+    // 원본은 웹 홈(HeroSection)이 그대로 씀. 새 파일: public/images/breeds/badge/<견종>-240.mp4
+    const breedVideo = media?.(pickHeroBreedVideo(context.weather, context.timeBucket).replace(/^\/images\/breeds\/([\w-]+)\.mp4$/, "/images/breeds/badge/$1-240.mp4"));
     const summary = heroWeatherSummary(report, "ko");
     const regionName = region === HERO_AUTO_REGION_ID ? "현재 위치" : KR_REGIONS.find((r) => r.id === region)?.name ?? "현재 위치";
 
