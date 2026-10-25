@@ -15,6 +15,8 @@ import { useEffect, type RefObject } from "react";
 import { KIT_CSS } from "../home-concepts/kit";
 import { Patch, STICKER_CSS, Tape } from "../home-concepts/sticker-kit";
 import { APP_INSTALL_CSS, InstallLabel, InstallSteps } from "./AppInstallGuide";
+import { InstallWebSheet } from "./AppInstallWeb";
+import { useWebScreen } from "@/hooks/useWebScreen";
 
 type Platform = "ios" | "android" | "other";
 
@@ -41,6 +43,23 @@ export default function InstallHelpSheet({
     useEffect(() => {
         closeRef.current?.focus();
     }, [closeRef]);
+
+    // 웹 화면 — 웹 크레파스 결 창(2026-10-25). 앱 화면은 아래 스티커북 창 그대로
+    const web = useWebScreen();
+    if (web) {
+        return (
+            <InstallWebSheet
+                title={title}
+                platform={platform}
+                isInAppBrowser={isInAppBrowser}
+                browserHint={browserHint}
+                copied={copied}
+                onCopy={onCopy}
+                onClose={onClose}
+                closeRef={closeRef}
+            />
+        );
+    }
 
     return (
         <div className="fixed inset-0 z-[1900] flex items-end justify-center sm:items-center sm:p-6">

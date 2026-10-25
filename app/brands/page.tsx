@@ -1,6 +1,10 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { listBrands } from "@/lib/catalog";
+import { CATALOG, CATEGORY_LABEL, listBrands } from "@/lib/catalog";
+import { productCardImage } from "@/lib/catalog/card-image";
+import { CATEGORY_ORDER } from "@/lib/shop";
+// 웹 브랜드 목록(2026-10-25 사용자 "나열만 한 느낌") — 맨 끝에 두고 웹에서만 보임(앱은 아래 기존 목록 그대로)
+import BrandsWebHub, { type BrandHubItem } from "@/components/brands/BrandsWebHub";
 // 웹 쇼핑 화면 크레파스 머리 · 타일 꾸밈(2026-10-24, data-shop-web 이름표만 · 앱은 닿지 않음)
 import "../shop-pages-web.css";
 // 브랜드 로고 판 색 — 브랜드 상세 웹 머리 판과 같이 쓰려고 lib 로 옮김(값 그대로, 2026-10-25)
@@ -11,8 +15,30 @@ export const metadata: Metadata = {
     description: "댕다방 입점 브랜드",
 };
 
+/** 대표 브랜드 한 줄 소개(상품 많은 세 곳) — 나머지는 주로 파는 분류로 소개 */
+const BRAND_TAGLINE: Record<string, string> = {
+    ruffwear: "활동견을 위한 프리미엄 아웃도어 기어",
+    "rex-specs": "강아지 눈 · 귀를 지키는 보호 아이웨어",
+    yora: "곤충 단백질로 만든 사료 · 간식",
+};
+
+/** 웹 브랜드 목록 자료 — 브랜드마다 분류별 상품 수 · 대표 상품 사진(카드 사진) */
+function buildHub(brands: ReturnType<typeof listBrands>): BrandHubItem[] {
+    return brands.map((brand) => {
+        const products = CATALOG.filter((product) => product.brandSlug === brand.slug);
+        const categories = CATEGORY_ORDER
+            .map((slug) => ({ slug, label: CATEGORY_LABEL[slug], count: products.filter((product) => product.category === slug).length }))
+            .filter((item) => item.count > 0)
+            .sort((a, b) => b.count - a.count);
+        const thumbs = [...new Set(products.map((product) => productCardImage(product) ?? product.image).filter((src): src is string => Boolean(src)))].slice(0, 4);
+        return { slug: brand.slug, ko: brand.ko, en: brand.en, count: brand.count, visual: brandStyle(brand.slug, brand.en), tagline: BRAND_TAGLINE[brand.slug], categories, thumbs };
+    });
+}
+
 export default function BrandsPage() {
     const brands = listBrands();
+    const hub = buildHub(brands);
+    const categoryTabs = CATEGORY_ORDER.filter((slug) => hub.some((brand) => brand.categories.some((category) => category.slug === slug))).map((slug) => ({ slug, label: CATEGORY_LABEL[slug] }));
 
     return (
         <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6" data-shop-web="brands">
@@ -52,6 +78,7 @@ export default function BrandsPage() {
                     );
                 })}
             </div>
+            <BrandsWebHub brands={hub} productTotal={CATALOG.length} categoryTabs={categoryTabs} />
         </main>
     );
 }

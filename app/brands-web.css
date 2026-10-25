@@ -1,0 +1,129 @@
+/*
+ * brands-web.css — 웹 브랜드 목록(/brands) · 2026-10-25
+ * ---------------------------------------------------------------------
+ * 쓰는 곳: components/brands/BrandsWebHub.tsx(.bwh-*). 웹에서만 새 본문을 켜고 예전 목록(앱용)은 숨김.
+ * 흰 · 파스텔 쿠션 · 주아 제목 + 세 색 밑줄 · 영문 꼬리표 · 브랜드 색 로고 판 · 크림 액자 상품 사진 · 분홍/흰 알약.
+ */
+
+html:not(.ddb-app-mode) main[data-shop-web="brands"] {
+    max-width: 1280px;
+    & > :not(.bwh) { display: none !important; } /* 앱용 예전 목록 · 제목 — 웹에서는 새 본문만 */
+    & > .bwh.hidden { display: grid; }
+}
+
+html:not(.ddb-app-mode) .bwh {
+    gap: 26px;
+    color: #1e293b;
+    word-break: keep-all;
+
+    & .bwh-kicker {
+        width: fit-content;
+        background: repeating-linear-gradient(172deg, #07849e 0 5px, #ef476f 5px 10px, #e98708 10px 15px);
+        -webkit-background-clip: text;
+        background-clip: text;
+        font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+        font-size: 13px;
+        letter-spacing: 0.12em;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* 머리 판 */
+    & .bwh-hero { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 24px; padding: 34px 40px; border-radius: 36px; background: radial-gradient(60% 100% at 100% 0, #f1ebff 0, transparent 60%), linear-gradient(130deg, #fff6e3, #fffaf1 55%, #fff); box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 22px 36px -24px rgb(15 23 42 / 32%), 0 0 0 1px #f4ead9; }
+    & .bwh-hero-text { display: grid; gap: 10px; }
+    & .bwh-hero h1 { font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 34px; font-weight: 400; line-height: 1.3; }
+    & .bwh-hero h1 em { position: relative; color: #d0436d; font-style: normal; white-space: nowrap; isolation: isolate; }
+    & .bwh-hero h1 em::after { content: ""; position: absolute; right: -2px; bottom: 0.04em; left: -2px; z-index: -1; height: 0.24em; border-radius: 999px 70% 999px 60%; background: repeating-linear-gradient(94deg, rgb(8 145 178 / 62%) 0 12px, rgb(239 71 111 / 58%) 12px 24px, rgb(245 158 11 / 62%) 24px 36px); opacity: 0.5; transform: rotate(-0.8deg); }
+    & .bwh-lead { color: #5b6476; font-size: 15px; font-weight: 600; line-height: 1.7; }
+    & .bwh-stats { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+    & .bwh-stats li, & .bwh-stats a { display: inline-flex; align-items: center; gap: 7px; padding: 7px 14px; border-radius: 999px; background: #fff; color: #5b6476; font-size: 13.5px; font-weight: 700; box-shadow: 0 0 0 1.5px #f3e6cf; }
+    & .bwh-stats li:has(a) { padding: 0; box-shadow: none; background: none; }
+    & .bwh-stats a { background: #e9789a; color: #fff; box-shadow: 0 10px 16px -12px rgb(200 80 120 / 80%); }
+    & .bwh-stats i { color: #e9789a; font-size: 12px; }
+    & .bwh-stats a i { color: #fff; }
+    & .bwh-stats b { color: #1e293b; font-weight: 800; }
+    & .bwh-hero-art { display: grid; width: 132px; height: 132px; place-items: center; border-radius: 50%; background: #fff; box-shadow: 0 0 0 8px rgb(255 255 255 / 60%), 0 18px 28px -18px rgb(15 23 42 / 40%); }
+    & .bwh-hero-art img { width: 96px; height: 96px; object-fit: contain; }
+
+    /* 로고 판 */
+    & .bwh-logo { display: grid; place-items: center; width: 100%; aspect-ratio: 16 / 6; padding: 8px 12px; border-radius: 18px; font-size: 13px; font-weight: 900; letter-spacing: 0.14em; line-height: 1.2; text-align: center; }
+    & .bwh-logo[data-big] { aspect-ratio: auto; height: 74px; font-size: 17px; border-radius: 20px; }
+
+    /* 대표 상품 사진 줄 — 크림 액자 */
+    & .bwh-thumbs { display: grid; grid-template-columns: repeat(var(--n, 3), minmax(0, 1fr)); gap: 8px; }
+    & .bwh-thumb { position: relative; display: block; aspect-ratio: 1; overflow: hidden; border-radius: 16px; background: #fffaf1; box-shadow: inset 0 0 0 1px #f4ece1; }
+    & .bwh-thumb img { padding: 6px; }
+
+    & .bwh-cats { display: flex; flex-wrap: wrap; gap: 6px; }
+    & .bwh-cats span { padding: 4px 11px; border-radius: 999px; background: #f6f1ff; color: #5b4a9e; font-size: 12.5px; font-weight: 700; }
+    & .bwh-cats span b { margin-left: 3px; color: #8b74e0; font-weight: 800; }
+    & .bwh-cats.is-small span { padding: 3px 9px; font-size: 11.5px; }
+
+    /* 대표 브랜드 */
+    & .bwh-featured { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+    & .bwh-feature { --n: 4; display: grid; align-content: start; gap: 12px; padding: 18px 18px 20px; border-radius: 32px; background: #fff; box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 22px 34px -24px rgb(15 23 42 / 34%), 0 0 0 1px #f4ece1; transition: transform 0.2s, box-shadow 0.2s; }
+    & .bwh-feature:hover { transform: translateY(-3px); box-shadow: 0 0 0 2px #f7a8bf, 0 26px 36px -24px rgb(200 80 120 / 45%); }
+    & .bwh-feature-top { position: relative; display: block; }
+    & .bwh-feature-rank { position: absolute; top: -8px; right: 12px; padding: 3px 10px; border-radius: 999px; background: #fff; color: #d0436d; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 12.5px; box-shadow: 0 0 0 1.5px #f7c3d2, 0 6px 10px -6px rgb(200 80 120 / 60%); }
+    & .bwh-feature-name { display: grid; gap: 1px; }
+    & .bwh-feature-name b { font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 22px; font-weight: 400; }
+    & .bwh-feature-name small, & .bwh-card-name small { color: #8a93a3; font-size: 11.5px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; }
+    & .bwh-feature-line { color: #5b6476; font-size: 14px; font-weight: 600; line-height: 1.6; }
+    & .bwh-go { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 46px; margin-top: 2px; border-radius: 999px; background: #fff0f4; color: #d0436d; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 15.5px; transition: background 0.2s, color 0.2s; }
+    & .bwh-feature:hover .bwh-go { background: #e9789a; color: #fff; }
+
+    /* 분류 고르기 */
+    & .bwh-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+    & .bwh-tabs button { display: inline-flex; align-items: center; gap: 7px; min-height: 44px; padding: 0 18px; border: 0; border-radius: 999px; background: #fff; color: #5b6476; font-size: 14px; font-weight: 800; cursor: pointer; box-shadow: 0 0 0 1.5px #efe5d6, 0 8px 14px -12px rgb(15 23 42 / 40%); transition: background 0.2s, color 0.2s; }
+    & .bwh-tabs button b { color: #8a93a3; font-size: 12px; }
+    & .bwh-tabs button:hover { color: #d0436d; box-shadow: 0 0 0 1.5px #f7c3d2; }
+    & .bwh-tabs button[aria-selected="true"] { background: #1e293b; color: #fff; box-shadow: 0 10px 16px -12px rgb(15 23 42 / 70%); }
+    & .bwh-tabs button[aria-selected="true"] b { color: rgb(255 255 255 / 70%); }
+    & .bwh-tabs button:focus-visible { outline: 3px solid #f7c3d2; outline-offset: 2px; }
+
+    /* 브랜드 카드 */
+    & .bwh-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: 1fr; gap: 16px; animation: bwh-in 0.3s ease; }
+    & .bwh-card { --n: 3; display: grid; grid-template-rows: auto auto auto 1fr auto; gap: 10px; height: 100%; padding: 14px 14px 16px; border-radius: 28px; background: #fff; box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 18px 28px -22px rgb(15 23 42 / 34%), 0 0 0 1px #f4ece1; transition: transform 0.2s, box-shadow 0.2s; }
+    & .bwh-card:hover { transform: translateY(-3px); box-shadow: 0 0 0 2px #f7a8bf, 0 22px 30px -22px rgb(200 80 120 / 45%); }
+    & .bwh-card-name { display: grid; gap: 1px; }
+    & .bwh-card-name b { font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 18px; font-weight: 400; line-height: 1.3; }
+    & .bwh-card .bwh-thumbs { align-self: end; }
+    & .bwh-card-foot { display: flex; align-items: center; gap: 4px; padding-top: 10px; color: #5b6476; font-size: 13px; font-weight: 700; box-shadow: inset 0 1.5px 0 #f6efe5; }
+    & .bwh-card-foot b { color: #d0436d; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 16px; font-weight: 400; }
+    & .bwh-card-foot i { margin-left: auto; color: #e9789a; font-size: 11px; }
+    & :is(.bwh-feature, .bwh-card, .bwh-stats a):focus-visible { outline: 3px solid #f7c3d2; outline-offset: 3px; }
+}
+
+@keyframes bwh-in { from { opacity: 0; transform: translateY(6px); } }
+
+@media (max-width: 1100px) {
+    html:not(.ddb-app-mode) .bwh .bwh-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 860px) {
+    html:not(.ddb-app-mode) .bwh {
+        & .bwh-featured { grid-template-columns: minmax(0, 1fr); }
+        & .bwh-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+}
+
+@media (max-width: 640px) {
+    html:not(.ddb-app-mode) .bwh {
+        gap: 18px;
+        & .bwh-hero { grid-template-columns: minmax(0, 1fr); padding: 24px 18px; border-radius: 30px; }
+        & .bwh-hero h1 { font-size: 26px; }
+        & .bwh-lead { font-size: 14px; }
+        & .bwh-hero-art { display: none; }
+        & .bwh-featured { display: flex; gap: 12px; overflow-x: auto; margin: 0 -16px; padding: 6px 16px 14px; scroll-snap-type: x mandatory; scroll-padding-inline: 16px; scrollbar-width: none; }
+        & .bwh-feature { flex: none; width: 82%; scroll-snap-align: start; border-radius: 28px; }
+        & .bwh-feature:hover, & .bwh-card:hover { transform: none; }
+        & .bwh-tabs { flex-wrap: nowrap; overflow-x: auto; margin: 0 -16px; padding: 4px 16px 8px; scrollbar-width: none; }
+        & .bwh-tabs button { flex: none; min-height: 40px; padding: 0 14px; font-size: 13px; }
+        & .bwh-grid { gap: 10px; }
+        & .bwh-card { gap: 8px; padding: 10px 10px 12px; border-radius: 22px; }
+        & .bwh-logo { aspect-ratio: 16 / 7; border-radius: 14px; font-size: 11px; letter-spacing: 0.1em; }
+        & .bwh-card-name b { font-size: 16px; }
+        & .bwh-thumbs { gap: 5px; }
+        & .bwh-thumb { border-radius: 12px; }
+        & .bwh-thumb img { padding: 3px; }
+    }
+}

@@ -1,0 +1,199 @@
+/*
+ * app-install-web.css — 앱 설치 안내(/app/ · 설치 방법 창) 웹 크레파스 결 · 2026-10-25
+ * ---------------------------------------------------------------------
+ * 쓰는 곳: components/pwa/install-guide/AppInstallWeb.tsx(.aiw-*)
+ * 흰 · 파스텔 쿠션 판 · 주아 제목 + 세 색 밑줄 · 영문 꼬리표 · 3D 그림 · 분홍/흰 알약. 테이프 · 모눈 · 점선 · 기울기 없음.
+ * 웹 화면에서만(앱 화면은 예전 스티커북 창 그대로).
+ */
+
+html:not(.ddb-app-mode) {
+    --aiw-ink: #1e293b;
+    --aiw-sub: #5b6476;
+    --aiw-mute: #8a93a3;
+    --aiw-pink: #e9789a;
+    --aiw-pink-d: #d0436d;
+    --aiw-pink-l: #fff0f4;
+    --aiw-mint: #12a17a;
+    --aiw-mint-l: #e9f8f1;
+    --aiw-cushion: inset 0 3px 0 rgb(255 255 255 / 90%), inset 0 -10px 18px rgb(0 0 0 / 3%), 0 22px 36px -24px rgb(15 23 42 / 32%);
+    --aiw-underline: repeating-linear-gradient(94deg, rgb(8 145 178 / 62%) 0 12px, rgb(239 71 111 / 58%) 12px 24px, rgb(245 158 11 / 62%) 24px 36px);
+    --aiw-jua: var(--font-jua), var(--font-wanted-sans), sans-serif;
+}
+
+html:not(.ddb-app-mode) [data-app-install-web] {
+    color: var(--aiw-ink);
+    word-break: keep-all;
+
+    & .aiw-kicker {
+        width: fit-content;
+        background: repeating-linear-gradient(172deg, #07849e 0 5px, #ef476f 5px 10px, #e98708 10px 15px);
+        -webkit-background-clip: text;
+        background-clip: text;
+        font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+        font-size: 13px;
+        letter-spacing: 0.12em;
+        -webkit-text-fill-color: transparent;
+    }
+
+    & .aiw-icon { display: grid; width: 76px; height: 76px; place-items: center; overflow: hidden; border-radius: 24px; background: #fff; box-shadow: 0 0 0 4px #fff, 0 0 0 5.5px #f7d5df, 0 14px 22px -14px rgb(15 23 42 / 45%); }
+    & .aiw-icon img { width: 100%; height: 100%; object-fit: cover; }
+    & .aiw-icon.is-small { width: 58px; height: 58px; border-radius: 18px; }
+
+    /* 분홍 알약 단추(설치 · 확인) · 흰 알약(주소 복사) */
+    & .aiw-install {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        min-height: 56px;
+        padding: 0 30px;
+        border: 0;
+        border-radius: 999px;
+        background: var(--aiw-pink);
+        color: #fff;
+        font-family: var(--aiw-jua);
+        font-size: 18px;
+        cursor: pointer;
+        box-shadow: inset 0 2px 0 rgb(255 255 255 / 28%), 0 14px 22px -14px rgb(200 80 120 / 85%);
+        transition: transform 0.2s, background 0.2s;
+    }
+    & .aiw-install:hover { background: #e26690; transform: translateY(-2px); }
+    & .aiw-install:active { transform: scale(0.97); }
+    & .aiw-ghost { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 52px; padding: 0 24px; border: 0; border-radius: 999px; background: #fff; color: var(--aiw-sub); font-family: var(--aiw-jua); font-size: 16px; cursor: pointer; box-shadow: 0 0 0 1.5px #efe5d6; }
+    & :is(.aiw-install, .aiw-ghost, .aiw-close):focus-visible { outline: 3px solid #f7c3d2; outline-offset: 3px; }
+
+    /* 기본 브라우저 안내 — 노랑 쿠션 */
+    & .aiw-note { display: flex; gap: 10px; margin: 0 0 16px; padding: 14px 16px; border-radius: 20px; background: #fff6e3; color: #6b5a3a; font-size: 13.5px; font-weight: 600; line-height: 1.65; box-shadow: inset 0 3px 0 rgb(255 255 255 / 80%); }
+    & .aiw-note > i { margin-top: 3px; color: #d98a12; }
+    & .aiw-note b { display: block; color: #b46e08; font-family: var(--aiw-jua); font-size: 15px; font-weight: 400; }
+    & .aiw-note em { color: var(--aiw-pink-d); font-style: normal; font-weight: 800; }
+
+    /* 설치 순서 */
+    & .aiw-steps { display: grid; gap: 10px; }
+    & .aiw-steps li { display: grid; grid-template-columns: auto auto minmax(0, 1fr); align-items: center; gap: 12px; padding: 12px 16px 12px 12px; border-radius: 20px; background: #fff; font-size: 14.5px; font-weight: 600; line-height: 1.55; box-shadow: 0 0 0 1.5px #f1ece3, 0 10px 16px -14px rgb(15 23 42 / 30%); }
+    & .aiw-step-no { display: grid; width: 34px; height: 34px; place-items: center; border-radius: 50%; background: var(--aiw-pink); color: #fff; font-family: var(--aiw-jua); font-size: 16px; box-shadow: 0 0 0 3px var(--aiw-pink-l); }
+    & .aiw-steps li > i { width: 18px; color: var(--aiw-pink); font-size: 14px; text-align: center; }
+    & .aiw-step-text { color: #334155; }
+    & .aiw-step-text b { color: var(--aiw-ink); font-weight: 800; }
+    & .aiw-step-text .ig-soft { color: var(--aiw-mute); font-weight: 600; }
+}
+
+/* ═════════ /app/ 페이지 ═════════ */
+html:not(.ddb-app-mode) .aiw {
+    display: grid;
+    gap: 22px;
+    width: min(1232px, calc(100% - 32px));
+    margin: 0 auto;
+    padding: 34px 0 calc(80px + env(safe-area-inset-bottom));
+
+    /* 머리 판 — 분홍 · 보라 파스텔 쿠션, 왼쪽 글 · 오른쪽 휴대폰 셋 */
+    & .aiw-hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+        align-items: center;
+        gap: 30px;
+        padding: 40px 44px;
+        overflow: hidden;
+        border-radius: 40px;
+        background: radial-gradient(60% 90% at 100% 0, #f1ebff 0, transparent 60%), radial-gradient(50% 70% at 0 100%, #fff1e2 0, transparent 60%), linear-gradient(130deg, #ffeef3, #fff6f8 55%, #fffaf3);
+        box-shadow: var(--aiw-cushion), 0 0 0 1px #f7e2e8;
+    }
+    & .aiw-hero-text { display: grid; justify-items: start; gap: 12px; }
+    & .aiw-hero-text .aiw-icon { margin-bottom: 6px; }
+    & .aiw-hero h1 { font-family: var(--aiw-jua); font-size: 40px; font-weight: 400; line-height: 1.25; }
+    & .aiw-hero h1 em { position: relative; color: var(--aiw-pink-d); font-style: normal; white-space: nowrap; isolation: isolate; }
+    & .aiw-hero h1 em::after { content: ""; position: absolute; right: -2px; bottom: 0.04em; left: -2px; z-index: -1; height: 0.24em; border-radius: 999px 70% 999px 60%; background: var(--aiw-underline); opacity: 0.5; transform: rotate(-0.8deg); }
+    & .aiw-lead { color: var(--aiw-sub); font-size: 16px; font-weight: 600; line-height: 1.7; }
+    & .aiw-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 2px 0 8px; }
+    & .aiw-chips li { display: inline-flex; align-items: center; gap: 7px; padding: 7px 14px; border-radius: 999px; background: #fff; color: var(--aiw-sub); font-size: 13.5px; font-weight: 700; box-shadow: 0 0 0 1.5px #f5dfe6; }
+    & .aiw-chips li i { color: var(--aiw-pink); font-size: 12px; }
+    & .aiw-installed { display: inline-flex; align-items: center; gap: 8px; padding: 14px 22px; border-radius: 999px; background: var(--aiw-mint-l); color: var(--aiw-mint); font-family: var(--aiw-jua); font-size: 16px; }
+
+    /* 휴대폰 셋 — 가운데가 조금 크게, 기울기 없음 */
+    & .aiw-phones { display: flex; align-items: flex-end; justify-content: center; gap: 16px; }
+    & .aiw-phone { display: grid; justify-items: center; gap: 10px; margin: 0; }
+    & .aiw-phone-screen { position: relative; display: block; width: 156px; aspect-ratio: 475 / 1028; overflow: hidden; border-radius: 26px; background: #f6efe8; box-shadow: 0 0 0 6px #fff, 0 0 0 7.5px #f1e4dc, 0 26px 36px -24px rgb(15 23 42 / 45%); }
+    & .aiw-phone[data-pos="1"] .aiw-phone-screen { width: 178px; }
+    & .aiw-phone[data-pos="1"] { transform: translateY(-14px); }
+    & .aiw-phone figcaption { padding: 4px 14px; border-radius: 999px; background: #fff; color: var(--aiw-ink); font-family: var(--aiw-jua); font-size: 14px; box-shadow: 0 0 0 1.5px #f1e4dc; }
+
+    /* 설치 방법 | 앱에서 좋은 점 */
+    & .aiw-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); align-items: start; gap: 22px; }
+    & .aiw-card { display: grid; gap: 16px; padding: 0 26px 26px; overflow: hidden; border-radius: 34px; background: #fff; box-shadow: var(--aiw-cushion); }
+    & .aiw-card-head { margin: 0 -26px; padding: 20px 26px 18px; background: #fff0f4; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
+    & .aiw-card[data-tone="mint"] .aiw-card-head { background: var(--aiw-mint-l); }
+    & .aiw-card-head h2 { margin-top: 2px; font-family: var(--aiw-jua); font-size: 23px; font-weight: 400; }
+    & .aiw-card:only-child { grid-column: 1 / -1; }
+
+    & .aiw-benefits { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    & .aiw-benefits li { display: grid; justify-items: center; gap: 4px; padding: 18px 12px 16px; border-radius: 24px; background: linear-gradient(170deg, #fff0f4, #fff); text-align: center; box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 0 0 1.5px #f8dde6; }
+    & .aiw-benefits li[data-tone="1"] { background: linear-gradient(170deg, #fff6e3, #fff); box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 0 0 1.5px #f6e6c6; }
+    & .aiw-benefits li[data-tone="2"] { background: linear-gradient(170deg, #e9f4fb, #fff); box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 0 0 1.5px #d5e9f5; }
+    & .aiw-benefits li[data-tone="3"] { background: linear-gradient(170deg, #ecf9f3, #fff); box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 0 0 1.5px #dff3ea; }
+    & .aiw-benefits img { width: 60px; height: 60px; margin-bottom: 4px; object-fit: contain; filter: drop-shadow(0 6px 8px rgb(15 23 42 / 14%)); }
+    & .aiw-benefits b { font-family: var(--aiw-jua); font-size: 17px; font-weight: 400; }
+    & .aiw-benefits span { color: var(--aiw-mute); font-size: 13px; font-weight: 600; }
+}
+
+/* ═════════ 설치 방법 창 ═════════ */
+html:not(.ddb-app-mode) .aiw-sheet-wrap {
+    position: fixed;
+    inset: 0;
+    z-index: 1900;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+
+    & .aiw-dim { position: absolute; inset: 0; border: 0; background: rgb(15 23 42 / 50%); backdrop-filter: blur(3px); cursor: default; animation: aiw-fade 0.2s ease both; }
+    & .aiw-sheet { position: relative; display: grid; gap: 18px; width: min(520px, 100%); max-height: calc(100dvh - 48px); overflow-y: auto; overscroll-behavior: contain; padding: 26px 26px 24px; border-radius: 34px; background: radial-gradient(70% 40% at 100% 0, #f1ebff 0, transparent 60%), radial-gradient(60% 30% at 0 0, #ffeef3 0, transparent 60%), #fffbf5; box-shadow: 0 40px 80px -30px rgb(15 23 42 / 55%); animation: aiw-pop 0.28s cubic-bezier(0.2, 0.9, 0.3, 1.2) both; }
+    & .aiw-close { position: absolute; top: 16px; right: 16px; display: grid; width: 42px; height: 42px; place-items: center; border: 0; border-radius: 50%; background: #fff; color: #64748b; font-size: 17px; cursor: pointer; box-shadow: 0 6px 12px -8px rgb(15 23 42 / 45%); }
+    & .aiw-close:hover { background: var(--aiw-pink-l); color: var(--aiw-pink-d); }
+    & .aiw-sheet-head { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 14px; padding-right: 44px; }
+    & .aiw-sheet-head h2 { margin-top: 2px; font-family: var(--aiw-jua); font-size: 23px; font-weight: 400; line-height: 1.25; }
+    & .aiw-sheet-sub { margin-top: 3px; color: var(--aiw-sub); font-size: 13.5px; font-weight: 600; }
+    & .aiw-sheet-steps { display: grid; gap: 12px; padding: 16px; border-radius: 26px; background: var(--aiw-mint-l); box-shadow: inset 0 3px 0 rgb(255 255 255 / 80%); }
+    & .aiw-sheet-steps-title { display: flex; align-items: center; gap: 8px; color: var(--aiw-mint); font-family: var(--aiw-jua); font-size: 17px; }
+    & .aiw-sheet-actions { display: grid; gap: 10px; }
+    & .aiw-sheet-actions > * { width: 100%; }
+}
+
+@keyframes aiw-fade { from { opacity: 0; } }
+@keyframes aiw-pop { from { opacity: 0; transform: translateY(14px) scale(0.98); } }
+@media (prefers-reduced-motion: reduce) {
+    html:not(.ddb-app-mode) .aiw-sheet-wrap :is(.aiw-dim, .aiw-sheet) { animation: none; }
+}
+
+/* ═════════ 태블릿 · 휴대폰 ═════════ */
+@media (max-width: 960px) {
+    html:not(.ddb-app-mode) .aiw {
+        & .aiw-hero { grid-template-columns: minmax(0, 1fr); padding: 34px 28px; }
+        & .aiw-grid { grid-template-columns: minmax(0, 1fr); }
+    }
+}
+
+@media (max-width: 640px) {
+    html:not(.ddb-app-mode) .aiw {
+        gap: 16px;
+        padding-top: 18px;
+        & .aiw-hero { gap: 22px; padding: 26px 18px 22px; border-radius: 32px; }
+        & .aiw-hero h1 { font-size: 30px; }
+        & .aiw-lead { font-size: 14.5px; }
+        & .aiw-install { width: 100%; }
+        & .aiw-icon { width: 64px; height: 64px; border-radius: 20px; }
+        /* 휴대폰 셋 — 옆으로 밀어 보기 */
+        & .aiw-phones { justify-content: flex-start; gap: 14px; overflow-x: auto; margin: 0 -18px; padding: 18px 18px 8px; scroll-snap-type: x mandatory; scroll-padding-inline: 18px; scrollbar-width: none; }
+        & .aiw-phone { flex: none; scroll-snap-align: start; }
+        & .aiw-phone-screen, & .aiw-phone[data-pos="1"] .aiw-phone-screen { width: 138px; }
+        & .aiw-phone[data-pos="1"] { transform: none; }
+        & .aiw-card { padding: 0 16px 18px; border-radius: 28px; }
+        & .aiw-card-head { margin: 0 -16px; padding: 16px 18px 14px; }
+        & .aiw-card-head h2 { font-size: 20px; }
+        & .aiw-benefits { gap: 8px; }
+        & .aiw-benefits li { padding: 14px 8px 12px; border-radius: 20px; }
+        & .aiw-benefits img { width: 50px; height: 50px; }
+        & .aiw-benefits b { font-size: 15.5px; }
+        & .aiw-benefits span { font-size: 12px; }
+    }
+    html:not(.ddb-app-mode) .aiw-sheet-wrap { align-items: end; padding: 0; }
+    html:not(.ddb-app-mode) .aiw-sheet-wrap .aiw-sheet { width: 100%; max-height: 90dvh; padding: 24px 18px calc(18px + env(safe-area-inset-bottom)); border-radius: 30px 30px 0 0; }
+}

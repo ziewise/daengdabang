@@ -8,7 +8,8 @@ export const metadata: Metadata = {
 
 export default function OfflinePage() {
     return (
-        <section className="flex min-h-[70vh] items-center justify-center px-5 py-16">
+        <section className="flex min-h-[70vh] items-center justify-center px-5 py-16" data-offline-web>
+            {/* data-offline-web — 웹 겉모양(app/globals.css "오프라인 안내" 묶음, 2026-10-25). 앱은 그대로 */}
             <div className="ddb-crayon-paper w-full max-w-md rounded-[2rem] border p-7 text-center sm:p-10">
                 <span className="ddb-crayon-icon mx-auto grid h-16 w-16 place-items-center rounded-2xl" data-crayon-tone="teal">
                     <i className="fa-solid fa-wifi text-2xl" aria-hidden="true" />

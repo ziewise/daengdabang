@@ -28,7 +28,7 @@ export function InstallLabel({ children, icon }: { children: ReactNode; icon?: s
 }
 
 // 앱 화면 미리보기 — 로그아웃 상태로 찍은 실제 앱 화면(개인 정보 없음, 2026-10-18)
-const PREVIEWS = [
+export const PREVIEWS = [
     { src: "/images/app-install/app-home.webp", label: "홈", tape: "rgba(255,200,215,.9)", rot: -1 },
     { src: "/images/app-install/app-lab.webp", label: "연구소", tape: "rgba(255,232,170,.9)", rot: 0.8 },
     { src: "/images/app-install/app-shop.webp", label: "쇼핑", tape: "rgba(200,240,215,.9)", rot: -0.6 },
@@ -56,7 +56,8 @@ type Platform = "ios" | "android" | "other";
 type Step = { icon: string; text: ReactNode };
 
 // 휴대폰별 설치 순서 — 협업자 설치 안내 창(PwaInstallProvider)과 같은 내용, 아이폰은 iOS 26 사파리(··· 메뉴 안 공유)까지
-const STEPS: Record<Platform, Step[]> = {
+// 웹 설치 안내(AppInstallWeb.tsx)도 같은 순서를 씀
+export const STEPS: Record<Platform, Step[]> = {
     ios: [
         { icon: "fa-compass", text: <><b>Safari</b>로 daengdabang.com 을 열어요</> },
         { icon: "fa-arrow-up-from-bracket", text: <>아래쪽 <b>공유</b> 버튼을 눌러요 <span className="ig-soft">(안 보이면 <b>···</b> 메뉴 안의 공유)</span></> },
@@ -103,7 +104,7 @@ export function InstallSteps({ platform, isInAppBrowser }: { platform: Platform;
 }
 
 // 앱에서 좋은 점 — 3D 그림 아이콘(앱에서 쓰는 그림 그대로)
-const BENEFITS = [
+export const BENEFITS = [
     { icon: "/images/ui/stickers/tab-home.webp", title: "탭 하나로 바로", desc: "홈 · 연구소 · 쇼핑을 한 번에" },
     { icon: "/images/ui/stickers/step-checkin.webp", title: "매일 출근 도장", desc: "매일 댕생활 출석 · 코인" },
     { icon: "/images/ui/stickers/lab-camera.webp", title: "연구소 분석", desc: "사진 · 행동 · 소리 분석" },
