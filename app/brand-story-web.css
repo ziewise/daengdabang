@@ -117,8 +117,9 @@ html:not(.ddb-app-mode) .bsw {
     & .bsw-principle { position: relative; display: grid; align-content: start; gap: 10px; min-height: 300px; padding: 26px 24px 28px; border-radius: 32px; background: #fff; box-shadow: var(--bw-cushion); overflow: hidden; }
     & .bsw-principle::before { content: ""; position: absolute; top: -40px; right: -40px; width: 150px; height: 150px; border-radius: 50%; background: var(--t-soft); }
     & .bsw-principle-no { position: relative; color: var(--t-ink); font-family: var(--bw-jua); font-size: 46px; line-height: 1; }
-    & .bsw-principle-art { position: absolute; top: 16px; right: 16px; display: grid; width: 84px; height: 84px; place-items: center; }
-    & .bsw-principle-art img { width: 76px; height: 76px; object-fit: contain; filter: drop-shadow(0 10px 12px rgb(15 23 42 / 16%)); }
+    /* 기준 그림 — 2026-10-25 크레파스 그림(일상 · 편안 · 근거 · 안심)으로 바꾸며 조금 키움 */
+    & .bsw-principle-art { position: absolute; top: 12px; right: 12px; display: grid; width: 96px; height: 96px; place-items: center; }
+    & .bsw-principle-art img { width: 88px; height: 88px; object-fit: contain; filter: drop-shadow(0 8px 10px rgb(15 23 42 / 12%)); }
     & .bsw-principle h3 { position: relative; margin-top: 46px; font-family: var(--bw-jua); font-size: 21px; font-weight: 400; word-break: keep-all; }
     & .bsw-principle h3::after { content: ""; display: block; width: 44px; height: 5px; margin-top: 10px; border-radius: 999px; background: var(--bw-underline); opacity: 0.6; }
     & .bsw-principle p { color: var(--bw-soft); font-size: 14px; font-weight: 600; line-height: 1.8; word-break: keep-all; }

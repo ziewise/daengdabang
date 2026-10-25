@@ -30,12 +30,12 @@ const SCENES: Array<{ slug: CategorySlug; art: string; tone: string; title: stri
     { slug: "care", art: "hotpick-care-128.webp", tone: "lav", title: "케어용품", line: "목욕과 빗질부터 매일의 위생 관리까지" },
 ];
 
-/** 네 가지 기준 — 원래 화면 문구 그대로 */
+/** 네 가지 기준 — 2026-10-25 사용자 문안 · 크레파스 그림으로 교체 */
 const PRINCIPLES = [
-    { title: "쓰임이 분명한가", body: "유행하는 이유보다 산책, 먹거리, 생활, 놀이, 케어 중 어떤 순간을 더 낫게 만드는지 먼저 봅니다.", art: "stickers/home-care.webp", tone: "pink" },
-    { title: "반려견이 편안한가", body: "보호자의 취향만이 아니라 크기, 움직임, 사용 환경과 부담 가능성을 함께 살핍니다.", art: "lab-dog-256.webp", tone: "sky" },
-    { title: "이유를 설명할 수 있는가", body: "상품 정보와 확인된 근거가 부족하면 멋진 문구로 채우지 않고, 더 확인하거나 보류합니다.", art: "lab-question-160.webp", tone: "yellow" },
-    { title: "구매 뒤까지 책임 있게", body: "고르는 순간뿐 아니라 배송, 교환·반품, 문의와 답변까지 한 흐름으로 이어지게 만듭니다.", art: "cs-check-160.webp", tone: "mint" },
+    { title: "일상에 꼭 필요한가", body: "유행이나 인기보다 산책, 식사, 휴식과 놀이 등 반려견의 일상에 실제로 도움이 되는 제품인지 먼저 살핍니다.", art: "brand-std-daily-256.webp", tone: "pink" },
+    { title: "반려견이 편안한가", body: "크기와 움직임, 소재와 사용 환경까지 고려해 반려견이 부담 없이 편안하게 사용할 수 있는지 살핍니다.", art: "brand-std-comfort-256.webp", tone: "sky" },
+    { title: "믿고 선택할 근거가 있는가", body: "제품의 특징과 소재, 사용 정보를 꼼꼼히 확인하고, 보호자가 납득할 수 있는 선택의 이유를 전달합니다.", art: "brand-std-evidence-256.webp", tone: "yellow" },
+    { title: "구매 후에도 안심할 수 있는가", body: "배송부터 교환·반품, 문의 응대까지. 구매 이후의 경험도 책임 있는 서비스의 일부로 생각합니다.", art: "brand-std-assure-256.webp", tone: "mint" },
 ];
 
 /** 큐레이션 흐름 — 원래 화면 문구 그대로 */
@@ -175,9 +175,9 @@ export default function BrandStoryWeb() {
                 <div className="bsw-head is-row">
                     <div>
                         <p className="bsw-kicker">OUR STANDARD</p>
-                        <h2 id="bsw-std-title" className="bsw-h2">댕다방이 상품을 바라보는 <em className="bsw-hl">네 가지 기준</em></h2>
+                        <h2 id="bsw-std-title" className="bsw-h2">댕다방이 상품을 고르는 <em className="bsw-hl">네 가지 기준</em></h2>
                     </div>
-                    <p>좋아 보이는 상품을 모으는 데서 멈추지 않고, 고객에게 왜 권할 수 있는지 설명 가능한지를 확인합니다.</p>
+                    <p>좋아 보이는 상품을 소개하는 데 그치지 않고, 반려견에게 왜 필요한지, 안심하고 사용할 수 있는지까지 세심하게 살핍니다.</p>
                 </div>
                 <div className="bsw-principles">
                     {PRINCIPLES.map((item, index) => (
