@@ -48,11 +48,12 @@ const LOOKS = [
     { title: "선택할 근거가 충분한가?", art: "partner-look-evidence-256.webp", tone: "yellow" },
     { title: "구매 후에도 안심할 수 있는가?", art: "partner-look-assure-256.webp", tone: "mint" },
 ];
+/** 검토 네 단계 — 2026-10-25 사용자 문안 · 크레파스 그림(웹제안접수 · 웹정보확인 · 웹적합검토 · 웹결과안내) */
 const REVIEW_STEPS = [
-    { title: "제안 접수", body: "브랜드와 상품, 공식 소개 주소, 담당자 정보를 안전하게 접수합니다.", art: "web-cs-mail-256.webp" },
-    { title: "기초 확인", body: "상품 정보와 공급 주체, 판매에 필요한 표시·인증 자료의 준비 여부를 확인합니다.", art: "web-cs-step-inspect-256.webp" },
-    { title: "카테고리 검토", body: "댕다방 고객에게 필요한 쓰임과 기존 카탈로그의 빈칸을 함께 살핍니다.", art: "find-showcase-256.webp" },
-    { title: "개별 회신", body: "검토 결과와 다음 협의가 필요한 내용을 접수한 이메일로 안내드립니다.", art: "lab-mail-160.webp" },
+    { title: "제안 접수", body: "브랜드와 상품 소개, 담당자 정보 등 제안 내용을 안전하게 접수합니다.", art: "partner-step-receive-256.webp" },
+    { title: "기본 정보 확인", body: "상품 및 공급사 정보를 확인하고, 필요한 표시\u2060·\u2060인증 자료가 갖춰졌는지 살펴봅니다.", art: "partner-step-check-256.webp" },
+    { title: "상품 적합성 검토", body: "반려견과 보호자에게 필요한 상품인지, 댕다방의 큐레이션 기준에 부합하는지 검토합니다.", art: "partner-step-review-256.webp" },
+    { title: "검토 결과 안내", body: "검토 결과와 추가 확인이 필요한 사항을 접수하신 이메일로 안내드립니다.", art: "partner-step-reply-256.webp" },
 ];
 
 export function PartnerWebIntro() {
@@ -123,9 +124,9 @@ export function PartnerWebIntro() {
             {/* 검토 네 단계 */}
             <section className="bzw-flow" aria-labelledby="bzw-flow-title">
                 <div className="bzw-head">
-                    <p className="bzw-kicker">REVIEW FLOW</p>
-                    <h2 id="bzw-flow-title" className="bzw-h2">한 번 더 <em className="bzw-hl">살펴보고</em> 답합니다</h2>
-                    <p>접수 순서만으로 입점을 결정하지 않습니다. 상품의 쓰임, 정보의 충실도, 공급 안정성과 고객 경험을 함께 검토합니다.</p>
+                    <p className="bzw-kicker">REVIEW PROCESS</p>
+                    <h2 id="bzw-flow-title" className="bzw-h2">한 번 더 살피고, <em className="bzw-hl">신중하게</em> 소개합니다</h2>
+                    <p>댕다방은 접수 순서만으로 입점을 결정하지 않습니다. 상품의 실용성과 정보의 정확성, 공급 안정성, 고객 경험까지 꼼꼼하게 살펴봅니다.</p>
                 </div>
                 <Steps steps={REVIEW_STEPS} />
             </section>
