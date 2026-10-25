@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import BusinessInquiryPanel from "@/components/contact/BusinessInquiryPanel";
+// 문의 양식 — 앱은 예전처럼 펼침, 웹은 단추 카드 → 창(2026-10-25 사용자 요청)
+import BizFormModal from "@/components/contact/BizFormModal";
 // 웹 겉모양(2026-10-25) — data-biz-web 이름표 · 웹 전용 3D 그림만, 꾸밈은 app/biz-web.css(앱은 그대로)
 import "../biz-web.css";
 // 웹 소개 화면 2차(2026-10-25) — 웹은 이 소개 + 아래 기존 문의 양식, 기존 소개 구역은 웹에서만 숨김(앱 그대로)
@@ -92,7 +94,9 @@ export default function PartnerInquiryPage() {
             </section>
 
             <div id="partner-form" className="mt-12 scroll-mt-24">
-                <BusinessInquiryPanel mode="partnership" />
+                <BizFormModal mode="partnership" formId="partner-form">
+                    <BusinessInquiryPanel mode="partnership" />
+                </BizFormModal>
             </div>
         </div>
     );

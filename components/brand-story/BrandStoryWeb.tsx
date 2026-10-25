@@ -17,6 +17,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { CATALOG, CATEGORY_LABEL, listBrands, type CategorySlug } from "@/lib/catalog";
+import BizFormButton from "@/components/contact/BizFormButton";
 import SceneDeck from "@/components/brand-story/SceneDeck";
 
 const UI = "/images/ui/";
@@ -275,7 +276,8 @@ export default function BrandStoryWeb() {
                 </div>
                 <div className="bsw-close-actions">
                     <Link href="/products" className="bsw-pill is-pink">상품 둘러보기<i className="fa-solid fa-arrow-right" aria-hidden="true" /></Link>
-                    <Link href="/partner" className="bsw-pill">입점·제휴 제안하기</Link>
+                    {/* 입점·제휴 — 페이지 이동 없이 입점 문의와 같은 양식 창(2026-10-25 사용자 요청) */}
+                    <BizFormButton mode="partnership" className="bsw-pill">입점·제휴 제안하기</BizFormButton>
                     <Link href="/faq" className="bsw-pill is-soft">고객센터</Link>
                 </div>
             </section>

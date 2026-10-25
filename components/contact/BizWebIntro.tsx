@@ -74,9 +74,7 @@ export function PartnerWebIntro() {
                 </div>
                 <div className="bzw-hero-art" aria-hidden="true">
                     <span className="bzw-ring"><Art src="next-brand-256.webp" /></span>
-                    <span className="bzw-float is-a"><Art src="shop-menu-brand-128.webp" /></span>
-                    <span className="bzw-float is-b"><Art src="find-indie-256.webp" /></span>
-                    <span className="bzw-float is-c"><Art src="logo-poodle-384.webp" /></span>
+                    {/* 2026-10-25 둘레의 떠 있는 동그라미 세 개(bzw-float) 뺌 — 사용자 요청 */}
                 </div>
             </section>
 
