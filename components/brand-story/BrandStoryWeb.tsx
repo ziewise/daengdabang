@@ -217,11 +217,11 @@ export default function BrandStoryWeb() {
                 </ol>
             </section>
 
-            {/* ⑦ 기술 — 2026-10-25 사용자 문안 · 사진 교체(큰사진/작은사진 → brand-story-tech-big/small.webp, 원본 png 유지) */}
+            {/* ⑦ 기술 — 2026-10-25 사용자 문안 · 사진 교체(큰사진/작은사진 2차 → brand-story-tech-big/small-v2.webp, 원본 png · 1차 webp 유지) */}
             <section className="bsw-tech" aria-labelledby="bsw-tech-title">
                 <div className="bsw-photos" aria-hidden="true">
-                    <span className="bsw-photo is-big"><Image src="/images/brands/brand-story-tech-big.webp" alt="" fill sizes="(max-width: 860px) 80vw, 460px" /></span>
-                    <span className="bsw-photo is-small"><Image src="/images/brands/brand-story-tech-small.webp" alt="" fill sizes="(max-width: 860px) 40vw, 220px" /></span>
+                    <span className="bsw-photo is-big"><Image src="/images/brands/brand-story-tech-big-v2.webp" alt="" fill sizes="(max-width: 860px) 80vw, 460px" /></span>
+                    <span className="bsw-photo is-small"><Image src="/images/brands/brand-story-tech-small-v2.webp" alt="" fill sizes="(max-width: 860px) 40vw, 220px" /></span>
                     <span className="bsw-photo-chip">MOVE · NOTICE · CHOOSE</span>
                 </div>
                 <div className="bsw-tech-copy">
