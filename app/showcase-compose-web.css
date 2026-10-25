@@ -297,3 +297,28 @@ html:not(.ddb-app-mode) .spd {
     html:not(.ddb-app-mode) .spd .spd-name > span { font-size: 28px; }
     html:not(.ddb-app-mode) .spd .spd-caption { max-height: none; font-size: 15px; }
 }
+
+/* ───────── 댕자랑 피드 — 휴대폰 한 줄 두 장(2026-10-25 사용자) ─────────
+   카드를 작게: 사진 테 얇게 · 주제 알약 작게 · 이름 한 줄 · 이야기 두 줄 · 응원 알약만(공유 · 신고 · 삭제는 카드를 눌러 여는 크게 보기 창에)
+   · 보호자 줄은 머리글자 · 이름 · 작은 팔로우만. 더보기 단추 없음(카드를 누르면 전체). */
+@media (max-width: 640px) {
+    html:not(.ddb-app-mode) [data-daily-web] .dw-sc-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    html:not(.ddb-app-mode) [data-daily-web] .dw-sc-grid .dw-sc-card { padding: 5px 5px 12px; border-radius: 26px; }
+    html:not(.ddb-app-mode) [data-daily-web] .dw-sc-grid .dw-sc-frame { padding: 3px; border-radius: 22px; }
+    html:not(.ddb-app-mode) [data-daily-web] .dw-sc-grid .dw-sc-frame img { border-radius: 19px; }
+    html:not(.ddb-app-mode) [data-daily-web] .dw-sc-grid .dw-sc-topic-tag { top: 8px; right: 8px; max-width: calc(100% - 16px); padding: 3px 8px; font-size: 10px; }
+    html:not(.ddb-app-mode) [data-daily-web] .dw-sc-grid .dw-sc-pet { margin-top: 9px; padding: 0 6px; overflow: hidden; font-size: 16px; line-height: 1.25; white-space: nowrap; text-overflow: ellipsis; }
+    html:not(.ddb-app-mode) [data-daily-web] .dw-sc-grid .dw-sc-pet small { display: none; }
+    html:not(.ddb-app-mode) [data-daily-web] .dw-sc-grid .dw-sc-caption { min-height: 0; margin-top: 4px; padding: 0 8px; font-size: 12.5px; line-height: 1.55; }
+    html:not(.ddb-app-mode) [data-daily-web] .dw-sc-grid .dw-sc-caption p { -webkit-line-clamp: 2; }
+    html:not(.ddb-app-mode) [data-daily-web] .dw-sc-grid .dw-sc-more { display: none; }
+    html:not(.ddb-app-mode) [data-daily-web] .dw-sc-grid .dw-sc-acts { padding-top: 8px; }
+    html:not(.ddb-app-mode) [data-daily-web] .dw-sc-grid .dw-sc-bone { height: 32px; gap: 5px; padding: 0 12px; font-size: 13px; }
+    html:not(.ddb-app-mode) [data-daily-web] .dw-sc-grid .dw-sc-mini { display: none; }
+    html:not(.ddb-app-mode) [data-daily-web] .dw-sc-grid .dw-sc-author { gap: 6px; margin: 10px 6px 0; padding-top: 9px; }
+    html:not(.ddb-app-mode) [data-daily-web] .dw-sc-grid .dw-sc-author-btn { gap: 6px; }
+    html:not(.ddb-app-mode) [data-daily-web] .dw-sc-grid .dw-sc-avatar { width: 26px; height: 26px; font-size: 12px; }
+    html:not(.ddb-app-mode) [data-daily-web] .dw-sc-grid .dw-sc-author-name { font-size: 12px; }
+    html:not(.ddb-app-mode) [data-daily-web] .dw-sc-grid .dw-sc-author-meta { display: none; }
+    html:not(.ddb-app-mode) [data-daily-web] .dw-sc-grid .dw-sc-follow { padding: 4px 9px; font-size: 11px; }
+}

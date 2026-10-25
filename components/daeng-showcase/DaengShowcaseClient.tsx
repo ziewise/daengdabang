@@ -77,7 +77,7 @@ function mergeUniquePosts(primary: ShowcasePost[], secondary: ShowcasePost[]) {
 
 function FeedSkeleton() {
     return (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" aria-label="댕자랑 피드 불러오는 중" aria-busy="true">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 dw-sc-grid" aria-label="댕자랑 피드 불러오는 중" aria-busy="true">
             {Array.from({ length: 8 }, (_, index) => (
                 <div key={index} className="dw-csheet dw-sc-card">
                     <div className="flex items-center gap-3 p-4">
@@ -503,7 +503,7 @@ export default function DaengShowcaseClient() {
                             {scope === "following" ? <button type="button" onClick={() => setScope("all")} className="ddb-crayon-link dw-pill dw-pill-main dw-pill-sm mt-4">전체 피드 보기</button> : null}
                         </div>
                     ) : (
-                        <div className="grid items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                        <div className="grid items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 dw-sc-grid">
                             {posts.map((post) => (
                                 <ShowcaseCard
                                     key={post.postId}
