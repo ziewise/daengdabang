@@ -8,6 +8,14 @@
  *  ③ .pl-subs  : 세부 카테고리 알약(크림 → 고르면 분홍)
  * 머리 판에 제목이 있으므로 아래 머리 줄(ProductsWebToolbar)의 제목은 숨기고 개수 · 검색 · 카테고리 · 정렬만 남김.
  * 범위: 웹(html:not(.ddb-app-mode)) · main[data-pl-page] 안. 앱에서는 머리 판을 통째로 숨김. 스티커 요소 · 점선 없음.
+ *
+ * 2026-10-26 웹 점검 추가(아래쪽 ④~⑦, 모두 웹에서만 · 앱 모양 그대로):
+ *  ④ .pl-ext-*   : 전체상품 · 제품군 페이지에서 검색했을 때 다른 판매처 가격 비교 덩어리 — 흰 쿠션 판 · 영문 손글씨 · 주아 제목 ·
+ *                  민트 알약 "더 보기" · 결과 없음 = 크림 쿠션(점선 없이). 댕다방 상품 소제목(.pl-own-head)도 주아.
+ *  ⑤ .pl-empty · .pl-own-empty : 상품 없음 쿠션(3D 그림) · 검색 0개 안내(검색 결과 페이지 SearchOwnEmpty 와 같은 노랑 쿠션)
+ *  ⑥ .xcmp-*     : 스마트 비교 판(ExternalProductComparisonTable) — 전체상품 검색 · 검색 결과 페이지(main[data-search-page]) 둘 다.
+ *                  둥근 흰 쿠션 · 민트 머리 판 · 점수 막대 · 표(넓은 화면) / 카드(1100px 이하) · 휴대폰은 가격표도 카드로 쌓음
+ *  ⑦ [data-list-fallback] : 목록 · 검색 · 제품군 페이지 대기 화면 — 글 대신 쿠션 뼈대(머리 판 + 카드 열 칸)
  */
 
 /* 앱 — 머리 판 숨김(앱은 기존 머리글 · 필터 그대로) */
@@ -107,4 +115,242 @@ html:not(.ddb-app-mode) main[data-pl-page] {
 @keyframes pl-bob { 50% { transform: translateY(-6px); } }
 @media (prefers-reduced-motion: reduce) {
     html:not(.ddb-app-mode) main[data-pl-page] .pl-hero-art img { animation: none; }
+}
+
+/* ═════════ ④ 전체상품 · 제품군 페이지 검색 — 다른 판매처 가격 비교 덩어리 · 댕다방 상품 소제목 (2026-10-26) ═════════ */
+html:not(.ddb-app-mode) main[data-pl-page] {
+    /* 댕다방 상품 소제목(검색했을 때만 보임) */
+    & .pl-own-head h2 { color: #1e293b; font-family: var(--pl-jua); font-size: 22px; font-weight: 400; }
+    & .pl-own-head > span { padding: 4px 12px; border-radius: 999px; background: #fff; color: #e2557a; box-shadow: 0 0 0 1.5px #f7c4d3; }
+
+    /* 판 — 흰 쿠션(각진 테두리 없이) */
+    & .pl-ext { margin-top: 40px; padding: 26px 28px 28px; border: 0; border-radius: 34px; background: #fff; box-shadow: var(--pl-cushion); }
+    & .pl-ext-head { margin-bottom: 20px; }
+    & .pl-ext-kicker { display: inline-block; background: repeating-linear-gradient(172deg, #07849e 0 5px, #ef476f 5px 10px, #e98708 10px 15px); -webkit-background-clip: text; background-clip: text; font-family: var(--pl-crayon); font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: none; -webkit-text-fill-color: transparent; }
+    & .pl-ext-title { position: relative; width: fit-content; color: #1e293b; font-family: var(--pl-jua); font-size: 26px; font-weight: 400; isolation: isolate; }
+    & .pl-ext-title::after { content: ""; position: absolute; right: 1%; bottom: -0.06em; left: 0; z-index: -1; height: 0.22em; border-radius: 999px 70% 999px 60%; background: var(--pl-underline); opacity: 0.65; }
+    & .pl-ext-count { padding: 6px 14px; background: #e9f8f1; color: #0f8a66; font-size: 12.5px; font-weight: 800; }
+
+    /* 외부 판매 상품 더 보기 — 소제목 · 크림 알약 */
+    & .pl-ext-subtitle { color: #1e293b; font-family: var(--pl-jua); font-size: 19px; font-weight: 400; }
+    & .pl-ext-more-head p { color: #64748b; font-weight: 600; }
+    & .pl-ext-badge { padding: 5px 13px; background: #fff6e3; color: #b86a08; font-weight: 800; }
+
+    /* N개 더 보기 — 민트 쿠션 알약 */
+    & .pl-ext-more { min-height: 48px; padding: 0 26px; border: 0; border-radius: 999px; background: #e9f8f1; color: #12a17a; font-size: 14px; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%), 0 10px 18px -12px rgb(18 161 122 / 55%); transition: background 0.18s ease, transform 0.18s ease; }
+    & .pl-ext-more:hover { background: #dcf3e8; color: #0f8a66; transform: translateY(-2px); }
+
+    /* 결과 없음 · 찾는 중 — 크림 쿠션(점선 없이) */
+    & .pl-ext-empty { padding: 30px 20px; border: 0; border-radius: 26px; background: #fbf7f1; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
+    & .pl-ext-empty > p:first-child { color: #1e293b; font-family: var(--pl-jua); font-size: 17px; font-weight: 400; }
+    & .pl-ext-empty > p + p { color: #8a7a66; font-weight: 600; }
+
+    /* 다른 판매처 카드(ExternalProductCard xc-*) — 둥근 흰 카드 · 민트 "판매처에서 보기" 알약(검색 결과 페이지와 같은 결) */
+    /* 카드 높이 맞춤 — "판매처에서 보기"가 늘 카드 맨 아래(검색 결과 페이지와 같게) */
+    & .pl-ext .xc-card { display: flex; height: 100%; flex-direction: column; }
+    & .pl-ext .xc-body { display: flex; flex: 1; flex-direction: column; }
+    & .pl-ext .xc-go { margin-top: auto; }
+    & .pl-ext .xc-card { border: 0; border-radius: 18px; background: #fff; box-shadow: 0 0 0 1.5px #f1e9de, 0 12px 24px -20px rgb(15 23 42 / 30%); }
+    & .pl-ext .xc-go { border-radius: 999px; background: #e9f8f1; color: #12a17a; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
+    & .pl-ext .xc-go:hover { background: #dcf3e8; color: #0f8a66; }
+
+    @media (max-width: 640px) {
+        & .pl-ext { padding: 20px 14px 20px; border-radius: 28px; }
+        & .pl-ext-title { font-size: 22px; }
+    }
+}
+
+/* ═════════ ⑤ 상품 없음 · 검색 0개 안내 (2026-10-26) ═════════ */
+html:not(.ddb-app-mode) main[data-pl-page] {
+    /* 상품 없음 — 흰 쿠션 + 노랑 동그라미 3D 그림(기존 얼굴 아이콘은 숨김) */
+    & .pl-empty { display: grid; justify-items: center; gap: 4px; padding: 40px 24px 44px; border: 0; border-radius: 34px; background: #fff; box-shadow: var(--pl-cushion); }
+    & .pl-empty-art { display: grid; width: 120px; height: 120px; place-items: center; border-radius: 999px; background: #fff6e3; box-shadow: 0 0 0 3px #f7d48a; }
+    & .pl-empty-art img { width: 84px; height: 84px; object-fit: contain; }
+    & .pl-empty-icon { display: none; }
+    & .pl-empty-title { margin-top: 14px; color: #1e293b; font-family: var(--pl-jua); font-size: 21px; font-weight: 400; }
+
+    /* 검색 0개 — SearchOwnEmpty(검색 결과 페이지와 같은 노랑 쿠션 · 인기 검색어 파스텔 알약) */
+    & .pl-own-empty { margin-bottom: 8px; }
+    & .sr-empty { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 22px; padding: 28px 32px; border-radius: 36px; background: #fff6e3; box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 22px 36px -24px rgb(15 23 42 / 32%); }
+    & .sr-empty-art { display: grid; width: 96px; height: 96px; place-items: center; border-radius: 999px; background: #fff; box-shadow: 0 0 0 3px #f7d48a; }
+    & .sr-empty-title { color: #1e293b; font-family: var(--pl-jua); font-size: 21px; word-break: keep-all; }
+    & .sr-empty-body { margin-top: 6px; color: #64748b; font-size: 14px; font-weight: 600; line-height: 1.7; word-break: keep-all; }
+    & .sr-showall { display: inline-flex; align-items: center; gap: 6px; height: 42px; margin-top: 14px; padding: 0 18px; border-radius: 999px; background: #e9789a; color: #fff; font-size: 14px; font-weight: 800; box-shadow: 0 8px 16px -10px rgb(200 80 120 / 60%); }
+    & .sr-showall:hover { background: #e26690; }
+    & .sr-keywords { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px; margin-top: 14px; }
+    & .sr-keywords-label { color: #475569; font-family: var(--pl-jua); font-size: 15px; }
+    & .sr-keywords ul { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+    & .sr-pop { --sr-bg: #ffeef3; --sr-ink: #d0436d; display: inline-flex; align-items: center; gap: 7px; height: 38px; padding: 0 14px 0 5px; border-radius: 999px; background: var(--sr-bg); color: #334155; font-size: 13.5px; font-weight: 700; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%), 0 8px 14px -12px rgb(15 23 42 / 35%); transition: transform 0.18s ease; }
+    & .sr-keywords li:nth-child(5n + 2) .sr-pop { --sr-bg: #fff; --sr-ink: #d97f0e; }
+    & .sr-keywords li:nth-child(5n + 3) .sr-pop { --sr-bg: #e9f8f1; --sr-ink: #12a17a; }
+    & .sr-keywords li:nth-child(5n + 4) .sr-pop { --sr-bg: #e9f4fb; --sr-ink: #0e8aa0; }
+    & .sr-keywords li:nth-child(5n + 5) .sr-pop { --sr-bg: #f3f0fe; --sr-ink: #7c62d6; }
+    & .sr-pop:hover { transform: translateY(-2px); }
+    & .sr-pop b { display: grid; width: 28px; height: 28px; place-items: center; border-radius: 999px; background: #fff; color: var(--sr-ink); font-family: var(--pl-jua); font-size: 13px; font-weight: 400; }
+    & .sr-keywords li:nth-child(5n + 2) .sr-pop b { background: #fff6e3; }
+
+    @media (max-width: 560px) {
+        /* 휴대폰 — 한 줄로 쌓고 가운데 정렬 */
+        & .sr-empty { grid-template-columns: minmax(0, 1fr); padding: 24px 20px; text-align: center; }
+        & .sr-empty-art { margin: 0 auto; }
+        & .sr-empty .sr-keywords { justify-content: center; }
+        & .pl-empty { padding: 32px 18px 36px; border-radius: 28px; }
+    }
+}
+
+/* ═════════ ⑥ 스마트 비교 판(ExternalProductComparisonTable .xcmp-*) — 전체상품 검색 · 검색 결과 페이지 (2026-10-26) ═════════ */
+html:not(.ddb-app-mode) :is(main[data-pl-page], main[data-search-page]) .xcmp {
+    --xc-mint: #12a17a;
+    --xc-mint-d: #0f8a66;
+    --xc-mint-soft: #e9f8f1;
+    --xc-cream: #fbf7f1;
+    --xc-line: #f1e9de;
+    margin-bottom: 30px;
+    border: 0;
+    border-radius: 32px;
+    background: #fff;
+    box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 0 0 1px #f2e9dd, 0 22px 36px -28px rgb(15 23 42 / 40%);
+
+    /* 머리 판 — 민트 파스텔 바탕 · 영문 손글씨 · 주아 제목 · 흰 개수 알약 */
+    & .xcmp-head { padding: 28px 30px 26px; border-bottom: 0; background: radial-gradient(70% 120% at 100% 0, rgb(255 255 255 / 75%) 0, transparent 60%), linear-gradient(120deg, #e3f6ec 0%, #f0faf5 55%, #f7fbff 100%); }
+    & .xcmp-kicker { display: inline-block; background: repeating-linear-gradient(172deg, #07849e 0 5px, #ef476f 5px 10px, #e98708 10px 15px); -webkit-background-clip: text; background-clip: text; font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: none; -webkit-text-fill-color: transparent; }
+    & .xcmp-title { margin-top: 4px; color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 24px; font-weight: 400; line-height: 1.35; word-break: keep-all; }
+    & .xcmp-desc { color: #5b6476; font-size: 13px; font-weight: 600; word-break: keep-all; }
+    & .xcmp-count { padding: 8px 16px; background: #fff; color: var(--xc-mint-d); font-size: 13px; font-weight: 800; box-shadow: 0 0 0 2px #a8e0c6, 0 10px 16px -12px rgb(15 23 42 / 35%); }
+
+    /* 기준상품 고르기 — 흰 알약, 고른 것 분홍 */
+    & .xcmp-anchors button { padding: 9px 16px; border: 0; border-radius: 999px; background: #fff; color: #475569; box-shadow: inset 0 0 0 1.5px #efe5d8; }
+    & .xcmp-anchors button:hover { box-shadow: inset 0 0 0 2px #f7c3d2; }
+    & .xcmp-anchors button[aria-pressed="true"] { background: #e9789a; color: #fff; box-shadow: 0 10px 18px -12px rgb(200 80 120 / 80%); }
+
+    /* 점수 기준 네 칸 — 흰 쿠션 · 민트 막대 */
+    & .xcmp-axes { gap: 10px; }
+    & .xcmp-axis { padding: 12px 14px; border: 0; border-radius: 18px; background: rgb(255 255 255 / 88%); box-shadow: 0 10px 18px -16px rgb(15 23 42 / 40%); }
+    & .xcmp-axis > div:last-child { height: 8px; background: var(--xc-mint-soft); }
+    & .xcmp-bar { background: linear-gradient(90deg, #12a17a, #7fd3b4); }
+
+    /* 기준상품의 확인된 강점 — 흰 쿠션 · 민트 알약 */
+    & .xcmp-strength { padding: 18px 20px; border: 0; border-radius: 24px; background: #fff; box-shadow: 0 0 0 2px #cdeedd; }
+    & .xcmp-strength > div:first-child p:first-child { color: var(--xc-mint-d); font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 14px; font-weight: 400; }
+    & .xcmp-score { background: var(--xc-mint-soft); color: var(--xc-mint-d); box-shadow: none; }
+    & .xcmp-fact { padding: 6px 12px; border: 0; border-radius: 999px; background: #f4fbf8; }
+    & .xcmp-fact strong { color: var(--xc-mint-d); }
+
+    /* 넓은 화면 표 — 크림 머리 줄 · 연한 줄 · 기준상품 줄 민트 */
+    & .xcmp-table { padding: 8px 18px 4px; background: transparent; }
+    & .xcmp-table table { min-width: 0; }
+    & .xcmp-table thead { background: var(--xc-cream); color: #94a3b8; text-transform: none; }
+    & .xcmp-table thead th:first-child { border-radius: 14px 0 0 14px; }
+    & .xcmp-table thead th:last-child { border-radius: 0 14px 14px 0; }
+    & .xcmp-table tbody > tr { border-color: var(--xc-line); }
+    & .xcmp-table tbody > tr.is-anchor { background: #f2fbf6; }
+    & .xcmp-table tbody > tr.is-anchor > :first-child { border-radius: 16px 0 0 16px; }
+    & .xcmp-table tbody > tr.is-anchor > :last-child { border-radius: 0 16px 16px 0; }
+    & .xcmp-table th[scope="row"] > div > div:first-child { border-radius: 14px; }
+
+    /* 순위 알약 — 1위 민트 채움, 나머지 크림 */
+    & .xcmp-rank { padding: 4px 11px; border-radius: 999px; background: var(--xc-cream); color: #64748b; white-space: nowrap; }
+    & .xcmp-rank.is-top { background: var(--xc-mint); color: #fff; }
+
+    /* 판매처 열기 — 민트 쿠션(동그라미 · 알약) */
+    & .xcmp-open { border-radius: 999px; background: var(--xc-mint-soft); color: var(--xc-mint); box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%), 0 8px 14px -12px rgb(18 161 122 / 55%); transition: background 0.18s ease, transform 0.18s ease; }
+    & .xcmp-open:hover { background: #dcf3e8; color: var(--xc-mint-d); transform: translateY(-2px); }
+
+    /* 카드(좁은 화면) — 둥근 흰 카드, 기준상품은 민트 */
+    & .xcmp-cards { gap: 12px; padding: 16px 18px 6px; background: transparent; }
+    & .xcmp-card { padding: 14px; border: 0; border-radius: 22px; background: #fff; box-shadow: 0 0 0 1.5px var(--xc-line), 0 12px 22px -20px rgb(15 23 42 / 35%); }
+    & .xcmp-card.is-anchor { background: #f2fbf6; box-shadow: 0 0 0 2px #a8e0c6; }
+    & .xcmp-thumb { border-radius: 16px; }
+    & .xcmp-card h4 { color: #1e293b; }
+    & .xcmp-chip { border-radius: 12px; background: var(--xc-cream); }
+    & .xcmp-card .xcmp-open { padding: 9px 16px; }
+
+    /* 아래 안내 · 같은 상품 가격 · 다른 구성 — 줄 없이 여백으로 나눔 */
+    & .xcmp-foot { padding: 12px 30px 4px; border-top: 0; background: transparent; color: #94a3b8; word-break: keep-all; }
+    & :is(.xcmp-exact, .xcmp-related) { padding: 20px 30px 24px; border-top: 0; background: transparent; }
+    & .xcmp-related { padding-top: 0; }
+    & .xcmp-subtitle { color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 18px; font-weight: 400; }
+    & .xcmp-exact-table thead { background: var(--xc-cream); }
+    & .xcmp-exact-table thead th:first-child { border-radius: 12px 0 0 12px; }
+    & .xcmp-exact-table thead th:last-child { border-radius: 0 12px 12px 0; }
+    & .xcmp-exact-table tbody > tr { border-color: var(--xc-line); }
+    & .xcmp-exact-table tbody > tr.is-best { background: #f2fbf6; }
+    & .xcmp-warn { padding: 12px 16px; border: 0; border-radius: 18px; background: #fff6e3; color: #8a5a0a; word-break: keep-all; }
+    & .xcmp-pack { border: 0; border-radius: 18px; background: var(--xc-cream); }
+}
+
+/* 1100px 이하 — 넓은 표 대신 카드 두 줄(가로 밀림 없이) */
+@media (max-width: 1100px) {
+    html:not(.ddb-app-mode) :is(main[data-pl-page], main[data-search-page]) .xcmp {
+        & .xcmp-table { display: none; }
+        & .xcmp-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+}
+
+/* 휴대폰 — 카드 한 줄 · 같은 상품 가격표도 줄마다 카드로 쌓음(이름표는 data-label) */
+@media (max-width: 640px) {
+    html:not(.ddb-app-mode) :is(main[data-pl-page], main[data-search-page]) .xcmp {
+        border-radius: 28px;
+
+        & .xcmp-head { padding: 22px 18px 20px; }
+        & .xcmp-title { font-size: 21px; }
+        & .xcmp-cards { grid-template-columns: minmax(0, 1fr); padding: 14px 12px 4px; }
+        & .xcmp-foot { padding: 10px 18px 2px; }
+        & :is(.xcmp-exact, .xcmp-related) { padding: 18px 16px 20px; }
+        & .xcmp-related { padding-top: 0; }
+
+        & .xcmp-exact-table { overflow: visible; }
+        & .xcmp-exact-table table { min-width: 0; }
+        & .xcmp-exact-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+        & .xcmp-exact-table tbody { display: grid; gap: 10px; }
+        & .xcmp-exact-table tbody > tr { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; padding: 12px 14px; border: 0; border-radius: 18px; background: var(--xc-cream); }
+        & .xcmp-exact-table tbody > tr.is-best { background: #f2fbf6; box-shadow: 0 0 0 2px #a8e0c6; }
+        & .xcmp-exact-table tbody > tr > * { padding: 0; }
+        & .xcmp-exact-table tbody > tr > th { grid-column: 1 / -1; font-size: 13px; }
+        & .xcmp-exact-table tbody > tr > td { display: flex; flex-direction: column; gap: 2px; }
+        & .xcmp-exact-table tbody > tr > td::before { content: attr(data-label); color: #94a3b8; font-size: 10.5px; font-weight: 800; }
+        & .xcmp-exact-table tbody > tr > td:last-child { align-items: flex-end; font-size: 14px; }
+    }
+}
+
+/* ═════════ ⑦ 대기 화면 뼈대 — 전체상품 · 제품군 · 검색 페이지 Suspense fallback (2026-10-26) ═════════ */
+html:not(.ddb-app-mode) [data-list-fallback] {
+    padding-top: 32px;
+
+    /* 글은 화면 읽기용으로만 남김 */
+    & .list-fallback-text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+    & .list-fallback-sk { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; }
+
+    /* 카드 자리 — 흰 쿠션 위로 크림 빛이 천천히 지나감 */
+    & .list-fallback-sk > span {
+        display: block;
+        aspect-ratio: 3 / 4;
+        border-radius: 22px;
+        background: linear-gradient(100deg, #fff 30%, #fbf3ea 50%, #fff 70%) 0 0 / 220% 100%;
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 0 0 1px #f2e9dd, 0 18px 28px -24px rgb(15 23 42 / 35%);
+        animation: pl-sk-shine 1.6s ease-in-out infinite;
+    }
+
+    /* 머리 판 자리 — 분홍 파스텔 판 */
+    & .list-fallback-sk > .is-hero {
+        grid-column: 1 / -1;
+        height: 180px;
+        aspect-ratio: auto;
+        margin-bottom: 10px;
+        border-radius: 36px;
+        background: linear-gradient(100deg, #ffe9f0 30%, #fff6f8 50%, #ffe9f0 70%) 0 0 / 220% 100%;
+    }
+
+    @media (max-width: 1024px) { & .list-fallback-sk { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+    @media (max-width: 768px) { & .list-fallback-sk { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    @media (max-width: 640px) {
+        & .list-fallback-sk { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+        & .list-fallback-sk > .is-hero { height: 140px; border-radius: 30px; }
+    }
+}
+
+@keyframes pl-sk-shine { to { background-position: -220% 0; } }
+@media (prefers-reduced-motion: reduce) {
+    html:not(.ddb-app-mode) [data-list-fallback] .list-fallback-sk > span { animation: none; }
 }

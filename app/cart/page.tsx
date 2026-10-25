@@ -35,6 +35,7 @@ import "../daily-web.css";
 import "../cart-web.css";
 import { purchaseStateLabel } from "@/lib/catalog/inventory";
 import { useLiveInventorySnapshot } from "@/lib/catalog/live-inventory";
+import { useWebConfirm } from "@/components/site/useWebConfirm";
 
 /* 커스텀 체크박스 — 인디고 채움 + 체크 아이콘 */
 function CheckBtn({ checked, onToggle, label, disabled = false }: { checked: boolean; onToggle: () => void; label: string; disabled?: boolean }) {
@@ -94,13 +95,23 @@ export default function CartPage() {
         router.push(user ? nextCheckoutHref : `/auth/login?redirect=${encodeURIComponent(nextCheckoutHref)}`);
     };
 
-    // 선택삭제 — 체크된 라인 일괄 삭제(실수 방지 confirm)
-    const removeSelected = () => {
+    // 선택삭제 — 체크된 라인 일괄 삭제(실수 방지 확인: 웹은 우리 확인 창, 앱은 기본 확인창 — useWebConfirm)
+    const [askConfirm, confirmDialog] = useWebConfirm();
+    const removeSelected = async () => {
         if (selectedLines.length === 0) return;
         const message = locale === "en"
             ? `Remove ${selectedLines.length} selected item(s)?`
             : `선택한 ${selectedLines.length}개 상품을 삭제할까요?`;
-        if (!window.confirm(message)) return;
+        const ok = await askConfirm({
+            title: message,
+            message: locale === "en" ? undefined : "장바구니에서만 빠지고, 다시 담을 수 있어요.",
+            confirmLabel: locale === "en" ? "Remove" : "삭제할게요",
+            cancelLabel: locale === "en" ? "Cancel" : "그대로 둘게요",
+            art: "header-cart-128.webp",
+            tone: "danger",
+            appText: message,
+        });
+        if (!ok) return;
         selectedLines.forEach((l) => cart.removeFromCart(l.product.id, l.color, l.size));
     };
 
@@ -384,6 +395,8 @@ export default function CartPage() {
                     <SimplePayButtons disabled={selectedLines.length === 0 || inventoryBlocked} onSelect={goCheckout} />
                 </aside>
             </div>
+            {/* 웹 확인 창(선택 삭제) — 열렸을 때만 body 에 붙음 */}
+            {confirmDialog}
         </main>
     );
 }

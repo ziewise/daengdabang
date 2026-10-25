@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { attributedOutboundVisit, safeOutboundTarget } from "@/lib/outbound";
 import { trackOutboundRedirect } from "@/lib/storefront-analytics";
+import { useWebScreen } from "@/hooks/useWebScreen";
 
 const REDIRECT_DELAY_MS = 900;
 
@@ -18,6 +19,13 @@ function attributionMessage(mode: "naver_nt" | "utm" | "referrer"): string {
         return "판매처 유입 식별값(UTM)을 적용해 고객 브라우저에서 직접 방문합니다.";
     }
     return "고객 브라우저에서 판매처 원본 페이지를 직접 방문합니다.";
+}
+
+/** 웹 화면용 쉬운 말(2026-10-26 전체 점검 — nt_* · UTM 같은 용어 대신). 앱은 위 문구 그대로 */
+function attributionMessageWeb(mode: "naver_nt" | "utm" | "referrer"): string {
+    if (mode === "naver_nt") return "네이버 연결 표시를 붙여, 지금 보는 브라우저에서 판매처 페이지로 바로 넘어가요.";
+    if (mode === "utm") return "판매처 방문 표시를 붙여, 지금 보는 브라우저에서 판매처 페이지로 바로 넘어가요.";
+    return "지금 보는 브라우저에서 판매처의 원래 페이지로 바로 넘어가요.";
 }
 
 export default function OutboundRedirectClient() {
@@ -52,6 +60,7 @@ export default function OutboundRedirectClient() {
             return "";
         }
     }, [target]);
+    const isWeb = useWebScreen();
     const trackedKeyRef = useRef("");
     const navigationStartedRef = useRef(false);
 
@@ -112,7 +121,8 @@ export default function OutboundRedirectClient() {
                     />
                 </div>
 
-                <h1 className="mt-5 text-2xl font-black text-neutral-950">판매처로 이동하고 있어요</h1>
+                {/* 주소를 못 찾았을 때는 "이동하고 있어요" 대신 그 상황 제목(웹) */}
+                <h1 className="mt-5 text-2xl font-black text-neutral-950">{isWeb && !target ? "이동할 주소를 찾지 못했어요" : "판매처로 이동하고 있어요"}</h1>
                 {target ? (
                     <>
                         <p className="mt-2 text-sm font-bold text-neutral-500">{host}</p>
@@ -126,7 +136,7 @@ export default function OutboundRedirectClient() {
                                         {visit.partnerName || "실제 판매처 방문"}
                                     </span>
                                     <span className="mt-1 block text-xs font-bold leading-5 text-emerald-800">
-                                        {attributionMessage(visit.attributionMode)}
+                                        {isWeb ? attributionMessageWeb(visit.attributionMode) : attributionMessage(visit.attributionMode)}
                                     </span>
                                 </span>
                             </div>
@@ -150,7 +160,7 @@ export default function OutboundRedirectClient() {
                     </>
                 ) : (
                     <>
-                        <p className="mt-3 text-sm font-bold text-neutral-600">이동할 주소를 확인할 수 없습니다.</p>
+                        <p className="mt-3 text-sm font-bold text-neutral-600">{isWeb ? "링크가 바뀌었거나 잘못된 주소예요. 상품 검색에서 다시 찾아 주세요." : "이동할 주소를 확인할 수 없습니다."}</p>
                         <Link href="/products" className="mt-5 inline-flex h-11 items-center justify-center rounded-md bg-neutral-950 px-5 text-sm font-black text-white">
                             상품 검색으로 돌아가기
                         </Link>

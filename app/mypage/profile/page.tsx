@@ -18,6 +18,8 @@ import { normalizedMemberName } from "@/lib/member-name";
 // 웹(2026-10-25): 한 번 더 확인 → 내 정보 · 로그인 보안 · 알림 수신 · 다른 정보(기존 기능 그대로). 앱은 아래 기존 화면
 import ProfileWebView from "@/components/mypage/ProfileWebView";
 import { useWebScreen } from "@/hooks/useWebScreen";
+// 2026-10-26 웹 오류 문구 — 서버 원문 대신 해요체 문장(앱은 원래 문구)
+import { mypageErrorText } from "@/components/mypage/mypageWebText";
 
 
 function ProfileEditor({
@@ -60,9 +62,9 @@ function ProfileEditor({
             onSaved(savedName);
             setSavedMessage("이름이 안전하게 변경되었습니다.");
         } catch (caught) {
-            setError(caught instanceof DdbApiError
+            setError(mypageErrorText(caught, caught instanceof DdbApiError
                 ? caught.message
-                : "이름을 변경하지 못했습니다. 잠시 후 다시 시도해 주세요.");
+                : "이름을 변경하지 못했습니다. 잠시 후 다시 시도해 주세요.", "이름을 바꾸지 못했어요. 잠시 뒤 다시 시도해 주세요."));
         } finally {
             setSubmitting(false);
         }

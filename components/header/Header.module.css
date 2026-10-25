@@ -243,3 +243,15 @@
         clip-path: inset(0);
     }
 }
+
+/* 2026-10-26 지금 보고 있는 페이지 — 그 묶음 메뉴 단추(data-nav-current) · 댕자랑 링크(aria-current="page").
+   웹(html:not(.ddb-app-mode))에서 분홍 글자 + 세 색(청록 · 분홍 · 주황) 크레파스 밑줄을 늘 그어 둠(움직임 없음). 올리거나 펼치면 원래 움직임 그대로 */
+:global(html:not(.ddb-app-mode)) .desktopNavItem:is([data-nav-current="true"], [aria-current="page"]) {
+    color: #d0436d;
+}
+:global(html:not(.ddb-app-mode)) .desktopNavItem:is([data-nav-current="true"], [aria-current="page"])::after {
+    opacity: 1;
+    clip-path: inset(0);
+    /* 글자 폭이 짧아도(쇼핑 · 댕자랑) 세 색이 다 보이게 비율로 나눔 */
+    background: linear-gradient(94deg, rgb(8 145 178 / 62%) 0 33%, rgb(239 71 111 / 58%) 33% 66%, rgb(245 158 11 / 62%) 66% 100%);
+}

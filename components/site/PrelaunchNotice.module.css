@@ -45,3 +45,98 @@
 @media (max-width: 380px) { .content { padding-inline: 22px; } .header { padding-left: 23px; } .description { font-size: 12px; } .illustration { transform: scale(.9); margin-top: -6px; margin-bottom: -12px; } }
 @media (max-height: 700px) { .illustration { height: 165px; transform: scale(.85); transform-origin: top center; margin-bottom: -12px; } .content { padding-top: 8px; } .description { margin-top: 12px; margin-bottom: 17px; } .header { padding-top: 10px; } }
 @media (prefers-reduced-motion: reduce) { .dialog[open] { animation: none; } .explore { transition: none; } }
+
+/* ═════════ 웹 크레파스 겉모양(2026-10-26) — 웹(html:not(.ddb-app-mode))의 [data-prelaunch-web] 창만. 앱은 위 모양 그대로 ═════════
+   흰 쿠션 창 · 흰 동그라미 닫기 · 파스텔 분홍 가게 그림 · 주아 제목 + 세 색 크레파스 밑줄 · 분홍 알약 주 단추 · 흰 알약 "오늘은 그만 보기".
+   점선 · 이름표 기울기 · 손글씨 기울기 · 초록 색감 없음. 구조 · 문구 · 동작 그대로 */
+:global(html:not(.ddb-app-mode)) .dialog[data-prelaunch-web] {
+    border: 0;
+    border-radius: 32px;
+    background: #fff;
+    color: #1e293b;
+    box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 40px 80px -30px rgb(15 23 42 / 50%);
+}
+:global(html:not(.ddb-app-mode)) .dialog[data-prelaunch-web]::backdrop { background: rgb(15 23 42 / 45%); backdrop-filter: blur(3px); }
+/* 닫기 — 흰 동그라미 + 부드러운 그림자, 누르면 살짝 작아짐 */
+:global(html:not(.ddb-app-mode)) .dialog[data-prelaunch-web] .close { border: 0; background: #fff; color: #475569; box-shadow: 0 8px 16px -10px rgb(15 23 42 / 45%), 0 0 0 1.5px #f3e7dd; transition: transform .15s, color .15s; }
+:global(html:not(.ddb-app-mode)) .dialog[data-prelaunch-web] .close:hover { background: #fff; color: #d0436d; }
+:global(html:not(.ddb-app-mode)) .dialog[data-prelaunch-web] .close:active { transform: scale(.92); }
+:global(html:not(.ddb-app-mode)) .dialog[data-prelaunch-web] :is(.close, .explore, .today input):focus-visible { outline: 3px solid #f7c3d2; outline-offset: 3px; }
+/* 가게 그림 — 초록 대신 파스텔 분홍 · 크림 */
+:global(html:not(.ddb-app-mode)) .dialog[data-prelaunch-web] .shopWindow { background: #fff4f7; border-color: #f7c3d2; }
+:global(html:not(.ddb-app-mode)) .dialog[data-prelaunch-web] .awning { border-color: #f4b8cb; background: repeating-linear-gradient(90deg, #f7a8bf 0 20px, #fff 20px 40px); box-shadow: 0 5px 0 rgb(200 80 120 / 8%); }
+:global(html:not(.ddb-app-mode)) .dialog[data-prelaunch-web] .windowSill { background: #f3d9b8; border-bottom-color: #e8c497; }
+/* 손글씨 · 하트 · 반짝이 — 기울기 없이 */
+:global(html:not(.ddb-app-mode)) .dialog[data-prelaunch-web] .handwritten { transform: none; color: #e9789a; }
+:global(html:not(.ddb-app-mode)) .dialog[data-prelaunch-web] .littleHeart { transform: none; color: #e9789a; }
+:global(html:not(.ddb-app-mode)) .dialog[data-prelaunch-web] .sparkle { transform: none; color: #f5b13d; }
+/* "OPENING SOON" — 기울어진 이름표 대신 흰 알약(영문 작은 꼬리표) */
+:global(html:not(.ddb-app-mode)) .dialog[data-prelaunch-web] .sign {
+    transform: translateX(-50%);
+    border: 0;
+    border-radius: 999px;
+    background: #fff;
+    color: #d0436d;
+    font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: .14em;
+    box-shadow: 0 0 0 1.5px #f7d5df, 0 8px 14px -10px rgb(200 80 120 / 55%);
+}
+/* 작은 영문 · 한글 꼬리표 — 세 색 크레파스 글자 */
+:global(html:not(.ddb-app-mode)) .dialog[data-prelaunch-web] .eyebrow {
+    background-image: repeating-linear-gradient(172deg, #07849e 0 5px, #ef476f 5px 10px, #e98708 10px 15px);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: #07849e;
+    font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: .08em;
+    -webkit-text-fill-color: transparent;
+}
+:global(html:not(.ddb-app-mode)) .dialog[data-prelaunch-web] .eyebrow > span { background: #e9789a; }
+/* 제목 — 주아(한 굵기라 400) · 강조 줄 아래 세 색 크레파스 밑줄 */
+:global(html:not(.ddb-app-mode)) .dialog[data-prelaunch-web] .title { color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-weight: 400; letter-spacing: -.02em; line-height: 1.38; }
+:global(html:not(.ddb-app-mode)) .dialog[data-prelaunch-web] .title em {
+    padding: 0 .08em;
+    color: #d0436d;
+    background-image: linear-gradient(94deg, rgb(8 145 178 / 55%) 0 33%, rgb(239 71 111 / 50%) 33% 66%, rgb(245 158 11 / 55%) 66% 100%);
+    background-position: 0 96%;
+    background-repeat: no-repeat;
+    background-size: 100% .2em;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+}
+:global(html:not(.ddb-app-mode)) .dialog[data-prelaunch-web] .description { color: #64748b; }
+:global(html:not(.ddb-app-mode)) .dialog[data-prelaunch-web] .description strong { color: #d0436d; font-weight: 700; }
+/* 주 단추 — 분홍 알약(올리면 #e26690 · 누르면 #d0436d + 살짝 작아짐) */
+:global(html:not(.ddb-app-mode)) .dialog[data-prelaunch-web] .explore {
+    gap: 10px;
+    border-radius: 999px;
+    background: #e9789a;
+    color: #fff;
+    font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    box-shadow: inset 0 2px 0 rgb(255 255 255 / 28%), 0 14px 22px -14px rgb(200 80 120 / 80%);
+    transition: background .18s, transform .15s;
+}
+:global(html:not(.ddb-app-mode)) .dialog[data-prelaunch-web] .explore:hover { background: #e26690; transform: translateY(-1px); }
+:global(html:not(.ddb-app-mode)) .dialog[data-prelaunch-web] .explore:active { background: #d0436d; transform: scale(.98); }
+/* 보조 — "오늘은 그만 보기" 흰 알약 */
+:global(html:not(.ddb-app-mode)) .dialog[data-prelaunch-web] .today {
+    margin: 14px auto 20px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    background: #fff;
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 700;
+    box-shadow: 0 0 0 1.5px #f3e7dd, 0 8px 16px -14px rgb(15 23 42 / 40%);
+    transition: transform .15s;
+}
+:global(html:not(.ddb-app-mode)) .dialog[data-prelaunch-web] .today:active { transform: scale(.97); }
+:global(html:not(.ddb-app-mode)) .dialog[data-prelaunch-web] .today input { accent-color: #e9789a; }
+/* 아래 띠 — 점선 대신 연분홍 띠 */
+:global(html:not(.ddb-app-mode)) .dialog[data-prelaunch-web] .signature { border-top: 0; background: #fff4f7; color: #d0436d; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 10px; font-weight: 400; }

@@ -1,3 +1,9 @@
+/**
+ * IntroSplash — 첫 화면 인트로 영상(누르거나 Enter · Space · Escape 로 건너뛰기)
+ * ---------------------------------------------------------------------
+ * 2026-10-26: 건너뛰기 안내 문구를 화면에 맞게 — 휴대폰(767px 이하) "탭하면", PC "클릭하면".
+ *   인트로가 뜨면 판에 초점을 옮겨 Escape 가 바로 먹게(예전에는 먼저 판을 눌러야 키가 먹었음). 영상 · 닫기 동작 그대로
+ */
 "use client";
 
 import { useEffect, useRef, useState } from "react";
@@ -18,6 +24,8 @@ export default function IntroSplash() {
     const introVideoRef = useRef<HTMLVideoElement>(null);
     const introMobileRef = useRef(false);
     const closeTimerRef = useRef<number | null>(null);
+    // 인트로 판 — 뜨는 순간 초점(키보드 Escape 로 바로 건너뛰기)
+    const splashRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         // 모바일 여부 1회 판단 (영상 선택 + 인트로 본 기록 키에 공통 사용)
@@ -91,6 +99,8 @@ export default function IntroSplash() {
 
         document.addEventListener("visibilitychange", keepIntroAtNormalSpeed);
         keepIntroAtNormalSpeed();
+        // 판에 초점 — 화면은 움직이지 않게(preventScroll)
+        splashRef.current?.focus({ preventScroll: true });
 
         return () => {
             observer.disconnect();
@@ -149,6 +159,7 @@ export default function IntroSplash() {
 
     return (
         <div
+            ref={splashRef}
             className={styles.splash}
             onClick={close}
             onKeyDown={(event) => {
@@ -182,7 +193,8 @@ export default function IntroSplash() {
                     onError={closeAfterMinimum}
                 />
             </div>
-            <span className={styles.skipText}>탭하면 바로 쇼핑하기</span>
+            {/* 휴대폰은 "탭하면", PC 는 "클릭하면"(isMobile = 처음 열 때 767px 이하) */}
+            <span className={styles.skipText}>{isMobile ? "탭하면" : "클릭하면"} 바로 쇼핑하기</span>
         </div>
     );
 }

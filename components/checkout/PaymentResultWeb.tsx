@@ -307,7 +307,13 @@ export function PaymentStateWeb({ view }: { view: PaymentStateView }) {
                 <img src={`${UI}goods-pay-none-256.webp`} alt="" aria-hidden="true" />
                 <span className="gw-kicker">SOMETHING WENT WRONG</span>
                 <h1 id="pw-state-title">{failed ? <>결제 확인에 <span className="gw-hl">실패</span>했어요</> : <>결제 결과를 <span className="gw-hl">확인할 수 없어요</span></>}</h1>
-                <p className="pw-reason">{view.message}</p>
+                {/* 서버가 보낸 원문 대신 쉬운 고정 문장(2026-10-26), 원문은 문의할 때 쓰도록 작은 흐린 줄로 */}
+                <p className="pw-reason">
+                    {failed
+                        ? "결제 내용을 확인하는 중에 문제가 생겼어요. 잠시 뒤 다시 확인해 주세요."
+                        : "결제 결과 정보가 올바르지 않아 확인할 수 없었어요."}
+                    {view.message && <small className="pw-reason-raw">자세한 내용 · {view.message}</small>}
+                </p>
                 <ul>
                     <li><i className="fa-solid fa-cart-shopping" aria-hidden="true" /><span>{failed && view.retryHref ? "같은 결제를 한 번 더 확인할 수 있어요. 새로 결제되지 않아요." : "장바구니는 그대로예요. 주문서에서 다시 결제할 수 있어요."}</span></li>
                     <li><i className="fa-solid fa-headset" aria-hidden="true" /><span>돈이 빠져나갔는데 이 화면이 보이면 1:1 문의에 주문번호를 남겨 주세요.</span></li>

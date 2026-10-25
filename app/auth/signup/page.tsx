@@ -3,6 +3,8 @@
 /*
  * 회원가입(/auth/signup) — 2026-10-24 웹 크레파스 결: 이름표(su-* · data-signup-web)만 붙이고 꾸밈은 app/auth-web.css(웹 전용).
  * 무지개 고리 강아지 · 영문 손글씨 · 주아 제목 · 쿠션 판 · 크림 입력칸 · 분홍 알약. 가입 · 인증 · 사진 분석 동작 그대로.
+ * 2026-10-26 웹: "이메일 확인 후 계정 열기"(activation) 화면에 3D 그림 · 손글씨 꼬리표(hidden → 웹 CSS로 보임) ·
+ *   가운데 제목 · 해요체 설명(useWebScreen 으로 웹에서만)을 더함. 꾸밈은 app/auth-web.css "이메일 확인 화면". 앱 글 · 모양 그대로.
  */
 
 import { FormEvent, useEffect, useRef, useState, useSyncExternalStore } from "react";
@@ -881,14 +883,20 @@ export default function SignupPage() {
             if (pendingVerification.verified) {
                 return (
                     <main className="mx-auto max-w-lg px-4 py-10 sm:py-16" data-signup-web="verify">
+                        {/* 웹 전용 머리 — 3D 확인 그림 · 손글씨 꼬리표(hidden, 웹 CSS에서만 보임) */}
+                        <NextImage className="hidden su-verify-art" src="/images/ui/cs-check-160.webp" alt="" width={96} height={96} priority />
+                        <p className="hidden su-kicker">EMAIL CHECKED</p>
                         <h1 className="su-title text-2xl font-black tracking-tight text-neutral-950">이메일 확인 완료</h1>
                         <p className="mt-2 text-sm font-bold leading-6 text-neutral-600">
-                            이메일이 확인되었습니다. 안전하게 계정 이용을 시작하기 위해 가입 때 입력한 비밀번호로 로그인해 주세요.
+                            {/* 웹은 해요체 안내, 앱은 기존 글 그대로 */}
+                            {webScreen
+                                ? "이메일 확인이 끝났어요! 안전하게 시작할 수 있도록 가입할 때 정한 비밀번호로 한 번 로그인해 주세요."
+                                : "이메일이 확인되었습니다. 안전하게 계정 이용을 시작하기 위해 가입 때 입력한 비밀번호로 로그인해 주세요."}
                         </p>
                         {activationFinalizing ? (
-                            <p role="status" className="mt-5 rounded-xl bg-indigo-50 px-4 py-3 text-sm font-black text-indigo-800">
+                            <p role="status" className="mt-5 rounded-xl bg-indigo-50 px-4 py-3 text-sm font-black text-indigo-800" data-su-progress>
                                 <i className="fa-solid fa-circle-notch fa-spin mr-2" />
-                                계정과 반려견 프로필을 준비하고 있습니다.
+                                {webScreen ? "계정과 우리 아이 프로필을 준비하고 있어요." : "계정과 반려견 프로필을 준비하고 있습니다."}
                             </p>
                         ) : (
                             <form
@@ -927,9 +935,15 @@ export default function SignupPage() {
 
             return (
                 <main className="mx-auto max-w-lg px-4 py-10 sm:py-16" data-signup-web="verify">
+                    {/* 웹 전용 머리 — 3D 편지 그림 · 손글씨 꼬리표(hidden, 웹 CSS에서만 보임) */}
+                    <NextImage className="hidden su-verify-art" src="/images/ui/lab-mail-160.webp" alt="" width={96} height={96} priority />
+                    <p className="hidden su-kicker">CHECK YOUR EMAIL</p>
                     <h1 className="su-title text-2xl font-black tracking-tight text-neutral-950">회원가입 이메일 확인</h1>
                     <p className="mt-2 text-sm font-bold leading-6 text-neutral-600">
-                        이메일 확인을 마쳐야 계정 이용이 시작됩니다. 확인 전에는 로그인 정보나 회원 프로필을 저장하지 않습니다.
+                        {/* 웹은 해요체 안내, 앱은 기존 글 그대로 */}
+                        {webScreen
+                            ? "가입한 이메일로 보낸 인증번호 6자리를 넣으면 계정이 열려요. 확인 전에는 로그인 정보나 프로필을 저장하지 않아요."
+                            : "이메일 확인을 마쳐야 계정 이용이 시작됩니다. 확인 전에는 로그인 정보나 회원 프로필을 저장하지 않습니다."}
                     </p>
                     <div className="mt-5">
                         <SignupEmailVerification

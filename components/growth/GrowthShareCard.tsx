@@ -193,6 +193,7 @@ export default function GrowthShareCard({
                                 ? "border-rose-200 bg-rose-50 text-rose-900"
                                 : "border-neutral-200 bg-neutral-50 text-neutral-700"
                     }`}
+                    data-web-notice={notice.tone === "success" ? "ok" : notice.tone === "error" ? "error" : "info"} // 웹 부드러운 안내 쿠션(daily-web.css)
                 >
                     {notice.message}
                     {notice.fallbackUrl ? (

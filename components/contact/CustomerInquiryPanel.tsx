@@ -187,7 +187,10 @@ export default function CustomerInquiryPanel({ email, phone, embedded }: { email
             setError(
                 caught instanceof DdbApiError
                     ? caught.message
-                    : "문의 접수 중 문제가 발생했습니다. 잠시 후 다시 시도해 주세요.",
+                    // 웹은 해요체 안내(2026-10-26), 앱은 원래 문구
+                    : webScreen
+                        ? "문의를 접수하지 못했어요. 잠시 후 다시 시도해 주세요."
+                        : "문의 접수 중 문제가 발생했습니다. 잠시 후 다시 시도해 주세요.",
             );
         } finally {
             setSubmitting(false);
@@ -298,7 +301,8 @@ export default function CustomerInquiryPanel({ email, phone, embedded }: { email
                 >
                     {!embedded && (
                     <div className="cs-form-head border-b border-aurora-indigo/10 bg-gradient-to-r from-orange-50 via-sky-50 to-indigo-50 px-5 py-4 sm:px-6">
-                        <p className="text-xs font-black tracking-[0.18em] text-aurora-indigo">CRAYON CONTACT NOTE</p>
+                        {/* 영문 꼬리표 — 웹은 "1:1 INQUIRY"(내부 컨셉 이름 노출 없이, 2026-10-26), 앱은 원래 문구 */}
+                        <p className="text-xs font-black tracking-[0.18em] text-aurora-indigo">{webScreen ? "1:1 INQUIRY" : "CRAYON CONTACT NOTE"}</p>
                         <div className="mt-1 flex items-start justify-between gap-4">
                             <div>
                                 <h2 className="text-xl font-black text-foreground">1:1 문의 바로 접수</h2>
@@ -324,17 +328,20 @@ export default function CustomerInquiryPanel({ email, phone, embedded }: { email
                                 <span className="flex h-11 w-11 items-center justify-center rounded-full bg-emerald-600 text-white">
                                     <i className="fa-solid fa-check" aria-hidden="true" />
                                 </span>
-                                <h3 className="mt-3 text-lg font-black text-emerald-950">문의가 접수됐습니다.</h3>
+                                <h3 className="mt-3 text-lg font-black text-emerald-950">{webScreen ? "문의가 접수됐어요." : "문의가 접수됐습니다."}</h3>
                                 <p className="mt-2 text-sm font-bold leading-6 text-emerald-900">접수번호: <b>{receipt.id}</b></p>
                                 <p className="mt-1 text-sm font-bold leading-6 text-neutral-700">{receipt.message}</p>
                                 {missingLabels.length > 0 ? (
-                                    <p className="mt-3 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-sm font-bold leading-6 text-amber-950">
-                                        {missingLabels.join("·")} 확인이 더 필요해요. 담당 자동 안내가 입력하신 이메일로 추가 내용을 요청할 수 있습니다.
+                                    <p className="mt-3 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-sm font-bold leading-6 text-amber-950" data-web-notice="warn">
+                                        {/* 웹은 자연스러운 해요체 문장(2026-10-26), 앱은 원래 문구 */}
+                                        {webScreen
+                                            ? `${missingLabels.join("·")} 확인이 더 필요해요. 입력하신 이메일로 추가 내용을 여쭤볼 수 있어요.`
+                                            : `${missingLabels.join("·")} 확인이 더 필요해요. 담당 자동 안내가 입력하신 이메일로 추가 내용을 요청할 수 있습니다.`}
                                     </p>
                                 ) : null}
                                 <p className="mt-3 text-xs font-bold leading-5 text-neutral-600">
                                     {receipt.auto_reply_sent
-                                        ? "접수 확인 메일을 발송했습니다."
+                                        ? (webScreen ? "접수 확인 메일을 보내 드렸어요." : "접수 확인 메일을 발송했습니다.")
                                         : "접수 내용은 안전하게 기록됐으며, 회신 준비가 완료되면 이메일로 알려드릴게요."}
                                 </p>
                                 <button
@@ -500,7 +507,7 @@ export default function CustomerInquiryPanel({ email, phone, embedded }: { email
                             </label>
 
                             {error ? (
-                                <p role="alert" className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm font-extrabold leading-6 text-red-800">
+                                <p role="alert" className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm font-extrabold leading-6 text-red-800" data-web-notice="error">
                                     {error}
                                 </p>
                             ) : null}

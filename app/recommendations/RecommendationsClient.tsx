@@ -3,6 +3,8 @@
 /*
  * 맞춤 추천(/recommendations) — 추천 계산 · 데이터 설정 · 숨기기 · 기록.
  * 2026-10-25 웹은 새 겉모양(components/recommendation/RecommendationsWeb)으로 그림 — 값 · 함수는 이 파일 그대로 넘김. 앱은 아래 기존 화면.
+ * 2026-10-26 앱 화면 main 에 data-rc-app-view — 웹에서 화면이 붙기 전 인디고 앱 화면이 비치지 않게 숨기고(page),
+ *  준비 중 글(loading)은 웹 쿠션으로 칠함(app/recommend-web.css). 앱은 그대로.
  */
 
 import Link from "next/link";
@@ -163,7 +165,7 @@ export default function RecommendationsClient() {
 
     if (!hydrated) {
         return (
-            <main className="mx-auto max-w-[1280px] px-4 py-12 md:px-6" aria-busy="true">
+            <main className="mx-auto max-w-[1280px] px-4 py-12 md:px-6" aria-busy="true" data-rc-app-view="loading">
                 <p className="rounded-2xl bg-neutral-50 px-5 py-8 text-center text-sm font-black text-neutral-500">
                     추천 화면을 준비하고 있어요.
                 </p>
@@ -177,6 +179,7 @@ export default function RecommendationsClient() {
             data-recommendations-page
             data-recommendation-mode={mode}
             data-recommendation-full-page-enabled={personalizationEnabled}
+            data-rc-app-view="page"
         >
             <header className="rounded-[32px] border border-indigo-100 bg-gradient-to-br from-indigo-50 via-white to-amber-50 p-6 md:p-8">
                 <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">

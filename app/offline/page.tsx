@@ -19,9 +19,14 @@ export default function OfflinePage() {
                 <p className="mt-4 text-sm leading-7 text-slate-600">
                     연결이 돌아오면 매일 댕생활과 댕다방 연구소를 다시 이용할 수 있어요.
                 </p>
-                {/* 앱 홈 — 설치한 앱의 홈(/app/home-1/)으로 바로(2026-10-18, /app/ 은 브라우저 설치 안내) */}
-                <Link href="/app/home-1/" className="ddb-crayon-link mt-7 inline-flex min-h-12 items-center justify-center rounded-2xl px-6">
+                {/* 앱 홈 — 설치한 앱의 홈(/app/home-1/)으로 바로(2026-10-18, /app/ 은 브라우저 설치 안내).
+                    data-offline-app-link: 웹에서는 숨김(globals.css "오프라인 안내") — 앱에서만 보임 */}
+                <Link href="/app/home-1/" data-offline-app-link className="ddb-crayon-link mt-7 inline-flex min-h-12 items-center justify-center rounded-2xl px-6">
                     앱 홈 다시 열기
+                </Link>
+                {/* 웹 — 메인으로(/main, 2026-10-26). 마크업은 hidden 이라 앱에선 안 보이고, 웹 CSS(data-offline-main-link)가 보이게 함 */}
+                <Link href="/main" data-offline-main-link className="ddb-crayon-link mt-7 hidden min-h-12 items-center justify-center rounded-2xl px-6">
+                    메인으로
                 </Link>
             </div>
         </section>

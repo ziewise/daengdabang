@@ -12,6 +12,9 @@
  * 2026-10-25 웹 비회원 주문(components/guest/GuestCheckoutPanel · lib/guest-order): 로그인 안 했으면 회원/비회원 고르기 →
  *  비회원 주문자 정보 · 주문 조회 비밀번호 · 필수 동의, 주문 요약 옆 결제 안내. 비회원 결제는 서버가 연결(NEXT_PUBLIC_GUEST_ORDER)될 때만
  *  열리고, 그 전에는 지금처럼 로그인해야 결제됨. 앱에서는 hidden(꾸밈 app/guest-web.css).
+ * 2026-10-26 웹 점검: 서버 · 개발 말투 안내(예상일 · 검증 안내)와 날것의 서버 오류 글은 웹에서만 쉬운 해요체로(useWebScreen),
+ *  구매할 수 없는 옵션 안내는 웹에서 3D 그림 쿠션 카드, 남은 인디고 글자 · 돌림표는 웹 CSS(co-addr-link · co-terms-link · co-spin)로 분홍.
+ *  앱 화면 · 테스트 결제 안내 · 결제 동작은 그대로.
  */
 import { FormEvent, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Image from "next/image";
@@ -36,6 +39,8 @@ import ShippingDetailsSection from "@/components/checkout/ShippingDetailsSection
 import { cartProducts } from "@/lib/shop";
 import { useLiveInventorySnapshot } from "@/lib/catalog/live-inventory";
 import { useAuth, useCart } from "@/lib/store";
+// 웹 화면인가 — 웹 전용 문구(쉬운 말)만 고를 때 씀, 결제 동작과는 무관
+import { useWebScreen } from "@/hooks/useWebScreen";
 import { useI18n } from "@/lib/i18n";
 import {
     cancelTossTestOrder,
@@ -99,6 +104,13 @@ const PAYMENT_BUTTON_COPY: Record<CheckoutPaymentMethod, { ko: string; en: strin
     kakao_pay: { ko: "카카오페이 심사 중", en: "Kakao Pay under review" },
 };
 
+// 서버가 보낸 날것의 오류 글인가(아래 safePaymentError 가 그대로 돌려주는 경우) — 웹은 이때 쉬운 고정 문장 + 작은 원문 한 줄
+function isRawServerPaymentError(error: unknown) {
+    return error instanceof DdbApiError
+        && error.apiCode !== "OPEN_ORDER_LIMIT"
+        && error.apiCode !== "ORDER_CREATE_RATE_LIMIT";
+}
+
 function safePaymentError(error: unknown, locale: "ko" | "en") {
     if (error instanceof DdbApiError) {
         if (error.apiCode === "OPEN_ORDER_LIMIT") {
@@ -129,6 +141,7 @@ export default function CheckoutPage() {
     const { user } = useAuth();
     const { t, locale, formatPrice, productName } = useI18n();
     const liveInventory = useLiveInventorySnapshot();
+    const webScreen = useWebScreen();
     const evaluatedCartLines = cartProducts(cart.lines, liveInventory);
     const inventoryBlocked = evaluatedCartLines.some(line => line.selectionBlocked);
     const lines = evaluatedCartLines.filter((line) => line.selected);
@@ -143,6 +156,8 @@ export default function CheckoutPage() {
     const [paymentMethod, setPaymentMethod] = useState<CheckoutPaymentMethod>("card");
     const [submitting, setSubmitting] = useState(false);
     const [paymentError, setPaymentError] = useState("");
+    // 마지막 결제 시도에서 받은 서버 원문 오류 — paymentError 와 같을 때만 웹이 쉬운 문장으로 바꿔 보여 줌(보이는 글만, 동작 무관)
+    const [rawServerError, setRawServerError] = useState("");
     const [directTermsAccepted, setDirectTermsAccepted] = useState(false);
     const [savedAddresses, setSavedAddresses] = useState<CustomerAddress[]>([]);
     const [selectedAddressId, setSelectedAddressId] = useState("");
@@ -418,13 +433,36 @@ export default function CheckoutPage() {
                 }
                 clearPendingTossTestPayment(pendingOrderId);
             }
-            setPaymentError(safePaymentError(error, locale));
+            const message = safePaymentError(error, locale);
+            setRawServerError(isRawServerPaymentError(error) ? message : "");
+            setPaymentError(message);
             setSubmitting(false);
         }
     };
 
     if (inventoryBlocked) {
-        return <main className="mx-auto max-w-[720px] px-4 py-14 text-center" data-checkout-web="notice"><h1 className="co-notice-title text-xl font-black">{locale === "en" ? "Review unavailable cart options before checkout." : "구매할 수 없는 옵션이 있어 장바구니 확인이 필요합니다."}</h1><Link href="/cart" className="btn btn-primary mt-6">{locale === "en" ? "Review cart" : "장바구니 확인"}</Link></main>;
+        return (
+            <main className="mx-auto max-w-[720px] px-4 py-14 text-center" data-checkout-web="notice" data-co-notice="blocked">
+                {/* 웹 전용 — 3D 그림 동그라미(빈 주문서 안내와 같은 co-notice-art) */}
+                <span className="hidden co-notice-art" aria-hidden="true">
+                    <Image src="/images/ui/goods-pay-none-256.webp" alt="" width={104} height={104} />
+                </span>
+                <h1 className="co-notice-title text-xl font-black">
+                    {webScreen
+                        // 웹 — 쉬운 해요체(앱은 아래 기존 문구 그대로)
+                        ? (locale === "en" ? "Some options can’t be purchased right now" : "지금 살 수 없는 옵션이 있어요")
+                        : (locale === "en" ? "Review unavailable cart options before checkout." : "구매할 수 없는 옵션이 있어 장바구니 확인이 필요합니다.")}
+                </h1>
+                {webScreen && (
+                    <p className="co-notice-desc">
+                        {locale === "en"
+                            ? "An item in your cart sold out or changed. Check it in your cart, then come back to checkout."
+                            : "장바구니에 품절되었거나 바뀐 옵션이 있어요. 장바구니에서 확인한 뒤 다시 주문해 주세요."}
+                    </p>
+                )}
+                <Link href="/cart" className="btn btn-primary mt-6">{locale === "en" ? "Review cart" : "장바구니 확인"}</Link>
+            </main>
+        );
     }
     if (lines.length === 0) {
         return (
@@ -502,7 +540,7 @@ export default function CheckoutPage() {
                                     </option>
                                 ))}
                             </select>
-                            <Link href="/mypage/address/" className="text-xs font-black text-indigo-700 hover:underline">배송지 관리</Link>
+                            <Link href="/mypage/address/" className="co-addr-link text-xs font-black text-indigo-700 hover:underline">배송지 관리</Link>
                         </section>
                     )}
                     <ShippingDetailsSection
@@ -526,7 +564,10 @@ export default function CheckoutPage() {
                                         {locale === "en" ? "Estimated arrival" : "예상 도착일"}
                                     </h2>
                                     <p className="mt-0.5 text-xs font-bold leading-5 text-neutral-500">
-                                        {locale === "en" ? "Calculated by the server in Korea time." : "한국 시간과 영업일 기준으로 서버가 계산합니다."}
+                                        {webScreen
+                                            // 웹 — 쉬운 말(앱은 기존 문구)
+                                            ? (locale === "en" ? "Based on Korean business days, excluding weekends and holidays." : "주말 · 공휴일을 빼고 영업일 기준으로 알려 드려요.")
+                                            : (locale === "en" ? "Calculated by the server in Korea time." : "한국 시간과 영업일 기준으로 서버가 계산합니다.")}
                                     </p>
                                 </div>
                             </div>
@@ -534,7 +575,7 @@ export default function CheckoutPage() {
                         <div className="p-4 sm:p-5" aria-live="polite">
                             {quoteLoading ? (
                                 <p className="text-sm font-black text-neutral-600">
-                                    <i className="fa-solid fa-spinner fa-spin mr-2 text-indigo-600" aria-hidden="true" />
+                                    <i className="co-spin fa-solid fa-spinner fa-spin mr-2 text-indigo-600" aria-hidden="true" />
                                     {locale === "en" ? "Calculating estimate…" : "예상일 계산 중…"}
                                 </p>
                             ) : deliveryQuote ? (
@@ -551,9 +592,14 @@ export default function CheckoutPage() {
                                 </>
                             ) : (
                                 <p className="text-sm font-bold leading-6 text-neutral-600">
-                                    {quoteError || (locale === "en"
-                                        ? "Sign in to see the server estimate."
-                                        : "로그인하면 서버 예상일을 확인할 수 있습니다.")}
+                                    {webScreen
+                                        // 웹 — 쉬운 말(앱은 기존 문구)
+                                        ? (quoteError
+                                            ? (locale === "en" ? "We couldn’t load the estimate yet. We’ll check it again when you pay." : "지금은 예상일을 불러오지 못했어요. 결제할 때 다시 확인해 드려요.")
+                                            : (locale === "en" ? "Sign in to see your estimated arrival date." : "로그인하면 예상 도착일을 알려 드려요."))
+                                        : quoteError || (locale === "en"
+                                            ? "Sign in to see the server estimate."
+                                            : "로그인하면 서버 예상일을 확인할 수 있습니다.")}
                                 </p>
                             )}
                         </div>
@@ -635,11 +681,11 @@ export default function CheckoutPage() {
                                 />
                                 <span className="text-[11px] font-bold leading-5 text-neutral-700">
                                     {locale === "en" ? "I agree to the required Toss Payments terms for direct wallet testing: " : "간편결제 직접 테스트에 필요한 토스페이먼츠 약관에 동의합니다: "}
-                                    <a href="https://pages.tosspayments.com/terms/user" target="_blank" rel="noreferrer" className="font-black text-indigo-700 underline">전자금융거래 약관</a>
+                                    <a href="https://pages.tosspayments.com/terms/user" target="_blank" rel="noreferrer" className="co-terms-link font-black text-indigo-700 underline">전자금융거래 약관</a>
                                     {" · "}
-                                    <a href="https://pages.tosspayments.com/terms/privacy/consent1" target="_blank" rel="noreferrer" className="font-black text-indigo-700 underline">개인정보 수집·이용</a>
+                                    <a href="https://pages.tosspayments.com/terms/privacy/consent1" target="_blank" rel="noreferrer" className="co-terms-link font-black text-indigo-700 underline">개인정보 수집·이용</a>
                                     {" · "}
-                                    <a href="https://pages.tosspayments.com/terms/privacy/consent2" target="_blank" rel="noreferrer" className="font-black text-indigo-700 underline">제3자 제공</a>
+                                    <a href="https://pages.tosspayments.com/terms/privacy/consent2" target="_blank" rel="noreferrer" className="co-terms-link font-black text-indigo-700 underline">제3자 제공</a>
                                 </span>
                             </label>
                         )}
@@ -721,7 +767,15 @@ export default function CheckoutPage() {
                     )}
                     {paymentError && (
                         <p className="mt-4 rounded-xl border border-red-200 bg-red-50 px-3 py-3 text-xs font-bold leading-5 text-red-800" role="alert">
-                            {paymentError}
+                            {webScreen && paymentError === rawServerError ? (
+                                // 웹 — 서버 원문 대신 쉬운 문장, 원문은 작은 흐린 줄로(문의할 때 쓰도록)
+                                <>
+                                    {locale === "en"
+                                        ? "Something went wrong while opening the payment window. Please try again in a moment."
+                                        : "결제창을 여는 중에 문제가 생겼어요. 잠시 뒤 다시 시도해 주세요."}
+                                    <small className="co-error-raw">{paymentError}</small>
+                                </>
+                            ) : paymentError}
                         </p>
                     )}
                     <button
@@ -735,9 +789,12 @@ export default function CheckoutPage() {
                             : (locale === "en" ? PAYMENT_BUTTON_COPY[paymentMethod].en : PAYMENT_BUTTON_COPY[paymentMethod].ko)}
                     </button>
                     <p className="mt-2 text-center text-[10px] font-bold leading-4 text-neutral-500">
-                        {locale === "en"
-                            ? "The server verifies the order, amount, and encrypted delivery snapshot."
-                            : "주문번호·금액·암호화 배송정보는 서버가 생성하고 검증합니다."}
+                        {webScreen
+                            // 웹 — 쉬운 말(앱은 기존 문구)
+                            ? (locale === "en" ? "We double-check your order amount and delivery details before the payment window opens." : "주문 금액과 배송 정보를 한 번 더 확인한 뒤 결제창이 열려요.")
+                            : (locale === "en"
+                                ? "The server verifies the order, amount, and encrypted delivery snapshot."
+                                : "주문번호·금액·암호화 배송정보는 서버가 생성하고 검증합니다.")}
                     </p>
                 </aside>
             </form>

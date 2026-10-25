@@ -153,6 +153,7 @@ export default function ShowcaseShareModal({
                 aria-modal="true"
                 aria-labelledby="showcase-share-title"
                 aria-describedby="showcase-share-description"
+                data-showcase-share
                 className="w-full max-w-lg rounded-[30px] border border-white/90 bg-[#fffdf8] p-5 shadow-modal sm:p-6"
             >
                 <div className="flex items-start justify-between gap-4">
@@ -198,7 +199,8 @@ export default function ShowcaseShareModal({
                     <div className="p-5">
                         <p className="ddb-crayon-kicker text-[10px]">오늘의 댕주제 · 댕자랑</p>
                         <h3 className="ddb-crayon-title mt-1 break-keep text-2xl text-neutral-950">{copy.title}</h3>
-                        <p className="mt-2 line-clamp-3 whitespace-pre-wrap break-words text-xs font-bold leading-5 text-neutral-650">
+                        {/* 없는 색 이름(text-neutral-650) 대신 같은 결과인 text-inherit(앱 그대로) · 웹 색은 showcase-compose-web.css */}
+                        <p className="mt-2 line-clamp-3 whitespace-pre-wrap break-words text-xs font-bold leading-5 text-inherit" data-web-soft-text>
                             {target.kind === "post" ? target.post.caption : target.topic.prompt}
                         </p>
                     </div>
@@ -219,6 +221,7 @@ export default function ShowcaseShareModal({
                         onClick={() => void copyLink()}
                         disabled={Boolean(busy)}
                         className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-indigo-200 bg-white px-5 text-sm font-black text-indigo-900 hover:bg-indigo-50 disabled:opacity-55"
+                        data-showcase-share-copy // 웹은 흰 알약(showcase-compose-web.css)
                     >
                         <i className={`fa-solid ${busy === "copy" ? "fa-spinner fa-spin" : "fa-link"}`} aria-hidden="true" />
                         링크 복사
@@ -231,6 +234,7 @@ export default function ShowcaseShareModal({
                     onFocus={(event) => event.currentTarget.select()}
                     value={shareUrl}
                     className="mt-3 h-10 w-full rounded-xl border border-neutral-200 bg-white px-3 text-[10px] font-bold text-neutral-600 outline-none focus:border-indigo-400"
+                    data-showcase-share-url // 웹은 12px 크림 입력칸(showcase-compose-web.css)
                 />
 
                 {notice ? (
@@ -244,6 +248,7 @@ export default function ShowcaseShareModal({
                                     ? "border-rose-200 bg-rose-50 text-rose-900"
                                     : "border-neutral-200 bg-neutral-50 text-neutral-700"
                         }`}
+                        data-web-notice={notice.tone === "success" ? "ok" : notice.tone === "error" ? "error" : "info"} // 웹 부드러운 안내 쿠션
                     >
                         {notice.message}
                     </p>

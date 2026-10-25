@@ -11,6 +11,9 @@ import { ddbApiBase } from "@/lib/ddb-api-base";
 import { getCustomerToken } from "@/lib/customer-api";
 import { findProduct, productHref, versionProductImage } from "@/lib/shop";
 import { useAuth } from "@/lib/store";
+// 2026-10-26 웹 문구 · 불러오는 중 모양 — 해요체 · 서버 원문 대신 정해 둔 문장 · 크림 쿠션 자리(앱은 원래 그대로)
+import { useWebScreen } from "@/hooks/useWebScreen";
+import MypageWebLoading from "@/components/mypage/MypageWebLoading";
 import {
     estimatedDeliveryLabel,
     formatOrderAmount,
@@ -268,6 +271,18 @@ function OrderCard({ order }: { order: TossOrderHistoryItem }) {
 }
 
 function LoadingView() {
+    // 웹: 사이드 메뉴 + 머리 판 + 흰 쿠션 카드 자리(앱은 아래 원래 회색 자리)
+    const webScreen = useWebScreen();
+    if (webScreen) {
+        return (
+            <OrdersShell>
+                <MypageWebLoading
+                    head={{ kicker: "MY ORDERS", title: "주문 내역", text: "주문 내역을 불러오고 있어요.", art: "cart" }}
+                    label="주문 내역을 불러오는 중이에요."
+                />
+            </OrdersShell>
+        );
+    }
     return (
         <main className="mx-auto max-w-[1040px] px-4 py-10 md:px-6" aria-busy="true" aria-live="polite">
             <div className="h-8 w-40 animate-pulse rounded-lg bg-neutral-200" />
@@ -280,24 +295,44 @@ function LoadingView() {
 }
 
 function LoginGate({ orderId, expired = false }: { orderId: string; expired?: boolean }) {
+    // 웹은 해요체(앱 문구 그대로)
+    const webScreen = useWebScreen();
     return (
         <main className="mx-auto max-w-[680px] px-4 py-16 text-center" data-mypage-web="gate">
             <i className="fa-solid fa-lock text-5xl text-amber-500" aria-hidden="true" />
-            <h1 className="mt-4 text-2xl font-black text-neutral-950">{expired ? "로그인이 만료되었습니다." : "로그인이 필요합니다."}</h1>
+            <h1 className="mt-4 text-2xl font-black text-neutral-950">
+                {webScreen
+                    ? (expired ? "로그인이 만료되었어요" : "로그인이 필요해요")
+                    : (expired ? "로그인이 만료되었습니다." : "로그인이 필요합니다.")}
+            </h1>
             <p className="mt-3 text-sm font-bold leading-6 text-neutral-600">
-                주문과 배송정보는 본인 확인 후에만 볼 수 있습니다.
+                {webScreen ? "주문과 배송 정보는 본인 확인 후에 볼 수 있어요." : "주문과 배송정보는 본인 확인 후에만 볼 수 있습니다."}
             </p>
             <Link href={loginHref(orderId)} className="btn btn-primary mt-6">로그인 후 주문 보기</Link>
+            {/* 웹 전용(2026-10-26) — 하위 화면 로그인 안내와 같게 비회원 주문 조회 줄(앱은 hidden 그대로, 꾸밈은 app/mypage-web.css) */}
+            <p className="hidden mp-gate-guest">
+                비회원으로 주문하셨나요?
+                <Link href="/order-lookup">비회원 주문 조회<i className="fa-solid fa-chevron-right" aria-hidden="true" /></Link>
+            </p>
         </main>
     );
 }
 
+// 웹 오류 안내 문장 — 서버가 보낸 원문(영어 detail · 형식 오류 같은 개발 문구) 대신 상황별 해요체(앱은 error.message 그대로)
+function webOrderErrorText(error: TossOrderHistoryApiError): string {
+    if (error.status === 404 || error.code === "invalid_order_id") return "주문을 찾지 못했어요. 주문 목록에서 다시 골라 주세요.";
+    if (error.code === "missing_api_base") return "지금은 주문 내역에 연결할 수 없어요. 잠시 뒤 다시 시도해 주세요.";
+    if (error.status === 429) return "요청이 많아 잠시 쉬고 있어요. 조금 뒤 다시 불러와 주세요.";
+    return "주문 내역을 잠시 불러오지 못했어요. 잠시 뒤 다시 불러와 주세요.";
+}
+
 function ErrorView({ error, retry }: { error: TossOrderHistoryApiError; retry: () => void }) {
+    const webScreen = useWebScreen();
     return (
         <section className="mx-auto max-w-[680px] py-12 text-center" role="alert">
             <i className="fa-solid fa-circle-exclamation text-5xl text-red-500" aria-hidden="true" />
-            <h1 className="mt-4 text-2xl font-black text-neutral-950">주문 내역을 불러오지 못했습니다.</h1>
-            <p className="mt-3 text-sm font-bold leading-6 text-neutral-600">{error.message}</p>
+            <h1 className="mt-4 text-2xl font-black text-neutral-950">{webScreen ? "주문 내역을 불러오지 못했어요" : "주문 내역을 불러오지 못했습니다."}</h1>
+            <p className="mt-3 text-sm font-bold leading-6 text-neutral-600">{webScreen ? webOrderErrorText(error) : error.message}</p>
             <div className="mt-6 flex flex-wrap justify-center gap-2">
                 <button type="button" onClick={retry} className="btn btn-primary">다시 불러오기</button>
                 <Link href="/mypage" className="btn btn-secondary">마이페이지</Link>
@@ -320,6 +355,8 @@ function OrderListView({
     loadMore: () => void;
 }) {
     const [query, setQuery] = useState("");
+    // 웹은 안내 · 빈 화면 문구를 해요체로(앱 문구 그대로)
+    const webScreen = useWebScreen();
     const filteredOrders = useMemo(() => {
         const needle = query.trim().toLocaleLowerCase("ko-KR");
         if (!needle) return orders;
@@ -339,7 +376,7 @@ function OrderListView({
                 <div>
                     <p className="text-sm font-black text-indigo-700">MY ORDERS</p>
                     <h1 className="mt-1 text-3xl font-black tracking-tight text-neutral-950">주문 내역</h1>
-                    <p className="mt-2 text-sm font-bold text-neutral-500">결제 결과와 배송 상태를 주문별로 확인할 수 있습니다.</p>
+                    <p className="mt-2 text-sm font-bold text-neutral-500">{webScreen ? "결제 결과와 배송 상태를 주문별로 확인할 수 있어요." : "결제 결과와 배송 상태를 주문별로 확인할 수 있습니다."}</p>
                 </div>
                 <Link href="/mypage" className="btn btn-secondary">마이페이지로</Link>
             </div>
@@ -378,13 +415,13 @@ function OrderListView({
             {orders.length === 0 ? (
                 <section className="mt-6 rounded-2xl border border-dashed border-neutral-300 bg-white p-10 text-center">
                     <i className="fa-solid fa-bag-shopping text-4xl text-neutral-300" aria-hidden="true" />
-                    <h2 className="mt-4 text-lg font-black text-neutral-950">아직 주문 내역이 없습니다.</h2>
-                    <p className="mt-2 text-sm font-bold text-neutral-500">결제가 확인된 주문이 이곳에 표시됩니다.</p>
+                    <h2 className="mt-4 text-lg font-black text-neutral-950">{webScreen ? "아직 주문 내역이 없어요" : "아직 주문 내역이 없습니다."}</h2>
+                    <p className="mt-2 text-sm font-bold text-neutral-500">{webScreen ? "결제가 확인된 주문이 이곳에 보여요." : "결제가 확인된 주문이 이곳에 표시됩니다."}</p>
                     <Link href="/products" className="btn btn-primary mt-6">상품 보러 가기</Link>
                 </section>
             ) : filteredOrders.length === 0 ? (
                 <section className="mt-6 rounded-2xl border border-dashed border-neutral-300 bg-white p-8 text-center">
-                    <h2 className="text-lg font-black text-neutral-950">검색 결과가 없습니다.</h2>
+                    <h2 className="text-lg font-black text-neutral-950">{webScreen ? "검색 결과가 없어요" : "검색 결과가 없습니다."}</h2>
                     <button type="button" onClick={() => setQuery("")} className="btn btn-secondary mt-4">검색어 지우기</button>
                 </section>
             ) : (
@@ -401,7 +438,7 @@ function OrderListView({
                         </p>
                     )}
                     {loadMoreError && (
-                        <p className="mb-3 text-xs font-bold text-red-700" role="alert">{loadMoreError}</p>
+                        <p className="mb-3 text-xs font-bold text-red-700" role="alert">{webScreen ? "이전 주문을 불러오지 못했어요. 잠시 뒤 다시 눌러 주세요." : loadMoreError}</p>
                     )}
                     <button
                         type="button"

@@ -4,8 +4,10 @@
  * 회원가입: 무지개 고리 안 댕다방 강아지 · 영문 손글씨 · 주아 제목 + 세 색 밑줄 · 한 줄 설명 ·
  *   가입 혜택 연보라 쿠션 · 약관 · 간편가입 · 입력 판 흰 쿠션(안쪽 칸 크림) · 반려견 사진 칸 크림 동그라미 모서리(점선 없음) ·
  *   관심 케어 파스텔 알약(고른 것 분홍) · 선택 동의 연보라 메모 · 분홍 가입 알약.
- * 로그인: 영상 · 배치 그대로, 입력칸 크림 알약 · 로그인 분홍 알약 · 회원가입 링크 분홍 테 알약.
- * 범위: 웹(html:not(.ddb-app-mode)) · main[data-signup-web] · [data-login-web] 안에서만. 가입 · 로그인 · 인증 동작 그대로.
+ * 로그인: 영상 · 배치 그대로, 입력칸 크림 알약 · 로그인 분홍 알약 · 회원가입 링크 분홍 테 알약 · 준비 중/오류 줄 둥근 쿠션(2026-10-26).
+ * 이메일 확인 화면(2026-10-26, 계정 열기): 3D 그림 · 꼬리표 · 가운데 제목 → 연보라 · 분홍 쿠션 인증 판(마이페이지 코인 탭과 같은 결).
+ * 로그인 안내 창(2026-10-26, components/auth/LoginModal): 흰 쿠션 창 · 3D 자물쇠 · 주아 제목 · 분홍/흰 알약.
+ * 범위: 웹(html:not(.ddb-app-mode)) · main[data-signup-web] · [data-login-web] · [data-login-modal] 안에서만. 가입 · 로그인 · 인증 동작 그대로.
  */
 
 /* ───────── 회원가입 ───────── */
@@ -205,8 +207,77 @@ html:not(.ddb-app-mode) main[data-signup-web] {
     }
 
     /* 이메일 인증 화면(가입 후) — 가운데 제목 + 흰 쿠션 */
-    &[data-signup-web="verify"] .su-title { font-size: 28px; }
+    &[data-signup-web="verify"] .su-title { margin: 4px auto 0; font-size: 28px; }
     &[data-signup-web="verify"] > div { border-radius: 30px; }
+}
+
+/* ───────── 이메일 확인 화면(계정 열기 · main[data-signup-web="verify"]) · 2026-10-26 ─────────
+   3D 그림 · 손글씨 꼬리표 · 가운데 주아 제목 + 설명 → 연보라 · 분홍 쿠션 판(SignupEmailVerification) 안에
+   주아 제목 · 연보라 배지 · 크림 칸 · 분홍 알약 받기/완료 · 큰 6자리 칸 · 남은 시간 칩 · 분홍 "다시 받기" 알약.
+   마이페이지 코인 탭(app/mypage-web.css "이메일 인증")과 같은 결. 동작 그대로, 앱은 그대로 */
+html:not(.ddb-app-mode) main[data-signup-web="verify"] {
+    /* 머리 — 3D 그림 · 꼬리표 · 가운데 설명 */
+    & .su-verify-art { display: block; width: 96px; height: 96px; margin: 0 auto; object-fit: contain; filter: drop-shadow(0 14px 16px rgb(200 80 120 / 20%)); }
+    & .su-kicker { margin-top: 10px; }
+    & > h1 + p { max-width: 440px; margin: 14px auto 0; color: #64748b; font-size: 14.5px; font-weight: 600; line-height: 1.7; text-align: center; word-break: keep-all; }
+
+    /* 계정 준비 중 줄 — 연보라 쿠션(남색 대신) */
+    & [data-su-progress] { padding: 14px 18px; border-radius: 20px; background: #f3f0fe; color: #6b51c9; text-align: center; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
+
+    /* 인증 판 — 연보라 · 분홍 쿠션(남색 · 하늘 그라데이션 대신) */
+    & [data-signup-email-verification] {
+        padding: 24px 24px 26px;
+        border: 0;
+        border-radius: 30px;
+        background:
+            radial-gradient(90% 120% at 100% 0, rgb(255 238 243 / 85%) 0, transparent 50%),
+            linear-gradient(120deg, #f3f0fe 0%, #f8f5ff 60%, #fffaf1 100%);
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 18px 30px -26px rgb(80 60 160 / 45%);
+    }
+
+    /* 제목 · 배지 · 설명 */
+    & h2#signup-email-verification-title { color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 20px; font-weight: 400; }
+    & [data-signup-email-verification] > div:has(> h2) > span { background: #fff; color: #6b51c9; box-shadow: inset 0 0 0 1.5px #ddd3f6; }
+    & [data-signup-email-verification] > p.text-xs { margin-top: 8px; color: #64748b; font-size: 13px; line-height: 1.7; word-break: keep-all; }
+    & #signup-bonus-email-help { color: #8391a3; font-size: 12px; word-break: keep-all; }
+
+    /* 이메일 칸 — 잠긴 칸은 연보라 회색 */
+    & [data-signup-email-verification] .input:disabled { background: #f4f1f8; color: #64748b; box-shadow: inset 0 0 0 1.5px #e7e1f3; }
+
+    /* 받기 · 완료 · 계속하기 — 분홍 알약(전역 남색 단추 대신) */
+    & [data-signup-email-verification] .btn.btn-primary {
+        height: 50px;
+        min-height: 50px;
+        padding: 0 22px;
+        border: 0;
+        border-radius: 999px;
+        background: #e9789a;
+        color: #fff;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 15.5px;
+        font-weight: 400;
+        box-shadow: inset 0 2px 0 rgb(255 255 255 / 28%), 0 12px 20px -12px rgb(200 80 120 / 80%);
+    }
+
+    & [data-signup-email-verification] .btn.btn-primary:hover:not(:disabled) { background: #e26690; }
+    & [data-signup-email-verification] .btn.btn-primary:disabled { background: #f2c2d1; box-shadow: none; opacity: 1; }
+
+    /* 인증번호 판 — 흰 쿠션 · 큰 6자리 칸 · 남은 시간 칩 */
+    & [data-signup-email-verification] form { gap: 12px; padding: 18px 18px 16px; border: 0; border-radius: 22px; background: #fff; box-shadow: inset 0 3px 0 #fff, 0 0 0 1px #efe7f8, 0 14px 22px -18px rgb(80 60 160 / 40%); }
+    & #signup-bonus-code { height: 58px; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 26px; font-weight: 400; letter-spacing: 0.5em; text-align: center; }
+    & #signup-bonus-code::placeholder { font-family: var(--font-wanted-sans), sans-serif; font-size: 14px; letter-spacing: 0.1em; }
+    & [data-signup-email-verification] form > div:first-child .btn.btn-primary { height: 58px; min-height: 58px; padding: 0 26px; }
+    & [data-signup-email-verification] form > div:last-child > span { padding: 4px 12px; border-radius: 999px; background: #f3f0fe; color: #6b51c9; font-size: 12px; }
+    & [data-signup-email-verification] form > div:last-child > span.text-rose-700 { background: #ffeef3; color: #c43d66; }
+
+    /* 다시 받기 — 분홍 글자 알약(남색 글자 대신) */
+    & [data-sev-resend] { display: inline-flex; align-items: center; min-height: 34px; padding: 0 14px; border-radius: 999px; background: #fff0f4; color: #d0436d; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 13.5px; font-weight: 400; }
+    & [data-sev-resend]:hover:not(:disabled) { background: #ffe2eb; }
+    & [data-sev-resend]:disabled { background: #f6f2ec; color: #b8a58c; }
+
+    /* 안내 · 오류 · 완료 줄 — 둥근 채움 */
+    & [data-signup-email-verification] :is(p[role="status"].rounded-xl, p[role="alert"]) { padding: 11px 16px; border-radius: 16px; font-size: 13px; }
+    & [data-sev-plain-done] { border: 0; border-radius: 22px; background: #e9f8f1; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
 }
 
 /* ───────── 로그인(영상 · 배치 그대로, 입력칸 · 버튼만) ───────── */
@@ -256,3 +327,66 @@ html:not(.ddb-app-mode) [data-login-web] {
 html:not(.ddb-app-mode) [data-login-web] .lg-guest-lookup { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; color: #64748b; font-size: 12.5px; font-weight: 800; text-decoration: underline; text-underline-offset: 3px; }
 html:not(.ddb-app-mode) [data-login-web] .lg-guest-lookup:hover { color: #d0436d; }
 html:not(.ddb-app-mode) [data-login-web] .lg-guest-lookup i { font-size: 11px; }
+
+/* ───────── 로그인 안내 창(components/auth/LoginModal · 펫렌즈 결과 등) · 2026-10-26 ─────────
+   흰 쿠션 창 · 오른쪽 위 흰 동그라미 닫기 · 가운데 3D 자물쇠 그림 · 손글씨 꼬리표 · 주아 제목 + 세 색 밑줄 ·
+   분홍 알약(로그인하러 가기) + 흰 알약(회원가입) · 작은 안내. 남색 아이콘 · 남색/회색 단추 대신. 앱은 그대로 */
+html:not(.ddb-app-mode) [data-login-modal-backdrop] { background: rgb(30 41 59 / 42%); }
+
+html:not(.ddb-app-mode) [data-login-modal] {
+    width: min(400px, calc(100vw - 32px));
+    padding: 30px 26px 24px;
+    border-radius: 32px;
+    background: #fffdf9;
+    text-align: center;
+    box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%), 0 0 0 1px #f2e9dd, 0 40px 70px -30px rgb(15 23 42 / 60%);
+
+    /* 머리 — 가운데 세로 줄(그림 → 꼬리표 → 제목), 닫기는 오른쪽 위 */
+    & .lm-head { display: block; padding: 0; }
+    & h2#petlens-login-title { display: flex; flex-direction: column; align-items: center; gap: 0; color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 23px; font-weight: 400; line-height: 1.35; }
+    & .lm-art { width: 84px; height: 84px; object-fit: contain; filter: drop-shadow(0 12px 14px rgb(200 80 120 / 22%)); }
+
+    & .lm-kicker {
+        display: block;
+        margin: 12px 0 2px;
+        background-image: repeating-linear-gradient(172deg, #07849e 0 5px, #ef476f 5px 10px, #e98708 10px 15px);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: #07849e;
+        font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        -webkit-text-fill-color: transparent;
+    }
+
+    & .lm-close { position: absolute; top: 14px; right: 14px; width: 38px; height: 38px; border-radius: 999px; background: #faf6f0; color: #8a7f70; box-shadow: inset 0 0 0 1px #efe5d8; }
+    & .lm-close:hover { background: #ffeef3; color: #d0436d; }
+
+    /* 설명 · 단추 */
+    & .lm-body { padding: 0; }
+    & .lm-lead { margin-top: 10px; color: #64748b; font-size: 14px; font-weight: 600; line-height: 1.7; word-break: keep-all; }
+
+    & .btn {
+        height: 52px;
+        border-radius: 999px;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 16px;
+        font-weight: 400;
+    }
+
+    & .btn.btn-primary { border: 0; background: #e9789a; color: #fff; box-shadow: inset 0 2px 0 rgb(255 255 255 / 28%), 0 12px 20px -12px rgb(200 80 120 / 80%); }
+    & .btn.btn-primary:hover { background: #e26690; }
+    & .btn.btn-secondary { border: 0; background: #fff; color: #d0436d; box-shadow: inset 0 0 0 2px #f7c3d2; }
+    & .btn.btn-secondary:hover { background: #fff3f6; color: #d0436d; }
+    & .lm-note { color: #94a3b8; font-size: 12px; font-weight: 700; }
+}
+
+/* 제목 세 색 밑줄 — 제목 글자(.lm-title)에만 */
+html:not(.ddb-app-mode) [data-login-modal] .lm-title { position: relative; isolation: isolate; }
+html:not(.ddb-app-mode) [data-login-modal] .lm-title::after { content: ""; position: absolute; right: 1%; bottom: -0.06em; left: 0; z-index: -1; height: 0.24em; border-radius: 999px 70% 999px 60%; background: repeating-linear-gradient(94deg, rgb(8 145 178 / 62%) 0 14px, rgb(239 71 111 / 58%) 14px 28px, rgb(245 158 11 / 62%) 28px 42px); opacity: 0.6; transform: rotate(-0.7deg) skewX(-7deg); }
+
+/* 로그인 — 준비 중 · 오류 줄(lg-notice) 둥근 쿠션(2026-10-26, 네모 상자 대신) */
+html:not(.ddb-app-mode) [data-login-web] .lg-notice { display: flex; align-items: center; gap: 8px; padding: 12px 16px; border-radius: 18px; font-size: 13px; line-height: 1.6; word-break: keep-all; }
+html:not(.ddb-app-mode) [data-login-web] .lg-notice[data-tone="amber"] { background: #fff6e3; color: #a8620a; box-shadow: inset 0 3px 0 rgb(255 255 255 / 70%); }
+html:not(.ddb-app-mode) [data-login-web] .lg-notice[data-tone="rose"] { background: #fff1f4; color: #c43a62; box-shadow: inset 0 3px 0 rgb(255 255 255 / 70%); }

@@ -1,23 +1,33 @@
+"use client";
+
 import type { ReactNode } from "react";
 import Link from "next/link";
 import MypageSidebar from "@/components/mypage/MypageSidebar";
+// 2026-10-26 웹 로그인 안내 — 해요체 문구 · 두 번째 단추는 회원가입(앱은 원래 문구 · 마이페이지로 그대로)
+import { useWebScreen } from "@/hooks/useWebScreen";
 // 로그인 안내 화면에도 웹 마이페이지 꾸밈(사이드 메뉴가 없는 화면이라 직접 불러옴)
 import "../../app/mypage-web.css";
 
 export function MypageLoginGate({ redirect }: { redirect: string }) {
     const loginHref = `/auth/login?redirect=${encodeURIComponent(redirect)}`;
+    // 웹: /mypage 도 로그인 안내라 "마이페이지로"는 같은 안내로 돌아옴 → 회원가입(기존 주소)으로 바꿈
+    const webScreen = useWebScreen();
     return (
         <main className="mx-auto max-w-[680px] px-4 py-16 text-center" data-mypage-web="gate">
             <span className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-amber-50 text-2xl text-amber-600" aria-hidden="true">
                 <i className="fa-solid fa-lock" />
             </span>
-            <h1 className="mt-4 text-2xl font-black text-neutral-950">로그인이 필요합니다.</h1>
+            <h1 className="mt-4 text-2xl font-black text-neutral-950">{webScreen ? "로그인이 필요해요" : "로그인이 필요합니다."}</h1>
             <p className="mt-2 text-sm font-bold leading-6 text-neutral-600">
-                회원 정보는 본인 확인 후에만 볼 수 있습니다.
+                {webScreen ? "회원 정보는 본인 확인 후에 볼 수 있어요." : "회원 정보는 본인 확인 후에만 볼 수 있습니다."}
             </p>
             <div className="mt-6 flex flex-wrap justify-center gap-2">
                 <Link href={loginHref} className="btn btn-primary">로그인</Link>
-                <Link href="/mypage" className="btn btn-secondary">마이페이지로</Link>
+                {webScreen ? (
+                    <Link href="/auth/signup" className="btn btn-secondary">회원가입</Link>
+                ) : (
+                    <Link href="/mypage" className="btn btn-secondary">마이페이지로</Link>
+                )}
             </div>
             {/* 웹 전용(2026-10-25) — 가입 없이 주문한 분은 비회원 주문 조회로(앱은 hidden 그대로) */}
             <p className="hidden mp-gate-guest">

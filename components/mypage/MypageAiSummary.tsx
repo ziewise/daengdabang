@@ -15,6 +15,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { useAuth, type PetProfile } from "@/lib/store";
+// 2026-10-26 웹 안내 문구 해요체(앱은 원래 문구)
+import { useWebScreen } from "@/hooks/useWebScreen";
 import { loadWeeklyPhotoAnalyses, type WeeklyPhotoAnalysisRecord } from "@/lib/weekly-photo-analysis";
 // 건강 기록 전체 보기 — 페이지 이동 대신 건강 일기 창(2026-10-24)
 import HealthDiaryModal from "@/components/mypage/HealthDiaryModal";
@@ -450,6 +452,7 @@ function Meter({ label, value, max, tone }: { label: string; value: number; max:
 
 export function DailySummary() {
     const { user } = useAuth();
+    const webScreen = useWebScreen();
     // 회원 정보 안 토큰이 없으면 따로 저장된 토큰(주문 내역 화면과 같은 방식)
     const token = user ? user.apiAccessToken || getCustomerToken() : "";
     const [retry, setRetry] = useState(0);
@@ -554,7 +557,7 @@ export function DailySummary() {
                             })}
                         </ol>
                         {notice ? <p className="dw-dial-notice" role="status">{notice}</p> : null}
-                        <p className="dw-dial-rule"><i className="fa-solid fa-shield-heart" aria-hidden="true" /> 도장 날짜와 보상은 한국 시간 기준으로 서버가 확인하며, 같은 날 여러 번 눌러도 한 번만 지급됩니다.</p>
+                        <p className="dw-dial-rule"><i className="fa-solid fa-shield-heart" aria-hidden="true" /> {webScreen ? "도장 날짜와 보상은 한국 시간 기준으로 서버가 확인해요. 같은 날 여러 번 눌러도 한 번만 지급돼요." : "도장 날짜와 보상은 한국 시간 기준으로 서버가 확인하며, 같은 날 여러 번 눌러도 한 번만 지급됩니다."}</p>
                     </div>
                 </div>
 

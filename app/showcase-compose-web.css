@@ -306,7 +306,7 @@ html:not(.ddb-app-mode) .spd {
     html:not(.ddb-app-mode) [data-daily-web] .dw-sc-grid .dw-sc-card { padding: 5px 5px 12px; border-radius: 26px; }
     html:not(.ddb-app-mode) [data-daily-web] .dw-sc-grid .dw-sc-frame { padding: 3px; border-radius: 22px; }
     html:not(.ddb-app-mode) [data-daily-web] .dw-sc-grid .dw-sc-frame img { border-radius: 19px; }
-    html:not(.ddb-app-mode) [data-daily-web] .dw-sc-grid .dw-sc-topic-tag { top: 8px; right: 8px; max-width: calc(100% - 16px); padding: 3px 8px; font-size: 10px; }
+    html:not(.ddb-app-mode) [data-daily-web] .dw-sc-grid .dw-sc-topic-tag { top: 8px; right: 8px; max-width: calc(100% - 16px); padding: 3px 9px; font-size: 11.5px; } /* 2026-10-26 10 → 11.5px */
     html:not(.ddb-app-mode) [data-daily-web] .dw-sc-grid .dw-sc-pet { margin-top: 9px; padding: 0 6px; overflow: hidden; font-size: 16px; line-height: 1.25; white-space: nowrap; text-overflow: ellipsis; }
     html:not(.ddb-app-mode) [data-daily-web] .dw-sc-grid .dw-sc-pet small { display: none; }
     html:not(.ddb-app-mode) [data-daily-web] .dw-sc-grid .dw-sc-caption { min-height: 0; margin-top: 4px; padding: 0 8px; font-size: 12.5px; line-height: 1.55; }
@@ -322,3 +322,185 @@ html:not(.ddb-app-mode) .spd {
     html:not(.ddb-app-mode) [data-daily-web] .dw-sc-grid .dw-sc-author-meta { display: none; }
     html:not(.ddb-app-mode) [data-daily-web] .dw-sc-grid .dw-sc-follow { padding: 4px 9px; font-size: 11px; }
 }
+
+/* ───────── 2026-10-26 댕자랑 창 · 알림 웹 꾸밈 ─────────
+ *  [data-showcase-report]  게시물 신고 창 — 흰 쿠션 창 · 크림 입력칸(분홍 초점) · 분홍 알약 접수 · 흰 알약 취소(웹 전용 단추)
+ *  [data-showcase-profile] 작성자 프로필 창 — 불러오는 중 · 못 불러옴 = 3D 그림 파스텔 쿠션 + 흰 알약 "다시 불러오기", "내 프로필" 분홍 꼬리표
+ *  [data-showcase-share]   공유카드 창 — "링크 복사" 흰 알약 · 링크 칸 12px 크림 입력칸
+ *  [data-showcase-toast]   아래 알림 — 흰 쿠션 알약(실패 분홍 테 · 성공 민트 테)
+ * 범위: html:not(.ddb-app-mode) 만. JSX 는 data-* 표시만 붙임 — 앱 모습 · 동작 그대로.
+ */
+
+/* 세 창 공통 — 닫기 단추 흰 동그라미 */
+html:not(.ddb-app-mode) :is([data-showcase-report], [data-showcase-profile], [data-showcase-share]) button[aria-label$="닫기"] {
+    background: #fff;
+    color: #64748b;
+    box-shadow: 0 0 0 2px #efe6da, 0 6px 12px -8px rgb(15 23 42 / 40%);
+    transition: color 0.2s, background 0.2s;
+}
+html:not(.ddb-app-mode) :is([data-showcase-report], [data-showcase-profile], [data-showcase-share]) button[aria-label$="닫기"]:hover:not(:disabled) { background: #fff0f4; color: #d0436d; }
+
+/* ── 신고 창 ── */
+html:not(.ddb-app-mode) [data-showcase-report] {
+    background: rgb(15 23 42 / 50%);
+    backdrop-filter: blur(3px);
+
+    & > form {
+        border: 0;
+        border-radius: 32px;
+        text-align: left; /* 카드 안에 붙는 창이라 카드의 가운데 정렬을 끊음 */
+        background: radial-gradient(70% 50% at 100% 0, rgb(255 238 243 / 90%) 0, transparent 70%), #fff;
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%), 0 0 0 1px #f2e9dd, 0 40px 80px -30px rgb(15 23 42 / 55%);
+    }
+    & label { color: #334155; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 15px; font-weight: 400; }
+    & label > span { font-family: var(--font-wanted-sans), sans-serif; font-size: 12px; }
+
+    /* 신고 이유 · 상세 내용 — 크림 입력칸 */
+    & :is(select, textarea) {
+        width: 100%;
+        border: 0;
+        border-radius: 16px;
+        background-color: #fffaf1;
+        color: #1e293b;
+        font-size: 14px;
+        font-weight: 600;
+        box-shadow: 0 0 0 2px #f3e3cc;
+    }
+    & select { height: 48px; padding: 0 16px; }
+    & textarea { min-height: 120px; padding: 14px 16px; line-height: 1.7; }
+    & :is(select, textarea):focus { outline: none; background-color: #fff; box-shadow: 0 0 0 2px #f39bb6, 0 0 0 5px rgb(233 120 154 / 18%); }
+
+    & [data-showcase-report-hint] { color: #8a94a6; font-size: 12px; line-height: 1.6; word-break: keep-all; }
+    & [data-showcase-report-error] { color: #c2375f; }
+    & [data-showcase-report-error]:empty { display: none; }
+
+    /* 신고 접수 — 분홍 알약 */
+    & [data-showcase-report-submit] {
+        min-height: 50px;
+        background: #e9789a;
+        color: #fff;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 16px;
+        font-weight: 400;
+        box-shadow: inset 0 2px 0 rgb(255 255 255 / 28%), 0 14px 22px -14px rgb(200 80 120 / 80%);
+        transition: background 0.2s, transform 0.2s;
+    }
+    & [data-showcase-report-submit]:hover:not(:disabled) { background: #e26690; transform: translateY(-1px); }
+    & [data-showcase-report-submit]:active:not(:disabled) { background: #d0436d; transform: scale(0.98); }
+
+    /* 취소 — 흰 알약(웹 전용 단추, 기존 닫기와 같은 동작) */
+    & [data-showcase-report-cancel] {
+        display: flex;
+        width: 100%;
+        min-height: 46px;
+        margin-top: 8px;
+        align-items: center;
+        justify-content: center;
+        border: 0;
+        border-radius: 999px;
+        background: #fff;
+        color: #475569;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 15px;
+        cursor: pointer;
+        box-shadow: 0 0 0 2px #efe6da;
+    }
+    & [data-showcase-report-cancel]:hover:not(:disabled) { color: #d0436d; box-shadow: 0 0 0 2px #f7c3d2; }
+    & [data-showcase-report-cancel]:disabled { opacity: 0.5; }
+}
+
+/* ── 작성자 프로필 창 ── */
+html:not(.ddb-app-mode) [data-showcase-profile] {
+    border: 0;
+    border-radius: 34px;
+    background: #fff;
+    box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%), 0 0 0 1px #f2e9dd, 0 40px 80px -30px rgb(15 23 42 / 55%);
+
+    /* 불러오는 중 · 못 불러옴 — 파스텔 쿠션 + 3D 그림 */
+    & [data-showcase-profile-state] {
+        align-content: center;
+        gap: 10px;
+        min-height: 16rem;
+        margin: 20px;
+        border-radius: 28px;
+        background: radial-gradient(80% 90% at 50% 0, #fff 0, transparent 70%), linear-gradient(160deg, #f2f8fc, #fff3f6);
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%), 0 16px 26px -22px rgb(15 23 42 / 30%);
+    }
+    & [data-showcase-profile-art] { display: block; width: 72px; height: 72px; margin: 0 auto 6px; object-fit: contain; filter: drop-shadow(0 10px 12px rgb(15 23 42 / 16%)); }
+    & [data-showcase-profile-state="loading"] [data-showcase-profile-art] { animation: scp-bob 1.8s ease-in-out infinite; }
+    & [data-showcase-profile-state] p { color: #475569; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 17px; font-weight: 400; word-break: keep-all; }
+    & [data-showcase-profile-state="error"] p { color: #c2375f; }
+
+    /* 다시 불러오기 — 흰 알약(같은 동작) */
+    & [data-showcase-profile-retry] {
+        min-height: 44px;
+        padding: 0 22px;
+        border: 0;
+        background: #fff;
+        color: #d0436d;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 15px;
+        font-weight: 400;
+        box-shadow: 0 0 0 2px #f7c3d2, 0 10px 16px -12px rgb(200 80 120 / 60%);
+    }
+    & [data-showcase-profile-retry]:hover { background: #fff0f4; }
+
+    /* 팔로우 — 분홍 알약(팔로잉은 흰 알약) · 내 프로필 — 분홍 꼬리표(남색 대신) */
+    & button[aria-pressed] { border: 0; background: #e9789a; color: #fff; box-shadow: 0 10px 16px -12px rgb(200 80 120 / 80%); }
+    & button[aria-pressed="true"] { background: #fff; color: #64748b; box-shadow: 0 0 0 2px #efe6da; }
+    & [data-showcase-profile-me] { background: #ffeef3; color: #d0436d; box-shadow: inset 0 0 0 1.5px #f7c3d2; }
+
+    /* 10px 글씨 → 12px */
+    & [data-showcase-profile-small] { font-size: 12px; }
+}
+@keyframes scp-bob { 50% { transform: translateY(-5px); } }
+
+/* ── 공유카드 창 ── */
+html:not(.ddb-app-mode) [data-showcase-share] {
+    border: 0;
+    border-radius: 34px;
+    background: #fff;
+    box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%), 0 0 0 1px #f2e9dd, 0 40px 80px -30px rgb(15 23 42 / 55%);
+
+    & [data-web-soft-text] { color: #5b6476; }
+
+    /* 링크 복사 — 흰 알약(남색 테 대신) */
+    & [data-showcase-share-copy] {
+        border: 0;
+        background: #fff;
+        color: #334155;
+        box-shadow: 0 0 0 2px #efe6da;
+        transition: color 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+    & [data-showcase-share-copy]:hover:not(:disabled) { background: #fff6f8; color: #d0436d; box-shadow: 0 0 0 2px #f7c3d2; }
+
+    /* 링크 칸 — 12px 크림 입력칸 */
+    & [data-showcase-share-url] {
+        height: 44px;
+        border: 0;
+        border-radius: 16px;
+        background: #fffaf1;
+        color: #475569;
+        font-size: 12px;
+        box-shadow: 0 0 0 2px #f3e3cc;
+    }
+    & [data-showcase-share-url]:focus { background: #fff; box-shadow: 0 0 0 2px #f39bb6, 0 0 0 5px rgb(233 120 154 / 18%); }
+}
+
+/* ── 아래 알림 — 흰 쿠션 알약 ── */
+html:not(.ddb-app-mode) [data-showcase-toast] {
+    border: 0;
+    background: #fff;
+    color: #0f8a66;
+    font-size: 13.5px;
+    font-weight: 800;
+    word-break: keep-all;
+    box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%), 0 0 0 2px #a8e0c6, 0 18px 30px -16px rgb(15 23 42 / 40%);
+}
+html:not(.ddb-app-mode) [data-showcase-toast="error"] { color: #c2375f; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%), 0 0 0 2px #f7a8bf, 0 18px 30px -16px rgb(15 23 42 / 40%); }
+
+@media (max-width: 640px) {
+    html:not(.ddb-app-mode) [data-showcase-report] > form { border-radius: 28px; }
+    html:not(.ddb-app-mode) [data-showcase-profile] [data-showcase-profile-state] { margin: 14px; }
+}
+@media (prefers-reduced-motion: reduce) { html:not(.ddb-app-mode) [data-showcase-profile] [data-showcase-profile-art] { animation: none; } }

@@ -485,7 +485,7 @@ export default function GoodsContest({
                     <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-neutral-950/55 via-transparent to-transparent" aria-hidden="true" />
                     <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6">
                         <div className="min-w-0 text-white drop-shadow-md">
-                            <p className="text-[10px] font-black tracking-[0.22em] sm:text-xs">DAENGDABANG GOODS CONTEST</p>
+                            <p className="text-[10px] font-black tracking-[0.22em] sm:text-xs" data-goods-hero-kicker>DAENGDABANG GOODS CONTEST</p>
                             <p className="mt-1 break-keep text-lg font-black sm:text-2xl">500명의 선택으로 만드는 다음 굿즈</p>
                         </div>
                     </div>
@@ -545,6 +545,7 @@ export default function GoodsContest({
                         role={notice.tone === "error" ? "alert" : "status"}
                         aria-live="polite"
                         className={`mt-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border px-4 py-3 text-xs font-bold leading-5 ${notice.tone === "success" ? "border-emerald-200 bg-emerald-50 text-emerald-900" : "border-rose-200 bg-rose-50 text-rose-900"}`}
+                        data-web-notice={notice.tone === "success" ? "ok" : "error"} // 웹 부드러운 안내 쿠션(daily-web.css)
                     >
                         <span>{notice.message}</span>
                         {notice.tone === "error" && summaryState === "error" ? (
@@ -621,7 +622,7 @@ export default function GoodsContest({
                                         className="aspect-square h-auto w-full bg-[#f4e8d3] object-cover transition duration-300 hover:scale-[1.02]"
                                     />
                                     {contentReady && !itemContent.active ? (
-                                        <span className="absolute right-3 top-3 rounded-full bg-neutral-900/80 px-2.5 py-1 text-[10px] font-black text-white">선택 준비 중</span>
+                                        <span className="absolute right-3 top-3 rounded-full bg-neutral-900/80 px-2.5 py-1 text-[10px] font-black text-white" data-goods-soon>선택 준비 중</span>
                                     ) : null}
                                     <span className="dw-goods-zoom-hint" aria-hidden="true"><i className="fa-solid fa-magnifying-glass-plus" /></span>
                                 </button>
@@ -655,7 +656,7 @@ export default function GoodsContest({
                                                 >
                                                     <div className={`dw-progress-fill h-full rounded-full transition-[width] ${itemSummary.productionEligible ? "is-done" : ""}`} style={{ width: `${progress}%` }} />
                                                 </div>
-                                                <p className="mt-2 text-[10px] font-bold leading-4 text-neutral-500">
+                                                <p className="mt-2 text-[10px] font-bold leading-4 text-neutral-500" data-goods-small>
                                                     {itemSummary.productionEligible
                                                         ? "목표를 달성했어요. 최종 조건 안내 전에는 주문이 아닙니다."
                                                         : selectionOpen
@@ -693,7 +694,7 @@ export default function GoodsContest({
                                                 >
                                                     이메일 확인 후 선택
                                                 </button>
-                                                <Link href={LOGIN_HREF} className="block text-center text-[10px] font-black text-indigo-700 underline decoration-indigo-300 underline-offset-2">
+                                                <Link href={LOGIN_HREF} className="block text-center text-[10px] font-black text-indigo-700 underline decoration-indigo-300 underline-offset-2" data-goods-login-link>
                                                     회원은 로그인하고 바로 선택
                                                 </Link>
                                             </div>
@@ -832,7 +833,8 @@ export default function GoodsContest({
                     if (event.target !== event.currentTarget || guestVerification.submitting) return;
                     setGuestVerificationOpen(false);
                 }}>
-                    <div role="dialog" aria-modal="true" aria-labelledby="goods-guest-verification-title" className="ddb-crayon-paper w-full max-w-md rounded-[28px] border bg-white p-5 shadow-2xl sm:p-6">
+                    {/* 비회원 이메일 확인 창 — 웹 꾸밈은 daily-web.css [data-goods-guest-verify](크림 입력칸 · 분홍 초점 · 파스텔 안내), 앱은 그대로 */}
+                    <div role="dialog" aria-modal="true" aria-labelledby="goods-guest-verification-title" data-goods-guest-verify className="ddb-crayon-paper w-full max-w-md rounded-[28px] border bg-white p-5 shadow-2xl sm:p-6">
                         <div className="flex items-start justify-between gap-4">
                             <div>
                                 <p className="ddb-crayon-kicker text-[10px]">GUEST SELECTION</p>
@@ -871,7 +873,7 @@ export default function GoodsContest({
                             </form>
                         ) : (
                             <form className="mt-5" onSubmit={confirmGuestCode}>
-                                <p className="rounded-xl bg-indigo-50 px-3 py-2 text-xs font-bold text-indigo-900"><strong>{guestVerification.maskedEmail}</strong>로 보낸 6자리 번호를 입력해 주세요.</p>
+                                <p className="rounded-xl bg-indigo-50 px-3 py-2 text-xs font-bold text-indigo-900" data-goods-guest-info><strong>{guestVerification.maskedEmail}</strong>로 보낸 6자리 번호를 입력해 주세요.</p>
                                 <label htmlFor="goods-guest-code" className="mt-4 block text-xs font-black text-neutral-800">인증번호</label>
                                 <input
                                     id="goods-guest-code"
@@ -902,7 +904,7 @@ export default function GoodsContest({
                         )}
 
                         <div className="mt-5 border-t border-neutral-200 pt-4 text-center">
-                            <Link href={LOGIN_HREF} className="text-xs font-black text-indigo-700 underline decoration-indigo-300 underline-offset-3">이미 회원이라면 로그인하기</Link>
+                            <Link href={LOGIN_HREF} className="text-xs font-black text-indigo-700 underline decoration-indigo-300 underline-offset-3" data-goods-login-link>이미 회원이라면 로그인하기</Link>
                         </div>
                     </div>
                 </div>

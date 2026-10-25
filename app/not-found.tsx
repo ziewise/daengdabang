@@ -3,9 +3,16 @@
  * ---------------------------------------------------------------------
  * 2026-10-25 웹 겉모양: 웹 전용 조각(3D 그림 · 손글씨 꼬리표 · 안내 · 바로가기 네 칸)을 hidden 으로 두고
  * app/notfound-web.css 가 웹(html:not(.ddb-app-mode))에서만 보이게 · 꾸밈. 앱은 기존 화면(나침반 · 제목 · 두 단추) 그대로.
+ * 2026-10-26 탭 제목(metadata) 추가 · 웹 제목은 해요체(nf-web-text, 앱은 원래 문구 nf-app-text).
  */
+import type { Metadata } from "next";
 import Link from "next/link";
 import "./notfound-web.css";
+
+// 브라우저 탭 제목 — 다른 페이지와 같은 "… | 댕다방" 꼴
+export const metadata: Metadata = {
+    title: "페이지를 찾을 수 없어요 | 댕다방",
+};
 
 /** 웹 바로가기 — 기존 페이지로만 연결 */
 const QUICK = [
@@ -23,7 +30,11 @@ export default function NotFound() {
             <img src="/images/ui/stickers/search-empty.webp" alt="" aria-hidden="true" className="hidden nf-art" />
             <p className="hidden nf-kicker">PAGE NOT FOUND</p>
             <i className="fa-regular fa-compass text-5xl text-neutral-300" />
-            <h1 className="mt-4 text-3xl font-black text-neutral-950">페이지를 찾을 수 없습니다.</h1>
+            <h1 className="mt-4 text-3xl font-black text-neutral-950">
+                {/* 앱은 원래 문구, 웹은 해요체(notfound-web.css 가 바꿔 보여 줌) */}
+                <span className="nf-app-text">페이지를 찾을 수 없습니다.</span>
+                <span className="hidden nf-web-text">페이지를 찾을 수 없어요</span>
+            </h1>
             <p className="hidden nf-lead">주소가 바뀌었거나 없어진 페이지예요. 아래에서 가고 싶은 곳을 골라 주세요.</p>
             <div className="mt-6 flex justify-center gap-2">
                 <Link href="/" className="btn btn-primary">홈</Link>

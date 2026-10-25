@@ -6,6 +6,8 @@
  *   세 단계 표시(이메일 → 인증번호 → 20C), "메일이 안 왔나요?" 도움 판(다시 받기 · 주소 변경 버튼 = 같은 함수),
  *   인증 완료 축하 판(+20C · 지갑 잔액 · 어디에 쓰는지 · 행동·소리 분석 바로 가기).
  *   웹 전용 요소는 hidden → app/mypage-web.css "이메일 인증" 에서만 보임. 가입 화면 · 앱은 그대로.
+ * 웹 가입 "이메일 확인 후 계정 열기"(2026-10-26): 계정 열기 모드 설명 · 도움말만 웹에서 해요체(useWebScreen), 앱 글 그대로.
+ *   이름표(data-sev-request · data-sev-resend)만 더함 — 꾸밈은 app/auth-web.css "이메일 확인 화면". 동작 그대로.
  */
 import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
@@ -22,6 +24,8 @@ import {
     normalizeSignupEmail,
 } from "@/lib/signup-email-verification";
 import DaengLabCoinMark from "@/components/petlens/DaengLabCoinMark";
+// 웹 화면인지(웹에서만 해요체 안내 — 앱 글은 그대로)
+import { useWebScreen } from "@/hooks/useWebScreen";
 
 export type SignupEmailVerificationResult = {
     status: "credited" | "already_claimed";
@@ -154,6 +158,7 @@ export default function SignupEmailVerification({
     const autoRequestAttemptedRef = useRef(false);
     const emailRef = useRef<HTMLInputElement>(null);
     const codeRef = useRef<HTMLInputElement>(null);
+    const webScreen = useWebScreen();
 
     useEffect(() => {
         if (accountActivationRequired) return;
@@ -371,7 +376,10 @@ export default function SignupEmailVerification({
             </div>
             <p className="mt-2 text-xs font-bold leading-5 text-neutral-600">
                 {accountActivationRequired
-                    ? "가입 이메일로 보낸 6자리 인증번호를 확인해야 계정 이용이 시작됩니다. 인증 전에는 로그인하거나 회원 기능을 이용할 수 없습니다."
+                    ? webScreen
+                        // 웹 — 해요체 안내(앱은 아래 기존 글 그대로)
+                        ? "가입 이메일로 보낸 인증번호 6자리를 확인하면 계정을 바로 쓸 수 있어요. 확인 전에는 로그인과 회원 기능을 쓸 수 없어요."
+                        : "가입 이메일로 보낸 6자리 인증번호를 확인해야 계정 이용이 시작됩니다. 인증 전에는 로그인하거나 회원 기능을 이용할 수 없습니다."
                     : "가입 이메일로 6자리 인증번호를 보내 드려요. 인증번호는 5분 동안 유효하며, 가입 혜택은 회원 1인당 한 번만 지급됩니다. 반복 가입 등 부정 수령이 확인되면 지급 코인이 회수되거나 서비스 이용이 제한될 수 있습니다."}
             </p>
 
@@ -488,6 +496,7 @@ export default function SignupEmailVerification({
                                 onClick={() => void requestCode()}
                                 disabled={!normalizedEmail || requesting}
                                 className="btn btn-primary mt-auto h-11 px-4 disabled:cursor-not-allowed disabled:opacity-50"
+                                data-sev-request
                             >
                                 {requesting ? "전송 중" : "인증번호 받기"}
                             </button>
@@ -495,7 +504,10 @@ export default function SignupEmailVerification({
                     </div>
                     <p id="signup-bonus-email-help" className="text-[11px] font-bold leading-4 text-neutral-500">
                         {accountActivationRequired
-                            ? "가입 때 입력한 이메일만 확인할 수 있습니다. 받은편지함에 없다면 스팸함을 확인한 뒤 인증번호를 다시 받아 주세요."
+                            ? webScreen
+                                // 웹 — 해요체 도움말(앱은 아래 기존 글 그대로)
+                                ? "가입할 때 넣은 이메일만 확인할 수 있어요. 받은편지함에 없으면 스팸함도 살펴본 뒤 인증번호를 다시 받아 주세요."
+                                : "가입 때 입력한 이메일만 확인할 수 있습니다. 받은편지함에 없다면 스팸함을 확인한 뒤 인증번호를 다시 받아 주세요."
                             : "가입 때 입력한 이메일에는 인증번호가 자동 발송됩니다. 이메일이 임시 주소이거나 오타가 있으면 인증 전에 수정할 수 있어요."}
                     </p>
 
@@ -537,6 +549,7 @@ export default function SignupEmailVerification({
                                     onClick={() => void requestCode()}
                                     disabled={requesting || resendSeconds > 0}
                                     className="font-black text-indigo-700 disabled:text-neutral-400"
+                                    data-sev-resend
                                 >
                                     {resendSeconds > 0 ? `${resendSeconds}초 후 재전송` : "인증번호 재전송"}
                                 </button>

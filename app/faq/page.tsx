@@ -9,7 +9,9 @@
 import type { Metadata } from "next";
 // "1:1 문의 바로 작성" — 웹은 페이지 이동 없이 문의 창(마이페이지와 같은 창 · 같은 양식), 앱 · 새 탭은 원래대로 이동(2026-10-25)
 import MypageInquiryLink from "@/components/mypage/MypageInquiryLink";
-import SupportTop, { SupportPaws } from "@/components/support/SupportTop";
+import { SupportPaws } from "@/components/support/SupportTop";
+// 머리 판 설명만 웹(해요체) · 앱(원래 문구)으로 나눔(2026-10-26)
+import SupportTopCopy from "@/components/contact/SupportTopCopy";
 import FaqClient from "./FaqClient";
 import "../daily-web.css";
 import "../support-web.css";
@@ -31,11 +33,12 @@ const FAQ_INQUIRY = {
 export default function FaqPage() {
     return (
         <main className="mx-auto max-w-[960px] px-4 py-10 md:px-6" data-daily-web data-support-web="faq">
-            <SupportTop
+            <SupportTopCopy
                 current="faq"
                 kicker="FAQ"
                 title="자주 묻는 질문"
                 lead="궁금한 점을 빠르게 확인하세요. 더 필요한 내용은 1:1 문의로 바로 접수해 주시면 도와드리겠습니다."
+                webLead="궁금한 점을 빠르게 확인해 보세요. 더 궁금한 건 1:1 문의로 남겨 주시면 도와드릴게요."
             >
             <MypageInquiryLink
                 href="/inquiry#inquiry-form"
@@ -44,7 +47,7 @@ export default function FaqPage() {
             >
                 <i className="fa-solid fa-envelope" aria-hidden="true" /> 1:1 문의 바로 작성 <i className="fa-solid fa-chevron-right text-[9px]" aria-hidden="true" />
             </MypageInquiryLink>
-            </SupportTop>
+            </SupportTopCopy>
             <SupportPaws />
 
             <FaqClient />

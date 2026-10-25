@@ -309,6 +309,7 @@ export default function GrowthPrograms() {
                         role={programNotice.tone === "error" ? "alert" : "status"}
                         aria-live="polite"
                         className={`mt-4 rounded-2xl border px-4 py-3 text-xs font-bold leading-5 ${programNotice.tone === "success" ? "border-emerald-200 bg-emerald-50 text-emerald-900" : "border-rose-200 bg-rose-50 text-rose-900"}`}
+                        data-web-notice={programNotice.tone === "success" ? "ok" : "error"} // 웹 부드러운 안내 쿠션(daily-web.css)
                     >
                         {programNotice.message}
                     </div>
@@ -374,12 +375,12 @@ export default function GrowthPrograms() {
                                         <div><dt className="inline font-black text-neutral-800">거부 안내</dt><dd className="inline"> · 동의를 거부할 수 있으며 관심등록만 제한됩니다. 쇼핑과 기본 돌봄 기능에는 영향이 없습니다.</dd></div>
                                     </dl>
                                     <p className="ml-7 mt-2 text-xs font-bold text-neutral-500">
-                                        자세한 내용은 {" "}<Link href="/privacy/" className="font-black text-indigo-700 underline underline-offset-2">개인정보처리방침</Link>에서 확인할 수 있습니다.
+                                        자세한 내용은 {" "}<Link href="/privacy/" className="font-black text-indigo-700 underline underline-offset-2" data-web-privacy-link>개인정보처리방침</Link>에서 확인할 수 있습니다.
                                     </p>
                                 </div>
 
                                 {error ? (
-                                    <div role="alert" className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-bold leading-6 text-rose-900">
+                                    <div role="alert" className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-bold leading-6 text-rose-900" data-web-notice="error">
                                         {error}
                                         {error.includes("로그인") ? <Link href={LOGIN_HREF} className="ml-2 font-black underline">다시 로그인</Link> : null}
                                     </div>

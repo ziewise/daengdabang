@@ -554,7 +554,8 @@ export default function DaengShowcaseClient() {
 
             <div className="fixed inset-x-4 bottom-5 z-[2050] flex justify-center pointer-events-none" aria-live="polite" aria-atomic="true">
                 {notice ? (
-                    <p className={`max-w-lg rounded-full border px-5 py-3 text-center text-xs font-black shadow-modal ${notice.error ? "border-red-200 bg-red-50 text-red-900" : "border-emerald-200 bg-emerald-50 text-emerald-900"}`}>
+                    // 아래 알림 — 웹은 흰 쿠션 알약(실패 분홍 테 · 성공 민트 테, showcase-compose-web.css data-showcase-toast), 앱은 그대로
+                    <p className={`max-w-lg rounded-full border px-5 py-3 text-center text-xs font-black shadow-modal ${notice.error ? "border-red-200 bg-red-50 text-red-900" : "border-emerald-200 bg-emerald-50 text-emerald-900"}`} data-showcase-toast={notice.error ? "error" : "ok"}>
                         {notice.message}
                     </p>
                 ) : null}

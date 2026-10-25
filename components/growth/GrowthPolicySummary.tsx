@@ -72,7 +72,8 @@ export default function GrowthPolicySummary() {
                             ))}
                         </div>
                         <div className="flex justify-end border-t border-neutral-100 bg-white/70 px-5 py-3 sm:px-7">
-                            <Link href="/privacy/" className="text-[10px] font-black text-indigo-800 underline underline-offset-4">개인정보처리방침</Link>
+                            {/* 웹은 12px 분홍 글씨(daily-web.css data-web-privacy-link), 앱은 그대로 */}
+                            <Link href="/privacy/" className="text-[10px] font-black text-indigo-800 underline underline-offset-4" data-web-privacy-link>개인정보처리방침</Link>
                         </div>
                     </div>
                 </details>

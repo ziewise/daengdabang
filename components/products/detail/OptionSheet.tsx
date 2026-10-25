@@ -10,6 +10,8 @@
  * - ⚠ 옵션(색상·사이즈)을 "다 고르기 전"에는 담기/구매·옵션추가 버튼이 비활성(미선택 담기 방지).
  *   color/sizeIdx 의 기본값은 null(미선택)이고, 라벨에 "선택하세요"를 빨갛게 표시한다.
  * - open=false 면 화면 밖으로 슬라이드 아웃(언마운트하지 않음) → 열기·닫기 모두 애니메이션.
+ * - 2026-10-26 웹 꾸밈 고리: 적립 줄 · 휴대폰 결제 아이콘의 인디고 글자를 웹에서만 연보라 · 분홍으로
+ *   ([html:not(.ddb-app-mode)_&] 변형 클래스 — 앱 표시가 있으면 적용 안 됨, 앱 그대로).
  */
 
 import { useEffect, useRef, useState } from "react";
@@ -360,8 +362,8 @@ export default function OptionSheet({ product, open, mode, initialColorIdx = nul
                     )}
                 </div>
 
-                {/* 하단 고정 — 합계 + 확정(옵션 미선택 시 비활성) */}
-                <div className="shrink-0 border-t border-neutral-200 px-5 pb-5 pt-3">
+                {/* 하단 고정 — 합계 + 확정(옵션 미선택 시 비활성) · 웹은 빠른 결제의 휴대폰 아이콘을 분홍으로(앱 그대로) */}
+                <div className="shrink-0 border-t border-neutral-200 px-5 pb-5 pt-3 [html:not(.ddb-app-mode)_&_.fa-mobile-screen-button]:text-[#e2557a]">
                     <div className="flex items-baseline justify-between">
                         <span className="text-sm font-black text-neutral-600">
                             {t("total")} {locale === "en" ? `${totalQty} ${t("countSuffix")}` : `${totalQty}${t("countSuffix")}`}
@@ -373,13 +375,14 @@ export default function OptionSheet({ product, open, mode, initialColorIdx = nul
                             className="mt-2 flex flex-col items-start gap-1 rounded-lg bg-indigo-50 px-3 py-2 text-xs sm:flex-row sm:items-center sm:justify-between sm:gap-3"
                             data-daenglab-coin-estimate={expectedDaengLabCoins}
                         >
-                            <span className="font-bold text-indigo-700">
+                            {/* 웹은 연보라 글씨(연보라 바탕에 맞춤), 앱은 인디고 그대로 */}
+                            <span className="font-bold text-indigo-700 [html:not(.ddb-app-mode)_&]:text-[#6b51c9]">
                                 {locale === "en" ? "Member benefit after confirmation" : "회원 구매확정 후 적립"}
                             </span>
-                            <b className="inline-flex flex-wrap items-center gap-x-1.5 gap-y-1 text-indigo-800 sm:shrink-0">
+                            <b className="inline-flex flex-wrap items-center gap-x-1.5 gap-y-1 text-indigo-800 sm:shrink-0 [html:not(.ddb-app-mode)_&]:text-[#5b45b8]">
                                 <DaengLabCoinMark en={locale === "en"} compact />
                                 <span>{expectedDaengLabCoins}C</span>
-                                <span className="font-bold text-indigo-500">
+                                <span className="font-bold text-indigo-500 [html:not(.ddb-app-mode)_&]:text-[#9a8ad8]">
                                     {locale === "en" ? "(10C = 1 analysis)" : "(10C = 분석 1회)"}
                                 </span>
                             </b>

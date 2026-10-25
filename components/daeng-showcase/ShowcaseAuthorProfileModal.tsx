@@ -1,6 +1,14 @@
 "use client";
 
+/**
+ * ShowcaseAuthorProfileModal — 댕자랑 작성자 프로필 창
+ * ---------------------------------------------------------------------
+ * 2026-10-26 웹 꾸밈 표시만 붙임(data-showcase-profile*): 불러오는 중 · 못 불러옴은 3D 그림 쿠션 + 흰 알약 "다시 불러오기"(같은 동작),
+ * "내 프로필" 꼬리표는 분홍 파스텔. 꾸밈은 app/showcase-compose-web.css(웹 전용), 앱은 그대로(웹 그림은 hidden).
+ */
+
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import {
     loadShowcaseAuthorProfile,
     setShowcaseFollow,
@@ -105,7 +113,7 @@ export default function ShowcaseAuthorProfileModal({
         <div className="fixed inset-0 z-[2090] grid place-items-center overflow-y-auto bg-black/50 p-4" role="presentation" onMouseDown={(event) => {
             if (event.target === event.currentTarget) onClose();
         }}>
-            <section role="dialog" aria-modal="true" aria-labelledby="showcase-author-profile-title" className="my-auto w-full max-w-3xl overflow-hidden rounded-[30px] border border-white bg-[#fffdf9] shadow-modal">
+            <section role="dialog" aria-modal="true" aria-labelledby="showcase-author-profile-title" data-showcase-profile className="my-auto w-full max-w-3xl overflow-hidden rounded-[30px] border border-white bg-[#fffdf9] shadow-modal">
                 <div className="flex items-start justify-between gap-4 border-b border-neutral-100 p-5 sm:p-7">
                     <div className="min-w-0">
                         <p className="ddb-crayon-kicker text-[10px]">SHOWCASE PROFILE</p>
@@ -119,14 +127,18 @@ export default function ShowcaseAuthorProfileModal({
                 </div>
 
                 {loading ? (
-                    <div className="grid min-h-72 place-items-center p-8" aria-busy="true">
+                    <div className="grid min-h-72 place-items-center p-8" aria-busy="true" data-showcase-profile-state="loading">
+                        {/* 웹 전용 3D 그림(앱은 hidden) */}
+                        <Image src="/images/ui/menu-daily-community-128.webp" alt="" width={72} height={72} className="hidden" aria-hidden="true" data-showcase-profile-art />
                         <p className="text-sm font-black text-neutral-500">프로필을 불러오는 중</p>
                     </div>
                 ) : error || !profile ? (
-                    <div className="grid min-h-72 place-items-center p-8 text-center">
+                    <div className="grid min-h-72 place-items-center p-8 text-center" data-showcase-profile-state="error">
                         <div>
+                            {/* 웹 전용 3D 그림(앱은 hidden) */}
+                            <Image src="/images/ui/menu-daily-community-128.webp" alt="" width={72} height={72} className="hidden" aria-hidden="true" data-showcase-profile-art />
                             <p className="text-sm font-black text-red-800">{error || "작성자 프로필을 찾지 못했어요."}</p>
-                            <button type="button" onClick={() => setRetryKey((value) => value + 1)} className="mt-4 min-h-10 rounded-full border border-red-200 bg-white px-5 text-xs font-black text-red-800">다시 불러오기</button>
+                            <button type="button" onClick={() => setRetryKey((value) => value + 1)} className="mt-4 min-h-10 rounded-full border border-red-200 bg-white px-5 text-xs font-black text-red-800" data-showcase-profile-retry>다시 불러오기</button>
                         </div>
                     </div>
                 ) : (
@@ -147,19 +159,19 @@ export default function ShowcaseAuthorProfileModal({
                                 <button type="button" onClick={toggleFollow} disabled={followBusy} aria-pressed={profile.author.followedByMe} className={`min-h-11 rounded-full border px-5 text-xs font-black ${profile.author.followedByMe ? "border-neutral-300 bg-white text-neutral-700" : "border-cyan-300 bg-cyan-700 text-white"}`}>
                                     {followBusy ? "처리 중" : profile.author.followedByMe ? "팔로잉" : "팔로우"}
                                 </button>
-                            ) : <span className="rounded-full bg-indigo-100 px-4 py-2 text-xs font-black text-indigo-800">내 프로필</span>}
+                            ) : <span className="rounded-full bg-indigo-100 px-4 py-2 text-xs font-black text-indigo-800" data-showcase-profile-me>내 프로필</span>}
                         </div>
 
                         <div className="mt-7 flex items-center justify-between gap-4">
                             <h3 className="ddb-crayon-title text-2xl text-neutral-950">최근 댕자랑</h3>
-                            <span className="text-[10px] font-bold text-neutral-500">공개 게시물만 표시</span>
+                            <span className="text-[10px] font-bold text-neutral-500" data-showcase-profile-small>공개 게시물만 표시</span>
                         </div>
                         <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
                             {profile.posts.map((post) => (
                                 <button key={post.postId} type="button" onClick={() => onShowPost(post)} className="group overflow-hidden rounded-[18px] border border-white bg-white text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-card motion-reduce:transform-none">
                                     {/* eslint-disable-next-line @next/next/no-img-element -- public API returns canonical media dimensions and URLs. */}
                                     <img src={post.imageUrl} alt={`${post.author.displayName}의 댕자랑`} width={post.imageWidth} height={post.imageHeight} loading="lazy" className="aspect-square w-full bg-[#f6f3ee] object-cover" />
-                                    <span className="block truncate px-3 py-2 text-[10px] font-black text-neutral-700"><i className="fa-solid fa-bone mr-1 text-amber-700" aria-hidden="true" />응원 {post.boneCount.toLocaleString("ko-KR")}</span>
+                                    <span className="block truncate px-3 py-2 text-[10px] font-black text-neutral-700" data-showcase-profile-small><i className="fa-solid fa-bone mr-1 text-amber-700" aria-hidden="true" />응원 {post.boneCount.toLocaleString("ko-KR")}</span>
                                 </button>
                             ))}
                         </div>

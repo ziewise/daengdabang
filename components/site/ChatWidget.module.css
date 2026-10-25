@@ -637,6 +637,11 @@
 /* 상품 문의 줄 */
 :global(html:not(.ddb-app-mode)) .contextBar { border-bottom: 0; background: #f6f3fd; color: #5b4bb0; }
 :global(html:not(.ddb-app-mode)) .contextTag { border: 0; border-radius: 999px; background: #7c62d6; box-shadow: none; }
+/* 상품 문의 대상 지우기 X(2026-10-26) — 웹은 남색 대신 흰 동그라미 · 분홍 글자, 누르면 살짝 작아짐. 앱은 그대로 */
+:global(html:not(.ddb-app-mode)) .contextClear { width: 28px; height: 28px; background: #ffffff; color: #e2557a; box-shadow: 0 4px 8px -6px rgba(15, 23, 42, 0.4); transition: transform 0.15s, color 0.15s; }
+:global(html:not(.ddb-app-mode)) .contextClear:hover { background: #fff3f6; color: #d0436d; }
+:global(html:not(.ddb-app-mode)) .contextClear:active { transform: scale(0.9); }
+:global(html:not(.ddb-app-mode)) .contextClear:focus-visible { outline: 3px solid #f7c3d2; outline-offset: 2px; }
 
 /* 대화 — 줄 없는 연한 바탕 · 말풍선은 둥글게(손님 = 연보라 바탕 흰 글씨, 케어톡 = 흰 바탕 진한 글씨) */
 :global(html:not(.ddb-app-mode)) .messageList {

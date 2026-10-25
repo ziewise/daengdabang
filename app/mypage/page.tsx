@@ -11,6 +11,9 @@ import MemberPetProfileEditor from "@/components/mypage/MemberPetProfileEditor";
 import MemberPetProfileCreateForm from "@/components/mypage/MemberPetProfileCreateForm";
 import DaengLabWalletCard from "@/components/mypage/DaengLabWalletCard";
 import MypageSidebar from "@/components/mypage/MypageSidebar";
+// 2026-10-26 웹 — 하위 화면과 같은 로그인 안내 · 해요체 빈 화면 문구(앱은 원래 안내 · 문구 그대로)
+import { MypageLoginGate } from "@/components/mypage/MypageSectionLayout";
+import { useWebScreen } from "@/hooks/useWebScreen";
 import {
     hasPetLensReadyProfile,
     PETLENS_PAGE_HREF,
@@ -96,8 +99,38 @@ export default function MyPage() {
     const [dashTab, setDashTab] = useState<DashTab>(() => (
         typeof window === "undefined" ? "pets" : HASH_TAB[window.location.hash] ?? "pets"
     ));
+    // 주소 # 다시 읽기(2026-10-26) — 다른 화면에서 링크로 들어올 때는 화면을 그린 뒤에 주소가 바뀌어 첫 값이 "pets"로 남을 수 있음.
+    //   그린 뒤 한 번 + 주소 # 바뀜(hashchange) · 뒤로/앞으로(popstate) 때 맞는 탭을 고름. 보이는 칸만 바꾸고 서버 호출 없음.
+    useEffect(() => {
+        const pickHashTab = () => {
+            const tab = HASH_TAB[window.location.hash];
+            if (tab) setDashTab(tab);
+        };
+        // 같은 화면 안 링크(/mypage/#…)는 Next 가 주소만 바꾸고 알림(hashchange)이 없음 → 누른 링크 주소로 바로 고름
+        const onLinkClick = (event: MouseEvent) => {
+            const link = (event.target as Element | null)?.closest?.("a[href*='#']");
+            if (!(link instanceof HTMLAnchorElement)) return;
+            const url = new URL(link.href, window.location.href);
+            const tab = HASH_TAB[url.hash];
+            if (tab && url.pathname.replace(/\/+$/, "") === "/mypage") setDashTab(tab);
+        };
+        const timer = window.setTimeout(pickHashTab, 0);
+        window.addEventListener("hashchange", pickHashTab);
+        window.addEventListener("popstate", pickHashTab);
+        document.addEventListener("click", onLinkClick, true);
+        return () => {
+            window.clearTimeout(timer);
+            window.removeEventListener("hashchange", pickHashTab);
+            window.removeEventListener("popstate", pickHashTab);
+            document.removeEventListener("click", onLinkClick, true);
+        };
+    }, []);
+    // 웹이면 로그인 안내 · 빈 화면 문구를 해요체로
+    const webScreen = useWebScreen();
 
     if (!user) {
+        // 웹: 하위 화면과 같은 안내(설명 · 로그인 후 돌아올 주소 · 회원가입 · 비회원 주문 조회)
+        if (webScreen) return <MypageLoginGate redirect="/mypage/" />;
         return (
             <main className="mx-auto max-w-[720px] px-4 py-14 text-center" data-mypage-web="gate">
                 <i className="fa-regular fa-user text-4xl text-neutral-300" />
@@ -190,7 +223,7 @@ export default function MyPage() {
                                                 {hasVerifiedPetPhoto(pet) ? (
                                                     <p className="mt-2 text-xs font-black text-indigo-700">착용 상품 자동 피팅 가능</p>
                                                 ) : (
-                                                    <p className="mt-2 text-xs font-black text-neutral-500">사진을 올리면 자동 피팅이 켜집니다</p>
+                                                    <p className="mt-2 text-xs font-black text-neutral-500">{webScreen ? "사진을 올리면 자동 피팅이 켜져요" : "사진을 올리면 자동 피팅이 켜집니다"}</p>
                                                 )}
                                             </div>
                                         </div>
@@ -213,7 +246,9 @@ export default function MyPage() {
                             </div>
                         ) : (
                             <div className="mt-3 rounded-lg border border-dashed border-neutral-300 bg-neutral-50 p-4 text-sm font-bold leading-6 text-neutral-600">
-                                먼저 우리 아이 이름과 실제 견종을 등록해 주세요. 저장이 끝나면 펫렌즈 사진 분석과 댕다방 연구소 행동·소리 분석을 바로 시작할 수 있습니다.
+                                {webScreen
+                                    ? "먼저 우리 아이 이름과 실제 견종을 등록해 주세요. 저장이 끝나면 펫렌즈 사진 분석과 댕다방 연구소 행동·소리 분석을 바로 시작할 수 있어요."
+                                    : "먼저 우리 아이 이름과 실제 견종을 등록해 주세요. 저장이 끝나면 펫렌즈 사진 분석과 댕다방 연구소 행동·소리 분석을 바로 시작할 수 있습니다."}
                             </div>
                         )}
                         <MemberPetProfileCreateForm
@@ -226,7 +261,9 @@ export default function MyPage() {
                             </Link>
                         ) : user.pets.length > 0 ? (
                             <p className="mt-4 rounded-lg bg-amber-50 px-3 py-2 text-xs font-black leading-5 text-amber-800">
-                                위 프로필의 ‘정보 수정’에서 서버 등록과 실제 견종 확인을 마치면 펫렌즈 버튼이 열립니다.
+                                {webScreen
+                                    ? "위 프로필의 ‘정보 수정’에서 서버 등록과 실제 견종 확인을 마치면 펫렌즈 버튼이 열려요."
+                                    : "위 프로필의 ‘정보 수정’에서 서버 등록과 실제 견종 확인을 마치면 펫렌즈 버튼이 열립니다."}
                             </p>
                         ) : null}
                         {heroTryOnProduct && hasTryOnProfile && (
@@ -242,7 +279,7 @@ export default function MyPage() {
                         <div className="flex items-center justify-between gap-3" data-mp-band="sky" data-mp-art="cart">
                             <div>
                                 <h2 className="text-lg font-black text-neutral-950" data-mp-kicker="ORDERS">최근 결제</h2>
-                                <p className="mt-1 text-xs font-bold text-neutral-500">이 브라우저에서 완료한 결제만 빠르게 보여줍니다.</p>
+                                <p className="mt-1 text-xs font-bold text-neutral-500">{webScreen ? "이 브라우저에서 마친 결제만 빠르게 보여 드려요." : "이 브라우저에서 완료한 결제만 빠르게 보여줍니다."}</p>
                             </div>
                             <Link href="/mypage/orders/" className="text-sm font-black text-indigo-700 hover:underline">
                                 전체 주문 보기 <i className="fa-solid fa-chevron-right ml-1 text-[10px]" aria-hidden="true" />
@@ -336,7 +373,7 @@ export default function MyPage() {
                                 {wishedProducts.map((product) => product && <ProductCard key={product.id} product={product} />)}
                             </div>
                         ) : (
-                            <div className="surface p-6 text-sm font-bold text-neutral-600">찜한 상품이 없습니다.</div>
+                            <div className="surface p-6 text-sm font-bold text-neutral-600">{webScreen ? "아직 찜한 상품이 없어요." : "찜한 상품이 없습니다."}</div>
                         )}
                     </div>
                 </section>

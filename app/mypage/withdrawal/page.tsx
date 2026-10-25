@@ -17,6 +17,9 @@ import {
 } from "@/lib/customer-api";
 import { memberAccountDisplay } from "@/lib/member-account-display";
 import { useAuth } from "@/lib/store";
+// 2026-10-26 웹 문구 — 서버 원문 대신 해요체 오류 문장 · 해요체 머리 설명(앱 글자는 그대로)
+import { mypageErrorText } from "@/components/mypage/mypageWebText";
+import { useWebScreen } from "@/hooks/useWebScreen";
 
 export default function MypageWithdrawalPage() {
     const { user, logout } = useAuth();
@@ -25,6 +28,7 @@ export default function MypageWithdrawalPage() {
     const [currentPassword, setCurrentPassword] = useState("");
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState("");
+    const webScreen = useWebScreen();
     if (!user) return <MypageLoginGate redirect="/mypage/withdrawal/" />;
 
     const isPasswordAccount = (user.authProvider || "email") === "email";
@@ -54,9 +58,9 @@ export default function MypageWithdrawalPage() {
             if (caught instanceof DdbApiError && caught.status === 401) {
                 setError("현재 비밀번호가 일치하지 않습니다.");
             } else {
-                setError(caught instanceof DdbApiError
+                setError(mypageErrorText(caught, caught instanceof DdbApiError
                     ? caught.message
-                    : "회원 탈퇴를 처리하지 못했습니다. 잠시 후 다시 시도해 주세요.");
+                    : "회원 탈퇴를 처리하지 못했습니다. 잠시 후 다시 시도해 주세요.", "회원 탈퇴를 처리하지 못했어요. 잠시 뒤 다시 시도해 주세요."));
             }
         } finally {
             setSubmitting(false);
@@ -67,7 +71,9 @@ export default function MypageWithdrawalPage() {
         <MypageSectionLayout
             eyebrow="MY 정보"
             title="회원 탈퇴"
-            description="계정 접근은 즉시 차단하고 개인정보는 가명화하며, 법정 보존 기록은 분리 보관합니다."
+            description={webScreen
+                ? "탈퇴하면 계정 접근은 바로 막히고 개인정보는 가명화돼요. 법으로 보관해야 하는 기록만 따로 보관해요."
+                : "계정 접근은 즉시 차단하고 개인정보는 가명화하며, 법정 보존 기록은 분리 보관합니다."}
         >
             {/* 웹 전용 화면(앱은 hidden) */}
             <WithdrawalWebView

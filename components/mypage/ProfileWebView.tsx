@@ -37,6 +37,8 @@ import { isInternalSocialEmail, memberAccountDisplay } from "@/lib/member-accoun
 import { normalizedMemberName } from "@/lib/member-name";
 import { clearReauth, consumeSocialReauth, markSocialReauthPending, REAUTH_TTL_MS, saveReauth, useReauthAt } from "@/lib/profile-reauth";
 import { useAuth, type User } from "@/lib/store";
+// 2026-10-26 서버 원문(영어 detail 등) 대신 상황별 해요체 오류 문장
+import { mypageErrorText } from "@/components/mypage/mypageWebText";
 
 const UI = "/images/ui/";
 const PROVIDER: Record<string, string> = { email: "이메일", kakao: "카카오", naver: "네이버", google: "구글" };
@@ -440,7 +442,7 @@ function InfoPanel({ user, token, accountDisplay, internalEmail, verifiedAt, onS
             setEditing(false);
             setMessage({ ok: true, text: "이름을 바꿨어요." });
         } catch (caught) {
-            setMessage({ ok: false, text: caught instanceof DdbApiError ? caught.message : "이름을 바꾸지 못했어요. 잠시 후 다시 시도해 주세요." });
+            setMessage({ ok: false, text: mypageErrorText(caught, caught instanceof DdbApiError ? caught.message : "이름을 바꾸지 못했어요. 잠시 후 다시 시도해 주세요.", "이름을 바꾸지 못했어요. 잠시 뒤 다시 시도해 주세요.") });
         } finally {
             setSaving(false);
         }
@@ -574,7 +576,7 @@ function SecurityPanel({ user, token, provider, providerLabel, accountDisplay, i
         } catch (caught) {
             if (caught instanceof DdbApiError && caught.status === 401) setError("현재 비밀번호가 맞지 않아요.");
             else if (caught instanceof DdbApiError && caught.status === 403) setError("이 계정의 비밀번호는 간편로그인 제공자에서 바꿔 주세요.");
-            else setError(caught instanceof DdbApiError ? caught.message : "비밀번호를 바꾸지 못했어요. 잠시 후 다시 시도해 주세요.");
+            else setError(mypageErrorText(caught, caught instanceof DdbApiError ? caught.message : "비밀번호를 바꾸지 못했어요. 잠시 후 다시 시도해 주세요.", "비밀번호를 바꾸지 못했어요. 잠시 뒤 다시 시도해 주세요."));
         } finally {
             setSaving(false);
         }
@@ -689,7 +691,7 @@ function NoticePanel({ token, internalEmail }: { token?: string; internalEmail: 
                 ? { ok: true, text: `${today.getFullYear()}년 ${today.getMonth() + 1}월 ${today.getDate()}일 · 댕다방 이메일 소식 수신에 동의했어요.` }
                 : { ok: false, text: "동의는 저장됐지만 받을 이메일 확인이 필요해요. 코인 탭에서 이메일을 인증해 주세요." });
         } catch (caught) {
-            setMessage({ ok: false, text: caught instanceof DdbApiError ? caught.message : "저장하지 못했어요. 잠시 후 다시 시도해 주세요." });
+            setMessage({ ok: false, text: mypageErrorText(caught, caught instanceof DdbApiError ? caught.message : "저장하지 못했어요. 잠시 후 다시 시도해 주세요.", "이메일 소식 설정을 저장하지 못했어요. 잠시 뒤 다시 시도해 주세요.") });
         } finally {
             setSaving(false);
         }

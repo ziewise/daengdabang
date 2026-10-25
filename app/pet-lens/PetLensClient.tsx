@@ -97,6 +97,7 @@ function ObservationDeepLinkNotice({
             role={pending ? "status" : "alert"}
             aria-live="polite"
             data-petlens-observation-deep-link={state}
+            data-web-notice={pending ? "info" : cancelled ? "warn" : "error"} // 웹 부드러운 안내 쿠션(daily-web.css)
         >
             <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white/80" aria-hidden="true">
                 <i className={`fa-solid ${pending ? "fa-circle-notch fa-spin" : cancelled ? "fa-rotate-left" : "fa-circle-exclamation"}`} />
@@ -787,7 +788,7 @@ export default function PetLensClient() {
                         {loading ? "분석 중" : "추천 받기"}
                     </button>
                     {analysisError && (
-                        <p className="rounded-md border border-rose-200 bg-rose-50 p-3 text-sm font-bold leading-6 text-rose-700">
+                        <p className="rounded-md border border-rose-200 bg-rose-50 p-3 text-sm font-bold leading-6 text-rose-700" data-web-notice="error">
                             {analysisError}
                         </p>
                     )}

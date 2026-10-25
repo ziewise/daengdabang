@@ -12,6 +12,8 @@
  */
 
 import { useEffect, useState } from "react";
+// 웹/앱 문구 갈림(웹은 해요체, 2026-10-26)
+import { useWebScreen } from "@/hooks/useWebScreen";
 import Image from "next/image";
 import Link from "next/link";
 import { CrayonGrainFilter, PawTrail } from "@/components/daily/CrayonArt";
@@ -77,6 +79,8 @@ function DiaryCard({ record, index }: { record: WeeklyPhotoAnalysisRecord; index
 
 export default function HealthReport() {
     const { hydrated, user } = useAuth();
+    // 웹 화면인가(웹은 해요체 문구)
+    const webScreen = useWebScreen();
     const [selectedPetId, setSelectedPetId] = useState<number | undefined>();
     const [weeklyState, setWeeklyState] = useState<{
         profileId?: number;
@@ -121,7 +125,16 @@ export default function HealthReport() {
     }, [accessToken, petProfileId]);
 
     if (!hydrated) {
-        return <main className="mx-auto grid min-h-[50vh] w-full max-w-[1280px] place-items-center px-4 py-10 text-sm font-black text-neutral-500" data-daily-web data-lab-web>건강 변화 리포트를 불러오는 중입니다.</main>;
+        return (
+            // 불러오는 중 — 앱은 원래 회색 글씨(wl-app), 웹은 3D 그림 + 해요체 쿠션(wl-card, daily-web.css data-web-loading)
+            <main className="mx-auto grid min-h-[50vh] w-full max-w-[1280px] place-items-center px-4 py-10 text-sm font-black text-neutral-500" data-daily-web data-lab-web data-web-loading>
+                <span className="wl-app">건강 변화 리포트를 불러오는 중입니다.</span>
+                <span className="hidden wl-card" role="status">
+                    <Image src="/images/ui/menu-lab-report-128.webp" alt="" width={64} height={64} aria-hidden="true" />
+                    <span>건강 변화 리포트를 불러오고 있어요</span>
+                </span>
+            </main>
+        );
     }
 
     // 로그인 전 · 아이 등록 전 — 우리 아이 기록과 같은 안내 판
@@ -190,7 +203,7 @@ export default function HealthReport() {
                 </ul>
 
                 {weeklyState.error && weeklyState.profileId === petProfileId && (
-                    <p className="hr-note is-error" role="alert">{weeklyState.error}</p>
+                    <p className="hr-note is-error" role="alert">{webScreen ? "주간 사진 기록을 불러오지 못했어요. 잠시 후 다시 확인해 주세요." : weeklyState.error}</p>
                 )}
 
                 {loading ? (

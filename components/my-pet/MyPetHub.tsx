@@ -11,6 +11,8 @@
  */
 
 import { useEffect, useRef, useState } from "react";
+// 웹/앱 문구 갈림(웹은 해요체, 2026-10-26)
+import { useWebScreen } from "@/hooks/useWebScreen";
 import Image from "next/image";
 import Link from "next/link";
 import WeeklyPhotoComparison from "@/components/my-pet/WeeklyPhotoComparison";
@@ -67,6 +69,8 @@ function petFacts(pet: PetProfile) {
 
 export default function MyPetHub() {
     const { hydrated, user } = useAuth();
+    // 웹 화면인가(웹은 해요체 문구)
+    const webScreen = useWebScreen();
     const [selectedPetId, setSelectedPetId] = useState<number | undefined>();
     // 그림책에 펼친 주간 기록(없으면 가장 최근 기록)
     const [openedRecordId, setOpenedRecordId] = useState<string | undefined>();
@@ -132,7 +136,16 @@ export default function MyPetHub() {
     };
 
     if (!hydrated) {
-        return <main className="mx-auto grid min-h-[50vh] w-full max-w-[1280px] place-items-center px-4 py-10 text-sm font-black text-neutral-500" data-daily-web>우리 아이 기록을 불러오는 중입니다.</main>;
+        return (
+            // 불러오는 중 — 앱은 원래 회색 글씨(wl-app), 웹은 3D 그림 + 해요체 쿠션(wl-card, daily-web.css data-web-loading)
+            <main className="mx-auto grid min-h-[50vh] w-full max-w-[1280px] place-items-center px-4 py-10 text-sm font-black text-neutral-500" data-daily-web data-web-loading>
+                <span className="wl-app">우리 아이 기록을 불러오는 중입니다.</span>
+                <span className="hidden wl-card" role="status">
+                    <Image src="/images/ui/menu-daily-mypet-128.webp" alt="" width={64} height={64} aria-hidden="true" />
+                    <span>우리 아이 기록을 불러오고 있어요</span>
+                </span>
+            </main>
+        );
     }
 
     if (!user) {
@@ -187,7 +200,10 @@ export default function MyPetHub() {
 
             <section id="health-report" className="scroll-mt-28" aria-labelledby="health-report-title">
                 {weeklyState.error && weeklyState.profileId === petProfileId && (
-                    <p className="mb-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-black text-red-700" role="alert">{weeklyState.error}</p>
+                    <p className="mb-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-black text-red-700" role="alert" data-web-notice="error">
+                        {/* 웹은 해요체 안내(2026-10-26), 앱은 원래 오류 문구 */}
+                        {webScreen ? "주간 사진 기록을 불러오지 못했어요. 잠시 후 다시 확인해 주세요." : weeklyState.error}
+                    </p>
                 )}
 
                 {/* 펼친 그림책 — 분홍 크레파스 표지 위에 두 쪽 */}
@@ -248,7 +264,7 @@ export default function MyPetHub() {
                                 <div className="dw-book-blank">
                                     <CrayonDoodle kind="paw" className="dw-book-blank-paw" />
                                     <p className="dw-hand dw-hand-sky">그림책을 펼치는 중이에요</p>
-                                    <p className="mt-1 text-sm font-bold text-neutral-500">주간 사진 기록을 불러오는 중입니다.</p>
+                                    <p className="mt-1 text-sm font-bold text-neutral-500">{webScreen ? "주간 사진 기록을 불러오고 있어요." : "주간 사진 기록을 불러오는 중입니다."}</p>
                                 </div>
                             ) : openedWeekly ? (
                                 <>

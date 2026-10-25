@@ -559,3 +559,6 @@ html:not(.ddb-app-mode) main[data-cart-web] {
         & .cart-del { top: 14px; right: 14px; padding: 5px 12px; }
     }
 }
+
+/* 2026-10-26 전체 점검 — 빠른결제 "휴대폰 결제" 아이콘이 인디고로 남아 있던 것 → 분홍(앱 그대로) */
+html:not(.ddb-app-mode) main[data-cart-web] button > i.fa-mobile-screen-button.text-indigo-600 { color: #e2557a; }

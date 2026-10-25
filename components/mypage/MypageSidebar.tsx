@@ -13,6 +13,7 @@ import { MYPAGE_MENU_GROUPS } from "@/lib/mypage-data";
 import { useAppMode } from "@/components/app-shell/useAppMode";
 // 모바일 웹: 사이드 메뉴 대신 헤더 아래 원형 버튼 + 전체 메뉴 시트(같은 항목 · 같은 로그아웃, 2026-10-24)
 import MypageMobileMenu from "@/components/mypage/MypageMobileMenu";
+import { useWebConfirm } from "@/components/site/useWebConfirm";
 // 웹 마이페이지 크레파스 꾸밈(2026-10-24) — 이 메뉴가 있는 화면 전체에 적용, 앱은 닿지 않음
 import "../../app/mypage-web.css";
 
@@ -29,8 +30,11 @@ export default function MypageSidebar({ className = "" }: { className?: string }
     const router = useRouter();
     const { logout } = useAuth();
 
-    const handleLogout = () => {
-        if (!confirm("로그아웃 하시겠어요?")) return;
+    // 로그아웃 확인 — 웹은 우리 확인 창, 앱은 기본 확인창(useWebConfirm)
+    const [askConfirm, confirmDialog] = useWebConfirm();
+    const handleLogout = async () => {
+        const ok = await askConfirm({ title: "로그아웃 하시겠어요?", message: "다시 로그인하면 기록은 그대로 이어져요.", confirmLabel: "로그아웃", cancelLabel: "계속 둘러볼게요", art: "header-mypage-128.webp" });
+        if (!ok) return;
         logout();
         router.push("/main");
     };
@@ -111,6 +115,7 @@ export default function MypageSidebar({ className = "" }: { className?: string }
                 }))}
                 onLogout={handleLogout}
             />
+            {confirmDialog}
         </aside>
     );
 }

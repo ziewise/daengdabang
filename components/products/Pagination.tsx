@@ -4,10 +4,12 @@
  * 상품 리스트 페이지들(전체상품·베스트·신상품·카테고리·브랜드·기획전)에서 공통 사용.
  * 현재 페이지 주변 ±1 + 처음/끝을 보여주고, 사이 구간은 "…" 로 축약한다.
  * totalPages 가 1 이하면 아무것도 렌더하지 않는다(페이지네이션 불필요).
+ * 웹(2026-10-26 전체 점검): data-pagination + app/pagination-web.css — 인디고 각진 단추 대신 흰 알약 · 지금 쪽은 분홍. 앱은 그대로.
  */
 "use client";
 
 import { useI18n } from "@/lib/i18n";
+import "@/app/pagination-web.css";
 
 function getPageNumbers(current: number, total: number): (number | "...")[] {
     const pages: (number | "...")[] = [];
@@ -38,7 +40,7 @@ export default function Pagination({
     if (totalPages <= 1) return null;
 
     return (
-        <nav className="mt-8 flex flex-wrap items-center justify-center gap-1.5" aria-label={locale === "en" ? "Page navigation" : "페이지 이동"}>
+        <nav data-pagination className="mt-8 flex flex-wrap items-center justify-center gap-1.5" aria-label={locale === "en" ? "Page navigation" : "페이지 이동"}>
             <button
                 type="button"
                 onClick={() => onChange(currentPage - 1)}

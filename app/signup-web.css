@@ -11,7 +11,9 @@
  * 모양: 카드 34px · 파스텔 판 26px · 안쪽 칸 20px · 입력칸 16px · 단추 · 칩은 알약. 베이지 테두리 · 구분선 없이 채움 · 그림자로 나눔.
  * 크레파스 결(종이 · 세 색 밑줄 · 영문 손글씨 · 3D 그림). 스티커북 요소(테이프 · 와펜 · 기울어진 카드 · 점선) 없음.
  * 범위: .sxw(가입 화면 main) · .sxw-doc(약관 창) 안에서만 — 웹에서만 그려지는 부품이라 앱 화면과 섞이지 않음.
- * 순서: 색 · 글꼴 → 틀 → 우리 아이 조각 → 카드 → 고르기 → 단계별 → 갈림길 · 완료 · 간편가입 → 약관 창 → 4차 파스텔 쿠션 결 → 움직임 → 모바일
+ *   예외(2026-10-26): 간편로그인 처리 중 카드(.sxw-wait)는 앱 카드와 같은 화면에 hidden 으로 있어 html:not(.ddb-app-mode) 로만 보임.
+ * 순서: 색 · 글꼴 → 틀 → 우리 아이 조각 → 카드 → 고르기 → 단계별 → 갈림길 · 완료 · 간편가입 → 약관 창 → 4차 파스텔 쿠션 결
+ *       → 간편로그인 처리 중 → 움직임 → 모바일(좁은 화면은 다음 단추 줄바꿈 허용)
  */
 
 /* 미리 만든 HTML(앱 기준 화면)이 웹에서 잠깐 보이지 않게 — 웹은 화면이 붙으면 새 가입 화면으로 바뀜 */
@@ -19,7 +21,8 @@ html:not(.ddb-app-mode) main[data-signup-web="form"] { visibility: hidden; }
 
 /* ═════════ 색 · 글꼴 ═════════ */
 .sxw,
-.sxw-doc {
+.sxw-doc,
+.sxw-wait {
     --sx-ink: #1e293b;
     --sx-soft: #64748b;
     --sx-mute: #94a3b8;
@@ -711,7 +714,26 @@ img.sxw-head-art { flex: none; width: 92px; height: 92px; object-fit: contain; f
 .sxw-dev-group button.is-on { background: #e9789a; color: #fff; }
 .sxw-dev-note { margin: 0; color: #94a3b8; font-size: 11px; font-weight: 700; line-height: 1.5; }
 
+/* ═════════ 간편로그인 처리 중(app/auth/social-callback · main[data-social-wait]) · 2026-10-26 ═════════
+   웹: 앱 카드(.surface)는 숨기고 크레파스 카드 — 노랑 동그라미 안 3D 로그인 그림(살짝 떠오름) · 손글씨 꼬리표 ·
+   주아 "로그인하고 있어요" + 세 색 밑줄 · 한 줄 · 세 색 점 기다림. 화면이 붙기 전에도 이 카드라 앱 카드가 번쩍이지 않음 */
+html:not(.ddb-app-mode) main[data-social-wait] > .surface { display: none; }
+html:not(.ddb-app-mode) main[data-social-wait] > .sxw-wait { display: grid; justify-items: center; gap: 4px; padding: 40px 28px 34px; border-radius: 34px; background: #fff; text-align: center; box-shadow: var(--sx-cushion); animation: sxw-up 0.35s ease both; }
+.sxw-wait-art { display: grid; width: 110px; height: 110px; place-items: center; border-radius: 50%; background: #fff6e3; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
+.sxw-wait-art img { width: 80px; height: 80px; object-fit: contain; filter: drop-shadow(0 10px 12px rgb(15 23 42 / 18%)); animation: sxw-bob 3.2s ease-in-out infinite; }
+.sxw-wait .sxw-kicker { margin-top: 14px; }
+.sxw-wait h1 { position: relative; isolation: isolate; margin: 4px 0 2px; font-family: var(--sx-jua); font-size: 25px; font-weight: 400; line-height: 1.35; word-break: keep-all; }
+/* 제목 세 색 밑줄 */
+.sxw-wait h1::after { content: ""; position: absolute; right: 1%; bottom: -0.04em; left: 0; z-index: -1; height: 0.24em; border-radius: 999px 70% 999px 60%; background: var(--sx-underline); opacity: 0.6; transform: rotate(-0.7deg) skewX(-7deg); }
+.sxw-wait p { max-width: 320px; margin: 4px 0 0; color: var(--sx-soft); font-size: 14px; font-weight: 600; line-height: 1.7; word-break: keep-all; }
+/* 세 색 점 — 차례로 통통 */
+.sxw-wait-dots { display: flex; gap: 8px; margin-top: 18px; }
+.sxw-wait-dots i { width: 10px; height: 10px; border-radius: 50%; background: #f39bb4; animation: sxw-dot 1.2s ease-in-out infinite; }
+.sxw-wait-dots i:nth-child(2) { background: #f7c76a; animation-delay: 0.15s; }
+.sxw-wait-dots i:nth-child(3) { background: #7cc8de; animation-delay: 0.3s; }
+
 /* ═════════ 움직임 ═════════ */
+@keyframes sxw-dot { 0%, 80%, 100% { opacity: 0.45; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-6px); } }
 @keyframes sxw-pop { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
 @keyframes sxw-up { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes sxw-fade { from { opacity: 0; } to { opacity: 1; } }
@@ -759,7 +781,8 @@ img.sxw-head-art { flex: none; width: 92px; height: 92px; object-fit: contain; f
     .sxw-mini { justify-content: center; }
     .sxw-channels { padding-left: 0; }
     .sxw-prev { padding: 0 16px; }
-    .sxw-next { font-size: 16px; }
+    /* 긴 이름("우리 아이와 함께 가입하기")이 좁은 카드 밖으로 나가지 않게 — 줄바꿈 허용 · 줄어들 수 있게(2026-10-26) */
+    .sxw-next { min-width: 0; padding: 8px 18px; font-size: 16px; line-height: 1.3; text-align: center; white-space: normal; word-break: keep-all; }
     .sxw-cta { min-height: 66px; padding-right: 18px; }
     .sxw-cta b { font-size: 16.5px; }
     .sxw-branch { flex-direction: column; gap: 10px; padding: 16px; }
@@ -787,6 +810,6 @@ img.sxw-head-art { flex: none; width: 92px; height: 92px; object-fit: contain; f
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .sxw-hero-art, .sxw-done-art, .sxw-ok-big, .sxw-pet, .sxw-branch, .sxw-aicard, .sxw-later, .sxw-shots-busy, .sxw-shots-busy i, .sxw-confetti, .sxw-done .sxw-ring, .sxw-return-art, .sxw-doc, .sxw-doc-card { animation: none; }
+    .sxw-hero-art, .sxw-done-art, .sxw-wait-art img, .sxw-wait-dots i, .sxw-ok-big, .sxw-pet, .sxw-branch, .sxw-aicard, .sxw-later, .sxw-shots-busy, .sxw-shots-busy i, .sxw-confetti, .sxw-done .sxw-ring, .sxw-return-art, .sxw-doc, .sxw-doc-card { animation: none; }
     .sxw-bar > span { transition: none; }
 }

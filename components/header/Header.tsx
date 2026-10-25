@@ -5,6 +5,8 @@
  * 모바일: 로고 + 햄버거 토글만 (전체 메뉴는 MobilePanel)
  *
  * client component (드롭다운 toggle, 검색·모바일 모달 trigger, 인증 상태 표시).
+ * 2026-10-26: 지금 페이지 표시 — 하위 메뉴 링크 aria-current="page", 그 묶음의 메뉴 단추 data-nav-current(웹 CSS: 분홍 글자 + 세 색 밑줄, globals.css).
+ *   좁은 화면(xl 미만)은 헤더 장바구니 아이콘이 없어 ☰ 단추에 같은 담긴 수량 분홍 배지. 주소 · 동작은 그대로
  */
 "use client";
 
@@ -34,8 +36,16 @@ import { useI18n } from "@/lib/i18n";
 import InstalledAppHomeButton from "@/components/pwa/InstalledAppHomeButton";
 import ProductBackButton from "./ProductBackButton";
 import headerStyles from "./Header.module.css";
+// 지금 페이지 판별(표시만 — aria-current · data-nav-current)
+import { isCurrentPath, isWithinPaths } from "./nav-current";
 
 type DropKey = "shop" | "daily" | "lab" | "cs" | null;
+
+/** 메뉴 묶음별 주소 — 지금 페이지가 이 아래면 그 메뉴 단추에 "지금 여기" 표시 */
+const SHOP_PATHS = ["/products", "/best", "/new", "/brands", "/brand", "/bundles", "/category", "/promo"];
+const DAILY_PATHS = ["/treasure-mine", "/goods-contest", "/my-pet", "/community"];
+const CS_PATHS = CS_LINKS.map((item) => item.href);
+const LAB_PATHS = ["/pet-lens", "/health-report", "/chat"];
 
 // 고객센터 하위 메뉴 그림 — CS_LINKS 주소별 사용자 크레파스 그림(public/images/ui/web-cs-*-128.webp, 2026-10-23 교체 · 이전 menu-cs-* 는 커뮤니티 · 공모전이 계속 씀)
 const CS_MENU_ICON: Record<string, string> = {
@@ -150,6 +160,7 @@ export default function Header() {
                     <nav className="hidden items-center gap-1 xl:flex">
                         <NavDropdown
                             label={t("shop")}
+                            current={isWithinPaths(pathname, SHOP_PATHS)}
                             open={openDrop === "shop"}
                             onEnter={() => setOpenDrop("shop")}
                             onLeave={() => setOpenDrop(null)}
@@ -167,7 +178,7 @@ export default function Header() {
                                         ["/brands", t("brand"), "brand"],
                                         ["/bundles", locale === "en" ? "Bundles" : "세트상품", "set"],
                                     ].map(([href, label, key]) => (
-                                        <Link key={href} href={href} className="ddb-menu-pill">
+                                        <Link key={href} href={href} className="ddb-menu-pill" aria-current={isCurrentPath(pathname, href) ? "page" : undefined}>
                                             <Image src={`/images/ui/shop-menu-${key}-128.webp`} alt="" width={28} height={28} className="h-7 w-7 shrink-0 object-contain" />
                                             <span>{label}</span>
                                         </Link>
@@ -176,7 +187,7 @@ export default function Header() {
                                 <div className="grid grid-cols-5 gap-2">
                                     {CATEGORY_GROUPS.map((g) => (
                                         <div key={g.title} className="ddb-menu-card">
-                                            <Link href={g.href} className="ddb-menu-card-title">
+                                            <Link href={g.href} className="ddb-menu-card-title" aria-current={isCurrentPath(pathname, g.href) ? "page" : undefined}>
                                                 {/* 제품군 주소 끝(outdoor · food · life · toy · care)으로 그림 고르기 */}
                                                 <Image src={`/images/ui/hotpick-${g.href.split("/").pop()}-128.webp`} alt="" width={40} height={40} className="h-10 w-10 object-contain" />
                                                 <span>{menuLabel(g.title)}</span>
@@ -198,6 +209,7 @@ export default function Header() {
 
                         <NavDropdown
                             label={t("dailyLife")}
+                            current={isWithinPaths(pathname, DAILY_PATHS)}
                             open={openDrop === "daily"}
                             onEnter={() => setOpenDrop("daily")}
                             onLeave={() => setOpenDrop(null)}
@@ -211,7 +223,7 @@ export default function Header() {
                                     ["/community/", "커뮤니티", "daily-community"],
                                 ].map(([href, label, key]) => (
                                     <li key={href}>
-                                        <Link href={href} className="ddb-menu-row">
+                                        <Link href={href} className="ddb-menu-row" aria-current={isCurrentPath(pathname, href) ? "page" : undefined}>
                                             <Image src={`/images/ui/menu-${key}-128.webp`} alt="" width={30} height={30} className="h-[30px] w-[30px] shrink-0 object-contain" />
                                             <span>{label}</span>
                                         </Link>
@@ -221,12 +233,14 @@ export default function Header() {
                         </NavDropdown>
                         <Link
                             href="/daeng-showcase/"
+                            aria-current={isCurrentPath(pathname, "/daeng-showcase/") ? "page" : undefined}
                             className={`${headerStyles.desktopNavItem} rounded-lg px-2 py-2 text-base font-bold text-foreground transition xl:px-3 xl:text-[17px]`}
                         >
                             댕자랑
                         </Link>
                         <NavDropdown
                             label={t("customerCenter")}
+                            current={isWithinPaths(pathname, CS_PATHS)}
                             open={openDrop === "cs"}
                             onEnter={() => setOpenDrop("cs")}
                             onLeave={() => setOpenDrop(null)}
@@ -235,7 +249,7 @@ export default function Header() {
                             <ul className="ddb-menu-paper grid w-max gap-1.5 p-2.5">
                                 {CS_LINKS.map((item) => (
                                     <li key={item.href}>
-                                        <Link href={item.href} className="ddb-menu-row">
+                                        <Link href={item.href} className="ddb-menu-row" aria-current={isCurrentPath(pathname, item.href) ? "page" : undefined}>
                                             <Image src={`/images/ui/web-cs-${CS_MENU_ICON[item.href] ?? "notice"}-128.webp`} alt="" width={30} height={30} className="h-[30px] w-[30px] shrink-0 object-contain" />
                                             <span>{menuLabel(item.label)}</span>
                                         </Link>
@@ -246,6 +260,7 @@ export default function Header() {
                         <NavDropdown
                             label={<DaengLabWordmark label={t("daengLab")} />}
                             ariaLabel={t("daengLab")}
+                            current={isWithinPaths(pathname, LAB_PATHS)}
                             open={openDrop === "lab"}
                             onEnter={() => setOpenDrop("lab")}
                             onLeave={() => setOpenDrop(null)}
@@ -262,6 +277,7 @@ export default function Header() {
                                     <li key={href}>
                                         <Link
                                             href={href}
+                                            aria-current={isCurrentPath(pathname, href) ? "page" : undefined}
                                             onClick={(event) => {
                                                 if (href !== "/chat/" || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
                                                 if (!document.querySelector("[data-chat-widget-open]")) return;
@@ -371,11 +387,18 @@ export default function Header() {
                             type="button"
                             onClick={() => setMobileOpen(true)}
                             data-pet-guide-target={!isLoggedIn ? "signup" : undefined}
-                            className="flex h-10 w-10 items-center justify-center rounded-full text-foreground transition hover:bg-white/80 xl:hidden"
-                            aria-label={t("menu")}
+                            className="relative flex h-10 w-10 items-center justify-center rounded-full text-foreground transition hover:bg-white/80 xl:hidden"
+                            aria-label={cartHydrated && cartCount > 0 ? `${t("menu")} · ${t("cart")} ${cartCount}` : t("menu")}
                             aria-expanded={mobileOpen}
                         >
                             <i className="fa-solid fa-bars" />
+                            {/* 담긴 수량 배지(2026-10-26) — xl 미만은 헤더 장바구니 아이콘이 없어 ☰ 위에 같은 수(useCart). 0이면 숨김, 99 초과는 99+.
+                                꾸밈은 globals.css .ddb-menu-cart-badge(분홍 알약) */}
+                            {cartHydrated && cartCount > 0 && (
+                                <span className="ddb-menu-cart-badge" aria-hidden="true">
+                                    {cartCount > 99 ? "99+" : cartCount}
+                                </span>
+                            )}
                         </button>
                     </div>
                 </div>
@@ -394,6 +417,7 @@ export default function Header() {
 function NavDropdown({
     label,
     ariaLabel,
+    current = false,
     open,
     onEnter,
     onLeave,
@@ -402,6 +426,8 @@ function NavDropdown({
 }: {
     label: React.ReactNode;
     ariaLabel?: string;
+    /** 지금 페이지가 이 묶음 안인지 — 단추에 data-nav-current(웹 CSS 표시) */
+    current?: boolean;
     open: boolean;
     onEnter: () => void;
     onLeave: () => void;
@@ -478,6 +504,7 @@ function NavDropdown({
                 }}
                 className={`${headerStyles.desktopNavItem} rounded-lg px-2 py-2 text-base font-bold text-foreground transition xl:px-3 xl:text-[17px]`}
                 data-nav-open={open ? "true" : "false"}
+                data-nav-current={current ? "true" : undefined}
             >
                 {label}
             </button>

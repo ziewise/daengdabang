@@ -393,7 +393,7 @@ export function SxDocModal({ kind, onClose }: { kind: SxDocKind | null; onClose:
                     )}
                     {kind === "terms" && (
                         <>
-                            <p>주요 내용을 먼저 보여 드려요. 전체 약관은 아래 단추로 볼 수 있어요.</p>
+                            <p>주요 내용을 먼저 보여 드려요. 전체 약관은 아래 버튼으로 볼 수 있어요.</p>
                             <ul className="sxw-doc-list">
                                 {SIGNUP_TERMS_AGREEMENT.summary.map((item) => <li key={item}>{item}</li>)}
                             </ul>
@@ -618,7 +618,7 @@ export function IdentityPanel({ state, onStart, onRestart }: { state: IdentitySt
                 <ol className="sxw-timeline">
                     <li data-owner="us">
                         <b aria-hidden="true">1</b>
-                        <span><em>댕다방</em><strong>아래 단추를 눌러요</strong><small>인증기관 창이 새로 열려요.</small></span>
+                        <span><em>댕다방</em><strong>아래 버튼을 눌러요</strong><small>인증기관 창이 새로 열려요.</small></span>
                     </li>
                     <li data-owner="agency">
                         <b aria-hidden="true">2</b>
@@ -679,7 +679,7 @@ export function SignupWebDone({ name, pet, providerLabel, emailNeedsSetup, marke
             <span className="sxw-kicker">WELCOME TO DAENGDABANG</span>
             <h2 id="sxw-done-title">가입을 환영해요, <span className="sxw-u">{name}</span>님!</h2>
             <p className="sxw-done-sub">
-                {providerLabel ? `다음부터는 ${providerLabel} 단추 하나로 로그인해요.` : "다음부터는 이메일과 비밀번호로 로그인해요."}
+                {providerLabel ? `다음부터는 ${providerLabel} 버튼 하나로 로그인해요.` : "다음부터는 이메일과 비밀번호로 로그인해요."}
             </p>
 
             <div className="sxw-gifts">

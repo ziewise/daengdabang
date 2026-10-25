@@ -1,3 +1,10 @@
+/**
+ * PrelaunchNotice — 정식 오픈 준비 안내 창(첫 방문 팝업 + 상품 "오픈 준비 중" 단추로 여는 같은 창)
+ * ---------------------------------------------------------------------
+ * 동작(열기 · 닫기 · 오늘은 그만 보기)과 문구는 그대로.
+ * 2026-10-26 웹 겉모양: data-prelaunch-web 이름표 + PrelaunchNotice.module.css "웹 크레파스" 구역
+ * (흰 쿠션 창 · 주아 제목 세 색 밑줄 · 분홍 알약 주 단추 · 흰 알약 보조 · 점선 · 기울기 없음). 앱은 예전 모양 그대로.
+ */
 "use client";
 
 import Image from "next/image";
@@ -70,7 +77,8 @@ export default function PrelaunchNotice() {
     }, [pathname]);
 
     return (
-        <dialog ref={dialogRef} className={styles.dialog} aria-labelledby="prelaunch-title" aria-describedby="prelaunch-description"
+        // data-prelaunch-web — 웹 크레파스 겉모양 이름표(PrelaunchNotice.module.css 아래 "웹 크레파스" 구역, html:not(.ddb-app-mode) 에서만). 앱 그대로
+        <dialog ref={dialogRef} className={styles.dialog} data-prelaunch-web aria-labelledby="prelaunch-title" aria-describedby="prelaunch-description"
             onCancel={(event) => { event.preventDefault(); close(); }}
             onClick={(event) => { if (event.target === event.currentTarget) close(); }}>
             <div className={styles.card}>

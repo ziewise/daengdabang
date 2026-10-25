@@ -46,6 +46,7 @@ function Switch({ checked, disabled, label, onChange, tone = "mint" }: { checked
     );
 }
 
+// 추천 재료 카드 문구 — 2026-10-26 웹 해요체로 다듬음(이 화면은 웹 전용, 앱은 기존 화면 그대로)
 const INGREDIENTS = [
     {
         key: "profile" as const,
@@ -53,7 +54,7 @@ const INGREDIENTS = [
         art: "/images/ui/mypet-view-front-160.webp",
         kicker: "PROFILE",
         title: "반려견 프로필",
-        desc: "등록한 체형, 생애단계, 활동량, 모질과 직접 선택한 관심사만 사용합니다.",
+        desc: "등록한 체형, 생애단계, 활동량, 모질과 직접 고른 관심사만 사용해요.",
         chips: ["체형", "생애단계", "활동량", "모질", "관심사"],
     },
     {
@@ -62,7 +63,7 @@ const INGREDIENTS = [
         art: "/images/ui/header-petlens-128.webp",
         kicker: "PETLENS",
         title: "펫렌즈 케어 신호",
-        desc: "켜면 사용 가능한 분석 결과에서 허용된 착용 실측·시인성·피모 관리 코드만 보조 신호로 사용합니다. 사진과 분석 원문은 추천 이유에 표시하지 않습니다.",
+        desc: "켜면 분석 결과 중 허용된 착용 실측·시인성·피모 관리 코드만 보조 신호로 사용해요. 사진과 분석 원문은 추천 이유에 보이지 않아요.",
         chips: ["착용 실측", "시인성", "피모 관리"],
     },
     {
@@ -71,7 +72,7 @@ const INGREDIENTS = [
         art: "/images/ui/lab-summary-256.webp",
         kicker: "BEHAVIOR",
         title: "행동 데이터",
-        desc: "클릭·구매 행동 기반 개인화는 아직 사용하지 않습니다.",
+        desc: "클릭·구매 행동 기반 개인화는 아직 사용하지 않아요.",
         chips: ["클릭", "구매"],
     },
 ];

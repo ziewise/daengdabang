@@ -8,6 +8,8 @@
  */
 
 html:not(.ddb-app-mode) .sm-panel {
+    /* 2026-10-26 높이 — 100vh 대신 100dvh: 휴대폰 키보드가 올라오면 창도 같이 줄어 아래 결과가 키보드 뒤로 숨지 않게 */
+    max-height: calc(100dvh - 120px);
     border-radius: 32px;
     background: #fffaf1;
     box-shadow: 0 0 0 1px rgb(160 120 60 / 10%), 0 34px 60px -30px rgb(120 80 30 / 45%);

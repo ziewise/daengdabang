@@ -1,6 +1,11 @@
 "use client";
 /* eslint-disable react-hooks/set-state-in-effect -- this static callback page derives its state from redirect URL and hydrated cart state. */
 
+/*
+ * 토스 테스트 결제 성공 돌아옴(/checkout/toss/success) — 결제 확인 · 장바구니 정리 · 주문 저장은 이 파일, 웹 겉모양은
+ * components/checkout/PaymentResultWeb. 2026-10-26 앱 화면 main 에 data-pay-app-view(웹에서 화면이 붙기 전 숨김 · app/payment-web.css).
+ */
+
 import { useEffect, useRef, useState } from "react";
 // 2026-10-25 비회원 결제 확인(서버가 연결됐을 때만 · lib/guest-order) → 비회원 주문 완료 화면
 import GuestOrderDone from "@/components/guest/GuestOrderDone";
@@ -172,6 +177,7 @@ export default function TossTestSuccessPage() {
     }, [cart, user]);
 
     // 웹 — 새 겉모양(비회원 완료와 같은 결). 앱은 아래 기존 화면 그대로
+    // 아래 앱 화면 main 의 data-pay-app-view = 웹에서 화면이 붙기 전 잠깐 비치지 않게 숨기는 이름표(app/payment-web.css, 2026-10-26)
     if (webScreen && view.kind !== "guest_complete") {
         if (view.kind === "complete") {
             return <PaymentDoneWeb confirmation={view.confirmation} orderId={view.orderId} amount={view.amount} userName={user?.name} />;
@@ -181,7 +187,7 @@ export default function TossTestSuccessPage() {
 
     if (view.kind === "checking") {
         return (
-            <main className="mx-auto max-w-[680px] px-4 py-16 text-center" aria-live="polite">
+            <main className="mx-auto max-w-[680px] px-4 py-16 text-center" aria-live="polite" data-pay-app-view>
                 <i className="fa-solid fa-spinner fa-spin text-4xl text-indigo-600" />
                 <h1 className="mt-4 text-2xl font-black text-neutral-950">테스트 결제 확인 중</h1>
                 <p className="mt-2 text-sm font-bold text-neutral-600">서버가 주문번호와 금액을 다시 검증하고 있습니다.</p>
@@ -195,7 +201,7 @@ export default function TossTestSuccessPage() {
 
     if (view.kind === "complete") {
         return (
-            <main className="mx-auto max-w-[680px] px-4 py-14 text-center" data-payment-status="test_paid">
+            <main className="mx-auto max-w-[680px] px-4 py-14 text-center" data-payment-status="test_paid" data-pay-app-view>
                 <i className="fa-solid fa-circle-check text-5xl text-emerald-600" />
                 <h1 className="mt-4 text-3xl font-black text-neutral-950">테스트 결제가 완료되었습니다.</h1>
                 <p className="mt-2 text-sm font-bold text-neutral-600">주문번호 {view.orderId}</p>
@@ -217,7 +223,7 @@ export default function TossTestSuccessPage() {
     if (view.kind === "login_required") {
         return (
             // data-login-gate — 웹 공통 로그인 안내 카드(app/globals.css), 앱은 그대로
-            <main className="mx-auto max-w-[680px] px-4 py-14 text-center" data-login-gate>
+            <main className="mx-auto max-w-[680px] px-4 py-14 text-center" data-login-gate data-pay-app-view>
                 <i className="fa-solid fa-lock text-5xl text-amber-600" />
                 <h1 className="mt-4 text-2xl font-black text-neutral-950">로그인이 필요합니다.</h1>
                 <p className="mt-2 text-sm font-bold leading-6 text-neutral-600">
@@ -234,6 +240,7 @@ export default function TossTestSuccessPage() {
                 className="mx-auto max-w-[680px] px-4 py-14 text-center"
                 data-payment-status="confirmation_pending"
                 aria-live="polite"
+                data-pay-app-view
             >
                 <i className="fa-solid fa-clock-rotate-left text-5xl text-amber-600" />
                 <h1 className="mt-4 text-2xl font-black text-neutral-950">결제 상태 확인 중</h1>
@@ -247,7 +254,7 @@ export default function TossTestSuccessPage() {
     }
 
     return (
-        <main className="mx-auto max-w-[680px] px-4 py-14 text-center" data-payment-status={view.kind}>
+        <main className="mx-auto max-w-[680px] px-4 py-14 text-center" data-payment-status={view.kind} data-pay-app-view>
             <i className="fa-solid fa-triangle-exclamation text-5xl text-red-600" />
             <h1 className="mt-4 text-2xl font-black text-neutral-950">
                 {view.kind === "invalid" ? "결제 결과를 확인할 수 없습니다." : "테스트 결제 확인에 실패했습니다."}

@@ -8,6 +8,8 @@
  *   ⑤ 우리 아이: 마이페이지와 같은 등록 창(MemberPetProfileCreateForm — 같은 검사 · 같은 저장) 또는 나중에
  *   ⑥ 가입 완료
  * SocialReturnWebNotice — 돌아왔지만 새 가입이 아닌 경우(동의 취소 · 이미 이메일로 가입 · 실패 · 이미 가입된 간편 계정)
+ *   2026-10-26: mode="login"(간편 로그인에서 돌아옴)이면 실패 · 취소 카드를 로그인 말로(제목 · 설명 · 단추 · 머리 판 · 로그인 세 단계),
+ *   기본(signup)은 기존 가입 말 그대로.
  */
 "use client";
 
@@ -45,6 +47,7 @@ import {
     useScrollTopOn,
     type IdentityState,
     type SxDocKind,
+    type SxStep,
 } from "@/components/auth/signup-web/SignupWebParts";
 
 type Screen = "check" | "pet" | "done";
@@ -255,10 +258,29 @@ function socialDevGroups(screens?: { now: Screen; set: (screen: Screen) => void 
     ];
 }
 
-/** 간편가입에서 돌아왔는데 새 가입이 아닌 경우 — 같은 틀(안내판 + 카드) */
-export function SocialReturnWebNotice({ kind, provider, message, onContinue }: { kind: SocialReturnKind; provider: string; message?: string; onContinue?: () => void }) {
+/** 간편 로그인 갈래 — 공급자 로그인 → 계정 확인 → 쇼핑 이어 가기(로그인 실패 · 취소 카드 머리 판용) */
+function socialLoginSteps(providerLabel: string): SxStep[] {
+    return [
+        { label: `${providerLabel} 로그인`, desc: `${providerLabel} 화면에서 진행`, icon: "fa-right-to-bracket", tone: "yellow" },
+        { label: "계정 확인", desc: "댕다방 계정 찾기", icon: "fa-user-check", tone: "sky" },
+        { label: "쇼핑 이어 가기", desc: "하던 곳으로 돌아가요", icon: "fa-bag-shopping", tone: "pink" },
+    ];
+}
+
+/** 간편가입에서 돌아왔는데 새 가입이 아닌 경우 — 같은 틀(안내판 + 카드). mode="login" 이면 간편 로그인 실패 · 취소 말로 */
+export function SocialReturnWebNotice({ kind, provider, message, onContinue, mode = "signup" }: { kind: SocialReturnKind; provider: string; message?: string; onContinue?: () => void; mode?: "login" | "signup" }) {
     const providerLabel = PROVIDER_NAME[provider] || "간편";
-    const content = kind === "existing" ? {
+    // 간편 로그인에서 돌아온 실패 · 취소(이미 가입된 계정 · 같은 이메일 안내는 갈래와 상관없이 같은 말)
+    const loginReturn = mode === "login" && (kind === "failed" || kind === "new" || kind === "cancelled");
+    const content = loginReturn ? (kind === "cancelled" ? {
+        art: "header-login-128.webp", tone: "amber", kicker: "CANCELLED",
+        title: `${providerLabel} 로그인을 취소했어요`,
+        text: `${providerLabel} 화면에서 로그인이나 정보 제공 동의를 마치지 않아 로그인되지 않았어요.`,
+    } : {
+        art: "header-login-128.webp", tone: "rose", kicker: "TRY AGAIN",
+        title: `${providerLabel} 로그인을 마치지 못했어요`,
+        text: message || "로그인 정보를 확인하지 못했어요. 잠시 후 다시 시도해 주세요.",
+    }) : kind === "existing" ? {
         art: "header-login-128.webp", tone: "mint", kicker: "WELCOME BACK",
         title: `이미 가입된 ${providerLabel} 계정이에요`,
         text: "새로 가입하지 않고 그 계정으로 로그인했어요. 하던 쇼핑을 이어서 할 수 있어요.",
@@ -279,6 +301,33 @@ export function SocialReturnWebNotice({ kind, provider, message, onContinue }: {
 
     return (
         <>
+        {loginReturn ? (
+            // 간편 로그인 실패 · 취소 — 로그인 머리 판(가입 단계 대신 로그인 세 단계) · 아래는 회원가입 안내
+            <SxShell
+                steps={socialLoginSteps(providerLabel)}
+                now={kind === "cancelled" ? 0 : 1}
+                kicker="SIGN IN"
+                title="간편 로그인"
+                lead="간편 로그인 결과를 알려 드려요."
+                stepsLabel="간편 로그인 단계"
+                footer={<p className="sxw-login">아직 회원이 아니신가요?<Link href="/auth/signup">회원가입</Link></p>}
+            >
+                <SxCard labelledBy="sxw-return-title" className={`sxw-return is-${content.tone}`} screen={`social-login-${kind}`}>
+                    <span className="sxw-return-art" aria-hidden="true">
+                        {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
+                        <img src={`/images/ui/${content.art}`} alt="" />
+                    </span>
+                    <span className="sxw-kicker">{content.kicker}</span>
+                    <h2 id="sxw-return-title">{content.title}</h2>
+                    <p>{content.text}</p>
+                    {/* 홈으로(흰 알약) · 로그인 다시 하기(분홍 알약) — 기존 주소로만 이동 */}
+                    <div className="sxw-return-go">
+                        <Link href="/" className="sxw-prev">홈으로</Link>
+                        <Link href="/auth/login" className="sxw-next">로그인 다시 하기<i className="fa-solid fa-arrow-right" aria-hidden="true" /></Link>
+                    </div>
+                </SxCard>
+            </SxShell>
+        ) : (
         <SxShell steps={steps} now={kind === "existing" ? 5 : 2} route={provider || undefined} lead={kind === "existing" ? "다시 만나서 반가워요." : "간편 가입 결과를 알려 드려요."}>
             <SxCard labelledBy="sxw-return-title" className={`sxw-return is-${content.tone}`} screen={`social-${kind}`}>
                 <span className="sxw-return-art" aria-hidden="true">
@@ -313,6 +362,7 @@ export function SocialReturnWebNotice({ kind, provider, message, onContinue }: {
                 </div>
             </SxCard>
         </SxShell>
+        )}
         {SIGNUP_DEV && <SignupDevPanel groups={socialDevGroups()} />}
         </>
     );

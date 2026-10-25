@@ -10,7 +10,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import CustomerInquiryPanel from "@/components/contact/CustomerInquiryPanel";
-import SupportTop, { SupportPaws } from "@/components/support/SupportTop";
+import { SupportPaws } from "@/components/support/SupportTop";
+// 머리 판 설명만 웹(해요체) · 앱(원래 문구)으로 나눔(2026-10-26)
+import SupportTopCopy from "@/components/contact/SupportTopCopy";
 import "../daily-web.css";
 import "../support-web.css";
 import { BUSINESS_INFO } from "@/lib/legal";
@@ -27,11 +29,12 @@ const CS_PHONE = BUSINESS_INFO.customerServicePhone;
 export default function InquiryPage() {
     return (
         <main className="mx-auto max-w-[960px] px-4 py-10 md:px-6" data-daily-web data-support-web="inquiry">
-            <SupportTop
+            <SupportTopCopy
                 current="inquiry"
                 kicker="CONTACT"
                 title="1:1 문의"
                 lead="궁금하신 점이나 도움이 필요하시면 아래 방법으로 연락 주세요. 빠르게 답변드리겠습니다."
+                webLead="궁금한 점이나 도움이 필요하면 아래 방법으로 편하게 연락 주세요. 빠르게 답변드릴게요."
             />
             <SupportPaws />
 

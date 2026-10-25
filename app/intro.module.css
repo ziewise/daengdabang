@@ -17,6 +17,9 @@
     touch-action: manipulation;
 }
 
+/* 2026-10-26 — 뜨는 순간 판에 초점을 옮기므로(Escape 바로 건너뛰기) 화면 전체 초점 테는 그리지 않음 */
+.splash:focus { outline: none; }
+
 .splash::before {
     position: absolute;
     inset: 0;

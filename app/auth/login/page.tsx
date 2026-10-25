@@ -3,6 +3,7 @@
 /*
  * 로그인(/auth/login) — 2026-10-24 웹 크레파스 결: 영상 · 배치는 그대로 두고 입력칸 · 버튼만 사이트 결(크림 알약 칸 · 분홍 로그인 알약)로.
  * 이름표(data-login-web · lg-*)만 붙이고 꾸밈은 app/auth-web.css(웹 전용). 로그인 동작 그대로.
+ * 2026-10-26 웹: 준비 중 · 오류 줄(lg-notice)을 둥근 쿠션으로, 이메일 칸 안내 글은 "이메일"(이메일로만 로그인)만 — 앱 글 그대로.
  */
 
 /**
@@ -174,12 +175,13 @@ export default function LoginPage() {
                     </div>
 
                     {apiReady === false && (
-                        <p className="mb-4 rounded-md bg-amber-50 px-3 py-2 text-xs font-bold leading-6 text-amber-800">
-                            지금은 회원 로그인을 준비 중입니다. 잠시 후 다시 이용해 주세요.
+                        <p className="lg-notice mb-4 rounded-md bg-amber-50 px-3 py-2 text-xs font-bold leading-6 text-amber-800" data-tone="amber">
+                            {/* 웹은 해요체, 앱은 기존 글 그대로 */}
+                            {webScreen ? "지금은 회원 로그인을 준비하고 있어요. 잠시 후 다시 이용해 주세요." : "지금은 회원 로그인을 준비 중입니다. 잠시 후 다시 이용해 주세요."}
                         </p>
                     )}
                     {error && (
-                        <p className="mb-4 rounded-md bg-rose-50 px-3 py-2 text-xs font-bold leading-6 text-rose-700">{error}</p>
+                        <p className="lg-notice mb-4 rounded-md bg-rose-50 px-3 py-2 text-xs font-bold leading-6 text-rose-700" data-tone="rose">{error}</p>
                     )}
 
                     <form onSubmit={submit} className="grid gap-3">
@@ -190,7 +192,7 @@ export default function LoginPage() {
                                 type="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                placeholder="이메일 또는 아이디"
+                                placeholder={webScreen ? "이메일" : "이메일 또는 아이디"}
                                 autoComplete="email"
                                 required
                                 className="h-12 w-full rounded-xl border border-neutral-200 bg-[#faf7f1] pl-10 pr-4 text-sm font-bold text-neutral-900 placeholder:font-medium placeholder:text-neutral-400 focus:border-amber-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-100"

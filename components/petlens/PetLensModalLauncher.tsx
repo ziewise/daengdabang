@@ -154,6 +154,8 @@ export default function PetLensModalProvider({ children }: { children: ReactNode
                     aria-modal="true"
                     aria-label={en ? "PetLens analysis" : "펫렌즈 분석"}
                     onClick={close}
+                    // data-petlens-modal — 웹 겹침 순서 이름표(petlens-menu-web.css: 헤더 1000 위 2050). 앱은 z-[120] 그대로
+                    data-petlens-modal
                 >
                     <div
                         data-petlens-view={view}

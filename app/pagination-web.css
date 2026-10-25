@@ -1,0 +1,45 @@
+/*
+ * pagination-web.css — 상품 목록 쪽 번호(components/products/Pagination.tsx · nav[data-pagination]) 웹 꾸밈 · 2026-10-26
+ * ---------------------------------------------------------------------
+ * 전체 점검: 웹 상품 목록(전체 · 분류 · 신상품 · 브랜드 · 기획전)마다 지금 쪽 번호가 인디고 각진 칸으로 남아 있던 것.
+ * 흰 쿠션 알약(테 크림) · 지금 쪽 = 분홍 알약 · 이전/다음은 흰 알약 + 화살표 느낌. 앱(ddb-app-mode)은 그대로.
+ */
+
+html:not(.ddb-app-mode) nav[data-pagination] {
+    gap: 8px;
+
+    & button {
+        height: 42px;
+        border: 0;
+        border-radius: 999px;
+        background: #fff;
+        color: #475569;
+        font-size: 14px;
+        font-weight: 800;
+        box-shadow: 0 0 0 2px #f1e6d6, 0 6px 12px -10px rgb(15 23 42 / 35%);
+        transition: transform 0.12s, color 0.15s, box-shadow 0.15s, background 0.15s;
+    }
+
+    /* 번호 칸은 동그라미 */
+    & button[class*="w-9"] { width: 42px; padding: 0; }
+    /* 이전 · 다음 — 조금 넓은 알약 */
+    & button:not([class*="w-9"]) { padding: 0 18px; }
+
+    & button:hover:not(:disabled) { color: #d0436d; box-shadow: 0 0 0 2px #f7a8bf, 0 6px 12px -10px rgb(15 23 42 / 35%); }
+    & button:active:not(:disabled) { transform: scale(0.95); }
+    & button:focus-visible { outline: 3px solid #f7c3d2; outline-offset: 2px; }
+    & button:disabled { background: #faf6ef; color: #c2b6a6; box-shadow: none; opacity: 1; }
+
+    /* 지금 쪽 — 분홍 알약(주아 숫자) */
+    & button[aria-current="page"] {
+        background: #e9789a;
+        color: #fff;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 16px;
+        font-weight: 400;
+        box-shadow: 0 10px 18px -12px rgb(200 80 120 / 75%);
+    }
+    & button[aria-current="page"]:hover { color: #fff; background: #e26690; }
+
+    & span { color: #b6aa9a; }
+}

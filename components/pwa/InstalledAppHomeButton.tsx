@@ -147,4 +147,8 @@ const APP_INSTALL_BUBBLE_CSS = `
 @keyframes ddb-aib-in { from { opacity: 0; transform: translateY(-6px) scale(.92); } to { opacity: 1; transform: none; } }
 @keyframes ddb-aib-out { from { opacity: 1; } to { opacity: 0; transform: translateY(-4px); } }
 @media (prefers-reduced-motion: reduce) { .ddb-aib, .ddb-aib.is-out { animation: none; } }
+/* 2026-10-26 좁은 휴대폰(320px 등) — 말풍선이 화면 밖으로 잘리지 않게 폭을 화면 - 24px 로 제한하고 넘치면 줄바꿈(웹만) */
+html:not(.ddb-app-mode) .ddb-aib { max-width: calc(100vw - 24px); white-space: normal; }
+html:not(.ddb-app-mode) .ddb-aib-text { word-break: keep-all; }
+html:not(.ddb-app-mode) .ddb-aib-hide { white-space: nowrap; }
 `;

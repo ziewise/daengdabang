@@ -10,6 +10,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 // 카드를 누르면 크게 보기 창(2026-10-25 웹)
 import ShowcasePostDialog from "./ShowcasePostDialog";
+import { useWebConfirm } from "@/components/site/useWebConfirm";
+// 웹/앱 문구 갈림(웹은 해요체, 2026-10-26)
+import { useWebScreen } from "@/hooks/useWebScreen";
 import {
     deleteShowcasePost,
     reportShowcasePost,
@@ -81,6 +84,18 @@ export default function ShowcaseCard({
     // 크게 보기 창(사진 · 이야기를 누르면 열림)
     const [detailOpen, setDetailOpen] = useState(false);
     const closeDetail = useCallback(() => setDetailOpen(false), []);
+    // 웹 화면인가(신고 안내 문구를 해요체로)
+    const webScreen = useWebScreen();
+
+    // 신고 창 — Esc 로 닫기(바깥 누르기와 같은 조건: 접수 중에는 닫지 않음, 2026-10-26)
+    useEffect(() => {
+        if (!reportOpen) return;
+        const closeOnEscape = (event: KeyboardEvent) => {
+            if (event.key === "Escape" && busy !== "report") setReportOpen(false);
+        };
+        window.addEventListener("keydown", closeOnEscape);
+        return () => window.removeEventListener("keydown", closeOnEscape);
+    }, [busy, reportOpen]);
 
     useEffect(() => {
         if (captionExpanded) return;
@@ -166,9 +181,12 @@ export default function ShowcaseCard({
         }
     };
 
+    // 삭제 확인 — 웹은 우리 확인 창, 앱은 기본 확인창(useWebConfirm)
+    const [askConfirm, confirmDialog] = useWebConfirm();
     const removePost = async () => {
         if (!requireMember() || !post.canDelete || busy) return;
-        if (!window.confirm("이 댕자랑을 삭제할까요? 삭제하면 되돌릴 수 없습니다.")) return;
+        const ok = await askConfirm({ title: "이 댕자랑을 삭제할까요?", message: "삭제하면 되돌릴 수 없어요.", confirmLabel: "삭제할게요", cancelLabel: "그대로 둘게요", art: "pet-photo-128.webp", tone: "danger", appText: "이 댕자랑을 삭제할까요? 삭제하면 되돌릴 수 없습니다." });
+        if (!ok) return;
         setBusy("delete");
         try {
             await deleteShowcasePost(post.postId, accessToken);
@@ -197,7 +215,10 @@ export default function ShowcaseCard({
             const receipt = await reportShowcasePost(post.postId, reportReason, reportDetail, accessToken);
             setReportOpen(false);
             setReportDetail("");
-            onNotice(receipt.alreadyReported ? "이미 접수된 게시물이에요." : "신고를 접수했어요. 운영자가 확인하겠습니다.");
+            onNotice(receipt.alreadyReported
+                ? "이미 접수된 게시물이에요."
+                // 웹은 해요체(2026-10-26), 앱은 원래 문구
+                : webScreen ? "신고를 접수했어요. 운영자가 확인할게요." : "신고를 접수했어요. 운영자가 확인하겠습니다.");
         } catch (reason) {
             if (reason instanceof ShowcaseApiError && reason.status === 401) {
                 setReportOpen(false);
@@ -350,7 +371,8 @@ export default function ShowcaseCard({
             />
 
             {reportOpen ? (
-                <div className="fixed inset-0 z-[2100] grid place-items-center bg-black/45 p-4" role="presentation" onMouseDown={(event) => {
+                // 신고 창 — 웹 꾸밈은 app/showcase-compose-web.css [data-showcase-report](쿠션 창 · 크림 입력칸 · 분홍/흰 알약)
+                <div className="fixed inset-0 z-[2100] grid place-items-center bg-black/45 p-4" role="presentation" data-showcase-report onMouseDown={(event) => {
                     if (event.target === event.currentTarget && busy !== "report") setReportOpen(false);
                 }}>
                     <form onSubmit={submitReport} role="dialog" aria-modal="true" aria-labelledby={`report-title-${post.postId}`} className="w-full max-w-md rounded-[26px] border border-white bg-white p-5 shadow-modal sm:p-6">
@@ -359,7 +381,7 @@ export default function ShowcaseCard({
                                 <p className="ddb-crayon-kicker text-[10px]">SAFE COMMUNITY</p>
                                 <h4 id={`report-title-${post.postId}`} className="ddb-crayon-title mt-1 text-2xl text-neutral-950">게시물 신고</h4>
                             </div>
-                            <button type="button" onClick={() => setReportOpen(false)} disabled={busy === "report"} className="grid h-9 w-9 place-items-center rounded-full bg-neutral-100 text-neutral-600" aria-label="신고 창 닫기">
+                            <button type="button" onClick={() => setReportOpen(false)} disabled={busy === "report"} className="grid h-9 w-9 place-items-center rounded-full bg-neutral-100 text-neutral-600" aria-label="신고 창 닫기" data-showcase-report-close>
                                 <i className="fa-solid fa-xmark" aria-hidden="true" />
                             </button>
                         </div>
@@ -369,14 +391,22 @@ export default function ShowcaseCard({
                         </select>
                         <label htmlFor={`report-detail-${post.postId}`} className="mt-4 block text-xs font-black text-neutral-700">상세 내용 <span className="font-bold text-neutral-400">선택</span></label>
                         <textarea id={`report-detail-${post.postId}`} value={reportDetail} onChange={(event) => setReportDetail(event.target.value.slice(0, 300))} rows={4} maxLength={300} className="input mt-2 resize-y py-3" disabled={busy === "report"} />
-                        <p className="mt-2 text-[10px] font-bold text-neutral-500">신고는 운영자 확인용이며 작성자에게 신고자 정보가 공개되지 않습니다.</p>
-                        <p className="mt-3 text-xs font-bold text-red-700" role="alert">{reportError}</p>
-                        <button type="submit" disabled={busy === "report"} className="mt-4 min-h-11 w-full rounded-full bg-neutral-900 px-5 text-sm font-black text-white disabled:opacity-50">
+                        <p className="mt-2 text-[10px] font-bold text-neutral-500" data-showcase-report-hint>
+                            {webScreen ? "신고는 운영자만 확인하고, 작성자에게 신고자 정보는 공개되지 않아요." : "신고는 운영자 확인용이며 작성자에게 신고자 정보가 공개되지 않습니다."}
+                        </p>
+                        <p className="mt-3 text-xs font-bold text-red-700" role="alert" data-showcase-report-error>{reportError}</p>
+                        <button type="submit" disabled={busy === "report"} className="mt-4 min-h-11 w-full rounded-full bg-neutral-900 px-5 text-sm font-black text-white disabled:opacity-50" data-showcase-report-submit>
                             {busy === "report" ? "접수 중" : "신고 접수"}
+                        </button>
+                        {/* 웹 전용 취소(흰 알약) — 기존 닫기와 같은 동작, 앱은 hidden 그대로 */}
+                        <button type="button" onClick={() => setReportOpen(false)} disabled={busy === "report"} className="hidden" data-showcase-report-cancel>
+                            취소
                         </button>
                     </form>
                 </div>
             ) : null}
+            {/* 삭제 확인 창(웹) — 열렸을 때만 body 에 붙음 */}
+            {confirmDialog}
         </article>
     );
 }

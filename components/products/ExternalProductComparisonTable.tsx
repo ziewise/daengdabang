@@ -1,5 +1,13 @@
 "use client";
 
+/**
+ * ExternalProductComparisonTable — 다른 판매처 스마트 비교(댕다방 기준상품 ↔ 비슷한 외부 상품 확인 근거 비교)
+ * ---------------------------------------------------------------------
+ * 비교 · 순위 · 판매처 열기 동작은 협업자 기능 그대로.
+ * 2026-10-26 웹 꾸밈 이름표(xcmp-*)만 더함 — 웹(html:not(.ddb-app-mode))에서만 app/shop-list-web.css 가 크레파스 쿠션으로 칠함:
+ *  둥근 흰 쿠션 판 · 영문 손글씨 꼬리표 · 주아 제목 · 민트 점수 막대 · 넓지 않은 화면은 표 대신 카드, 휴대폰은 가격표도 카드로 쌓음.
+ * 앱은 이름표가 칠해지지 않아 기존 모양 그대로.
+ */
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { type ExternalProductResult } from "@/lib/external-products";
@@ -158,27 +166,27 @@ export default function ExternalProductComparisonTable({ products, query = "" }:
     };
 
     return (
-        <section className="mb-7 min-w-0 max-w-full overflow-hidden rounded-xl border border-emerald-200 bg-emerald-50/35">
-            <div className="border-b border-emerald-100 bg-white p-4 md:p-6">
+        <section className="xcmp mb-7 min-w-0 max-w-full overflow-hidden rounded-xl border border-emerald-200 bg-emerald-50/35">
+            <div className="xcmp-head border-b border-emerald-100 bg-white p-4 md:p-6">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                     <div className="max-w-3xl">
-                        <p className="text-xs font-black uppercase tracking-[0.12em] text-emerald-700">Smart Category Comparison</p>
-                        <h3 className="mt-1 text-xl font-black text-neutral-950 md:text-2xl">
+                        <p className="xcmp-kicker text-xs font-black uppercase tracking-[0.12em] text-emerald-700">Smart Category Comparison</p>
+                        <h3 className="xcmp-title mt-1 text-xl font-black text-neutral-950 md:text-2xl">
                             {locale === "en" ? `Evidence-based comparison of similar ${comparisonSubject}` : `비슷한 ${comparisonSubject} 스마트 비교`}
                         </h3>
-                        <p className="mt-2 text-xs font-bold leading-5 text-neutral-600">
+                        <p className="xcmp-desc mt-2 text-xs font-bold leading-5 text-neutral-600">
                             {locale === "en"
                                 ? "The score summarizes confirmed search fit, price clarity, product details, source and check timestamp. It is not a quality, health or efficacy rating."
                                 : "검색 적합성·가격 정보·상품정보·출처와 확인시점 중 확인된 근거만 점수화했습니다. 품질·건강·효능의 우열을 뜻하지 않습니다."}
                         </p>
                     </div>
-                    <span className="rounded-full bg-emerald-700 px-3 py-1.5 text-xs font-black text-white">
+                    <span className="xcmp-count rounded-full bg-emerald-700 px-3 py-1.5 text-xs font-black text-white">
                         {locale === "en" ? `${comparison.ranked.length} evidence profiles` : `${comparison.ranked.length}개 근거 비교`}
                     </span>
                 </div>
 
                 {anchors.length > 1 && (
-                    <div className="mt-4 flex gap-2 overflow-x-auto pb-1" aria-label={locale === "en" ? "Choose a DaengDaBang reference product" : "댕다방 기준상품 선택"}>
+                    <div className="xcmp-anchors mt-4 flex gap-2 overflow-x-auto pb-1" aria-label={locale === "en" ? "Choose a DaengDaBang reference product" : "댕다방 기준상품 선택"}>
                         {anchors.map((anchor) => (
                             <button
                                 key={anchor.id}
@@ -197,21 +205,21 @@ export default function ExternalProductComparisonTable({ products, query = "" }:
                     </div>
                 )}
 
-                <div className="mt-4 grid grid-cols-2 gap-2 lg:grid-cols-4" aria-label={locale === "en" ? "Score criteria" : "확인 근거 점수 기준"}>
+                <div className="xcmp-axes mt-4 grid grid-cols-2 gap-2 lg:grid-cols-4" aria-label={locale === "en" ? "Score criteria" : "확인 근거 점수 기준"}>
                     {anchorAssessment.axes.map((item) => (
-                        <div key={item.key} className="rounded-lg border border-neutral-200 bg-neutral-50 px-3 py-2.5">
+                        <div key={item.key} className="xcmp-axis rounded-lg border border-neutral-200 bg-neutral-50 px-3 py-2.5">
                             <div className="flex items-center justify-between gap-2 text-[11px] font-black">
                                 <span className="text-neutral-600">{axisLabel(item.key)}</span>
                                 <span className="text-neutral-950">{item.score}/{item.maxScore}</span>
                             </div>
                             <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-neutral-200" aria-hidden="true">
-                                <div className="h-full rounded-full bg-emerald-600" style={{ width: `${(item.score / item.maxScore) * 100}%` }} />
+                                <div className="xcmp-bar h-full rounded-full bg-emerald-600" style={{ width: `${(item.score / item.maxScore) * 100}%` }} />
                             </div>
                         </div>
                     ))}
                 </div>
 
-                <div className="mt-4 rounded-lg border border-emerald-200 bg-emerald-50 p-4">
+                <div className="xcmp-strength mt-4 rounded-lg border border-emerald-200 bg-emerald-50 p-4">
                     <div className="flex flex-wrap items-start justify-between gap-3">
                         <div>
                             <p className="text-xs font-black text-emerald-800">
@@ -219,7 +227,7 @@ export default function ExternalProductComparisonTable({ products, query = "" }:
                             </p>
                             <p className="mt-1 text-sm font-black text-neutral-950">{activeAnchor.title}</p>
                         </div>
-                        <span className="rounded-full bg-white px-3 py-1.5 text-xs font-black text-emerald-800 shadow-sm">
+                        <span className="xcmp-score rounded-full bg-white px-3 py-1.5 text-xs font-black text-emerald-800 shadow-sm">
                             {locale === "en" ? `Evidence score ${anchorAssessment.score}` : `확인 근거 ${anchorAssessment.score}점`}
                             {topPosition ? ` · ${locale === "en" ? `${anchorIsTied ? "joint " : ""}rank ${topPosition}` : `${anchorIsTied ? "공동 " : ""}${topPosition}위`}` : ""}
                         </span>
@@ -227,7 +235,7 @@ export default function ExternalProductComparisonTable({ products, query = "" }:
                     {anchorFacts.length > 0 ? (
                         <div className="mt-3 flex flex-wrap gap-2">
                             {anchorFacts.map((fact) => (
-                                <span key={`${fact.key}-${fact.value}`} className="rounded-md border border-emerald-200 bg-white px-2.5 py-1.5 text-[11px] font-bold text-neutral-700">
+                                <span key={`${fact.key}-${fact.value}`} className="xcmp-fact rounded-md border border-emerald-200 bg-white px-2.5 py-1.5 text-[11px] font-bold text-neutral-700">
                                     <strong className="text-emerald-800">{factLabel(fact.key)}</strong> {displayFactValue(fact, locale)}
                                 </span>
                             ))}
@@ -245,7 +253,7 @@ export default function ExternalProductComparisonTable({ products, query = "" }:
                 </div>
             </div>
 
-            <div className="hidden overflow-x-auto bg-white md:block">
+            <div className="xcmp-table hidden overflow-x-auto bg-white md:block">
                 <table className="w-full min-w-[980px] border-collapse text-left">
                     <caption className="sr-only">
                         {locale === "en" ? `Evidence comparison of the selected DaengDaBang ${comparisonSubject} and similar external products` : `선택한 댕다방 ${comparisonSubject} 및 외부 유사 상품의 확인 근거 비교`}
@@ -267,9 +275,9 @@ export default function ExternalProductComparisonTable({ products, query = "" }:
                             const price = displayProductPrice(product);
                             const shippingKnown = hasExplicitShippingEvidence(product);
                             return (
-                                <tr key={product.id} className={isAnchor ? "bg-emerald-50/70" : "bg-white"}>
+                                <tr key={product.id} className={isAnchor ? "is-anchor bg-emerald-50/70" : "bg-white"}>
                                     <td className="px-4 py-4 align-top">
-                                        <span className={`inline-flex rounded-md px-2 py-1 text-xs font-black ${row.position === 1 ? "bg-emerald-700 text-white" : "bg-neutral-100 text-neutral-700"}`}>
+                                        <span className={`xcmp-rank inline-flex rounded-md px-2 py-1 text-xs font-black ${row.position === 1 ? "is-top bg-emerald-700 text-white" : "bg-neutral-100 text-neutral-700"}`}>
                                             {locale === "en" ? `${row.isTied ? "Joint " : ""}#${row.position}` : `${row.isTied ? "공동 " : ""}${row.position}위`}
                                         </span>
                                         {isAnchor && <div className="mt-1 text-[10px] font-black text-emerald-800">{locale === "en" ? "REFERENCE" : "기준상품"}</div>}
@@ -321,7 +329,7 @@ export default function ExternalProductComparisonTable({ products, query = "" }:
                                             href={trackedHref(product, "smart-comparison")}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="inline-flex h-9 w-9 items-center justify-center rounded-md bg-neutral-950 text-white transition hover:bg-emerald-700"
+                                            className="xcmp-open inline-flex h-9 w-9 items-center justify-center rounded-md bg-neutral-950 text-white transition hover:bg-emerald-700"
                                             aria-label={`${product.title} ${locale === "en" ? "open seller" : "판매처 열기"}`}
                                             onClick={() => handleOutbound(product, "smart-comparison")}
                                         >
@@ -335,18 +343,18 @@ export default function ExternalProductComparisonTable({ products, query = "" }:
                 </table>
             </div>
 
-            <div className="grid gap-3 bg-white p-3 md:hidden" role="list" aria-label={locale === "en" ? "Mobile evidence comparison cards" : "모바일 확인 근거 비교 카드"}>
+            <div className="xcmp-cards grid gap-3 bg-white p-3 md:hidden" role="list" aria-label={locale === "en" ? "Mobile evidence comparison cards" : "모바일 확인 근거 비교 카드"}>
                 {comparison.ranked.map((row) => {
                     const product = row.product;
                     const isAnchor = product.id === activeAnchor.id;
                     const price = displayProductPrice(product);
                     return (
-                        <article key={product.id} role="listitem" className={`rounded-lg border p-3 ${isAnchor ? "border-emerald-300 bg-emerald-50" : "border-neutral-200 bg-white"}`}>
+                        <article key={product.id} role="listitem" className={`xcmp-card rounded-lg border p-3 ${isAnchor ? "is-anchor border-emerald-300 bg-emerald-50" : "border-neutral-200 bg-white"}`}>
                             <div className="flex items-start gap-3">
-                                <img src={rowThumbnail(product)} alt="" className="h-16 w-16 shrink-0 rounded-md bg-[#f7f2e8] object-cover" />
+                                <img src={rowThumbnail(product)} alt="" className="xcmp-thumb h-16 w-16 shrink-0 rounded-md bg-[#f7f2e8] object-cover" />
                                 <div className="min-w-0 flex-1">
                                     <div className="flex items-center justify-between gap-2">
-                                        <span className="rounded-md bg-emerald-700 px-2 py-1 text-[10px] font-black text-white">
+                                        <span className={`xcmp-rank rounded-md bg-emerald-700 px-2 py-1 text-[10px] font-black text-white ${row.position === 1 ? "is-top" : ""}`}>
                                             {locale === "en" ? `Evidence score ${row.isTied ? "joint " : ""}#${row.position}` : `근거점수 ${row.isTied ? "공동 " : ""}${row.position}위`}
                                         </span>
                                         <strong className="text-base text-neutral-950">{row.assessment.score}<span className="text-[10px] text-neutral-500">/100</span></strong>
@@ -357,7 +365,7 @@ export default function ExternalProductComparisonTable({ products, query = "" }:
                             </div>
                             <div className="mt-3 grid grid-cols-2 gap-2">
                                 {row.assessment.axes.map((item) => (
-                                    <div key={item.key} className="rounded-md bg-neutral-50 px-2 py-1.5 text-[10px] font-bold text-neutral-600">
+                                    <div key={item.key} className="xcmp-chip rounded-md bg-neutral-50 px-2 py-1.5 text-[10px] font-bold text-neutral-600">
                                         {axisLabel(item.key)} <strong className="float-right text-neutral-950">{item.score}/{item.maxScore}</strong>
                                     </div>
                                 ))}
@@ -371,7 +379,7 @@ export default function ExternalProductComparisonTable({ products, query = "" }:
                                     href={trackedHref(product, "smart-comparison-mobile")}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="rounded-md bg-neutral-950 px-3 py-2 text-xs font-black text-white"
+                                    className="xcmp-open rounded-md bg-neutral-950 px-3 py-2 text-xs font-black text-white"
                                     onClick={() => handleOutbound(product, "smart-comparison-mobile")}
                                     aria-label={`${product.title} ${locale === "en" ? "open seller" : "판매처 열기"}`}
                                 >
@@ -383,19 +391,19 @@ export default function ExternalProductComparisonTable({ products, query = "" }:
                 })}
             </div>
 
-            <p className="border-t border-neutral-100 bg-white px-4 py-3 text-[11px] font-bold leading-5 text-neutral-500 md:px-5">
+            <p className="xcmp-foot border-t border-neutral-100 bg-white px-4 py-3 text-[11px] font-bold leading-5 text-neutral-500 md:px-5">
                 {locale === "en"
                     ? "Listed prices are reference values. Price level is not scored because model, size, options and pack contents may differ."
                     : "표시 판매가는 참고값입니다. 모델·크기·옵션·구성 조건이 달라 가격의 높고 낮음은 근거점수 순위에 반영하지 않습니다."}
             </p>
 
-            <div className="border-t border-emerald-100 bg-white p-4 md:p-5">
-                <h4 className="text-sm font-black text-neutral-950">{locale === "en" ? "Exact product price check" : "같은 상품 가격 비교"}</h4>
+            <div className="xcmp-exact border-t border-emerald-100 bg-white p-4 md:p-5">
+                <h4 className="xcmp-subtitle text-sm font-black text-neutral-950">{locale === "en" ? "Exact product price check" : "같은 상품 가격 비교"}</h4>
                 <p className="mt-1 text-xs font-bold text-neutral-500">
                     {locale === "en" ? "Total price is compared only when brand, model, size and total quantity all match." : "브랜드·모델·크기·총수량이 모두 일치할 때만 총액을 비교합니다."}
                 </p>
                 {hasExactComparison ? (
-                    <div className="mt-3 overflow-x-auto">
+                    <div className="xcmp-exact-table mt-3 overflow-x-auto">
                         <table className="w-full min-w-[620px] border-collapse text-left text-xs">
                             <caption className="sr-only">{locale === "en" ? "Exact matching seller price table" : "같은 상품 판매처 가격표"}</caption>
                             <thead className="bg-neutral-50 text-neutral-500">
@@ -409,10 +417,10 @@ export default function ExternalProductComparisonTable({ products, query = "" }:
                                 {comparableRows.map((product) => {
                                     const total = comparableTotal(product);
                                     return (
-                                        <tr key={product.id} className={total === minTotal ? "bg-emerald-50" : "bg-white"}>
+                                        <tr key={product.id} className={total === minTotal ? "is-best bg-emerald-50" : "bg-white"}>
                                             <th scope="row" className="px-3 py-2 font-black text-neutral-900">{product.sellerName || product.sourceName}</th>
-                                            <td className="px-3 py-2 font-bold text-neutral-600">{unitSummary(product, locale) || (locale === "en" ? "Confirmed in detail" : "상품 상세에서 확인")}</td>
-                                            <td className="px-3 py-2 text-right font-black text-neutral-950">{total !== null ? formatPrice(total) : "-"}</td>
+                                            <td className="px-3 py-2 font-bold text-neutral-600" data-label={locale === "en" ? "Pack" : "구성"}>{unitSummary(product, locale) || (locale === "en" ? "Confirmed in detail" : "상품 상세에서 확인")}</td>
+                                            <td className="px-3 py-2 text-right font-black text-neutral-950" data-label={locale === "en" ? "Confirmed total" : "확인 총액"}>{total !== null ? formatPrice(total) : "-"}</td>
                                         </tr>
                                     );
                                 })}
@@ -420,7 +428,7 @@ export default function ExternalProductComparisonTable({ products, query = "" }:
                         </table>
                     </div>
                 ) : (
-                    <div className="mt-3 rounded-md border border-amber-200 bg-amber-50 px-3 py-2.5 text-xs font-bold leading-5 text-amber-900">
+                    <div className="xcmp-warn mt-3 rounded-md border border-amber-200 bg-amber-50 px-3 py-2.5 text-xs font-bold leading-5 text-amber-900">
                         {locale === "en"
                             ? "No seller with the same name, size and pack has been confirmed yet. Similar products above are compared separately by evidence, not by checkout total."
                             : "상품명·용량·구성이 같은 판매처는 아직 확인되지 않았습니다. 위 유사 상품은 결제총액이 아닌 확인 근거로 별도 비교합니다."}
@@ -429,12 +437,12 @@ export default function ExternalProductComparisonTable({ products, query = "" }:
             </div>
 
             {relatedPackRows.length > 0 && (
-                <div className="border-t border-emerald-100 bg-white p-4 md:p-5">
-                    <h4 className="text-sm font-black text-neutral-950">{locale === "en" ? "Same product, different pack" : "같은 상품의 다른 구성"}</h4>
+                <div className="xcmp-related border-t border-emerald-100 bg-white p-4 md:p-5">
+                    <h4 className="xcmp-subtitle text-sm font-black text-neutral-950">{locale === "en" ? "Same product, different pack" : "같은 상품의 다른 구성"}</h4>
                     <p className="mt-1 text-xs font-bold text-neutral-500">{locale === "en" ? "Different pack sizes are listed separately with a unit price." : "수량이 다른 구성은 한 개당 가격을 따로 계산해 보여드려요."}</p>
                     <div className="mt-3 grid gap-2 md:grid-cols-2">
                         {relatedPackRows.map((product) => (
-                            <div key={product.id} className="flex items-center justify-between gap-3 rounded-md border border-neutral-200 bg-neutral-50 px-3 py-3">
+                            <div key={product.id} className="xcmp-pack flex items-center justify-between gap-3 rounded-md border border-neutral-200 bg-neutral-50 px-3 py-3">
                                 <div className="min-w-0">
                                     <div className="truncate text-xs font-black text-neutral-900">{product.title}</div>
                                     <div className="mt-1 text-[11px] font-bold text-neutral-500">{unitSummary(product, locale)}</div>

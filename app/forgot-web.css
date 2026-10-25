@@ -8,12 +8,15 @@
  *  - .fx-tips · .fx-resend : 메일이 안 왔을 때 · 다시 받기 알약
  *  - .fx-safe   : 안전한 비밀번호 팁 세 칸
  * (auth) 묶음 레이아웃의 위 로고는 웹 새 화면에서는 숨김(사이트 머리글이 이미 있음).
+ * 2026-10-26: 웹에서 화면이 붙기 전(미리 만든 HTML) 앱 카드([data-forgot-app]) · 위 로고가 번쩍이지 않게 감춤(가입 화면과 같은 방법).
  * 범위: .sxw[data-forgot-web] 안 + (auth) 레이아웃 겉 — 웹에서만 그려지는 부품이라 앱 화면과 섞이지 않음.
  */
 
 /* (auth) 레이아웃 — 웹 새 화면이면 위 로고 · 여백을 빼고 넓게(앱 · 기존 화면은 그대로) */
 html:not(.ddb-app-mode) div.min-h-screen:has(> main[data-forgot-web]) { display: block; min-height: 0; padding: 0; }
 html:not(.ddb-app-mode) div.min-h-screen:has(> main[data-forgot-web]) > a:first-child { display: none; }
+/* 미리 만든 HTML(앱 기준 카드)이 웹에서 잠깐 보이지 않게 — 웹은 화면이 붙으면 새 화면(main[data-forgot-web])으로 바뀜 */
+html:not(.ddb-app-mode) div.min-h-screen:has(> [data-forgot-app]) { visibility: hidden; }
 
 
 /* 이메일 칸 아래 안내는 두 칸 너비 다 쓰기 */

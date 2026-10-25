@@ -23,6 +23,9 @@ import {
     type CustomerAddressInput,
 } from "@/lib/customer-api";
 import { useAuth } from "@/lib/store";
+// 2026-10-26 웹 문구 — 서버 원문 대신 해요체 오류 문장 · 해요체 안내(앱 글자는 그대로)
+import { mypageErrorText } from "@/components/mypage/mypageWebText";
+import { useWebScreen } from "@/hooks/useWebScreen";
 
 const EMPTY_ADDRESS: CustomerAddressInput = {
     label: "집",
@@ -48,6 +51,8 @@ export default function MypageAddressPage() {
     const [modalOpen, setModalOpen] = useState(false);
     const modalHost = usePetModalHost(modalOpen);
     const token = user?.apiAccessToken || getCustomerToken();
+    // 웹이면 머리 설명 · 안내 문구를 해요체로(앱은 원래 문구)
+    const webScreen = useWebScreen();
 
     const refresh = useCallback(async () => {
         if (!token) return;
@@ -56,9 +61,9 @@ export default function MypageAddressPage() {
         try {
             setAddresses(await loadCustomerAddresses(token));
         } catch (caught) {
-            setError(caught instanceof DdbApiError
+            setError(mypageErrorText(caught, caught instanceof DdbApiError
                 ? caught.message
-                : "배송지 목록을 불러오지 못했습니다.");
+                : "배송지 목록을 불러오지 못했습니다.", "배송지 목록을 불러오지 못했어요. 잠시 뒤 다시 시도해 주세요."));
         } finally {
             setLoading(false);
         }
@@ -127,9 +132,9 @@ export default function MypageAddressPage() {
             setModalOpen(false);
             await refresh();
         } catch (caught) {
-            setError(caught instanceof DdbApiError
+            setError(mypageErrorText(caught, caught instanceof DdbApiError
                 ? caught.message
-                : "배송지를 저장하지 못했습니다. 입력값을 확인해 주세요.");
+                : "배송지를 저장하지 못했습니다. 입력값을 확인해 주세요.", "배송지를 저장하지 못했어요. 잠시 뒤 다시 시도해 주세요."));
         } finally {
             setPending(false);
         }
@@ -142,7 +147,7 @@ export default function MypageAddressPage() {
             setFeedback("기본 배송지를 변경했습니다.");
             await refresh();
         } catch (caught) {
-            setError(caught instanceof DdbApiError ? caught.message : "기본 배송지를 변경하지 못했습니다.");
+            setError(mypageErrorText(caught, caught instanceof DdbApiError ? caught.message : "기본 배송지를 변경하지 못했습니다.", "기본 배송지를 바꾸지 못했어요. 잠시 뒤 다시 시도해 주세요."));
         } finally {
             setPending(false);
         }
@@ -157,7 +162,7 @@ export default function MypageAddressPage() {
             if (editingId === addressId) resetForm();
             await refresh();
         } catch (caught) {
-            setError(caught instanceof DdbApiError ? caught.message : "배송지를 삭제하지 못했습니다.");
+            setError(mypageErrorText(caught, caught instanceof DdbApiError ? caught.message : "배송지를 삭제하지 못했습니다.", "배송지를 삭제하지 못했어요. 잠시 뒤 다시 시도해 주세요."));
         } finally {
             setPending(false);
         }
@@ -167,14 +172,16 @@ export default function MypageAddressPage() {
         <MypageSectionLayout
             eyebrow="MY 정보"
             title="배송지 관리"
-            description="자주 쓰는 배송지를 최대 10개까지 암호화해 저장하고 기본 배송지를 지정합니다."
+            description={webScreen
+                ? "자주 쓰는 배송지를 최대 10개까지 암호화해 저장하고, 기본 배송지도 정할 수 있어요."
+                : "자주 쓰는 배송지를 최대 10개까지 암호화해 저장하고 기본 배송지를 지정합니다."}
         >
             <div className="grid gap-5">
                 <section className="surface p-5 sm:p-6" aria-labelledby="saved-address-heading" data-mp-card>
                     <div className="flex items-center justify-between gap-3" data-mp-band="mint" data-mp-art="home">
                         <div>
                             <h2 id="saved-address-heading" className="text-lg font-black text-neutral-950" data-mp-kicker="MY ADDRESS">저장된 배송지</h2>
-                            <p className="mt-1 text-xs font-bold text-neutral-500">주소와 연락처는 서버에서 암호화해 보관합니다.</p>
+                            <p className="mt-1 text-xs font-bold text-neutral-500">{webScreen ? "주소와 연락처는 서버에서 암호화해 보관해요." : "주소와 연락처는 서버에서 암호화해 보관합니다."}</p>
                         </div>
                         <span className="rounded-full bg-neutral-100 px-3 py-1 text-xs font-black text-neutral-600">{addresses.length}/10</span>
                         {/* 웹 전용 — 배송지 추가(창) */}
@@ -191,7 +198,8 @@ export default function MypageAddressPage() {
                     ) : addresses.length === 0 ? (
                         <>
                             <div className="mt-5 rounded-xl border border-dashed border-neutral-300 bg-neutral-50 p-5 text-sm font-bold text-neutral-600" data-address-empty>
-                                저장된 배송지가 없습니다. 아래에서 첫 배송지를 추가해 주세요.
+                                {/* 웹은 data-address-empty-web 쪽이 보이지만, 혹시 보일 때를 위해 해요체로 */}
+                                {webScreen ? "저장된 배송지가 없어요. 첫 배송지를 추가해 주세요." : "저장된 배송지가 없습니다. 아래에서 첫 배송지를 추가해 주세요."}
                             </div>
                             {/* 웹 전용 빈 상태 — 3D 집 그림 · 안내 · 첫 배송지 추가(창) */}
                             <div className="hidden" data-address-empty-web>

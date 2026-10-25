@@ -37,10 +37,11 @@ const LOST = [
     { icon: "fa-right-from-bracket", label: "모든 로그인 세션" },
 ];
 
+// 탈퇴 후 처리 안내 — 2026-10-26 웹 해요체로 다듬음(이 화면은 웹 전용, 앱은 기존 양식 그대로)
 const HANDLING = [
-    { art: "/images/ui/stickers/login-lock.webp", tone: "pink", title: "계정은 즉시 잠겨요", text: "로그인 계정과 간편로그인 연결 정보는 즉시 비활성화 · 가명화됩니다." },
-    { art: "/images/ui/web-cs-mail-256.webp", tone: "lav", title: "알림 메일은 멈춰요", text: "마케팅 이메일 수신 동의는 철회되고 재발송 방지 기록만 남습니다." },
-    { art: "/images/ui/policy-info-192.webp", tone: "sky", title: "법정 기록만 따로 보관해요", text: "결제 · 계약 · 분쟁 기록은 관계 법령상 기간 동안 다른 정보와 분리 보관 후 파기합니다." },
+    { art: "/images/ui/stickers/login-lock.webp", tone: "pink", title: "계정은 즉시 잠겨요", text: "로그인 계정과 간편로그인 연결 정보는 바로 비활성화 · 가명화돼요." },
+    { art: "/images/ui/web-cs-mail-256.webp", tone: "lav", title: "알림 메일은 멈춰요", text: "마케팅 이메일 수신 동의는 철회되고, 다시 보내지 않도록 하는 기록만 남아요." },
+    { art: "/images/ui/policy-info-192.webp", tone: "sky", title: "법정 기록만 따로 보관해요", text: "결제 · 계약 · 분쟁 기록은 법에서 정한 기간 동안 다른 정보와 따로 보관한 뒤 파기해요." },
 ];
 
 export default function WithdrawalWebView(props: Props) {

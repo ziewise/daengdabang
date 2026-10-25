@@ -386,7 +386,7 @@ export default function SignupWebFlow(props: Props) {
                             <button type="button" onClick={providers.retryProviders}>다시 확인</button>
                         </p>
                     )}
-                    <p className="sxw-note">간편 가입은 비밀번호 없이 공급자 계정으로 로그인해요. 공급자 화면에서 동의하면 댕다방으로 돌아와요.</p>
+                    <p className="sxw-note">간편 가입은 비밀번호 없이 카카오 · 네이버 · 구글 계정으로 로그인해요. 그 화면에서 동의하면 댕다방으로 돌아와요.</p>
 
                     {/* 가입 혜택 — 가입 방법 카드 아래 */}
                     <div className="sxw-bonus">
@@ -448,7 +448,7 @@ export default function SignupWebFlow(props: Props) {
                                 onTokenChange={props.setBotToken}
                                 resetKey={props.botResetKey}
                                 title="가입 보안 확인"
-                                description="자동 가입을 막기 위해 확인해요. 확인이 끝나면 다음 단추가 켜져요."
+                                description="자동 가입을 막기 위해 확인해요. 확인이 끝나면 다음 버튼이 켜져요."
                             />
                         </div>
                     )}
@@ -818,7 +818,7 @@ export default function SignupWebFlow(props: Props) {
                             onTokenChange={props.setBotToken}
                             resetKey={props.botResetKey}
                             title="가입 보안 확인"
-                            description="자동 가입을 막기 위해 확인해요. 확인이 끝나면 가입하기 단추가 켜져요."
+                            description="자동 가입을 막기 위해 확인해요. 확인이 끝나면 가입하기 버튼이 켜져요."
                         />
                     </div>
                 </SxBlock>
@@ -858,7 +858,7 @@ export default function SignupWebFlow(props: Props) {
 
                 <SxFoot
                     onPrev={() => go("account")}
-                    hint={!canSubmit && !props.loading ? (!choice ? "우리 아이를 지금 등록할지 먼저 골라 주세요." : !props.botToken ? "가입 보안 확인이 끝나면 가입하기 단추가 켜져요." : "잠시만 기다려 주세요.") : undefined}
+                    hint={!canSubmit && !props.loading ? (!choice ? "우리 아이를 지금 등록할지 먼저 골라 주세요." : !props.botToken ? "가입 보안 확인이 끝나면 가입하기 버튼이 켜져요." : "잠시만 기다려 주세요.") : undefined}
                 >
                     <button type="submit" className="sxw-next" disabled={!canSubmit} aria-busy={props.loading} data-signup-submit>
                         {props.loading ? (

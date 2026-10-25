@@ -10,16 +10,21 @@
 import Link from "next/link";
 import MypageSectionLayout, { MypageLoginGate } from "@/components/mypage/MypageSectionLayout";
 import { useAuth } from "@/lib/store";
+// 2026-10-26 웹 머리 설명 해요체(앱 설명은 그대로)
+import { useWebScreen } from "@/hooks/useWebScreen";
 
 export default function MypagePaymentsPage() {
     const { user } = useAuth();
+    const webScreen = useWebScreen();
     if (!user) return <MypageLoginGate redirect="/mypage/payments/" />;
 
     return (
         <MypageSectionLayout
             eyebrow="MY 정보"
             title="결제수단 관리"
-            description="결제수단 저장 여부와 결제 단계의 이용 방법을 안내합니다."
+            description={webScreen
+                ? "결제수단 저장 기능과 지금 결제하는 방법을 알려 드려요."
+                : "결제수단 저장 여부와 결제 단계의 이용 방법을 안내합니다."}
         >
             {/* 웹 전용 — 준비 중 안내(앱은 hidden) */}
             <div className="hidden" data-pay-web>

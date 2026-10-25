@@ -336,7 +336,8 @@ export default function WeeklyPhotoComparison({ pet, history = [], onCompleted }
                                         <span className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-emerald-500 text-2xl text-white shadow-lg"><i className="fa-solid fa-check" /></span>
                                         <p className="ddb-crayon-kicker mt-4 text-xs">분석 준비 완료 · 기록 저장 완료</p>
                                         <h3 className="ddb-crayon-title mt-2 text-2xl text-neutral-950">이번 주 변화 기록이 쌓였어요!</h3>
-                                        <p className="mx-auto mt-2 max-w-2xl text-sm font-bold leading-6 text-neutral-650">{savedRecord.comparison.headline}</p>
+                                        {/* 없는 색 이름(text-neutral-650) 대신 같은 결과인 text-inherit(앱 그대로) · 웹 색은 daily-web.css data-web-soft-text */}
+                                        <p className="mx-auto mt-2 max-w-2xl text-sm font-bold leading-6 text-inherit" data-web-soft-text>{savedRecord.comparison.headline}</p>
                                     </div>
                                     <div className="mt-4 grid gap-3 md:grid-cols-2">
                                         <article className="rounded-3xl border bg-white p-5">
@@ -430,7 +431,7 @@ export default function WeeklyPhotoComparison({ pet, history = [], onCompleted }
                                             </div>
                                         )}
 
-                                        {error && <p className="mt-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-black leading-5 text-red-700" role="alert">{error}</p>}
+                                        {error && <p className="mt-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-black leading-5 text-red-700" role="alert" data-web-notice="error">{error}</p>}
                                         <button type="button" disabled={capturedCount === 0 || busy} onClick={() => void analyzeWeeklyPhotos()} className="ddb-crayon-link mt-3 flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-5 text-sm font-black disabled:cursor-not-allowed disabled:opacity-40"><i className="fa-solid fa-cloud-arrow-up" />{busy ? "업로드·분석 중" : `${capturedCount}장 자동 업로드하고 비교 분석`}</button>
                                         <p className="mt-2 text-center text-[10px] font-bold leading-4 text-neutral-500">비교 품질을 위해 네 방향을 권장하지만, 한 장부터 분석할 수 있어요.</p>
                                     </aside>

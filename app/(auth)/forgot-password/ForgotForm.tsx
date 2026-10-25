@@ -4,6 +4,8 @@
  * 비밀번호 재설정(/forgot-password) — 이메일 → 인증번호 → 새 비밀번호 → 완료.
  * 2026-10-25 웹은 회원가입과 같은 틀의 새 화면(components/auth/forgot-web/ForgotWebView)으로 그림 —
  *   상태 · 요청 · 검사는 이 파일 그대로 넘겨주기만 함. 앱(ddb-app-mode)은 아래 기존 화면 그대로.
+ * 2026-10-26: 앱 카드에 이름표(data-forgot-app)만 붙임 — 웹에서는 화면이 붙기 전(미리 만든 HTML) 앱 카드가 번쩍이지 않게
+ *   app/forgot-web.css 에서 감춤(가입 화면과 같은 방법). 앱 모양 · 동작 그대로.
  */
 
 import Link from "next/link";
@@ -21,6 +23,8 @@ import { useDdbApiReady } from "@/hooks/useDdbApiReady";
 // 웹 전용 화면(2026-10-25)
 import ForgotWebView from "@/components/auth/forgot-web/ForgotWebView";
 import { useWebScreen } from "@/hooks/useWebScreen";
+// 웹 꾸밈 — 미리 만든 HTML 단계에서도 "앱 카드 감춤" 규칙이 먼저 걸리도록 여기서도 불러옴
+import "@/app/forgot-web.css";
 
 type Step = "email" | "code" | "password" | "done";
 
@@ -337,7 +341,7 @@ export default function ForgotPasswordPage() {
     }
 
     return (
-        <div className="w-full max-w-md rounded-3xl bg-white px-6 py-8 shadow-card md:px-9 md:py-10">
+        <div className="w-full max-w-md rounded-3xl bg-white px-6 py-8 shadow-card md:px-9 md:py-10" data-forgot-app>
             <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-amber-50 text-2xl text-amber-600">
                 <i className={`fa-solid ${step === "done" ? "fa-check" : "fa-key"}`} aria-hidden="true" />
             </div>

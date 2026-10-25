@@ -178,7 +178,7 @@ function EmailCard(props: ForgotWebProps) {
                     <SignupBotChallenge
                         action="password_reset"
                         title="본인 확인 보호"
-                        description="자동 요청을 막기 위한 확인이에요. 확인이 끝나면 받기 단추가 켜져요."
+                        description="자동 요청을 막기 위한 확인이에요. 확인이 끝나면 받기 버튼이 켜져요."
                         unavailableMessage="본인 확인 보호 기능을 준비 중입니다. 잠시 후 다시 이용해 주세요."
                         onTokenChange={props.setBotToken}
                         resetKey={props.challengeResetKey}
@@ -195,7 +195,7 @@ function EmailCard(props: ForgotWebProps) {
                     </span>
                     <span>
                         <b>간편가입으로 가입했어요</b>
-                        <small>카카오 · 네이버 · 구글 회원은 비밀번호가 없어요. 그 단추로 로그인해 주세요.</small>
+                        <small>카카오 · 네이버 · 구글 회원은 비밀번호가 없어요. 그 버튼으로 로그인해 주세요.</small>
                     </span>
                     <i className="fa-solid fa-chevron-right" aria-hidden="true" />
                 </Link>

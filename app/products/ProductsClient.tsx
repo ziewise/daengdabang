@@ -36,6 +36,8 @@ import { SearchHero, SearchOwnEmpty, searchHref } from "@/components/search/Sear
 import { CrayonGrainFilter, PawTrail } from "@/components/daily/CrayonArt";
 // 웹 상품 목록 머리 판 · 카테고리 칸 · 세부 알약(2026-10-25) — 앱은 CSS 로 숨김
 import ShopListHero from "@/components/products/ShopListHero";
+// 웹 화면인가(앱 ddb-app-mode 가 아닌가) — 웹 전용 빈 결과 안내를 앱에 그리지 않으려고(2026-10-26)
+import { useWebScreen } from "@/hooks/useWebScreen";
 import "../shop-list-web.css";
 
 type Props = {
@@ -97,6 +99,7 @@ export default function ProductsClient({ initialCategory, title, variant }: Prop
     const [externalSearched, setExternalSearched] = useState(false);
     const [externalReveal, setExternalReveal] = useState({ scope: "", count: 30 });
     const { t, locale, categoryLabel, subcategoryLabel, menuLabel } = useI18n();
+    const webScreen = useWebScreen();
 
     useEffect(() => {
         // URL navigation is an external source that intentionally rehydrates the filter controls.
@@ -209,15 +212,16 @@ export default function ProductsClient({ initialCategory, title, variant }: Prop
     const heading = title ? menuLabel(title) : t("allProducts");
 
     // 다른 판매처 가격 비교(협업자 기능) — 전체상품 · 검색 결과 페이지가 같은 덩어리를 씀
+    // pl-ext-* 이름표 = 웹 꾸밈 자리(app/shop-list-web.css, 전체상품 · 제품군 페이지에서 검색했을 때). 앱은 칠하지 않아 그대로
     const externalSection = hasSearch ? (
-                <section className="mt-10 min-w-0 rounded-lg border border-neutral-200 bg-white p-4 shadow-sm">
-                    <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+                <section className="pl-ext mt-10 min-w-0 rounded-lg border border-neutral-200 bg-white p-4 shadow-sm">
+                    <div className="pl-ext-head mb-4 flex flex-wrap items-end justify-between gap-3">
                         <div>
-                            <p className="text-xs font-black uppercase tracking-[0.12em] text-emerald-700">Product Price Search</p>
-                            <h2 className="mt-1 text-xl font-black text-neutral-950">{t("priceCompare")}</h2>
+                            <p className="pl-ext-kicker text-xs font-black uppercase tracking-[0.12em] text-emerald-700">Product Price Search</p>
+                            <h2 className="pl-ext-title mt-1 text-xl font-black text-neutral-950">{t("priceCompare")}</h2>
                         </div>
                         <div className="flex items-center gap-2">
-                            <span className="rounded-full bg-neutral-100 px-2.5 py-1 text-xs font-black text-neutral-600">
+                            <span className="pl-ext-count rounded-full bg-neutral-100 px-2.5 py-1 text-xs font-black text-neutral-600">
                                 {externalLoading ? t("searching") : countText(externalProducts.length)}
                             </span>
                         </div>
@@ -227,9 +231,9 @@ export default function ProductsClient({ initialCategory, title, variant }: Prop
                             <ExternalProductComparisonTable products={externalProducts} query={query.trim()} />
                             {referenceExternalProducts.length > 0 && (
                                 <div>
-                                    <div className="mb-3 flex flex-wrap items-end justify-between gap-2">
+                                    <div className="pl-ext-more-head mb-3 flex flex-wrap items-end justify-between gap-2">
                                         <div>
-                                            <h3 className="text-base font-black text-neutral-950">
+                                            <h3 className="pl-ext-subtitle text-base font-black text-neutral-950">
                                                 {locale === "en" ? "More products from other sellers" : "외부 판매 상품 더 보기"}
                                             </h3>
                                             <p className="mt-1 text-xs font-bold text-neutral-500">
@@ -238,7 +242,7 @@ export default function ProductsClient({ initialCategory, title, variant }: Prop
                                                     : "상품 사진과 판매가가 함께 확인된 결과입니다. 옵션과 배송비에 따라 결제금액은 달라질 수 있어요."}
                                             </p>
                                         </div>
-                                        <span className="rounded-full bg-amber-50 px-2.5 py-1 text-xs font-black text-amber-800">
+                                        <span className="pl-ext-badge rounded-full bg-amber-50 px-2.5 py-1 text-xs font-black text-amber-800">
                                             {locale === "en" ? "External products" : "외부 상품"} {countText(referenceExternalProducts.length)}
                                         </span>
                                     </div>
@@ -258,7 +262,7 @@ export default function ProductsClient({ initialCategory, title, variant }: Prop
                                         <div className="mt-5 flex justify-center">
                                             <button
                                                 type="button"
-                                                className="min-h-11 rounded-md border border-neutral-300 bg-white px-5 py-2.5 text-sm font-black text-neutral-800 transition hover:border-emerald-500 hover:text-emerald-800"
+                                                className="pl-ext-more min-h-11 rounded-md border border-neutral-300 bg-white px-5 py-2.5 text-sm font-black text-neutral-800 transition hover:border-emerald-500 hover:text-emerald-800"
                                                 onClick={() => setExternalReveal({
                                                     scope: externalScope,
                                                     count: Math.min(revealedExternalCount + 20, referenceExternalRows.length),
@@ -275,7 +279,7 @@ export default function ProductsClient({ initialCategory, title, variant }: Prop
                             )}
                         </>
                     ) : (
-                        <div className="rounded-lg border border-dashed border-neutral-200 bg-neutral-50 px-4 py-8 text-center">
+                        <div className="pl-ext-empty rounded-lg border border-dashed border-neutral-200 bg-neutral-50 px-4 py-8 text-center">
                             <p className="text-sm font-black text-neutral-700">
                                 {externalLoading || !externalSearched ? t("externalCompareLoading") : t("externalCompareEmpty")}
                             </p>
@@ -287,8 +291,9 @@ export default function ProductsClient({ initialCategory, title, variant }: Prop
                 </section>
     ) : null;
 
-    // 카테고리를 골라 0개일 때, 전체로 보면 나오는 개수(검색 결과 페이지 빈 안내용)
-    const hiddenByCategory = isSearchPage && hasSearch && products.length === 0 && category !== "all"
+    // 카테고리를 골라 0개일 때, 전체로 보면 나오는 개수(검색 결과 페이지 · 웹 전체상품 검색의 빈 안내용 —
+    // 제품군 페이지(initialCategory)는 카테고리가 고정이라 "전체로 보기"를 내지 않음)
+    const hiddenByCategory = (isSearchPage || !initialCategory) && hasSearch && products.length === 0 && category !== "all"
         ? searchCatalog(query).length
         : 0;
 
@@ -499,7 +504,7 @@ export default function ProductsClient({ initialCategory, title, variant }: Prop
             {products.length > 0 && (
                 <section>
                     {hasSearch && externalProducts.length > 0 && (
-                        <div className="mb-3 flex items-end justify-between gap-3">
+                        <div className="pl-own-head mb-3 flex items-end justify-between gap-3">
                             <h2 className="text-lg font-black text-neutral-950">{t("daengdabangProducts")}</h2>
                             <span className="text-xs font-black text-neutral-500">{countText(products.length)}</span>
                         </div>
@@ -511,12 +516,30 @@ export default function ProductsClient({ initialCategory, title, variant }: Prop
                 </section>
             )}
 
+            {/* 웹 — 검색했는데 댕다방 상품이 0개면 검색 결과 페이지와 같은 쿠션 안내(앱은 지금처럼 아무것도 그리지 않음) */}
+            {webScreen && hasSearch && products.length === 0 && (
+                <section className="pl-own-empty">
+                    <SearchOwnEmpty
+                        query={query.trim()}
+                        hiddenByCategory={hiddenByCategory}
+                        onShowAll={() => {
+                            setCategory("all");
+                            setSubcategory("all");
+                        }}
+                    />
+                </section>
+            )}
+
             {externalSection}
 
             {products.length === 0 && !hasSearch && (
-                <div className="surface p-10 text-center">
-                    <i className="fa-regular fa-face-meh text-3xl text-neutral-400" />
-                    <p className="mt-3 text-sm font-black text-neutral-700">{t("noProducts")}</p>
+                // pl-empty = 웹 쿠션 빈 안내(3D 그림은 웹에서만 보임 · app/shop-list-web.css), 앱은 기존 상자 그대로
+                <div className="pl-empty surface p-10 text-center">
+                    <span className="hidden pl-empty-art" aria-hidden="true">
+                        <Image src="/images/ui/web-no-match-192.webp" alt="" width={96} height={96} />
+                    </span>
+                    <i className="pl-empty-icon fa-regular fa-face-meh text-3xl text-neutral-400" />
+                    <p className="pl-empty-title mt-3 text-sm font-black text-neutral-700">{t("noProducts")}</p>
                 </div>
             )}
         </main>

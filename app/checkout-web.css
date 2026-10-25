@@ -6,6 +6,8 @@
  * 안내 상자 = 둥근 파스텔 메모 · 주문 상품 요약 = 사진 · 크레파스 총 결제금액 · 분홍 결제 알약. 점선 · 줄무늬 · 기울기 · 스티커 없음.
  * 범위: 웹(html:not(.ddb-app-mode)) · main[data-checkout-web] 안에서만(앱은 appShopSkin 주문서 꾸밈 그대로).
  * 입력 오류(빨간 테두리 · 문구)는 그대로 보이게 오류 칸은 덮지 않음. 결제 · 검증 동작 그대로, 모양만.
+ * 2026-10-26: 구매할 수 없는 옵션 안내 쿠션 카드(data-co-notice="blocked") · 남은 인디고 글자(co-addr-link · co-terms-link · co-spin) 분홍 ·
+ *  결제 오류 원문 작은 줄(co-error-raw).
  */
 
 html:not(.ddb-app-mode) main[data-checkout-web] {
@@ -268,6 +270,19 @@ html:not(.ddb-app-mode) main[data-checkout-web] {
         box-shadow: 0 0 0 2px #f3e3cc;
     }
 
+    /* 잘못 입력한 칸 — 같은 크림 둥근 칸에 장미색 테(2026-10-26 전체 점검: 흰 각진 칸으로 보이던 것) */
+    & :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea):is([aria-invalid="true"], [class*="border-red"]) {
+        border-color: transparent;
+        border-radius: 16px;
+        background-color: #fff6f6;
+        box-shadow: 0 0 0 2px #f4a3ad;
+    }
+
+    & :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea):is([aria-invalid="true"], [class*="border-red"]):focus {
+        outline: none;
+        box-shadow: 0 0 0 2.5px #ec7f8e, 0 0 0 7px rgb(236 127 142 / 20%);
+    }
+
     & :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea):not([aria-invalid="true"]):not([class*="border-red"]):focus {
         outline: none;
         background-color: #fff;
@@ -440,6 +455,50 @@ html:not(.ddb-app-mode) main[data-checkout-web] {
     &[data-checkout-web="notice"] > a.btn { display: flex; width: fit-content; margin-right: auto; margin-left: auto; }
     & .co-notice-title { word-break: keep-all; }
 
+    /* 구매할 수 없는 옵션 안내(2026-10-26) — 흰 쿠션 카드 · 노랑 고리 3D 그림 · 주아 제목 · 해요체 설명 */
+    &[data-co-notice="blocked"] {
+        width: calc(100% - 32px);
+        max-width: 600px;
+        margin-top: 48px;
+        margin-bottom: 64px;
+        padding: 44px 32px 40px;
+        border-radius: 34px;
+        background: #fff;
+        box-shadow: var(--co-cushion);
+    }
+
+    &[data-co-notice="blocked"] .co-notice-art { width: 140px; height: 140px; box-shadow: 0 0 0 10px #fff6e3, 0 22px 36px -24px rgb(15 23 42 / 32%); }
+    &[data-co-notice="blocked"] .co-notice-art img { width: 96px; height: 96px; object-fit: contain; }
+    &[data-co-notice="blocked"] .co-notice-title { font-size: 25px; }
+
+    & .co-notice-desc {
+        max-width: 420px;
+        margin: 14px auto 0;
+        color: #64748b;
+        font-size: 14.5px;
+        font-weight: 600;
+        line-height: 1.7;
+        word-break: keep-all;
+    }
+
+    /* 남은 인디고 글자 · 돌림표 → 분홍(2026-10-26) — 배송지 관리 · 토스 약관 링크 · 예상일 계산 중 */
+    & .co-addr-link {
+        padding: 7px 14px;
+        border-radius: 999px;
+        background: #ffeef3;
+        color: #d0436d;
+        text-decoration: none;
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%);
+    }
+
+    & .co-addr-link:hover { background: #fde0e9; text-decoration: none; }
+    & .co-terms-link { color: #d0436d; text-decoration-color: #f7a8bf; text-underline-offset: 3px; }
+    & .co-terms-link:hover { color: #e26690; }
+    & .co-spin { color: #e9789a; }
+
+    /* 결제 오류 — 쉬운 문장 아래 서버 원문은 작은 흐린 줄 */
+    & .co-error-raw { display: block; margin-top: 6px; color: #b98b95; font-size: 11px; font-weight: 600; word-break: break-all; }
+
     /* 웹 전용 머리 보이기 */
     & :is(.co-pay-head, .co-sum-head) { display: flex; }
 }
@@ -465,5 +524,8 @@ html:not(.ddb-app-mode) main[data-checkout-web] {
         & section.surface > div[aria-live] { padding: 14px 18px 20px; }
         & :is(section.surface, aside.surface) { border-radius: 26px; }
         & aside.surface { padding: 22px 18px 20px; }
+        /* 구매할 수 없는 옵션 안내 카드 — 휴대폰 여백 줄임 */
+        &[data-co-notice="blocked"] { margin-top: 28px; padding: 34px 20px 30px; border-radius: 28px; }
+        &[data-co-notice="blocked"] .co-notice-title { font-size: 22px; }
     }
 }

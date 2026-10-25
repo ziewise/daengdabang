@@ -55,6 +55,8 @@ html:not(.ddb-app-mode) section[data-policy-dialog] {
 }
 
 /* ───────── 언어 · 지역 창 ───────── */
+/* 2026-10-26 겹침 순서: 휴대폰 메뉴(MobilePanel 덮개 1500 · 판 1501) 안의 언어 단추로 열면 예전 1300 이라 메뉴 뒤에 깔려 고를 수 없었음 → 웹은 1600 */
+html:not(.ddb-app-mode) [data-region-modal] { z-index: 1600; }
 html:not(.ddb-app-mode) [data-region-modal] {
     --md-jua: var(--font-jua), var(--font-wanted-sans), sans-serif;
     & > div { overflow: visible; border-radius: 32px; box-shadow: 0 40px 80px -30px rgb(15 23 42 / 50%); }

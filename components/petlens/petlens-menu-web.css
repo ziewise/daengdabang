@@ -7,6 +7,10 @@
  * 사진 · 행동 분석 화면(같은 창 안 다음 화면)과 앱은 그대로. 버튼 동작 · 문구 그대로, 모양만.
  */
 
+/* 2026-10-26 겹침 순서 — 예전 z-[120] 이라 웹 헤더(1000) 아래에 깔려 어두운 덮개가 헤더를 못 덮고 창 윗부분이 가려졌음.
+   웹은 헤더 · 검색 창(2000/2001) 위 2050(창 전체 화면 — 메뉴 · 사진 · 행동 분석 모두). 앱은 그대로 */
+html:not(.ddb-app-mode) [data-petlens-modal] { z-index: 2050; }
+
 html:not(.ddb-app-mode) [data-petlens-view="menu"] {
     border-radius: 34px;
     background: #fffaf1;

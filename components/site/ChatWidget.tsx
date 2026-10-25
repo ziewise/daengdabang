@@ -193,6 +193,19 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
         return () => window.cancelAnimationFrame(focusFrame);
     }, [isMobile, onOpenChange, open, productContext, focusInputOnOpen]);
 
+    // 2026-10-26 웹 — Escape 키로 상담 창 닫기(닫기 X 단추와 같은 setOpen(false)). 창 안의 다른 창이 먼저 Escape 를 쓰면(defaultPrevented) 그대로 둠.
+    // 앱(ddb-app-mode)은 예전 그대로(키보드 Escape 없음)
+    useEffect(() => {
+        if (!open) return;
+        const onKey = (event: KeyboardEvent) => {
+            if (event.key !== "Escape" || event.defaultPrevented) return;
+            if (document.documentElement.classList.contains("ddb-app-mode")) return;
+            setOpen(false);
+        };
+        window.addEventListener("keydown", onKey);
+        return () => window.removeEventListener("keydown", onKey);
+    }, [open]);
+
     useEffect(() => {
         const applyOpen = (detail?: ChatWidgetOpenDetail) => {
             if (typeof detail?.productName === "string") setProductContext(detail.productName.trim());
@@ -511,7 +524,8 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                             <button
                                 type="button"
                                 onClick={() => setProductContext("")}
-                                className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-indigo-500 hover:bg-indigo-100 hover:text-indigo-900"
+                                // styles.contextClear — 웹 꾸밈 이름표(ChatWidget.module.css 웹 구역: 흰 동그라미 · 분홍). 앱은 아래 남색 그대로
+                                className={`${styles.contextClear} flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-indigo-500 hover:bg-indigo-100 hover:text-indigo-900`}
                                 aria-label="상품 문의 대상 지우기"
                             >
                                 <i className="fa-solid fa-xmark text-[10px]" />

@@ -19,6 +19,9 @@ import type { RecommendationPreferences } from "@/lib/customer-api";
 import { RECOMMENDATION_FEATURE_FLAGS } from "@/lib/recommendation";
 import { createRecommendationRunId, trackStorefrontEvent } from "@/lib/storefront-analytics";
 import { useAuth, type PetProfile } from "@/lib/store";
+// 2026-10-26 웹 — 불러오는 중 크림 쿠션 자리 · 해요체 머리 설명(앱은 원래 그대로)
+import { useWebScreen } from "@/hooks/useWebScreen";
+import MypageWebLoading from "@/components/mypage/MypageWebLoading";
 
 export default function MypageRecommendationPreferencesPage() {
     const { hydrated, user } = useAuth();
@@ -27,8 +30,17 @@ export default function MypageRecommendationPreferencesPage() {
     const preferences = preferenceState.preferences;
     // 앱/웹 구분 — 웹은 "분석 기록 확인"을 마이페이지 안 요약으로
     const appMode = useAppMode(usePathname() ?? "");
+    const webScreen = useWebScreen();
 
     if (!hydrated) {
+        // 웹: 사이드 메뉴 · 머리 판이 있는 마이페이지 틀 안에 흰 쿠션 카드 자리
+        if (webScreen) {
+            return (
+                <MypageSectionLayout eyebrow="MY 정보" title="추천 데이터 관리" description="회원 추천 설정을 확인하고 있어요.">
+                    <MypageWebLoading label="회원 추천 설정을 확인하고 있어요." />
+                </MypageSectionLayout>
+            );
+        }
         return (
             <main className="mx-auto max-w-[680px] px-4 py-16 text-center" aria-busy="true">
                 <p className="text-sm font-black text-neutral-500">회원 추천 설정을 확인하고 있어요.</p>
@@ -41,7 +53,9 @@ export default function MypageRecommendationPreferencesPage() {
             <MypageSectionLayout
                 eyebrow="MY 정보"
                 title="추천 데이터 관리"
-                description="맞춤 추천 데이터 설정은 현재 단계적으로 준비하고 있습니다. 일반 쇼핑과 회원 정보 관리는 그대로 이용할 수 있습니다."
+                description={webScreen
+                    ? "맞춤 추천 데이터 설정은 지금 차근차근 준비하고 있어요. 일반 쇼핑과 회원 정보 관리는 그대로 이용할 수 있어요."
+                    : "맞춤 추천 데이터 설정은 현재 단계적으로 준비하고 있습니다. 일반 쇼핑과 회원 정보 관리는 그대로 이용할 수 있습니다."}
             >
                 <section
                     className="surface p-5 md:p-6"
@@ -99,7 +113,9 @@ export default function MypageRecommendationPreferencesPage() {
         <MypageSectionLayout
             eyebrow="MY 정보"
             title="추천 데이터 관리"
-            description="맞춤 추천에 사용할 정보와 기본 반려견을 직접 선택합니다. 설정을 꺼도 일반 쇼핑과 댕다방 편집 추천은 계속 이용할 수 있습니다."
+            description={webScreen
+                ? "맞춤 추천에 쓸 정보와 기본 반려견을 직접 골라요. 설정을 꺼도 일반 쇼핑과 댕다방 편집 추천은 계속 이용할 수 있어요."
+                : "맞춤 추천에 사용할 정보와 기본 반려견을 직접 선택합니다. 설정을 꺼도 일반 쇼핑과 댕다방 편집 추천은 계속 이용할 수 있습니다."}
         >
             <div
                 className="grid gap-5"

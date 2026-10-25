@@ -9,6 +9,8 @@ import {
 import DaengLabCoinMark from "@/components/petlens/DaengLabCoinMark";
 import SignupEmailVerification from "@/components/auth/SignupEmailVerification";
 import { useAuth } from "@/lib/store";
+// 2026-10-26 웹 오류 문구 — 서버 원문 대신 해요체 문장(앱은 원래 문구)
+import { mypageErrorText } from "@/components/mypage/mypageWebText";
 
 type Props = {
     accessToken?: string;
@@ -58,7 +60,7 @@ export default function DaengLabWalletCard({ accessToken, accountEmail = "" }: P
             publishWallet(next);
             setConversionPoints(next.pointConversionUnit);
         } catch (reason) {
-            setError(reason instanceof Error ? reason.message : "댕다방 연구소 지갑을 불러오지 못했습니다.");
+            setError(mypageErrorText(reason, reason instanceof Error ? reason.message : "댕다방 연구소 지갑을 불러오지 못했습니다.", "연구소 지갑을 불러오지 못했어요. 잠시 뒤 다시 시도해 주세요."));
         } finally {
             setLoading(false);
         }
@@ -78,7 +80,7 @@ export default function DaengLabWalletCard({ accessToken, accountEmail = "" }: P
                     }
                 })
                 .catch((reason) => {
-                    if (active) setError(reason instanceof Error ? reason.message : "댕다방 연구소 지갑을 불러오지 못했습니다.");
+                    if (active) setError(mypageErrorText(reason, reason instanceof Error ? reason.message : "댕다방 연구소 지갑을 불러오지 못했습니다.", "연구소 지갑을 불러오지 못했어요. 잠시 뒤 다시 시도해 주세요."));
                 })
                 .finally(() => {
                     if (active) setLoading(false);
@@ -108,7 +110,7 @@ export default function DaengLabWalletCard({ accessToken, accountEmail = "" }: P
             setNotice(`${converted.convertedRewardPoints.toLocaleString("ko-KR")}P를 ${converted.grantedDaengLabCoins}C로 전환했습니다.`);
             setConversionPoints(converted.wallet.pointConversionUnit);
         } catch (reason) {
-            setError(reason instanceof Error ? reason.message : "적립금 전환을 완료하지 못했습니다.");
+            setError(mypageErrorText(reason, reason instanceof Error ? reason.message : "적립금 전환을 완료하지 못했습니다.", "적립금을 코인으로 바꾸지 못했어요. 잠시 뒤 다시 시도해 주세요."));
         } finally {
             setConverting(false);
         }

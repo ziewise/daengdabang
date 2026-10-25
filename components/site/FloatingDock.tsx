@@ -19,6 +19,10 @@
  *   ① 페이지가 다 열리고 브라우저가 한가해지면(늦어도 몇 초 안) 붙이고, ② 그 전에 "상담 열기"(openChatWidget) ·
  *   산책 친구 안내(상담 단추 보여 주기)가 오면 그 즉시 붙인다. 열기 요청은 chat-widget-events 가 들고 있다가
  *   상담 창이 붙는 순간 그대로 열림(앱 AppShell 과 같은 방식). 상담 창 안의 대화 로직 · 모양은 그대로.
+ *
+ * 2026-10-26 결제(/checkout) 휴대폰: 56px 상담 단추가 화면 폭 전체 아래 단추(결제하기 등)의 오른쪽 끝을 덮어서
+ *   휴대폰 폭에서는 상담 단추(launcher)만 숨김. 메뉴 등에서 상담을 열면(openChatWidget) 창은 그대로 열림.
+ *   상품 상세 구매 바(78px)와는 5.5rem 위치에서 10px 떨어져 있어 그대로(더 올리면 오른쪽 펫 런처와 겹침).
  */
 "use client";
 
@@ -116,6 +120,8 @@ export default function FloatingDock() {
         && !mobileFloating.isDaengLabResultVisible
         && (chatOpen || (!hideAtHeroTop && baseDockVisible && !mobileFloating.isScrolling));
     const interactive = dockVisible ? "pointer-events-auto" : "pointer-events-none";
+    // 결제 화면 휴대폰 — 상담 단추만 숨김(창 열기 동작은 그대로)
+    const hideLauncherOnCheckout = mobileFloating.isMobile && Boolean(pathname?.startsWith("/checkout"));
     const dockBottom = buybar
         ? (mobileFloating.isMobile
             ? "bottom-[calc(5.5rem+env(safe-area-inset-bottom))]"
@@ -156,7 +162,7 @@ export default function FloatingDock() {
             <div className={interactive}>
                 {chatMounted && <ChatWidget
                     isMobile={mobileFloating.isMobile}
-                    launcherHidden={!dockVisible}
+                    launcherHidden={!dockVisible || hideLauncherOnCheckout}
                     onOpenChange={setChatOpen}
                     empty={CareTalkWelcome}
                 />}
