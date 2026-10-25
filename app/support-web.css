@@ -17,7 +17,7 @@ html:not(.ddb-app-mode) main[data-support-web] {
 
     /* 부모가 가운데 정렬 flex 라 내용 폭으로 줄어들지 않게 */
     width: 100%;
-    max-width: 1080px;
+    max-width: 1280px; /* 2026-10-25 다른 웹 페이지(브랜드 스토리 · 상품 1280)와 같은 폭으로(사용자 요청) */
 
     /* 파스텔 색 묶음(바탕 · 글자 · 테) — 꼬리표 · 쿠션이 함께 씀 */
     & .is-yellow, & [data-notice-tag="배송"], & [data-faq-cat="주문/결제"] { --cs-bg: #fff6e3; --cs-ink: #b86a08; --cs-ring: #f7d48a; }
@@ -123,7 +123,7 @@ html:not(.ddb-app-mode) main[data-support-web] {
 
     /* ── 공지사항 — 왼쪽 날짜 · 가운데 점 줄 · 오른쪽 흰 쿠션 ── */
     & .cs-notices {
-        max-width: 900px;
+        max-width: none; /* 2026-10-25 폭 맞춤 — 판 폭 그대로 */
         margin: 6px auto 0;
         gap: 0;
     }
@@ -237,7 +237,7 @@ html:not(.ddb-app-mode) main[data-support-web] {
 
     /* ── 자주 묻는 질문 — Q · A 흰 쿠션(분류마다 색) ── */
     & .cs-faqs {
-        max-width: 900px;
+        max-width: none; /* 2026-10-25 폭 맞춤 — 판 폭 그대로 */
         margin: 6px auto 0;
         gap: 14px;
     }
@@ -351,7 +351,7 @@ html:not(.ddb-app-mode) main[data-support-web] {
         align-items: center;
         justify-content: center;
         gap: 10px 16px;
-        max-width: 900px;
+        max-width: none; /* 2026-10-25 폭 맞춤 — 판 폭 그대로 */
         margin: 30px auto 0;
         padding: 16px 24px;
         border-radius: 999px;
