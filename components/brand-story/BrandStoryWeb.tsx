@@ -216,33 +216,33 @@ export default function BrandStoryWeb() {
                 </ol>
             </section>
 
-            {/* ⑦ 기술 */}
+            {/* ⑦ 기술 — 2026-10-25 사용자 문안 · 사진 교체(큰사진/작은사진 → brand-story-tech-big/small.webp, 원본 png 유지) */}
             <section className="bsw-tech" aria-labelledby="bsw-tech-title">
                 <div className="bsw-photos" aria-hidden="true">
-                    <span className="bsw-photo is-big"><Image src="/images/brands/Ruffwear01-story.webp" alt="" fill sizes="(max-width: 860px) 80vw, 460px" /></span>
-                    <span className="bsw-photo is-small"><Image src="/images/brands/Rexspecs01-story.webp" alt="" fill sizes="(max-width: 860px) 40vw, 220px" /></span>
+                    <span className="bsw-photo is-big"><Image src="/images/brands/brand-story-tech-big.webp" alt="" fill sizes="(max-width: 860px) 80vw, 460px" /></span>
+                    <span className="bsw-photo is-small"><Image src="/images/brands/brand-story-tech-small.webp" alt="" fill sizes="(max-width: 860px) 40vw, 220px" /></span>
                     <span className="bsw-photo-chip">MOVE · NOTICE · CHOOSE</span>
                 </div>
                 <div className="bsw-tech-copy">
-                    <p className="bsw-kicker">TECHNOLOGY WITH HUMILITY</p>
-                    <h2 id="bsw-tech-title" className="bsw-h2">기술은 정답이 아니라,<br /><em className="bsw-hl">더 좋은 질문</em>을 위한 도구입니다.</h2>
-                    <p>펫렌즈와 케어톡은 사진과 보호자가 확인한 정보를 바탕으로 선택지를 정리합니다. 기술이 우리 아이를 단정하거나 의료적 판단을 대신하지 않습니다.</p>
-                    <p>추천보다 확인을 먼저, 자동화보다 보호자의 결정을 우선합니다.</p>
+                    <p className="bsw-kicker">TECHNOLOGY WITH CARE</p>
+                    <h2 id="bsw-tech-title" className="bsw-h2">기술은 정답이 아니라,<br />우리 아이를 <em className="bsw-hl">더 잘 살피는</em> 도구입니다.</h2>
+                    <p>펫렌즈와 케어톡은 사진과 보호자가 알려준 정보를 바탕으로, 우리 아이를 이해하는 데 필요한 단서와 정보를 정리합니다. AI가 반려견의 상태를 단정하거나 전문가의 판단을 대신하지는 않습니다.</p>
+                    <p>답을 서두르기보다 확인해야 할 부분을 함께 살피고, 보호자가 더 신중하게 선택할 수 있도록 돕습니다.</p>
                     <div className="bsw-tools">
                         <Link href="/pet-lens" className="bsw-tool" data-tone="lav">
                             {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                             <img src={`${UI}pet-lens-v2-256.webp`} alt="" aria-hidden="true" />
-                            <span><b>펫렌즈</b><small>사진으로 외형 · 체형 · 털 상태 살피기</small></span>
+                            <span><b>펫렌즈</b><small>사진으로 외형 · 체형 · 털 상태 살펴보기</small></span>
                             <i className="fa-solid fa-arrow-right" aria-hidden="true" />
                         </Link>
                         <Link href="/chat" className="bsw-tool" data-tone="pink">
                             {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                             <img src={`${UI}caretalk-web-128.webp`} alt="" aria-hidden="true" />
-                            <span><b>케어톡</b><small>궁금한 점을 편하게 물어보기</small></span>
+                            <span><b>케어톡</b><small>우리 아이에 대한 궁금증을 편하게 물어보기</small></span>
                             <i className="fa-solid fa-arrow-right" aria-hidden="true" />
                         </Link>
                     </div>
-                    <p className="bsw-note"><i className="fa-solid fa-shield-heart" aria-hidden="true" />추천은 참고 정보예요. 의료적 판단은 꼭 수의사와 함께해 주세요.</p>
+                    <p className="bsw-note"><i className="fa-solid fa-shield-heart" aria-hidden="true" />AI가 제공하는 정보는 참고용입니다. 건강 이상이 의심될 때는 수의사와 상담해 주세요.</p>
                 </div>
             </section>
 
