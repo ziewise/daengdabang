@@ -38,12 +38,12 @@ const PRINCIPLES = [
     { title: "구매 후에도 안심할 수 있는가", body: "배송부터 교환·반품, 문의 응대까지. 구매 이후의 경험도 책임 있는 서비스의 일부로 생각합니다.", art: "brand-std-assure-256.webp", tone: "mint" },
 ];
 
-/** 큐레이션 흐름 — 원래 화면 문구 그대로 */
+/** 큐레이션 네 단계 — 2026-10-25 사용자 문안 · 크레파스 그림(1번 발견은 새 그림 올 때까지 기존 그림) */
 const FLOW = [
-    { title: "관찰", body: "시장 흐름과 보호자 검색을 함께 살피고 자사몰 카탈로그의 빈칸을 찾습니다.", art: "find-magazine-256.webp" },
-    { title: "비교", body: "상품의 쓰임, 정보, 가격, 공급 경로와 고객이 실제로 확인해야 할 조건을 나란히 봅니다.", art: "find-showcase-256.webp" },
-    { title: "검토", body: "많이 보인다는 이유만으로 들이지 않고, 댕다방이 설명할 수 있는 상품인지 다시 묻습니다.", art: "web-cs-step-inspect-256.webp" },
-    { title: "연결", body: "입점 뒤에도 질문과 피드백을 모아 더 이해하기 쉬운 선택 경험으로 다듬습니다.", art: "next-brand-256.webp" },
+    { title: "발견", body: "시장 흐름과 보호자의 검색·고민을 함께 살피며, 아직 충분히 채워지지 않은 필요를 찾습니다.", art: "find-magazine-256.webp" },
+    { title: "비교", body: "상품의 쓰임과 정보, 가격, 공급 조건을 나란히 비교해 선택에 필요한 차이를 확인합니다.", art: "brand-flow-compare-256.webp" },
+    { title: "선별", body: "인기만으로 결정하지 않고, 추천하는 이유를 분명하게 설명할 수 있는 상품인지 검토합니다.", art: "brand-flow-select-256.webp" },
+    { title: "개선", body: "입점 후에도 고객의 문의와 후기를 살펴, 상품 정보와 쇼핑 경험을 꾸준히 다듬습니다.", art: "brand-flow-improve-256.webp" },
 ];
 
 /** 약속 — 원래 화면 문구 그대로(2026-10-25 카드 아이콘 뺌 · 사용자 요청) */
@@ -197,15 +197,15 @@ export default function BrandStoryWeb() {
             {/* ⑥ 큐레이션 흐름 */}
             <section className="bsw-flow" aria-labelledby="bsw-flow-title">
                 <div className="bsw-flow-intro">
-                    <p className="bsw-kicker">CURATION, NOT A SHORTCUT</p>
-                    <h2 id="bsw-flow-title" className="bsw-h2">시장의 움직임과<br /><em className="bsw-hl">우리 아이의 하루</em> 사이.</h2>
-                    <p>외부 시장의 변화는 새로운 필요를 발견하는 중요한 신호입니다. 다만 검색량이나 인기만으로 입점을 결정하지 않습니다. 보호자가 실제로 찾는 이유와 자사몰에 비어 있는 선택지를 함께 봅니다.</p>
+                    <p className="bsw-kicker">CURATION, STEP BY STEP</p>
+                    <h2 id="bsw-flow-title" className="bsw-h2">시장의 흐름을 읽고,<br /><em className="bsw-hl">우리 아이의 하루</em>에 맞춰 고릅니다.</h2>
+                    <p>새로운 트렌드와 검색량은 필요한 제품을 발견하는 단서가 됩니다. 하지만 인기가 곧 좋은 선택을 뜻하지는 않습니다. 보호자의 실제 고민과 제품의 쓰임을 살피고, 비교와 검토를 거쳐 소개합니다.</p>
                 </div>
                 <ol className="bsw-steps">
                     {FLOW.map((step, index) => (
                         <li key={step.title}>
                             <span className="bsw-step-art" aria-hidden="true">
-                                {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
+                                {/* eslint-disable-next-line @next/next/no-img-element -- 크레파스 그림 */}
                                 <img src={`${UI}${step.art}`} alt="" />
                                 <b>{index + 1}</b>
                             </span>
