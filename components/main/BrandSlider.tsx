@@ -4,6 +4,7 @@
  * 4슬라이드 (각 브랜드 2장씩) — 4.5초마다 자동 전환.
  * 텍스트(브랜드명·태그라인·CTA) 와 페이지네이션은 슬라이드 인덱스에 동기화.
  * 사용자가 dot 클릭 시 자동 전환 일시 정지 → 5초 후 재개.
+ * 사진: 원본 PNG(장당 2~3MB) 대신 같은 그림을 1600px 로 줄인 webp(2026-10-25 속도 — 원본 PNG 는 그대로 둠)
  */
 "use client";
 
@@ -26,25 +27,25 @@ const SLIDES: BrandSlide[] = [
         brandId: "ruffwear", brandName: "Ruffwear",
         desc: "활동견을 위한 프리미엄 아웃도어 기어",
         cta: "브랜드 둘러보기", href: "/brand/ruffwear",
-        image: "/images/brands/Ruffwear01.png",
+        image: "/images/brands/Ruffwear01-1600.webp",
     },
     {
         brandId: "ruffwear", brandName: "Ruffwear",
         desc: "Front Range · Roamer · Cloud Chaser — 베스트셀러 라인",
         cta: "브랜드 둘러보기", href: "/brand/ruffwear",
-        image: "/images/brands/Ruffwear02.png",
+        image: "/images/brands/Ruffwear02-1600.webp",
     },
     {
         brandId: "rexspecs", brandName: "Rex Specs",
         desc: "강아지 눈 보호 전문 아이웨어 솔루션",
         cta: "고글 라인업", href: "/brand/rex-specs",
-        image: "/images/brands/Rexspecs01.png",
+        image: "/images/brands/Rexspecs01-1600.webp",
     },
     {
         brandId: "rexspecs", brandName: "Rex Specs",
         desc: "V2 · Air · Sun Visor — 활동량과 날씨에 맞춰",
         cta: "고글 라인업", href: "/brand/rex-specs",
-        image: "/images/brands/Rexspecs02.png",
+        image: "/images/brands/Rexspecs02-1600.webp",
     },
 ];
 
