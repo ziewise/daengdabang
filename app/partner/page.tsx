@@ -3,6 +3,8 @@ import Link from "next/link";
 import BusinessInquiryPanel from "@/components/contact/BusinessInquiryPanel";
 // 웹 겉모양(2026-10-25) — data-biz-web 이름표 · 웹 전용 3D 그림만, 꾸밈은 app/biz-web.css(앱은 그대로)
 import "../biz-web.css";
+// 웹 소개 화면 2차(2026-10-25) — 웹은 이 소개 + 아래 기존 문의 양식, 기존 소개 구역은 웹에서만 숨김(앱 그대로)
+import { PartnerWebIntro } from "@/components/contact/BizWebIntro";
 
 export const metadata: Metadata = {
     title: "입점·제휴 문의 | 댕다방",
@@ -26,6 +28,7 @@ const proposalTypes = [
 export default function PartnerInquiryPage() {
     return (
         <div className="mx-auto w-full max-w-[1180px] px-4 py-10 md:px-6 md:py-14" data-biz-web="partner">
+            <PartnerWebIntro />
             <section className="relative overflow-hidden rounded-[32px] border border-white/70 bg-[linear-gradient(135deg,rgba(255,247,237,.96),rgba(239,246,255,.94)_48%,rgba(238,242,255,.96))] px-6 py-10 shadow-card sm:px-10 sm:py-14">
                 <div aria-hidden="true" className="absolute -right-14 -top-16 h-48 w-48 rounded-full bg-orange-200/50 blur-3xl" />
                 <div aria-hidden="true" className="absolute -bottom-24 left-1/3 h-56 w-56 rounded-full bg-indigo-200/50 blur-3xl" />

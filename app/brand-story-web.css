@@ -103,9 +103,13 @@ html:not(.ddb-app-mode) .bsw {
     & .bsw-scene-art { display: grid; width: 92px; height: 92px; place-items: center; border-radius: 50%; background: #fff; box-shadow: 0 0 0 4px var(--t-ring), 0 14px 22px -16px rgb(15 23 42 / 45%); transition: transform 0.3s; }
     & .bsw-scene:hover .bsw-scene-art { transform: rotate(-6deg) scale(1.06); }
     & .bsw-scene-art img { width: 66px; height: 66px; object-fit: contain; }
+    & .bsw-scene-text { display: grid; justify-items: center; gap: 6px; }
     & .bsw-scene b { margin-top: 10px; font-family: var(--bw-jua); font-size: 18px; font-weight: 400; }
     & .bsw-scene small { min-height: 3em; color: var(--bw-soft); font-size: 13px; font-weight: 600; line-height: 1.5; word-break: keep-all; }
-    & .bsw-scene-go { display: inline-flex; align-items: center; gap: 6px; margin-top: 4px; padding: 6px 13px; border-radius: 999px; background: #fff; color: var(--t-ink); font-size: 12.5px; font-weight: 800; }
+    & .bsw-scene-go { display: inline-flex; align-items: center; gap: 6px; margin-top: 4px; padding: 6px 13px; border-radius: 999px; background: #fff; color: var(--t-ink); font-size: 12.5px; font-weight: 800; text-decoration: none; }
+    & .bsw-scene-go:hover { box-shadow: inset 0 0 0 2px var(--t-ring); }
+    /* 겹친 카드 안내 · 점 줄은 휴대폰에서만 */
+    & .bsw-scene-tap, & .bsw-deck-nav { display: none; }
 
     /* ───────── ⑤ 네 가지 기준 ───────── */
     & .bsw-principles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
@@ -203,10 +207,31 @@ html:not(.ddb-app-mode) .bsw {
         & .bsw-stats b { font-size: 24px; }
         & .bsw-bubble { padding: 26px 24px 30px; }
         & .bsw-reader { width: 150px; height: 150px; }
-        /* 다섯 장면 — 옆으로 밀어 보기 */
-        & .bsw-scenes { display: flex; margin: 0 -16px; padding: 4px 16px 10px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: 16px; scrollbar-width: none; }
-        & .bsw-scenes::-webkit-scrollbar { display: none; }
-        & .bsw-scene { flex: none; width: 196px; scroll-snap-align: start; }
+        /* 다섯 장면 — 가로로 긴 카드 다섯 장을 겹쳐 쌓고, 뒤 카드가 위로 조금씩 보이게. 맨 앞 카드를 누르면 맨 뒤로(옆으로 밀지 않음) */
+        & .bsw-scenes { position: relative; display: block; height: 252px; margin-top: 8px; }
+        & .bsw-scene { position: absolute; right: 0; bottom: 0; left: 0; display: grid; grid-template-columns: 96px minmax(0, 1fr); align-items: center; justify-items: start; gap: 0 16px; height: 196px; padding: 18px 18px 18px 16px; text-align: left; cursor: pointer; transform-origin: 50% 0; transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.45s, box-shadow 0.3s; -webkit-tap-highlight-color: transparent; }
+        & .bsw-scene:hover { transform: none; }
+        & .bsw-scene[data-pos="0"] { z-index: 5; box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%), 0 22px 30px -18px rgb(15 23 42 / 45%); }
+        & .bsw-scene[data-pos="1"] { z-index: 4; transform: translateY(-14px) scale(0.95); box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%), 0 12px 18px -14px rgb(15 23 42 / 35%); }
+        & .bsw-scene[data-pos="2"] { z-index: 3; transform: translateY(-27px) scale(0.9); }
+        & .bsw-scene[data-pos="3"] { z-index: 2; transform: translateY(-39px) scale(0.85); opacity: 0.92; }
+        & .bsw-scene[data-pos="4"] { z-index: 1; transform: translateY(-50px) scale(0.8); opacity: 0.8; }
+        /* 뒤 카드는 내용을 감추고 색 띠만 보이게 */
+        & .bsw-scene:not([data-pos="0"]) > * { visibility: hidden; }
+        & .bsw-scene[data-pos="0"]:active { transform: scale(0.98); }
+        & .bsw-scene-no { top: 14px; left: auto; right: 18px; }
+        & .bsw-scene-art { grid-row: span 1; width: 96px; height: 96px; }
+        & .bsw-scene-art img { width: 70px; height: 70px; }
+        & .bsw-scene-text { justify-items: start; gap: 4px; }
+        & .bsw-scene b { margin-top: 0; font-size: 20px; }
+        & .bsw-scene small { min-height: 0; font-size: 13.5px; }
+        & .bsw-scene-go { margin-top: 6px; padding: 8px 14px; font-size: 13px; box-shadow: 0 8px 14px -10px rgb(15 23 42 / 40%); }
+        & .bsw-scene-tap { position: absolute; right: 16px; bottom: 12px; display: inline-flex; align-items: center; gap: 5px; color: var(--t-ink); font-size: 11.5px; font-weight: 800; opacity: 0.75; }
+        & .bsw-deck-nav { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 14px; }
+        & .bsw-deck-nav button { display: grid; width: 40px; height: 40px; place-items: center; border: 0; border-radius: 50%; background: #fff; color: #64748b; cursor: pointer; box-shadow: 0 8px 14px -10px rgb(15 23 42 / 45%), inset 0 0 0 1.5px #efe5d8; }
+        & .bsw-deck-dots { display: flex; gap: 6px; }
+        & .bsw-deck-dots i { width: 8px; height: 8px; border-radius: 999px; background: var(--t-ring); transition: width 0.3s; }
+        & .bsw-deck-dots i.is-on { width: 24px; background: var(--t-ink); }
         & .bsw-principles { grid-template-columns: minmax(0, 1fr); }
         & .bsw-principle { min-height: 0; padding: 22px 20px 24px; }
         & .bsw-principle h3 { margin-top: 18px; }

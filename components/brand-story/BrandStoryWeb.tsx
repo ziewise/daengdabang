@@ -6,7 +6,7 @@
  *  ① 머리 판: 손글씨 꼬리표 · 주아 세 줄 제목(강조 단어) · 소개 · 분홍/흰 알약 · 다섯 장면 알약 / 오른쪽 둥근 창 속 영상 + 떠 있는 3D 그림
  *  ② 숫자 띠: 상품 · 브랜드 · 생활 장면 · 선택 기준
  *  ③ 첫 질문: 말풍선 큰 인용 “우리 아이에게도 맞을까?” + 책 읽는 댕다방 강아지 / 시작 이야기
- *  ④ 다섯 장면: 산책 · 먹거리 · 생활 · 놀이 · 케어(3D 그림 · 한 줄 · 상품 수 · 보러 가기)
+ *  ④ 다섯 장면: 산책 · 먹거리 · 생활 · 놀이 · 케어(3D 그림 · 한 줄 · 상품 수 · 보러 가기) — SceneDeck(휴대폰은 겹친 카드를 눌러 한 장씩)
  *  ⑤ 네 가지 기준: 파스텔 카드 · 큰 번호 · 3D 그림
  *  ⑥ 큐레이션 흐름: 관찰 → 비교 → 검토 → 연결(세 색 크레파스 줄로 이은 동그라미)
  *  ⑦ 기술: 둥근 사진 두 장 + 펫렌즈 · 케어톡 도구 카드 + "의료 판단을 대신하지 않아요"
@@ -17,6 +17,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { CATALOG, CATEGORY_LABEL, listBrands, type CategorySlug } from "@/lib/catalog";
+import SceneDeck from "@/components/brand-story/SceneDeck";
 
 const UI = "/images/ui/";
 
@@ -162,20 +163,17 @@ export default function BrandStoryWeb() {
                     <h2 id="bsw-scenes-title" className="bsw-h2">매일 반복되는 <em className="bsw-hl">다섯 장면</em>에서 시작해요</h2>
                     <p>우리 아이의 하루를 장면으로 나눠 보면, 지금 필요한 것이 더 또렷해집니다.</p>
                 </div>
-                <div className="bsw-scenes">
-                    {SCENES.map((scene, index) => (
-                        <Link key={scene.slug} href={`/category/${scene.slug}`} className="bsw-scene" data-tone={scene.tone}>
-                            <span className="bsw-scene-no">{String(index + 1).padStart(2, "0")}</span>
-                            <span className="bsw-scene-art" aria-hidden="true">
-                                {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
-                                <img src={`${UI}${scene.art}`} alt="" />
-                            </span>
-                            <b>{CATEGORY_LABEL[scene.slug]}</b>
-                            <small>{scene.line}</small>
-                            <span className="bsw-scene-go">상품 {countBy(scene.slug)}개 보기<i className="fa-solid fa-arrow-right" aria-hidden="true" /></span>
-                        </Link>
-                    ))}
-                </div>
+                {/* PC 다섯 칸 · 휴대폰 겹친 카드(눌러서 한 장씩) */}
+                <SceneDeck
+                    scenes={SCENES.map((scene) => ({
+                        slug: scene.slug,
+                        label: CATEGORY_LABEL[scene.slug],
+                        art: scene.art,
+                        tone: scene.tone,
+                        line: scene.line,
+                        count: countBy(scene.slug),
+                    }))}
+                />
             </section>
 
             {/* ⑤ 네 가지 기준 */}
