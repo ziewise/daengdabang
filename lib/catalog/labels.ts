@@ -56,6 +56,8 @@ export const PROMO_LABEL: Record<PromoSlug, string> = {
     eye: "눈 보호",
     food: "프리미엄 푸드",
     seasonal: "시즌 컬렉션",
+    season: "시즌 기획전",
+    walk: "산책용 상품",
 };
 
 export const BEST_PERIOD_LABEL: Record<BestPeriod, string> = {

@@ -27,6 +27,7 @@ import RecommendSection from "@/components/main/RecommendSection";
 import HotPickSection from "@/components/main/HotPickSection";
 import BrandSlider from "@/components/main/BrandSlider";
 import PromoSection from "@/components/main/PromoSection";
+import { seasonOf } from "@/lib/promo-season";
 import NewArrivalsSection from "@/components/main/NewArrivalsSection";
 import InstaSection from "@/components/main/InstaSection";
 import DailyMineTeaser from "@/components/home/DailyMineTeaser";
@@ -53,7 +54,8 @@ export default function HomePage() {
             {/* 2026-10-19 웹 시안: 추천 셀렉트 → 댕다방 핫픽(제품군 5장 · 1~3위 카드 뒤집기). 앱은 그대로 */}
             <HotPickSection />
             <BrandSlider />
-            <PromoSection />
+            {/* 시즌 기획전 칸 — 페이지를 만든 날의 계절로 그려 두고, 화면에서 오늘 날짜로 다시 맞춤 */}
+            <PromoSection season={seasonOf()} />
 
             {/* 쇼핑 흐름을 먼저 충분히 보여준 뒤 매일 방문 기능은 짧은 띠로 연결한다. */}
             <DailyMineTeaser />

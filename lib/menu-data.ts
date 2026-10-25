@@ -37,6 +37,10 @@ export interface PromoCard {
     images?: string[];
     video?: string;
     featured?: boolean;
+    /** 휴대폰에서 쓸 다른 그림(없으면 image) — 웹 기획전 시즌 칸 */
+    imageMobile?: string;
+    /** 시즌 칸 — 제목 · 설명 · 그림을 오늘 날짜의 계절 것으로 바꿔 보여 줌(lib/promo-season.ts) */
+    season?: boolean;
 }
 
 export interface CSLink {
@@ -131,6 +135,35 @@ export const PROMO_CARDS: PromoCard[] = [
     {
         icon: "fa-boxes-stacked", title: "세트 상품", desc: "함께 사면 더 좋은 묶음 구성", href: "/bundles", color: "pink",
         image: "/images/promo/bundles.png",
+    },
+];
+
+// ============ 웹 메인 기획전 5칸(2026-10-25 사용자 결정) ============
+// 시즌 기획전 · 산책용 상품 · 눈·청력 보호 · 프리미엄 푸드 · 세트 상품. 칸마다 그림 한 장(나중에 영상 · 그림 바꾸기 효과 추가 예정).
+// 시즌 칸의 제목 · 설명 · 그림은 lib/promo-season.ts 의 계절 값으로 바뀜(아래 값은 가을 기본값).
+// 앱(스티커북 쇼핑)은 위 PROMO_CARDS 그대로 — 앱은 지금 바꾸지 않음
+export const WEB_PROMO_CARDS: PromoCard[] = [
+    {
+        icon: "fa-leaf", title: "시즌 기획전", desc: "하이킹 슈즈 · 배낭 · 간절기 겉옷 · 야외 놀이 — 걷기 좋은 계절 준비", href: "/promo/season", color: "indigo",
+        titleFull: "선선한 가을,\n함께 걷는 하이킹", eyebrow: "SEASON PICK",
+        image: "/images/ui/promo/season-autumn-pc-1600.webp", imageMobile: "/images/ui/promo/season-autumn-mobile-960.webp",
+        featured: true, season: true,
+    },
+    {
+        icon: "fa-person-walking", title: "산책용 상품", desc: "하네스 · 리드줄 · 목줄 · 트릿백 — 매일 산책 기본템", href: "/promo/walk", color: "green",
+        image: "/images/ui/promo/walk-960.webp",
+    },
+    {
+        icon: "fa-glasses", title: "눈·청력 보호", desc: "Rex Specs 고글 · 귀 보호", href: "/promo/eye", color: "purple",
+        image: "/images/ui/promo/eye-care-960.webp",
+    },
+    {
+        icon: "fa-bone", title: "프리미엄 푸드", desc: "엄선된 사료·간식 큐레이션", href: "/promo/food", color: "blue",
+        image: "/images/ui/promo/premium-food-960.webp",
+    },
+    {
+        icon: "fa-boxes-stacked", title: "세트 상품", desc: "함께 사면 더 좋은 묶음 구성", href: "/bundles", color: "pink",
+        image: "/images/ui/promo/bundles-960.webp",
     },
 ];
 

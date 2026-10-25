@@ -14,13 +14,19 @@
  *
  * 웹(2026-10-24 J5): 왼쪽 큰 사진 + 오른쪽 가로 사진 4장, 흰 액자 아래 여백에만 글(data-promo-cap).
  * 사진 위 오버레이 글 · 그늘은 웹 CSS(app/globals.css)에서만 숨김 — 앱 화면 · 링크는 그대로.
+ *
+ * 2026-10-25 사용자 결정: 웹 기획전 5칸 = 시즌 기획전 · 산책용 · 눈·청력 보호 · 프리미엄 푸드 · 세트(WEB_PROMO_CARDS).
+ *  - 시즌 칸은 손님 기기의 오늘 날짜로 계절(봄 3~5 · 여름 6~8 · 가을 9~11 · 겨울 12~2)을 정해 제목 · 설명 · 그림을 바꿈(lib/promo-season.ts).
+ *    미리 만든 페이지에는 만든 날의 계절(season 인자)로 그려 두고, 화면에 붙은 뒤 오늘 날짜로 다시 맞춤(배포 없이 계절이 바뀜).
+ *  - 칸마다 그림 한 장(시즌은 PC용 · 휴대폰용 중 화면에 맞는 한 장). 영상 · 그림 바꾸기 효과는 나중에.
  */
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import Image from "next/image";
+import { SEASONS, seasonOf, type SeasonKey } from "@/lib/promo-season";
 import Link from "next/link";
-import { PROMO_CARDS, type PromoCard } from "@/lib/menu-data";
+import { WEB_PROMO_CARDS, type PromoCard } from "@/lib/menu-data";
 
 // color → 배경 class (Tailwind JIT 가 잡도록 명시 매핑, 헤더 드롭다운과 동일 팔레트)
 const COLOR_BG: Record<PromoCard["color"], string> = {
@@ -33,7 +39,18 @@ const COLOR_BG: Record<PromoCard["color"], string> = {
 
 const IMAGE_SWITCH_INTERVAL = 3000; // 교차 이미지 전환 간격 (ms)
 
-export default function PromoSection() {
+const noopSubscribe = () => () => {};
+
+/** 시즌 칸이면 지금 계절의 제목 · 설명 · 그림으로 */
+function withSeason(card: PromoCard, season: SeasonKey): PromoCard {
+    if (!card.season) return card;
+    const look = SEASONS[season];
+    return { ...card, title: look.title, titleFull: look.titleFull, desc: look.desc, eyebrow: look.eyebrow, image: look.image.pc, imageMobile: look.image.mobile };
+}
+
+export default function PromoSection({ season: builtSeason = "autumn" }: { season?: SeasonKey } = {}) {
+    // 미리 만든 페이지 = 만든 날의 계절, 화면에 붙은 뒤 = 오늘 날짜의 계절
+    const season = useSyncExternalStore(noopSubscribe, () => seasonOf(), () => builtSeason);
     return (
         <section id="promo" className="py-8 md:py-12">
             <div className="max-w-[1400px] mx-auto px-6">
@@ -44,7 +61,7 @@ export default function PromoSection() {
 
                 {/* 1 featured + 4 small 그리드 — 헤더 드롭다운과 동일한 PROMO_CARDS 사용 */}
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 auto-rows-[130px] md:auto-rows-[200px] lg:auto-rows-[220px]">
-                    {PROMO_CARDS.map((t, i) => (
+                    {WEB_PROMO_CARDS.map((card) => withSeason(card, season)).map((t, i) => (
                         <PromoTileCard key={t.href} tile={t} priority={i === 0} index={i} />
                     ))}
                 </div>
@@ -192,7 +209,22 @@ function PromoMedia({
         );
     }
 
-    // 3) 단일 이미지
+    // 3) 단일 이미지 — 휴대폰용 그림이 따로 있으면 화면 폭에 맞는 한 장만 받음(picture)
+    if (tile.image && tile.imageMobile) {
+        return (
+            <picture>
+                <source media="(max-width: 767px)" srcSet={tile.imageMobile} />
+                <img
+                    src={tile.image}
+                    alt={tile.title}
+                    loading={priority ? "eager" : "lazy"}
+                    fetchPriority={priority ? "high" : undefined}
+                    decoding="async"
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+            </picture>
+        );
+    }
     if (tile.image) {
         return (
             <Image
