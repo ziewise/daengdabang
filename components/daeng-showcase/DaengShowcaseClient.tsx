@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import ShowcaseAuthorProfileModal from "@/components/daeng-showcase/ShowcaseAuthorProfileModal";
 import ShowcaseCard from "@/components/daeng-showcase/ShowcaseCard";
 import ShowcaseComposer from "@/components/daeng-showcase/ShowcaseComposer";
+import ShowcaseComposeLauncher from "@/components/daeng-showcase/ShowcaseComposeLauncher";
 import ShowcaseShareModal, { type ShowcaseShareTarget } from "@/components/daeng-showcase/ShowcaseShareModal";
 import ShowcaseTopicCard from "@/components/daeng-showcase/ShowcaseTopicCard";
 import {
@@ -116,6 +117,8 @@ export default function DaengShowcaseClient() {
     const [highlightedTopicId, setHighlightedTopicId] = useState("");
     const [profileAuthorId, setProfileAuthorId] = useState("");
     const [shareTarget, setShareTarget] = useState<ShowcaseShareTarget | null>(null);
+    // 올리기 창(2026-10-25 웹 — 페이지에는 "사진 올리기" 카드, 누르면 작성 창)
+    const [composerOpen, setComposerOpen] = useState(false);
     const [loginHref, setLoginHref] = useState(SHOWCASE_LOGIN_HREF);
     const [signupHref, setSignupHref] = useState(SHOWCASE_SIGNUP_HREF);
     const [notice, setNotice] = useState<{ message: string; error: boolean } | null>(null);
@@ -428,7 +431,8 @@ export default function DaengShowcaseClient() {
                         router.push(signupHref);
                         return;
                     }
-                    document.getElementById("showcase-composer")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                    // 2026-10-25 아래로 내려가는 대신 올리기 창을 엶
+                    setComposerOpen(true);
                 }}
                 onShare={() => {
                     if (topic) setShareTarget({ kind: "topic", topic });
@@ -442,13 +446,22 @@ export default function DaengShowcaseClient() {
                 {!hydrated ? (
                     <div className="dw-csheet is-mint h-44 animate-pulse motion-reduce:animate-none" aria-label="회원 상태 확인 중" />
                 ) : authenticated && user ? (
-                    <ShowcaseComposer
-                        accessToken={accessToken}
-                        defaultDisplayName={memberDisplayName(user.name)}
-                        pets={serverPets}
-                        topic={topic?.isActive ? { topicId: topic.topicId, title: topic.title } : undefined}
-                        onCreated={handleCreated}
-                    />
+                    <>
+                        {/* 페이지 — "사진 올리기" 카드(누르면 작성 창) */}
+                        <ShowcaseComposeLauncher topicTitle={topic?.isActive ? topic.title : undefined} onOpen={() => setComposerOpen(true)} />
+                        <ShowcaseComposer
+                            accessToken={accessToken}
+                            defaultDisplayName={memberDisplayName(user.name)}
+                            pets={serverPets}
+                            topic={topic?.isActive ? { topicId: topic.topicId, title: topic.title } : undefined}
+                            onCreated={(post) => {
+                                setComposerOpen(false);
+                                handleCreated(post);
+                            }}
+                            open={composerOpen}
+                            onClose={() => setComposerOpen(false)}
+                        />
+                    </>
                 ) : (
                     <div className="dw-csheet is-mint dw-sc-join">
                         <span className="dw-rring" aria-hidden="true"><span><Image src="/images/ui/mypet-shutter-384.webp" alt="" width={96} height={96} /></span></span>
