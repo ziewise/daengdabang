@@ -4505,3 +4505,15 @@ html:not(.ddb-app-mode) { --font-gaegu: var(--font-crayon); }
 html:not(.ddb-app-mode) body { --font-crayon: var(--font-jua); }
 /* 케어톡(떠 있는 창 · 전체 화면)은 손글씨 글꼴 선택을 그대로 — 안에서 --font-crayon 을 다시 손글씨로 */
 html:not(.ddb-app-mode) :is([data-chat-widget-open], [data-chat-shell]) { --font-crayon: var(--font-gaegu); }
+
+/* ── 웹 스크롤바 정리 (2026-10-25 사용자 "모달은 스크롤바 없이 스크롤만, 모바일은 전체적으로 스크롤바 없이") ──
+   스크롤 자체(휠 · 터치 · 키보드)는 그대로, 막대만 숨김. 앱(ddb-app-mode)은 그대로.
+   !important — 몇몇 칸(약관 목차 · 케어톡 대화 목록 등)이 얇은 막대를 따로 정해 둔 것보다 앞서게. */
+/* ① 웹 창(모달) — 창과 그 안 스크롤 칸 모두 */
+html:not(.ddb-app-mode) :is([role="dialog"], [role="dialog"] *) { scrollbar-width: none !important; -ms-overflow-style: none; }
+html:not(.ddb-app-mode) :is([role="dialog"], [role="dialog"] *)::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
+/* ② 휴대폰 폭(767px 이하) — 페이지와 안쪽 스크롤 칸 전체(PC 폭은 스크롤바 그대로) */
+@media (max-width: 767px) {
+    html:not(.ddb-app-mode), html:not(.ddb-app-mode) * { scrollbar-width: none !important; -ms-overflow-style: none; }
+    html:not(.ddb-app-mode)::-webkit-scrollbar, html:not(.ddb-app-mode) *::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
+}
