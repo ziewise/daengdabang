@@ -39,12 +39,13 @@ export default function ProductTabs({ product: p }: Props) {
     return (
         <div className="mt-12 md:mt-16">
             {p.reviewGroup && p.reviewGroup.variants.length > 1 && (
-                <section aria-label={locale === "en" ? "Product variants" : "색상·시즌별 상품 옵션"} className="mb-6 rounded-xl border border-neutral-200 bg-neutral-50 p-5">
+                <section aria-label={locale === "en" ? "Product variants" : "색상·시즌별 상품 옵션"} className="mb-6 rounded-xl border border-neutral-200 bg-neutral-50 p-5" data-pd-variants="">
                     <h2 className="text-sm font-bold">{locale === "en" ? "Choose a color or season" : "색상·시즌별 옵션 보기"}</h2>
                     <p className="mt-2 text-xs leading-5 text-neutral-500">{locale === "en" ? "Each version keeps its own size options, price and stock." : "각 상품의 기존 색상·사이즈·가격·재고를 그대로 확인하고 선택할 수 있어요."}</p>
                     <div className="mt-3 grid gap-2 sm:grid-cols-2">{p.reviewGroup.variants.map(variant => <Link key={variant.folder} href={`/product/${variant.folder}/`} aria-current={variant.folder === p.folder ? "page" : undefined} className={`rounded-lg border p-3 text-xs leading-5 ${variant.folder === p.folder ? "border-indigo-300 bg-indigo-50" : "border-neutral-200 bg-white hover:border-indigo-300"}`}>
                         <span className="block font-bold">{variant.name}</span>
-                        {variant.colors.length > 0 && <span className="mt-1 block text-neutral-500">{variant.colors.join(" · ")}</span>}
+                        {/* 색상 이름마다 span(웹은 알약 · 앱은 지금처럼 " · " 로 이어 보임) */}
+                        {variant.colors.length > 0 && <span className="mt-1 block text-neutral-500" data-pd-variant-colors="">{variant.colors.map((color, index) => <span key={color}>{index > 0 && <i aria-hidden="true" data-sep=""> · </i>}<span data-chip="">{color}</span></span>)}</span>}
                     </Link>)}</div>
                 </section>
             )}

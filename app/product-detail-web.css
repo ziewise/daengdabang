@@ -25,6 +25,8 @@ html:not(.ddb-app-mode) main[data-product-detail-content] {
     }
 
     & .pd-thumbs { gap: 10px; padding: 6px 4px 8px; }
+    /* 썸네일 줄은 웹에서 숨김(2026-10-25 사용자 — 색상은 오른쪽 칩으로 고르고, 큰 사진은 한 장 + 올리면 영상이라 줄이 필요 없음). 앱은 그대로 */
+    & .pd-thumbs { display: none; }
 
     & .pd-thumb {
         border-radius: 18px;
@@ -706,5 +708,158 @@ html:not(.ddb-app-mode) main[data-product-detail-content] [data-app-detail-fold]
     html:not(.ddb-app-mode) main[data-product-detail-content] [data-app-detail-fold]:has([data-supplier-original-detail], [data-product-detail-copy]) {
         &[data-app-detail-fold="closed"] > [data-app-detail-fold-body] { max-height: 760px; }
         & > [data-app-detail-fold-toggle] button { min-height: 48px; padding: 0 26px; font-size: 15px; }
+    }
+}
+
+/* ═════════ 2026-10-25 상품 상세 고도화(사용자 "우리 웹 컨셉으로 · 디테일까지") — 웹 전용 ═════════
+   ① 색상 · 시즌별 옵션 판(ProductTabs [data-pd-variants]) ② 배송 · 반품 한눈에 보기 + 펼치기(ProductDeliveryReturnPolicy)
+   ③ 외부 판매처 후기 판(ProductReviewPanel [data-review-panel]). 문구 · 동작은 그대로, 앱은 그대로 */
+html:not(.ddb-app-mode) main[data-product-detail-content] {
+    /* ── ① 색상 · 시즌별 옵션 판 — 보라 파스텔 쿠션 + 흰 카드(지금 보는 상품은 분홍 테) ── */
+    & [data-pd-variants] {
+        position: relative;
+        max-width: 1024px;
+        margin: 0 auto 28px;
+        padding: 26px 28px 28px;
+        border: 0;
+        border-radius: 32px;
+        background: radial-gradient(60% 120% at 100% 0, #fff0f4 0, transparent 60%), linear-gradient(140deg, #f3f0fe, #f8f6ff 60%, #fffaf3);
+        box-shadow: var(--pd-cushion);
+    }
+    & [data-pd-variants]::after {
+        content: "";
+        position: absolute;
+        top: 18px;
+        right: 22px;
+        width: 64px;
+        height: 64px;
+        background: url("/images/ui/shop-menu-set-128.webp") center / contain no-repeat;
+        filter: drop-shadow(0 8px 10px rgb(15 23 42 / 14%));
+    }
+    & [data-pd-variants] > h2 { padding-right: 80px; color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 22px; font-weight: 400; }
+    & [data-pd-variants] > h2::before { content: "OTHER SEASONS"; display: block; color: #6b51c9; font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif; font-size: 12.5px; font-weight: 700; letter-spacing: 0.12em; line-height: 1.6; }
+    & [data-pd-variants] > p { padding-right: 80px; color: #5b6476; font-size: 13.5px; font-weight: 600; }
+    & [data-pd-variants] > div { gap: 14px; margin-top: 20px; }
+    & [data-pd-variants] a {
+        position: relative;
+        display: grid;
+        align-content: start;
+        gap: 10px;
+        padding: 18px 20px;
+        border: 0;
+        border-radius: 24px;
+        background: #fff;
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 0 0 1.5px #ece6fb, 0 14px 22px -18px rgb(15 23 42 / 35%);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    & [data-pd-variants] a:hover { transform: translateY(-2px); box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 0 0 2px #c9b8f5, 0 18px 26px -18px rgb(107 81 201 / 45%); }
+    & [data-pd-variants] a[aria-current="page"] { background: linear-gradient(140deg, #fff, #fff5f8); box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 0 0 2.5px #e9789a, 0 16px 24px -18px rgb(200 80 120 / 55%); }
+    & [data-pd-variants] a[aria-current="page"]::before { content: "지금 보는 상품"; position: absolute; top: -10px; right: 18px; padding: 3px 10px; border-radius: 999px; background: #e9789a; color: #fff; font-size: 11.5px; font-weight: 800; box-shadow: 0 6px 10px -6px rgb(200 80 120 / 70%); }
+    & [data-pd-variants] a > span:first-child { color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 16.5px; font-weight: 400; line-height: 1.4; word-break: keep-all; }
+    & [data-pd-variant-colors] { display: flex; flex-wrap: wrap; gap: 5px; margin: 0; }
+    & [data-pd-variant-colors] [data-sep] { display: none; }
+    & [data-pd-variant-colors] [data-chip] { display: inline-block; padding: 3px 10px; border-radius: 999px; background: #f6f1ff; color: #5b4a9e; font-size: 12px; font-weight: 700; line-height: 1.6; }
+    & [data-pd-variants] a[aria-current="page"] [data-chip] { background: #fff0f4; color: #c2416a; }
+
+    /* ── ② 배송 · 반품 — 한눈에 보기 네 칸 + 전체 안내 펼치기 ── */
+    & #delivery-return-policy { max-width: 1024px; }
+    & .pd-policy-facts.hidden { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 4px 0 6px; }
+    & .pd-policy-facts li { display: grid; justify-items: center; align-content: start; gap: 2px; padding: 18px 12px 16px; border-radius: 24px; background: linear-gradient(170deg, #ecf9f3, #fff); text-align: center; box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 0 0 1.5px #dff3ea; }
+    & .pd-policy-facts li:nth-child(2) { background: linear-gradient(170deg, #fff0f4, #fff); box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 0 0 1.5px #f8dde6; }
+    & .pd-policy-facts li:nth-child(3) { background: linear-gradient(170deg, #e9f4fb, #fff); box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 0 0 1.5px #d5e9f5; }
+    & .pd-policy-facts li:nth-child(4) { background: linear-gradient(170deg, #fff6e3, #fff); box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 0 0 1.5px #f6e6c6; }
+    & .pd-policy-facts img { width: 52px; height: 52px; margin-bottom: 6px; object-fit: contain; filter: drop-shadow(0 6px 8px rgb(15 23 42 / 14%)); }
+    & .pd-policy-facts span { color: #64748b; font-size: 12.5px; font-weight: 700; }
+    & .pd-policy-facts b { color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 18px; font-weight: 400; line-height: 1.35; word-break: keep-all; }
+    & .pd-policy-facts small { color: #8a93a3; font-size: 12px; font-weight: 600; word-break: keep-all; }
+    & #delivery-return-policy[data-policy-open="false"] .pd-policy-full { display: none; }
+    & #delivery-return-policy[data-policy-open="true"] .pd-policy-full { margin-top: 22px; animation: pd-fold-in 0.3s ease; }
+    & .pd-policy-toggle.hidden { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 50px; margin: 20px auto 0; padding: 0 26px; border: 0; border-radius: 999px; background: #fff; color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 16px; cursor: pointer; box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 0 0 1.5px #dff3ea, 0 12px 20px -16px rgb(15 23 42 / 40%); transition: transform 0.2s, box-shadow 0.2s; }
+    & .pd-policy-toggle i { color: #12a17a; font-size: 11px; }
+    & .pd-policy-toggle:hover { transform: translateY(-2px); box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 0 0 2px #a8e3cb, 0 14px 22px -16px rgb(18 161 122 / 45%); }
+    & .pd-policy-toggle:focus-visible { outline: 3px solid #b9e7d3; outline-offset: 3px; }
+    /* 전체 안내 — 소제목 민트 점 · 항목 줄은 크림 바탕 둥근 줄 */
+    & .pd-policy-full section > h3 { display: flex; align-items: center; gap: 8px; color: #1e293b; font-size: 17px; }
+    & .pd-policy-full section > h3::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: #5fcfa5; box-shadow: 0 0 0 3px #e9f8f1; }
+    & .pd-policy-full dl { gap: 6px; }
+    & .pd-policy-full dl > div { padding: 10px 16px; border-radius: 16px; background: #fbf8f2; }
+    & .pd-policy-full dd { color: #475569; }
+
+    /* ── ③ 외부 판매처 후기 판 ── */
+    & [data-review-panel] { max-width: 1024px; }
+    /* 출처 안내 — 보라 안내 띠 + 방패 그림 */
+    & [data-review-panel] > p:first-child { position: relative; padding: 16px 20px 16px 62px; border-radius: 22px; background: #f3f0fe; color: #5b4a9e; font-size: 13.5px; font-weight: 600; line-height: 1.7; word-break: keep-all; box-shadow: inset 0 3px 0 rgb(255 255 255 / 80%); }
+    & [data-review-panel] > p:first-child::before { content: ""; position: absolute; top: 50%; left: 16px; width: 34px; height: 34px; transform: translateY(-50%); background: url("/images/ui/policy-info-192.webp") center / contain no-repeat; }
+    /* AI 요약 — 연보라 쿠션 + 오른쪽 3D 그림 */
+    & [data-review-panel] section[aria-label="AI 리뷰 요약"] { position: relative; padding: 26px 120px 24px 28px; border-radius: 30px; background: radial-gradient(60% 100% at 100% 0, #fff0f4 0, transparent 60%), linear-gradient(150deg, #f3f0fe, #faf8ff); }
+    & [data-review-panel] section[aria-label="AI 리뷰 요약"]::after { content: ""; position: absolute; top: 22px; right: 26px; width: 76px; height: 76px; background: url("/images/ui/lab-summary-256.webp") center / contain no-repeat; filter: drop-shadow(0 8px 10px rgb(15 23 42 / 15%)); }
+    & [data-review-panel] section[aria-label="AI 리뷰 요약"] h3 { color: #6b51c9; font-size: 15px; }
+    & [data-review-panel] section[aria-label="AI 리뷰 요약"] h3 > span { color: #f6b73c; }
+    & [data-review-panel] section[aria-label="AI 리뷰 요약"] > p:nth-of-type(1) { color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 21px; font-weight: 400; line-height: 1.5; word-break: keep-all; }
+    & [data-review-panel] section[aria-label="AI 리뷰 요약"] > p:nth-of-type(2) { color: #475569; font-size: 14.5px; word-break: keep-all; }
+    & [data-review-panel] section[aria-label="AI 리뷰 요약"] > div span { padding: 5px 12px; border-radius: 999px; background: #fff; color: #6b51c9; font-size: 12.5px; font-weight: 700; box-shadow: 0 0 0 1.5px #e4dcfb; }
+    & [data-review-panel] section[aria-label="AI 리뷰 요약"] > p:nth-of-type(n + 3) { color: #8a83a8; font-size: 12px; }
+    /* 평점 — 흰 쿠션 + 큰 주아 점수 · 크레파스 막대 */
+    & [data-review-panel] section[aria-label="리뷰 평점"] { padding: 26px 28px; border-radius: 30px; background: radial-gradient(50% 80% at 100% 0, #fff6e3 0, transparent 60%), #fff; }
+    & [data-review-panel] section[aria-label="리뷰 평점"] > p:first-child { width: fit-content; padding: 4px 12px; border-radius: 999px; background: #e9f8f1; color: #12a17a; font-size: 12.5px; font-weight: 800; }
+    & [data-review-panel] section[aria-label="리뷰 평점"] > p:is(:nth-of-type(2), :nth-of-type(3)) { color: #8a93a3; }
+    & [data-review-panel] section[aria-label="리뷰 평점"] .text-3xl { font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 44px; font-weight: 400; line-height: 1; }
+    & [data-review-panel] section[aria-label="리뷰 평점"] .text-3xl .text-amber-500 { color: #f9bf3b; text-shadow: 0 2px 0 rgb(214 138 18 / 30%); }
+    & [data-review-panel] section[aria-label="리뷰 평점"] .text-3xl > span:last-child { color: #8a93a3; font-family: var(--font-wanted-sans), sans-serif; font-size: 15px; }
+    & [data-review-panel] section[aria-label="리뷰 평점"] .text-3xl + span { padding: 5px 14px; border-radius: 999px; background: #fff6e3; color: #b46e08; font-weight: 800; }
+    & [data-review-panel] section[aria-label="리뷰 평점"] .border-t { border-top: 2px solid #f6efe4; }
+    & [data-review-panel] section[aria-label="리뷰 평점"] .h-2 { height: 12px; background: #f7f0e3; }
+    & [data-review-panel] section[aria-label="리뷰 평점"] .bg-indigo-500 { background: linear-gradient(90deg, #ffd48a, #f9bf3b); box-shadow: inset 0 3px 0 rgb(255 255 255 / 40%); }
+    & [data-review-panel] section[aria-label="리뷰 평점"] .text-indigo-600 { color: #12a17a; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 17px; font-weight: 400; }
+    /* 원문 발췌 — 두 줄 말풍선 카드(큰 따옴표 · 크레파스 별) */
+    & [data-review-panel] section[aria-label="구매 후기 원문 발췌"] { padding: 0; border-radius: 0; background: none; box-shadow: none; }
+    & [data-review-panel] section[aria-label="구매 후기 원문 발췌"] > h3 { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; color: #1e293b; font-size: 20px; }
+    & [data-review-panel] section[aria-label="구매 후기 원문 발췌"] > h3::before { content: ""; width: 34px; height: 34px; background: url("/images/ui/menu-daily-community-128.webp") center / contain no-repeat; }
+    & [data-review-panel] section[aria-label="구매 후기 원문 발췌"] > h3 > span { color: #d0436d; }
+    & [data-review-panel] section[aria-label="구매 후기 원문 발췌"] > div { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 14px; }
+    & [data-review-panel] section[aria-label="구매 후기 원문 발췌"] > div > * + * { margin-top: 0; }
+    & [data-review-panel] article { position: relative; padding: 20px 22px 18px; border: 0; border-radius: 26px; background: #fff; box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 18px 28px -22px rgb(15 23 42 / 35%), 0 0 0 1px #f4ece0; }
+    & [data-review-panel] article::before { content: "\201C"; position: absolute; top: 6px; right: 18px; color: #f7c3d2; font-family: Georgia, serif; font-size: 52px; line-height: 1; }
+    & [data-review-panel] article > div:first-child { justify-content: flex-start; gap: 10px; padding-right: 36px; }
+    & [data-review-panel] article > div:first-child > span { color: #b46e08; font-size: 12.5px; font-weight: 800; }
+    /* "별점 N" 글자 대신 크레파스 별 다섯 개(읽기 프로그램에는 원래 글자가 읽힘) */
+    & [data-review-panel] article[data-rating] > div:first-child > span { color: transparent; font-size: 0; }
+    & [data-review-panel] article[data-rating] > div:first-child > span::after { content: "\2605\2605\2605\2605\2605"; font-size: 15px; letter-spacing: 1px; background: linear-gradient(90deg, #f9bf3b var(--rp, 100%), #efe5d3 0); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+    & [data-review-panel] article[data-rating="1"] { --rp: 20%; }
+    & [data-review-panel] article[data-rating="2"] { --rp: 40%; }
+    & [data-review-panel] article[data-rating="3"] { --rp: 60%; }
+    & [data-review-panel] article[data-rating="4"] { --rp: 80%; }
+    & [data-review-panel] article[data-rating="5"] { --rp: 100%; }
+    & [data-review-panel] article a { padding: 3px 10px; border-radius: 999px; background: #f6f1ff; color: #6b51c9; font-size: 11.5px; font-weight: 700; text-decoration: none; }
+    & [data-review-panel] article a:hover { background: #ece6fd; }
+    & [data-review-panel] article > p { color: #334155; font-size: 14.5px; line-height: 1.8; word-break: keep-all; }
+    & [data-review-panel] section[aria-label="구매 후기 원문 발췌"] > button { min-height: 52px; margin-top: 18px; border: 0; background: #fff; color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 16.5px; font-weight: 400; box-shadow: var(--pd-cushion), 0 0 0 1.5px #efe5d6; }
+    & [data-review-panel] section[aria-label="구매 후기 원문 발췌"] > button:hover { box-shadow: var(--pd-cushion), 0 0 0 2px #f7c3d2; }
+    /* 원문 보기 — 민트 판 + 흰 알약 링크 */
+    & [data-review-panel] section[aria-label="리뷰 출처"] { padding: 22px 24px; border-radius: 28px; background: linear-gradient(150deg, #e9f8f1, #f4fbf8); }
+    & [data-review-panel] section[aria-label="리뷰 출처"] h3 { color: #0f8a66; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 18px; font-weight: 400; }
+    & [data-review-panel] section[aria-label="리뷰 출처"] a { padding: 8px 16px; border: 0; border-radius: 999px; background: #fff; color: #0f8a66; font-size: 13px; font-weight: 800; box-shadow: 0 0 0 1.5px #c8ecdc; }
+    & [data-review-panel] section[aria-label="리뷰 출처"] a:hover { box-shadow: 0 0 0 2px #7fd9b6; }
+}
+
+@keyframes pd-fold-in { from { opacity: 0; transform: translateY(-6px); } }
+
+@media (max-width: 767px) {
+    html:not(.ddb-app-mode) main[data-product-detail-content] {
+        & [data-pd-variants] { padding: 22px 16px 18px; border-radius: 28px; }
+        & [data-pd-variants]::after { top: 16px; right: 14px; width: 48px; height: 48px; }
+        & [data-pd-variants] > :is(h2, p) { padding-right: 56px; }
+        & .pd-policy-facts.hidden { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+        & .pd-policy-facts li { padding: 14px 8px 12px; border-radius: 20px; }
+        & .pd-policy-facts img { width: 44px; height: 44px; }
+        & .pd-policy-facts b { font-size: 16px; }
+        & .pd-policy-toggle.hidden { width: 100%; }
+        & [data-review-panel] section[aria-label="AI 리뷰 요약"] { padding: 22px 18px 20px; }
+        & [data-review-panel] section[aria-label="AI 리뷰 요약"]::after { top: 16px; right: 14px; width: 52px; height: 52px; }
+        & [data-review-panel] section[aria-label="AI 리뷰 요약"] > h3 { padding-right: 56px; }
+        & [data-review-panel] section[aria-label="AI 리뷰 요약"] > p:nth-of-type(1) { font-size: 18px; }
+        & [data-review-panel] section[aria-label="리뷰 평점"] { padding: 22px 18px; }
+        & [data-review-panel] section[aria-label="구매 후기 원문 발췌"] > div { grid-template-columns: minmax(0, 1fr); }
+        & [data-review-panel] section[aria-label="리뷰 출처"] { padding: 20px 18px; }
     }
 }

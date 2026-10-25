@@ -73,7 +73,7 @@ export default function ProductReviewPanel({ product: p }: { product: CatalogPro
             </section>
             {excerpts.length > 0 ? <section aria-label={en ? "Original review excerpts" : "구매 후기 원문 발췌"}>
                 <h3 className="mb-3 text-sm font-bold">{en ? "Original review excerpts" : "구매 후기 원문 발췌"} <span className="text-neutral-400">{excerpts.length}</span></h3>
-                <div className="space-y-3">{(expanded ? excerpts : excerpts.slice(0, 8)).map((item,index) => <article key={`${item.sourceUrl}-${index}`} className="rounded-xl border border-neutral-200 bg-white p-4">
+                <div className="space-y-3">{(expanded ? excerpts : excerpts.slice(0, 8)).map((item,index) => <article key={`${item.sourceUrl}-${index}`} className="rounded-xl border border-neutral-200 bg-white p-4" data-rating={item.rating || undefined}>
                     <div className="mb-2 flex flex-wrap items-center justify-between gap-2 text-xs text-neutral-500"><span>{item.rating ? `${en ? "Rating" : "별점"} ${item.rating}` : en ? "Purchase review" : "구매 후기"}</span>{item.sourceUrl && <a href={item.sourceUrl} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2">{en ? "Source" : "출처 보기"}</a>}</div>
                     <p className="whitespace-pre-wrap break-words text-sm leading-7 text-neutral-800">{item.text}</p>
                 </article>)}</div>

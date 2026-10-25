@@ -58,6 +58,10 @@ export type ReviewSummary = {
     photoCount: number;
     distribution: Record<1 | 2 | 3 | 4 | 5, number>;
     fit: Record<ReviewFit, number>;
+    /** 후기에서 자주 나온 이야기(서버가 모아 줌 · 시안 예시) */
+    keywords: Array<{ label: string; count: number }>;
+    /** 우리 아이와 같은 사이즈를 고른 후기 수 */
+    similarCount: number;
 };
 
 /** 분류별 짧은 평가 질문(서버 · 기획 확정 전 시안) */
@@ -104,6 +108,12 @@ export const PREVIEW_REVIEWS: OwnReview[] = [
         media: [R(2), R(7)], helpfulCount: 6, helpfulByMe: false,
     },
     {
+        id: "rv6", type: "photo", rating: 4, maskedName: "한*루", createdAt: "2026-10-13", option: "블루 · M", fit: "good",
+        pet: { name: "하루", breed: "보더콜리", weightKg: 14.2, size: "M" },
+        body: "활동량 많은 하루가 뛰어도 몸에 딱 붙어서 안 돌아가요. 버클이 조금 뻑뻑한 건 아쉽지만 쓰다 보니 부드러워졌어요.",
+        media: [R(6)], helpfulCount: 11, helpfulByMe: false,
+    },
+    {
         id: "rv5", type: "text", rating: 3, maskedName: "정*톨", createdAt: "2026-10-11", option: "레드 · M", fit: "big",
         pet: { name: "밤톨", breed: "요크셔테리어", weightKg: 2.9, size: "M" },
         body: "생각보다 길어서 처음엔 조금 다루기 어려웠어요. 익숙해지니 괜찮아요.",
@@ -118,6 +128,14 @@ export const PREVIEW_SUMMARY: ReviewSummary = {
     photoCount: 47,
     distribution: { 5: 92, 4: 24, 3: 8, 2: 3, 1: 1 },
     fit: { small: 14, good: 78, big: 8 },
+    keywords: [
+        { label: "가벼워요", count: 41 },
+        { label: "입히기 쉬워요", count: 33 },
+        { label: "튼튼해요", count: 27 },
+        { label: "색이 예뻐요", count: 18 },
+        { label: "배송이 빨라요", count: 12 },
+    ],
+    similarCount: 46,
 };
 
 /** 시안 작성 창에 미리 채울 우리 아이 · 주문 정보 */
@@ -131,3 +149,12 @@ export const PREVIEW_WRITE_CONTEXT = {
 
 /** 별점 말 */
 export const RATING_WORDS: Record<number, string> = { 1: "아쉬워요", 2: "조금 아쉬워요", 3: "보통이에요", 4: "좋아요", 5: "최고예요!" };
+
+/** 글쓰기 도움 알약 — 누르면 이야기 칸에 첫마디를 붙여 줌 */
+export const WRITING_PROMPTS: Array<{ label: string; starter: string }> = [
+    { label: "사이즈", starter: "사이즈는 " },
+    { label: "착용감", starter: "입혔을 때 " },
+    { label: "아이 반응", starter: "아이가 " },
+    { label: "소재 · 마감", starter: "소재는 " },
+    { label: "배송 · 포장", starter: "배송은 " },
+];
