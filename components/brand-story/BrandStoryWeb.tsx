@@ -265,13 +265,13 @@ export default function BrandStoryWeb() {
                 </div>
             </section>
 
-            {/* ⑨ 마무리 */}
+            {/* ⑨ 마무리 — 2026-10-25 사용자 문안 · 그림 교체(웹마음 → brand-story-close-448.webp, 원본 png 유지) */}
             <section className="bsw-close" aria-labelledby="bsw-close-title">
-                {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
-                <img className="bsw-close-art" src={`${UI}logo-poodle-384.webp`} alt="" aria-hidden="true" />
+                {/* eslint-disable-next-line @next/next/no-img-element -- 크레파스 그림 */}
+                <img className="bsw-close-art" src={`${UI}brand-story-close-448.webp`} alt="" aria-hidden="true" />
                 <div>
-                    <p className="bsw-kicker">오늘도 우리 아이를 한 번 더 바라보는 마음으로.</p>
-                    <h2 id="bsw-close-title" className="bsw-h2">댕다방은 더 나은 선택을<br /><em className="bsw-hl">함께</em> 만들어갑니다.</h2>
+                    <p className="bsw-kicker">오늘도 우리 아이의 하루를 한 번 더 생각하는 마음으로.</p>
+                    <h2 id="bsw-close-title" className="bsw-h2">더 좋은 선택이,<br />우리 아이의 <em className="bsw-hl">좋은 하루</em>가 되도록.</h2>
                 </div>
                 <div className="bsw-close-actions">
                     <Link href="/products" className="bsw-pill is-pink">상품 둘러보기<i className="fa-solid fa-arrow-right" aria-hidden="true" /></Link>
