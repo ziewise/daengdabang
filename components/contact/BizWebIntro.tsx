@@ -151,16 +151,17 @@ export function PartnerWebIntro() {
 }
 
 /* ═════════ 대량 구매 ═════════ */
+/** 대량 구매 세 갈래 — 2026-10-25 사용자 문안 · 크레파스 그림(웹단체구매 · 웹프로모션 · 웹정기분할납품) */
 const USE_CASES = [
-    { title: "기업·기관 구매", body: "사내 행사, 복지, 고객 선물처럼 목적과 수량이 정해진 주문", art: "next-membership-256.webp", tone: "sky", tags: ["사내 행사", "복지", "고객 선물"] },
-    { title: "행사·프로모션", body: "구성, 포장, 납품 일정까지 함께 확인해야 하는 기획 주문", art: "stickers/signup-gift.webp", tone: "pink", tags: ["구성", "포장", "납품 일정"] },
-    { title: "정기·분할 납품", body: "여러 지점이나 일정에 맞춰 공급 가능 여부를 확인하는 상담", art: "daily-checkin-256.webp", tone: "mint", tags: ["여러 지점", "일정 맞춤"] },
+    { title: "기업·기관 단체 구매", body: "사내 행사, 임직원 복지, 고객 선물 등 목적과 수량에 맞는 구매 방법을 함께 살펴봅니다.", art: "bulk-use-team-256.webp", tone: "sky", tags: ["사내 행사", "임직원 복지", "고객 선물"] },
+    { title: "행사·프로모션 주문", body: "행사에 필요한 상품 구성과 포장 방식, 납품 일정까지 함께 검토합니다.", art: "bulk-use-promo-256.webp", tone: "pink", tags: ["상품 구성", "포장 협의", "납품 일정"] },
+    { title: "정기·분할 납품", body: "여러 지점이나 지정된 일정에 맞춰 상품을 나누어 공급할 수 있는지 상담합니다.", art: "bulk-use-split-256.webp", tone: "mint", tags: ["복수 지점", "일정별 납품"] },
 ];
 const CHECK_ITEMS = [
-    "희망 상품명·옵션과 예상 수량",
+    "희망 상품·옵션과 예상 수량",
     "예산 범위와 희망 납품일",
-    "배송 지역·지점 수와 분할 배송 여부",
-    "포장, 문구, 세금계산서 등 필요한 조건",
+    "배송지 수와 분할 배송 여부",
+    "포장·문구 인쇄·세금계산서 등 추가 요청사항",
 ];
 const BULK_STEPS = [
     { title: "요청 확인", body: "상품·수량·일정과 필요한 거래 조건을 확인합니다.", art: "web-cs-mail-256.webp" },
@@ -174,18 +175,19 @@ export function BulkWebIntro() {
             <section className="bzw-hero" data-tone="mint" aria-labelledby="bzw-bulk-title">
                 <div className="bzw-hero-text">
                     <p className="bzw-kicker">BULK ORDER</p>
-                    <h1 id="bzw-bulk-title" className="bzw-title">여러 아이를 위한 주문도<br /><em className="bzw-hl">한 건처럼</em> 세심하게.</h1>
-                    <p className="bzw-lead">기업·기관·단체의 대량 구매는 상품과 수량만으로 끝나지 않습니다. 사용 목적, 예산, 일정과 배송 조건을 함께 살펴 가능한 범위를 안내드립니다.</p>
+                    {/* 2026-10-25 머리 판 문구 교체(사용자 문안) */}
+                    <h1 id="bzw-bulk-title" className="bzw-title">단체·대량 주문도,<br /><em className="bzw-hl">필요에 맞게</em> 세심하게.</h1>
+                    <p className="bzw-lead">기업·기관·단체의 대량 구매도 목적과 예산에 맞춰 도와드립니다. 희망 수량부터 납품 일정, 배송 조건까지 꼼꼼히 살펴 가능한 상품과 진행 방법을 안내해 드립니다.</p>
                     <div className="bzw-actions">
                         {/* 2026-10-25 "상담 내용 작성하기" 뺌(아래 카드 단추 → 상담 신청 창, 입점과 같은 방식 · 사용자 요청) */}
-                        <Link href="/products" className="bzw-pill is-pink">상품 먼저 둘러보기<i className="fa-solid fa-arrow-right" aria-hidden="true" /></Link>
+                        <Link href="/products" className="bzw-pill is-pink">상품 둘러보기<i className="fa-solid fa-arrow-right" aria-hidden="true" /></Link>
                     </div>
                 </div>
                 {/* 빠른 확인 메모 */}
                 <aside className="bzw-memo" aria-labelledby="bzw-memo-title">
-                    <span className="bzw-memo-art"><Art src="stickers/benefit-goods.webp" /></span>
+                    <span className="bzw-memo-art"><Art src="bulk-memo-256.webp" /></span>
                     <p className="bzw-kicker">QUICK CHECK</p>
-                    <h2 id="bzw-memo-title">상담 전에 알려 주시면 좋아요</h2>
+                    <h2 id="bzw-memo-title">상담 전에 알려주세요</h2>
                     <ul>
                         {CHECK_ITEMS.map((item) => <li key={item}><i className="fa-solid fa-check" aria-hidden="true" />{item}</li>)}
                     </ul>
@@ -195,7 +197,7 @@ export function BulkWebIntro() {
             <section className="bzw-section" aria-labelledby="bzw-use-title">
                 <div className="bzw-head">
                     <p className="bzw-kicker">FOR TEAMS &amp; GROUPS</p>
-                    <h2 id="bzw-use-title" className="bzw-h2"><em className="bzw-hl">목적</em>에 맞춰 함께 확인합니다</h2>
+                    <h2 id="bzw-use-title" className="bzw-h2"><em className="bzw-hl">목적에 맞는 구매</em>, 함께 준비합니다</h2>
                 </div>
                 <div className="bzw-cards">
                     {USE_CASES.map((item) => (
