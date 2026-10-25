@@ -7,7 +7,8 @@
  * Q · A 쿠션 목록 → 끝에 "찾는 답이 없나요?" 한 줄(웹 전용, 같은 1:1 문의 주소). 앱은 기존 앱 꾸밈 그대로.
  */
 import type { Metadata } from "next";
-import Link from "next/link";
+// "1:1 문의 바로 작성" — 웹은 페이지 이동 없이 문의 창(마이페이지와 같은 창 · 같은 양식), 앱 · 새 탭은 원래대로 이동(2026-10-25)
+import MypageInquiryLink from "@/components/mypage/MypageInquiryLink";
 import SupportTop, { SupportPaws } from "@/components/support/SupportTop";
 import FaqClient from "./FaqClient";
 import "../daily-web.css";
@@ -16,6 +17,15 @@ import "../support-web.css";
 export const metadata: Metadata = {
     title: "자주 묻는 질문 | 댕다방",
     description: "댕다방 자주 묻는 질문(FAQ)",
+};
+
+/** 자주 묻는 질문에서 여는 1:1 문의 창 머리(문의 유형은 "기타", 내용은 고객이 직접) */
+const FAQ_INQUIRY = {
+    kicker: "1:1 INQUIRY",
+    title: "1:1 문의하기",
+    sub: "찾는 답이 없으셨나요? 궁금한 점을 남겨 주시면 확인 후 이메일로 답변드려요.",
+    art: "/images/ui/web-cs-inquiry-160.webp",
+    category: "other" as const,
 };
 
 export default function FaqPage() {
@@ -27,12 +37,13 @@ export default function FaqPage() {
                 title="자주 묻는 질문"
                 lead="궁금한 점을 빠르게 확인하세요. 더 필요한 내용은 1:1 문의로 바로 접수해 주시면 도와드리겠습니다."
             >
-            <Link
+            <MypageInquiryLink
                 href="/inquiry#inquiry-form"
+                preset={FAQ_INQUIRY}
                 className="cs-cta mt-4 inline-flex min-h-10 items-center gap-2 rounded-full border border-aurora-indigo/20 bg-white/85 px-4 py-2 text-sm font-extrabold text-aurora-indigo shadow-sm transition hover:-translate-y-0.5 hover:border-aurora-indigo/40 hover:bg-indigo-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aurora-indigo"
             >
                 <i className="fa-solid fa-envelope" aria-hidden="true" /> 1:1 문의 바로 작성 <i className="fa-solid fa-chevron-right text-[9px]" aria-hidden="true" />
-            </Link>
+            </MypageInquiryLink>
             </SupportTop>
             <SupportPaws />
 
@@ -41,7 +52,7 @@ export default function FaqPage() {
             {/* 웹 전용 — 목록 끝 안내 한 줄(같은 1:1 문의 주소) */}
             <p className="hidden cs-more">
                 <span>찾는 답이 없나요? 1:1 문의로 남겨 주시면 확인 후 답변드려요.</span>
-                <Link href="/inquiry#inquiry-form">1:1 문의하기 <i className="fa-solid fa-arrow-right text-[10px]" aria-hidden="true" /></Link>
+                <MypageInquiryLink href="/inquiry#inquiry-form" preset={FAQ_INQUIRY}>1:1 문의하기 <i className="fa-solid fa-arrow-right text-[10px]" aria-hidden="true" /></MypageInquiryLink>
             </p>
         </main>
     );

@@ -20,6 +20,8 @@ import DeliveryReturnPolicyDetails from "@/components/policy/DeliveryReturnPolic
 import { BUSINESS_INFO } from "@/lib/legal";
 import { RETURN_STEPS } from "@/lib/return-steps";
 import type { CustomerSupportCategory } from "@/lib/customer-api";
+// 창 꾸밈(.ddb-petform · .ddb-orderhelp) — 마이페이지 밖(자주 묻는 질문 등)에서 열려도 같은 모양(2026-10-25)
+import "@/app/mypage-web.css";
 
 export type OrderHelpSummary = {
     orderId: string;
