@@ -109,9 +109,6 @@
 .fw-biz p > span + span::before { content: ""; position: absolute; top: 50%; left: 0; width: 1.5px; height: 10px; margin-top: -5px; background: #e2d6c4; }
 .fw-biz b { margin-right: 6px; color: #8a6e4b; font-weight: 800; }
 
-/* 사업자 정보 펼침 단추 — 휴대폰에서만 */
-.fw-biz-toggle { display: none; }
-
 /* ③ 가로 전체 크림 띠 */
 .fw-bar { background: rgb(251 247 241 / 95%); box-shadow: inset 0 1.5px 0 var(--fw-line); }
 .fw-bar-in { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 24px; padding: 16px 0 18px; }
@@ -181,16 +178,12 @@
     .fw-card.is-sns .fw-kicker { display: none; }
     .fw-sns { justify-content: center; gap: 8px; }
     .fw-sns a { width: 40px; height: 40px; font-size: 16px; }
-    /* 사업자 정보 — 눌러서 펼침 */
-    .fw-biz-toggle { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; margin: 0; padding: 12px 0 10px; border: 0; background: none; color: #8a6e4b; font-size: 12px; font-weight: 800; cursor: pointer; box-shadow: inset 0 1.5px 0 var(--fw-line); }
-    .fw-biz-toggle i { font-size: 10px; transition: transform 0.25s; }
-    .fw-biz-toggle[aria-expanded="true"] i { transform: rotate(180deg); }
-    .fw-biz { display: none; gap: 2px; padding: 0 0 14px; text-align: center; box-shadow: none; }
-    .fw-biz.is-open { display: grid; }
+    /* 사업자 정보 — 늘 펼침(전자상거래법 제10조: 첫 화면에서 쉽게 알 수 있게) · 작은 글 이어 쓰기 */
+    .fw-biz { gap: 2px; padding: 14px 0 14px; text-align: center; }
     .fw-biz p { display: block; }
     .fw-biz p > span { display: inline; padding: 0; font-size: 11px; line-height: 1.8; }
     .fw-biz p > span + span::before { content: " · "; position: static; width: auto; height: auto; margin: 0; background: none; color: #d6c9b5; }
-    .fw-biz b { margin-right: 4px; }
+    .fw-biz b { margin-right: 4px; white-space: nowrap; } /* 항목 이름이 가운데서 끊기지 않게 */
     /* 아래 띠 — 법적 링크 작은 글 두 줄 · 저작권 */
     .fw-bar-in { flex-direction: column; justify-content: center; gap: 6px; padding: 12px 0 calc(92px + env(safe-area-inset-bottom)); }
     .fw-legal { justify-content: center; gap: 2px 12px; }

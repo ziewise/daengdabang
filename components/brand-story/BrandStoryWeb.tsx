@@ -100,15 +100,7 @@ export default function BrandStoryWeb() {
                             disablePictureInPicture
                         />
                     </div>
-                    {/* 떠 있는 3D 그림 */}
-                    <span className="bsw-float is-a" aria-hidden="true">
-                        {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
-                        <img src={`${UI}logo-poodle-384.webp`} alt="" />
-                    </span>
-                    <span className="bsw-float is-b" aria-hidden="true">
-                        {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
-                        <img src={`${UI}find-indie-256.webp`} alt="" />
-                    </span>
+                    {/* 2026-10-25 양 끝 원형 아이콘(bsw-float) 뺌 — 사용자 "없는 게 더 깔끔" */}
                     <p className="bsw-caption">Everyday choices, made with care.</p>
                 </div>
             </section>

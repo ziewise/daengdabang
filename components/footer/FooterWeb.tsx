@@ -9,13 +9,12 @@
  *  ② 사업자 정보 : 두 줄 글(회사 · 신고 / 주소 · 운영)
  *  ③ 아래 띠 : 가로 전체 크림 띠 — 법적 링크 · 저작권
  *  휴대폰: 같은 순서로 짧게(회사 링크는 세 칸, 고객센터 카드는 한 줄 구성, SNS 는 아이콘 줄, 법적 링크는 작은 알약).
- *  2026-10-25 휴대폰 더 짧게(사용자): 회사 링크 한 줄 알약 · 고객센터 한 덩어리 · 사업자 정보는 눌러서 펼침(PC 는 늘 펼침).
+ *  2026-10-25 휴대폰 더 짧게(사용자): 회사 링크 한 줄 알약 · 고객센터 한 덩어리 · 사업자 정보는 휴대폰도 늘 펼침(법적 표시 · 작은 글 이어 쓰기).
  * 꾸밈: app/footer-web.css
  */
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
 import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
 import LocalizedText from "@/components/i18n/LocalizedText";
 import { FOOTER_LEGAL_LINKS, FOOTER_META_LINKS } from "@/lib/menu-data";
@@ -45,8 +44,6 @@ const SNS_INK: Record<string, string> = {
 };
 
 export default function FooterWeb() {
-    // 휴대폰 사업자 정보 펼침(PC 는 CSS 로 늘 보임)
-    const [bizOpen, setBizOpen] = useState(false);
     return (
         <footer className="fw" data-footer-web>
             <div className="fw-band">
@@ -148,12 +145,8 @@ export default function FooterWeb() {
                         </div>
                     </div>
 
-                    {/* ② 사업자 정보 — 두 줄 글(휴대폰은 눌러서 펼침) */}
-                    <button type="button" className="fw-biz-toggle" aria-expanded={bizOpen} aria-controls="fw-biz" onClick={() => setBizOpen((value) => !value)}>
-                        {BUSINESS_INFO.companyName} <LocalizedText ko="사업자 정보" en="business info" />
-                        <i className="fa-solid fa-chevron-down" aria-hidden="true" />
-                    </button>
-                    <div id="fw-biz" className={bizOpen ? "fw-biz is-open" : "fw-biz"} aria-label="사업자 정보">
+                    {/* ② 사업자 정보 — 두 줄 글, PC · 휴대폰 모두 늘 펼침(전자상거래법 제10조 첫 화면 표시) */}
+                    <div className="fw-biz" aria-label="사업자 정보">
                         <p>
                             <span><b><LocalizedText ko="상호" en="Company" /></b>{BUSINESS_INFO.companyName}</span>
                             <span><b><LocalizedText ko="대표자" en="Representative" /></b>{BUSINESS_INFO.representative}</span>

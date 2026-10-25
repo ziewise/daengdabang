@@ -69,10 +69,6 @@ html:not(.ddb-app-mode) .bsw {
     & .bsw-hero-media { position: relative; padding: 12px 18px 40px; }
     & .bsw-window { position: relative; aspect-ratio: 5 / 4; overflow: hidden; border: 8px solid #fff; border-radius: 40px; background: #fbf7f1; box-shadow: 0 0 0 4px #f7c3d2, 0 30px 46px -28px rgb(15 23 42 / 55%); }
     & .bsw-window-img, & .bsw-window-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 53% center; }
-    & .bsw-float { position: absolute; display: grid; place-items: center; border-radius: 50%; background: #fff; box-shadow: 0 18px 28px -18px rgb(15 23 42 / 45%); animation: bsw-bob 3.6s ease-in-out infinite; }
-    & .bsw-float img { width: 76%; height: 76%; object-fit: contain; }
-    & .bsw-float.is-a { top: -6px; left: -8px; width: 96px; height: 96px; box-shadow: 0 0 0 4px #ffd08a, 0 18px 28px -18px rgb(15 23 42 / 45%); }
-    & .bsw-float.is-b { right: -4px; bottom: 6px; width: 88px; height: 88px; box-shadow: 0 0 0 4px #a8e0c6, 0 18px 28px -18px rgb(15 23 42 / 45%); animation-delay: -1.6s; }
     & .bsw-caption { position: absolute; bottom: 4px; left: 50%; padding: 7px 16px; border-radius: 999px; background: #fff; color: #6b51c9; font-family: var(--bw-crayon); font-size: 13px; letter-spacing: 0.08em; white-space: nowrap; box-shadow: 0 10px 18px -14px rgb(15 23 42 / 40%); transform: translateX(-50%); }
 
     /* ───────── ② 숫자 띠 ───────── */
@@ -185,8 +181,6 @@ html:not(.ddb-app-mode) .bsw {
         gap: 40px;
         & .bsw-hero { grid-template-columns: minmax(0, 1fr); gap: 20px; padding: 22px 20px 30px; border-radius: 34px; }
         & .bsw-hero-media { grid-row: 1; padding: 8px 10px 36px; }
-        & .bsw-float.is-a { width: 70px; height: 70px; }
-        & .bsw-float.is-b { width: 64px; height: 64px; }
         & .bsw-stats { margin-top: -18px; }
         & .bsw-question { grid-template-columns: minmax(0, 1fr); gap: 26px; padding: 28px 22px; border-radius: 32px; }
         & .bsw-flow, & .bsw-promise { padding: 30px 20px; border-radius: 32px; }
@@ -252,5 +246,5 @@ html:not(.ddb-app-mode) .bsw {
 
 @keyframes bsw-bob { 50% { transform: translateY(-7px); } }
 @media (prefers-reduced-motion: reduce) {
-    html:not(.ddb-app-mode) .bsw :is(.bsw-float, .bsw-close-art) { animation: none; }
+    html:not(.ddb-app-mode) .bsw .bsw-close-art { animation: none; }
 }
