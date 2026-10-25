@@ -5,7 +5,7 @@
  * ---------------------------------------------------------------------
  * 2026-10-18 사용자 결정: 로고 옆 검은 "앱 홈" 알약 → 펫렌즈(사진기 강아지) 버튼 왼쪽 3D 그림 아이콘(42px — 로고보다 작게).
  * 가는 곳은 전과 같은 /app/ (지금은 설치 안내 페이지). 설치한 앱 · 네이티브 앱은 웹 헤더 대신 앱 틀이라 안 보임.
- * 말풍선 "댕다방, 앱에서 더 편하게 즐겨보세요 🐾" — 아이콘 아래로 가끔 열림(스티커북 메모지 모양):
+ * 말풍선 "댕다방, 앱에서 더 편하게 즐겨보세요 🐾" — 아이콘 아래로 가끔 열림(웹 크레파스 결 흰 쿠션 말풍선 — 2026-10-25 스티커 요소 뺌):
  *  - 들어오고 3초 뒤 처음, 5초 보였다가 닫히고 같은 화면에 머물면 20초마다 다시(횟수 제한 없음)
  *  - "오늘 안 보기"를 누르면 오늘(이 기기 날짜)은 더 열지 않음(localStorage)
  *  - 아이콘 · 말풍선 글자를 누르면 /app/ 으로 가고, 그 방문(탭) 동안은 열지 않음(sessionStorage)
@@ -114,7 +114,6 @@ export default function InstalledAppHomeButton() {
             </Link>
             {bubble ? (
                 <span role="status" className={`ddb-aib ${bubble === "out" ? "is-out" : ""}`}>
-                    <span aria-hidden="true" className="ddb-aib-tape" />
                     <Link href="/app/" onClick={goInstallGuide} className="ddb-aib-text">
                         <b>댕다방,</b> 앱에서 더 편하게 즐겨보세요 🐾
                     </Link>
@@ -127,23 +126,23 @@ export default function InstalledAppHomeButton() {
     );
 }
 
-/** 말풍선 — 노란 메모지 · 분홍 마스킹테이프 · 아이콘 쪽 꼬리, 위에서 살짝 내려오며 열림. 아래 줄 오른쪽에 "오늘 안 보기" */
+/** 말풍선 — 웹 크레파스 결(2026-10-25 사용자 "스티커 요소는 빼야지"): 흰 쿠션 · 연분홍 테 · 아이콘 쪽 꼬리, 기울기 · 테이프 · 메모지 없음.
+ *  위에서 살짝 내려오며 열림. 아래 줄 오른쪽에 "오늘 안 보기" */
 const APP_INSTALL_BUBBLE_CSS = `
 /* 글꼴: 주아(--font-jua, app/layout.tsx 에서 이미 받음) — 한 굵기뿐이라 400 고정(가짜 굵게 방지) */
-.ddb-aib { position: absolute; top: calc(100% + 9px); right: -58px; z-index: 5; display: flex; flex-direction: column; align-items: flex-end; gap: 3px;
-  width: max-content; padding: 9px 12px 6px; white-space: nowrap;
-  background: #fff6c9; border-radius: 6px 6px 14px 6px; color: #5a4038; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-weight: 400;
-  font-size: 12.5px; line-height: 1.45; letter-spacing: -0.01em; text-align: left;
-  box-shadow: 0 10px 16px -10px rgba(120,90,40,.55), 0 0 0 1px rgba(232,206,120,.55); rotate: -1deg;
+.ddb-aib { position: absolute; top: calc(100% + 10px); right: -58px; z-index: 5; display: flex; flex-direction: column; align-items: flex-end; gap: 4px;
+  width: max-content; padding: 10px 14px 7px; white-space: nowrap;
+  background: #fff; border-radius: 18px; color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-weight: 400;
+  font-size: 13px; line-height: 1.45; letter-spacing: -0.01em; text-align: left;
+  box-shadow: inset 0 3px 0 rgba(255,255,255,.9), 0 0 0 1.5px #f7d5df, 0 14px 22px -14px rgba(200,80,120,.55);
   animation: ddb-aib-in .35s cubic-bezier(.3,1.4,.5,1) both; }
 .ddb-aib-text { align-self: stretch; color: inherit; -webkit-tap-highlight-color: transparent; }
-.ddb-aib-text b { color: #d6457a; font-weight: 400; }
-.ddb-aib-hide { margin-right: -4px; padding: 3px 4px; border-radius: 6px; font: inherit; font-size: 11px; color: #9a8070;
-  background: none; border: 0; text-decoration: underline; text-underline-offset: 2px; -webkit-tap-highlight-color: transparent; }
-.ddb-aib-hide:active { background: rgba(232,206,120,.35); }
-.ddb-aib::before { content: ""; position: absolute; top: -6px; right: 73px; width: 12px; height: 12px; background: #fff6c9; rotate: 45deg;
-  box-shadow: -1px -1px 0 0 rgba(232,206,120,.55); }
-.ddb-aib-tape { position: absolute; top: -6px; left: 14px; width: 34px; height: 11px; background: rgba(255,190,210,.85); rotate: -4deg; }
+.ddb-aib-text b { color: #d0436d; font-weight: 400; }
+.ddb-aib-hide { margin-right: -4px; padding: 3px 6px; border-radius: 999px; font: inherit; font-family: var(--font-wanted-sans), sans-serif; font-size: 11px; font-weight: 600; color: #8a93a3;
+  background: none; border: 0; -webkit-tap-highlight-color: transparent; }
+.ddb-aib-hide:active { background: #fff0f4; color: #d0436d; }
+.ddb-aib::before { content: ""; position: absolute; top: -6px; right: 73px; width: 12px; height: 12px; background: #fff; border-radius: 3px 0 0 0; rotate: 45deg;
+  box-shadow: -1.5px -1.5px 0 0 #f7d5df; }
 .ddb-aib.is-out { animation: ddb-aib-out .35s ease both; pointer-events: none; }
 @keyframes ddb-aib-in { from { opacity: 0; transform: translateY(-6px) scale(.92); } to { opacity: 1; transform: none; } }
 @keyframes ddb-aib-out { from { opacity: 1; } to { opacity: 0; transform: translateY(-4px); } }
