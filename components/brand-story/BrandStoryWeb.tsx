@@ -66,8 +66,8 @@ export default function BrandStoryWeb() {
                     <h1 id="bsw-title" className="bsw-hero-title">
                         {/* 2026-10-25 문구 교체(사용자 제공 문안) */}
                         <span>좋은 하루는,</span>
-                        <span>우리 아이를 이해하는</span>
-                        <span><em className="bsw-hl">선택</em>부터.</span>
+                        <span className="is-sub">우리 아이를 이해하는</span>
+                        <span className="is-sub"><em className="bsw-hl">선택</em>부터.</span>
                     </h1>
                     <p className="bsw-hero-lead">댕다방은 반려견의 일상과 특성을 먼저 생각하는 펫 큐레이션 쇼핑몰입니다. 신중하게 고른 상품과 AI 맞춤 안내를 통해, 보호자가 선택의 이유를 이해하고 우리 아이에게 맞는 제품을 고를 수 있도록 돕습니다.</p>
                     <div className="bsw-actions">

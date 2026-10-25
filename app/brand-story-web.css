@@ -60,6 +60,9 @@ html:not(.ddb-app-mode) .bsw {
     & .bsw-hero { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); align-items: center; gap: 40px; padding: 48px 48px 48px 56px; border-radius: 44px; background: radial-gradient(70% 90% at 100% 0, rgb(243 240 254 / 95%) 0, transparent 60%), radial-gradient(60% 80% at 0 100%, rgb(255 246 227 / 90%) 0, transparent 60%), linear-gradient(120deg, #ffe9f0 0%, #fff4f7 55%, #fdf7ff 100%); box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), 0 30px 50px -36px rgb(200 80 120 / 50%); }
     & .bsw-hero-text { display: grid; justify-items: start; gap: 14px; }
     & .bsw-hero-title { display: grid; font-family: var(--bw-jua); font-size: clamp(40px, 4.8vw, 66px); font-weight: 400; line-height: 1.18; }
+    /* 둘째 · 셋째 줄(우리 아이를 이해하는 / 선택부터.)은 작게 — 2026-10-25 사용자 요청 */
+    & .bsw-hero-title .is-sub { font-size: 0.62em; line-height: 1.32; color: #3b4458; }
+    & .bsw-hero-title span:first-child + .is-sub { margin-top: 0.12em; }
     & .bsw-hero-lead { max-width: 520px; color: #6b5162; font-size: 16px; font-weight: 600; line-height: 1.8; word-break: keep-all; }
     & .bsw-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
     & .bsw-scene-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 0; padding: 0; list-style: none; }
