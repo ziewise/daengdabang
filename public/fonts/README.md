@@ -2,7 +2,8 @@
 
 | 파일 | 글꼴 | 쓰는 곳 | 출처 · 라이선스 |
 |---|---|---|---|
-| `WantedSansVariable.woff2` | 원티드 산스 | 사이트 기본 본문 (`app/layout.tsx`) | 원티드 · SIL OFL 1.1 |
+| `WantedSansVariable.woff2` | 원티드 산스(원본) | 나눈 조각을 다시 만들 때 쓰는 원본 — 화면에서는 직접 쓰지 않음 | 원티드 · SIL OFL 1.1 |
+| `wanted/WantedSansVariable-base · ko1 · ko2.woff2` | 원티드 산스(세 조각) | 사이트 기본 본문 (`app/globals.css` @font-face "Wanted Sans DDB") — 기본 · 자주 쓰는 한글 2,350자 · 나머지 한글. 2026-10-25 fontTools 로 글자만 나눔(모양 수정 없음) | 원티드 · SIL OFL 1.1 |
 | `Cafe24Ssurround.woff2` | 카페24 써라운드 | 앱(스티커북) 제목 · 버튼 · 이름표 | 카페24 무료 글꼴(상업 사용 가능, 글꼴 자체 판매 금지). 원본 woff(projectnoonnu 미러)를 woff2로만 변환 — 글자 모양 수정 없음 |
 | `NanumSquareRoundR.woff2` · `NanumSquareRoundB.woff2` | 나눔스퀘어라운드 보통 · 굵게 | 앱(스티커북) 설명 · 안내 · 입력칸 | 네이버 한글한글 아름답게(hangeul.pstatic.net) · SIL OFL 1.1 |
 

@@ -4,7 +4,8 @@
  * 헤더·모바일 패널·푸터에서 공통 사용.
  *
  * 워드마크: 디자이너가 제작한 크레파스 손글씨 PNG (투명 배경)
- *   /images/wordmark.png — 1999×787 RGBA
+ *   /images/wordmark.png — 1999×787 RGBA (원본, 지우지 않음)
+ *   화면에는 같은 그림을 줄인 wordmark-360.webp · logo-black-poodle-v2-240.webp 를 씀(2026-10-25 속도 — 원본 1.7MB → 52KB)
  *   글자별 색상 (댕 청록 · 다 빨강 · 방 주황) 그대로 표시.
  */
 import Image from "next/image";
@@ -50,7 +51,7 @@ export default function BrandLogo({ className = "", mobileEmphasis = false, mobi
             {/* 강아지 로고 — 배경 없이(투명) 헤더 색이 비치게, 좀 더 크게 */}
             <span className={`relative shrink-0 ${mobileIntegrated ? "hidden md:inline-flex" : "inline-flex"} ${symbolSize}`}>
                 <Image
-                    src="/images/logo-black-poodle-v2.png"
+                    src="/images/brand/logo-black-poodle-v2-240.webp"
                     alt=""
                     fill
                     sizes={mobileEmphasis
@@ -63,7 +64,7 @@ export default function BrandLogo({ className = "", mobileEmphasis = false, mobi
             {/* 댕다방 워드마크 — 디자이너 제작 크레파스 이미지 */}
             <span className={`relative shrink-0 ${mobileIntegrated ? "hidden md:inline-block" : "inline-block"} ${wordmarkSize}`} aria-hidden="true">
                 <Image
-                    src="/images/wordmark.png"
+                    src="/images/brand/wordmark-360.webp"
                     alt=""
                     width={200}
                     height={79}

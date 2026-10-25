@@ -12,7 +12,7 @@
  *  - 장바구니 · 결제 · 로그인 · 가입 · 비밀번호 화면에서는 열지 않음(구매 · 입력 방해 X)
  *  - 다른 창(정식 오픈 안내 · 메뉴 · 상담 등)이 열려 있으면 그 차례는 건너뜀
  *  - 휴대폰 폭(768px 미만)에서만 · 움직임 줄이기 설정이면 움직임 없이
- * 말풍선은 열릴 때만 그려서 글꼴(나눔스퀘어라운드)도 그때만 받는다.
+ * 말풍선 글꼴은 웹 제목과 같은 주아(2026-10-25 사용자 — 웹이 이미 받는 글꼴이라 따로 받는 파일 없음).
  * 아이콘 링크 안에 버튼을 넣을 수 없어(링크 안 버튼 금지) 아이콘과 말풍선을 나란히 둔다.
  */
 
@@ -129,15 +129,15 @@ export default function InstalledAppHomeButton() {
 
 /** 말풍선 — 노란 메모지 · 분홍 마스킹테이프 · 아이콘 쪽 꼬리, 위에서 살짝 내려오며 열림. 아래 줄 오른쪽에 "오늘 안 보기" */
 const APP_INSTALL_BUBBLE_CSS = `
-/* 나눔스퀘어라운드 글꼴 선언은 app/globals.css 한 곳(2026-10-21) */
+/* 글꼴: 주아(--font-jua, app/layout.tsx 에서 이미 받음) — 한 굵기뿐이라 400 고정(가짜 굵게 방지) */
 .ddb-aib { position: absolute; top: calc(100% + 9px); right: -58px; z-index: 5; display: flex; flex-direction: column; align-items: flex-end; gap: 3px;
   width: max-content; padding: 9px 12px 6px; white-space: nowrap;
-  background: #fff6c9; border-radius: 6px 6px 14px 6px; color: #5a4038; font-family: "NanumSquareRound", sans-serif; font-weight: 700;
+  background: #fff6c9; border-radius: 6px 6px 14px 6px; color: #5a4038; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-weight: 400;
   font-size: 12.5px; line-height: 1.45; letter-spacing: -0.01em; text-align: left;
   box-shadow: 0 10px 16px -10px rgba(120,90,40,.55), 0 0 0 1px rgba(232,206,120,.55); rotate: -1deg;
   animation: ddb-aib-in .35s cubic-bezier(.3,1.4,.5,1) both; }
 .ddb-aib-text { align-self: stretch; color: inherit; -webkit-tap-highlight-color: transparent; }
-.ddb-aib-text b { color: #d6457a; font-weight: 700; }
+.ddb-aib-text b { color: #d6457a; font-weight: 400; }
 .ddb-aib-hide { margin-right: -4px; padding: 3px 4px; border-radius: 6px; font: inherit; font-size: 11px; color: #9a8070;
   background: none; border: 0; text-decoration: underline; text-underline-offset: 2px; -webkit-tap-highlight-color: transparent; }
 .ddb-aib-hide:active { background: rgba(232,206,120,.35); }

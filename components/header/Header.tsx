@@ -22,7 +22,12 @@ import {
 import BrandLogo from "./BrandLogo";
 import LanguageSwitcher from "./LanguageSwitcher";
 import MobilePanel from "./MobilePanel";
-import SearchModal from "./SearchModal";
+import dynamic from "next/dynamic";
+// 2026-10-25 속도 — 검색창은 처음 열 때 불러옴(앱 AppShell 과 같은 방식). 검색창이 상품 자료 전체(압축 후 약 1MB)를 쓰기 때문에,
+// 예전처럼 바로 import 하면 상품과 상관없는 페이지(브랜드 스토리 · 고객센터 · 커뮤니티 …)까지 그 자료를 받고 해석했다.
+// 검색 단추에 마우스를 올리거나 초점이 가면 미리 받기 시작해 기다림을 줄임. 검색 동작 · 모양은 그대로
+const SearchModal = dynamic(() => import("./SearchModal"), { ssr: false });
+const preloadSearch = () => { void import("./SearchModal"); };
 import { usePetLensModal } from "@/components/petlens/PetLensModalLauncher";
 import DaengLabWordmark from "./DaengLabWordmark";
 import { useI18n } from "@/lib/i18n";
@@ -47,6 +52,9 @@ export default function Header() {
     const [openDrop, setOpenDrop] = useState<DropKey>(null);
     const [mobileOpen, setMobileOpen] = useState(false);
     const [searchOpen, setSearchOpen] = useState(false);
+    // 검색창은 한 번 연 뒤부터 그려 둠(닫아도 다시 받지 않게)
+    const [searchMounted, setSearchMounted] = useState(false);
+    if (searchOpen && !searchMounted) setSearchMounted(true);
     const [mobilePetLensGuideArmed, setMobilePetLensGuideArmed] = useState(false);
     const { isLoggedIn, hydrated } = useAuth();
     // 장바구니 수량 배지 — StoreContext(useCart) 라인 qty 합. hydrate 전엔 0(SSR 일치)
@@ -126,6 +134,8 @@ export default function Header() {
                         <button
                             type="button"
                             onClick={() => setSearchOpen(true)}
+                            onPointerEnter={preloadSearch}
+                            onFocus={preloadSearch}
                             aria-label={t("search")}
                             aria-haspopup="dialog"
                             data-product-search
@@ -304,6 +314,8 @@ export default function Header() {
                         <button
                             type="button"
                             onClick={() => setSearchOpen(true)}
+                            onPointerEnter={preloadSearch}
+                            onFocus={preloadSearch}
                             className="ddb-header-tip group relative hidden h-8 w-8 shrink-0 items-center justify-center rounded-full transition-all hover:-translate-y-px xl:flex"
                             aria-label={t("search")}
                             data-header-tip={t("search")}
@@ -370,7 +382,7 @@ export default function Header() {
             </header>
 
             <MobilePanel open={mobileOpen} onClose={() => setMobileOpen(false)} />
-            <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
+            {searchMounted && <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />}
         </>
     );
 }

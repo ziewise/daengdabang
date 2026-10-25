@@ -62,6 +62,10 @@ interface Props {
 
 export default function MobilePanel({ open, onClose }: Props) {
     const [expanded, setExpanded] = useState<string | null>(null);
+    // 2026-10-25 속도 — 메뉴 본문(3D 그림 20여 장)은 처음 열 때 그림. 닫혀 있는 동안 모든 페이지가 그림을 미리 받지 않게.
+    // 한 번 연 뒤에는 계속 두어 닫힘 · 다시 열림 움직임과 펼친 상태가 그대로 유지됨
+    const [everOpened, setEverOpened] = useState(open);
+    if (open && !everOpened) setEverOpened(true);
     const [searchTerm, setSearchTerm] = useState("");
     const { isLoggedIn, hydrated } = useAuth();
     const { logout: memberLogout, user: member } = useMemberSession();
@@ -143,7 +147,7 @@ export default function MobilePanel({ open, onClose }: Props) {
                     </div>
                 </div>
 
-                <div className="mpn-scroll">
+                {everOpened && <div className="mpn-scroll">
                     {/* 검색 — submit 시 /search/?q=... 로 이동 */}
                     <form onSubmit={submitSearch} className="mpn-search">
                         <i className="fa-solid fa-magnifying-glass" aria-hidden="true" />
@@ -282,7 +286,7 @@ export default function MobilePanel({ open, onClose }: Props) {
                             </PwaInstallButton>
                         )}
                     </nav>
-                </div>
+                </div>}
             </aside>
         </>
     );

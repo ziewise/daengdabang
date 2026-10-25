@@ -13,15 +13,23 @@
  *   · 데스크톱에서 다시 페이지 맨 위로 올라오면 숨김.
  *   · 히어로가 없는 다른 페이지(sentinel 없음)에서는 항상 노출.
  *   · 제품 상세 하단 구매 바(ddb:buybar)가 뜨면 그 위로 비켜 올라간다.
+ *
+ * 2026-10-25 속도: 상담 창(ChatWidget)은 AI 상담이 상품 자료 전체(압축 후 약 1MB, 휴대폰 해석 2~3초)를 함께 끌고 와서,
+ *   예전처럼 바로 import 하면 모든 페이지가 첫 화면 전에 그 자료를 받고 해석했다. 이제는
+ *   ① 페이지가 다 열리고 브라우저가 한가해지면(늦어도 몇 초 안) 붙이고, ② 그 전에 "상담 열기"(openChatWidget) ·
+ *   산책 친구 안내(상담 단추 보여 주기)가 오면 그 즉시 붙인다. 열기 요청은 chat-widget-events 가 들고 있다가
+ *   상담 창이 붙는 순간 그대로 열림(앱 AppShell 과 같은 방식). 상담 창 안의 대화 로직 · 모양은 그대로.
  */
 "use client";
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import ChatWidget from "@/components/site/ChatWidget";
+import dynamic from "next/dynamic";
 import CareTalkWelcome from "@/components/site/CareTalkWelcome";
 import { useMobileFloatingVisibility } from "@/hooks/useMobileFloatingVisibility";
-import { CHAT_WIDGET_NAVIGATOR_REVEAL_EVENT } from "@/lib/chat-widget-events";
+import { CHAT_WIDGET_NAVIGATOR_REVEAL_EVENT, CHAT_WIDGET_OPEN_EVENT } from "@/lib/chat-widget-events";
+
+const ChatWidget = dynamic(() => import("@/components/site/ChatWidget"), { ssr: false });
 
 function isHeroRoute(pathname: string | null) {
     return pathname === "/" || pathname === "/main" || pathname === "/main/";
@@ -33,6 +41,29 @@ export default function FloatingDock() {
     const [shown, setShown] = useState(false);
     const [navigatorReveal, setNavigatorReveal] = useState(false);
     const [chatOpen, setChatOpen] = useState(false);
+    const [chatMounted, setChatMounted] = useState(false);
+    // 상담 창 붙이기 — 한가할 때 · 열기 요청 · 상담 단추 안내 중 먼저 오는 때(한 번 붙이면 계속)
+    useEffect(() => {
+        if (chatMounted) return;
+        const mount = () => setChatMounted(true);
+        window.addEventListener(CHAT_WIDGET_OPEN_EVENT, mount);
+        window.addEventListener(CHAT_WIDGET_NAVIGATOR_REVEAL_EVENT, mount);
+        let idleId: number | undefined;
+        let timerId: number | undefined;
+        const schedule = () => {
+            if (typeof window.requestIdleCallback === "function") idleId = window.requestIdleCallback(mount, { timeout: 4000 });
+            else timerId = window.setTimeout(mount, 2500);
+        };
+        if (document.readyState === "complete") schedule();
+        else window.addEventListener("load", schedule, { once: true });
+        return () => {
+            window.removeEventListener(CHAT_WIDGET_OPEN_EVENT, mount);
+            window.removeEventListener(CHAT_WIDGET_NAVIGATOR_REVEAL_EVENT, mount);
+            window.removeEventListener("load", schedule);
+            if (idleId !== undefined) window.cancelIdleCallback(idleId);
+            if (timerId !== undefined) window.clearTimeout(timerId);
+        };
+    }, [chatMounted]);
     const dockRef = useRef<HTMLDivElement>(null);
     const mobileFloating = useMobileFloatingVisibility({
         ignoreDialogsWithin: dockRef,
@@ -123,12 +154,12 @@ export default function FloatingDock() {
         >
             {/* 챗봇 — 위치는 dock 이 관리, 내부 토글/대화 로직은 협업자 ChatWidget 그대로 */}
             <div className={interactive}>
-                <ChatWidget
+                {chatMounted && <ChatWidget
                     isMobile={mobileFloating.isMobile}
                     launcherHidden={!dockVisible}
                     onOpenChange={setChatOpen}
                     empty={CareTalkWelcome}
-                />
+                />}
             </div>
         </div>
     );

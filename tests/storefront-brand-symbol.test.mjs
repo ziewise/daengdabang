@@ -17,8 +17,11 @@ test("storefront uses the approved transparent black-poodle brand symbol", () =>
     assert.equal(symbol.readUInt32BE(20), 1254);
     assert.equal(symbol[25], 6, "brand symbol must remain an RGBA PNG");
 
+    // 화면에는 같은 그림을 줄인 webp(240px)를 써도 됨 — 원본 PNG 는 위에서 그대로 검사(2026-10-25 속도 최적화)
+    const small = readFileSync(new URL("../public/images/brand/logo-black-poodle-v2-240.webp", import.meta.url));
+    assert.equal(small.toString("ascii", 8, 12), "WEBP");
     for (const source of [brandLogo, siteHeader, authLayout, videoOverlay]) {
-        assert.match(source, /\/images\/logo-black-poodle-v2\.png/);
+        assert.match(source, /\/images\/(brand\/)?logo-black-poodle-v2(\.png|-240\.webp)/);
     }
 
     for (const header of [brandLogo, siteHeader]) {

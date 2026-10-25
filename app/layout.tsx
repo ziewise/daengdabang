@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { Geist, Geist_Mono, Gaegu, Jua } from "next/font/google";
-import localFont from "next/font/local";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "./globals.css";
 // 헤더·푸터·도크는 경로별 토글(ConditionalChrome) — 로그인 등 풀스크린 페이지에서 숨김
@@ -23,14 +22,7 @@ import PrivacyNoticeModal from "@/components/site/PrivacyNoticeModal";
 // 우리 글로벌 폰트 — 헤더/로고/본문이 의존하는 --font-* 변수 제공
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"], display: "swap" });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"], display: "swap" });
-const wantedSans = localFont({
-    src: "../public/fonts/WantedSansVariable.woff2",
-    variable: "--font-wanted-sans",
-    display: "swap",
-    weight: "100 900",
-    preload: false,
-});
-// Gaegu (개구) — 거친 손글씨 한글 폰트, 로고 크레파스 워드마크용
+// 원티드 산스(본문)는 app/globals.css 의 @font-face 세 조각("Wanted Sans DDB")으로 — 2026-10-25 속도(1.26MB → 보통 약 360KB)
 const gaegu = Gaegu({ variable: "--font-crayon", subsets: ["latin"], weight: ["400", "700"], display: "swap", preload: false });
 // Jua (배민 주아) — 웹 제목 글꼴(2026-10-22 사용자: 로고와 가장 닮은 동글동글한 글꼴, 큰 글씨 · 작은 제목 모두). 앱은 쓰지 않음
 const jua = Jua({ variable: "--font-jua", subsets: ["latin"], weight: "400", display: "swap", preload: false });
@@ -177,7 +169,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     return (
         <html
             lang="ko"
-            className={`${geistSans.variable} ${geistMono.variable} ${wantedSans.variable} ${gaegu.variable} ${jua.variable} h-full antialiased`}
+            className={`${geistSans.variable} ${geistMono.variable} ${gaegu.variable} ${jua.variable} h-full antialiased`}
             suppressHydrationWarning
         >
             <head>
@@ -188,7 +180,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 {/* 앱 화면에서는 원티드 산스(1.26MB)를 받지 않음(2026-10-21 앱 속도) — 앱 글자는 카페24 · 나눔스퀘어라운드로 그려지고 원티드 산스는
                     대체 글꼴로만 적혀 있는데, 앞 글꼴을 받는 동안 브라우저가 대체 글꼴까지 받아 풀었다. 앱 모드에서는 대체 글꼴 자리를 나눔스퀘어라운드로.
                     상품 상세의 공급처 원본 상세(웹과 같은 글꼴로 보여야 하는 곳)만 원래 원티드 산스 */}
-                <style id="ddb-app-font" dangerouslySetInnerHTML={{ __html: `html.ddb-app-mode{--font-wanted-sans:"NanumSquareRound","Apple SD Gothic Neo","Noto Sans KR",sans-serif}html.ddb-app-mode [data-supplier-original-detail]{--font-wanted-sans:${wantedSans.style.fontFamily}}` }} />
+                <style id="ddb-app-font" dangerouslySetInnerHTML={{ __html: `html.ddb-app-mode{--font-wanted-sans:"NanumSquareRound","Apple SD Gothic Neo","Noto Sans KR",sans-serif}html.ddb-app-mode [data-supplier-original-detail]{--font-wanted-sans:"Wanted Sans DDB"}` }} />
                 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
                 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
             </head>
