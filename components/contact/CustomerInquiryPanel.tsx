@@ -11,6 +11,7 @@
 import { FormEvent, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import CloudflareSafeEmail from "@/components/footer/CloudflareSafeEmail";
+import { useWebScreen } from "@/hooks/useWebScreen";
 import {
     DdbApiError,
     submitCustomerSupportInquiry,
@@ -135,6 +136,8 @@ export default function CustomerInquiryPanel({ email, phone, embedded }: { email
         categoryRef.current?.focus({ preventScroll: true });
     }, []);
 
+    // 웹/앱 갈림 — 웹은 "1:1 문의 남기기 + 이메일 · 전화 안내" 모양(2026-10-25), 앱은 기존 카드
+    const webScreen = useWebScreen();
     const revealForm = (category?: CustomerSupportCategory) => {
         const nextCategory = category ?? selectedCategory ?? requestedCategory ?? "other";
         setSelectedCategory(nextCategory);
@@ -197,7 +200,54 @@ export default function CustomerInquiryPanel({ email, phone, embedded }: { email
 
     return (
         <>
-            {!embedded && (
+            {/* 웹(2026-10-25 사용자 "이메일 문의 · 전화 문의는 주소 · 번호 안내만") — 1:1 문의 남기기(양식 열기) 카드 하나 + 이메일 · 전화 안내 둘 */}
+            {!embedded && webScreen && (
+            <div className="csq">
+                <div className="csq-main">
+                    {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
+                    <img src="/images/ui/web-cs-inquiry-160.webp" alt="" aria-hidden="true" className="csq-main-art" />
+                    <div className="csq-main-text">
+                        <p className="ddb-crayon-kicker csq-kicker">1:1 INQUIRY</p>
+                        <h2>1:1 문의 남기기</h2>
+                        <p>궁금한 점을 남겨 주시면 확인 후 이메일로 답변드려요.</p>
+                    </div>
+                    <button
+                        type="button"
+                        onClick={() => revealForm()}
+                        aria-expanded={expanded}
+                        aria-controls="inquiry-form"
+                        className="csq-main-btn"
+                    >
+                        <i className="fa-solid fa-pen" aria-hidden="true" />문의 작성하기
+                    </button>
+                </div>
+                <div className="csq-contacts">
+                    <a href={`mailto:${email}`} className="csq-contact is-mail">
+                        {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
+                        <img src="/images/ui/web-cs-mail-256.webp" alt="" aria-hidden="true" />
+                        <span className="csq-contact-text">
+                            <small>이메일 문의</small>
+                            <b><CloudflareSafeEmail email={email} /></b>
+                            <span>메일로 보내 주셔도 답변드려요</span>
+                        </span>
+                        <i className="fa-solid fa-arrow-right csq-contact-go" aria-hidden="true" />
+                    </a>
+                    <a href={`tel:${phone}`} className="csq-contact is-phone">
+                        {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
+                        <img src="/images/ui/web-cs-phone-256.webp" alt="" aria-hidden="true" />
+                        <span className="csq-contact-text">
+                            <small>전화 문의</small>
+                            <b>{phone}</b>
+                            <span>평일 10:00 ~ 18:00 (주말·공휴일 휴무)</span>
+                        </span>
+                        <i className="fa-solid fa-phone csq-contact-go" aria-hidden="true" />
+                    </a>
+                </div>
+            </div>
+            )}
+
+            {/* 앱 — 기존 이메일 · 전화 카드 그대로 */}
+            {!embedded && !webScreen && (
             <div className="mt-8 grid gap-4 sm:grid-cols-2 cs-contacts">
                 <button
                     type="button"
