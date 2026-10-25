@@ -4921,7 +4921,7 @@ html:not(.ddb-app-mode) [data-daily-web] {
 /* ── 댕자랑(2026-10-22 사용자 선택: 댕주제 무대 + 사각 사진 · 파스텔 카드 S7) ──
    머리 판 · 무대 · 올리기 판 · 카드 모두 기록 결(.dw-csheet · .dw-rring · .dw-pill · .dw-chip)을 그대로 쓰고 자리만 잡는다. */
 html:not(.ddb-app-mode) [data-daily-web] {
-    & .dw-sc-wrap { max-width: 1248px; margin: 0 auto; padding-right: 16px; padding-left: 16px; }
+    & .dw-sc-wrap { max-width: 1264px; margin: 0 auto; padding-right: 16px; padding-left: 16px; } /* 안쪽 1232(2026-10-25 웹 폭 통일) */
     & .dw-sc-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
     & .dw-sc-rules { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
     & .dw-sc-chip-live { color: #047857; }

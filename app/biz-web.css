@@ -165,3 +165,6 @@ html:not(.ddb-app-mode) main[data-campaign-web] {
 
 @keyframes bz-bob { 50% { transform: translateY(-6px); } }
 @media (prefers-reduced-motion: reduce) { html:not(.ddb-app-mode) [data-biz-web] img[data-biz-art] { animation: none; } }
+
+/* 2026-10-25 웹 페이지 폭 1232 통일 — 입점 · 대량 구매 바깥 틀(1180 → 1280, 안쪽 1232) */
+html:not(.ddb-app-mode) div[data-biz-web] { max-width: 1280px; }

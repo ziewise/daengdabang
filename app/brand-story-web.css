@@ -27,7 +27,7 @@ html:not(.ddb-app-mode) .bsw {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: 64px;
-    width: min(1280px, calc(100% - 32px));
+    width: min(1232px, calc(100% - 32px)); /* 2026-10-25 웹 페이지 폭 1232 통일 */
     margin: 0 auto;
     padding: 32px 0 90px;
     color: var(--bw-ink);

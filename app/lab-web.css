@@ -913,3 +913,6 @@ html:not(.ddb-app-mode) [data-health-report] {
         & .hr-empty { grid-template-columns: minmax(0, 1fr); justify-items: center; text-align: center; padding: 24px 18px; }
     }
 }
+
+/* 2026-10-25 웹 페이지 폭 1232 통일 — 펫렌즈 · AI 상담 바깥 틀 1280(안쪽 1232) */
+html:not(.ddb-app-mode) main[data-lab-web] { max-width: 1280px; }
