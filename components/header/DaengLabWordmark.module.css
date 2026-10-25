@@ -5,7 +5,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+    font-family: var(--font-gaegu, var(--font-crayon)), var(--font-wanted-sans), sans-serif;
     font-weight: 900;
     line-height: .88;
     letter-spacing: -.08em;

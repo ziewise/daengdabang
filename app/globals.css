@@ -4496,3 +4496,12 @@ html:not(.ddb-app-mode) [data-pet-chooser] {
     html:not(.ddb-app-mode) [data-pet-chooser] { justify-items: start; }
     html:not(.ddb-app-mode) [data-pet-chooser] .pc-list { justify-content: flex-start; }
 }
+
+/* ── 웹 손글씨 꼬리표 → 주아체 (2026-10-25 사용자 "같은 방식으로 표현된 곳 모두 주아체로") ──
+   웹(html:not(.ddb-app-mode))에서만 --font-crayon 을 주아체로 바꿔, 영어 꼬리표 · 작은 손글씨 이름표가 한꺼번에 주아체가 됨.
+   진짜 손글씨가 필요한 곳(케어톡 · 댕다방 연구소 글자 · 손편지 메모 · 출석 도장)은 --font-gaegu 로 원래 손글씨 유지.
+   앱은 그대로(--font-gaegu 가 없으면 각 모듈이 --font-crayon 으로 되돌아감). */
+html:not(.ddb-app-mode) { --font-gaegu: var(--font-crayon); }
+html:not(.ddb-app-mode) body { --font-crayon: var(--font-jua); }
+/* 케어톡(떠 있는 창 · 전체 화면)은 손글씨 글꼴 선택을 그대로 — 안에서 --font-crayon 을 다시 손글씨로 */
+html:not(.ddb-app-mode) :is([data-chat-widget-open], [data-chat-shell]) { --font-crayon: var(--font-gaegu); }

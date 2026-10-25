@@ -95,7 +95,7 @@
 
 .stampCopy {
     margin-top: -10px;
-    font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+    font-family: var(--font-gaegu, var(--font-crayon)), var(--font-wanted-sans), sans-serif;
     font-size: 13px;
     font-weight: 700;
     letter-spacing: -0.04em;
