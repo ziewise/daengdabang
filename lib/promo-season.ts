@@ -9,6 +9,7 @@
  * 앱(스티커북 쇼핑)은 예전 기획전 목록(lib/menu-data.ts PROMO_CARDS)을 그대로 씀.
  */
 import type { CatalogProduct } from "@/lib/catalog/types";
+import type { PromoCard } from "@/lib/menu-data";
 
 export type SeasonKey = "spring" | "summer" | "autumn" | "winter";
 
@@ -138,4 +139,11 @@ export function walkProducts(products: readonly CatalogProduct[]): CatalogProduc
         if (p.subcategory === "carrier" && has(text, /트릿|힙 ?팩|간식주머니/)) return true;
         return has(text, /배변봉투|스테이쉬/);
     });
+}
+
+/** 기획전 카드(시즌 칸이면) → 지금 계절의 제목 · 설명 · 그림으로 — 웹 메인(PromoSection) · 앱 쇼핑(StickerShop) 같이 씀(2026-10-26) */
+export function promoCardForSeason(card: PromoCard, season: SeasonKey): PromoCard {
+    if (!card.season) return card;
+    const look = SEASONS[season];
+    return { ...card, title: look.title, titleFull: look.titleFull, desc: look.desc, eyebrow: look.eyebrow, image: look.image.pc, imageMobile: look.image.mobile };
 }

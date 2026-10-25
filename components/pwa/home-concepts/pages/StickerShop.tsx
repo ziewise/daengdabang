@@ -21,11 +21,12 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { getBestProducts, getNewProducts } from "@/lib/catalog";
 import { productCardImage } from "@/lib/catalog/card-image";
 import type { CategorySlug } from "@/lib/catalog/types";
-import { CATEGORY_GROUPS, PROMO_CARDS, type PromoCard } from "@/lib/menu-data";
+import { CATEGORY_GROUPS, WEB_PROMO_CARDS, type PromoCard } from "@/lib/menu-data";
+import { promoCardForSeason, seasonOf } from "@/lib/promo-season";
 import { PUBLIC_SOCIAL_CHANNELS } from "@/lib/social-channels";
 import { hasVerifiedPetPhoto, useAuth } from "@/lib/store";
 import { useRecommendationAnalytics } from "@/hooks/useRecommendationAnalytics";
@@ -155,7 +156,8 @@ export default function StickerShop() {
                         <SectionLabel icon="fa-scissors">기획전</SectionLabel>
                         <p className="ah-light mt-1 text-[12px]" style={{ color: TEXT_SOFT }}>우리 댕댕이에게 딱 맞는 큐레이션</p>
                         <div className="mt-4 grid grid-cols-2 gap-x-3 gap-y-4">
-                            {PROMO_CARDS.map((t, i) => <PromoSticker key={t.href} tile={t} i={i} />)}
+                            {/* 2026-10-26 사용자: 앱 기획전도 웹과 같은 5칸(시즌 · 산책용 · 눈·청력 보호 · 프리미엄 푸드 · 세트) — AppPromoCards */}
+                            <AppPromoCards />
                         </div>
                     </section>
 
@@ -389,6 +391,16 @@ const APP_PROMO_IMG: Record<string, string> = {
     "/images/promo/bundles.png": "/images/ui/promo/bundles-480.webp",
 };
 const promoSrc = (src: string) => APP_PROMO_IMG[src] ?? src;
+
+/* ───────── ⑤ 기획전 5칸 — 웹 메인과 같은 목록(WEB_PROMO_CARDS, 2026-10-26) ─────────
+   시즌 칸은 화면이 붙은 뒤 손님 기기의 오늘 날짜로 계절 제목 · 그림(lib/promo-season.ts). 첫 그림(미리 만든 HTML)은 "시즌 기획전" 그대로라 어긋남 없음.
+   그림은 휴대폰용 한 장(imageMobile, 없으면 image) — 모두 앱 묶음 images/ui/promo 안 파일이라 앱 용량은 그대로. */
+const noopSubscribe = () => () => {};
+function AppPromoCards() {
+    const season = useSyncExternalStore(noopSubscribe, () => seasonOf(), () => null);
+    const cards = WEB_PROMO_CARDS.map((card) => (season ? promoCardForSeason(card, season) : card)).map((card) => ({ ...card, image: card.imageMobile ?? card.image }));
+    return <>{cards.map((t, i) => <PromoSticker key={t.href} tile={t} i={i} />)}</>;
+}
 
 /* ───────── ⑤ 기획전 카드 — 사진(영상)은 위, 아래는 제목만(큰 카드도 한 줄) ───────── */
 function PromoSticker({ tile, i }: { tile: PromoCard; i: number }) {

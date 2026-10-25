@@ -24,7 +24,7 @@
 
 import { useEffect, useState, useSyncExternalStore } from "react";
 import Image from "next/image";
-import { SEASONS, seasonOf, type SeasonKey } from "@/lib/promo-season";
+import { promoCardForSeason, seasonOf, type SeasonKey } from "@/lib/promo-season";
 import Link from "next/link";
 import { WEB_PROMO_CARDS, type PromoCard } from "@/lib/menu-data";
 
@@ -42,11 +42,7 @@ const IMAGE_SWITCH_INTERVAL = 3000; // 교차 이미지 전환 간격 (ms)
 const noopSubscribe = () => () => {};
 
 /** 시즌 칸이면 지금 계절의 제목 · 설명 · 그림으로 */
-function withSeason(card: PromoCard, season: SeasonKey): PromoCard {
-    if (!card.season) return card;
-    const look = SEASONS[season];
-    return { ...card, title: look.title, titleFull: look.titleFull, desc: look.desc, eyebrow: look.eyebrow, image: look.image.pc, imageMobile: look.image.mobile };
-}
+const withSeason = (card: PromoCard, season: SeasonKey): PromoCard => promoCardForSeason(card, season); // 앱 쇼핑과 같은 함수(lib/promo-season.ts)
 
 export default function PromoSection({ season: builtSeason = "autumn" }: { season?: SeasonKey } = {}) {
     // 미리 만든 페이지 = 만든 날의 계절, 화면에 붙은 뒤 = 오늘 날짜의 계절
