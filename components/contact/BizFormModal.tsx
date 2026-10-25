@@ -34,11 +34,12 @@ const LAUNCH_LOOK: Record<BusinessInquiryMode, { web: "partner" | "bulk"; kicker
     },
     bulk_order: {
         web: "bulk",
-        kicker: "BULK ORDER NOTE",
-        title: "대량 구매 상담 신청",
-        body: "필요한 상품과 수량, 희망 일정이 구체적일수록 빠르게 검토할 수 있어요.",
-        button: "상담 내용 작성하기",
-        art: "stickers/benefit-goods.webp",
+        // 2026-10-25 카드 문구 · 그림 교체(사용자 문안 · 웹대량구매신청) — 창 안 양식 머리는 기존 그대로
+        kicker: "BULK ORDER INQUIRY",
+        title: "단체·대량 구매, 편하게 문의해 주세요",
+        body: "필요한 상품과 수량, 희망 납품 일정을 알려주세요. 공급 가능 여부와 진행 조건을 확인해 안내드리겠습니다.",
+        button: "구매 상담 신청하기",
+        art: "bulk-inquiry-send-256.webp",
         dialogLabel: "대량 구매 상담 신청",
     },
 };
