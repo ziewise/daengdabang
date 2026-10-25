@@ -20,7 +20,8 @@ export default function BundleCard({ bundle, priority }: Props) {
     const videoVisible = videoReady && videoActive;
 
     return (
-        <article className="group overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+        // data-bundle-card — 웹에서 상품 카드(C1 쿠션 액자)와 같은 모양으로(globals.css, 2026-10-25 · 앱은 그대로)
+        <article data-bundle-card className="group overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
             <Link
                 href={bundleHref(bundle)}
                 className="relative block aspect-square overflow-hidden bg-[#f7f2e8]"
