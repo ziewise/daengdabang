@@ -38,8 +38,8 @@ test("live showcase supports public read, member posting, feed scopes, cursor pa
     assert.match(client, /clean\.includes\(":\/\/"\)/);
     assert.match(client, /SHOWCASE_LOGIN_HREF = "\/auth\/login\?redirect=%2Fdaeng-showcase%2F"/);
     assert.match(client, /SHOWCASE_SIGNUP_HREF = "\/auth\/signup\?redirect=%2Fdaeng-showcase%2F"/);
-    assert.match(client, /누구나 보고, 회원이면 바로 올리는/);
-    assert.match(client, /공개 피드는 로그인 없이 볼 수 있고/);
+    assert.match(client, /우리 아이의 반짝이는 순간/);
+    assert.match(client, /공개 게시물은 누구나 볼 수 있고/);
     assert.match(client, /loadShowcaseFeed\(scope/);
     assert.match(client, /loadShowcasePost\(requestedPostId/);
     assert.match(client, /new URLSearchParams\(window\.location\.search\)\.get\("post"\)/);

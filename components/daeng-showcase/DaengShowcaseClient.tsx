@@ -372,47 +372,25 @@ export default function DaengShowcaseClient() {
                             <span className="dw-chip dw-sc-chip-live">지금 참여 가능</span>
                         </div>
                         <h1 id="daeng-showcase-title" className="ddb-crayon-title dw-h1">
-                            누구나 보고, 회원이면 바로 올리는<br />
-                            <span className="ddb-crayon-underline">오늘의 댕자랑</span>
+                            {/* 2026-10-25 머리 판 문구 · 그림 교체(사용자 문안 · 웹댕자랑카드) */}
+                            우리 아이의 반짝이는 순간,<br />
+                            <span className="ddb-crayon-underline">함께 나누는 댕자랑</span>
                         </h1>
                         <p className="dw-lead">
-                            귀여운 표정부터 함께 만든 돌봄 습관까지, 우리 아이의 오늘을 나누고 마음에 드는 친구를 팔로우해 보세요.
-                            공개 피드는 로그인 없이 볼 수 있고 사진 올리기·팔로우·뼈다귀 응원은 회원이 바로 이용할 수 있어요.
+                            귀여운 표정부터 소소한 일상과 돌봄 이야기까지.<br />
+                            반려견과 함께한 특별한 순간을 나누고, 다른 친구들의 사랑스러운 오늘도 만나보세요.
                         </p>
-                        <div className="dw-sc-actions">
-                            {authenticated ? (
-                                <button
-                                    type="button"
-                                    onClick={() => document.getElementById("showcase-composer")?.scrollIntoView({ behavior: "smooth", block: "start" })}
-                                    className="ddb-crayon-link ddb-attention-cta dw-pill dw-pill-main"
-                                >
-                                    <i className="fa-solid fa-camera mr-2" aria-hidden="true" />
-                                    사진 올리기
-                                </button>
-                            ) : (
-                                <Link href={signupHref} className="ddb-crayon-link ddb-attention-cta dw-pill dw-pill-main">
-                                    <i className="fa-solid fa-user-plus mr-2" aria-hidden="true" />
-                                    회원가입하고 시작
-                                </Link>
-                            )}
-                            <button
-                                type="button"
-                                onClick={() => document.getElementById("showcase-feed")?.scrollIntoView({ behavior: "smooth", block: "start" })}
-                                className="ddb-motion-lift dw-pill"
-                            >
-                                최신 댕자랑 보기
-                                <i className="fa-solid fa-arrow-down ml-2 text-xs" aria-hidden="true" />
-                            </button>
-                        </div>
+                        <p className="dw-lead">공개 게시물은 누구나 볼 수 있고, 회원이라면 사진을 올리고 팔로우와 응원에도 참여할 수 있어요.</p>
+                        {/* 2026-10-25 "사진 올리기 · 최신 댕자랑 보기" 단추 뺌(사용자) — 바로 아래 사진 올리기 카드 · 피드 · 가입 카드가 같은 일을 함 */}
                         {/* 이용 안내 세 줄 → 칩 */}
                         <ul className="dw-sc-rules" aria-label="댕자랑 이용 안내">
-                            <li className="dw-chip"><i className="fa-solid fa-eye mr-1.5" aria-hidden="true" />누구나 공개 피드를 볼 수 있어요</li>
-                            <li className="dw-chip"><i className="fa-solid fa-user-group mr-1.5" aria-hidden="true" />회원은 게시·팔로우·응원을 바로 이용해요</li>
-                            <li className="dw-chip"><i className="fa-solid fa-shield-heart mr-1.5" aria-hidden="true" />개인정보 노출 등은 신고하면 운영자가 확인해요</li>
+                            <li className="dw-chip"><i className="fa-solid fa-eye mr-1.5" aria-hidden="true" />공개 게시물은 누구나 볼 수 있어요</li>
+                            <li className="dw-chip"><i className="fa-solid fa-user-group mr-1.5" aria-hidden="true" />회원은 사진 공유·팔로우·응원에 참여해요</li>
+                            <li className="dw-chip"><i className="fa-solid fa-shield-heart mr-1.5" aria-hidden="true" />문제 게시물은 신고하면 운영자가 확인해요</li>
                         </ul>
                     </div>
                     <span className="dw-rring dw-chero-ring" aria-hidden="true">
-                        <span><Image src="/images/ui/daily-hero-community-384.webp" alt="" width={230} height={230} priority /></span>
+                        <span><Image src="/images/ui/showcase-hero-640.webp" alt="" width={230} height={230} priority /></span>
                     </span>
                 </div>
             </section>
