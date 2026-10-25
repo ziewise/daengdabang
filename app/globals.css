@@ -4624,3 +4624,12 @@ html:not(.ddb-app-mode) [data-offline-web] {
     & p { word-break: keep-all; }
     & .ddb-crayon-link { border: 0; border-radius: 999px; background: #e9789a; color: #fff; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; box-shadow: inset 0 2px 0 rgb(255 255 255 / 28%), 0 14px 22px -14px rgb(200 80 120 / 80%); }
 }
+
+
+/* ═════════ 한국어 줄바꿈(웹 전체 · 2026-10-25 휴대폰 점검) ═════════
+   기본값은 한 글자 단위로 줄을 바꿔 "불러오지 못했습 / 니다"처럼 낱말 중간이 끊겼다(휴대폰 66개 화면 · 532곳).
+   웹은 띄어쓰기 단위로만 줄을 바꾸고, 칸보다 긴 낱말(주소 · 긴 영문 · 숫자)만 쪼개 화면 밖으로 나가지 않게. 앱은 그대로 */
+html:not(.ddb-app-mode) body {
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+}
