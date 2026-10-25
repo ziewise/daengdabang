@@ -35,10 +35,11 @@ function Steps({ steps }: { steps: Array<{ title: string; body: string; art: str
 }
 
 /* ═════════ 입점 · 제휴 ═════════ */
+/** 제안 세 갈래 — 2026-10-25 사용자 문안 · 크레파스 그림(웹입점 · 웹공급유통 · 웹공동기획) */
 const PROPOSALS = [
-    { title: "브랜드·상품 입점", body: "제조사, 브랜드사, 공식 유통사의 신규 상품 제안", art: "next-brand-256.webp", tone: "pink", tags: ["제조사", "브랜드사", "공식 유통사"] },
-    { title: "공급·유통 제휴", body: "안정적인 공급과 운영 조건을 갖춘 파트너십 제안", art: "web-cs-step-ship-256.webp", tone: "sky", tags: ["안정적인 공급", "운영 조건"] },
-    { title: "공동 기획", body: "보호자에게 유용한 콘텐츠, 세트, 캠페인 공동 기획", art: "find-magazine-256.webp", tone: "yellow", tags: ["콘텐츠", "세트", "캠페인"] },
+    { title: "브랜드·상품 입점", body: "반려견의 일상에 도움이 되는 좋은 상품과 브랜드의 이야기를 들려주세요.", art: "partner-type-brand-256.webp", tone: "pink", tags: ["제조사", "브랜드", "공식 유통사"] },
+    { title: "공급·유통 제휴", body: "안정적인 상품 공급과 원활한 유통을 위한 협력 방안을 함께 논의합니다.", art: "partner-type-supply-256.webp", tone: "sky", tags: ["안정적 공급", "유통 협력"] },
+    { title: "공동 기획", body: "보호자에게 도움이 되는 콘텐츠와 상품 구성, 캠페인을 함께 만들어갑니다.", art: "partner-type-plan-256.webp", tone: "yellow", tags: ["콘텐츠", "기획 세트", "캠페인"] },
 ];
 const LOOKS = [
     { title: "쓰임이 분명한가", art: "stickers/home-care.webp", tone: "pink" },
@@ -84,8 +85,8 @@ export function PartnerWebIntro() {
             {/* 이런 제안을 기다립니다 */}
             <section className="bzw-section" aria-labelledby="bzw-types-title">
                 <div className="bzw-head">
-                    <p className="bzw-kicker">WHAT WE REVIEW</p>
-                    <h2 id="bzw-types-title" className="bzw-h2">이런 <em className="bzw-hl">제안</em>을 기다립니다</h2>
+                    <p className="bzw-kicker">PARTNERSHIP PROPOSALS</p>
+                    <h2 id="bzw-types-title" className="bzw-h2">댕다방과 <em className="bzw-hl">함께할 제안</em>을 기다립니다</h2>
                 </div>
                 <div className="bzw-cards">
                     {PROPOSALS.map((item) => (
