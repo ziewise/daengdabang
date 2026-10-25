@@ -43,6 +43,7 @@ html:not(.ddb-app-mode) .bsw {
     & :is(.bsw-hero, .bsw-question, .bsw-tech, .bsw-close, .bsw-head) > * { min-width: 0; }
     & .bsw-kicker { width: fit-content; background: repeating-linear-gradient(172deg, #07849e 0 5px, #ef476f 5px 10px, #e98708 10px 15px); -webkit-background-clip: text; background-clip: text; font-family: var(--bw-crayon); font-size: 14px; letter-spacing: 0.14em; -webkit-text-fill-color: transparent; }
     & .bsw-h2 { font-family: var(--bw-jua); font-size: clamp(28px, 3vw, 40px); font-weight: 400; line-height: 1.3; word-break: keep-all; }
+    & .bsw-h2 .bsw-hl { white-space: nowrap; } /* 강조 낱말(모든 것 · 네 가지 기준)이 휴대폰에서 둘로 갈리지 않게 */
     /* 강조 단어 — 분홍 글씨 + 세 색 밑줄 */
     & .bsw-hl { position: relative; color: var(--bw-pink-d); font-style: normal; isolation: isolate; }
     & .bsw-hl::after { content: ""; position: absolute; right: 1%; bottom: 0.02em; left: 0; z-index: -1; height: 0.24em; border-radius: 999px 70% 999px 60%; background: var(--bw-underline); opacity: 0.55; transform: rotate(-0.7deg) skewX(-7deg); }
@@ -89,7 +90,8 @@ html:not(.ddb-app-mode) .bsw {
     /* 말풍선 꼬리 */
     & .bsw-bubble::after { content: ""; position: absolute; bottom: -20px; left: 64%; width: 40px; height: 34px; background: #f8f1fb; clip-path: polygon(0 0, 100% 0, 30% 100%); }
     & .bsw-bubble-mark { position: absolute; top: -14px; left: 22px; color: #f2a9bf; font-family: Georgia, serif; font-size: 80px; line-height: 1; }
-    & .bsw-reader { width: 200px; height: 200px; margin-top: 16px; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 6px #fff, 0 0 0 10px #cdbff5, 0 24px 34px -24px rgb(15 23 42 / 50%); }
+    /* 질문 그림 — 2026-10-25 크레파스 푸들(자체 보라 테두리)로 바꾸며 흰·보라 틀 뺌 */
+    & .bsw-reader { width: 260px; height: 260px; margin-top: 4px; object-fit: contain; filter: drop-shadow(0 18px 18px rgb(15 23 42 / 14%)); }
     & .bsw-question-copy { display: grid; gap: 14px; }
     & .bsw-question-copy > p:not(.bsw-kicker) { color: var(--bw-soft); font-size: 15px; font-weight: 600; line-height: 1.9; word-break: keep-all; }
     & .bsw-question-copy > p.bsw-lead-strong { color: var(--bw-ink); font-size: 17px; font-weight: 700; line-height: 1.8; }
@@ -202,7 +204,7 @@ html:not(.ddb-app-mode) .bsw {
         & .bsw-stats img { width: 44px; height: 44px; }
         & .bsw-stats b { font-size: 24px; }
         & .bsw-bubble { padding: 26px 24px 30px; }
-        & .bsw-reader { width: 150px; height: 150px; }
+        & .bsw-reader { width: 190px; height: 190px; }
         /* 다섯 장면 — 가로로 긴 카드 다섯 장을 겹쳐 쌓고, 뒤 카드가 위로 조금씩 보이게. 맨 앞 카드를 누르면 맨 뒤로(옆으로 밀지 않음) */
         & .bsw-scenes { position: relative; display: block; height: 252px; margin-top: 8px; }
         & .bsw-scene { position: absolute; right: 0; bottom: 0; left: 0; display: grid; grid-template-columns: 96px minmax(0, 1fr); align-items: center; justify-items: start; gap: 0 16px; height: 196px; padding: 18px 18px 18px 16px; text-align: left; cursor: pointer; transform-origin: 50% 0; transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.45s, box-shadow 0.3s; -webkit-tap-highlight-color: transparent; }

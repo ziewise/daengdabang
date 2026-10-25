@@ -21,13 +21,13 @@ import SceneDeck from "@/components/brand-story/SceneDeck";
 
 const UI = "/images/ui/";
 
-/** 다섯 장면 — 원래 글의 "산책과 식사, 휴식과 놀이처럼 매일 반복되는 장면"을 제품군으로 */
-const SCENES: Array<{ slug: CategorySlug; art: string; tone: string; line: string }> = [
-    { slug: "outdoor", art: "hotpick-outdoor-128.webp", tone: "mint", line: "매일 걷는 길이 안전하고 즐겁도록" },
-    { slug: "food", art: "hotpick-food-128.webp", tone: "yellow", line: "잘 먹는 시간, 원료와 구성을 살펴서" },
-    { slug: "life", art: "hotpick-life-128.webp", tone: "sky", line: "집에서 쉬는 시간이 포근하도록" },
-    { slug: "toy", art: "hotpick-toy-128.webp", tone: "pink", line: "물고 당기며 에너지를 풀 수 있게" },
-    { slug: "care", art: "hotpick-care-128.webp", tone: "lav", line: "빗질부터 목욕까지 매일의 돌봄" },
+/** 다섯 장면 — 제품군 소개 카드. title 은 이 구역 카드 제목(2026-10-25 사용자 문안, 메뉴 분류 이름은 그대로) */
+const SCENES: Array<{ slug: CategorySlug; art: string; tone: string; title: string; line: string }> = [
+    { slug: "outdoor", art: "hotpick-outdoor-128.webp", tone: "mint", title: "산책·아웃도어", line: "산책과 외출을 더 편안하고 안전하게" },
+    { slug: "food", art: "hotpick-food-128.webp", tone: "yellow", title: "먹거리", line: "사료부터 간식까지, 매일 먹는 만큼 꼼꼼하게" },
+    { slug: "life", art: "hotpick-life-128.webp", tone: "sky", title: "생활용품", line: "집에서도 더 편안하고 포근한 하루" },
+    { slug: "toy", art: "hotpick-toy-128.webp", tone: "pink", title: "장난감", line: "즐겁게 놀고 활력을 채우는 시간" },
+    { slug: "care", art: "hotpick-care-128.webp", tone: "lav", title: "케어용품", line: "목욕과 빗질부터 매일의 위생 관리까지" },
 ];
 
 /** 네 가지 기준 — 원래 화면 문구 그대로 */
@@ -135,17 +135,18 @@ export default function BrandStoryWeb() {
                 <div className="bsw-bubble-wrap">
                     <blockquote className="bsw-bubble">
                         <span className="bsw-bubble-mark" aria-hidden="true">“</span>
-                        우리 아이에게도<br /><em className="bsw-hl">맞을까?</em>
+                        우리 아이에게도<br /><em className="bsw-hl">잘 맞을까?</em>
                     </blockquote>
-                    {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
-                    <img className="bsw-reader" src={`${UI}lab-researcher-384.webp`} alt="" aria-hidden="true" />
+                    {/* 2026-10-25 그림 교체 — 밥그릇 앞에서 고민하는 푸들(크레파스, 자체 보라 테두리라 틀 없음) */}
+                    {/* eslint-disable-next-line @next/next/no-img-element -- 크레파스 그림 */}
+                    <img className="bsw-reader" src={`${UI}brand-story-question-768.webp`} alt="" aria-hidden="true" />
                 </div>
                 <div className="bsw-question-copy">
                     <p className="bsw-kicker">THE FIRST QUESTION</p>
                     <h2 id="bsw-q-title" className="bsw-h2">무엇을 더 팔까보다,<br />무엇이 정말 필요할까.</h2>
-                    <p className="bsw-lead-strong">반려견을 위한 선택지는 많아졌지만, 선택은 오히려 어려워졌습니다. 비슷해 보이는 상품과 흩어진 정보 사이에서 보호자는 매번 다시 묻습니다.</p>
-                    <p>댕다방은 그 질문을 장바구니 앞에서 혼자 남겨두지 않으려 시작합니다. 가장 많은 상품을 진열하기보다, 산책과 식사, 휴식과 놀이처럼 매일 반복되는 장면에서 이유가 분명한 상품을 찾습니다.</p>
-                    <p>이름처럼 잠시 머물러 비교하고 물어볼 수 있는 곳. 빠르게 사는 것보다 잘 고르는 경험이 쌓이는 곳. 그것이 우리가 만들고 싶은 댕다방입니다.</p>
+                    <p className="bsw-lead-strong">반려견을 위한 상품은 많아졌지만, 우리 아이에게 꼭 맞는 제품을 고르는 일은 여전히 어렵습니다. 비슷한 상품과 넘쳐나는 정보 속에서 보호자의 고민은 깊어집니다.</p>
+                    <p>댕다방은 바로 그 고민에서 시작했습니다. 상품의 수보다 선택의 이유를 중요하게 생각하며, 산책과 식사, 휴식과 놀이처럼 반려견의 일상에 꼭 필요한 제품을 세심하게 살핍니다.</p>
+                    <p>편하게 둘러보고, 충분히 비교하고, 궁금한 점은 물어볼 수 있는 곳. 서두르지 않고 우리 아이에게 맞는 선택을 할 수 있도록 돕는 것, 그것이 댕다방이 만들어가고 싶은 쇼핑 경험입니다.</p>
                 </div>
             </section>
 
@@ -153,14 +154,14 @@ export default function BrandStoryWeb() {
             <section className="bsw-section" aria-labelledby="bsw-scenes-title">
                 <div className="bsw-head">
                     <p className="bsw-kicker">EVERYDAY SCENES</p>
-                    <h2 id="bsw-scenes-title" className="bsw-h2">매일 반복되는 <em className="bsw-hl">다섯 장면</em>에서 시작해요</h2>
-                    <p>우리 아이의 하루를 장면으로 나눠 보면, 지금 필요한 것이 더 또렷해집니다.</p>
+                    <h2 id="bsw-scenes-title" className="bsw-h2">우리 아이의 하루에 필요한 <em className="bsw-hl">모든 것</em></h2>
+                    <p>산책과 식사부터 휴식, 놀이, 케어까지.<br />반려견의 일상에 필요한 제품을 하나씩 살펴보세요.</p>
                 </div>
                 {/* PC 다섯 칸 · 휴대폰 겹친 카드(눌러서 한 장씩) */}
                 <SceneDeck
                     scenes={SCENES.map((scene) => ({
                         slug: scene.slug,
-                        label: CATEGORY_LABEL[scene.slug],
+                        label: scene.title,
                         art: scene.art,
                         tone: scene.tone,
                         line: scene.line,
