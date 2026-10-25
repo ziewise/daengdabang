@@ -1,10 +1,13 @@
 /*
- * footer-web.css — 웹 푸터(components/footer/FooterWeb) 꾸밈 · 2026-10-25
+ * footer-web.css — 웹 푸터(components/footer/FooterWeb) 꾸밈 · 2026-10-25 2차
  * ---------------------------------------------------------------------
- * 결: 파스텔 쿠션 · 주아 제목 · 영문 손글씨 꼬리표 · 3D 그림 · 분홍/흰 알약. 점선 · 스티커 요소 없음.
- *  PC   : 도움 띠(고객센터 민트 칸 + 바로가기 셋) → 흰 쿠션 판(로고 · SNS | 링크 네 묶음 | 연보라 소식 카드) → 크림 사업자 칸 → 법적 링크
- *  휴대폰: 도움 2×2(고객센터는 한 줄 전체) → 로고 · SNS → 링크 묶음 접는 칸 → 소식 카드 → 사업자 정보 짧은 글줄 → 법적 링크
- * 범위: footer[data-footer-web] 안(웹에서만 그려짐).
+ * 하나의 큰 종이 판: 페이지 맨 아래에서 올라온 흰~크림 판(위 모서리 둥글게 · 위쪽 세 색 크레파스 줄 · 위로 퍼지는 그림자),
+ * 판 위 오른쪽에 댕다방 강아지가 걸터앉음(살짝 위아래로).
+ *  ① 위 줄  : 주아 세 색 "댕다방" · 한 줄 소개 | 회사 링크 알약(작은 3D 그림)
+ *  ② 가운데 : 세 칸(연보라 소식 · 민트 고객센터 · 분홍 SNS) — 같은 판 안의 파스텔 칸, 칸마다 동그라미 3D 그림이 위로 살짝 걸침
+ *  ③ 아래   : 얇은 크림 띠 위 사업자 정보 표 → 법적 링크(점으로 이음, 개인정보처리방침 굵게) · 저작권
+ *  휴대폰: 같은 판 안에서 짧게 — 위 줄 가운데 정렬 · 회사 링크 한 줄 알약 셋 · 세 칸은 고객센터/소식/SNS 순서로 낮게 · 사업자 정보 글줄.
+ * 범위: footer[data-footer-web] 안(웹에서만 그려짐). 점선 · 스티커 요소 없음.
  */
 
 .fw {
@@ -12,157 +15,139 @@
     --fw-soft: #64748b;
     --fw-mute: #94a3b8;
     --fw-cream: #fbf7f1;
+    --fw-line: #efe5d8;
     --fw-pink: #e9789a;
     --fw-pink-d: #d0436d;
     --fw-jua: var(--font-jua), var(--font-wanted-sans), sans-serif;
     --fw-crayon: var(--font-crayon), var(--font-wanted-sans), sans-serif;
-    --fw-cushion: inset 0 3px 0 rgb(255 255 255 / 90%), 0 0 0 1px #f2e9dd, 0 22px 36px -30px rgb(15 23 42 / 40%);
-    margin-top: 72px;
-    padding: 0 0 36px;
+    margin-top: 110px;
     color: var(--fw-ink);
 }
-.fw [data-tone="pink"] { --t-soft: #fff0f4; --t-ink: #e2557a; }
-.fw [data-tone="sky"] { --t-soft: #e9f4fb; --t-ink: #0e8aa0; }
-.fw [data-tone="yellow"] { --t-soft: #fff6e3; --t-ink: #d98a12; }
-.fw [data-tone="mint"] { --t-soft: #e9f8f1; --t-ink: #12a17a; }
-.fw :is(h2, p, ul, dl, dd) { margin: 0; }
+.fw :is(h2, p, dl, dd) { margin: 0; }
 .fw a { text-decoration: none; }
-.fw-inner { display: grid; gap: 18px; width: min(1320px, calc(100% - 32px)); margin: 0 auto; }
 
-/* ───────── 도움 띠 ───────── */
-.fw-help { display: grid; grid-template-columns: 1.35fr repeat(3, minmax(0, 1fr)); gap: 12px; }
-.fw-cs { display: flex; align-items: center; gap: 14px; padding: 16px 20px; border-radius: 28px; background: linear-gradient(120deg, #e3f6ec, #f0faf5 60%, #f4f9fd); box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
-.fw-cs-art { display: grid; flex: none; width: 58px; height: 58px; place-items: center; border-radius: 50%; background: #fff; box-shadow: 0 8px 14px -10px rgb(15 23 42 / 40%); }
-.fw-cs-art img { width: 44px; height: 44px; object-fit: contain; }
-.fw-cs-text { display: grid; gap: 1px; min-width: 0; }
-.fw-cs-text small { color: #0f8a69; font-family: var(--fw-jua); font-size: 13.5px; }
-.fw-cs-tel { color: var(--fw-ink); font-family: var(--fw-jua); font-size: 27px; line-height: 1.15; letter-spacing: 0.01em; }
-.fw-cs-tel:hover { color: var(--fw-pink-d); }
-.fw-cs-time { color: var(--fw-soft); font-size: 12px; font-weight: 700; }
-.fw-help-card { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 28px; background: var(--t-soft); color: var(--fw-ink); box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); transition: transform 0.2s, box-shadow 0.2s; }
-.fw-help-card:hover { transform: translateY(-2px); box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%), 0 14px 22px -16px rgb(15 23 42 / 40%); }
-.fw-help-card img { flex: none; width: 48px; height: 48px; padding: 4px; border-radius: 50%; background: #fff; object-fit: contain; box-shadow: 0 8px 12px -10px rgb(15 23 42 / 40%); }
-.fw-help-card span { display: grid; flex: 1; gap: 1px; min-width: 0; }
-.fw-help-card b { font-family: var(--fw-jua); font-size: 16px; font-weight: 400; }
-.fw-help-card small { color: var(--fw-soft); font-size: 12px; font-weight: 700; }
-.fw-help-card > i { color: var(--t-ink); font-size: 12px; opacity: 0.7; }
+/* ───────── 하나의 큰 종이 판 ───────── */
+.fw-sheet { position: relative; width: min(1360px, calc(100% - 32px)); margin: 0 auto; padding: 44px 0 26px; border-radius: 48px 48px 0 0; background: radial-gradient(60% 120% at 0 0, rgb(255 240 244 / 70%) 0, transparent 55%), radial-gradient(60% 120% at 100% 0, rgb(233 244 251 / 75%) 0, transparent 55%), linear-gradient(180deg, #fffdf9 0%, #fff 60%); box-shadow: inset 0 3px 0 #fff, 0 -1px 0 #f2e9dd, 0 -24px 40px -30px rgb(15 23 42 / 30%); }
+/* 위쪽 세 색 크레파스 줄 */
+.fw-sheet::before { content: ""; position: absolute; top: 14px; left: 50%; width: 120px; height: 6px; border-radius: 999px; background: repeating-linear-gradient(94deg, rgb(8 145 178 / 55%) 0 14px, rgb(239 71 111 / 50%) 14px 28px, rgb(245 158 11 / 55%) 28px 42px); transform: translateX(-50%); }
+/* 걸터앉은 강아지 */
+.fw-mascot { position: absolute; top: -66px; right: 64px; width: 92px; height: 92px; object-fit: contain; filter: drop-shadow(0 12px 12px rgb(15 23 42 / 18%)); animation: fw-bob 3.8s ease-in-out infinite; }
+.fw-inner { display: grid; gap: 30px; padding: 0 44px; }
 
-/* ───────── 흰 쿠션 판 ───────── */
-.fw-main { display: grid; grid-template-columns: minmax(0, 0.95fr) minmax(0, 2fr) minmax(0, 1.15fr); gap: 36px; padding: 34px 36px; border-radius: 40px; background: rgb(255 255 255 / 92%); box-shadow: var(--fw-cushion); }
-.fw-brand { display: grid; align-content: start; justify-items: start; gap: 12px; }
-.fw-logo { display: inline-flex; align-items: center; gap: 10px; }
-.fw-logo img { width: 54px; height: 54px; object-fit: contain; }
-.fw-logo-word { display: inline-flex; font-family: var(--fw-jua); font-size: 30px; line-height: 1; }
+/* ① 위 줄 */
+.fw-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px 28px; }
+.fw-brand { display: grid; gap: 6px; }
+.fw-logo-word { display: inline-flex; font-family: var(--fw-jua); font-size: 38px; line-height: 1; letter-spacing: 0.02em; }
 .fw-logo-word b { font-weight: 400; }
 .fw-logo-word b:nth-child(1) { color: #0e8aa0; }
 .fw-logo-word b:nth-child(2) { color: #e2557a; }
 .fw-logo-word b:nth-child(3) { color: #e98708; }
-.fw-tagline { color: var(--fw-soft); font-size: 13.5px; font-weight: 600; line-height: 1.7; word-break: keep-all; }
+.fw-tagline { color: var(--fw-soft); font-size: 14px; font-weight: 600; word-break: keep-all; }
 .fw-tagline strong { color: var(--fw-ink); font-family: var(--fw-jua); font-size: 15px; font-weight: 400; }
-.fw-sns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
-.fw-sns a { display: grid; width: 42px; height: 42px; place-items: center; border-radius: 50%; background: #fff; font-size: 17px; box-shadow: inset 0 0 0 1.5px #efe5d8, 0 8px 14px -10px rgb(15 23 42 / 40%); transition: transform 0.2s, box-shadow 0.2s; }
-.fw-sns a:hover { transform: translateY(-2px); box-shadow: inset 0 0 0 2px currentColor, 0 10px 16px -10px rgb(15 23 42 / 40%); }
+.fw-meta { display: flex; flex-wrap: wrap; gap: 10px; }
+.fw-meta a { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px 6px 6px; border-radius: 999px; background: #fff; color: #334155; font-family: var(--fw-jua); font-size: 15px; box-shadow: inset 0 0 0 1.5px var(--fw-line), 0 10px 16px -14px rgb(15 23 42 / 40%); transition: transform 0.2s, box-shadow 0.2s, color 0.2s; }
+.fw-meta a:hover { color: var(--fw-pink-d); transform: translateY(-2px); box-shadow: inset 0 0 0 2px #f7c3d2, 0 12px 18px -14px rgb(15 23 42 / 40%); }
+.fw-meta img { width: 32px; height: 32px; padding: 3px; border-radius: 50%; background: var(--fw-cream); object-fit: contain; }
+.fw-meta i { color: var(--fw-mute); font-size: 11px; }
 
-/* 링크 네 묶음 */
-.fw-groups { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
-.fw-group-h { display: flex; align-items: center; gap: 8px; width: 100%; margin: 0 0 12px; padding: 0; border: 0; background: none; color: var(--fw-ink); font-family: var(--fw-jua); font-size: 17px; text-align: left; cursor: default; }
-.fw-group-h::before { content: ""; flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--fw-pink); box-shadow: 0 0 0 3px #ffe4ec; }
-.fw-group-h i { display: none; }
-.fw-group ul { display: grid; gap: 9px; padding: 0; list-style: none; }
-.fw-group a { color: var(--fw-soft); font-size: 14px; font-weight: 700; transition: color 0.15s; }
-.fw-group a:hover { color: var(--fw-pink-d); }
-
-/* 소식 받기 카드 — 연보라 쿠션 · 3D 편지 */
-.fw-news { position: relative; display: grid; align-content: start; gap: 8px; padding: 22px 22px 22px; border-radius: 30px; background: linear-gradient(140deg, #f3f0fe, #f8f5ff 60%, #fff4f7); box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
-.fw-news-art { position: absolute; top: -18px; right: 18px; display: grid; width: 62px; height: 62px; place-items: center; border-radius: 50%; background: #fff; box-shadow: 0 0 0 3px #cdbff5, 0 12px 18px -12px rgb(15 23 42 / 45%); }
-.fw-news-art img { width: 46px; height: 46px; object-fit: contain; }
+/* ② 가운데 세 칸 */
+.fw-tiles { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 16px; padding-top: 22px; }
+.fw-tile { position: relative; display: grid; align-content: start; gap: 6px; padding: 30px 24px 22px; border-radius: 30px; background: var(--fw-bg); box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
+.fw-tile.is-news { --fw-bg: linear-gradient(140deg, #f3f0fe, #f8f5ff 60%, #fff4f7); --fw-ring: #cdbff5; --fw-tone: #6b51c9; }
+.fw-tile.is-cs { --fw-bg: linear-gradient(140deg, #e3f6ec, #f0faf5 60%, #f4f9fd); --fw-ring: #a8e0c6; --fw-tone: #0f8a69; }
+.fw-tile.is-sns { --fw-bg: linear-gradient(140deg, #fff0f4, #fff6f8 60%, #fff9f0); --fw-ring: #f7b6c9; --fw-tone: #d0436d; }
+/* 칸 위로 살짝 걸친 동그라미 그림 */
+.fw-tile-art { position: absolute; top: -22px; right: 20px; display: grid; width: 56px; height: 56px; place-items: center; border-radius: 50%; background: #fff; box-shadow: 0 0 0 3px var(--fw-ring), 0 10px 16px -10px rgb(15 23 42 / 45%); }
+.fw-tile-art img { width: 40px; height: 40px; object-fit: contain; }
 .fw-kicker { width: fit-content; background: repeating-linear-gradient(172deg, #07849e 0 5px, #ef476f 5px 10px, #e98708 10px 15px); -webkit-background-clip: text; background-clip: text; font-family: var(--fw-crayon); font-size: 13px; letter-spacing: 0.14em; -webkit-text-fill-color: transparent; }
-.fw-news h2 { font-family: var(--fw-jua); font-size: 18px; font-weight: 400; line-height: 1.4; }
-/* 기존 NewsletterForm — 겉모양만(동작 그대로) */
-.fw-news form { max-width: none; }
-.fw-news form > div:first-child { padding: 5px; border: 0; background: #fff; box-shadow: inset 0 0 0 1.5px #ddd3f6; }
-.fw-news form input[type="email"] { font-size: 13px; }
-.fw-news form button { height: 36px; padding: 0 16px; background: var(--fw-pink); font-family: var(--fw-jua); font-size: 14px; font-weight: 400; }
-.fw-news form label { color: #5b5478; font-size: 11.5px; }
-.fw-news form input[type="checkbox"] { accent-color: var(--fw-pink); }
-.fw-news > a { justify-content: center; height: 46px; padding: 0 20px; border: 0; background: var(--fw-pink); color: #fff; font-family: var(--fw-jua); font-size: 15px; font-weight: 400; box-shadow: inset 0 2px 0 rgb(255 255 255 / 28%), 0 12px 20px -14px rgb(200 80 120 / 80%); }
-.fw-news > a[href^="/inquiry"] { background: #fff; color: #334155; box-shadow: inset 0 0 0 2px #ddd3f6; }
+.fw-tile h2 { padding-right: 56px; font-family: var(--fw-jua); font-size: 18px; font-weight: 400; line-height: 1.4; word-break: keep-all; }
+/* 소식 받기 — 기존 NewsletterForm 겉모양만(동작 그대로) */
+.fw-tile.is-news form { max-width: none; margin-top: 6px; }
+.fw-tile.is-news form > div:first-child { padding: 5px; border: 0; background: #fff; box-shadow: inset 0 0 0 1.5px #ddd3f6; }
+.fw-tile.is-news form input[type="email"] { font-size: 13px; }
+.fw-tile.is-news form button { height: 36px; padding: 0 16px; background: var(--fw-pink); font-family: var(--fw-jua); font-size: 14px; font-weight: 400; }
+.fw-tile.is-news form label { color: #5b5478; font-size: 11.5px; }
+.fw-tile.is-news form input[type="checkbox"] { accent-color: var(--fw-pink); }
+.fw-tile.is-news > a { justify-content: center; width: fit-content; height: 44px; margin-top: 6px; padding: 0 22px; border: 0; background: var(--fw-pink); color: #fff; font-family: var(--fw-jua); font-size: 15px; font-weight: 400; box-shadow: inset 0 2px 0 rgb(255 255 255 / 28%), 0 12px 20px -14px rgb(200 80 120 / 80%); }
+.fw-tile.is-news > a[href^="/inquiry"] { background: #fff; color: #334155; box-shadow: inset 0 0 0 2px #ddd3f6; }
+/* 고객센터 */
+.fw-tel { width: fit-content; color: var(--fw-ink); font-family: var(--fw-jua); font-size: 34px; line-height: 1.15; letter-spacing: 0.01em; transition: color 0.2s; }
+.fw-tel:hover { color: var(--fw-pink-d); }
+.fw-cs-info { display: grid; gap: 4px; margin-top: 4px; }
+.fw-cs-info span { display: flex; align-items: center; gap: 7px; color: var(--fw-soft); font-size: 12.5px; font-weight: 700; }
+.fw-cs-info i { width: 14px; color: var(--fw-tone); text-align: center; }
+/* SNS */
+.fw-sns-lead { color: var(--fw-soft); font-size: 13px; font-weight: 700; }
+.fw-sns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.fw-sns a { display: grid; width: 44px; height: 44px; place-items: center; border-radius: 50%; background: #fff; font-size: 18px; box-shadow: 0 8px 14px -10px rgb(15 23 42 / 40%); transition: transform 0.2s, box-shadow 0.2s; }
+.fw-sns a:hover { transform: translateY(-3px); box-shadow: inset 0 0 0 2px currentColor, 0 10px 16px -10px rgb(15 23 42 / 40%); }
 
-/* ───────── 사업자 정보 ───────── */
-.fw-biz { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 18px; padding: 18px 24px; border-radius: 26px; background: var(--fw-cream); box-shadow: inset 0 0 0 1.5px #efe5d8; }
-.fw-biz dl { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px 22px; }
-.fw-biz dl > div { display: flex; gap: 6px; min-width: 0; font-size: 12px; line-height: 1.6; }
-.fw-biz dl > div.is-wide { grid-column: span 2; }
+/* ③ 아래 — 사업자 정보 · 법적 링크 */
+.fw-bottom { display: grid; gap: 16px; padding-top: 22px; box-shadow: inset 0 1.5px 0 var(--fw-line); }
+.fw-biz { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px 24px; }
+.fw-biz > div { display: flex; gap: 7px; min-width: 0; font-size: 12px; line-height: 1.6; }
+.fw-biz > div.is-wide { grid-column: span 2; }
 .fw-biz dt { flex: none; color: #8a6e4b; font-weight: 800; }
-.fw-biz dd { overflow: hidden; color: var(--fw-soft); font-weight: 600; text-overflow: ellipsis; word-break: keep-all; }
-.fw-biz-link { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; background: #fff; color: #8a6e4b; font-family: var(--fw-jua); font-size: 13.5px; white-space: nowrap; box-shadow: inset 0 0 0 1.5px #efe5d8; }
-.fw-biz-link:hover { color: var(--fw-pink-d); }
-
-/* ───────── 법적 링크 · 저작권 ───────── */
-.fw-legal { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 20px; padding: 0 8px; }
-.fw-legal nav { display: flex; flex-wrap: wrap; gap: 4px 0; }
-.fw-legal-link { position: relative; padding: 0 10px; color: var(--fw-soft); font-size: 12.5px; font-weight: 700; }
+.fw-biz dd { color: var(--fw-soft); font-weight: 600; word-break: keep-all; }
+.fw-legal { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 20px; padding: 14px 18px; border-radius: 20px; background: var(--fw-cream); }
+.fw-legal nav { display: flex; flex-wrap: wrap; gap: 2px 0; }
+.fw-legal-link { position: relative; padding: 0 10px; color: var(--fw-soft); font-size: 12.5px; font-weight: 700; transition: color 0.15s; }
 .fw-legal-link:first-child { padding-left: 0; }
-.fw-legal-link + .fw-legal-link::before { content: ""; position: absolute; top: 50%; left: 0; width: 3px; height: 3px; margin-top: -1.5px; border-radius: 50%; background: #d6c9b5; }
+.fw-legal-link + .fw-legal-link::before { content: ""; position: absolute; top: 50%; left: -1px; width: 3px; height: 3px; margin-top: -1.5px; border-radius: 50%; background: #d6c9b5; }
 .fw-legal-link:hover { color: var(--fw-pink-d); }
 .fw-legal-link.is-strong { color: var(--fw-ink); font-weight: 900; }
 .fw-copy { color: var(--fw-mute); font-size: 12px; font-weight: 600; }
 
+@keyframes fw-bob { 50% { transform: translateY(-5px); } }
+@media (prefers-reduced-motion: reduce) { .fw-mascot { animation: none; } }
+
 /* ───────── 태블릿 ───────── */
 @media (max-width: 1100px) {
-    .fw-help { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .fw-main { grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); }
-    .fw-groups { grid-column: 1 / -1; grid-row: 2; }
-    .fw-biz dl { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .fw-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 30px; }
+    .fw-tile.is-news { grid-column: 1 / -1; }
+    .fw-biz { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 /* ───────── 휴대폰 ───────── */
 @media (max-width: 640px) {
-    .fw { margin-top: 48px; padding-bottom: 96px; }
-    .fw-inner { gap: 12px; }
-    /* 도움 — 고객센터는 한 줄 전체, 바로가기 셋은 작은 칸 */
-    .fw-help { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-    .fw-cs { grid-column: 1 / -1; padding: 12px 16px; border-radius: 24px; }
-    .fw-cs-art { width: 46px; height: 46px; }
-    .fw-cs-art img { width: 34px; height: 34px; }
-    .fw-cs-tel { font-size: 23px; }
-    .fw-help-card { flex-direction: column; justify-content: center; gap: 4px; padding: 12px 6px; border-radius: 22px; text-align: center; }
-    .fw-help-card img { width: 40px; height: 40px; }
-    .fw-help-card b { font-size: 13.5px; }
-    .fw-help-card small, .fw-help-card > i { display: none; }
-    /* 판 — 한 줄로, 링크 묶음은 접는 칸 */
-    .fw-main { grid-template-columns: minmax(0, 1fr); gap: 16px; padding: 22px 18px; border-radius: 30px; }
-    .fw-brand { grid-template-columns: auto minmax(0, 1fr); align-items: center; column-gap: 12px; }
-    .fw-logo { grid-row: span 2; }
-    .fw-logo img { width: 46px; height: 46px; }
-    .fw-logo-word { font-size: 24px; }
-    .fw-tagline { font-size: 12.5px; line-height: 1.55; }
-    .fw-tagline br { display: none; }
-    .fw-sns { grid-column: 1 / -1; justify-content: flex-start; }
-    .fw-sns a { width: 38px; height: 38px; font-size: 15px; }
-    .fw-groups { grid-row: auto; grid-template-columns: minmax(0, 1fr); gap: 0; border-radius: 22px; background: var(--fw-cream); overflow: hidden; }
-    .fw-group + .fw-group { box-shadow: inset 0 1.5px 0 #efe5d8; }
-    .fw-group-h { justify-content: space-between; margin: 0; padding: 14px 16px; font-size: 15.5px; cursor: pointer; }
-    .fw-group-h::before { display: none; }
-    .fw-group-h i { display: block; color: var(--fw-mute); font-size: 12px; transition: transform 0.25s; }
-    .fw-group.is-open .fw-group-h i { transform: rotate(180deg); color: var(--fw-pink-d); }
-    .fw-group ul { display: none; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; padding: 0 16px 14px; }
-    .fw-group.is-open ul { display: grid; }
-    .fw-group a { display: block; padding: 8px 12px; border-radius: 14px; background: #fff; font-size: 13px; }
-    .fw-news { padding: 18px 16px; border-radius: 24px; }
-    .fw-news h2 { font-size: 16px; padding-right: 60px; }
-    .fw-news h2 br { display: none; }
-    .fw-news-art { top: 14px; right: 14px; width: 48px; height: 48px; }
-    .fw-news-art img { width: 36px; height: 36px; }
+    .fw { margin-top: 84px; }
+    .fw-sheet { width: 100%; padding: 34px 0 calc(96px + env(safe-area-inset-bottom)); border-radius: 34px 34px 0 0; }
+    .fw-mascot { top: -52px; right: 22px; width: 72px; height: 72px; }
+    .fw-inner { gap: 22px; padding: 0 16px; }
+    /* 위 줄 — 가운데 정렬 */
+    .fw-top { flex-direction: column; align-items: center; text-align: center; gap: 14px; }
+    .fw-brand { justify-items: center; }
+    .fw-logo-word { font-size: 32px; }
+    .fw-tagline { font-size: 12.5px; }
+    .fw-meta { justify-content: center; gap: 6px; }
+    .fw-meta a { gap: 5px; padding: 4px 11px 4px 4px; font-size: 13px; }
+    .fw-meta img { width: 26px; height: 26px; }
+    .fw-meta i { display: none; }
+    /* 세 칸 — 고객센터 → 소식 → SNS, 낮게 */
+    .fw-tiles { grid-template-columns: minmax(0, 1fr); gap: 26px 0; padding-top: 16px; }
+    .fw-tile { padding: 22px 18px 18px; border-radius: 24px; }
+    .fw-tile.is-cs { order: -1; }
+    .fw-tile-art { top: -18px; right: 16px; width: 46px; height: 46px; }
+    .fw-tile-art img { width: 32px; height: 32px; }
+    .fw-tile h2 { font-size: 16px; }
+    .fw-tel { font-size: 28px; }
+    .fw-cs-info { grid-auto-flow: row; }
+    .fw-sns-lead { display: none; }
+    /* SNS — 휴대폰은 칸 없이 아이콘 한 줄 */
+    .fw-tile.is-sns { padding: 0; background: none; box-shadow: none; }
+    .fw-tile.is-sns :is(.fw-tile-art, .fw-kicker) { display: none; }
+    .fw-sns { justify-content: center; gap: 10px; margin-top: -8px; }
+    .fw-sns a { width: 46px; height: 46px; }
     /* 사업자 정보 — 짧은 글줄 */
-    .fw-biz { grid-template-columns: minmax(0, 1fr); gap: 10px; padding: 14px 16px; border-radius: 22px; }
-    .fw-biz dl { display: block; font-size: 11px; line-height: 1.75; }
-    .fw-biz dl > div { display: inline; font-size: 11px; }
-    .fw-biz dl > div + div::before { content: " · "; color: #d6c9b5; }
+    .fw-bottom { gap: 12px; padding-top: 16px; }
+    .fw-biz { display: block; font-size: 11px; line-height: 1.8; text-align: center; }
+    .fw-biz > div { display: inline; font-size: 11px; }
+    .fw-biz > div + div::before { content: " · "; color: #d6c9b5; }
     .fw-biz dt, .fw-biz dd { display: inline; }
     .fw-biz dd { margin-left: 4px; }
-    .fw-biz-link { justify-self: start; padding: 6px 12px; font-size: 12.5px; }
-    .fw-legal { padding: 0 4px; }
-    .fw-legal-link { font-size: 11.5px; line-height: 2; }
+    .fw-legal { flex-direction: column; justify-content: center; padding: 12px 14px; text-align: center; }
+    .fw-legal nav { justify-content: center; }
+    .fw-legal-link { padding: 0 7px; font-size: 11.5px; line-height: 2; }
+    .fw-legal-link:first-child { padding-left: 7px; }
     .fw-copy { font-size: 11px; }
 }
