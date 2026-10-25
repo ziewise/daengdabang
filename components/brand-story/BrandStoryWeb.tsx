@@ -64,14 +64,15 @@ export default function BrandStoryWeb() {
                 <div className="bsw-hero-text">
                     <p className="bsw-kicker">DAENGDABANG BRAND STORY</p>
                     <h1 id="bsw-title" className="bsw-hero-title">
-                        <span>좋은 하루는,</span>
-                        <span>함께 고르는</span>
-                        <span><em className="bsw-hl">순간</em>부터.</span>
+                        {/* 2026-10-25 문구 교체(사용자 제공 문안) */}
+                        <span>반려견의 좋은 하루,</span>
+                        <span>더 나은 <em className="bsw-hl">선택</em>에서</span>
+                        <span>시작됩니다.</span>
                     </h1>
-                    <p className="bsw-hero-lead">댕다방은 반려견의 하루를 먼저 바라보고, 보호자가 이유 있게 고를 수 있도록 돕는 큐레이션 펫 쇼핑몰입니다.</p>
+                    <p className="bsw-hero-lead">반려견에게 필요한 것은 무엇인지, 어떤 제품이 더 좋은 선택인지. 댕다방은 반려견의 일상을 먼저 생각하고, 보호자가 안심하고 선택할 수 있는 제품을 세심하게 제안합니다.</p>
                     <div className="bsw-actions">
-                        <Link href="/products" className="bsw-pill is-pink">댕다방 셀렉션 보기<i className="fa-solid fa-arrow-right" aria-hidden="true" /></Link>
-                        <a href="#bsw-standard" className="bsw-pill">우리의 선택 기준</a>
+                        <Link href="/products" className="bsw-pill is-pink">엄선한 상품 만나보기<i className="fa-solid fa-arrow-right" aria-hidden="true" /></Link>
+                        <a href="#bsw-standard" className="bsw-pill">댕다방의 선택 기준</a>
                     </div>
                     <ul className="bsw-scene-chips" aria-label="댕다방이 살피는 다섯 장면">
                         {SCENES.map((scene) => (
