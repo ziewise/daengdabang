@@ -151,10 +151,10 @@
     - 오늘 밤 수정분은 수백 KB 수준이에요.
     - 예: `public/fonts`에 예전 원티드 산스 한 덩어리(1.29MB)와 새로 나눈 글꼴(1.32MB)이 함께 들어가요.
     - 묶음 대상 설정(`scripts/prepare-native-web.mjs`)은 배포 설정이라 손대지 않았어요. 웹 배포(`deploy.yml`)와는 별개예요.
-12. **굿즈 공모전 빌드 검사**(`verify-goods-contest-build-output.mjs`, 웹 배포 단계) — 어제 빌드에서도 같은 실패예요(오늘 수정 무관).
-    - 오류: 'goods hero markup is missing'
-    - 원인: 검사가 찾는 `<div class="ddb-crayon-paper` 표시가 페이지에 없음
-    - 협업자 굿즈 화면 쪽 확인이 필요해요.
+12. **굿즈 공모전 빌드 검사**(`verify-goods-contest-build-output.mjs`, 웹 배포 단계) — 원인은 우리 작업(협업자 아님)
+    - ① 영상 머리 끝 기준점(`<div class="ddb-crayon-paper`) — 10-22 굿즈 새 모양 때 사라짐. 2026-10-26 안 보이는 표시로 복구, 통과(128e2244).
+    - ② 헤더 그림 이름 — 검사는 옛 이름 `pet-lens-128.webp` · `lang-globe-128.webp`를 찾음. 10-18 헤더 3D 아이콘 작업 때 `header-petlens-128.webp` · `header-lang-128.webp`로 바뀜. 남은 실패는 이 두 줄(15 · 16)뿐.
+      - 제안: 예전 상표 그림 테스트처럼 검사가 새 이름도 받게 넓히기(사용자 승인 필요)
 
 ## 4. 검사
 
