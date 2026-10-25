@@ -163,10 +163,11 @@ const CHECK_ITEMS = [
     "배송지 수와 분할 배송 여부",
     "포장·문구 인쇄·세금계산서 등 추가 요청사항",
 ];
+/** 대량 구매 진행 세 단계 — 2026-10-25 사용자 문안 · 크레파스 그림(웹구매접수 · 웹조건검토 · 웹검토결과안내) */
 const BULK_STEPS = [
-    { title: "요청 확인", body: "상품·수량·일정과 필요한 거래 조건을 확인합니다.", art: "web-cs-mail-256.webp" },
-    { title: "가능 범위 검토", body: "현재 판매·공급 가능한 구성과 배송 조건을 검토합니다.", art: "web-cs-step-inspect-256.webp" },
-    { title: "개별 안내", body: "확인된 조건과 다음 협의 내용을 이메일로 답변드립니다.", art: "lab-mail-160.webp" },
+    { title: "구매 요청 접수", body: "희망 상품과 수량, 납품 일정 등 요청 내용을 확인합니다.", art: "bulk-step-receive-256.webp" },
+    { title: "공급 조건 검토", body: "재고와 공급 가능 수량, 배송 조건 등을 꼼꼼히 살펴봅니다.", art: "bulk-step-review-256.webp" },
+    { title: "검토 결과 안내", body: "가능한 진행 조건과 추가 협의 사항을 이메일로 안내드립니다.", art: "bulk-step-reply-256.webp" },
 ];
 
 export function BulkWebIntro() {
@@ -214,8 +215,8 @@ export function BulkWebIntro() {
             <section className="bzw-flow" data-tone="sky" aria-labelledby="bzw-bulk-flow-title">
                 <div className="bzw-head">
                     <p className="bzw-kicker">HOW IT WORKS</p>
-                    <h2 id="bzw-bulk-flow-title" className="bzw-h2">이렇게 <em className="bzw-hl">진행</em>돼요</h2>
-                    <p>제출만으로 가격·재고·납품 일정이 확정되지는 않아요. 담당자가 검토한 뒤 이메일로 안내드려요.</p>
+                    <h2 id="bzw-bulk-flow-title" className="bzw-h2">단체·대량 주문, 이렇게 <em className="bzw-hl">진행</em>돼요</h2>
+                    <p>요청 내용을 바탕으로 재고와 공급·배송 조건을 검토한 후 이메일로 안내드립니다. 최종 가격과 납품 일정은 별도 협의 후 확정됩니다.</p>
                 </div>
                 <Steps steps={BULK_STEPS} />
             </section>
