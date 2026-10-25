@@ -14,7 +14,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { BRAND_STANDARDS } from "@/lib/brand-standards";
 
-export default function StandardsDialogButton({ className, formHref }: { className?: string; formHref?: string }) {
+export default function StandardsDialogButton({ className, formHref, label = "댕다방의 선택 기준 보기" }: { className?: string; formHref?: string; label?: string }) {
     const [open, setOpen] = useState(false);
     const openerRef = useRef<HTMLButtonElement>(null);
     const closeRef = useRef<HTMLButtonElement>(null);
@@ -40,7 +40,7 @@ export default function StandardsDialogButton({ className, formHref }: { classNa
     return (
         <>
             <button ref={openerRef} type="button" className={className} onClick={() => setOpen(true)} aria-haspopup="dialog" aria-expanded={open}>
-                댕다방의 선택 기준 보기
+                {label}
                 <i className="fa-solid fa-list-check" aria-hidden="true" />
             </button>
 

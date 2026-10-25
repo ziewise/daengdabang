@@ -55,6 +55,7 @@ html:not(.ddb-app-mode) .bzw {
     & .bzw-chips li { display: inline-flex; align-items: center; gap: 7px; padding: 7px 15px; border-radius: 999px; background: rgb(255 255 255 / 90%); color: #475569; font-size: 13px; font-weight: 700; box-shadow: 0 8px 14px -12px rgb(15 23 42 / 40%); }
     & .bzw-chips i { color: #d98a12; font-size: 12px; }
     & .bzw-chips b { color: var(--bz-pink-d); font-family: var(--bz-jua); font-size: 16px; font-weight: 400; }
+    & .bzw-chips b.is-text { font-size: 14px; } /* 글자 강조(이메일로 안내)는 숫자보다 작게 */
     /* 오른쪽 그림 — 무지개 고리 큰 그림 + 떠 있는 작은 그림 셋 */
     & .bzw-hero-art { position: relative; justify-self: center; width: 300px; height: 300px; }
     & .bzw-ring { position: absolute; inset: 20px; display: grid; place-items: center; padding: 10px; border-radius: 50%; background: conic-gradient(from 20deg, #f7a8bf, #ffd08a, #a8e0c6, #a9d4ea, #cfc3f5, #f7a8bf); box-shadow: 0 24px 36px -24px rgb(15 23 42 / 45%); }

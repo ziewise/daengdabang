@@ -61,20 +61,22 @@ export function PartnerWebIntro() {
             <section className="bzw-hero" data-tone="peach" aria-labelledby="bzw-partner-title">
                 <div className="bzw-hero-text">
                     <p className="bzw-kicker">PARTNER WITH DAENGDABANG</p>
-                    <h1 id="bzw-partner-title" className="bzw-title">좋은 상품이 보호자에게<br /><em className="bzw-hl">제대로 닿도록</em>.</h1>
-                    <p className="bzw-lead">댕다방은 상품 수를 늘리기 위한 입점보다, 반려견의 실제 생활에 분명한 쓰임이 있는 상품을 찾습니다. 브랜드가 지켜온 기준과 상품의 이유를 들려주세요.</p>
+                    {/* 2026-10-25 머리 판 문구 · 그림 교체(사용자 문안 · 웹파트너 그림) */}
+                    <h1 id="bzw-partner-title" className="bzw-title">좋은 상품의 가치가,<br /><em className="bzw-hl">반려견의 일상</em>에 닿도록.</h1>
+                    <p className="bzw-lead">댕다방은 단순히 입점 브랜드를 늘리기보다, 반려견의 일상에 실질적인 도움이 되는 제품을 찾습니다.</p>
+                    <p className="bzw-lead">제품에 담긴 고민과 브랜드가 지켜온 기준을 들려주세요. 그 가치를 보호자가 이해하고 믿고 선택할 수 있도록, 댕다방이 함께하겠습니다.</p>
                     <div className="bzw-actions">
                         {/* 2026-10-25 "제안서 작성하기" 뺌(아래 카드 단추로 충분) · 선택 기준은 브랜드 스토리로 가지 않고 요약 창(사용자 요청) */}
-                        <StandardsDialogButton className="bzw-pill is-pink" formHref="#partner-form" />
+                        <StandardsDialogButton className="bzw-pill is-pink" formHref="#partner-form" label="댕다방의 선택 기준" />
                     </div>
                     <ul className="bzw-chips" aria-label="댕다방 한눈에">
                         <li><i className="fa-solid fa-tag" aria-hidden="true" />함께하는 브랜드 <b>{brandCount}</b>곳</li>
-                        <li><i className="fa-solid fa-box-open" aria-hidden="true" />고른 상품 <b>{CATALOG.length}</b>개</li>
-                        <li><i className="fa-solid fa-envelope" aria-hidden="true" />회신은 이메일로</li>
+                        <li><i className="fa-solid fa-box-open" aria-hidden="true" />엄선한 상품 <b>{CATALOG.length}</b>개</li>
+                        <li><i className="fa-solid fa-envelope" aria-hidden="true" />제안 결과는 <b className="is-text">이메일로 안내</b></li>
                     </ul>
                 </div>
                 <div className="bzw-hero-art" aria-hidden="true">
-                    <span className="bzw-ring"><Art src="next-brand-256.webp" /></span>
+                    <span className="bzw-ring"><Art src="partner-hero-512.webp" /></span>
                     {/* 2026-10-25 둘레의 떠 있는 동그라미 세 개(bzw-float) 뺌 — 사용자 요청 */}
                 </div>
             </section>
