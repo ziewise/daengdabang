@@ -46,11 +46,11 @@ const FLOW = [
     { title: "연결", body: "입점 뒤에도 질문과 피드백을 모아 더 이해하기 쉬운 선택 경험으로 다듬습니다.", art: "next-brand-256.webp" },
 ];
 
-/** 약속 — 원래 화면 문구 그대로 */
+/** 약속 — 원래 화면 문구 그대로(2026-10-25 카드 아이콘 뺌 · 사용자 요청) */
 const PROMISES = [
-    { title: "확인한 것과 추정한 것을 구분하겠습니다", body: "상품 정보와 시장 신호를 섞어 단정하지 않고, 고객이 판단할 수 있게 출처와 한계를 드러냅니다.", art: "lab-info-160.webp", tone: "sky" },
-    { title: "우리 아이의 차이를 존중하겠습니다", body: "같은 견종과 체중만으로 정답을 만들지 않고, 보호자가 확인하고 선택할 여지를 남깁니다.", art: "stickers/my-pets.webp", tone: "pink" },
-    { title: "어려운 순간에도 연결되어 있겠습니다", body: "교환·반품·상품 이상과 같은 문의가 접수에서 답변까지 끊기지 않도록 운영합니다.", art: "web-cs-inquiry-160.webp", tone: "mint" },
+    { title: "확인한 것과 추정한 것을 구분하겠습니다", body: "상품 정보와 시장 신호를 섞어 단정하지 않고, 고객이 판단할 수 있게 출처와 한계를 드러냅니다.", tone: "sky" },
+    { title: "우리 아이의 차이를 존중하겠습니다", body: "같은 견종과 체중만으로 정답을 만들지 않고, 보호자가 확인하고 선택할 여지를 남깁니다.", tone: "pink" },
+    { title: "어려운 순간에도 연결되어 있겠습니다", body: "교환·반품·상품 이상과 같은 문의가 접수에서 답변까지 끊기지 않도록 운영합니다.", tone: "mint" },
 ];
 
 export default function BrandStoryWeb() {
@@ -255,8 +255,6 @@ export default function BrandStoryWeb() {
                         <article key={item.title} data-tone={item.tone}>
                             <span className="bsw-promise-top">
                                 <b>약속 {index + 1}</b>
-                                {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
-                                <img src={`${UI}${item.art}`} alt="" aria-hidden="true" />
                             </span>
                             <h3>{item.title}</h3>
                             <p>{item.body}</p>
