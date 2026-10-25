@@ -274,7 +274,14 @@ html:not(.ddb-app-mode) main[data-product-detail-content] {
         box-shadow: var(--pd-cushion);
     }
 
-    & #tab-qna > div > div:first-child { width: 64px; height: 64px; background: #f3f0fe; color: #7c62d6; }
+    /* 상품 문의 그림 — 글꼴 아이콘 대신 3D 물음표 말풍선(웹질문 · 2026-10-25), 동그라미 판 없이 그림만 */
+    & #tab-qna > div > div:first-child {
+        width: 84px;
+        height: 84px;
+        background: url("/images/ui/pd-qna-ask-256.webp") center / contain no-repeat;
+        filter: drop-shadow(0 8px 10px rgb(15 23 42 / 14%));
+    }
+    & #tab-qna > div > div:first-child > i { display: none; }
     & #tab-qna h3 { font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 20px; font-weight: 400; }
 
     & #tab-qna [class*="bg-neutral-950"] {
@@ -421,7 +428,7 @@ html:not(.ddb-app-mode) main[data-product-detail-content] {
     & [data-pd-band="lav"] { --pd-bg: #f3f0fe; --pd-ink: #6b51c9; }
     & [data-pd-art="detail"] { --pd-art: url("/images/ui/lab-summary-256.webp"); }
     & [data-pd-art="review"] { --pd-art: url("/images/ui/find-basics-256.webp"); }
-    & [data-pd-art="qna"] { --pd-art: url("/images/ui/mypet-caretalk-256.webp"); }
+    & [data-pd-art="qna"] { --pd-art: url("/images/ui/pd-qna-band-256.webp"); } /* 웹Q&A · 2026-10-25 */
     & [data-pd-art="return"] { --pd-art: url("/images/ui/web-cs-step-ship-256.webp"); }
     & [data-pd-art="related"] { --pd-art: url("/images/ui/header-cart-128.webp"); }
 
@@ -629,7 +636,7 @@ html:not(.ddb-app-mode) main[data-product-detail-content] {
 
     & .pd-tab[href="#tab-detail"] { --tb-art: url("/images/ui/lab-summary-256.webp"); --tb-bg: #e9f4fb; }
     & .pd-tab[href="#tab-review"] { --tb-art: url("/images/ui/find-basics-256.webp"); --tb-bg: #fff6e3; }
-    & .pd-tab[href="#tab-qna"] { --tb-art: url("/images/ui/mypet-caretalk-256.webp"); --tb-bg: #f3f0fe; }
+    & .pd-tab[href="#tab-qna"] { --tb-art: url("/images/ui/pd-qna-band-256.webp"); --tb-bg: #f3f0fe; }
 
     & .pd-tab[aria-current="true"] {
         min-height: 60px;

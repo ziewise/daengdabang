@@ -9,6 +9,10 @@ import { useI18n } from "@/lib/i18n";
 import { openChatWidget } from "@/lib/chat-widget-events";
 import ProductDeliveryReturnPolicy from "@/components/products/detail/ProductDeliveryReturnPolicy";
 import { getProductDetailContent } from "@/lib/catalog/product-detail-content";
+// 자사몰 구매 후기 시안(개발 서버 + ?rvpreview=1 + 웹 화면에서만 — 배포 빌드에는 안 보임)
+import ProductOwnReviews from "@/components/reviews/ProductOwnReviews";
+import { useReviewPreview, PREVIEW_SUMMARY } from "@/lib/reviews-preview";
+import { useWebScreen } from "@/hooks/useWebScreen";
 
 type SectionKey = "detail" | "review" | "qna";
 
@@ -19,12 +23,16 @@ interface Props {
 export default function ProductTabs({ product: p }: Props) {
     const [active, setActive] = useState<SectionKey>("detail");
     const { t, locale } = useI18n();
+    const previewMode = useReviewPreview();
+    const webScreen = useWebScreen();
+    const ownPreview = previewMode !== "off" && webScreen && locale !== "en";
+    const [reviewView, setReviewView] = useState<"own" | "external">("own");
     const reviewBadge = p.externalReviewCount
         ? p.externalReviewCount.toLocaleString(locale === "en" ? "en-US" : "ko-KR")
         : undefined;
     const sections: { key: SectionKey; label: string }[] = [
         { key: "detail", label: t("detailInfo") },
-        { key: "review", label: locale === "en" ? "External reviews" : "외부 판매점 후기" },
+        { key: "review", label: ownPreview ? "구매 후기" : locale === "en" ? "External reviews" : "외부 판매점 후기" },
         { key: "qna", label: t("qna") },
     ];
 
@@ -76,13 +84,34 @@ export default function ProductTabs({ product: p }: Props) {
             </section>
 
             <section id="tab-review" className="scroll-mt-32 pt-14">
-                <SectionTitle title={locale === "en" ? "External store reviews" : "외부 판매점 후기"} badge={reviewBadge} tone="yellow" art="review" kicker="REVIEW" />
-                <ReviewContent product={p} />
-                {!!p.relatedExternalReviewProducts?.length && <aside className="mx-auto mt-6 max-w-3xl rounded-xl border border-neutral-200 p-5" aria-label={locale === "en" ? "Other seasons' external reviews" : "다른 시즌 상품의 외부 후기"}>
-                    <h3 className="text-sm font-bold">{locale === "en" ? "Other seasons' external reviews" : "다른 시즌 상품의 외부 후기"}</h3>
-                    <p className="mt-2 text-xs leading-5 text-neutral-500">{locale === "en" ? "These source products may differ in design or specifications. Their reviews are kept separate from this product's ratings and summary." : "디자인·사양이 다를 수 있는 다른 시즌 상품의 후기입니다. 이 상품의 평점·리뷰 수·요약에는 합산하지 않습니다."}</p>
-                    <div className="mt-3 space-y-2">{p.relatedExternalReviewProducts.map(source => <Link key={source.folder} href={`/product/${source.folder}/#tab-review`} className="block rounded-lg border border-neutral-200 px-3 py-2 text-xs leading-5 hover:border-indigo-400">{source.name} · {locale === "en" ? "View source reviews" : "원래 상품의 외부 후기 보기"} →</Link>)}</div>
-                </aside>}
+                {ownPreview ? (
+                    <>
+                        {/* 시안: 댕다방 구매 후기 | 외부 판매처 후기 — 출처를 섞지 않고 두 갈래로 */}
+                        <SectionTitle title="구매 후기" tone="yellow" art="review" kicker="REVIEW" />
+                        <div className="rvw-switch" role="tablist" aria-label="후기 출처">
+                            <button type="button" role="tab" aria-selected={reviewView === "own"} onClick={() => setReviewView("own")}>
+                                댕다방 구매 후기 <b>{previewMode === "empty" ? 0 : PREVIEW_SUMMARY.count}</b>
+                            </button>
+                            <button type="button" role="tab" aria-selected={reviewView === "external"} onClick={() => setReviewView("external")}>
+                                외부 판매처 후기 {reviewBadge && <b>{reviewBadge}</b>}
+                            </button>
+                        </div>
+                    </>
+                ) : (
+                    <SectionTitle title={locale === "en" ? "External store reviews" : "외부 판매점 후기"} badge={reviewBadge} tone="yellow" art="review" kicker="REVIEW" />
+                )}
+                {ownPreview && reviewView === "own" ? (
+                    <ProductOwnReviews product={p} empty={previewMode === "empty"} />
+                ) : (
+                    <>
+                        <ReviewContent product={p} />
+                        {!!p.relatedExternalReviewProducts?.length && <aside className="mx-auto mt-6 max-w-3xl rounded-xl border border-neutral-200 p-5" aria-label={locale === "en" ? "Other seasons' external reviews" : "다른 시즌 상품의 외부 후기"}>
+                            <h3 className="text-sm font-bold">{locale === "en" ? "Other seasons' external reviews" : "다른 시즌 상품의 외부 후기"}</h3>
+                            <p className="mt-2 text-xs leading-5 text-neutral-500">{locale === "en" ? "These source products may differ in design or specifications. Their reviews are kept separate from this product's ratings and summary." : "디자인·사양이 다를 수 있는 다른 시즌 상품의 후기입니다. 이 상품의 평점·리뷰 수·요약에는 합산하지 않습니다."}</p>
+                            <div className="mt-3 space-y-2">{p.relatedExternalReviewProducts.map(source => <Link key={source.folder} href={`/product/${source.folder}/#tab-review`} className="block rounded-lg border border-neutral-200 px-3 py-2 text-xs leading-5 hover:border-indigo-400">{source.name} · {locale === "en" ? "View source reviews" : "원래 상품의 외부 후기 보기"} →</Link>)}</div>
+                        </aside>}
+                    </>
+                )}
             </section>
 
             <section id="tab-qna" className="scroll-mt-32 pt-14">

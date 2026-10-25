@@ -134,6 +134,10 @@ test("all approved JSK details bypass legacy editorial indices and render every 
             };
             if (id === "@/lib/chat-widget-events") return { openChatWidget: () => {} };
             if (id === "@/components/products/detail/ProductDeliveryReturnPolicy") return () => null;
+            // 자사몰 후기 시안(개발 서버 전용) — 테스트에서는 꺼진 상태
+            if (id === "@/components/reviews/ProductOwnReviews") return () => null;
+            if (id === "@/lib/reviews-preview") return { useReviewPreview: () => "off", PREVIEW_SUMMARY: { count: 0 } };
+            if (id === "@/hooks/useWebScreen") return { useWebScreen: () => false };
             throw new Error(`Unexpected import: ${id}`);
         },
     });

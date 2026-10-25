@@ -70,6 +70,10 @@ function renderDetails(product, content) {
         "@/lib/chat-widget-events": { openChatWidget() {} },
         "@/components/products/detail/ProductDeliveryReturnPolicy": () => React.createElement("div", { "data-store-policy": true }),
         "@/lib/catalog/product-detail-content": { getProductDetailContent(folder) { lookups.push(folder); return content; } },
+        // 자사몰 후기 시안(개발 서버 전용) — 테스트에서는 꺼진 상태
+        "@/components/reviews/ProductOwnReviews": () => null,
+        "@/lib/reviews-preview": { useReviewPreview: () => "off", PREVIEW_SUMMARY: { count: 0 } },
+        "@/hooks/useWebScreen": { useWebScreen: () => false },
     });
     return { html: renderToStaticMarkup(React.createElement(ProductTabs, { product })), lookups };
 }
