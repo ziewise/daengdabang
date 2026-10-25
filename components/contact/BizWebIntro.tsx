@@ -9,6 +9,7 @@
  */
 import Link from "next/link";
 import { CATALOG, listBrands } from "@/lib/catalog";
+import StandardsDialogButton from "./StandardsDialogButton";
 import "@/app/biz-intro-web.css";
 
 const UI = "/images/ui/";
@@ -63,8 +64,8 @@ export function PartnerWebIntro() {
                     <h1 id="bzw-partner-title" className="bzw-title">좋은 상품이 보호자에게<br /><em className="bzw-hl">제대로 닿도록</em>.</h1>
                     <p className="bzw-lead">댕다방은 상품 수를 늘리기 위한 입점보다, 반려견의 실제 생활에 분명한 쓰임이 있는 상품을 찾습니다. 브랜드가 지켜온 기준과 상품의 이유를 들려주세요.</p>
                     <div className="bzw-actions">
-                        <a href="#partner-form" className="bzw-pill is-pink">제안서 작성하기<i className="fa-solid fa-arrow-down" aria-hidden="true" /></a>
-                        <Link href="/brand-story" className="bzw-pill">댕다방의 선택 기준 보기</Link>
+                        {/* 2026-10-25 "제안서 작성하기" 뺌(아래 카드 단추로 충분) · 선택 기준은 브랜드 스토리로 가지 않고 요약 창(사용자 요청) */}
+                        <StandardsDialogButton className="bzw-pill is-pink" formHref="#partner-form" />
                     </div>
                     <ul className="bzw-chips" aria-label="댕다방 한눈에">
                         <li><i className="fa-solid fa-tag" aria-hidden="true" />함께하는 브랜드 <b>{brandCount}</b>곳</li>

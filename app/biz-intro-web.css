@@ -37,7 +37,7 @@ html:not(.ddb-app-mode) .bzw {
     & .bzw-hl::after { content: ""; position: absolute; right: 1%; bottom: 0.02em; left: 0; z-index: -1; height: 0.24em; border-radius: 999px 70% 999px 60%; background: var(--bz-underline); opacity: 0.55; transform: rotate(-0.7deg) skewX(-7deg); }
     & .bzw-head { display: grid; justify-items: start; gap: 8px; margin-bottom: 24px; }
     & .bzw-head > p:last-child:not(.bzw-kicker) { max-width: 720px; color: var(--bz-soft); font-size: 15px; font-weight: 600; line-height: 1.75; word-break: keep-all; }
-    & .bzw-pill { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 52px; padding: 0 26px; border-radius: 999px; background: #fff; color: #334155; font-family: var(--bz-jua); font-size: 16.5px; text-decoration: none; box-shadow: inset 0 0 0 2px #e6dccf, 0 12px 20px -16px rgb(15 23 42 / 45%); transition: transform 0.2s, background 0.2s; }
+    & .bzw-pill { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 52px; padding: 0 26px; border-radius: 999px; background: #fff; color: #334155; font-family: var(--bz-jua); font-size: 16.5px; text-decoration: none; border: 0; cursor: pointer; box-shadow: inset 0 0 0 2px #e6dccf, 0 12px 20px -16px rgb(15 23 42 / 45%); transition: transform 0.2s, background 0.2s; }
     & .bzw-pill:hover { transform: translateY(-2px); }
     & .bzw-pill.is-pink { background: var(--bz-pink); color: #fff; box-shadow: inset 0 2px 0 rgb(255 255 255 / 28%), 0 16px 24px -14px rgb(200 80 120 / 80%); }
     & .bzw-pill.is-pink:hover { background: #e26690; }
@@ -210,4 +210,65 @@ html:not(.ddb-app-mode) .bzm-overlay {
     html:not(.ddb-app-mode) .bzm-overlay { align-items: end; padding: 0; }
     html:not(.ddb-app-mode) .bzm-overlay .bzm-dialog { width: 100%; max-height: 92dvh; border-radius: 30px 30px 0 0; }
     html:not(.ddb-app-mode) .bzm-overlay .bzm-close { top: 12px; right: 12px; }
+}
+
+/* ───────── 선택 기준 요약 창(StandardsDialogButton) · 2026-10-25 ─────────
+   입점 머리 판 "댕다방의 선택 기준 보기" → 브랜드 스토리로 가지 않고 네 가지 기준을 한눈에. 휴대폰은 아래서 올라오는 판. */
+html:not(.ddb-app-mode) .sdm-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2600;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    background: rgb(15 23 42 / 50%);
+    backdrop-filter: blur(3px);
+    & .sdm-dialog { position: relative; display: grid; gap: 22px; width: min(820px, 100%); max-height: calc(100dvh - 48px); overflow-y: auto; overscroll-behavior: contain; padding: 34px 34px 28px; border-radius: 36px; background: radial-gradient(70% 60% at 100% 0, rgb(243 240 254 / 90%) 0, transparent 60%), radial-gradient(60% 50% at 0 100%, rgb(255 241 227 / 80%) 0, transparent 60%), #fff; box-shadow: 0 40px 80px -30px rgb(15 23 42 / 55%); animation: bzm-pop 0.28s cubic-bezier(0.2, 0.9, 0.3, 1.2); }
+    & .sdm-close { position: absolute; top: 18px; right: 18px; display: grid; width: 42px; height: 42px; place-items: center; border: 0; border-radius: 50%; background: #fff; color: #64748b; font-size: 18px; cursor: pointer; box-shadow: 0 6px 12px -8px rgb(15 23 42 / 45%); }
+    & .sdm-close:hover { background: #fff0f4; color: #d0436d; }
+    & .sdm-close:focus-visible { outline: 3px solid #f7c3d2; outline-offset: 2px; }
+
+    /* 머리 */
+    & .sdm-head { display: grid; gap: 8px; padding-right: 48px; }
+    & .sdm-kicker { width: fit-content; background: repeating-linear-gradient(172deg, #07849e 0 5px, #ef476f 5px 10px, #e98708 10px 15px); -webkit-background-clip: text; background-clip: text; font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif; font-size: 14px; letter-spacing: 0.1em; -webkit-text-fill-color: transparent; }
+    & .sdm-head h2 { color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 28px; font-weight: 400; line-height: 1.3; word-break: keep-all; }
+    & .sdm-head h2 em { position: relative; color: #d0436d; font-style: normal; white-space: nowrap; isolation: isolate; }
+    & .sdm-head h2 em::after { content: ""; position: absolute; right: 0; bottom: -0.02em; left: 0; z-index: -1; height: 0.22em; border-radius: 999px 70% 999px 60%; background: repeating-linear-gradient(94deg, rgb(8 145 178 / 62%) 0 12px, rgb(239 71 111 / 58%) 12px 24px, rgb(245 158 11 / 62%) 24px 36px); opacity: 0.5; transform: rotate(-0.6deg); }
+    & .sdm-head > p:last-child { color: #5b6476; font-size: 14.5px; font-weight: 600; line-height: 1.75; word-break: keep-all; }
+
+    /* 네 가지 기준 — 파스텔 쿠션 카드 2×2 */
+    & .sdm-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin: 0; padding: 0; list-style: none; }
+    & .sdm-list li { --t-bg: #fff0f4; --t-ink: #d0436d; display: grid; grid-template-columns: 76px minmax(0, 1fr); align-items: center; gap: 14px; padding: 16px 18px; border-radius: 26px; background: var(--t-bg); box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
+    & .sdm-list li[data-tone="sky"] { --t-bg: #e9f4fb; --t-ink: #0e7f93; }
+    & .sdm-list li[data-tone="yellow"] { --t-bg: #fff6e1; --t-ink: #c27a06; }
+    & .sdm-list li[data-tone="mint"] { --t-bg: #e7f7ef; --t-ink: #12a17a; }
+    & .sdm-art { display: grid; width: 76px; height: 76px; place-items: center; border-radius: 50%; background: #fff; box-shadow: 0 10px 16px -12px rgb(15 23 42 / 40%); }
+    & .sdm-art img { width: 58px; height: 58px; object-fit: contain; }
+    & .sdm-text { display: grid; gap: 3px; min-width: 0; }
+    & .sdm-text small { color: var(--t-ink); font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 15px; }
+    & .sdm-text b { color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 18.5px; font-weight: 400; word-break: keep-all; }
+    & .sdm-text span { color: #5b6476; font-size: 13.5px; font-weight: 600; line-height: 1.6; word-break: keep-all; }
+
+    /* 아래 — 안내 · 단추 */
+    & .sdm-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; padding-top: 4px; }
+    & .sdm-foot > p { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 999px; background: #fbf7f1; color: #6b5a40; font-size: 13.5px; font-weight: 700; }
+    & .sdm-foot > p i { color: #e9a23b; }
+    & .sdm-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+    & .sdm-pill { display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 22px; border-radius: 999px; background: #fff; color: #334155; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 16px; text-decoration: none; box-shadow: inset 0 0 0 2px #f0e6d8; transition: transform 0.2s, background 0.2s; }
+    & .sdm-pill:hover { transform: translateY(-2px); }
+    & .sdm-pill.is-pink { background: #e9789a; color: #fff; box-shadow: inset 0 2px 0 rgb(255 255 255 / 28%), 0 14px 22px -14px rgb(200 80 120 / 80%); }
+    & .sdm-pill.is-pink:hover { background: #e26690; }
+}
+@media (prefers-reduced-motion: reduce) { html:not(.ddb-app-mode) .sdm-overlay .sdm-dialog { animation: none; } }
+@media (max-width: 640px) {
+    html:not(.ddb-app-mode) .sdm-overlay { align-items: end; padding: 0; }
+    html:not(.ddb-app-mode) .sdm-overlay .sdm-dialog { width: 100%; max-height: 92dvh; gap: 18px; padding: 28px 18px 22px; border-radius: 30px 30px 0 0; }
+    html:not(.ddb-app-mode) .sdm-overlay .sdm-head h2 { font-size: 23px; }
+    html:not(.ddb-app-mode) .sdm-overlay .sdm-list { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+    html:not(.ddb-app-mode) .sdm-overlay .sdm-list li { grid-template-columns: 62px minmax(0, 1fr); padding: 12px 14px; }
+    html:not(.ddb-app-mode) .sdm-overlay .sdm-art { width: 62px; height: 62px; }
+    html:not(.ddb-app-mode) .sdm-overlay .sdm-art img { width: 48px; height: 48px; }
+    html:not(.ddb-app-mode) .sdm-overlay .sdm-foot { flex-direction: column; align-items: stretch; }
+    html:not(.ddb-app-mode) .sdm-overlay .sdm-foot > p { justify-content: center; border-radius: 18px; }
+    html:not(.ddb-app-mode) .sdm-overlay .sdm-actions .sdm-pill { flex: 1; justify-content: center; }
 }

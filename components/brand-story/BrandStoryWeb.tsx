@@ -18,6 +18,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { CATALOG, CATEGORY_LABEL, listBrands, type CategorySlug } from "@/lib/catalog";
 import BizFormButton from "@/components/contact/BizFormButton";
+import { BRAND_STANDARDS } from "@/lib/brand-standards";
 import SceneDeck from "@/components/brand-story/SceneDeck";
 
 const UI = "/images/ui/";
@@ -31,13 +32,8 @@ const SCENES: Array<{ slug: CategorySlug; art: string; tone: string; title: stri
     { slug: "care", art: "hotpick-care-128.webp", tone: "lav", title: "케어용품", line: "목욕과 빗질부터 매일의 위생 관리까지" },
 ];
 
-/** 네 가지 기준 — 2026-10-25 사용자 문안 · 크레파스 그림으로 교체 */
-const PRINCIPLES = [
-    { title: "일상에 꼭 필요한가", body: "유행이나 인기보다 산책, 식사, 휴식과 놀이 등 반려견의 일상에 실제로 도움이 되는 제품인지 먼저 살핍니다.", art: "brand-std-daily-256.webp", tone: "pink" },
-    { title: "반려견이 편안한가", body: "크기와 움직임, 소재와 사용 환경까지 고려해 반려견이 부담 없이 편안하게 사용할 수 있는지 살핍니다.", art: "brand-std-comfort-256.webp", tone: "sky" },
-    { title: "믿고 선택할 근거가 있는가", body: "제품의 특징과 소재, 사용 정보를 꼼꼼히 확인하고, 보호자가 납득할 수 있는 선택의 이유를 전달합니다.", art: "brand-std-evidence-256.webp", tone: "yellow" },
-    { title: "구매 후에도 안심할 수 있는가", body: "배송부터 교환·반품, 문의 응대까지. 구매 이후의 경험도 책임 있는 서비스의 일부로 생각합니다.", art: "brand-std-assure-256.webp", tone: "mint" },
-];
+/** 네 가지 기준 — lib/brand-standards(입점 문의 "선택 기준" 창과 같은 문안) */
+const PRINCIPLES = BRAND_STANDARDS;
 
 /** 큐레이션 네 단계 — 2026-10-25 사용자 문안 · 크레파스 그림(1번 발견 = 웹관찰) */
 const FLOW = [
