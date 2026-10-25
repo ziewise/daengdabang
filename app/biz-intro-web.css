@@ -33,6 +33,7 @@ html:not(.ddb-app-mode) .bzw {
     & :is(.bzw-hero, .bzw-looks, .bzw-prep, .bzw-head) > * { min-width: 0; }
     & .bzw-kicker { width: fit-content; background: repeating-linear-gradient(172deg, #07849e 0 5px, #ef476f 5px 10px, #e98708 10px 15px); -webkit-background-clip: text; background-clip: text; font-family: var(--bz-crayon); font-size: 14px; letter-spacing: 0.14em; -webkit-text-fill-color: transparent; }
     & .bzw-h2 { font-family: var(--bz-jua); font-size: clamp(26px, 2.8vw, 36px); font-weight: 400; line-height: 1.3; word-break: keep-all; }
+    & .bzw-h2 .bzw-hl { white-space: nowrap; } /* 강조 낱말(네 가지 질문 등)이 둘로 갈리지 않게 */
     & .bzw-hl { position: relative; color: var(--bz-pink-d); font-style: normal; isolation: isolate; }
     & .bzw-hl::after { content: ""; position: absolute; right: 1%; bottom: 0.02em; left: 0; z-index: -1; height: 0.24em; border-radius: 999px 70% 999px 60%; background: var(--bz-underline); opacity: 0.55; transform: rotate(-0.7deg) skewX(-7deg); }
     & .bzw-head { display: grid; justify-items: start; gap: 8px; margin-bottom: 24px; }

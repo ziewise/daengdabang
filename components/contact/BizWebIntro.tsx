@@ -41,11 +41,12 @@ const PROPOSALS = [
     { title: "공급·유통 제휴", body: "안정적인 상품 공급과 원활한 유통을 위한 협력 방안을 함께 논의합니다.", art: "partner-type-supply-256.webp", tone: "sky", tags: ["안정적 공급", "유통 협력"] },
     { title: "공동 기획", body: "보호자에게 도움이 되는 콘텐츠와 상품 구성, 캠페인을 함께 만들어갑니다.", art: "partner-type-plan-256.webp", tone: "yellow", tags: ["콘텐츠", "기획 세트", "캠페인"] },
 ];
+/** 네 가지 질문 — 2026-10-25 사용자 문안 · 크레파스 그림(웹일상쓰임 · 웹편안함 · 웹선택근거 · 웹구매안심) */
 const LOOKS = [
-    { title: "쓰임이 분명한가", art: "stickers/home-care.webp", tone: "pink" },
-    { title: "반려견이 편안한가", art: "lab-dog-256.webp", tone: "sky" },
-    { title: "이유를 설명할 수 있는가", art: "lab-question-160.webp", tone: "yellow" },
-    { title: "구매 뒤까지 책임 있게", art: "cs-check-160.webp", tone: "mint" },
+    { title: "일상에서 쓰임이 분명한가?", art: "partner-look-daily-256.webp", tone: "pink" },
+    { title: "반려견이 편안한가?", art: "partner-look-comfort-256.webp", tone: "sky" },
+    { title: "선택할 근거가 충분한가?", art: "partner-look-evidence-256.webp", tone: "yellow" },
+    { title: "구매 후에도 안심할 수 있는가?", art: "partner-look-assure-256.webp", tone: "mint" },
 ];
 const REVIEW_STEPS = [
     { title: "제안 접수", body: "브랜드와 상품, 공식 소개 주소, 담당자 정보를 안전하게 접수합니다.", art: "web-cs-mail-256.webp" },
@@ -103,10 +104,10 @@ export function PartnerWebIntro() {
             {/* 댕다방이 먼저 살펴보는 네 가지 */}
             <section className="bzw-looks" aria-labelledby="bzw-looks-title">
                 <div className="bzw-looks-text">
-                    <p className="bzw-kicker">OUR STANDARD</p>
-                    <h2 id="bzw-looks-title" className="bzw-h2">상품을 볼 때 <em className="bzw-hl">먼저 묻는 것</em></h2>
-                    <p>댕다방이 모든 상품에 똑같이 적용하는 네 가지 기준이에요. 제안서에 이 질문의 답을 담아 주시면 검토에 도움이 돼요.</p>
-                    <Link href="/brand-story" className="bzw-link">브랜드 스토리에서 자세히 보기<i className="fa-solid fa-arrow-right" aria-hidden="true" /></Link>
+                    <p className="bzw-kicker">OUR STANDARDS</p>
+                    <h2 id="bzw-looks-title" className="bzw-h2">좋은 상품을 고르는 <em className="bzw-hl">네 가지 질문</em></h2>
+                    <p>댕다방은 모든 상품을 네 가지 관점에서 살펴봅니다. 제안서에 각 질문에 대한 답을 담아 주시면, 상품의 가치를 더 정확하게 이해하고 검토하는 데 도움이 됩니다.</p>
+                    <Link href="/brand-story#bsw-standard" className="bzw-link">댕다방의 선택 기준 자세히 보기<i className="fa-solid fa-arrow-right" aria-hidden="true" /></Link>
                 </div>
                 <ul className="bzw-look-list">
                     {LOOKS.map((item, index) => (
