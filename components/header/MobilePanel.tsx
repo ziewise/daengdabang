@@ -17,6 +17,8 @@ import Link from "next/link";
 import { openChatWidget } from "@/lib/chat-widget-events";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
+// 로그아웃 — 마이페이지(MypageSidebar)와 같은 함수(회원 정보 · 로그인 표시 · 토큰을 함께 지움)
+import { useAuth as useMemberSession } from "@/lib/store";
 import { searchRecent } from "@/lib/storage";
 import {
     CATEGORY_GROUPS,
@@ -62,6 +64,7 @@ export default function MobilePanel({ open, onClose }: Props) {
     const [expanded, setExpanded] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
     const { isLoggedIn, hydrated } = useAuth();
+    const { logout: memberLogout, user: member } = useMemberSession();
     const router = useRouter();
     const { t, menuLabel } = useI18n();
     const { isNativeApp, isReady: pwaReady, isStandalone } = usePwaInstall();
@@ -97,7 +100,15 @@ export default function MobilePanel({ open, onClose }: Props) {
         };
     }, [open, onClose]);
 
-    const member = hydrated && isLoggedIn;
+    const loggedIn = hydrated && isLoggedIn;
+
+    /** 로그아웃 — 마이페이지와 같은 순서: 확인 → 로그아웃 → 메뉴 닫기 → 메인으로 */
+    const handleLogout = () => {
+        if (!confirm("로그아웃 하시겠어요?")) return;
+        memberLogout();
+        onClose();
+        router.push("/main");
+    };
 
     return (
         <>
@@ -153,12 +164,24 @@ export default function MobilePanel({ open, onClose }: Props) {
                         로그인/마이페이지 — hydrate 후 인증 상태 반영(hydrate 전엔 로그인 표시, 깜빡임 최소화) · 로그인은 /auth/login */}
                     <div className="mpn-quick">
                         <MobileLink href="/cart" icon="fa-bag-shopping" art="header-cart-128.webp" onClick={onClose} quick>{t("cart")}</MobileLink>
-                        {member ? (
+                        {loggedIn ? (
                             <MobileLink href="/mypage" icon="fa-user" art="header-mypage-128.webp" onClick={onClose} quick>{t("mypage")}</MobileLink>
                         ) : (
                             <MobileLink href="/auth/login" icon="fa-right-to-bracket" art="header-login-128.webp" onClick={onClose} quick>{t("login")}</MobileLink>
                         )}
                     </div>
+                    {/* 로그인 상태 — 인사 · 로그아웃(메뉴에서 바로, 2026-10-25 사용자) */}
+                    {loggedIn ? (
+                        <div className="mpn-member">
+                            <span className="mpn-member-hi">
+                                <i className="fa-solid fa-paw" aria-hidden="true" />
+                                <b>{member?.name ? `${member.name}님` : "회원님"}</b>, 반가워요
+                            </span>
+                            <button type="button" onClick={handleLogout} className="mpn-logout">
+                                <i className="fa-solid fa-right-from-bracket" aria-hidden="true" />로그아웃
+                            </button>
+                        </div>
+                    ) : null}
 
                     {/* 큰 메뉴 */}
                     <nav className="mpn-nav" aria-label={t("menu")}>
