@@ -194,6 +194,9 @@ html:not(.ddb-app-mode) .bzm-overlay {
     & .bzm-close:hover { background: #fff0f4; color: #d0436d; }
     & .bzm-close:focus-visible { outline: 3px solid #f7c3d2; outline-offset: 2px; }
     & .bzm-body section[data-biz-form] > div:first-child { padding-right: 72px !important; } /* 닫기 단추 자리 */
+    /* 창 폭(760)에서 세 칸 줄(예산 · 납품일 · 배송 지역)이 넘치지 않게 — 칸이 줄어들 수 있게 */
+    & .bzm-body form :is(div, label) { min-width: 0; }
+    & .bzm-body form :is(input, select, textarea) { width: 100%; min-width: 0; }
 }
 @keyframes bzm-pop { from { opacity: 0; transform: translateY(14px) scale(0.98); } }
 @media (prefers-reduced-motion: reduce) { html:not(.ddb-app-mode) .bzm-overlay .bzm-dialog { animation: none; } }
