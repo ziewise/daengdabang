@@ -116,9 +116,6 @@ html:not(.ddb-app-mode) .bzw {
     & .bzw-prep li i { color: #12a17a; }
 
     /* 양식으로 이어지는 한 줄 */
-    & .bzw-to-form { display: flex; align-items: center; justify-content: center; gap: 10px; color: #8a6e4b; font-family: var(--bz-jua); font-size: 17px; }
-    & .bzw-to-form i { color: var(--bz-pink); }
-    & .bzw-to-form i:last-child { animation: bzw-down 1.6s ease-in-out infinite; }
 
     @media (max-width: 960px) {
         gap: 40px;
@@ -151,9 +148,7 @@ html:not(.ddb-app-mode) .bzw {
     }
 }
 @keyframes bzw-bob { 50% { transform: translateY(-7px); } }
-@keyframes bzw-down { 50% { transform: translateY(4px); } }
 @media (prefers-reduced-motion: reduce) {
-    html:not(.ddb-app-mode) .bzw .bzw-to-form i { animation: none; }
 }
 
 /* ───────── 문의 양식 단추 카드 · 창(BizFormModal) · 2026-10-25 ─────────

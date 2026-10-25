@@ -21,14 +21,16 @@ import "@/app/biz-web.css";
 import "@/app/biz-intro-web.css";
 
 /** 단추 카드 문구 · 그림(양식 머리 문구와 같은 말) */
-const LAUNCH_LOOK: Record<BusinessInquiryMode, { web: "partner" | "bulk"; kicker: string; title: string; body: string; button: string; art: string }> = {
+const LAUNCH_LOOK: Record<BusinessInquiryMode, { web: "partner" | "bulk"; kicker: string; title: string; body: string; button: string; art: string; dialogLabel: string }> = {
     partnership: {
         web: "partner",
-        kicker: "PARTNER NOTE",
-        title: "입점·제휴 제안서 보내기",
-        body: "브랜드와 상품의 강점, 공식 소개 주소, 협업 제안을 함께 적어 주세요.",
+        // 2026-10-25 카드 문구 · 그림 교체(사용자 문안 · 웹제안서보내기) — 창 안 양식 머리는 기존 그대로
+        kicker: "PARTNERSHIP PROPOSAL",
+        title: "좋은 제안, 댕다방에 들려주세요",
+        body: "브랜드와 상품의 강점, 공식 소개 링크, 협업 아이디어를 남겨주세요. 보내주신 제안은 댕다방의 선택 기준에 따라 꼼꼼히 살펴보겠습니다.",
         button: "제안서 작성하기",
-        art: "next-brand-256.webp",
+        art: "partner-proposal-send-256.webp",
+        dialogLabel: "입점·제휴 제안서 보내기",
     },
     bulk_order: {
         web: "bulk",
@@ -37,6 +39,7 @@ const LAUNCH_LOOK: Record<BusinessInquiryMode, { web: "partner" | "bulk"; kicker
         body: "필요한 상품과 수량, 희망 일정이 구체적일수록 빠르게 검토할 수 있어요.",
         button: "상담 내용 작성하기",
         art: "stickers/benefit-goods.webp",
+        dialogLabel: "대량 구매 상담 신청",
     },
 };
 
@@ -87,8 +90,8 @@ export function BizFormDialog({
                 if (event.currentTarget === event.target) onClose();
             }}
         >
-            <div className="bzm-dialog" role="dialog" aria-modal="true" aria-label={look.title}>
-                <button ref={closeRef} type="button" className="bzm-close" onClick={onClose} aria-label={`${look.title} 창 닫기`}>
+            <div className="bzm-dialog" role="dialog" aria-modal="true" aria-label={look.dialogLabel}>
+                <button ref={closeRef} type="button" className="bzm-close" onClick={onClose} aria-label={`${look.dialogLabel} 창 닫기`}>
                     <i className="fa-solid fa-xmark" aria-hidden="true" />
                 </button>
                 <div className="bzm-body">

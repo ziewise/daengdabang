@@ -133,19 +133,19 @@ export function PartnerWebIntro() {
 
             {/* 제안 전 준비물 */}
             <section className="bzw-prep" aria-labelledby="bzw-prep-title">
-                <span className="bzw-prep-art"><Art src="find-basics-256.webp" /></span>
+                {/* 2026-10-25 문구 · 그림 교체(사용자 문안 · 웹제안준비) */}
+                <span className="bzw-prep-art"><Art src="partner-proposal-prep-256.webp" /></span>
                 <div>
-                    <h2 id="bzw-prep-title">제안 전에 준비하면 좋아요</h2>
-                    <p>가격표만 있는 제안보다 아래 자료의 준비 여부를 함께 알려주시면 검토에 도움이 됩니다.</p>
+                    <h2 id="bzw-prep-title">제안 전, 이런 자료를 준비해 주세요</h2>
+                    <p>가격 정보와 함께 아래 자료의 준비 여부를 알려주시면, 상품을 더욱 정확하게 검토하는 데 도움이 됩니다.</p>
                 </div>
                 <ul>
-                    <li><i className="fa-solid fa-circle-check" aria-hidden="true" />공식 소개 자료</li>
-                    <li><i className="fa-solid fa-circle-check" aria-hidden="true" />공급 주체</li>
-                    <li><i className="fa-solid fa-circle-check" aria-hidden="true" />상품 표시 · 인증 자료</li>
+                    <li><i className="fa-solid fa-circle-check" aria-hidden="true" />브랜드·상품 소개 자료</li>
+                    <li><i className="fa-solid fa-circle-check" aria-hidden="true" />제조·공급사 정보</li>
+                    <li><i className="fa-solid fa-circle-check" aria-hidden="true" />상품 표시·인증 자료</li>
                 </ul>
             </section>
 
-            <p className="bzw-to-form"><i className="fa-solid fa-paw" aria-hidden="true" />아래 양식으로 제안서를 보내 주세요<i className="fa-solid fa-arrow-down" aria-hidden="true" /></p>
         </article>
     );
 }
@@ -218,7 +218,6 @@ export function BulkWebIntro() {
                 <Steps steps={BULK_STEPS} />
             </section>
 
-            <p className="bzw-to-form"><i className="fa-solid fa-paw" aria-hidden="true" />아래 양식으로 상담 내용을 남겨 주세요<i className="fa-solid fa-arrow-down" aria-hidden="true" /></p>
         </article>
     );
 }
