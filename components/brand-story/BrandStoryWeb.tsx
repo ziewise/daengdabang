@@ -65,13 +65,13 @@ export default function BrandStoryWeb() {
                     <p className="bsw-kicker">DAENGDABANG BRAND STORY</p>
                     <h1 id="bsw-title" className="bsw-hero-title">
                         {/* 2026-10-25 문구 교체(사용자 제공 문안) */}
-                        <span>반려견의 좋은 하루,</span>
-                        <span>더 나은 <em className="bsw-hl">선택</em>에서</span>
-                        <span>시작됩니다.</span>
+                        <span>좋은 하루는,</span>
+                        <span>우리 아이를 이해하는</span>
+                        <span><em className="bsw-hl">선택</em>부터.</span>
                     </h1>
-                    <p className="bsw-hero-lead">반려견에게 필요한 것은 무엇인지, 어떤 제품이 더 좋은 선택인지. 댕다방은 반려견의 일상을 먼저 생각하고, 보호자가 안심하고 선택할 수 있는 제품을 세심하게 제안합니다.</p>
+                    <p className="bsw-hero-lead">댕다방은 반려견의 일상과 특성을 먼저 생각하는 펫 큐레이션 쇼핑몰입니다. 신중하게 고른 상품과 AI 맞춤 안내를 통해, 보호자가 선택의 이유를 이해하고 우리 아이에게 맞는 제품을 고를 수 있도록 돕습니다.</p>
                     <div className="bsw-actions">
-                        <Link href="/products" className="bsw-pill is-pink">엄선한 상품 만나보기<i className="fa-solid fa-arrow-right" aria-hidden="true" /></Link>
+                        <Link href="/products" className="bsw-pill is-pink">댕다방 셀렉션 둘러보기<i className="fa-solid fa-arrow-right" aria-hidden="true" /></Link>
                         <a href="#bsw-standard" className="bsw-pill">댕다방의 선택 기준</a>
                     </div>
                     <ul className="bsw-scene-chips" aria-label="댕다방이 살피는 다섯 장면">
