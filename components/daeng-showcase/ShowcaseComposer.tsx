@@ -1,7 +1,8 @@
 "use client";
 /**
  * ShowcaseComposer — 댕자랑 "오늘의 한 장 올리기"(웹 전용 · 앱은 AppShell 이 앱 댕자랑 화면으로 보냄)
- * 2026-10-25 웹 고도화(사용자 "더 고도화"): 머리(세 단계 진행) · 왼쪽 폴라로이드 사진 + 피드 미리보기 · 오른쪽 크림 입력 칸 · 주제 · 동의 카드 · 분홍 알약.
+ * 2026-10-25 웹 2차(사용자 "카드 안에 정보가 너무 많아 보기 불편"): 덜어내기 — 머리는 제목 · 회원 공개만, 사진 칸은 그림 + 단추 하나,
+ *   주제는 한 줄 켜고 끄기, 동의는 한 줄씩(전체 문구는 "자세히" 안에 그대로). 단계 표시 · 번호 · 팁 · 빈 미리보기 뺌.
  * 올리기 로직(사진 준비 · 검사 · 동의 · createShowcasePost · 분석)은 바뀐 것 없음. 꾸밈: app/showcase-compose-web.css(.scw-*)
  */
 
@@ -152,46 +153,31 @@ export default function ShowcaseComposer({
         }
     };
 
-    // 화면 표시용(2026-10-25 웹 고도화) — 세 단계 진행 표시 · 왼쪽 미리보기에 쓰는 값만, 올리기 로직은 위 그대로
-    const steps = [
-        { label: "사진 고르기", done: Boolean(file) },
-        { label: "이야기 쓰기", done: caption.trim().length >= 2 },
-        { label: "공개 동의", done: publicConsent },
-    ];
+    // 화면 표시용(2026-10-25 웹 2차 · "카드 안 정보가 너무 많아 보기 불편") — 올리기 로직은 위 그대로
     const pickedPet = pets.find((pet) => String(pet.id) === petProfileId);
 
     return (
         <form onSubmit={submit} className="scw" aria-labelledby="showcase-composer-title">
-            {/* 머리 — 꼬리표 · 주아 제목 · 한 줄 · 회원 공개 알약 · 세 단계 */}
+            {/* 머리 — 꼬리표 · 주아 제목 · 회원 공개 알약만 */}
             <div className="scw-head">
-                <div className="scw-head-text">
+                <div>
                     <p className="ddb-crayon-kicker scw-kicker">SHARE TODAY</p>
                     <h2 id="showcase-composer-title" className="scw-title">
                         오늘의 <em>한 장</em> 올리기
                     </h2>
-                    <p className="scw-sub">사진 한 장과 짧은 이야기면 충분해요. 올린 글은 댕자랑 피드 맨 앞에 보여요.</p>
                 </div>
-                <span className="scw-badge"><i className="fa-solid fa-earth-asia" aria-hidden="true" />회원 공개 게시</span>
-                <ol className="scw-steps" aria-label="올리기 단계">
-                    {steps.map((step, index) => (
-                        <li key={step.label} className={step.done ? "is-done" : ""}>
-                            <b aria-hidden="true">{step.done ? <i className="fa-solid fa-check" /> : index + 1}</b>
-                            {step.label}
-                            <span className="sr-only">{step.done ? " 완료" : " 아직"}</span>
-                        </li>
-                    ))}
-                </ol>
+                <span className="scw-badge"><i className="fa-solid fa-earth-asia" aria-hidden="true" />회원 공개</span>
             </div>
 
             <div className="scw-grid">
-                {/* 왼쪽 — 사진(폴라로이드) + 피드 미리보기 */}
+                {/* 왼쪽 — 사진 한 장(고르기 전: 그림 · 단추 하나 / 고른 뒤: 사진 + 다시 고르기 · 지우기) */}
                 <div className="scw-photo-col">
-                    <label htmlFor="showcase-photo" className="scw-label"><span className="scw-no">1</span>사진 1장</label>
-                    <div className={previewUrl ? "scw-polaroid has-photo" : "scw-polaroid"}>
+                    <label htmlFor="showcase-photo" className="sr-only">사진 1장</label>
+                    <div className={previewUrl ? "scw-photo-card has-photo" : "scw-photo-card"}>
                         {previewUrl ? (
-                            <div className="scw-photo">
+                            <>
                                 {/* eslint-disable-next-line @next/next/no-img-element -- local object URL preview cannot use the static image loader. */}
-                                <img src={previewUrl} alt="올릴 사진 미리보기" className="aspect-square w-full object-cover" />
+                                <img src={previewUrl} alt="올릴 사진 미리보기" className="scw-photo-img" />
                                 <button
                                     type="button"
                                     onClick={clearPhoto}
@@ -201,33 +187,30 @@ export default function ShowcaseComposer({
                                 >
                                     <i className="fa-solid fa-xmark" aria-hidden="true" />
                                 </button>
-                            </div>
+                                <button
+                                    type="button"
+                                    onClick={() => fileInputRef.current?.click()}
+                                    className="scw-repick"
+                                    disabled={submitting}
+                                >
+                                    <i className="fa-solid fa-rotate" aria-hidden="true" />다른 사진 선택
+                                </button>
+                                {/* 사진 아래 한 줄 — 피드에 보일 이름 · 반려견 */}
+                                <span className="scw-photo-name" aria-hidden="true">
+                                    <i className="fa-solid fa-paw" />{displayName.trim() || "피드에 보일 이름"}
+                                    {pickedPet ? <small>{pickedPet.name}</small> : null}
+                                </span>
+                            </>
                         ) : (
                             <label htmlFor="showcase-photo" className="scw-drop">
                                 <span className="scw-drop-ring" aria-hidden="true">
                                     {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                                     <img src="/images/ui/mypet-shutter-384.webp" alt="" width={84} height={84} />
                                 </span>
-                                <strong>오늘의 한 장을 골라 주세요</strong>
                                 <span className="scw-drop-pill"><i className="fa-solid fa-image" aria-hidden="true" />사진 고르기</span>
-                                <span className="scw-tips" aria-hidden="true">
-                                    <small><i className="fa-solid fa-sun" />밝은 곳에서</small>
-                                    <small><i className="fa-solid fa-dog" />아이 얼굴이 잘 보이게</small>
-                                </span>
-                                <span className="scw-drop-note">JPG · PNG · WebP / 최대 8MB</span>
+                                <span className="scw-drop-note">JPG · PNG · WebP · 최대 8MB</span>
                             </label>
                         )}
-                        {/* 폴라로이드 아래 — 피드에 보일 모습(이름 · 반려견 · 이야기 첫 줄) */}
-                        <div className="scw-preview" aria-hidden="true">
-                            <span className="scw-preview-name">
-                                <i className="fa-solid fa-paw" />
-                                {displayName.trim() || "피드에 보일 이름"}
-                                {pickedPet ? <small>{pickedPet.name}{pickedPet.breed ? ` · ${pickedPet.breed}` : ""}</small> : null}
-                            </span>
-                            <span className={caption.trim() ? "scw-preview-text" : "scw-preview-text is-empty"}>
-                                {caption.trim() || "오늘의 이야기가 여기에 보여요"}
-                            </span>
-                        </div>
                     </div>
                     <input
                         ref={fileInputRef}
@@ -239,42 +222,32 @@ export default function ShowcaseComposer({
                         onChange={(event) => void selectPhoto(event.target.files?.[0])}
                         disabled={submitting}
                     />
-                    {previewUrl ? (
-                        <button
-                            type="button"
-                            onClick={() => fileInputRef.current?.click()}
-                            className="scw-repick"
-                            disabled={submitting}
-                        >
-                            <i className="fa-solid fa-rotate" aria-hidden="true" />다른 사진 선택
-                        </button>
-                    ) : null}
                 </div>
 
                 {/* 오른쪽 — 이야기 · 이름 · 반려견 · 주제 · 동의 · 올리기 */}
                 <div className="scw-fields">
                     <div className="scw-field">
-                        <div className="scw-field-head">
-                            <label htmlFor="showcase-caption" className="scw-label"><span className="scw-no">2</span>오늘의 이야기</label>
+                        <label htmlFor="showcase-caption" className="scw-label">오늘의 이야기</label>
+                        <div className="scw-text-wrap">
+                            <textarea
+                                id="showcase-caption"
+                                value={caption}
+                                onChange={(event) => setCaption(event.target.value.slice(0, 500))}
+                                rows={5}
+                                minLength={2}
+                                maxLength={500}
+                                required
+                                placeholder="산책에서 만난 작은 순간, 귀여운 표정, 함께 기억하고 싶은 오늘을 적어 주세요."
+                                className="scw-input scw-textarea"
+                                disabled={submitting}
+                            />
                             <span className={caption.length >= 450 ? "scw-count is-near" : "scw-count"}>{caption.length}/500</span>
                         </div>
-                        <textarea
-                            id="showcase-caption"
-                            value={caption}
-                            onChange={(event) => setCaption(event.target.value.slice(0, 500))}
-                            rows={5}
-                            minLength={2}
-                            maxLength={500}
-                            required
-                            placeholder="산책에서 만난 작은 순간, 귀여운 표정, 함께 기억하고 싶은 오늘을 적어 주세요."
-                            className="scw-input scw-textarea"
-                            disabled={submitting}
-                        />
                     </div>
 
                     <div className="scw-two">
                         <div className="scw-field">
-                            <label htmlFor="showcase-display-name" className="scw-label is-plain"><i className="fa-solid fa-signature" aria-hidden="true" />피드에 보일 이름</label>
+                            <label htmlFor="showcase-display-name" className="scw-label">피드에 보일 이름</label>
                             <input
                                 id="showcase-display-name"
                                 value={displayName}
@@ -287,7 +260,7 @@ export default function ShowcaseComposer({
                             />
                         </div>
                         <div className="scw-field">
-                            <label htmlFor="showcase-pet" className="scw-label is-plain"><i className="fa-solid fa-dog" aria-hidden="true" />함께 나온 반려견 <span className="scw-opt">선택</span></label>
+                            <label htmlFor="showcase-pet" className="scw-label">함께 나온 반려견 <span className="scw-opt">선택</span></label>
                             <select
                                 id="showcase-pet"
                                 value={petProfileId}
@@ -303,52 +276,59 @@ export default function ShowcaseComposer({
                         </div>
                     </div>
 
+                    {/* 오늘의 댕주제 — 한 줄 켜고 끄기(체크를 풀면 일반 댕자랑) */}
                     {topic ? (
-                        <label className={joinTopic ? "scw-topic is-on" : "scw-topic"}>
+                        <label className={joinTopic ? "scw-topic is-on" : "scw-topic"} title="선택하면 이 글이 현재 주제와 함께 표시돼요. 체크를 풀어 일반 댕자랑으로 올릴 수도 있습니다.">
+                            <span className="scw-topic-text"><b>#{topic.title}</b> 주제로 올리기</span>
                             <input
                                 type="checkbox"
                                 checked={joinTopic}
                                 onChange={(event) => setTopicChoice({ topicId: topic.topicId, joined: event.target.checked })}
-                                className="scw-check"
+                                className="scw-switch"
+                                aria-label={`오늘의 댕주제 참여 · ${topic.title} — 끄면 일반 댕자랑으로 올라가요`}
                                 disabled={submitting}
                             />
-                            {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
-                            <img src="/images/ui/daily-checkin-256.webp" alt="" aria-hidden="true" className="scw-topic-art" />
-                            <span>
-                                <strong>오늘의 댕주제 참여 · {topic.title}</strong>
-                                <span>선택하면 이 글이 현재 주제와 함께 표시돼요. 체크를 풀어 일반 댕자랑으로 올릴 수도 있습니다.</span>
-                            </span>
                         </label>
                     ) : null}
 
+                    {/* 동의 — 한 줄씩, 전체 문구는 "자세히" 안에 그대로 */}
                     <div className="scw-consents">
-                        <p className="scw-label"><span className="scw-no">3</span>공개 동의</p>
-                        <label className={publicConsent ? "scw-consent is-must is-on" : "scw-consent is-must"}>
-                            <input
-                                type="checkbox"
-                                checked={publicConsent}
-                                onChange={(event) => setPublicConsent(event.target.checked)}
-                                className="scw-check"
-                                required
-                                disabled={submitting}
-                            />
-                            <span>
-                                <strong className="scw-tag is-must">필수</strong> 선택한 사진과 글, 공개 이름, 선택한 반려견 이름·견종이 누구나 보는 댕자랑 피드에 게시되는 것에 동의합니다.
-                                직접 촬영했거나 게시 권한이 있는 사진만 사용하고, 사람 얼굴·연락처 등 개인정보가 보이는 사진은 올리지 않겠습니다. <Link href="/privacy/" className="scw-link">개인정보처리방침</Link>
-                            </span>
-                        </label>
-                        <label className={officialOptIn ? "scw-consent is-opt is-on" : "scw-consent is-opt"}>
-                            <input
-                                type="checkbox"
-                                checked={officialOptIn}
-                                onChange={(event) => setOfficialOptIn(event.target.checked)}
-                                className="scw-check"
-                                disabled={submitting}
-                            />
-                            <span>
-                                <strong className="scw-tag is-opt">선택 · 기본 해제</strong> 운영자 검수 후 댕다방 공식 Instagram·Threads·Naver Blog에 이 게시물을 소개하는 데 동의합니다. 선택하지 않아도 피드 게시에는 영향이 없습니다.
-                            </span>
-                        </label>
+                        <div className="scw-consent">
+                            <label className="scw-consent-row">
+                                <input
+                                    type="checkbox"
+                                    checked={publicConsent}
+                                    onChange={(event) => setPublicConsent(event.target.checked)}
+                                    className="scw-check"
+                                    required
+                                    disabled={submitting}
+                                />
+                                <span>사진과 글을 댕자랑 피드에 공개하는 데 동의해요 <strong className="scw-tag is-must">필수</strong></span>
+                            </label>
+                            <details className="scw-more">
+                                <summary>자세히</summary>
+                                <p>
+                                    선택한 사진과 글, 공개 이름, 선택한 반려견 이름·견종이 누구나 보는 댕자랑 피드에 게시되는 것에 동의합니다.
+                                    직접 촬영했거나 게시 권한이 있는 사진만 사용하고, 사람 얼굴·연락처 등 개인정보가 보이는 사진은 올리지 않겠습니다. <Link href="/privacy/" className="scw-link">개인정보처리방침</Link>
+                                </p>
+                            </details>
+                        </div>
+                        <div className="scw-consent">
+                            <label className="scw-consent-row">
+                                <input
+                                    type="checkbox"
+                                    checked={officialOptIn}
+                                    onChange={(event) => setOfficialOptIn(event.target.checked)}
+                                    className="scw-check"
+                                    disabled={submitting}
+                                />
+                                <span>댕다방 공식 SNS 소개에도 동의해요 <strong className="scw-tag is-opt">선택 · 기본 해제</strong></span>
+                            </label>
+                            <details className="scw-more">
+                                <summary>자세히</summary>
+                                <p>운영자 검수 후 댕다방 공식 Instagram·Threads·Naver Blog에 이 게시물을 소개하는 데 동의합니다. 선택하지 않아도 피드 게시에는 영향이 없습니다.</p>
+                            </details>
+                        </div>
                     </div>
 
                     {submitting ? (
