@@ -109,6 +109,9 @@
 .fw-biz p > span + span::before { content: ""; position: absolute; top: 50%; left: 0; width: 1.5px; height: 10px; margin-top: -5px; background: #e2d6c4; }
 .fw-biz b { margin-right: 6px; color: #8a6e4b; font-weight: 800; }
 
+/* 사업자 정보 펼침 단추 — 휴대폰에서만 */
+.fw-biz-toggle { display: none; }
+
 /* ③ 가로 전체 크림 띠 */
 .fw-bar { background: rgb(251 247 241 / 95%); box-shadow: inset 0 1.5px 0 var(--fw-line); }
 .fw-bar-in { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 24px; padding: 16px 0 18px; }
@@ -131,52 +134,67 @@
     .fw-sns { justify-content: flex-start; flex-wrap: wrap; }
 }
 
-/* ───────── 휴대폰 ───────── */
+/* ───────── 휴대폰 — 짧게 ───────── */
 @media (max-width: 640px) {
-    .fw { margin-top: 90px; }
-    .fw-band { border-radius: 34px 34px 0 0; }
-    .fw-band::before { top: 14px; width: 100px; }
-    .fw-mascot { top: -56px; right: 22px; width: 76px; height: 76px; }
+    .fw { margin-top: 80px; }
+    .fw-band { border-radius: 30px 30px 0 0; }
+    .fw-band::before { top: 12px; width: 90px; height: 5px; }
+    .fw-mascot { top: -50px; right: 20px; width: 68px; height: 68px; }
     .fw-wrap { width: calc(100% - 32px); }
-    .fw-grid { grid-template-columns: minmax(0, 1fr); gap: 14px; padding: 44px 0 20px; }
-    /* 로고 · 소개 — 가운데 */
-    .fw-col.is-brand { justify-items: center; gap: 10px; text-align: center; }
-    .fw-logo img { width: 46px; height: 46px; }
-    .fw-logo-word { font-size: 30px; }
-    .fw-tagline { font-size: 12.5px; }
+    .fw-grid { grid-template-columns: minmax(0, 1fr); gap: 10px; padding: 34px 0 14px; }
+    /* 로고 · 소개 — 한 덩어리로 가운데 */
+    .fw-col.is-brand { justify-items: center; gap: 8px; text-align: center; }
+    .fw-logo { gap: 6px; }
+    .fw-logo img { width: 36px; height: 36px; }
+    .fw-logo-word { font-size: 26px; }
+    .fw-tagline { font-size: 12px; line-height: 1.5; }
     .fw-tagline br { display: none; }
-    .fw-tagline strong { margin-left: 4px; font-size: 14px; }
-    /* 회사 링크 — 세 칸 */
-    .fw-meta { grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; gap: 6px; }
-    .fw-meta a { grid-template-columns: minmax(0, 1fr); justify-items: center; gap: 4px; padding: 10px 4px; border-radius: 18px; text-align: center; }
-    .fw-meta-art { width: 38px; height: 38px; }
-    .fw-meta-art img { width: 28px; height: 28px; }
-    .fw-meta-text b { font-size: 13px; }
+    .fw-tagline strong { margin-left: 4px; font-size: 13px; }
+    /* 회사 링크 — 한 줄 작은 알약 셋 */
+    .fw-meta { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin: 0; }
+    .fw-meta a { display: inline-flex; gap: 5px; padding: 4px 11px 4px 4px; border-radius: 999px; }
+    .fw-meta a:hover { transform: none; }
+    .fw-meta-art { width: 24px; height: 24px; }
+    .fw-meta-art img { width: 18px; height: 18px; }
+    .fw-meta-text b { font-size: 12.5px; }
     .fw-meta-text small, .fw-meta a > i { display: none; }
-    /* 고객센터 — 짧게 */
-    .fw-card { padding: 18px; border-radius: 24px; }
-    .fw-card.is-cs { gap: 10px; }
-    .fw-tel { font-size: 34px; }
-    .fw-cs-info li { padding: 8px 12px; }
+    /* 고객센터 — 한 덩어리(번호 + 시간 · 메일 작은 글) */
+    .fw-card { padding: 14px 16px; border-radius: 22px; }
+    .fw-card.is-cs { grid-template-columns: auto minmax(0, 1fr); align-items: center; column-gap: 12px; row-gap: 2px; }
+    .fw-card.is-cs .fw-card-head { grid-row: span 2; }
+    .fw-card.is-cs .fw-card-head .fw-kicker { display: none; }
+    .fw-card.is-cs .fw-card-icon { width: 44px; height: 44px; background: #e9f8f1; }
+    .fw-tel { font-size: 26px; }
+    .fw-cs-info { gap: 0; }
+    .fw-cs-info li { padding: 0; background: none; }
+    .fw-cs-info i { display: none; }
     .fw-cs-info b { display: none; }
-    .fw-cs-info span { font-size: 13px; }
-    .fw-col.is-right { grid-template-columns: minmax(0, 1fr); gap: 14px; }
-    .fw-card.is-news h2 { font-size: 16px; }
+    .fw-cs-info span { font-size: 11.5px; line-height: 1.5; }
+    /* 소식 받기 — 짧게 */
+    .fw-col.is-right { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+    .fw-card.is-news { gap: 8px; }
+    .fw-card.is-news .fw-card-head { display: none; }
+    .fw-card.is-news h2 { font-size: 14.5px; text-align: center; }
+    .fw-card.is-news > a { height: 40px; font-size: 14px; }
     /* SNS — 칸 없이 아이콘 줄 */
-    .fw-card.is-sns { grid-template-columns: minmax(0, 1fr); justify-items: center; padding: 4px 0 0; background: none; box-shadow: none; }
+    .fw-card.is-sns { grid-template-columns: minmax(0, 1fr); justify-items: center; padding: 2px 0 0; background: none; box-shadow: none; }
     .fw-card.is-sns .fw-kicker { display: none; }
-    .fw-sns { justify-content: center; gap: 10px; }
-    .fw-sns a { width: 46px; height: 46px; }
-    /* 사업자 정보 — 가운데 글줄 */
-    .fw-biz { gap: 2px; padding: 16px 0 18px; text-align: center; }
+    .fw-sns { justify-content: center; gap: 8px; }
+    .fw-sns a { width: 40px; height: 40px; font-size: 16px; }
+    /* 사업자 정보 — 눌러서 펼침 */
+    .fw-biz-toggle { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; margin: 0; padding: 12px 0 10px; border: 0; background: none; color: #8a6e4b; font-size: 12px; font-weight: 800; cursor: pointer; box-shadow: inset 0 1.5px 0 var(--fw-line); }
+    .fw-biz-toggle i { font-size: 10px; transition: transform 0.25s; }
+    .fw-biz-toggle[aria-expanded="true"] i { transform: rotate(180deg); }
+    .fw-biz { display: none; gap: 2px; padding: 0 0 14px; text-align: center; box-shadow: none; }
+    .fw-biz.is-open { display: grid; }
     .fw-biz p { display: block; }
-    .fw-biz p > span { display: inline; padding: 0; font-size: 11px; line-height: 1.85; }
+    .fw-biz p > span { display: inline; padding: 0; font-size: 11px; line-height: 1.8; }
     .fw-biz p > span + span::before { content: " · "; position: static; width: auto; height: auto; margin: 0; background: none; color: #d6c9b5; }
     .fw-biz b { margin-right: 4px; }
-    /* 아래 띠 — 법적 링크 작은 알약(줄 앞 점 없음) */
-    .fw-bar-in { flex-direction: column; justify-content: center; gap: 10px; padding: 14px 0 calc(96px + env(safe-area-inset-bottom)); }
-    .fw-legal { justify-content: center; gap: 6px; }
-    .fw-legal-link, .fw-legal-link:first-child { padding: 5px 10px; border-radius: 999px; background: #fff; font-size: 11.5px; box-shadow: inset 0 0 0 1px var(--fw-line); }
+    /* 아래 띠 — 법적 링크 작은 글 두 줄 · 저작권 */
+    .fw-bar-in { flex-direction: column; justify-content: center; gap: 6px; padding: 12px 0 calc(92px + env(safe-area-inset-bottom)); }
+    .fw-legal { justify-content: center; gap: 2px 12px; }
+    .fw-legal-link, .fw-legal-link:first-child { padding: 0; font-size: 11px; line-height: 1.9; }
     .fw-legal-link + .fw-legal-link::before { display: none; }
-    .fw-copy { font-size: 11px; }
+    .fw-copy { font-size: 10.5px; }
 }
