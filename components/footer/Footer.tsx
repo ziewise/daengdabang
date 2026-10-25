@@ -1,5 +1,8 @@
+"use client";
+
 /**
  * Footer — 사이트 공용 푸터
+ * 2026-10-25 웹은 새 푸터(FooterWeb — 도움 띠 · 링크 묶음 · 소식 받기 · 사업자 정보, 휴대폰은 접는 칸)로 그림. 앱은 아래 기존 푸터 그대로.
  * ---------------------------------------------------------------------
  * 5개 영역:
  *   1. 브랜드 + 뉴스레터
@@ -18,6 +21,8 @@ import { PUBLIC_SOCIAL_CHANNELS, type SocialChannel } from "@/lib/social-channel
 import CloudflareSafeEmail from "./CloudflareSafeEmail";
 import NewsletterForm from "./NewsletterForm";
 import ReturnPolicyDialogLink from "@/components/policy/ReturnPolicyDialogLink";
+import FooterWeb from "./FooterWeb";
+import { useWebScreen } from "@/hooks/useWebScreen";
 
 const SOCIAL_TONES: Record<string, string> = {
     naver: "from-green-500 to-emerald-600",
@@ -28,6 +33,8 @@ const SOCIAL_TONES: Record<string, string> = {
 };
 
 export default function Footer() {
+    const webScreen = useWebScreen();
+    if (webScreen) return <FooterWeb />;
     return (
         <footer className="mt-16 bg-white/60 backdrop-blur-xl border-t border-white/60">
             <div className="max-w-[1400px] mx-auto px-6 py-7 md:py-8 space-y-5 md:space-y-6">
