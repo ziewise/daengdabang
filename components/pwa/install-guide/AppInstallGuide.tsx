@@ -65,9 +65,10 @@ export const STEPS: Record<Platform, Step[]> = {
         { icon: "fa-check", text: <>오른쪽 위 <b>추가</b>를 누르면 홈 화면에 댕다방이 생겨요</> },
     ],
     android: [
-        { icon: "fa-ellipsis-vertical", text: <>Chrome 오른쪽 위 <b>︙ 메뉴</b>를 눌러요</> },
-        { icon: "fa-square-plus", text: <><b>앱 설치</b> 또는 <b>홈 화면에 추가</b>를 골라요</> },
-        { icon: "fa-check", text: <><b>설치</b>를 누르면 홈 화면에 댕다방이 생겨요</> },
+        // 2026-10-26 사용자: 안드로이드는 삼성 인터넷을 기본으로 많이 써서 Chrome 과 함께 안내
+        { icon: "fa-bars", text: <>브라우저 <b>메뉴</b>를 열어요 <span className="ig-soft">(삼성 인터넷은 아래쪽 <b>≡</b>, Chrome은 오른쪽 위 <b>︙</b>)</span></> },
+        { icon: "fa-square-plus", text: <>삼성 인터넷은 <b>현재 페이지 추가 → 홈 화면</b>, Chrome은 <b>앱 설치</b> 또는 <b>홈 화면에 추가</b>를 골라요</> },
+        { icon: "fa-check", text: <><b>추가</b> · <b>설치</b>를 누르면 홈 화면에 댕다방이 생겨요</> },
     ],
     other: [
         { icon: "fa-window-maximize", text: <>브라우저 주소창의 <b>설치 아이콘</b>이나 메뉴를 열어요</> },
@@ -85,7 +86,7 @@ export function InstallSteps({ platform, isInAppBrowser }: { platform: Platform;
                     <Tape className="-top-2 left-4 h-3.5 w-10" color="rgba(255,200,215,.9)" />
                     <b className="ah-display block text-[14px] font-normal text-[#c4456f]">먼저 기본 브라우저로 열어 주세요</b>
                     카카오톡 · 네이버 · 인스타그램 안에서는 설치 메뉴가 보이지 않을 수 있어요. 메뉴에서
-                    {platform === "ios" ? " Safari로 열기" : " Chrome으로 열기"}를 골라 주세요.
+                    {platform === "ios" ? " Safari로 열기" : " 삼성 인터넷 또는 Chrome으로 열기"}를 골라 주세요.
                 </p>
             ) : null}
             <ol className="space-y-3">

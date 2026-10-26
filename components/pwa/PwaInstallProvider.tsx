@@ -184,7 +184,7 @@ export function PwaInstallProvider({ children }: { children: React.ReactNode }) 
                     title="댕다방을 홈 화면에 추가"
                     platform={platform}
                     isInAppBrowser={isInAppBrowser}
-                    browserHint={platform === "ios" ? "Safari로 열기" : "Chrome으로 열기"}
+                    browserHint={platform === "ios" ? "Safari로 열기" : "삼성 인터넷 또는 Chrome으로 열기"}
                     copied={copied}
                     onCopy={() => void copyAppAddress()}
                     onClose={() => setIsHelpOpen(false)}

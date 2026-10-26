@@ -123,7 +123,7 @@ export function InstallWebPage({ showInstall, isStandalone, isInAppBrowser, plat
                             <p className="aiw-kicker">HOW TO INSTALL</p>
                             <h2 id="app-install-steps">{platformTitle(platform)}</h2>
                         </header>
-                        {isInAppBrowser ? <InAppNote hint={platform === "ios" ? "Safari로 열기" : "Chrome으로 열기"} /> : null}
+                        {isInAppBrowser ? <InAppNote hint={platform === "ios" ? "Safari로 열기" : "삼성 인터넷 또는 Chrome으로 열기"} /> : null}
                         <InstallWebSteps platform={platform} />
                     </section>
                 ) : null}
