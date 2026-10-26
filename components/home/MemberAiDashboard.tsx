@@ -88,7 +88,7 @@ const SLICE_TONES = [
 ];
 // 할 일 그림(서버 할 일 id 별, 모르는 id 는 돌봄 그림) — 사용자 그림 웹하루 · 우리아이분석(2026-10-22)
 const TASK_ART: Partial<Record<DaengLabCareTaskId, string>> = {
-    walk_20: "/images/ui/daily-web-care-384.webp",
+    walk_20: "/images/ui/daily-web-walk-384.webp", // 산책 — 사용자 그림 웹산책(2026-10-26)
     eye_check: "/images/ui/daily-web-care-384.webp",
 };
 const ART_STAMP = "/images/ui/daily-web-checkin-384.webp";
