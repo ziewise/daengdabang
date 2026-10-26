@@ -51,6 +51,7 @@ export type { ShopChatReferenceInput } from "@/lib/generation-reference-assets";
 export type { ShopChatResearch, ShopChatSource } from "@/lib/shop-chat-evidence";
 export type { ShopChatStreamStage } from "@/lib/shop-chat-stream";
 import { awaitShopChatJob, CHAT_VIEW_DETACHED, pendingChatKey, readPendingChat, rememberPendingChat, forgetPendingChat } from "@/lib/shop-chat-jobs";
+import { chatGuestSessionHeaders, normalizeChatBotToken, responseChatSecurityError, ShopChatSecurityError } from "@/lib/shop-chat-security";
 
 type PetLensInput = {
     name: string;
@@ -531,6 +532,7 @@ export type ShopQuestionContext = {
     history?: ShopChatHistoryTurn[];
     references?: ShopChatReferenceInput[];
     accessToken?: string;
+    turnstileToken?: string;
     conversationId?: string;
     onProgress?: (progress: { stage: ShopChatStreamStage; message?: string }) => void;
     onDelta?: (text: string) => void;
@@ -2199,6 +2201,7 @@ type ShopChatRequestPayload = {
     clientRequestId: string;
     conversationId?: string;
     references?: ShopChatReferenceInput[];
+    turnstileToken?: string;
 };
 
 type ShopChatPreparedFallbacks = {
@@ -2384,6 +2387,8 @@ async function answerShopQuestionPost(
         signal,
     });
     onTransportActivity?.();
+    const securityError = await responseChatSecurityError(response);
+    if (securityError) throw securityError;
     if (!response.ok) return shopChatErrorAnswer(response, references, fallbacks);
     emitShopChatProgress(context, "answering");
     return normalizeShopChatApiAnswer(await response.json(), response.headers, fallbacks);
@@ -2416,6 +2421,8 @@ async function answerShopQuestionStream(
         signal,
     });
     onTransportActivity?.();
+    const securityError = await responseChatSecurityError(response);
+    if (securityError) throw securityError;
     const responseErrorCode = await shopChatResponseErrorCode(response);
     if (response.status === 404 && responseErrorCode === "shop_chat_conversation_not_found") {
         return { kind: "answer", answer: shopChatConversationNotFoundAnswer() };
@@ -2550,13 +2557,14 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
     context?.signal?.addEventListener("abort", abortFromCaller, { once: true });
 
     try {
-        const headers: Record<string, string> = { "Content-Type": "application/json" };
+        const headers: Record<string, string> = { "Content-Type": "application/json", ...await chatGuestSessionHeaders(base, requestController.signal) };
         if (context?.accessToken) {
             headers.Authorization = `Bearer ${context.accessToken}`;
         }
         const clientRequestId = createShopChatClientRequestId();
         headers["X-Idempotency-Key"] = clientRequestId;
         const conversationId = normalizeConversationId(context?.conversationId);
+        const turnstileToken = normalizeChatBotToken(context?.turnstileToken);
         const payload: ShopChatRequestPayload = {
             message,
             limit: 6,
@@ -2565,6 +2573,7 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
             clientRequestId,
             ...(conversationId ? { conversationId } : {}),
             ...(references.length ? { references } : {}),
+            ...(turnstileToken ? { turnstileToken } : {}),
         };
         const pendingKey = context?.recoveryScope ? await pendingChatKey(context.recoveryScope) : "";
         requestController.signal.throwIfAborted();
@@ -2579,6 +2588,7 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
             if (pendingKey && requestController.signal.reason !== CHAT_VIEW_DETACHED) forgetPendingChat(pendingKey, clientRequestId);
         }
         if (job.kind === "result") return normalizeShopChatApiAnswer(job.result, new Headers(), fallbacks);
+        if (job.kind === "blocked") throw new ShopChatSecurityError(job.code, job.retryAfterSeconds);
         if (job.kind === "failed") return preparedShopChatErrorAnswer(fallbacks, "service_busy");
         timeoutGuard.start();
         const streamed = await answerShopQuestionStream(
@@ -2608,6 +2618,7 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
         );
     } catch (reason) {
         if (context?.signal?.aborted) throw new ShopChatRequestCancelledError();
+        if (reason instanceof ShopChatSecurityError) throw reason;
         if (reason instanceof ShopChatReferenceRequestError) throw reason;
         if (timeoutGuard.timeoutReason() || (reason instanceof Error && reason.name === "TimeoutError")) {
             return preparedShopChatErrorAnswer(fallbacks, "timeout");
@@ -2630,7 +2641,7 @@ export async function submitShopChatFeedback(input: ShopChatFeedbackInput): Prom
     const controller = new AbortController();
     const timeoutHandle = setTimeout(() => controller.abort(), 8_000);
     try {
-        const headers: Record<string, string> = { "Content-Type": "application/json" };
+        const headers: Record<string, string> = { "Content-Type": "application/json", ...await chatGuestSessionHeaders(base, controller.signal) };
         if (input.accessToken?.trim()) headers.Authorization = `Bearer ${input.accessToken.trim()}`;
         const response = await fetch(`${base.replace(/\/$/, "")}/api/v1/shop-chat/feedback`, {
             method: "POST",
@@ -2653,9 +2664,9 @@ export async function resumeShopChatQuestion(scope: string, context: ShopQuestio
     const key = await pendingChatKey(scope);
     const id = readPendingChat(key);
     if (!id || !apiBase()) return null;
-    const headers: Record<string, string> = {};
-    if (context.accessToken) headers.Authorization = `Bearer ${context.accessToken}`;
     const signal = context.signal ?? new AbortController().signal;
+    const headers: Record<string, string> = await chatGuestSessionHeaders(apiBase(), signal);
+    if (context.accessToken) headers.Authorization = `Bearer ${context.accessToken}`;
     try {
         const job = await awaitShopChatJob({base: apiBase(), headers, payload: {clientRequestId: id}, signal,
             resumeOnly: true, onProgress: (stage, message) => emitShopChatProgress(context, stage, message)});

@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
+import { posix } from "node:path";
 import test from "node:test";
 import vm from "node:vm";
 
@@ -34,24 +35,28 @@ function loadChat({ fetch, base = "https://api.example.test", resumable = false 
         "@/lib/shop-chat-client-contract": { projectShopChatPetProfile: () => null },
     };
     const context = vm.createContext({
-        fetch: (url, init) => !resumable && url.includes("/shop-chat/jobs")
-            ? Promise.resolve(new Response("{}", { status: 501 })) : fetch(url, init),
+        // Cheap policy/session setup is not a generation transport attempt.
+        fetch: (url, init) => url.endsWith("/shop-chat/security-config")
+            ? Promise.resolve(Response.json({ guestChallengeRequired: false, challengeAction: "shop_chat" }))
+            : !resumable && url.includes("/shop-chat/jobs")
+                ? Promise.resolve(new Response("{}", { status: 501 })) : fetch(url, init),
         URL, Headers, Response, AbortController, AbortSignal, Error, TypeError,
         TextDecoder, TextEncoder, setTimeout, clearTimeout,
     });
-    const load = (name) => {
+    const load = (name, parent = "") => {
         if (stubs[name]) return stubs[name];
-        if (modules.has(name)) return modules.get(name).exports;
-        const path = `${name.replace("@/", "")}.ts`;
+        const resolved = name.startsWith(".") ? posix.join(posix.dirname(parent), name) : name.replace("@/", "");
+        const path = resolved.endsWith(".ts") ? resolved : `${resolved}.ts`;
+        if (modules.has(path)) return modules.get(path).exports;
         if (!compiled.has(path)) {
             compiled.set(path, ts.transpileModule(readFileSync(new URL(`../${path}`, import.meta.url), "utf8"), {
                 compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
             }).outputText);
         }
         const record = { exports: {} };
-        modules.set(name, record);
+        modules.set(path, record);
         const factory = new vm.Script(`(function(require, module, exports) {\n${compiled.get(path)}\n})`, { filename: path }).runInContext(context);
-        factory(load, record, record.exports);
+        factory((child) => load(child, path), record, record.exports);
         return record.exports;
     };
     return load("@/lib/daengdabang-llm");

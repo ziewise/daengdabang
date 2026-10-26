@@ -9,6 +9,7 @@ import "../lab-web.css";
 export const metadata: Metadata = {
     title: "챗봇 | 댕다방",
     description: "댕다방 상품 카탈로그 기반 챗봇",
+    robots: { index: false, follow: false, noarchive: true },
 };
 
 export default function ChatPage() {
