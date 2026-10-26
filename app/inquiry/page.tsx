@@ -47,7 +47,7 @@ export default function InquiryPage() {
                     <span className="min-w-0 flex-1"><b className="block text-sm font-black text-neutral-900">자주 묻는 질문</b><span className="mt-0.5 block text-xs font-bold leading-5 text-neutral-500">빠른 해결 방법 보기</span></span>
                     <i className="fa-solid fa-chevron-right text-xs text-sky-600 transition group-hover:translate-x-0.5" aria-hidden="true" />
                 </Link>
-                <Link href="/mypage" className="cs-help-link is-lav group flex min-h-16 items-center gap-3 rounded-xl border border-indigo-100 bg-white/85 px-4 py-3 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-300 hover:bg-indigo-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aurora-indigo">
+                <Link href="/mypage/orders/" className="cs-help-link is-lav group flex min-h-16 items-center gap-3 rounded-xl border border-indigo-100 bg-white/85 px-4 py-3 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-300 hover:bg-indigo-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aurora-indigo">
                     <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-indigo-700"><i className="fa-solid fa-box" aria-hidden="true" /></span>
                     <span className="min-w-0 flex-1"><b className="block text-sm font-black text-neutral-900">주문·배송 조회</b><span className="mt-0.5 block text-xs font-bold leading-5 text-neutral-500">마이페이지 주문 내역</span></span>
                     <i className="fa-solid fa-chevron-right text-xs text-indigo-600 transition group-hover:translate-x-0.5" aria-hidden="true" />
