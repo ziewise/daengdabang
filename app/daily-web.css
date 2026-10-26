@@ -4013,6 +4013,85 @@ html:not(.ddb-app-mode) [data-daily-web] {
     }
 }
 
+/* ── 굿즈 공모전 A안(2026-10-26 사용자: 영상을 줄여 안내 카드와 한 장으로) ──
+ *    넓은 화면: 왼쪽 영상(흰 액자 · 덮개 없음) / 오른쪽 제목 · 설명 · 칩 · 결제 없음 손글씨("500" 고리는 영상을 가려 뺌)
+ *    1180px 이하: 영상 위(가운데 · 폭 가득) · 글 아래(가운데).
+ *    제목 · 안내 글은 줄 길이를 고르게(text-wrap: balance), 칩은 칩 안에서 줄바꿈 없이 */
+html:not(.ddb-app-mode) [data-daily-web] {
+    & .dw-gcover-top {
+        grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
+        align-items: center;
+        gap: 46px;
+    }
+
+    /* 영상 자리 */
+    & .dw-gcover-media { position: relative; min-width: 0; }
+
+    & .dw-gcover-media [data-goods-hero-video] {
+        border-width: 6px;
+        border-radius: 30px !important;
+        box-shadow: 3px 4px 0 rgb(124 98 214 / 14%), 0 20px 36px -24px rgb(40 30 80 / 40%) !important;
+    }
+
+    /* 글 칸 — 제목은 두 줄이 고르게, 밑줄은 글 길이만큼 */
+    & .dw-gcover-copy h2.ddb-crayon-title {
+        width: fit-content;
+        max-width: 100%;
+        font-size: clamp(26px, 2.5vw, 34px) !important;
+        line-height: 1.35;
+        text-wrap: balance;
+    }
+
+    /* 제목 덩이(GoodsContest titleParts) — 덩이 안에서는 꺾이지 않게, 덩이가 화면보다 길면 그 안에서만 줄바꿈 */
+    & .dw-gcover-title-part { display: inline-block; max-width: 100%; }
+    & .dw-gcover-copy .dw-sub { max-width: 560px; text-wrap: pretty; word-break: keep-all; }
+    & .dw-gcover-copy .dw-ichip { white-space: nowrap; }
+
+    /* 칩 두 줄 — 폭은 기간 칩만큼, 위 기간 칩은 두 칸 가득 · 아래 두 칩은 반씩(양 끝이 위아래로 맞음) */
+    & .dw-gcover-chips {
+        display: grid;
+        width: fit-content;
+        max-width: 100%;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+    }
+
+    & .dw-gcover-chips .dw-ichip { justify-content: center; min-width: 0; }
+    & .dw-gcover-chips .dw-gcover-date { grid-column: 1 / -1; }
+    & .dw-gcover-copy .dw-gcover-note { font-size: 16.5px; line-height: 1.5; text-wrap: balance; }
+    & .dw-gcover-steps { margin-top: 30px; }
+}
+
+/* 1180px 이하 — 영상 위 · 글 아래, 모두 가운데(두 칸이면 글 칸이 좁아 제목 · 안내가 꺾임). 영상은 가운데 폭 가득 */
+@media (max-width: 1180px) {
+    html:not(.ddb-app-mode) [data-daily-web] {
+        & .dw-gcover-top { grid-template-columns: minmax(0, 1fr); justify-items: center; gap: 26px; text-align: center; }
+        & .dw-gcover-media { width: min(100%, 700px); }
+        & .dw-gcover-copy { display: grid; justify-items: center; }
+        & .dw-gcover-copy .dw-sub { margin: 12px auto 0; }
+        & .dw-gcover-copy .dw-intro-chips { justify-content: center; margin-inline: auto; }
+    }
+}
+
+/* 휴대폰 — 액자 · 글씨를 조금 작게 */
+@media (max-width: 520px) {
+    html:not(.ddb-app-mode) [data-daily-web] {
+        & .dw-gcover-media [data-goods-hero-video] { border-width: 4px; border-radius: 22px !important; }
+        & .dw-gcover-copy h2.ddb-crayon-title { font-size: 24px !important; }
+        & .dw-gcover-copy .dw-gcover-note { font-size: 15px; }
+    }
+}
+
+/* 작은 휴대폰(420px 이하) — 기간 칩은 "시작 ~ / 끝" 두 줄(둥근 판), 아래 두 칩은 글씨 · 안쪽 여백을 조금 줄여 반씩 맞춤 */
+@media (max-width: 420px) {
+    html:not(.ddb-app-mode) [data-daily-web] {
+        & .dw-gcover-chips { width: 100%; }
+        & .dw-gcover-chips .dw-gcover-date { flex-wrap: wrap; column-gap: 4px; row-gap: 0; padding: 8px 12px; border-radius: 20px; white-space: normal; text-align: center; }
+        & .dw-gcover-chips .dw-gcover-when { display: inline-block; white-space: nowrap; }
+        & .dw-gcover-chips .dw-ichip:not(.dw-gcover-date) { padding: 7px 8px; font-size: 11.5px; }
+    }
+}
+
 /* ── 보물광산 T1(2026-10-22 사용자 선택): 노란 크레파스 표지(그림 탭 넷 · 보물상자 고리) · 민트 쿠션 오늘의 보물 · 분홍 로그인 쿠션 ·
  *    나누고 이어가기 쿠션 · 연보라 표지 굿즈 미리보기 · 다른 탭 판도 쿠션 결로 ── */
 html:not(.ddb-app-mode) [data-daily-web] {

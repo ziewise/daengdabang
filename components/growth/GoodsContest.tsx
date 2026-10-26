@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import {
     cancelGoodsContestItemSelection,
     cancelGuestGoodsContestItemSelection,
@@ -72,6 +72,13 @@ const INITIAL_GUEST_VERIFICATION: GuestVerificationState = {
     error: "",
     intendedItemId: null,
 };
+
+/** 제목 줄바꿈 자리 — "~으로 / ~로" 뒤에서 나눠 두 덩이로(2026-10-26 사용자: 이상한 줄바꿈 없이). 좁은 화면에서 "다음 / 굿즈"처럼
+ *  뜻 중간에서 꺾이지 않고 "500명의 선택으로 / 다음 굿즈를 함께 정해요"로 바뀜. 넓으면 그대로 한 줄. 나눌 자리가 없으면 통째로 */
+function titleParts(title: string): string[] {
+    const match = /^(.+?(?:으로|로))\s+(.+)$/.exec(title.trim());
+    return match ? [match[1], match[2]] : [title];
+}
 
 function formattedCampaignDate(value: string | null): string {
     if (!value || !Number.isFinite(Date.parse(value))) return "기간 확인 중";
@@ -468,65 +475,66 @@ export default function GoodsContest({
     return (
         <section id="goods-contest" className="scroll-mt-28 py-10 md:py-14" aria-labelledby="goods-contest-title">
             <div className="mx-auto max-w-[1400px] px-4 sm:px-6">
-                <div className="relative aspect-video overflow-hidden rounded-[34px] bg-neutral-950 shadow-[0_22px_60px_rgba(62,47,34,0.16)]" data-goods-hero-video>
-                    <video
-                        autoPlay
-                        muted
-                        loop
-                        playsInline
-                        preload="auto"
-                        poster="/images/goods/goods-hero-lifestyle.webp"
-                        aria-label="댕다방 굿즈 공모전 상품 미리보기 영상"
-                        className="absolute inset-0 h-full w-full object-cover"
-                    >
-                        <source media="(max-width: 640px)" src="/videos/goods-contest-hero-mobile.mp4" type="video/mp4" />
-                        <source src="/videos/goods-contest-hero.mp4" type="video/mp4" />
-                    </video>
-                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-neutral-950/55 via-transparent to-transparent" aria-hidden="true" />
-                    <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6">
-                        <div className="min-w-0 text-white drop-shadow-md">
-                            <p className="text-[10px] font-black tracking-[0.22em] sm:text-xs" data-goods-hero-kicker>DAENGDABANG GOODS CONTEST</p>
-                            <p className="mt-1 break-keep text-lg font-black sm:text-2xl">500명의 선택으로 만드는 다음 굿즈</p>
-                        </div>
-                    </div>
-                </div>
-
-                {/* 영상 머리 끝 표시(화면에 안 보임) — 배포 검사 scripts/verify-goods-contest-build-output.mjs 가
-                    영상 머리 다음의 `<div class="ddb-crayon-paper` 를 기준으로 영상 부분을 잘라 확인함.
-                    2026-10-22 안내 판을 연보라 표지로 바꾸며 그 판이 사라져 검사가 실패하던 것(2026-10-26 복구). 지우지 말 것 */}
-                <div className="ddb-crayon-paper hidden" aria-hidden="true" data-goods-hero-end />
-
-                {/* 안내 — 연보라 크레파스 표지(2026-10-22 사용자 선택 G1): 왼쪽 제목 · 칩 · 결제 없음 손글씨, 오른쪽 "500" 무지개 고리, 아래 점선으로 이은 4단계. CSS 는 app/daily-web.css */}
+                {/* 안내 — 연보라 크레파스 표지 한 장(2026-10-26 사용자: 영상을 줄여 안내 카드와 합치기 · A안)
+                    왼쪽 영상(덮개 · 영상 위 글자 없이, 원본 960px 보다 작게 보여 선명), 오른쪽 제목 · 설명 · 칩 · 결제 없음 손글씨,
+                    ("500" 고리는 영상을 가려 뺌 — 제목 · 2단계에 500명이 있음, 2026-10-26 사용자)
+                    아래 점선으로 이은 4단계. 넓은 화면 두 칸 · 좁은 화면은 영상 위 · 글 아래. CSS 는 app/daily-web.css(굿즈 공모전 A안) */}
                 <CrayonGrainFilter />
-                <div className="dw-ccover is-lav dw-gcover mt-8">
+                <div className="dw-ccover is-lav dw-gcover">
                     <div className="dw-ccover-in">
                         <div className="dw-gcover-top">
-                            <div className="min-w-0">
+                            <div className="dw-gcover-media">
+                                <div className="relative aspect-video overflow-hidden rounded-[34px] bg-neutral-950" data-goods-hero-video>
+                                    <video
+                                        autoPlay
+                                        muted
+                                        loop
+                                        playsInline
+                                        preload="auto"
+                                        poster="/images/goods/goods-hero-lifestyle.webp"
+                                        aria-label="댕다방 굿즈 공모전 상품 미리보기 영상"
+                                        className="absolute inset-0 h-full w-full object-cover"
+                                    >
+                                        <source media="(max-width: 640px)" src="/videos/goods-contest-hero-mobile.mp4" type="video/mp4" />
+                                        <source src="/videos/goods-contest-hero.mp4" type="video/mp4" />
+                                    </video>
+                                </div>
+                                {/* 영상 머리 끝 표시(화면에 안 보임) — 배포 검사 scripts/verify-goods-contest-build-output.mjs 가
+                                    영상 칸(data-goods-hero-video) 다음의 `<div class="ddb-crayon-paper` 를 기준으로 영상 부분을 잘라 확인함. 영상 바로 뒤에 둘 것 · 지우지 말 것 */}
+                                <div className="ddb-crayon-paper hidden" aria-hidden="true" data-goods-hero-end />
+                            </div>
+                            <div className="dw-gcover-copy min-w-0">
                                 <p className="ddb-crayon-kicker dw-kicker">{content.kicker}</p>
                                 <h2 id="goods-contest-title" className="ddb-crayon-title ddb-crayon-underline dw-h2 break-keep">
-                                    {content.title}
+                                    {/* 덩이마다 한 줄로 묶어(dw-gcover-title-part) 줄이 바뀔 때 뜻 단위로 꺾이게 */}
+                                    {titleParts(content.title).map((part, index) => (
+                                        <Fragment key={part}>
+                                            {index > 0 ? " " : null}
+                                            <span className="dw-gcover-title-part">{part}</span>
+                                        </Fragment>
+                                    ))}
                                 </h2>
                                 <p className="dw-sub">
                                     {content.description}
                                 </p>
-                                <div className="dw-intro-chips">
+                                {/* 칩 — 위 줄 기간(두 칸 가득), 아래 줄 진행 상태 · 참여 대상(반씩) — 두 줄 양 끝이 맞게(2026-10-26 사용자) */}
+                                <div className="dw-intro-chips dw-gcover-chips">
+                                    <span className="dw-ichip dw-gcover-date">
+                                        <i className="fa-regular fa-calendar" aria-hidden="true" />
+                                        {/* 시작 · 끝을 덩이로 묶어 좁은 휴대폰에서는 "시작 ~ / 끝" 두 줄로만 꺾이게 */}
+                                        <span className="dw-gcover-when"><span className="sr-only">공모 시작 </span>{formattedCampaignDate(campaignStartsAt)} ~</span>{" "}
+                                        <span className="dw-gcover-when"><span className="sr-only">공모 종료 예정 </span>{formattedCampaignDate(campaignEndsAt)}</span>
+                                    </span>
                                     <span className={`dw-ichip ${campaignClosed ? "is-closed" : "is-open"}`}>
                                         <i className="fa-solid fa-circle-check" aria-hidden="true" />{campaignStatusLabel}
                                     </span>
                                     <span className="dw-ichip is-violet"><i className="fa-solid fa-user-group" aria-hidden="true" />회원·비회원 모두 참여</span>
-                                    <span className="dw-ichip">
-                                        <i className="fa-regular fa-calendar" aria-hidden="true" />
-                                        <span className="sr-only">공모 시작 </span>{formattedCampaignDate(campaignStartsAt)} ~ <span className="sr-only">공모 종료 예정 </span>{formattedCampaignDate(campaignEndsAt)}
-                                    </span>
                                 </div>
                                 <p className="dw-gcover-note">
                                     <i className="fa-solid fa-circle-info mr-1.5" aria-hidden="true" />
                                     선택은 주문·예약·결제가 아니며, 이 단계에서는 결제가 없습니다.
                                 </p>
                             </div>
-                            <span className="dw-rring dw-gcover-ring" aria-hidden="true">
-                                <span><b>500</b><em>명이 모이면<br />만들어요</em></span>
-                            </span>
                         </div>
 
                         <ol className="dw-dsteps dw-gcover-steps" aria-label="굿즈 공모전 진행 순서">
