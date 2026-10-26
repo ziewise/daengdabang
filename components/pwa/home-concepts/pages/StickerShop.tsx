@@ -11,7 +11,8 @@
  *  ③ "{반려견}를 위한 추천" — 회원만(비회원은 자리 없음, 웹과 같음). 협업자 추천 엔진 · 상황별 안내 그대로.
  *     카드 아래 추천 이유 메모 대신 "추천 기준" 버튼 → 속지(사용한 정보 · 주의 · 상품별 이유 + 접힌 "왜 추천했나요?" · 관심 없음 · 추천 데이터 관리)
  *     이름표 사진은 실제 반려견 사진(확인된 사진만, 없으면 강아지 그림) — 시연 분기 제거(배포 전 연결 2026-10-16)
- *  ④ 추천 셀렉트 · 신상품 — 색인 탭 2개로 한 섹션(웹 BestSection 4개 · NewArrivalsSection 8개 그대로)
+ *  ④ 댕다방 핫픽 · 신상품 — 색인 탭 2개로 한 섹션. 핫픽은 웹 메인 핫픽(휴대폰 한 줄 B안)과 같은 자료 · 동작(ShopHotPick, 2026-10-26 —
+ *     웹처럼 예전 "추천 셀렉트" 자리를 핫픽으로), 신상품은 웹 NewArrivalsSection 8개 그대로
  *  ⑤ 기획전 — 웹 PromoSection 5개(큰 카드 1 + 작은 카드 4) 그대로, 글자는 사진 아래 · 바로 아래 대표 브랜드 2장
  *  ⑥ 인스타 — 맨 아래 작은 링크(핸들 · 팔로우 하러가기 한 줄)
  *  영문 꼬리표(COLLECTION · FEATURED …)와 보조 설명 줄은 빼서 깔끔하게
@@ -22,7 +23,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
-import { getBestProducts, getNewProducts } from "@/lib/catalog";
+import { getNewProducts } from "@/lib/catalog";
 import { productCardImage } from "@/lib/catalog/card-image";
 import type { CategorySlug } from "@/lib/catalog/types";
 import { CATEGORY_GROUPS, WEB_PROMO_CARDS, type PromoCard } from "@/lib/menu-data";
@@ -46,6 +47,7 @@ import { DiaryBody, DiaryTabs, PARTS_CSS, SectionLabel } from "../sticker-parts"
 import { Patch, STICKER_CSS, Tape } from "../sticker-kit";
 import ShopHero, { SHOP_HERO_CSS } from "../shop/ShopHero";
 import ShopProductCard, { SHOP_CARD_CSS } from "../shop/ShopProductCard";
+import ShopHotPick, { SHOP_HOTPICK_CSS } from "../shop/ShopHotPick";
 import { useShopMedia } from "../shop/useShopMedia";
 import { SHOW_PARTS_CSS, Sheet } from "../show-parts";
 import { useI18n } from "@/lib/i18n";
@@ -73,9 +75,9 @@ const SOURCE_LABEL: Record<RecommendationSourceGroup, string> = {
     petlens: "동의한 펫렌즈 케어 신호",
     editorial: "댕다방 편집 추천",
 };
-/* ④ 색인 탭 — 다른 화면과 같은 다이어리 탭 */
+/* ④ 색인 탭 — 다른 화면과 같은 다이어리 탭(첫 칸 = 댕다방 핫픽, 2026-10-26) */
 const SHELF_TABS = [
-    { label: "추천 셀렉트", color: "#ffe7c2" },
+    { label: "댕다방 핫픽", color: "#ffe7c2" },
     { label: "신상품", color: "#dcf3e6" },
 ];
 /* 상품군 스티커 — 바탕색 · 사용자가 만든 3D 그림 */
@@ -90,8 +92,7 @@ const CAT_IMAGES: Record<CategorySlug, string> = {
 
 export default function StickerShop() {
     const [session, setSession] = useDemoSession();
-    const [shelf, setShelf] = useState<0 | 1>(0); // 0 추천 셀렉트 · 1 신상품
-    const best = useMemo(() => getBestProducts(4), []);
+    const [shelf, setShelf] = useState<0 | 1>(0); // 0 댕다방 핫픽 · 1 신상품
     const fresh = useMemo(() => getNewProducts().slice(0, 8), []);
     // 상품군 스티커 — 웹 메뉴 순서 · 이름 그대로 + 3D 그림
     const cats = useMemo(() => CATEGORY_GROUPS.map((g, i) => {
@@ -101,7 +102,7 @@ export default function StickerShop() {
 
     return (
         <div className="relative isolate flex-1 overflow-x-hidden break-keep px-3.5 pb-14 pt-4" style={{ color: TEXT }}>
-            <style>{KIT_CSS + HC_CSS + STICKER_CSS + PARTS_CSS + SHOW_PARTS_CSS + SHOP_HERO_CSS + SHOP_CARD_CSS + SHOP_CSS}</style>
+            <style>{KIT_CSS + HC_CSS + STICKER_CSS + PARTS_CSS + SHOW_PARTS_CSS + SHOP_HERO_CSS + SHOP_CARD_CSS + SHOP_HOTPICK_CSS + SHOP_CSS}</style>
             <div aria-hidden="true" className="ah-bg pointer-events-none fixed inset-0 -z-10" />
             <div className="mx-auto w-full max-w-md">
                 <ConceptBar session={session} onSession={setSession} />
@@ -126,18 +127,19 @@ export default function StickerShop() {
                     <ShopRecommend />
                 </DiaryBody>
 
-                {/* 속지 2 — ④ 추천 셀렉트 · 신상품: 다른 화면과 같은 색인 탭, 옆으로 밀면 넘어감 */}
-                <section aria-label="추천 셀렉트와 신상품" className="mt-7">
+                {/* 속지 2 — ④ 댕다방 핫픽 · 신상품: 다른 화면과 같은 색인 탭, 옆으로 밀면 넘어감 */}
+                <section aria-label="댕다방 핫픽과 신상품" className="mt-7">
                     <DiaryTabs tabs={SHELF_TABS} active={shelf} onPick={(i) => setShelf(i as 0 | 1)} />
                     <DiaryBody pageKey={`shelf-${shelf}`} dir={shelf === 0 ? -1 : 1} className="!pl-8 !pr-3"
                         onSwipe={(st) => { const n = shelf + st; if (n === 0 || n === 1) { haptic("light"); setShelf(n); } }}>
                         {shelf === 0 ? (
                             <>
-                                <p className="ah-display text-[15px]">댕다방 추천 셀렉트</p>
-                                <p className="ah-light mt-0.5 text-[12px]" style={{ color: TEXT_SOFT }}>상품 용도와 브랜드 구성을 살펴 고른 편집 추천</p>
-                                <span className="ah-light mt-2 inline-block rounded-full bg-[#e3f6fb] px-2.5 py-1 text-[11px] text-[#1f6f8f]">판매량 순위 아님 · 상품 탐색용</span>
-                                <div className="mt-4 grid grid-cols-2 gap-x-3 gap-y-5">{best.map((p, i) => <ShopProductCard key={p.id} product={p} index={i} />)}</div>
-                                <div className="mt-5"><Patch href="/best/" tone="cream" small>추천 셀렉트 더 보기<i aria-hidden="true" className="fa-solid fa-arrow-right text-[11px]" /></Patch></div>
+                                {/* 댕다방 핫픽 — 웹 메인과 같은 제목 · 설명, 제품군 5줄(작은 사진을 누르면 그 순위가 크게) */}
+                                <p className="ah-display text-[15px]">댕다방 핫픽</p>
+                                <p className="ah-light mt-0.5 text-[12px]" style={{ color: TEXT_SOFT }}>요즘 가장 사랑받는 인기 상품</p>
+                                <ShopHotPick />
+                                {/* 핫픽 전체 — 웹 /best/ 핫픽 페이지(제품군마다 1~3위 + 추천) */}
+                                <div className="mt-6"><Patch href="/best/" tone="cream" small>핫픽 전체 보기<i aria-hidden="true" className="fa-solid fa-arrow-right text-[11px]" /></Patch></div>
                             </>
                         ) : (
                             <>
