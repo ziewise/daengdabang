@@ -2833,3 +2833,74 @@ html:not(.ddb-app-mode) main:has(nav[aria-label="마이페이지 메뉴"]) {
     & .ddb-oc-lines em { color: #64748b; font-size: 13px; font-style: normal; font-weight: 800; }
     & .ddb-oc-error { display: flex; align-items: center; gap: 6px; margin-top: 10px; color: #d0436d; font-size: 13px; font-weight: 700; }
 }
+
+/* ═════════ 주문 내역 · 주문 상세 — 금액 · 버튼을 웹 크레파스 결로(2026-10-26 사용자 "금액 색상이나 버튼들이 웹 컨셉과 안 맞아") ═════════
+   금액 = 장바구니 · 주문서와 같은 크레파스 금액 글씨(주아 + 청록 · 분홍 · 노랑 그라데이션)
+   버튼 = 다른 웹 화면 알약(dw-round-go)과 같은 파스텔 채움 알약 · 테두리 없음 · 누르면 살짝 눌림. 버튼마다 색으로 구분
+     상품 보기 연분홍 · 반품 신청 크림 · 배송 문의/조회 민트 · 교환·반품 안내 노랑 · 주문 취소 요청 장미 · 구매 확정 분홍 채움. 앱은 그대로 */
+html:not(.ddb-app-mode) main:has(nav[aria-label="마이페이지 메뉴"]) {
+    /* 크레파스 금액 */
+    & :is(article[data-order-mode] .mp-line-side > b, article[data-order-mode] > footer b, [data-mp-card] > div.grid > div > b, [data-mp-card] dd.text-xl) {
+        display: inline-block;
+        background: linear-gradient(102deg, #0891b2 0 31%, #ef476f 38% 67%, #f59e0b 75% 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: #e7466d;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-weight: 400;
+        letter-spacing: -0.01em;
+        -webkit-text-fill-color: transparent;
+    }
+    & article[data-order-mode] .mp-line-side > b { font-size: 20px; }
+    & article[data-order-mode] > footer b { font-size: 26px; }
+    & [data-mp-card] > div.grid > div > b { font-size: 19px; }
+    & [data-mp-card] dd.text-xl { font-size: 26px; }
+
+    /* 상품 줄 알약 — 상품 보기(연분홍) · 반품 신청(크림) */
+    & article[data-order-mode] .mp-line-side > a,
+    & .mp-line-return-wrap > a.mp-line-return {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        height: 34px;
+        padding: 0 14px;
+        border-radius: 999px;
+        background: #fff0f4;
+        color: #d0436d;
+        font-size: 12.5px;
+        font-weight: 800;
+        box-shadow: none;
+        transition: transform 0.12s, background 0.15s;
+    }
+    & article[data-order-mode] .mp-line-side > a::after { content: "→"; font-size: 12px; }
+    & :is(article[data-order-mode] .mp-line-side, .mp-line-return-wrap) > a.mp-line-return { background: #fff6e3; color: #b86a08; box-shadow: none; }
+    & :is(article[data-order-mode] .mp-line-side, .mp-line-return-wrap) > a.mp-line-return::before { content: "↩"; color: #e0a020; }
+    & :is(article[data-order-mode] .mp-line-side, .mp-line-return-wrap) > a.mp-line-return::after { content: none; }
+    & article[data-order-mode] .mp-line-side > a:hover { background: #ffe3ec; }
+    & :is(article[data-order-mode] .mp-line-side, .mp-line-return-wrap) > a.mp-line-return:hover { background: #ffedc7; color: #a35c05; }
+    & :is(article[data-order-mode] .mp-line-side > a, .mp-line-return-wrap > a):active { transform: scale(0.96); }
+
+    /* 주문 아래 · 상세 머리 버튼 줄 — 파스텔 채움 알약 */
+    & [data-live-fulfillment-actions] > :is(a, button) {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        min-height: 42px;
+        padding: 0 18px;
+        border: 0;
+        border-radius: 999px;
+        background: #e9f8f1 !important; /* 마이페이지 공통 "보조 버튼 = 흰 알약"보다 앞서게 */
+        color: #12a17a;
+        font-size: 13.5px;
+        font-weight: 800;
+        box-shadow: none !important;
+        transition: transform 0.12s, background 0.15s, color 0.15s;
+    }
+    & [data-live-fulfillment-actions] > a[href^="/return"] { background: #fff6e3 !important; color: #b86a08; }
+    & [data-live-fulfillment-actions] > a[data-order-cancel] { background: #fff0f2 !important; color: #d0436d; }
+    & [data-live-fulfillment-actions] > button[data-order-confirm] { background: #e9789a !important; color: #fff; box-shadow: 0 10px 18px -12px rgb(200 80 120 / 75%) !important; }
+    & [data-live-fulfillment-actions] > :is(a, button):hover { filter: brightness(0.97); }
+    & [data-live-fulfillment-actions] > :is(a, button):active { transform: scale(0.96); }
+    & [data-live-fulfillment-actions] > :is(a, button):focus-visible { outline: 3px solid #f7c3d2; outline-offset: 2px; }
+}
