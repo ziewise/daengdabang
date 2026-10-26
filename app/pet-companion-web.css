@@ -1,0 +1,172 @@
+/*
+ * pet-companion-web.css — "산책 친구 설정" 창 웹 겉모양(크레파스 결) · 2026-10-26
+ * ---------------------------------------------------------------------
+ * 사용자: "산책 친구에서 기능 부분만 건드리지 않으면 UI 변경은 문제 없잖아" → 협업자 산책 친구 코드(components/pet-companion/*)는
+ * 한 줄도 바꾸지 않고, 창에 이미 붙어 있는 data-pet-companion-dialog 표시와 구조(header · 본문 · footer)로만 웹 꾸밈을 입힘.
+ * 불러오기는 app/layout.tsx(사이트 공통 틀). 앱(html.ddb-app-mode)은 협업자 원래 모양 그대로.
+ *  - 흰 쿠션 창 · 분홍 영문 꼬리표 · 주아 제목 + 세 색 크레파스 밑줄 · 흰 동그라미 닫기
+ *  - 왼쪽 미리보기 판: 연분홍~크림 파스텔
+ *  - 이름표 주아 · 입력칸 크림 둥근 칸(분홍 초점) · 견종 검색 결과 크림 알약
+ *  - 털 색상 · 체크 칸: 흰 쿠션 알약, 고른 것은 분홍 테
+ *  - 아래: 취소 = 흰 알약, 저장하고 산책하기 = 분홍 알약
+ *  - 10~11px 이던 작은 글자를 12~13px 로
+ */
+
+html:not(.ddb-app-mode) [data-pet-companion-dialog] {
+    --pcw-ink: #1e293b;
+    --pcw-soft: #64748b;
+    --pcw-pink: #e9789a;
+    --pcw-pink-deep: #d0436d;
+    --pcw-cream: #fffaf1;
+    --pcw-ring: #f3e3cc;
+    --pcw-jua: var(--font-jua), var(--font-wanted-sans), sans-serif;
+    background: rgb(30 41 59 / 40%);
+
+    /* 창 — 흰 쿠션 */
+    & > section[role="dialog"] {
+        border: 0;
+        border-radius: 32px;
+        background: #fffdf9;
+        color: var(--pcw-ink);
+        box-shadow: inset 0 3px 0 #fff, 0 0 0 2px #f6ecdf, 0 30px 60px -24px rgb(15 23 42 / 45%);
+        word-break: keep-all;
+    }
+
+    /* 머리 — 꼬리표 · 주아 제목 · 세 색 밑줄 */
+    & > section > header {
+        padding: 24px 26px 18px;
+        border-bottom: 0;
+    }
+    & > section > header > div > span:first-child {
+        margin-bottom: 6px;
+        color: var(--pcw-pink-deep);
+        font-size: 11px;
+        letter-spacing: 0.18em;
+    }
+    & > section > header h2 {
+        position: relative;
+        width: fit-content;
+        padding-bottom: 8px;
+        font-family: var(--pcw-jua);
+        font-size: 26px;
+        font-weight: 400;
+        letter-spacing: 0;
+    }
+    & > section > header h2::after {
+        content: "";
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        height: 5px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, #f7a8bf 0 33%, #ffd48a 33% 66%, #9cc9f0 66%);
+    }
+    & > section > header p { margin-top: 8px; color: var(--pcw-soft); font-size: 13.5px; font-weight: 600; }
+    & > section > header > button {
+        width: 40px;
+        height: 40px;
+        border: 0;
+        background: #fff;
+        color: #64748b;
+        box-shadow: 0 0 0 2px #efe5d8, 0 8px 14px -10px rgb(15 23 42 / 40%);
+        transition: transform 0.12s, color 0.15s;
+    }
+    & > section > header > button:hover { color: var(--pcw-pink-deep); }
+    & > section > header > button:active { transform: scale(0.94); }
+
+    /* 왼쪽 미리보기 판 — 파스텔 */
+    & > section > header + div > div:first-child {
+        background:
+            radial-gradient(circle at 22% 18%, rgb(255 255 255 / 80%) 0 9%, transparent 10%),
+            linear-gradient(165deg, #ffeef3, #fff6e6);
+    }
+    & > section > header + div > div:first-child strong { font-family: var(--pcw-jua); font-size: 18px; font-weight: 400; }
+    & > section > header + div > div:first-child span { color: var(--pcw-soft); font-size: 12px; font-weight: 600; }
+
+    /* 이름표 */
+    & :is(label, div):has(> :is(input, select)) > span:first-child,
+    & [data-pet-companion-breed-search] > label:first-child,
+    & fieldset legend {
+        color: var(--pcw-ink);
+        font-family: var(--pcw-jua);
+        font-size: 15px;
+        font-weight: 400;
+    }
+
+    /* 입력칸 · 고르기 칸 — 크림 둥근 칸 */
+    & :is(input:not([type="checkbox"]), select) {
+        height: 46px;
+        padding: 0 14px;
+        border: 0;
+        border-radius: 16px;
+        background-color: var(--pcw-cream);
+        color: var(--pcw-ink);
+        font-size: 14px;
+        font-weight: 600;
+        box-shadow: 0 0 0 2px var(--pcw-ring);
+    }
+    & :is(input:not([type="checkbox"]), select):focus { outline: none; background-color: #fff; box-shadow: 0 0 0 2.5px #f7a8bf, 0 0 0 7px rgb(247 168 191 / 22%); }
+
+    /* 견종 검색 — 상태 글 · 안내 글 · 결과 알약 */
+    & [data-pet-companion-breed-search] small[role="status"] { color: var(--pcw-pink-deep); font-size: 12.5px; }
+    & [data-pet-companion-breed-search] small:not([role]) { color: var(--pcw-soft); font-size: 12px; }
+    & [role="listbox"] button { border: 0; border-radius: 16px; background: var(--pcw-cream); box-shadow: 0 0 0 2px var(--pcw-ring); }
+    & [role="listbox"] button:is(:hover, [data-selected="true"]) { background: #fff5f8; box-shadow: 0 0 0 2px #f7a8bf; }
+
+    /* 털 색상 — 흰 쿠션 알약, 고른 것은 분홍 테 */
+    & fieldset button {
+        min-height: 40px;
+        padding: 6px 14px 6px 8px;
+        border: 0;
+        background: #fff;
+        color: #475569;
+        font-size: 13px;
+        box-shadow: 0 0 0 2px #efe5d8, 0 6px 12px -10px rgb(15 23 42 / 35%);
+        transition: transform 0.12s, box-shadow 0.15s;
+    }
+    & fieldset button > span { width: 22px; height: 22px; }
+    & fieldset button[data-selected="true"] { background: #fff5f8; color: var(--pcw-pink-deep); box-shadow: 0 0 0 2.5px var(--pcw-pink); }
+    & fieldset button:active { transform: scale(0.96); }
+
+    /* 체크 칸 — 크림 쿠션 */
+    & label:has(> input[type="checkbox"]) {
+        min-height: 46px;
+        padding: 8px 14px;
+        border: 0;
+        border-radius: 16px;
+        background: var(--pcw-cream);
+        color: var(--pcw-ink);
+        font-size: 13px;
+        box-shadow: 0 0 0 2px var(--pcw-ring);
+    }
+    & label > input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--pcw-pink); }
+
+    /* 아래 — 취소 흰 알약 · 저장 분홍 알약 */
+    & > section > footer { border-top: 0; background: #fffdf9; padding: 14px 26px 20px; }
+    & > section > footer > span { color: #12a17a; font-size: 12.5px; }
+    & > section > footer > button {
+        min-height: 50px;
+        padding: 0 22px;
+        border: 0;
+        border-radius: 999px;
+        font-size: 14.5px;
+        font-weight: 800;
+        transition: transform 0.12s, background 0.15s;
+    }
+    & > section > footer > button:active { transform: scale(0.97); }
+    & > section > footer > button:nth-last-of-type(2) { background: #fff; color: #475569; box-shadow: 0 0 0 2px #efe5d8; }
+    & > section > footer > button:last-of-type { background: var(--pcw-pink); color: #fff; box-shadow: 0 10px 18px -12px rgb(200 80 120 / 75%); }
+    & > section > footer > button:last-of-type:hover { background: #e26690; }
+    & button:focus-visible, & :is(input, select):focus-visible { outline: 3px solid #f7c3d2; outline-offset: 2px; }
+}
+
+/* 휴대폰 — 창이 화면에 꽉 차도 둥근 모서리 · 글자 크기 유지 */
+@media (max-width: 680px) {
+    html:not(.ddb-app-mode) [data-pet-companion-dialog] {
+        & > section[role="dialog"] { border-radius: 28px; }
+        & > section > header { padding: 20px 18px 14px; }
+        & > section > header h2 { font-size: 23px; }
+        & > section > footer { padding: 12px 18px 16px; }
+    }
+}

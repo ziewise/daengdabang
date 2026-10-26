@@ -3,6 +3,8 @@ import Script from "next/script";
 import { Geist, Geist_Mono, Gaegu, Jua } from "next/font/google";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "./globals.css";
+// 산책 친구 설정 창 웹 겉모양(2026-10-26) — 협업자 산책 친구 코드는 그대로, 창의 data 표시로만 꾸밈(앱은 그대로)
+import "./pet-companion-web.css";
 // 헤더·푸터·도크는 경로별 토글(ConditionalChrome) — 로그인 등 풀스크린 페이지에서 숨김
 import ConditionalChrome from "@/components/site/ConditionalChrome";
 // 협업자 기능 유지 — 전역 스토어(장바구니 등)
@@ -183,6 +185,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <style id="ddb-app-font" dangerouslySetInnerHTML={{ __html: `html.ddb-app-mode{--font-wanted-sans:"NanumSquareRound","Apple SD Gothic Neo","Noto Sans KR",sans-serif}html.ddb-app-mode [data-supplier-original-detail]{--font-wanted-sans:"Wanted Sans DDB"}` }} />
                 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
                 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+                {/* 댕다방 서버(목록 · 사진 · 로그인 등) 연결 미리 열기(2026-10-26 댕자랑 속도) — 화면 코드를 받는 동안 주소 찾기 · 보안 연결을 끝내 둠.
+                    목록 같은 fetch 는 anonymous 통로, 사진(<img>)은 기본 통로를 써서 둘 다 엶. 요청 내용 · 동작은 그대로 */}
+                <link rel="preconnect" href="https://api.daengdabang.com" crossOrigin="anonymous" />
+                <link rel="preconnect" href="https://api.daengdabang.com" />
             </head>
             <body className="min-h-full flex flex-col">
                 <Script id="ddb-android-appearance" strategy="beforeInteractive">
