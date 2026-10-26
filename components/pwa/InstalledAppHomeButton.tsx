@@ -54,7 +54,12 @@ function remember(storage: "local" | "session") {
     }
 }
 
-export default function InstalledAppHomeButton() {
+/**
+ * 앱 설치 말풍선 시간 · 조건(위 머리 설명 그대로) — 모바일 아이콘과 PC 아이콘(DesktopAppInstallQr · 2026-10-26)이 같이 씀.
+ * media: 말풍선을 열 화면 폭(모바일 "(max-width: 767px)", PC "(min-width: 768px)"). 오늘 안 보기 · 이번 방문 기록은 같은 저장 키라 한쪽에서 끄면 둘 다 꺼짐.
+ * 돌려주는 것: bubble(열림 · 닫히는 중 · 없음) · onAppRoute(설치 안내 페이지 안) · markVisited(설치 안내로 감 · QR 창 염) · hideToday(오늘 안 보기)
+ */
+export function useAppInstallBubble(media: string) {
     const pathname = usePathname();
     const [bubble, setBubble] = useState<"in" | "out" | null>(null); // 말풍선 상태: 열림 · 닫히는 중 · 없음
     const [stopped, setStopped] = useState(false); // 이번 화면에서 그만(오늘 안 보기 · 설치 안내로 이동)
@@ -62,7 +67,7 @@ export default function InstalledAppHomeButton() {
     const quiet = stopped || onAppRoute || QUIET_PATHS.some((path) => pathname === path || pathname.startsWith(`${path}/`));
 
     useEffect(() => {
-        if (quiet || !window.matchMedia("(max-width: 767px)").matches) return;
+        if (quiet || !window.matchMedia(media).matches) return;
         const timers: number[] = [];
         let repeat = 0;
         const open = () => {
@@ -85,11 +90,9 @@ export default function InstalledAppHomeButton() {
             window.clearInterval(repeat);
             setBubble(null);
         };
-    }, [quiet, pathname]);
+    }, [quiet, pathname, media]);
 
-    if (onAppRoute) return null;
-
-    const goInstallGuide = () => {
+    const markVisited = () => {
         remember("session");
         setStopped(true);
     };
@@ -97,6 +100,14 @@ export default function InstalledAppHomeButton() {
         remember("local");
         setStopped(true);
     };
+    return { bubble, onAppRoute, markVisited, hideToday };
+}
+
+export default function InstalledAppHomeButton() {
+    // 모바일(768px 미만)에서만 말풍선 — 시간 · 조건은 useAppInstallBubble
+    const { bubble, onAppRoute, markVisited: goInstallGuide, hideToday } = useAppInstallBubble("(max-width: 767px)");
+
+    if (onAppRoute) return null;
 
     return (
         <span className="relative inline-flex shrink-0 md:hidden">
@@ -128,7 +139,7 @@ export default function InstalledAppHomeButton() {
 
 /** 말풍선 — 웹 크레파스 결(2026-10-25 사용자 "스티커 요소는 빼야지"): 흰 쿠션 · 연분홍 테 · 아이콘 쪽 꼬리, 기울기 · 테이프 · 메모지 없음.
  *  위에서 살짝 내려오며 열림. 아래 줄 오른쪽에 "오늘 안 보기" */
-const APP_INSTALL_BUBBLE_CSS = `
+export const APP_INSTALL_BUBBLE_CSS = `
 /* 글꼴: 주아(--font-jua, app/layout.tsx 에서 이미 받음) — 한 굵기뿐이라 400 고정(가짜 굵게 방지) */
 .ddb-aib { position: absolute; top: calc(100% + 10px); right: -58px; z-index: 5; display: flex; flex-direction: column; align-items: flex-end; gap: 4px;
   width: max-content; padding: 10px 14px 7px; white-space: nowrap;

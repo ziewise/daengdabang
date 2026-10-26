@@ -34,6 +34,7 @@ import { usePetLensModal } from "@/components/petlens/PetLensModalLauncher";
 import DaengLabWordmark from "./DaengLabWordmark";
 import { useI18n } from "@/lib/i18n";
 import InstalledAppHomeButton from "@/components/pwa/InstalledAppHomeButton";
+import DesktopAppInstallQr from "@/components/pwa/DesktopAppInstallQr";
 import ProductBackButton from "./ProductBackButton";
 import headerStyles from "./Header.module.css";
 // 지금 페이지 판별(표시만 — aria-current · data-nav-current)
@@ -304,6 +305,8 @@ export default function Header() {
                         {/* 유틸 순서: (모바일) 앱 설치 → 펫렌즈 → 검색 → 장바구니 → 로그인/마이페이지 → 한/영 → (좁은 화면) ☰ */}
                         {/* 앱 설치 동그라미 아이콘 + 가끔 말풍선 — 모바일 웹에서만, 누르면 /app/ 설치 안내(2026-10-18 로고 옆 "앱 홈" 알약에서 옮김) */}
                         <InstalledAppHomeButton />
+                        {/* PC(md 이상) 앱 설치 아이콘 — 누르면 휴대폰으로 찍는 설치 안내 QR 창(2026-10-26 사용자) */}
+                        <DesktopAppInstallQr />
                         {/* 펫렌즈 — 사진 분석 모달. 챗봇은 우하단 FloatingDock 에 있음 */}
                         <button
                             type="button"
