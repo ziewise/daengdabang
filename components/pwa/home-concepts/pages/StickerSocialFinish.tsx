@@ -6,7 +6,7 @@
  * app/auth/social-callback/page.tsx 가 로그인까지 마친 뒤 앱 화면(ddb-app-mode)에서 그림. 웹은 SocialSignupWebFinish 그대로.
  * 웹 SocialSignupWebFinish 와 같은 단계 · 같은 함수:
  *   ① 정보 확인 — 공급자에게 받은 이름 · 이메일 · 연결 표시, 앞에서 받은 동의 표시, 이메일을 못 받았으면 등록 안내,
- *                 (스위치가 켜지면) 마케팅 수신 동의 저장(saveMarketingConsent)
+ *                 (스위치가 켜지면) 마케팅 수신 동의 저장(saveMarketingConsent) · 휴대폰 본인인증(startIdentityVerification — 통과해야 다음)
  *   ② 우리 아이 — 마이페이지와 같은 등록 창(MemberPetProfileCreateForm — 같은 검사 · 같은 저장) 또는 나중에
  *   ③ 가입 완료 — 이메일 가입과 같은 완료 화면(SignupDone), "이메일 인증하고 20C"는 기존 이메일 인증 창(SignupEmailVerification)
  * AppSocialReturnNotice — 돌아왔지만 새 가입이 아닌 경우(이미 가입된 간편 계정 · 동의 취소 · 이미 이메일로 가입 · 실패 · 간편 로그인 실패/취소)
@@ -21,14 +21,14 @@ import { appLoginHref, appSignupHref } from "@/components/app-shell/appTabs";
 import SignupEmailVerification, { type SignupEmailVerificationResult } from "@/components/auth/SignupEmailVerification";
 import MemberPetProfileCreateForm from "@/components/mypage/MemberPetProfileCreateForm";
 import { clearSignupEmailResume } from "@/lib/signup-email-verification";
-import { isPlaceholderEmail, maskEmail, readSignupFlowFeatures, saveMarketingConsent, type MarketingChoice, type SocialReturnKind } from "@/lib/signup-flow";
+import { isPlaceholderEmail, maskEmail, readSignupFlowFeatures, saveMarketingConsent, startIdentityVerification, type MarketingChoice, type SocialReturnKind } from "@/lib/signup-flow";
 import { useAuth, type User } from "@/lib/store";
 import { haptic } from "../gestures";
 import { KIT_CSS, TEXT, TEXT_SOFT } from "../kit";
 import { HC_CSS } from "../shared";
 import { DiaryBody, DiaryTabs, PARTS_CSS } from "../sticker-parts";
 import { Patch, STICKER_CSS, Tape } from "../sticker-kit";
-import { Note, SIGNUP_CSS, SignupDone } from "./StickerSignup";
+import { IdentityStep, identityPasses, Note, SIGNUP_CSS, SignupDone, type IdentityState } from "./StickerSignup";
 
 const APP_HOME = "/app/home-1/";
 /** 공급자 이름 · 동그라미 색(앱 가입 방법 화면과 같음) */
@@ -70,6 +70,9 @@ export default function AppSocialFinish({ member, provider, onFinish }: { member
     const [marketing, setMarketing] = useState<MarketingChoice>({ email: false, sms: false });
     const [marketingProcessedAt, setMarketingProcessedAt] = useState<string | null>(null);
     const [saving, setSaving] = useState(false);
+    // 휴대폰 본인인증(스위치) — 웹 SocialSignupWebFinish 와 같은 함수 · 통과 조건
+    const [identity, setIdentity] = useState<IdentityState>({ phase: "idle" });
+    const canGoOn = !features.identity || identityPasses(identity);
     const p = providerOf(provider);
     const current: User = user && user.apiAccessToken === member.apiAccessToken ? user : member;
     const noEmail = isPlaceholderEmail(member.email);
@@ -92,6 +95,7 @@ export default function AppSocialFinish({ member, provider, onFinish }: { member
 
     // 정보 확인 → 우리 아이 : 마케팅 수신 동의를 고른 경우에만 저장(연동됐을 때) — 웹과 같음
     const toPet = async () => {
+        if (!canGoOn) return;
         if (features.marketing && marketingAny && !marketingProcessedAt) {
             setSaving(true);
             const processedAt = await saveMarketingConsent(member.apiAccessToken, marketing);
@@ -237,7 +241,16 @@ export default function AppSocialFinish({ member, provider, onFinish }: { member
                     </div>
                 ) : null}
 
-                <div className="mt-6"><Patch onClick={() => void toPet()} disabled={saving}>{saving ? "저장하는 중이에요" : "맞아요 · 다음"}<i aria-hidden="true" className="fa-solid fa-chevron-right text-[12px]" /></Patch></div>
+                {/* 휴대폰 본인인증(스위치가 켜졌을 때) — 웹과 같은 안내 · 결과 갈림길 */}
+                {features.identity ? (
+                    <div className="mt-5">
+                        <p className="ah-display mb-2.5 text-[13.5px]"><i aria-hidden="true" className="fa-solid fa-mobile-screen-button mr-1 text-[12px] text-[#3d8fb8]" />휴대폰 본인인증</p>
+                        <IdentityStep state={identity} onRestart={() => setIdentity({ phase: "idle" })}
+                            onStart={() => { setIdentity({ phase: "busy" }); void startIdentityVerification().then((result) => setIdentity({ phase: "result", result })); }} />
+                    </div>
+                ) : null}
+
+                <div className="mt-6"><Patch onClick={() => void toPet()} disabled={saving || !canGoOn}>{saving ? "저장하는 중이에요" : features.identity && !canGoOn ? "인증을 마치면 다음으로" : "맞아요 · 다음"}<i aria-hidden="true" className="fa-solid fa-chevron-right text-[12px]" /></Patch></div>
             </DiaryBody>
         </Frame>
     );

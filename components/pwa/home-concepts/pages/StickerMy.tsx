@@ -288,7 +288,7 @@ export default function StickerMy() {
                                             <span className="ah-display mt-1 block text-[13px] leading-snug line-clamp-2">{o.orderName}</span>
                                             <span className="mt-2 flex items-center justify-between gap-1 border-t border-dashed border-[#e7d9d1] pt-1.5">
                                                 <span className="ah-display text-[12.5px]">{formatOrderAmount(o.amount)}</span>
-                                                <InkStamp rot={-8} color="#1f9e75" className="!px-1.5 !py-0.5 text-[10px]">{orderStatusLabel(o)}</InkStamp>
+                                                <InkStamp rot={-8} color="#1f9e75" className="shrink-0 whitespace-nowrap !px-1.5 !py-0.5 text-[10px]">{orderStatusLabel(o)}</InkStamp>
                                             </span>
                                         </Link>
                                     ))}

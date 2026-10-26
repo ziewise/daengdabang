@@ -37,7 +37,7 @@ import { resizePetPhoto } from "@/lib/pet-photo";
 import { petLensPostAuthDestination } from "@/lib/petlens-routing";
 import { clearPetLensSignupDraft, loadPetLensSignupDraft, savePetLensSignupDraft } from "@/lib/petlens-signup-draft";
 import { SIGNUP_PETLENS_PRIVACY_CONSENT, SIGNUP_PRIVACY_VERSION, SIGNUP_REQUIRED_PRIVACY_CONSENT, SIGNUP_TERMS_AGREEMENT, SIGNUP_TERMS_VERSION } from "@/lib/signup-agreements";
-import { checkSignupEmail, maskEmail, readSignupFlowFeatures, saveMarketingConsent, type EmailAvailability, type MarketingChoice } from "@/lib/signup-flow";
+import { checkSignupEmail, maskEmail, readSignupFlowFeatures, saveMarketingConsent, startIdentityVerification, type EmailAvailability, type IdentityResult, type MarketingChoice } from "@/lib/signup-flow";
 import { clearSignupActivationResume, clearSignupEmailResume, loadSignupActivationResume, loadSignupEmailResume, saveSignupActivationResume, saveSignupEmailResume } from "@/lib/signup-email-verification";
 import { useAuth, type PetProfile, type User } from "@/lib/store";
 import { trackSignupCompleted } from "@/lib/storefront-analytics";
@@ -61,6 +61,18 @@ const EMAIL_STEPS = [
     { label: "계정", color: "#dcf3e6" },
     { label: "우리 아이", color: "#e8ddff" },
 ];
+/** 휴대폰 본인인증이 켜졌을 때(웹과 같은 스위치) — 약관 다음에 본인인증 */
+const EMAIL_STEPS_WITH_IDENTITY = [{ label: "시작", color: "#ffd6e2" }, EMAIL_STEPS[1], { label: "본인인증", color: "#e3f2fb" }, EMAIL_STEPS[2], EMAIL_STEPS[3]]; // 5칸 — 첫 칸 이름을 줄여 한 줄로
+
+/* 서버가 아직 없는 가입 기능 스위치(lib/signup-flow) — 화면이 붙은 뒤에 읽음(미리 만든 HTML 은 운영 설정 값 그대로 → 개발 미리보기에서도 화면 어긋남 없음) */
+const noopSubscribe = () => () => {};
+const featuresKey = () => { const f = readSignupFlowFeatures(); return `${f.identity ? 1 : 0}${f.emailCheck ? 1 : 0}${f.marketing ? 1 : 0}`; };
+const serverFeaturesKey = () => `${process.env.NEXT_PUBLIC_SIGNUP_IDENTITY === "1" ? 1 : 0}${process.env.NEXT_PUBLIC_SIGNUP_EMAIL_CHECK === "1" ? 1 : 0}${process.env.NEXT_PUBLIC_SIGNUP_MARKETING === "1" ? 1 : 0}`;
+function useSignupFeatures() {
+    const key = useSyncExternalStore(noopSubscribe, featuresKey, serverFeaturesKey);
+    return { identity: key[0] === "1", emailCheck: key[1] === "1", marketing: key[2] === "1" };
+}
+type SignupScreen = "method" | "terms" | "identity" | "account" | "pet";
 /** 간편 가입 공급자 — 웹과 같은 이름 · 받는 정보 안내 */
 const SOCIAL: Array<{ id: SocialProvider; label: string; gives: string; bg: string; ink: string; mark: string }> = [
     { id: "kakao", label: "카카오", gives: "프로필 이름 · 이메일(카카오 화면에서 동의한 항목만)", bg: "#fee500", ink: "#3c1e1e", mark: "fa-comment" },
@@ -240,7 +252,12 @@ export default function StickerSignup() {
     const [step, setStep] = useState(0);
     // 쪽 넘김 방향 — 0 = 처음 연 쪽(속지 전체가 이미 넘겨지며 나타나므로 단계 내용은 따로 움직이지 않음)
     const [dir, setDir] = useState(0);
+    const features = useSignupFeatures(); // 서버가 아직 없는 기능 스위치(본인인증 · 이메일 중복 확인 · 마케팅 동의 저장)
     const goStep = (i: number) => { setDir(i > step ? 1 : -1); setStep(i); window.scrollTo({ top: 0, behavior: "smooth" }); };
+    // 단계 이름(웹과 같은 순서) — 본인인증 스위치가 켜지면 약관과 계정 사이에 본인인증. 이름으로 이동(goTo)
+    const order: SignupScreen[] = ["method", "terms", ...(features.identity ? ["identity" as const] : []), "account", "pet"];
+    const cur: SignupScreen = order[step] ?? "method";
+    const goTo = (screen: SignupScreen) => goStep(Math.max(0, order.indexOf(screen)));
 
     /* 웹 가입 화면과 같은 상태 */
     const [name, setName] = useState("");
@@ -285,7 +302,6 @@ export default function StickerSignup() {
     const apiReady = useDdbApiReady();
     const botChallengeConfigured = Boolean(signupTurnstileSiteKey());
     /* 웹 단계별 가입과 같은 값(2026-10-26) — 가입 방법(이메일 · 공급자) · 만 14세 · 마케팅 · 비밀번호 확인 · 우리 아이 지금/나중에 */
-    const [features] = useState(readSignupFlowFeatures); // 서버가 아직 없는 기능 스위치(이메일 중복 확인 · 마케팅 동의 저장)
     const providers = useSocialProviderStatus(); // 간편 가입 공급자 준비 상태(웹 가입 방법 화면과 같음)
     const [route, setRoute] = useState<"email" | SocialProvider>("email");
     const [age14, setAge14] = useState(false);
@@ -300,6 +316,17 @@ export default function StickerSignup() {
     const [marketingProcessedAt, setMarketingProcessedAt] = useState<string | null>(null);
     const marketingSavedRef = useRef(false);
     const [verifyOpen, setVerifyOpen] = useState(false); // 가입 완료 화면에서 "이메일 인증하고 20C 받기"를 누름
+    // 휴대폰 본인인증(스위치가 켜졌을 때) — 웹과 같은 startIdentityVerification · 같은 통과 조건(identityPasses)
+    const [identity, setIdentity] = useState<IdentityState>({ phase: "idle" });
+    const identityOk = identityPasses(identity);
+    const identityVerified = identity.phase === "result" && identity.result.status === "verified" ? identity.result : null;
+    const startIdentity = () => {
+        setIdentity({ phase: "busy" });
+        void startIdentityVerification().then((result) => {
+            setIdentity({ phase: "result", result });
+            if (result.status === "verified" && result.name) setName(result.name); // 이름은 본인인증 정보로(웹과 같음)
+        });
+    };
     const isSocial = route !== "email";
     const socialInfo = SOCIAL.find((item) => item.id === route);
     const requiredConsentsAccepted = age14 && agreeTerms && agreePrivacy;
@@ -447,7 +474,7 @@ export default function StickerSignup() {
         setError(""); setTried(true);
         if (!requiredConsentsAccepted) { haptic("light"); return; }
         setTried(false);
-        goStep(2);
+        goTo(features.identity ? "identity" : "account");
     };
     // 간편 가입: 필수 동의 + 보안 확인 → 공급자 화면으로(웹 beginSocialAuth 그대로)
     const continueSocial = () => {
@@ -483,7 +510,7 @@ export default function StickerSignup() {
             if (result === "taken") { haptic("light"); return; }
         }
         setTried(false);
-        goStep(3);
+        goTo("pet");
     };
 
     // 가입이 끝나면 마케팅 수신 동의 저장(연동됐을 때만) → 완료 화면에 처리 결과(웹과 같음)
@@ -502,11 +529,11 @@ export default function StickerSignup() {
         setErrorKind("");
         // 웹은 이름 · 이메일 칸(required · type="email")을 브라우저가 가입 처리 전에 먼저 막음 → 같은 순서로 맨 먼저 검사, 문제면 계정 쪽으로
         // (비밀번호는 웹과 같이 아래 서버 준비 확인 다음 순서에서 검사)
-        if (!name.trim() || !email.trim() || !EMAIL_PATTERN.test(email.trim())) { setError(accountProblem()); haptic("light"); goStep(2); return; }
+        if (!name.trim() || !email.trim() || !EMAIL_PATTERN.test(email.trim())) { setError(accountProblem()); haptic("light"); goTo("account"); return; }
         if (!ddbApiReady()) { setCustomerToken(); setError("지금은 회원가입 준비 중입니다. 잠시 후 다시 이용해 주세요."); return; }
         const passwordBytes = passwordUtf8Bytes(password);
-        if (password.length < 8 || passwordBytes > 72) { setError("비밀번호는 8자 이상, 최대 72바이트로 입력해 주세요."); goStep(2); return; }
-        if (!age14 || !agreeTerms || !agreePrivacy) { setError("필수 약관(만 14세 이상 · 이용약관 · 개인정보 수집·이용)에 동의해 주세요."); goStep(1); return; }
+        if (password.length < 8 || passwordBytes > 72) { setError("비밀번호는 8자 이상, 최대 72바이트로 입력해 주세요."); goTo("account"); return; }
+        if (!age14 || !agreeTerms || !agreePrivacy) { setError("필수 약관(만 14세 이상 · 이용약관 · 개인정보 수집·이용)에 동의해 주세요."); goTo("terms"); return; }
         if (!botChallengeConfigured) { setError("가입 보안 확인을 준비 중입니다. 잠시 후 다시 이용해 주세요."); return; }
         // 보안 확인 토큰이 비었으면(시간 만료 · 미완료) — 이메일 가입은 마지막 확인 칸에 보안 확인이 있어 이 쪽 그대로(웹과 같은 문구)
         if (!botToken) { setError("가입 보안 확인을 완료해 주세요."); haptic("light"); return; }
@@ -742,7 +769,7 @@ export default function StickerSignup() {
     /* ───────── 가입 단계 ───────── */
     // 단계 내용 쪽 넘김 애니메이션(속지 DiaryBody 와 같은 dt-in-next / dt-in-prev) — 처음 연 쪽(dir 0)은 속지가 이미 움직이므로 없음
     const turnClass = dir > 0 ? "dt-in-next" : dir < 0 ? "dt-in-prev" : "";
-    const tabs = isSocial ? socialStepTabs(socialInfo?.label ?? "") : EMAIL_STEPS;
+    const tabs = isSocial ? socialStepTabs(socialInfo?.label ?? "") : features.identity ? EMAIL_STEPS_WITH_IDENTITY : EMAIL_STEPS;
     // 공급자 준비 상태 — 웹 가입 방법 화면과 같은 판단(준비 중 · 확인 중 · 연결 오류)
     const providerState = (provider: SocialProvider) => {
         if (apiReady !== true) return "off";
@@ -773,14 +800,14 @@ export default function StickerSignup() {
             <div key={`step-${step}`} className={turnClass}>
             {apiReady === false ? <div className="mb-4"><Note tone="warn">지금은 회원가입 준비 중입니다. 잠시 후 다시 이용해 주세요.</Note></div> : null}
 
-            {step === 0 ? (
+            {cur === "method" ? (
                 <>
                     {/* ① 가입 방법 — 이메일 카드 · 간편 가입 동그란 스티커 셋 · 가입 혜택 포스트잇 */}
                     <p className="ah-light text-[10.5px] tracking-[.16em] text-[#c4567a]">STEP 1 · START</p>
                     <p className="ah-display mt-0.5 text-[19px] leading-snug">어떻게 <span className="st-marker">가입</span>할까요?</p>
                     <p className="ah-light mt-1 text-[12.5px]" style={{ color: TEXT_SOFT }}>이메일로 가입하거나, 쓰던 계정으로 바로 시작할 수 있어요.</p>
 
-                    <button type="button" disabled={apiReady === false} onClick={() => { haptic("light"); setRoute("email"); setError(""); goStep(1); }}
+                    <button type="button" disabled={apiReady === false} onClick={() => { haptic("light"); setRoute("email"); setError(""); goTo("terms"); }}
                         className="su-way st-sheet relative mt-5 flex w-full items-center gap-3 rounded-[16px] px-3.5 pb-3.5 pt-4 text-left disabled:opacity-60" style={{ rotate: "-0.6deg" }}>
                         <Tape className="-top-2 left-5 h-3.5 w-12" color="rgba(255,214,228,.9)" style={{ rotate: "-4deg" }} />
                         <Image src="/images/ui/stickers/my-profile.webp" alt="" width={56} height={56} className="st-diecut-img h-14 w-14 shrink-0 object-contain" />
@@ -806,7 +833,7 @@ export default function StickerSignup() {
                             const state = providerState(provider.id);
                             return (
                                 <button key={provider.id} type="button" disabled={state !== "ready"} aria-label={`${provider.label}로 간편 가입`}
-                                    onClick={() => { haptic("light"); setRoute(provider.id); setSocialError(""); setError(""); goStep(1); }}
+                                    onClick={() => { haptic("light"); setRoute(provider.id); setSocialError(""); setError(""); goTo("terms"); }}
                                     className="su-social-way flex flex-col items-center rounded-[14px] bg-white px-1 pb-2.5 pt-3 disabled:opacity-55" style={{ rotate: `${[-1.2, 0.8, -0.6][i]}deg` }}>
                                     <ProviderMark provider={provider} />
                                     <span className="ah-display mt-1.5 text-[12.5px]">{provider.label}로 시작</span>
@@ -834,7 +861,7 @@ export default function StickerSignup() {
                         </span>
                     </div>
                 </>
-            ) : step === 1 ? (
+            ) : cur === "terms" ? (
                 <>
                     {/* ② 약관 — 전체 동의 · 필수 3가지(만 14세 · 이용약관 · 개인정보) · (스위치) 마케팅, 항목마다 내용 속지 */}
                     <p className="ah-light text-[10.5px] tracking-[.16em] text-[#c4567a]">STEP 2 · AGREEMENT</p>
@@ -895,7 +922,7 @@ export default function StickerSignup() {
                     {isSocial && !signupSecurityReady ? <p className="ah-light mt-3 text-center text-[11px]" style={{ color: TEXT_SOFT }}>필수 동의와 보안 확인을 마치면 {socialInfo?.label} 화면으로 넘어가요.</p> : null}
 
                     <div className="mt-5 grid grid-cols-[auto_1fr] gap-2.5">
-                        <Patch tone="cream" small onClick={() => goStep(0)}><i aria-hidden="true" className="fa-solid fa-chevron-left text-[11px]" />이전</Patch>
+                        <Patch tone="cream" small onClick={() => goTo("method")}><i aria-hidden="true" className="fa-solid fa-chevron-left text-[11px]" />이전</Patch>
                         {isSocial ? (
                             <Patch small onClick={continueSocial} disabled={!signupSecurityReady}>{socialInfo?.label}로 계속하기<i aria-hidden="true" className="fa-solid fa-arrow-right text-[11px]" /></Patch>
                         ) : (
@@ -903,17 +930,42 @@ export default function StickerSignup() {
                         )}
                     </div>
                 </>
-            ) : step === 2 ? (
+            ) : cur === "identity" ? (
+                <>
+                    {/* ③ 휴대폰 본인인증(스위치) — 웹과 같은 안내 · 결과 갈림길(이미 가입 · 만 14세 미만 · 재가입 제한 · 취소 · 시간 초과 · 실패) */}
+                    <p className="ah-light text-[10.5px] tracking-[.16em] text-[#3d8fb8]">STEP 3 · IDENTITY</p>
+                    <p className="ah-display mt-0.5 text-[19px] leading-snug">휴대폰으로 <span className="st-marker">본인인증</span> 해 주세요</p>
+                    <p className="ah-light mt-1 text-[12.5px]" style={{ color: TEXT_SOFT }}>내 명의 휴대폰으로 인증해요. 입력은 인증기관 창에서 해요.</p>
+                    <div className="mt-4"><IdentityStep state={identity} onStart={startIdentity} onRestart={() => setIdentity({ phase: "idle" })} /></div>
+                    <div className="mt-5 grid grid-cols-[auto_1fr] gap-2.5">
+                        <Patch tone="cream" small onClick={() => goTo("terms")}><i aria-hidden="true" className="fa-solid fa-chevron-left text-[11px]" />이전</Patch>
+                        <Patch small onClick={() => goTo("account")} disabled={!identityOk}>{identityOk ? "다음 · 계정 정보" : "인증을 마치면 다음으로"}<i aria-hidden="true" className="fa-solid fa-chevron-right text-[11px]" /></Patch>
+                    </div>
+                </>
+            ) : cur === "account" ? (
                 <>
                     {/* ③ 계정 정보 — 이름 · 이메일(중복 확인 스위치) · 비밀번호 · 비밀번호 확인 · 강도 */}
-                    <p className="ah-light text-[10.5px] tracking-[.16em] text-[#c4567a]">STEP 3 · ACCOUNT</p>
+                    <p className="ah-light text-[10.5px] tracking-[.16em] text-[#c4567a]">STEP {order.indexOf("account") + 1} · ACCOUNT</p>
                     <p className="ah-display mt-0.5 text-[19px] leading-snug"><span className="st-marker">계정 정보</span>를 정해 주세요</p>
                     <p className="ah-light mt-1 text-[12.5px]" style={{ color: TEXT_SOFT }}>이메일이 로그인 아이디가 돼요. 주문 안내도 이 주소로 보내 드려요.</p>
                     <form className="mt-5 space-y-3" onSubmit={(e) => { e.preventDefault(); void nextFromAccount(); }}>
                         <LabelField icon="fa-user" stub="#d9f2e4" ink="#1f9e75">
                             <span className="sr-only">이름</span>
-                            <input value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" maxLength={40} placeholder="이름 · 예: 김댕댕" aria-invalid={tried && !name.trim()} className="min-w-0 flex-1 bg-transparent px-3.5 text-[15px] outline-none placeholder:text-[#c2b2aa]" />
+                            {identityVerified ? (
+                                // 본인인증 정보로 채운 이름 — 잠금(웹과 같음)
+                                <span className="flex min-w-0 flex-1 items-center justify-between px-3.5 text-[15px] text-[#5a4038]">{identityVerified.name}<i aria-label="본인인증 정보" className="fa-solid fa-lock text-[12px] text-[#b8a59c]" /></span>
+                            ) : (
+                                <input value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" maxLength={40} placeholder="이름 · 예: 김댕댕" aria-invalid={tried && !name.trim()} className="min-w-0 flex-1 bg-transparent px-3.5 text-[15px] outline-none placeholder:text-[#c2b2aa]" />
+                            )}
                         </LabelField>
+                        {identityVerified ? (
+                            <LabelField icon="fa-mobile-screen-button" stub="#e3f2fb" ink="#3d8fb8">
+                                <span className="sr-only">휴대폰</span>
+                                <span className="flex min-w-0 flex-1 items-center justify-between px-3.5 text-[15px] text-[#5a4038]">{identityVerified.maskedPhone}<i aria-label="본인인증 정보" className="fa-solid fa-lock text-[12px] text-[#b8a59c]" /></span>
+                            </LabelField>
+                        ) : (
+                            <p className="ah-light pl-1 text-[11px] leading-snug" style={{ color: TEXT_SOFT }}><i aria-hidden="true" className="fa-solid fa-receipt mr-1 text-[10px] text-[#f08eae]" />주문 · 배송 안내와 영수증을 이메일로 보내 드려요. 실제로 쓰는 주소를 넣어 주세요.</p>
+                        )}
                         {tried && !name.trim() ? <p className="su-err ah-light">이름을 넣어 주세요.</p> : null}
                         <div className="flex items-stretch gap-2">
                             <LabelField icon="fa-envelope" stub="#ffe1ea" ink="#d2457a" grow>
@@ -967,7 +1019,7 @@ export default function StickerSignup() {
                         {tried && !password2 ? <p className="su-err ah-light">비밀번호를 한 번 더 넣어 주세요.</p> : null}
 
                         <div className="grid grid-cols-[auto_1fr] gap-2.5 pt-2">
-                            <Patch tone="cream" small onClick={() => goStep(1)}><i aria-hidden="true" className="fa-solid fa-chevron-left text-[11px]" />이전</Patch>
+                            <Patch tone="cream" small onClick={() => goTo(features.identity ? "identity" : "terms")}><i aria-hidden="true" className="fa-solid fa-chevron-left text-[11px]" />이전</Patch>
                             <Patch small type="submit" disabled={emailStatus === "checking"}>다음 · 우리 아이<i aria-hidden="true" className="fa-solid fa-chevron-right text-[11px]" /></Patch>
                         </div>
                     </form>
@@ -975,7 +1027,7 @@ export default function StickerSignup() {
             ) : (
                 <>
                     {/* ④ 우리 아이 — 지금 / 나중에 고르기 → (지금) 사진 · 정보 · 선택 동의, 그리고 가입 전 마지막 확인 · 보안 확인 */}
-                    <p className="ah-light text-[10.5px] tracking-[.16em] text-[#c4567a]">STEP 4 · MY DOG</p>
+                    <p className="ah-light text-[10.5px] tracking-[.16em] text-[#c4567a]">STEP {order.indexOf("pet") + 1} · MY DOG</p>
                     <p className="ah-display mt-0.5 text-[19px] leading-snug"><span className="st-marker">우리 아이</span>도 함께 등록할까요?</p>
                     <p className="ah-light mt-1 text-[12.5px]" style={{ color: TEXT_SOFT }}>사진 한 장만 있어도 견종 · 크기 후보를 찾아 드려요. 지금 안 해도 돼요.</p>
                     <div className="mt-4 grid grid-cols-2 gap-3" role="radiogroup" aria-label="우리 아이 등록">
@@ -1107,10 +1159,11 @@ export default function StickerSignup() {
                                 <span className="ah-display block truncate text-[14px]">{name.trim() || "댕다방 회원"}</span>
                                 <span className="ah-light block truncate text-[11.5px]" style={{ color: TEXT_SOFT }}>{email.trim()}</span>
                             </span>
-                            <button type="button" onClick={() => goStep(2)} className="ah-display shrink-0 text-[12px] text-[#e0557f] underline underline-offset-2">수정</button>
+                            <button type="button" onClick={() => goTo("account")} className="ah-display shrink-0 text-[12px] text-[#e0557f] underline underline-offset-2">수정</button>
                         </div>
                         <div className="mt-2.5 flex flex-wrap gap-1.5">
                             <span className="su-done-chip ah-light"><i aria-hidden="true" className="fa-solid fa-check" />약관 동의</span>
+                            {identityVerified ? <span className="su-done-chip ah-light"><i aria-hidden="true" className="fa-solid fa-check" />본인인증</span> : null}
                             {marketing.email || marketing.sms ? <span className="su-done-chip ah-light"><i aria-hidden="true" className="fa-solid fa-check" />마케팅 수신</span> : null}
                             {choice === "now" ? <span className="su-done-chip ah-light"><i aria-hidden="true" className="fa-solid fa-paw" />{petName.trim() || "우리 아이"} 함께 등록</span> : null}
                         </div>
@@ -1121,19 +1174,19 @@ export default function StickerSignup() {
 
                     {/* 갈림길 — 이미 가입된 이메일 · 받지 않는 이메일 · 그 밖 오류 */}
                     {errorKind === "email_taken" ? (
-                        <div className="mt-4"><EmailTakenNote email={email} onOther={() => goStep(2)} /></div>
+                        <div className="mt-4"><EmailTakenNote email={email} onOther={() => goTo("account")} /></div>
                     ) : errorKind === "email_domain" ? (
                         <div className="mt-4">
                             <Note tone="warn">
                                 <b className="ah-display block text-[13px]">이 이메일 주소로는 가입할 수 없어요</b>
                                 임시 · 일회용 이메일은 받지 않아요. 실제로 쓰는 다른 이메일을 넣어 주세요.
-                                <button type="button" onClick={() => goStep(2)} className="ah-display mt-1.5 block text-[12px] text-[#c4456f] underline underline-offset-2">이메일 바꾸기</button>
+                                <button type="button" onClick={() => goTo("account")} className="ah-display mt-1.5 block text-[12px] text-[#c4456f] underline underline-offset-2">이메일 바꾸기</button>
                             </Note>
                         </div>
                     ) : error ? <div className="mt-4"><Note tone="error">{error}</Note></div> : null}
 
                     <div className="mt-5 grid grid-cols-[auto_1fr] gap-2.5">
-                        <Patch tone="cream" small onClick={() => goStep(2)}><i aria-hidden="true" className="fa-solid fa-chevron-left text-[11px]" />이전</Patch>
+                        <Patch tone="cream" small onClick={() => goTo("account")}><i aria-hidden="true" className="fa-solid fa-chevron-left text-[11px]" />이전</Patch>
                         <Patch small disabled={!canSubmit} onClick={() => { if (!choice) { setTried(true); haptic("light"); return; } void submit(choice === "now"); }}>
                             {loading ? <><i aria-hidden="true" className="fa-solid fa-circle-notch fa-spin text-[11px]" />가입하는 중</> : <>{choice === "now" ? "우리 아이와 함께 가입" : "가입하기"}<i aria-hidden="true" className="fa-solid fa-user-plus text-[11px]" /></>}
                         </Patch>
@@ -1160,6 +1213,137 @@ export default function StickerSignup() {
         </DiaryBody>,
         // 색인 탭 — 지나온 단계로만 돌아감(앞 단계는 "다음" 버튼의 검사를 거쳐야 함)
         <DiaryTabs tabs={tabs} active={step} onPick={goPick} />,
+    );
+}
+
+/* ───────── 휴대폰 본인인증 — 웹 IdentityPanel 과 같은 안내 · 결과 갈림길을 스티커북으로(이메일 가입 · 간편 가입이 같이 씀) ─────────
+   처음: 이렇게 진행돼요(댕다방 · 인증기관 창 세 단계) · 확인하는 것 · 받는 정보 · 시작 와펜
+   결과: 인증 완료(이름 · 생년월일 · 휴대폰 · 통신사) / 이미 가입한 사람 / 만 14세 미만 / 재가입 제한 / 취소 · 시간 초과 · 실패(다시 하기) */
+export type IdentityState = { phase: "idle" } | { phase: "busy" } | { phase: "result"; result: IdentityResult };
+/** 다음 단계로 갈 수 있는가 — 웹 identityPasses 와 같은 조건 */
+export function identityPasses(state: IdentityState) {
+    return state.phase === "result" && state.result.status === "verified" && state.result.over14 && !state.result.existingAccount && !state.result.rejoinBlockedUntil;
+}
+const idDate = (value: string) => value.replace(/^(\d{4})-(\d{2})-(\d{2})$/, "$1. $2. $3");
+
+export function IdentityStep({ state, onStart, onRestart }: { state: IdentityState; onStart: () => void; onRestart: () => void }) {
+    // 결과 — 인증 완료 · 갈림길
+    if (state.phase === "result" && state.result.status === "verified") {
+        const result = state.result;
+        if (result.existingAccount) {
+            const isEmail = result.existingAccount.provider === "email";
+            return (
+                <div className="st-postit relative px-3.5 pb-3.5 pt-4" style={{ background: "#ffe1ea", rotate: "-0.5deg" }} data-branch="identity-duplicate">
+                    <Tape className="-top-2 left-6 h-3.5 w-11" color="rgba(255,232,170,.92)" style={{ rotate: "-4deg" }} />
+                    <div className="flex items-center gap-3">
+                        <Image src="/images/ui/stickers/my-profile.webp" alt="" width={44} height={44} className="st-diecut-img h-11 w-11 shrink-0 object-contain" />
+                        <span className="min-w-0 flex-1">
+                            <span className="ah-light block text-[10.5px] text-[#c4456f]">이미 가입한 사람</span>
+                            <span className="ah-display block text-[14.5px] leading-snug">{result.name}님 명의로 가입된 계정이 있어요</span>
+                        </span>
+                    </div>
+                    <p className="ah-display mt-2.5 rounded-full bg-white px-3 py-1.5 text-center text-[12.5px] text-[#7a6a63]">{result.existingAccount.maskedAccount}</p>
+                    <p className="ah-light mt-2 text-[11.5px] leading-snug text-[#b0597a]">한 사람은 한 계정만 만들 수 있어요. 쓰던 계정으로 로그인해 주세요.</p>
+                    <div className={`mt-3 grid gap-2 ${isEmail ? "grid-cols-2" : "grid-cols-1"}`}>
+                        <Patch small href={appLoginHref(null)}>그 계정으로 로그인</Patch>
+                        {isEmail ? <Patch small tone="cream" href="/forgot-password/">비밀번호 찾기</Patch> : null}
+                    </div>
+                    <button type="button" onClick={onRestart} className="ah-display mt-2.5 block w-full text-center text-[12px] text-[#c4456f] underline underline-offset-2">다른 명의로 인증</button>
+                </div>
+            );
+        }
+        if (!result.over14 || result.rejoinBlockedUntil) {
+            const under14 = !result.over14;
+            return (
+                <div className="st-postit relative px-3.5 pb-3.5 pt-4" style={{ background: "#f1ece6", rotate: "0.5deg" }} data-branch={under14 ? "identity-under14" : "identity-rejoin"}>
+                    <Tape className="-top-2 left-6 h-3.5 w-11" color="rgba(190,224,255,.88)" style={{ rotate: "-4deg" }} />
+                    <div className="flex items-center gap-3">
+                        <Image src={under14 ? "/images/ui/stickers/login-lock.webp" : "/images/ui/policy-info-192.webp"} alt="" width={44} height={44} className="h-11 w-11 shrink-0 object-contain" />
+                        <span className="min-w-0 flex-1">
+                            <span className="ah-light block text-[10.5px] text-[#8f7a70]">{under14 ? "만 14세 미만" : "탈퇴 후 다시 가입"}</span>
+                            <span className="ah-display block text-[14.5px] leading-snug">{under14 ? "지금은 가입할 수 없어요" : `${idDate(result.rejoinBlockedUntil ?? "")}부터 다시 가입할 수 있어요`}</span>
+                        </span>
+                    </div>
+                    <p className="ah-light mt-2.5 text-[11.5px] leading-snug" style={{ color: TEXT_SOFT }}>
+                        {under14 ? "만 14세 미만은 법정대리인(부모님 등)의 동의가 있어야 가입할 수 있어요. 법정대리인 동의 절차를 갖추기 전까지는 가입을 받지 않아요."
+                            : "가입 혜택을 여러 번 받는 일을 막기 위해, 탈퇴한 뒤 정해진 기간에는 같은 사람이 다시 가입할 수 없어요."}
+                    </p>
+                    <div className="mt-3"><Patch small tone="cream" href={under14 ? "/app/home-1/" : "/inquiry/?category=other#inquiry-form"}>{under14 ? "홈으로" : "1:1 문의하기"}</Patch></div>
+                </div>
+            );
+        }
+        return (
+            <div className="su-idok relative rounded-[16px] px-3.5 pb-3.5 pt-4 text-center" role="status" data-branch="identity-verified">
+                <span aria-hidden="true" className="su-idok-big mx-auto grid h-12 w-12 place-items-center rounded-full text-[18px] text-white"><i className="fa-solid fa-check" /></span>
+                <p className="ah-light mt-2 text-[10.5px] tracking-[.18em] text-[#1f9e75]">VERIFIED</p>
+                <p className="ah-display text-[16px]">본인인증이 끝났어요</p>
+                <dl className="mt-3 grid grid-cols-2 gap-1.5 text-left">
+                    {[["이름", result.name], ["생년월일", idDate(result.birthDate)], ["휴대폰", result.maskedPhone], ["통신사", result.carrier]].map(([label, value]) => (
+                        <div key={label} className="rounded-[10px] bg-white px-2.5 py-1.5">
+                            <dt className="ah-light text-[10px]" style={{ color: TEXT_SOFT }}>{label}</dt>
+                            <dd className="ah-display truncate text-[13px]">{value}</dd>
+                        </div>
+                    ))}
+                </dl>
+                <span className="mt-2.5 flex flex-wrap justify-center gap-1.5">
+                    <span className="su-done-chip ah-light"><i aria-hidden="true" className="fa-solid fa-check" />만 14세 이상</span>
+                    <span className="su-done-chip ah-light"><i aria-hidden="true" className="fa-solid fa-check" />가입 이력 없음</span>
+                </span>
+                <button type="button" onClick={onRestart} className="ah-display mt-2.5 text-[12px] text-[#7a6a63] underline decoration-dashed underline-offset-2">다른 명의로 다시 인증</button>
+            </div>
+        );
+    }
+
+    // 취소 · 시간 초과 · 실패 안내 + 처음 안내
+    const notice = state.phase === "result" ? (
+        state.result.status === "cancelled" ? { title: "본인인증을 취소했어요", text: "가입하려면 본인인증이 필요해요. 준비되면 다시 시작해 주세요." }
+            : state.result.status === "expired" ? { title: "인증 시간이 지났어요", text: "보안을 위해 인증 창은 10분 동안만 열려 있어요. 다시 시작해 주세요." }
+                : state.result.status === "failed" ? { title: "본인인증을 마치지 못했어요", text: state.result.message || "통신사 확인 중 문제가 생겼어요. 잠시 후 다시 시도해 주세요." }
+                    : null
+    ) : null;
+    const busy = state.phase === "busy";
+    const steps: Array<[string, string, string, string]> = [
+        ["댕다방", "아래 버튼을 눌러요", "인증기관 창이 새로 열려요.", "#ffe1ea"],
+        ["인증기관 창", "통신사를 고르고 정보를 넣어요", "이름 · 생년월일 · 휴대폰 번호를 넣고 문자 또는 PASS 앱으로 인증해요.", "#e3f2fb"],
+        ["댕다방", "결과를 확인하고 다음으로", "이름과 휴대폰 번호는 다음 단계에 자동으로 채워져요.", "#ffe1ea"],
+    ];
+    return (
+        <div>
+            {notice ? <div className="mb-3"><Note tone="warn"><b className="ah-display block text-[13px]">{notice.title}</b>{notice.text}</Note></div> : null}
+            {/* 이렇게 진행돼요 — 번호 스티커 세 줄(누가 하는지 꼬리표) */}
+            <div className="su-paper rounded-[16px] px-3.5 py-3.5">
+                <p className="ah-display text-[13px] text-[#3d8fb8]"><i aria-hidden="true" className="fa-solid fa-route mr-1 text-[11px]" />이렇게 진행돼요</p>
+                <ol className="mt-2.5 space-y-2.5">
+                    {steps.map(([owner, title, sub, tone], i) => (
+                        <li key={title} className="flex items-start gap-2.5">
+                            <span className="ah-display grid h-6 w-6 shrink-0 place-items-center rounded-full text-[12px] text-[#5a4038]" style={{ background: tone, boxShadow: "0 0 0 2px #fff, 0 3px 6px -3px rgba(90,60,50,.4)" }}>{i + 1}</span>
+                            <span className="min-w-0">
+                                <span className="ah-light mr-1.5 rounded-full bg-[#f6f1ec] px-1.5 py-px text-[10px] text-[#8f7a70]">{owner}</span>
+                                <span className="ah-display text-[13px]">{title}</span>
+                                <span className="ah-light mt-0.5 block text-[11px] leading-snug" style={{ color: TEXT_SOFT }}>{sub}</span>
+                            </span>
+                        </li>
+                    ))}
+                </ol>
+            </div>
+            {/* 확인하는 것 · 받는 정보 — 노란 메모 */}
+            <div className="st-postit relative mt-4 px-3.5 pb-3 pt-3.5" style={{ background: "#fff3a6", rotate: "-0.4deg" }}>
+                <Tape className="-top-2 right-8 h-3.5 w-11" color="rgba(200,240,215,.92)" style={{ rotate: "4deg" }} />
+                <p className="ah-display text-[13px]"><i aria-hidden="true" className="fa-solid fa-shield-halved mr-1 text-[11px] text-[#c98a12]" />확인하는 것 · 받는 정보</p>
+                <ul className="ah-light mt-1.5 space-y-1 text-[11.5px] leading-snug text-[#8f5e12]">
+                    <li><b className="ah-display text-[#6b4708]">중복 가입</b> 이미 가입한 사람인지 확인해요.</li>
+                    <li><b className="ah-display text-[#6b4708]">나이</b> 만 14세 이상인지 확인해요.</li>
+                    <li><b className="ah-display text-[#6b4708]">받는 정보</b> 이름 · 생년월일 · 성별 · 휴대폰 번호 · 중복가입 확인값(CI/DI). 주민등록번호는 받지 않아요.</li>
+                </ul>
+            </div>
+            {/* 시작 — 하늘 와펜(인증기관 창이 열림) */}
+            <div className="mt-4">
+                <Patch tone="mint" onClick={onStart} disabled={busy}>
+                    {busy ? <><i aria-hidden="true" className="fa-solid fa-circle-notch fa-spin text-[12px]" />인증 창에서 진행하고 있어요</> : <><i aria-hidden="true" className="fa-solid fa-mobile-screen-button text-[13px]" />{notice ? "본인인증 다시 하기" : "휴대폰 본인인증 시작"}</>}
+                </Patch>
+                <p className="ah-light mt-1.5 text-center text-[10.5px]" style={{ color: TEXT_SOFT }}>{busy ? "창을 닫으면 취소돼요" : "SKT · KT · LG U+ · 알뜰폰 · PASS 앱"}</p>
+            </div>
+        </div>
     );
 }
 
@@ -1428,6 +1612,9 @@ export const SIGNUP_CSS = `
 /* 가입 완료 — 보물 상자 톡 · 요일 스티커 톡 */
 .su-done-art { rotate: -5deg; animation: hc-pop .5s cubic-bezier(.3,1.6,.5,1) both; }
 .su-confetti { animation: hc-pop .45s cubic-bezier(.3,1.6,.5,1) both; }
+/* 본인인증 완료 — 민트 메모 · 체크 동그라미 스티커 */
+.su-idok { background: #f1fbf5; box-shadow: inset 0 0 0 1.5px #c8ecd9, 0 10px 16px -12px rgba(60,120,90,.4); }
+.su-idok-big { background: #3fbf8a; box-shadow: 0 0 0 3px #fff, 0 6px 10px -5px rgba(40,140,100,.55); animation: hc-pop .45s cubic-bezier(.3,1.6,.5,1) both; }
 /* 간편 가입 반려견 등록 창(마이와 같은 부품 MemberPetProfileCreateForm) — 남색 단추 · 칸을 앱 결(분홍 알약 · 크림 칸)로 */
 .su-petcreate button[class*="bg-indigo"], .su-petcreate button[class*="bg-neutral-9"] { border-radius: 999px; background: #f2789d; color: #fff; font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; box-shadow: inset 0 0 0 2px #d9547d, 0 8px 14px -8px rgba(200,80,120,.6); }
 .su-petcreate :is(input, select, textarea) { border-radius: 10px; border-color: #f3e3da; background: #fffaf5; }

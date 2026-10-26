@@ -1877,4 +1877,58 @@ html.ddb-app-mode .ddb-orderhelp .ddb-pf-hint i { color: #f48fac; }
 /* 창이 열린 동안 아래 탭바 숨김(다른 숨은 창과 같음) */
 html.ddb-app-mode body:has(.ddb-orderhelp) :is(nav[aria-label="앱 메뉴"], .app-care-fab) { visibility: hidden; }
 
+/* ── 33) 이메일 인증 칸(협업자 SignupEmailVerification — 앱 마이 첫 화면 · 앱 가입 혜택 인증 · 간편 가입 인증) — 앱 화면 어디서나 스티커북 결 ──
+   흰 종이 카드 · 제목 카페24 · 꼬리표 분홍 스티커 · 입력칸 흰 종이 · 주 단추 분홍 와펜 · 보조 단추 크림 와펜 · 안내 칸 메모(2026-10-26 사용자 "디테일").
+   문구 · 입력 · 인증 동작 그대로 ── */
+html.ddb-app-mode [data-signup-email-verification] { border: 0; border-radius: 4px 4px 16px 4px; background: #fffdf8; color: #3d2f2a;
+  font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; box-shadow: 0 0 0 1.5px #f3e6d6, 0 10px 16px -12px rgba(110, 80, 40, .45); }
+html.ddb-app-mode [data-signup-email-verification] h2 { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; color: #3d2f2a; }
+html.ddb-app-mode [data-signup-email-verification] h2 + span[class*="rounded-full"], html.ddb-app-mode [data-signup-email-verification] span[class*="rounded-full"][class*="text-[10px]"] {
+  background: #ffe1ea; color: #c4456f; box-shadow: 0 0 0 1.5px #fff, 0 3px 6px -3px rgba(200, 70, 110, .45); rotate: -2deg; }
+html.ddb-app-mode [data-signup-email-verification] p { color: #7a6a63; }
+html.ddb-app-mode [data-signup-email-verification] :is(input.input, input[type="email"], input[type="text"]) { height: 46px; border-color: transparent; border-radius: 14px; background: #fff;
+  color: #5a4038; font-weight: 700; box-shadow: 0 0 0 1.5px #f3e6d6, 0 4px 8px -6px rgba(110, 80, 40, .4); }
+html.ddb-app-mode [data-signup-email-verification] :is(input.input, input[type="email"], input[type="text"]):focus { outline: none; box-shadow: 0 0 0 2px #f283a3, 0 0 0 5px rgba(242, 131, 163, .15); }
+html.ddb-app-mode [data-signup-email-verification] label > span { color: #b07a8a; font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+html.ddb-app-mode [data-signup-email-verification] .btn-primary { ${PATCH_PINK} min-height: 44px; }
+html.ddb-app-mode [data-signup-email-verification] .btn:not(.btn-primary) { ${PATCH_CREAM} min-height: 44px; }
+html.ddb-app-mode [data-signup-email-verification] .btn:not(:disabled):active { transform: scale(.96); }
+html.ddb-app-mode [data-signup-email-verification] .btn:disabled { filter: saturate(.55); opacity: .6; }
+/* 인증번호 칸 · 결과 · 안내 — 메모지(테두리 대신 종이 그림자) */
+html.ddb-app-mode [data-signup-email-verification] :is(form, div, p)[class*="rounded-xl"][class*="border"] { border: 0; border-radius: 4px 4px 14px 4px; box-shadow: 0 0 0 1.5px #f3e6d6, 0 6px 10px -8px rgba(110, 80, 40, .4); }
+html.ddb-app-mode [data-signup-email-verification] :is(div, p)[class*="bg-emerald-50"] { background: #e6f7ee; }
+html.ddb-app-mode [data-signup-email-verification] :is(div, p)[class*="bg-amber-50"] { background: #fff3a6; }
+/* 앱 마이 첫 화면 — 이미 포스트잇 안이라 카드 겉모양은 빼고 안쪽만 */
+html.ddb-app-mode .my-verify [data-signup-email-verification] { padding: 2px 2px 0; border-radius: 0; background: transparent; box-shadow: none; }
+
+/* 주문 카드 아래 단추 — 두 칸 같은 폭(배송 문의 · 교환·반품 안내), 주문 취소 요청 · 구매 확정은 한 줄 가득(비율 맞춤) */
+${MYW} [data-live-fulfillment-actions] { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; width: 100%; }
+${MYW} [data-live-fulfillment-actions] > :is(a, button) { justify-content: center; width: 100%; min-width: 0; }
+${MYW} [data-live-fulfillment-actions] > :is([data-order-cancel], [data-order-confirm]) { grid-column: 1 / -1; }
+
+/* 고객센터 머리 판 단추(교환·반품 접수하기 · 자주 묻는 질문 등 cs-actions) — 흰 알약 대신 와펜, 두 칸 같은 폭 */
+${MYW} .cs-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); gap: 8px; }
+${MYW} .cs-actions > :is(a, button) { justify-content: center; min-width: 0; padding-inline: 10px; white-space: nowrap; font-size: 13px; }
+${MYW} .cs-actions > :is(a, button) i.fa-chevron-right { display: none; } /* 두 칸이 한 줄에 들어가게 끝 화살표는 뺌(와펜 자체가 단추) */
+${MYW} .cs-actions .cs-cta { ${PATCH_PINK} }
+${MYW} .cs-actions .cs-cta-sub { ${PATCH_CREAM} }
+${MYW} .cs-actions > :is(a, button):active { transform: scale(.96); }
+
+/* ── 34) 핫픽 전체(/best — 제품군마다 1~3위 + 추천) — 제목 구조가 바뀌어 목록 규칙이 안 걸리던 것(2026-10-26 "디테일")
+   제목 = 쇼핑 탭 테이프 이름표 · 개수 = 분홍 스티커(크레파스 세 색 글씨 대신) · 안내 = 노란 포스트잇 · 제품군 이름 카페24 · 전체 보기 = 크림 와펜 ── */
+${LIST} .ddb-hotpick-page .ddb-pl-title {
+  display: inline-block; width: fit-content; padding: 7px 20px 6px; rotate: -1deg; text-decoration: none; font-size: 1.55rem; line-height: 1.1; color: #a8480f;
+  font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400;
+  clip-path: polygon(0 0, 100% 0, 97% 20%, 100% 40%, 97% 60%, 100% 80%, 97% 100%, 0 100%, 3% 80%, 0 60%, 3% 40%, 0 20%);
+  background: repeating-linear-gradient(90deg, rgba(251,201,162,.9) 0 9px, rgba(253,224,200,.9) 9px 18px); filter: drop-shadow(0 6px 5px rgba(110, 60, 50, .18)); }
+${LIST} .ddb-hotpick-page .ddb-pl-title::after { display: none; }
+${LIST} .ddb-hotpick-page .ddb-pl-count { display: inline-block; margin-top: 10px; padding: 3px 10px; border-radius: 999px; background: #fff !important; color: #d4447a !important;
+  -webkit-text-fill-color: #d4447a; font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0;
+  box-shadow: 0 0 0 1.5px #f6c9d6, 0 3px 6px -4px rgba(110, 80, 40, .4); }
+${LIST} .ddb-hotpick-page .ddb-hotpick-note { position: relative; border-radius: 2px 2px 14px 2px; background: #fff3a6; color: #8f5e12; font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif;
+  rotate: -0.6deg; box-shadow: 0 8px 12px -8px rgba(110, 80, 40, .45); }
+${LIST} .ddb-hotpick-page .ddb-hotpick-group-title { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+${LIST} .ddb-hotpick-page .ddb-hotpick-more { ${PATCH_CREAM} min-height: 0; padding: 4px 11px 3px; font-size: 11.5px; }
+${LIST} .ddb-hotpick-page .ddb-hotpick-rank { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; box-shadow: 0 0 0 2px #fff, 0 4px 7px -4px rgba(90, 60, 50, .45); }
+
 `;

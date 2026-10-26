@@ -20,7 +20,7 @@ export function DiaryTabs({ tabs, active, onPick }: { tabs: { label: string; col
         <div className="relative z-[1] -mb-[3px] flex gap-1.5 pl-8 pr-2" role="tablist" aria-label="쪽 고르기">
             {tabs.map((t, i) => (
                 <button key={t.label} type="button" role="tab" aria-selected={active === i} onClick={() => { if (i !== active) { haptic("light"); onPick(i); } }}
-                    className={`dt-tab ah-display ${active === i ? "is-on" : ""}`} style={{ ["--c" as string]: t.color }}>
+                    className={`dt-tab ah-display whitespace-nowrap ${active === i ? "is-on" : ""}`} style={{ ["--c" as string]: t.color }}>
                     {t.label}
                 </button>
             ))}
