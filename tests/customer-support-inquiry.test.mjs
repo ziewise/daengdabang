@@ -94,9 +94,11 @@ test("FAQ, order, and return destinations have persistent button affordances", a
         source("app/return/page.tsx"),
     ]);
 
-    for (const destination of ["/faq", "/mypage", "/return"]) {
+    for (const destination of ["/faq", "/return"]) {
         assert.match(inquiry, new RegExp(`href="${destination.replace("/", "\\/")}"`));
     }
+    // 주문 · 배송 조회 카드는 마이페이지의 주문 내역으로 바로(2026-10-26 사용자: 대시보드로 가던 것)
+    assert.match(inquiry, /href="\/mypage(?:\/orders\/)?"/);
     assert.match(faqPage, /1:1 문의 바로 작성/);
     assert.match(faqClient, /교환·반품 기준 보기/);
     assert.match(faqClient, /교환·반품 접수/);
