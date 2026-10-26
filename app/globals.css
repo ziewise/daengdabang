@@ -4858,3 +4858,86 @@ html:not(.ddb-app-mode) :is(.ddb-hero-band.is-sky, .ddb-hero-band[data-tone="sky
 @media (max-width: 640px) {
     html:not(.ddb-app-mode) .ddb-hero-band.ddb-hero-band { --ddb-band-w: 10px; }
 }
+
+/* ═════════ 입혀보기 진행 창 · 알림 단추(2026-10-26 사용자: 작게 줄어든 창 · 검정 알림 단추도 웹 결로) ═════════
+   lib/pet-tryon-background.tsx 의 data-tryon-dock — panel(작은 진행 창) · alert(다시 로그인 안내) · pill(오른쪽 아래 알림 단추).
+   흰 종이 쿠션 + 연보라 머리 띠 · 주아 제목 · 분홍/흰 알약 단추 · 파스텔 진행 막대, 검정 알약 → 흰 쿠션 알약. 기능 · 문구 그대로, 웹만 */
+html:not(.ddb-app-mode) :is(section[data-tryon-dock="panel"], section[data-tryon-dock="alert"]) {
+    --dock-jua: var(--font-jua), var(--font-wanted-sans), sans-serif;
+    border: 0;
+    border-radius: 28px;
+    background: #fffdf8;
+    box-shadow: 0 0 0 6px rgb(255 255 255 / 60%), 0 28px 50px -24px rgb(60 40 120 / 45%);
+
+    /* 머리 — 연보라 띠(다시 로그인 안내는 크림 노랑) · 꼬리표 손글씨 · 주아 제목 */
+    & > div:first-child { border: 0; background: linear-gradient(120deg, #f3f0fe, #f8f5ff 55%, #fdf7ff); box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
+    & > div:first-child p:first-child {
+        width: fit-content;
+        background: repeating-linear-gradient(172deg, #07849e 0 5px, #ef476f 5px 10px, #e98708 10px 15px);
+        -webkit-background-clip: text;
+        background-clip: text;
+        font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
+        letter-spacing: 0.08em;
+        -webkit-text-fill-color: transparent;
+    }
+    & h2 { color: #1e293b; font-family: var(--dock-jua); font-size: 16px; font-weight: 400; }
+    & > div:first-child button { background: #fff; color: #64748b; box-shadow: 0 6px 12px -8px rgb(15 23 42 / 40%); }
+
+    /* 여러 작업 목록 · 사진 두 칸 — 회색 → 크림 */
+    & [class*="bg-neutral-50"] { border-color: transparent; background-color: #faf6ef; }
+    & .grid > div[class*="rounded-xl"] { border-radius: 18px; box-shadow: inset 0 0 0 1.5px #efe5d8; }
+    & button[class*="rounded-xl"][class*="border-indigo-300"] { border-color: #f7c5d4; }
+
+    /* 글 · 칸 — 인디고 → 연보라, 칸은 테두리 없는 쿠션 */
+    & [class*="text-indigo-"] { color: #6b51c9; }
+    & [class*="text-indigo-9"] { color: #4c3d8f; }
+    & [class*="bg-indigo-50"], & [class*="bg-indigo-100"] { background-color: #f3f0fe; }
+    & :is(div, p)[class*="rounded-"]:is([class*="bg-indigo-50"], [class*="bg-amber-50"], [class*="bg-neutral-50"]):not([class*="rounded-full"]) { border: 0; border-radius: 18px; }
+    & [class*="bg-amber-50"] { background-color: #fff6e3; }
+
+    /* 진행 막대 — 크림 길 · 분홍→연보라 */
+    & div[role="progressbar"] { background: #f1ece4; }
+    & div[role="progressbar"] > div { background-image: linear-gradient(90deg, #f7a8bf, #cfc3f5); }
+
+    /* 단추 — 주요 분홍 알약 · 보조 흰 알약 */
+    & :is(button, a)[class*="bg-indigo-6"] {
+        border: 0;
+        border-radius: 999px;
+        background: #e9789a;
+        color: #fff;
+        font-family: var(--dock-jua);
+        font-size: 13.5px;
+        font-weight: 400;
+        box-shadow: inset 0 2px 0 rgb(255 255 255 / 28%), 0 12px 18px -12px rgb(200 80 120 / 80%);
+    }
+    & :is(button, a)[class*="bg-indigo-6"]:hover { background: #e26690; }
+    & button[class*="border-neutral-200"] {
+        border: 0;
+        border-radius: 999px;
+        background: #fff;
+        color: #334155;
+        font-family: var(--dock-jua);
+        font-size: 13.5px;
+        font-weight: 400;
+        box-shadow: inset 0 0 0 2px #e6dccf;
+    }
+    & button[class*="border-neutral-200"]:hover { background: #fff8f2; }
+    & input { border-radius: 14px; border-color: #efe5d8; }
+}
+
+/* 다시 로그인 안내 — 머리 띠 크림 노랑 */
+html:not(.ddb-app-mode) section[data-tryon-dock="alert"] > div:first-child { background: linear-gradient(120deg, #fff6e3, #fffaf0); }
+
+/* 오른쪽 아래 알림 단추 — 검정 알약 → 흰 쿠션 알약(분홍 테 · 발바닥 동그라미), 완성이면 민트 */
+html:not(.ddb-app-mode) button[data-tryon-dock="pill"] {
+    background: #fff;
+    color: #1e293b;
+    box-shadow: inset 0 0 0 2px #f7c5d4, 0 16px 28px -16px rgb(200 80 120 / 60%);
+}
+
+html:not(.ddb-app-mode) button[data-tryon-dock="pill"] > span:first-child { background: #ffeef3; color: #e2557a; }
+html:not(.ddb-app-mode) button[data-tryon-dock="pill"] > span:first-child > span { border-color: rgb(233 120 154 / 45%); }
+html:not(.ddb-app-mode) button[data-tryon-dock="pill"] > span:last-child > span:first-child { font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 13.5px; font-weight: 400; }
+html:not(.ddb-app-mode) button[data-tryon-dock="pill"] > span:last-child > span:last-child { color: #8391a3; }
+html:not(.ddb-app-mode) button[data-tryon-dock="pill"][data-ready] { background: #e9f8f1; color: #0f6e56; box-shadow: inset 0 0 0 2px #a8e0c6, 0 16px 28px -16px rgb(18 161 122 / 55%); }
+html:not(.ddb-app-mode) button[data-tryon-dock="pill"][data-ready] > span:first-child { background: #fff; color: #12a17a; }

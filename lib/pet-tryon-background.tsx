@@ -1450,6 +1450,8 @@ export function PetTryOnTaskProvider({ children }: { children: ReactNode }) {
                         role="alert"
                         aria-live="assertive"
                         className="pointer-events-auto overflow-hidden rounded-2xl border border-amber-200 bg-white shadow-2xl"
+                        // 웹 겉모양 이름표(2026-10-26) — 꾸밈은 app/globals.css "입혀보기 진행 창 · 알림 단추", 웹만
+                        data-tryon-dock="alert"
                     >
                         <div className="border-b border-amber-100 bg-amber-50 px-4 py-3">
                             <p className="text-[11px] font-black tracking-wide text-amber-800">DDB SMART FIT</p>
@@ -1485,6 +1487,8 @@ export function PetTryOnTaskProvider({ children }: { children: ReactNode }) {
                     {panelOpen && (
                         <section
                             className="pointer-events-auto w-full overflow-hidden rounded-2xl border border-indigo-100 bg-white shadow-2xl"
+                            // 웹 겉모양 이름표(2026-10-26) — 작게 줄어든 진행 창. 꾸밈은 app/globals.css, 웹만
+                            data-tryon-dock="panel"
                         >
                             <div className="flex items-start justify-between gap-3 border-b border-neutral-100 px-4 py-3">
                                 <div>
@@ -1669,6 +1673,9 @@ export function PetTryOnTaskProvider({ children }: { children: ReactNode }) {
                         <button
                             type="button"
                             onClick={() => setPanelOpen(true)}
+                            // 웹 겉모양 이름표(2026-10-26) — 오른쪽 아래 진행 알림 단추(완성이면 data-ready). 꾸밈은 app/globals.css, 웹만
+                            data-tryon-dock="pill"
+                            data-ready={readyCount > 0 ? "true" : undefined}
                             className={`pointer-events-auto inline-flex min-h-12 max-w-full items-center gap-3 rounded-full px-4 py-2.5 text-left shadow-xl transition hover:-translate-y-0.5 ${readyCount > 0 ? "bg-emerald-600 text-white" : "bg-neutral-950 text-white"}`}
                         >
                             <span className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/15">

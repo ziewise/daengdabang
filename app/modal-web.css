@@ -152,3 +152,77 @@ html:not(.ddb-app-mode) section[data-tryon-web] {
     /* 진행 막대 · 점 — 연보라 */
     & div:not(button)[class*="bg-indigo-6"], & div:not(button)[class*="bg-indigo-7"], & span[class*="bg-indigo-6"], & span[class*="bg-indigo-7"] { background-color: #8b76d8; }
 }
+
+/* ───────── 입혀보기 창 본문(2026-10-26 사용자: "우리 웹 스타일 컨셉이 아니야") ─────────
+   머리만 크레파스 결이던 것 → 창 전체를 따뜻한 종이 + 흰 테, 왼쪽 사진은 크림 쿠션 액자, 오른쪽 조작 칸은 줄 없이 쿠션 칸 · 주아 이름표 ·
+   둥근 선택 상자, 진행 막대 · 단계 칩 · 불러오는 판도 분홍 · 연보라 파스텔. 기능 · 문구 · 배치는 그대로, 웹만 */
+html:not(.ddb-app-mode) section[data-tryon-web] {
+    background: #fffdf8 radial-gradient(rgb(180 150 110 / 8%) 1px, transparent 1.3px);
+    background-size: auto, 7px 7px;
+    box-shadow: 0 0 0 10px rgb(255 255 255 / 55%), 0 40px 80px -30px rgb(15 23 42 / 50%);
+
+    /* 왼쪽 사진 — 회색 칸 → 크림 쿠션 액자(가장자리 여백 · 둥근 모서리) */
+    & > div.grid > div.relative:first-child {
+        margin: 18px 0 18px 18px;
+        overflow: hidden;
+        border-radius: 28px;
+        background: #f6f0e7;
+        box-shadow: inset 0 0 0 1.5px #efe5d8, inset 0 3px 0 rgb(255 255 255 / 80%);
+    }
+
+    /* 오른쪽 조작 칸 — 가르는 줄 없이 */
+    & aside { border: 0 !important; }
+
+    /* 이름표(입혀볼 아이 · 입혀볼 색상) — 주아 */
+    & aside label > span:first-child, & aside div.mb-2 > span:first-child {
+        color: #334155;
+        font-family: var(--md-jua);
+        font-size: 15px;
+        font-weight: 400;
+    }
+
+    /* 오른쪽 위 "대표 색상" 같은 보조 글 — 분홍 */
+    & aside div.mb-2 > span[class*="text-indigo-"] { color: #d0436d; }
+
+    /* 아이 고르기 — 회색 테 상자 → 크림 둥근 상자 */
+    & aside select.input {
+        height: 48px;
+        border: 0;
+        border-radius: 18px;
+        background-color: #fbf7f1;
+        box-shadow: inset 0 0 0 1.5px #efe5d8;
+        color: #1e293b;
+        font-weight: 800;
+    }
+
+    & aside select.input:focus { outline: none; box-shadow: inset 0 0 0 2px #f7a8bf, 0 0 0 4px rgb(247 168 191 / 22%); }
+
+    /* 작은 안내 글 — 부드러운 회청 */
+    & aside p[class*="text-neutral-500"] { color: #8391a3; }
+
+    /* 안내 · 확인 칸 — 테두리 없는 파스텔 쿠션(연보라 · 크림 노랑 · 흰) */
+    & :is(div, p)[class*="rounded-"][class*="border"]:is([class*="bg-indigo-50"], [class*="bg-amber-50"], [class*="bg-white"]):not([class*="rounded-full"]) {
+        border: 0;
+        border-radius: 22px;
+        box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%);
+    }
+
+    & :is(div, p)[class*="rounded-"][class*="bg-amber-50"]:not([class*="rounded-full"]) { background-color: #fff6e3; }
+    & :is(div, p)[class*="rounded-"][class*="border"][class*="bg-white"]:not([class*="rounded-full"]) { box-shadow: inset 0 0 0 1.5px #efe5d8; }
+    & [class*="text-indigo-9"] { color: #4c3d8f; }
+
+    /* 진행 단계 칩 — 둥근 알약 */
+    & div[aria-label] > div[class*="rounded-lg"][class*="border"] { border-radius: 999px; }
+
+    /* 진행 막대 — 회색 길 → 크림 길, 인디고 → 분홍 · 연보라 */
+    & div[role="progressbar"] { background: #f1ece4; }
+    & div[role="progressbar"] > div { background-image: linear-gradient(90deg, #f7a8bf, #cfc3f5); }
+
+    /* 만드는 중 덮개 — 검은 덮개 → 연한 보라 덮개, 안내 판은 종이 쿠션 */
+    & div.absolute.inset-0[class*="bg-neutral-950"] { background: rgb(76 61 143 / 26%); }
+    & div.absolute.inset-0[class*="bg-neutral-950"] > div { border-radius: 26px; background: #fffdf8; box-shadow: 0 0 0 6px rgb(255 255 255 / 60%), 0 24px 40px -24px rgb(40 30 80 / 50%); }
+
+    /* 확인 단추(민트) · 다른 점 단추(크림) — 알약 */
+    & button[class*="bg-emerald-6"] { border-radius: 999px; background: #12a17a; font-family: var(--md-jua); font-weight: 400; }
+    & button[class*="border-amber-4"] { border: 0; border-radius: 999px; box-shadow: inset 0 0 0 2px #f2cf8f; font-family: var(--md-jua); font-weight: 400; }
+}
