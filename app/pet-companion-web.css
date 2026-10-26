@@ -170,3 +170,22 @@ html:not(.ddb-app-mode) [data-pet-companion-dialog] {
         & > section > footer { padding: 12px 18px 16px; }
     }
 }
+
+/* ═════════ 산책 친구 안내 · 추천 말풍선(휴대폰) — 2026-10-26 사용자 "세로로 너무 길게 나와 보기 안 좋아" ═════════
+   협업자 꾸밈(PetCompanionLayer.module.css ≤410px)이 강아지 왼쪽에 뜨는 말풍선(data-bubble-side="left", 메뉴 · 헤더 안내)을
+   폭 136px 로 묶어, 안내 한 문장이 열 줄 넘게(높이 약 270px) 늘어났음. 웹에서만 폭을 화면 안에서 넉넉하게(최대 240px) 풀고,
+   휴대폰 말풍선 제목 · 글자를 조금 줄여 전체 높이를 낮춤. 위치 · 문구 · 동작은 그대로(말풍선 오른쪽 끝은 협업자 자리 그대로 강아지 옆) */
+@media (max-width: 680px) {
+    html:not(.ddb-app-mode) div[data-pet-companion-speech] {
+        padding: 11px 32px 12px 14px;
+        font-size: 12.5px;
+        line-height: 1.5;
+    }
+    html:not(.ddb-app-mode) div[data-pet-companion-speech] > span:first-child { margin-bottom: 2px; font-size: 16px; }
+    html:not(.ddb-app-mode) div[data-pet-companion-speech] > :is(a, button:not([aria-label$="닫기"])) { margin-top: 8px; padding: 6px 13px 7px; font-size: 12px; }
+}
+@media (max-width: 410px) {
+    html:not(.ddb-app-mode) [data-bubble-side="left"] div[data-pet-companion-speech] {
+        width: min(240px, calc(100vw - 40px));
+    }
+}
