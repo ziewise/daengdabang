@@ -9,7 +9,9 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <!-- 2026-10-26 사용자: "우리 앱에 다크 모드는 애초에 없다" — 앱 화면 테마를 늘 밝은 테마로 고정.
+         예전 DayNight 는 휴대폰 다크 모드를 따라가, 앱 안 웹 화면이 다크로 읽혀 어두운 배경 · 앱 바 규칙이 켜졌음 -->
+    <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:background">@null</item>
