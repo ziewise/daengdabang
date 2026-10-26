@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Base application theme. -->
+    <!-- Base application theme. 2026-10-26: 모든 테마에 forceDarkAllowed=false — 휴대폰 강제 다크가 앱을 어둡게 칠하지 않게 -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -12,6 +13,7 @@
     <!-- 2026-10-26 사용자: "우리 앱에 다크 모드는 애초에 없다" — 앱 화면 테마를 늘 밝은 테마로 고정.
          예전 DayNight 는 휴대폰 다크 모드를 따라가, 앱 안 웹 화면이 다크로 읽혀 어두운 배경 · 앱 바 규칙이 켜졌음 -->
     <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:background">@null</item>
@@ -19,6 +21,7 @@
 
 
     <style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen">
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
         <item name="android:background">@drawable/splash</item>
     </style>
 </resources>
