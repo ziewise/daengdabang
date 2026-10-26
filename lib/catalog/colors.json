@@ -5894,6 +5894,12 @@
       "file": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001240/image/detail/1000001240_detail_362.jpg",
       "name": "리프 피쉬",
       "chip": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001240/image/detail/1000001240_detail_362.jpg",
+      "imageRegion": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 0.5
+      },
       "imageWidth": 1000,
       "imageHeight": 1000
     },
@@ -6005,6 +6011,12 @@
       "file": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001240/image/detail/1000001240_detail_863.jpg",
       "name": "문나잇 페이드",
       "chip": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001240/image/detail/1000001240_detail_863.jpg",
+      "imageRegion": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 0.5
+      },
       "imageWidth": 1000,
       "imageHeight": 1000
     }
@@ -6066,6 +6078,12 @@
       "file": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001241/image/detail/1000001241_detail_332.jpg",
       "name": "리프 피쉬",
       "chip": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001241/image/detail/1000001241_detail_332.jpg",
+      "imageRegion": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 0.5
+      },
       "imageWidth": 1000,
       "imageHeight": 1000
     },
@@ -6177,6 +6195,12 @@
       "file": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001241/image/detail/1000001241_detail_869.jpg",
       "name": "문나잇 페이드",
       "chip": "https://godomall-storage.cdn-nhncommerce.com/4e7351c74dc6924932558247413b69d2/goods/1000001241/image/detail/1000001241_detail_869.jpg",
+      "imageRegion": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 0.5
+      },
       "imageWidth": 1000,
       "imageHeight": 1000
     }
