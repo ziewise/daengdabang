@@ -14,8 +14,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { hasVerifiedPetPhoto, useAuth } from "@/lib/store";
+import { hasVerifiedPetPhoto, useAuth, useStore } from "@/lib/store";
 import SignupEmailVerification from "@/components/auth/SignupEmailVerification";
+import { findProduct } from "@/lib/shop";
+import ShopProductCard, { SHOP_CARD_CSS } from "../shop/ShopProductCard";
 import { convertRewardPointsToDaengLabCoins, getCustomerToken, loadDaengLabWallet, type DaengLabWallet } from "@/lib/customer-api";
 import { ddbApiBase } from "@/lib/ddb-api-base";
 import { formatOrderAmount, loadTossOrderHistory, orderDateLabel, orderStatusLabel, type TossOrderHistoryItem } from "@/lib/toss-order-history";
@@ -117,13 +119,21 @@ export default function StickerMy() {
     }, [member, accessToken, publishWallet]);
 
     // 적립금 → 코인 바꾸기 — 웹 지갑 카드의 submitConversion 과 같은 조건 · 같은 함수 · 같은 재시도 키 규칙.
-    // 웹은 바꿀 적립금을 입력하지만(기본값 = 전환 단위), 앱은 한 번에 전환 단위만큼(되돌릴 수 없음 안내 그대로)
+    // 2026-10-26 사용자: 웹처럼 바꿀 금액을 고름 — 앱은 숫자 입력 대신 −/＋ 스티커 단추로 전환 단위씩(단위 이상 · 가진 적립금 이하 · 단위의 배수, 웹과 같은 검사)
     const [converting, setConverting] = useState(false);
+    const [pickedPoints, setPickedPoints] = useState(0); // 0 = 아직 안 고름(전환 단위)
     const retryKeyRef = useRef<{ points: number; key: string } | null>(null);
-    const canConvert = Boolean(wallet && wallet.rewardPointsDebt === 0 && wallet.pointConversionUnit <= wallet.rewardPoints);
+    const unit = wallet?.pointConversionUnit ?? 1000;
+    const maxPoints = wallet ? Math.floor(wallet.rewardPoints / unit) * unit : 0;
+    const points = Math.min(Math.max(pickedPoints || unit, unit), Math.max(unit, maxPoints));
+    const coinsFor = wallet ? Math.floor(points / unit) * wallet.coinConversionUnit : 0;
+    const canConvert = Boolean(wallet && wallet.rewardPointsDebt === 0 && points >= unit && points % unit === 0 && points <= wallet.rewardPoints);
+    const stepPoints = (dir: 1 | -1) => {
+        haptic("light");
+        setPickedPoints(Math.min(Math.max(points + dir * unit, unit), Math.max(unit, maxPoints)));
+    };
     const convert = async () => {
         if (!wallet || converting || !canConvert) return;
-        const points = wallet.pointConversionUnit;
         const retry = retryKeyRef.current;
         const key = retry?.points === points ? retry.key : requestKey();
         retryKeyRef.current = { points, key };
@@ -131,6 +141,7 @@ export default function StickerMy() {
         try {
             const converted = await convertRewardPointsToDaengLabCoins(points, key, accessToken);
             retryKeyRef.current = null;
+            setPickedPoints(0);
             publishWallet(converted.wallet);
             haptic("medium");
             flyCoin(convertRef.current, coinRef.current, 3);
@@ -159,10 +170,13 @@ export default function StickerMy() {
     }, [member, user?.apiAccessToken]);
 
     const pets = user?.pets ?? [];
+    // 찜한 상품 — 웹 마이페이지와 같은 방법(찜 번호 → 상품, 없어진 상품은 뺌)
+    const { state: storeState } = useStore();
+    const wished = storeState.wishlist.map(findProduct).filter((product): product is NonNullable<ReturnType<typeof findProduct>> => Boolean(product));
 
     return (
         <div className="relative isolate flex-1 overflow-x-hidden break-keep px-3.5 pb-12 pt-4" style={{ color: TEXT }}>
-            <style>{KIT_CSS + HC_CSS + STICKER_CSS + PARTS_CSS + MY_CSS}</style>
+            <style>{KIT_CSS + HC_CSS + STICKER_CSS + PARTS_CSS + SHOP_CARD_CSS + MY_CSS}</style>
             <div aria-hidden="true" className="ah-bg pointer-events-none fixed inset-0 -z-10" />
             <div className="mx-auto w-full max-w-md">
                 <DiaryBody pageKey={member ? "member" : "guest"} dir={1}>
@@ -214,11 +228,21 @@ export default function StickerMy() {
                                         <span className="ah-display block text-[18px] tabular-nums">{wallet ? `${wallet.rewardPoints.toLocaleString("ko-KR")}P` : "—"}</span>
                                     </span>
                                 </div>
+                                {/* 바꿀 적립금 고르기 — −/＋ 동그란 스티커(전환 단위씩) · 가운데 금액 → 코인 */}
+                                <div className="relative mt-3 flex items-center justify-between gap-2" role="group" aria-label="바꿀 적립금 고르기">
+                                    <button type="button" onClick={() => stepPoints(-1)} disabled={!wallet || points <= unit || converting} aria-label={`${unit.toLocaleString("ko-KR")}P 줄이기`}
+                                        className="my-step ah-display grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white text-[15px] text-[#c4560f] disabled:opacity-40">−</button>
+                                    <span className="ah-display min-w-0 flex-1 text-center text-[13.5px] tabular-nums" aria-live="polite">
+                                        {points.toLocaleString("ko-KR")}P <i aria-hidden="true" className="fa-solid fa-arrow-right mx-0.5 text-[10px] text-[#c79a3a]" /> {coinsFor}C
+                                    </span>
+                                    <button type="button" onClick={() => stepPoints(1)} disabled={!wallet || points >= maxPoints || converting} aria-label={`${unit.toLocaleString("ko-KR")}P 늘리기`}
+                                        className="my-step ah-display grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white text-[15px] text-[#c4560f] disabled:opacity-40">＋</button>
+                                </div>
                                 <button ref={convertRef} type="button" onClick={() => void convert()} disabled={!canConvert || converting}
-                                    className="ah-display relative mt-3 w-full rounded-full bg-white/90 py-2.5 text-[13px] text-[#c4560f] shadow-[0_6px_12px_-8px_rgba(150,100,30,.6)] disabled:opacity-50">
-                                    {converting ? "바꾸는 중…" : (<>적립금 {(wallet?.pointConversionUnit ?? 1000).toLocaleString("ko-KR")}P <i aria-hidden="true" className="fa-solid fa-arrow-right mx-0.5 text-[11px]" /> {wallet?.coinConversionUnit ?? 10}코인 바꾸기</>)}
+                                    className="ah-display relative mt-2.5 w-full rounded-full bg-white/90 py-2.5 text-[13px] text-[#c4560f] shadow-[0_6px_12px_-8px_rgba(150,100,30,.6)] disabled:opacity-50">
+                                    {converting ? "바꾸는 중…" : (<>적립금 {points.toLocaleString("ko-KR")}P <i aria-hidden="true" className="fa-solid fa-arrow-right mx-0.5 text-[11px]" /> {coinsFor}코인 바꾸기</>)}
                                 </button>
-                                <p className="ah-light relative mt-1.5 text-center text-[10.5px] text-[#a07a3e]">바꾼 코인은 되돌릴 수 없어요{wallet ? ` · 행동 · 소리 분석 1회 ${wallet.analysisCoinCost}코인` : ""}</p>
+                                <p className="ah-light relative mt-1.5 text-center text-[10.5px] text-[#a07a3e]">{unit.toLocaleString("ko-KR")}P 단위로 바꿔요 · 바꾼 코인은 되돌릴 수 없어요{wallet ? ` · 행동 · 소리 분석 1회 ${wallet.analysisCoinCost}코인` : ""}</p>
                                 {/* 빚 안내 — 웹 지갑 카드와 같은 조건(적립금 · 코인 빚이 있을 때) · 같은 문구. 빚이 있으면 바꾸기 버튼이 잠기는 이유 */}
                                 {wallet && (wallet.rewardPointsDebt > 0 || wallet.daengLabCoinsDebt > 0) ? (
                                     <p className="ah-light relative mt-2 rounded-[4px_4px_12px_4px] bg-[#ffe1ea] px-3 py-2 text-[11px] leading-relaxed text-[#b23a5e]" style={{ rotate: "-0.5deg" }}>
@@ -272,6 +296,26 @@ export default function StickerMy() {
                             ) : (
                                 <Link href="/mypage/orders/" className="ah-light mt-3 block rounded-[4px_4px_14px_4px] bg-[#fffbea] px-4 py-3 text-[12.5px] shadow-[0_6px_10px_-8px_rgba(110,80,40,.45)]" style={{ color: TEXT_SOFT }}>
                                     {ordersError ? "주문 내역을 불러오지 못했어요. 주문 내역에서 다시 확인해 주세요." : orders ? "아직 주문이 없어요." : "주문 내역을 확인하고 있어요."}
+                                </Link>
+                            )}
+
+                            {/* 찜한 상품 — 웹 마이페이지 찜 목록과 같은 자료(store.wishlist → findProduct), 하트를 다시 누르면 빠짐(앱 상품 카드 그대로) */}
+                            <SectionLabel className="mt-6" icon="fa-heart">찜한 상품{wished.length ? ` ${wished.length}` : ""}</SectionLabel>
+                            {wished.length > 0 ? (
+                                <ul className="my-shelf -mr-3 mt-3.5 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-3 pr-3 pt-2.5" aria-label="찜한 상품">
+                                    {wished.map((product, i) => (
+                                        <li key={product.id} className="w-[10.4rem] shrink-0 snap-start"><ShopProductCard product={product} index={i} /></li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <Link href="/app/sticker/shop/" className="my-wish-empty st-postit relative mt-3 flex items-center gap-3 px-3.5 pb-3 pt-3.5" style={{ background: "#ffe1ea", rotate: "-0.6deg" }}>
+                                    <Tape className="-top-2 left-6 h-3.5 w-11" color="rgba(255,232,170,.92)" style={{ rotate: "-4deg" }} />
+                                    <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white text-[16px] text-[#e0557f]"><i aria-hidden="true" className="fa-solid fa-heart" /></span>
+                                    <span className="min-w-0 flex-1">
+                                        <span className="ah-display block text-[13.5px] text-[#c4456f]">아직 찜한 상품이 없어요</span>
+                                        <span className="ah-light block text-[11px] text-[#b0597a]">상품 카드의 하트를 누르면 여기에 모여요</span>
+                                    </span>
+                                    <i aria-hidden="true" className="fa-solid fa-chevron-right text-[10px] text-[#e8a2b8]" />
                                 </Link>
                             )}
 
@@ -331,6 +375,13 @@ function LogoutConfirm({ onCancel, onConfirm }: { onCancel: () => void; onConfir
 
 /* 마이 화면 CSS */
 const MY_CSS = `
+/* 2026-10-26 — 적립금 고르기 −/＋ 동그란 스티커(누르면 꾹) · 찜한 상품 선반(스크롤 막대 없음) · 빈 찜 포스트잇 */
+.my-step { box-shadow: 0 0 0 2px #f6dca8, 0 5px 9px -6px rgba(150,100,30,.6); -webkit-tap-highlight-color: transparent; transition: transform .3s cubic-bezier(.3,1.6,.5,1); }
+.my-step:not(:disabled):active { transform: scale(.85); }
+.my-shelf { scrollbar-width: none; }
+.my-shelf::-webkit-scrollbar { display: none; }
+.my-wish-empty { -webkit-tap-highlight-color: transparent; transition: transform .35s cubic-bezier(.3,1.6,.5,1); }
+.my-wish-empty:active { transform: scale(.96); }
 /* 이름표 스티커 */
 .my-tag { background: #fffdf6; box-shadow: 0 0 0 1.5px #f3e6d6, 0 12px 20px -14px rgba(110,80,40,.55); }
 /* 코인 봉투: 버터색 봉투 + 위 덮개 */

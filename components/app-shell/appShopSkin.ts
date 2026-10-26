@@ -1809,4 +1809,72 @@ html.ddb-app-mode :is(button, a):has(> i:is(.fa-xmark, .fa-trash-can, .fa-trash)
 /* 케어톡 머리의 비우기(휴지통) · 닫기 — 그림 32px */
 html.ddb-app-mode section[aria-label="댕다방 케어톡"] > header button > i:is(.fa-xmark, .fa-trash-can) { font-size: 19px !important; }
 
+/* ── 32) 주문 내역 · 상세(2026-10-26 사용자: 웹에만 있던 주문 취소 요청 · 상품별 반품 신청 · 구매 확정 · 주문 도움 창을 앱에도) ──
+   주문 카드: 진행 단계는 도장 칩 줄 · 상품 줄 "반품 신청"은 크림 와펜 알약(금액 · 상품 보기는 앱 카드에 이미 있어 숨김).
+   창(주문 도움 = 교환·반품 안내 · 문의 · 주문 취소 요청 · 반품 신청, 구매 확정): 점 무늬 속지 + 테이프 · 머리는 바느질 점선 ·
+   제목은 테이프 이름표 · 주문 표는 크래프트 메모 · 안내 칸은 메모지 · 주 버튼 분홍 와펜 · 보조 버튼 크림 와펜. 문구 · 입력 · 접수 동작 그대로 ── */
+/* 진행 단계 — 도장 칩(지난 단계 민트 · 지금 분홍 · 남은 단계 크림) */
+${MYW} .mp-order-steps { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; padding: 0; list-style: none; }
+${MYW} .mp-order-steps li { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px 3px 4px; border-radius: 999px; background: #fff6ee; color: #a8968d;
+  font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; font-size: 11px; box-shadow: inset 0 0 0 1.5px #f3e3da; }
+${MYW} .mp-order-steps li > span { display: grid; place-items: center; width: 17px; height: 17px; border-radius: 999px; background: #fff; font-size: 10px; box-shadow: 0 0 0 1px #f3e3da; }
+${MYW} .mp-order-steps li[data-state="done"] { background: #e6f7ee; color: #1f9e75; box-shadow: inset 0 0 0 1.5px #b8e6cf; }
+${MYW} .mp-order-steps li[data-state="now"] { background: #ffe1ea; color: #c4456f; box-shadow: inset 0 0 0 1.5px #f6a9bf; rotate: -2deg; }
+/* 상품 줄 반품 신청 — 목록 카드는 오른쪽 아래, 상세는 줄 끝(크림 와펜 작은 알약) */
+${MYW} .mp-line-side { display: flex; align-self: flex-end; flex: none; }
+${MYW} .mp-line-side > b, ${MYW} .mp-line-side > a:not(.mp-line-return) { display: none; }
+${MYW} .mp-line-return-wrap { display: flex; align-self: center; flex: none; }
+${MYW} .mp-line-return { ${PATCH_CREAM} min-height: 0; padding: 5px 12px 4px; font-size: 11.5px; }
+${MYW} .mp-line-return::before { content: "↩"; margin-right: 3px; font-size: 11px; }
+${MYW} .mp-line-return:active { transform: scale(.94); }
+/* 주문 카드 아래 단추 줄 — 주문 취소 요청은 장미빛 크림 와펜, 구매 확정은 분홍 와펜(다른 단추는 위 공통 와펜 그대로) */
+${MYW} [data-live-fulfillment-actions] [data-order-cancel] { color: #c4456f; }
+${MYW} [data-live-fulfillment-actions] [data-order-confirm] { ${PATCH_PINK} }
+
+/* 창 공통 — 웹 크레파스 창(.ddb-petform)을 앱에서는 스티커북 창으로 */
+html.ddb-app-mode .ddb-orderhelp .ddb-pf-backdrop { background: rgba(90, 60, 50, .38); backdrop-filter: none; }
+html.ddb-app-mode .ddb-orderhelp .ddb-pf-card { ${DOT_PAPER} position: relative; border-radius: 24px; color: #3d2f2a; font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif;
+  box-shadow: 0 0 0 1.5px #f1e3da, 0 26px 50px -22px rgba(110, 70, 55, .6); }
+html.ddb-app-mode .ddb-orderhelp .ddb-pf-card::before { ${TAPE} top: 6px; left: 50%; width: 62px; margin-left: -31px; height: 13px; rotate: -2deg; background: repeating-linear-gradient(90deg, rgba(255,200,218,.92) 0 7px, rgba(255,220,232,.92) 7px 14px); }
+html.ddb-app-mode .ddb-orderhelp .ddb-pf-head { background: transparent !important; border-bottom: 2px dashed #f0d9cf; box-shadow: none; }
+html.ddb-app-mode .ddb-orderhelp .ddb-pf-avatar { border: 0; background: #fff; box-shadow: 0 0 0 3px #fff, 0 0 0 4.5px #f6c6d4, 0 6px 10px -6px rgba(200, 70, 110, .45); rotate: -4deg; }
+html.ddb-app-mode .ddb-orderhelp .ddb-pf-kicker { display: none; }
+html.ddb-app-mode .ddb-orderhelp .ddb-pf-head h2 { font-size: 1.05rem; }
+html.ddb-app-mode .ddb-orderhelp .ddb-pf-name { display: inline-flex; width: fit-content; padding: 5px 14px 4px; rotate: -1deg; color: #9c2f54 !important;
+  font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400;
+  clip-path: polygon(0 0, 100% 0, 96% 25%, 100% 50%, 96% 75%, 100% 100%, 0 100%, 4% 75%, 0 50%, 4% 25%);
+  background: repeating-linear-gradient(90deg, rgba(255,200,218,.95) 0 8px, rgba(255,222,232,.95) 8px 16px); }
+html.ddb-app-mode .ddb-orderhelp .ddb-pf-name::after { display: none; }
+html.ddb-app-mode .ddb-orderhelp .ddb-pf-sub { color: #8a766c; font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; }
+html.ddb-app-mode .ddb-orderhelp .ddb-pf-body { scrollbar-color: #f6c6d4 transparent; }
+/* 주문 표 — 크래프트 메모(폴라로이드 사진 · 상태 도장) */
+html.ddb-app-mode .ddb-orderhelp .ddb-oh-ticket { border-radius: 4px 4px 16px 4px; background: #fff6e6; box-shadow: 0 0 0 1.5px #f3e2c8, 0 10px 16px -12px rgba(110, 80, 40, .5); }
+html.ddb-app-mode .ddb-orderhelp .ddb-oh-thumb { border-radius: 2px; background: #fff; padding: 3px; box-shadow: 0 5px 9px -5px rgba(90, 60, 50, .5); rotate: -3deg; }
+html.ddb-app-mode .ddb-orderhelp :is(.ddb-oh-info strong, .ddb-oh-h, .ddb-oh-steps strong, .ddb-oh-refund h3, .ddb-oc-name b) { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+html.ddb-app-mode .ddb-orderhelp .ddb-oh-status { border-radius: 999px; background: #ffe1ea; color: #c4456f; box-shadow: 0 0 0 1.5px #fff; rotate: -3deg; }
+/* 안내 칸 — 메모지(교환·반품 순서 · 꼭 확인 · 환불/취소 안내 · 구매 확정 확인) */
+html.ddb-app-mode .ddb-orderhelp :is(.ddb-oh-sec, .ddb-oh-policy, .ddb-oh-refund) { border-radius: 4px 4px 14px 4px; box-shadow: 0 0 0 1.5px #f3e6d6, 0 8px 12px -10px rgba(110, 80, 40, .45); }
+html.ddb-app-mode .ddb-orderhelp .ddb-oh-refund { background: #e6f7ee; }
+html.ddb-app-mode .ddb-orderhelp .ddb-oh-refund[data-oh-cancel] { background: #ffeef3; }
+html.ddb-app-mode .ddb-orderhelp .ddb-oh-h > span { border-radius: 999px; background: #f2789d; color: #fff; box-shadow: 0 0 0 2px #fff; }
+html.ddb-app-mode .ddb-orderhelp .ddb-oh-steps .ddb-oh-badge { box-shadow: 0 0 0 3px #fff, 0 5px 9px -5px rgba(110, 80, 40, .45); }
+/* 구매 확정 창 — 상품 줄은 작은 폴라로이드 · 미리보기 표시는 노란 포스트잇 · 오류는 분홍 메모 */
+html.ddb-app-mode .ddb-orderhelp .ddb-oc-lines li { border-radius: 4px 4px 12px 4px; background: #fff; box-shadow: 0 0 0 1.5px #f3e6d6; }
+html.ddb-app-mode .ddb-orderhelp .ddb-oc-thumb { border-radius: 2px; background: #fff; padding: 2px; box-shadow: 0 4px 7px -4px rgba(90, 60, 50, .45); }
+html.ddb-app-mode .ddb-orderhelp .ddb-oc-preview { border-radius: 2px 2px 12px 2px; background: #fff3a6; color: #8f5e12; rotate: -0.6deg; box-shadow: 0 6px 10px -7px rgba(110, 80, 40, .45); }
+html.ddb-app-mode .ddb-orderhelp .ddb-oc-error { border-radius: 4px 4px 12px 4px; background: #ffd6e2; color: #c4456f; }
+/* 입력칸(문의 · 반품 양식) — 흰 종이 */
+html.ddb-app-mode .ddb-orderhelp :is(input:not([type="checkbox"]):not([type="radio"]):not([type="file"]), select, textarea) { border-color: transparent; background-color: #fff; border-radius: 14px;
+  box-shadow: 0 0 0 1.5px #f3e6d6, 0 4px 8px -6px rgba(110, 80, 40, .4); }
+html.ddb-app-mode .ddb-orderhelp :is(input, select, textarea):focus { outline: none; box-shadow: 0 0 0 2px #f283a3, 0 0 0 5px rgba(242, 131, 163, .15); }
+/* 아래 줄 — 바느질 점선 위 · 주 버튼 분홍 와펜 · 닫기 · 안내 다시 보기는 크림 와펜 · 안내 글 둥근 글씨 */
+html.ddb-app-mode .ddb-orderhelp .ddb-pf-foot { background: transparent; border-top: 2px dashed #f0d9cf; box-shadow: none; }
+html.ddb-app-mode .ddb-orderhelp .ddb-pf-save, html.ddb-app-mode .ddb-orderhelp .ddb-oh-form button[type="submit"] { ${PATCH_PINK} min-width: 0; }
+html.ddb-app-mode .ddb-orderhelp :is(.ddb-pf-cancel, .ddb-oh-back) { ${PATCH_CREAM} }
+html.ddb-app-mode .ddb-orderhelp :is(.ddb-pf-save, .ddb-pf-cancel, .ddb-oh-back):active { transform: scale(.96); }
+html.ddb-app-mode .ddb-orderhelp .ddb-pf-hint { color: #8a766c; font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; }
+html.ddb-app-mode .ddb-orderhelp .ddb-pf-hint i { color: #f48fac; }
+/* 창이 열린 동안 아래 탭바 숨김(다른 숨은 창과 같음) */
+html.ddb-app-mode body:has(.ddb-orderhelp) :is(nav[aria-label="앱 메뉴"], .app-care-fab) { visibility: hidden; }
+
 `;

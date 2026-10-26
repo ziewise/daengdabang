@@ -91,7 +91,7 @@ const RETURN_REQUEST_HREF = "/inquiry?category=exchange#inquiry-form";
 
 function OrderLineView({ line, compact = false, onReturnRequest }: { line: TossOrderHistoryLine; compact?: boolean; onReturnRequest?: () => void }) {
     const image = lineImage(line);
-    // 반품 신청 버튼(웹 전용 칸 안 — 앱 화면은 그대로) · 배송 완료된 실제 주문에서만 넘어옴
+    // 반품 신청 버튼 · 배송 완료된 실제 주문에서만 넘어옴(앱도 2026-10-26부터 보임 — 꾸밈은 앱 appShopSkin)
     const returnLink = onReturnRequest ? (
         <Link href={RETURN_REQUEST_HREF} className="mp-line-return" onClick={(event) => { if (opensInModal(event)) { event.preventDefault(); onReturnRequest(); } }}>
             반품 신청
@@ -136,9 +136,9 @@ function OrderLineView({ line, compact = false, onReturnRequest }: { line: TossO
                 </p>
             </div>
             {!compact && <b className="shrink-0 text-sm font-black text-neutral-950">{formatOrderAmount(line.lineAmount)}</b>}
-            {/* 웹 전용 — 상세 화면 상품 줄의 반품 신청(앱에서는 숨김) */}
+            {/* 상세 화면 상품 줄의 반품 신청(웹 · 앱 — hidden 을 각 화면 꾸밈이 보이게 바꿈) */}
             {!compact && returnLink && <span className="hidden mp-line-return-wrap">{returnLink}</span>}
-            {/* 웹 전용 — 목록 카드 상품 칸 오른쪽: 상품 금액 + 상품 보기(PC 빈 공간 채움, 앱에서는 숨김) */}
+            {/* 목록 카드 상품 칸 오른쪽: 상품 금액 + 상품 보기 + 반품 신청(웹 · 앱은 반품 신청만 보임 — 각 화면 꾸밈) */}
             {compact && (
                 <span className="hidden mp-line-side">
                     <b>{formatOrderAmount(line.lineAmount)}</b>
@@ -163,7 +163,7 @@ function orderStage(order: TossOrderHistoryItem): number | null {
     return null;
 }
 
-// 웹 전용 진행 단계 줄(앱에서는 숨김 · 꾸밈은 app/mypage-web.css)
+// 진행 단계 줄(웹 꾸밈 app/mypage-web.css · 앱 꾸밈 appShopSkin — 2026-10-26 앱도 보임)
 function OrderSteps({ order }: { order: TossOrderHistoryItem }) {
     const stage = orderStage(order);
     if (stage === null) return null;
@@ -204,10 +204,11 @@ function DeliverySummary({ order }: { order: TossOrderHistoryItem }) {
     );
 }
 
-// 웹 · 보통 클릭이면 창으로(앱 화면 · 새 탭 · 가운데 클릭은 원래대로 페이지 이동)
+// 보통 클릭이면 창으로(새 탭 · 가운데 클릭은 원래대로 페이지 이동).
+// 2026-10-26 사용자: 앱에서도 같은 창(교환·반품 · 문의 · 주문 취소 · 반품 신청) — 앱은 1:1 문의 · 교환/반품 페이지가 앱 묶음 밖(APK 바깥 브라우저)이라 창이 더 자연스러움.
+// 창 모양은 앱 꾸밈(components/app-shell/appShopSkin "주문 도움 창")이 스티커북으로 바꿈
 function opensInModal(event: React.MouseEvent) {
-    return !(event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)
-        && !document.documentElement.classList.contains("ddb-app-mode");
+    return !(event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey);
 }
 
 /** 교환·반품 · 문의 창 위의 주문 표 */
@@ -245,15 +246,14 @@ function LineReturnModal({ order, line, onClose }: { order: TossOrderHistoryItem
 function LiveOrderActions({ order, className = "" }: { order: TossOrderHistoryItem; className?: string }) {
     const [help, setHelp] = useState<"inquiry" | "return" | "cancel" | null>(null);
     const [confirmOpen, setConfirmOpen] = useState(false);
-    // 웹에서만 — 주문 취소 요청 · 구매 확정(앱 화면은 그대로)
-    const webScreen = useWebScreen();
+    // 주문 취소 요청 · 구매 확정 — 웹 · 앱 모두(2026-10-26 사용자, 앱 모양은 appShopSkin)
     const confirmPreview = usePurchaseConfirmPreview();
     if (isTestOrder(order)) return null;
     const summary = orderHelpSummary(order);
     const stage = orderStage(order);
     // 배송 준비 전(결제 완료 · 상품 준비 중)이면 취소 요청, 배송 완료면 구매 확정(서버 기능 전까지 미리보기에서만)
-    const cancelable = webScreen && stage !== null && stage <= 1;
-    const confirmable = webScreen && confirmPreview && stage === 3;
+    const cancelable = stage !== null && stage <= 1;
+    const confirmable = confirmPreview && stage === 3;
     return (
         <div className={`flex flex-wrap gap-2 ${className}`} data-live-fulfillment-actions="true">
             {order.delivery?.trackingUrl ? (
