@@ -31,7 +31,7 @@ export function useChatBotProtection(open: boolean, accessToken?: string) {
         return () => { clearTimeout(timer); controller.abort(); };
     }, [open, authenticated, revision]);
     const decision = () => chatSubmissionDecision(policy, accessToken, native, tokenRef.current, Boolean(siteKey));
-    const consume = () => { const value = decision(); if (value.allowed && value.token) clearToken(); return value; };
+    const consume = () => { const value = decision(); if (value.allowed && value.token) clearToken(); return { allowed: value.allowed, proof: value.token, message: value.message }; };
     const challenge = !authenticated && open && (unavailable ? (
         <section role="status" className="mb-2 rounded-lg border border-amber-200 bg-amber-50 p-2 text-xs">
             보안 설정을 확인하지 못했어요. <button type="button" className="underline" onClick={refresh}>다시 확인</button>

@@ -345,7 +345,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                 history,
                 references: readyReferences,
                 accessToken: user?.apiAccessToken,
-                turnstileToken: security.token,
+                turnstileToken: security.proof,
                 recoveryScope,
                 conversationId: conversationIdRef.current || undefined,
                 onProgress: ({ stage, message }) => {

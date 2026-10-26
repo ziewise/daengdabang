@@ -39,7 +39,7 @@ test("blank member widget starts fresh, visible followups retain context, new ch
     const stubs = {
         react,
         "@/hooks/useChatWindow": { useChatWindow: () => ({ desktop: false }) },
-        "@/components/site/ChatBotProtection": { useChatBotProtection: () => ({ consume: () => ({ allowed: true, token: "" }), refresh() {}, challenge: null, ready: true }) },
+        "@/components/site/ChatBotProtection": { useChatBotProtection: () => ({ consume: () => ({ allowed: true, proof: "" }), refresh() {}, challenge: null, ready: true }) },
         "@/lib/chat-widget-events": { CHAT_WIDGET_OPEN_EVENT: "open-chat", consumeChatWidgetOpen: () => undefined },
         "react/jsx-runtime": { jsx, jsxs: jsx, Fragment: "fragment" },
         "next/link": { default: "a" },
