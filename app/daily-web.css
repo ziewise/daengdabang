@@ -3925,6 +3925,8 @@ html:not(.ddb-app-mode) [data-daily-web] {
     }
 
     & .dw-gcover-ring { --dw-ring: 250px; }
+    /* 숫자 · 설명을 한 묶음으로 원 한가운데(2026-10-26 사용자 "500이 너무 위에") — 칸 나누기가 원 높이를 반씩 나눠 숫자가 위쪽 절반에 있던 것 */
+    & .dw-gcover-ring > span { align-content: center; }
 
     & .dw-gcover-ring b {
         display: block;
