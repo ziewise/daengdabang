@@ -2797,3 +2797,39 @@ html:not(.ddb-app-mode) :is(main:has(nav[aria-label="마이페이지 메뉴"]), 
 
 /* 지갑 카드 연보라 코인 칸 — 이름 · 숫자의 남색(#4338ca · indigo-800)을 연보라 칸 글자색으로(위 "보라 칸 이름" 규칙 뒤에 덮어씀) */
 html:not(.ddb-app-mode) :is(main:has(nav[aria-label="마이페이지 메뉴"]), main[data-mypage-web]) [data-daenglab-wallet] > div.p-5 > div[class*="grid-cols-2"] > div[class*="bg-indigo"] :is(.ddb-daenglab-coin-copy, strong) { color: #6b51c9; }
+
+/* ═════════ 상품별 반품 신청(2026-10-26 사용자 — 주문 내역 · 주문 상세의 상품 줄에서 바로, 창으로) ═════════
+   배송 완료된 실제 주문의 상품 줄에만(app/mypage/orders/page.tsx canRequestReturn). 흰 알약 + 회색 글씨로 "상품 보기"(분홍)와 구별. 앱은 그대로 */
+html:not(.ddb-app-mode) main:has(nav[aria-label="마이페이지 메뉴"]) {
+    & .mp-line-side > a.mp-line-return { color: #475569; box-shadow: 0 0 0 1.5px #efe5d8; }
+    & .mp-line-side > a.mp-line-return::after { content: ""; }
+    & .mp-line-side > a.mp-line-return::before { content: "↩ "; color: #e2557a; }
+    & .mp-line-return-wrap { display: flex; flex: none; margin-left: 8px; }
+    & .mp-line-return-wrap > a.mp-line-return {
+        padding: 6px 13px;
+        border-radius: 999px;
+        background: #fff;
+        color: #475569;
+        font-size: 12.5px;
+        font-weight: 800;
+        white-space: nowrap;
+        box-shadow: 0 0 0 1.5px #efe5d8;
+        transition: background 0.15s, color 0.15s;
+    }
+    & .mp-line-return-wrap > a.mp-line-return::before { content: "↩ "; color: #e2557a; }
+    & :is(.mp-line-side, .mp-line-return-wrap) > a.mp-line-return:hover { background: #fff5f8; color: #d0436d; }
+}
+
+/* ═════════ 구매 확정 창(components/mypage/PurchaseConfirmModal.tsx · 2026-10-26) — 주문 도움 창과 같은 틀, 상품 목록 · 미리보기 표시 · 오류 ═════════ */
+.ddb-orderhelp[data-mode="confirm"] {
+    & .ddb-oc-preview { display: inline-flex; align-items: center; gap: 6px; width: fit-content; margin: 0 0 12px; padding: 5px 12px; border-radius: 999px; background: #eef5ff; color: #2f6fb0; font-size: 12px; font-weight: 800; }
+    & .ddb-oc-lines { display: grid; gap: 8px; margin: 14px 0; padding: 0; list-style: none; }
+    & .ddb-oc-lines li { display: grid; grid-template-columns: 52px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 8px 14px 8px 8px; border-radius: 18px; background: #fffaf1; }
+    & .ddb-oc-thumb { display: grid; width: 52px; height: 52px; place-items: center; overflow: hidden; border-radius: 14px; background: #fff; color: #cbd5e1; }
+    & .ddb-oc-thumb img { width: 100%; height: 100%; object-fit: contain; }
+    & .ddb-oc-name { display: grid; min-width: 0; gap: 2px; }
+    & .ddb-oc-name b { overflow: hidden; color: #1e293b; font-size: 14px; font-weight: 800; text-overflow: ellipsis; white-space: nowrap; }
+    & .ddb-oc-name small { color: #64748b; font-size: 12px; font-weight: 600; }
+    & .ddb-oc-lines em { color: #64748b; font-size: 13px; font-style: normal; font-weight: 800; }
+    & .ddb-oc-error { display: flex; align-items: center; gap: 6px; margin-top: 10px; color: #d0436d; font-size: 13px; font-weight: 700; }
+}

@@ -7,6 +7,11 @@
  *  - 배송 문의(inquiry): 1:1 문의 양식 그대로(CustomerInquiryPanel embedded — 접수 · 검사 · 문구 그대로), 유형 = 배송
  *  - 교환·반품 안내(return): 네 단계(크레파스 배지 · 세 색 줄로 이음) · 정책 묶음 카드 · 환불 처리 → 아래 분홍 "교환·반품 접수하기"를
  *    누르면 같은 창에서 교환 문의 양식으로 넘어감(뒤로 가면 안내로)
+ * 상품별 반품 신청(2026-10-26 사용자 "주문 내역의 해당 상품에서 바로 반품 신청 버튼 → 창으로"): line 을 넘기고 initialMode="exchange" 로 열면
+ *   머리 "반품 신청하기" · 표에 그 상품(그림 · 이름 · 옵션) · 접수 양식에 주문번호 · 상품명 · 제목("반품 신청 · 상품명")을 미리 채움.
+ *   접수는 같은 1:1 문의(유형 "반품") 기능 그대로 — 반품 전용 서버 기능은 아직 없음(협업자 할 일).
+ * 주문 취소 요청(cancel, 2026-10-26): 배송 준비 전 주문 — 취소 안내 카드 + 1:1 문의 양식(유형 "환불·주문 취소", 제목 "주문 취소 요청 · 주문 이름").
+ *   결제 취소 서버 기능이 생기면 이 창의 접수만 그 기능으로 바꾸면 됨(협업자 문서 HANDOFF_20261025_BACKEND_TODO_4ITEMS_READY.md).
  * 주문 없이 쓰는 문의(preset — 이메일·계정 변경 문의 · 분석 결과 삭제 요청 등)도 같은 창: 주문 표 없이 머리 문구 · 문의 유형 · 제목만 바꿔 문의 양식.
  * 앱 화면과 새 탭(Ctrl/⌘ 클릭)은 원래대로 페이지로 이동(여는 쪽에서 처리 — MypageInquiryLink · 주문 내역 화면).
  */
@@ -33,7 +38,7 @@ export type OrderHelpSummary = {
     statusLabel: string;
 };
 
-type Mode = "inquiry" | "return" | "exchange";
+type Mode = "inquiry" | "return" | "exchange" | "cancel";
 
 /** 주문 없는 문의 창 머리 · 양식 미리 채움 */
 export type InquiryPreset = {
@@ -50,17 +55,26 @@ const HEAD: Record<Mode, { kicker: string; title: string; sub: string; art: stri
     inquiry: { kicker: "DELIVERY HELP", title: "배송 문의하기", sub: "주문번호는 미리 넣어 두었어요. 궁금한 점만 적어 주세요.", art: "/images/ui/web-cs-orders-160.webp" },
     return: { kicker: "RETURN & EXCHANGE", title: "교환·반품 안내", sub: "어떻게 진행되는지 먼저 확인하고, 아래에서 바로 접수할 수 있어요.", art: "/images/ui/web-cs-return-160.webp" },
     exchange: { kicker: "RETURN REQUEST", title: "교환·반품 접수하기", sub: "사유와 상품 상태를 적어 주시면 협의 방법을 이메일로 안내해 드려요.", art: "/images/ui/web-cs-return-160.webp" },
+    cancel: { kicker: "CANCEL REQUEST", title: "주문 취소 요청", sub: "배송 준비 전 주문은 확인 후 취소해 드려요. 취소 사유만 남겨 주세요.", art: "/images/ui/web-cs-refund-160.webp" },
 };
 
 const CS_EMAIL = BUSINESS_INFO.customerServiceEmail || "support@daengdabang.com";
 const CS_PHONE = BUSINESS_INFO.customerServicePhone;
 
-export default function OrderHelpModal({ order, preset, initialMode, onClose }: { order?: OrderHelpSummary; preset?: InquiryPreset; initialMode: "inquiry" | "return"; onClose: () => void }) {
+/** 상품별 반품 신청 — 고른 상품 하나 */
+export type OrderHelpLine = { name: string; option?: string; image?: string };
+
+/** 상품별 반품 신청 창 머리 */
+const LINE_RETURN_HEAD = { kicker: "RETURN REQUEST", title: "반품 신청하기", sub: "이 상품으로 접수해요. 반품 사유와 상품 상태를 적어 주시면 협의 방법을 이메일로 안내해 드려요.", art: "/images/ui/web-cs-return-160.webp" };
+
+export default function OrderHelpModal({ order, line, preset, initialMode, onClose }: { order?: OrderHelpSummary; line?: OrderHelpLine; preset?: InquiryPreset; initialMode: "inquiry" | "return" | "exchange" | "cancel"; onClose: () => void }) {
     const [mode, setMode] = useState<Mode>(initialMode);
     const titleId = useId();
     const closeRef = useRef<HTMLButtonElement>(null);
     const bodyRef = useRef<HTMLDivElement>(null);
-    const head = preset && mode === "inquiry" ? preset : HEAD[mode];
+    const head = preset && mode === "inquiry" ? preset : line && mode === "exchange" ? LINE_RETURN_HEAD : HEAD[mode];
+    // 상품별 반품 신청이면 양식의 상품명 · 제목을 그 상품으로
+    const lineLabel = line ? `${line.name}${line.option ? ` (${line.option})` : ""}` : undefined;
     const close = useCallback(() => onClose(), [onClose]);
 
     // 열려 있는 동안 뒤 화면 스크롤 잠금 · Esc 로 닫기 · 닫기 단추에 초점
@@ -107,14 +121,14 @@ export default function OrderHelpModal({ order, preset, initialMode, onClose }: 
                     {order && (
                     <section className="ddb-oh-ticket" aria-label="문의할 주문">
                         <span className="ddb-oh-thumb" aria-hidden="true">
-                            {order.image
-                                ? <Image src={order.image} alt="" width={72} height={72} />
+                            {(line?.image ?? order.image)
+                                ? <Image src={(line?.image ?? order.image) as string} alt="" width={72} height={72} />
                                 : <i className="fa-solid fa-box-open" />}
                         </span>
                         <div className="ddb-oh-info">
-                            <p className="ddb-oh-tag">{mode === "return" ? "이 주문 기준으로 안내해요" : "이 주문으로 문의해요"}</p>
-                            <strong>{order.orderName}</strong>
-                            <span className="ddb-oh-meta">{order.dateLabel} · {order.amountLabel}</span>
+                            <p className="ddb-oh-tag">{line ? "이 상품으로 접수해요" : mode === "cancel" ? "이 주문을 취소 요청해요" : mode === "return" ? "이 주문 기준으로 안내해요" : "이 주문으로 문의해요"}</p>
+                            <strong>{line ? line.name : order.orderName}</strong>
+                            <span className="ddb-oh-meta">{line?.option ? `${line.option} · ` : ""}{order.dateLabel} · {order.amountLabel}</span>
                         </div>
                         <div className="ddb-oh-side">
                             <span className="ddb-oh-status">{order.statusLabel}</span>
@@ -161,19 +175,32 @@ export default function OrderHelpModal({ order, preset, initialMode, onClose }: 
                             </section>
                         </>
                     ) : (
+                        <>
+                        {/* 주문 취소 요청 — 취소 안내(결제 취소 기간 · 이미 출고된 주문) */}
+                        {mode === "cancel" && (
+                            <section className="ddb-oh-refund" data-oh-cancel>
+                                {/* eslint-disable-next-line @next/next/no-img-element -- 작은 3D 그림 */}
+                                <img src="/images/ui/web-cs-refund-160.webp" alt="" aria-hidden="true" />
+                                <div>
+                                    <h3>취소는 이렇게 진행돼요</h3>
+                                    <p>담당자가 주문 상태를 확인한 뒤 결제 전체를 취소해 드려요. 카드 승인 취소는 카드사에 따라 영업일 기준 3~5일 걸릴 수 있어요. 이미 출고된 주문은 취소 대신 반품으로 안내해 드려요.</p>
+                                </div>
+                            </section>
+                        )}
                         <div className="ddb-oh-form">
                             <CustomerInquiryPanel
                                 key={mode}
                                 email={CS_EMAIL}
                                 phone={CS_PHONE}
                                 embedded={{
-                                    category: preset && mode === "inquiry" ? preset.category : mode === "exchange" ? "exchange" : "delivery",
+                                    category: preset && mode === "inquiry" ? preset.category : mode === "cancel" ? "refund" : mode === "exchange" ? (line ? "return" : "exchange") : "delivery",
                                     orderNumber: order?.orderId,
-                                    productName: order?.firstLineName,
-                                    subject: preset && mode === "inquiry" ? preset.subject : undefined,
+                                    productName: lineLabel ?? order?.firstLineName,
+                                    subject: preset && mode === "inquiry" ? preset.subject : line && mode === "exchange" ? `반품 신청 · ${line.name}` : mode === "cancel" && order ? `주문 취소 요청 · ${order.orderName}` : undefined,
                                 }}
                             />
                         </div>
+                        </>
                     )}
                 </div>
 
@@ -183,7 +210,7 @@ export default function OrderHelpModal({ order, preset, initialMode, onClose }: 
                             <i className="fa-solid fa-chevron-left" aria-hidden="true" />안내 다시 보기
                         </button>
                     ) : (
-                        <p className="ddb-pf-hint"><i className="fa-solid fa-paw" aria-hidden="true" />{mode === "return" ? "접수하면 담당자가 이메일로 협의 방법을 안내해 드려요." : preset?.hint ?? `평일 10:00~18:00 · 전화 ${CS_PHONE}`}</p>
+                        <p className="ddb-pf-hint"><i className="fa-solid fa-paw" aria-hidden="true" />{mode === "return" ? "접수하면 담당자가 이메일로 협의 방법을 안내해 드려요." : mode === "cancel" ? "접수하면 담당자가 확인 후 이메일로 결과를 알려 드려요." : preset?.hint ?? `평일 10:00~18:00 · 전화 ${CS_PHONE}`}</p>
                     )}
                     <button type="button" className="ddb-pf-cancel" onClick={close}>닫기</button>
                     {mode === "return" && (

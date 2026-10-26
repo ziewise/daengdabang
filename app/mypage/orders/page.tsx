@@ -7,6 +7,8 @@ import { useSearchParams } from "next/navigation";
 import MypageSidebar from "@/components/mypage/MypageSidebar";
 // 웹: 배송 문의 · 교환·반품 안내를 마이페이지 안 창으로(2026-10-24)
 import OrderHelpModal from "@/components/mypage/OrderHelpModal";
+// 구매 확정 창(2026-10-26) — 서버 기능 전까지 개발 서버 미리보기(?ocpreview=1)에서만 보임
+import PurchaseConfirmModal, { usePurchaseConfirmPreview } from "@/components/mypage/PurchaseConfirmModal";
 import { ddbApiBase } from "@/lib/ddb-api-base";
 import { getCustomerToken } from "@/lib/customer-api";
 import { findProduct, productHref, versionProductImage } from "@/lib/shop";
@@ -84,8 +86,17 @@ function lineImage(line: TossOrderHistoryLine): { src: string; href: string } | 
     return src ? { src, href: productHref(product) } : null;
 }
 
-function OrderLineView({ line, compact = false }: { line: TossOrderHistoryLine; compact?: boolean }) {
+// 상품별 반품 신청(2026-10-26 사용자) — 웹은 교환·반품 창의 "반품 신청하기" 양식으로(OrderHelpModal), 새 탭 · 가운데 클릭은 1:1 문의 페이지
+const RETURN_REQUEST_HREF = "/inquiry?category=exchange#inquiry-form";
+
+function OrderLineView({ line, compact = false, onReturnRequest }: { line: TossOrderHistoryLine; compact?: boolean; onReturnRequest?: () => void }) {
     const image = lineImage(line);
+    // 반품 신청 버튼(웹 전용 칸 안 — 앱 화면은 그대로) · 배송 완료된 실제 주문에서만 넘어옴
+    const returnLink = onReturnRequest ? (
+        <Link href={RETURN_REQUEST_HREF} className="mp-line-return" onClick={(event) => { if (opensInModal(event)) { event.preventDefault(); onReturnRequest(); } }}>
+            반품 신청
+        </Link>
+    ) : null;
     const imageBox = (
         <span className={`relative block shrink-0 overflow-hidden rounded-xl border border-neutral-100 bg-neutral-50 ${compact ? "h-16 w-16" : "h-20 w-20"}`}>
             {image ? (
@@ -125,11 +136,14 @@ function OrderLineView({ line, compact = false }: { line: TossOrderHistoryLine; 
                 </p>
             </div>
             {!compact && <b className="shrink-0 text-sm font-black text-neutral-950">{formatOrderAmount(line.lineAmount)}</b>}
+            {/* 웹 전용 — 상세 화면 상품 줄의 반품 신청(앱에서는 숨김) */}
+            {!compact && returnLink && <span className="hidden mp-line-return-wrap">{returnLink}</span>}
             {/* 웹 전용 — 목록 카드 상품 칸 오른쪽: 상품 금액 + 상품 보기(PC 빈 공간 채움, 앱에서는 숨김) */}
             {compact && (
                 <span className="hidden mp-line-side">
                     <b>{formatOrderAmount(line.lineAmount)}</b>
                     {image && <Link href={image.href}>상품 보기</Link>}
+                    {returnLink}
                 </span>
             )}
         </div>
@@ -196,11 +210,10 @@ function opensInModal(event: React.MouseEvent) {
         && !document.documentElement.classList.contains("ddb-app-mode");
 }
 
-function LiveOrderActions({ order, className = "" }: { order: TossOrderHistoryItem; className?: string }) {
-    const [help, setHelp] = useState<"inquiry" | "return" | null>(null);
-    if (isTestOrder(order)) return null;
+/** 교환·반품 · 문의 창 위의 주문 표 */
+function orderHelpSummary(order: TossOrderHistoryItem) {
     const firstLine = order.lines[0];
-    const summary = {
+    return {
         orderId: order.orderId,
         orderName: order.orderName,
         firstLineName: firstLine?.name,
@@ -209,6 +222,38 @@ function LiveOrderActions({ order, className = "" }: { order: TossOrderHistoryIt
         amountLabel: formatOrderAmount(order.amount),
         statusLabel: orderStatusLabel(order),
     };
+}
+
+/** 반품 신청을 보일 주문 — 실제 주문 · 배송 완료(테스트 주문 · 배송 전은 없음) */
+function canRequestReturn(order: TossOrderHistoryItem): boolean {
+    return !isTestOrder(order) && orderStage(order) === 3;
+}
+
+/** 상품별 반품 신청 창 — 고른 상품이 있을 때만 */
+function LineReturnModal({ order, line, onClose }: { order: TossOrderHistoryItem; line: TossOrderHistoryLine | null; onClose: () => void }) {
+    if (!line) return null;
+    return (
+        <OrderHelpModal
+            order={orderHelpSummary(order)}
+            line={{ name: line.name, option: [line.color, line.size].filter(Boolean).join(" · ") || undefined, image: lineImage(line)?.src }}
+            initialMode="exchange"
+            onClose={onClose}
+        />
+    );
+}
+
+function LiveOrderActions({ order, className = "" }: { order: TossOrderHistoryItem; className?: string }) {
+    const [help, setHelp] = useState<"inquiry" | "return" | "cancel" | null>(null);
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    // 웹에서만 — 주문 취소 요청 · 구매 확정(앱 화면은 그대로)
+    const webScreen = useWebScreen();
+    const confirmPreview = usePurchaseConfirmPreview();
+    if (isTestOrder(order)) return null;
+    const summary = orderHelpSummary(order);
+    const stage = orderStage(order);
+    // 배송 준비 전(결제 완료 · 상품 준비 중)이면 취소 요청, 배송 완료면 구매 확정(서버 기능 전까지 미리보기에서만)
+    const cancelable = webScreen && stage !== null && stage <= 1;
+    const confirmable = webScreen && confirmPreview && stage === 3;
     return (
         <div className={`flex flex-wrap gap-2 ${className}`} data-live-fulfillment-actions="true">
             {order.delivery?.trackingUrl ? (
@@ -224,13 +269,31 @@ function LiveOrderActions({ order, className = "" }: { order: TossOrderHistoryIt
                 <Link href="/inquiry?category=delivery#inquiry-form" className="btn btn-secondary" onClick={(event) => { if (opensInModal(event)) { event.preventDefault(); setHelp("inquiry"); } }}>배송 문의</Link>
             )}
             <Link href="/return" className="btn btn-secondary" onClick={(event) => { if (opensInModal(event)) { event.preventDefault(); setHelp("return"); } }}>교환·반품 안내</Link>
+            {/* 주문 취소 요청 — 1:1 문의(환불·주문 취소)로 접수(결제 취소 서버 기능 전까지) */}
+            {cancelable && (
+                <Link href="/inquiry?category=refund#inquiry-form" className="btn btn-secondary" data-order-cancel onClick={(event) => { if (opensInModal(event)) { event.preventDefault(); setHelp("cancel"); } }}>주문 취소 요청</Link>
+            )}
+            {/* 구매 확정 — 서버 기능 전까지 미리보기에서만(확정해도 화면만 바뀜) */}
+            {confirmable && (
+                <button type="button" className="btn btn-primary" data-order-confirm onClick={() => setConfirmOpen(true)}>구매 확정</button>
+            )}
             {help && <OrderHelpModal order={summary} initialMode={help} onClose={() => setHelp(null)} />}
+            {confirmOpen && (
+                <PurchaseConfirmModal
+                    order={summary}
+                    lines={order.lines.map((line) => ({ name: line.name, option: [line.color, line.size].filter(Boolean).join(" · ") || undefined, image: lineImage(line)?.src, qty: line.qty }))}
+                    preview
+                    onClose={() => setConfirmOpen(false)}
+                />
+            )}
         </div>
     );
 }
 
 function OrderCard({ order }: { order: TossOrderHistoryItem }) {
     const visibleLines = order.lines.slice(0, 2);
+    const [returnLine, setReturnLine] = useState<TossOrderHistoryLine | null>(null);
+    const returnable = canRequestReturn(order);
     return (
         <article className="rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm sm:p-5" data-order-mode={isTestOrder(order) ? "test" : "live"}>
             <header className="flex flex-wrap items-start justify-between gap-3 border-b border-neutral-100 pb-4">
@@ -252,9 +315,10 @@ function OrderCard({ order }: { order: TossOrderHistoryItem }) {
 
             <div className="mt-4 grid gap-4">
                 {visibleLines.map((line, index) => (
-                    <OrderLineView key={`${line.productId}-${line.color ?? ""}-${line.size ?? ""}-${index}`} line={line} compact />
+                    <OrderLineView key={`${line.productId}-${line.color ?? ""}-${line.size ?? ""}-${index}`} line={line} compact onReturnRequest={returnable ? () => setReturnLine(line) : undefined} />
                 ))}
             </div>
+            <LineReturnModal order={order} line={returnLine} onClose={() => setReturnLine(null)} />
             {order.lines.length > visibleLines.length && (
                 <p className="mt-3 text-xs font-black text-neutral-500">외 {order.lines.length - visibleLines.length}개 상품</p>
             )}
@@ -518,6 +582,8 @@ function DeliveryDetail({ order }: { order: TossOrderHistoryItem }) {
 
 function OrderDetailView({ order }: { order: TossOrderHistoryItem }) {
     const productAmount = order.lines.reduce((sum, line) => sum + line.lineAmount, 0);
+    const [returnLine, setReturnLine] = useState<TossOrderHistoryLine | null>(null);
+    const returnable = canRequestReturn(order);
     return (
         <div>
             <Link href="/mypage/orders/" className="inline-flex items-center gap-2 text-sm font-black text-indigo-700 hover:underline">
@@ -551,11 +617,12 @@ function OrderDetailView({ order }: { order: TossOrderHistoryItem }) {
                 <OrderSteps order={order} />
                 <div className="mt-5 grid gap-5 border-t border-neutral-100 pt-5">
                     {order.lines.length > 0 ? order.lines.map((line, index) => (
-                        <OrderLineView key={`${line.productId}-${line.color ?? ""}-${line.size ?? ""}-${index}`} line={line} />
+                        <OrderLineView key={`${line.productId}-${line.color ?? ""}-${line.size ?? ""}-${index}`} line={line} onReturnRequest={returnable ? () => setReturnLine(line) : undefined} />
                     )) : (
                         <p className="text-sm font-bold text-neutral-500">주문 상품 정보를 확인하지 못했습니다.</p>
                     )}
                 </div>
+                <LineReturnModal order={order} line={returnLine} onClose={() => setReturnLine(null)} />
             </section>
 
             <div className="mt-5 grid gap-5 lg:grid-cols-2">
