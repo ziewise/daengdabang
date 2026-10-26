@@ -37,7 +37,7 @@ const PetCompanionGate = dynamic(() => import("@/components/pet-companion/PetCom
 import { Capacitor } from "@capacitor/core";
 import { useAuth, useCart } from "@/lib/store";
 import {
-    APP_ITEM, APP_LOGIN, APP_SIGNUP, APP_TABS, DANG_SECTIONS, MEMBER_ONLY_PATHS, appLoginHref, appSignupHref, conceptIsTabRoot, isWebLoginPath, isWebSignupPath, conceptOf, conceptSubTitle, conceptTabForPath, conceptTabs,
+    APP_FORGOT, APP_ITEM, APP_LOGIN, APP_SIGNUP, APP_TABS, DANG_SECTIONS, MEMBER_ONLY_PATHS, appLoginHref, appSignupHref, conceptIsTabRoot, isWebForgotPath, isWebLoginPath, isWebSignupPath, conceptOf, conceptSubTitle, conceptTabForPath, conceptTabs,
     hidesTabBar, isCareTalkPath, isTabRoot, tabForPath, type AppTab, type AppTabKey, type Concept,
 } from "./appTabs";
 import { APP_SHOP_SKIN_CSS } from "./appShopSkin";
@@ -253,6 +253,7 @@ const isMyPetPath = (pathname: string) => /^\/(my-pet|health-report)(\/|$)/.test
  *  - 매일 댕생활(/treasure-mine · /growth · /challenge, 설치 앱 바로가기 · 공유 링크) → 앱 매일 댕생활
  *  - 굿즈 공모전(/goods-contest) → 댕다방 굿즈 공모전 쪽
  *  - 댕자랑(/daeng-showcase) → 댕다방 댕자랑 쪽(공유 링크의 ?post · ?author · ?topic 은 그대로 넘겨 앱에서 그 게시물 · 프로필을 엶)
+ *  - 비밀번호 찾기(/forgot-password) → 앱 비밀번호 찾기(2026-10-26, 같은 부품 · 앱 묶음 안)
  * 우리 아이 기록(/my-pet)은 위 APP_REPORT. 찾지 못하면 null(그 주소 그대로).
  */
 function appScreenFor(pathname: string, search: string): string | null {
@@ -260,6 +261,7 @@ function appScreenFor(pathname: string, search: string): string | null {
     // 앱 안에서 같은 부품으로 그려 빠르고, 로그인 · 장바구니 · 찜이 앱과 이어짐
     const productMatch = /^\/product\/([^/]+)\/?$/.exec(pathname);
     if (productMatch) return `${APP_ITEM}?p=${encodeURIComponent(decodeURIComponent(productMatch[1]))}`;
+    if (isWebForgotPath(pathname)) return APP_FORGOT;
     if (isMyPetPath(pathname)) {
         // 웹 /my-pet/?profile=N(AppAiCareOverview 주간 비교 보기 등) — 앱 리포트도 같은 아이를 먼저 고르게 profile 만 이어 줌
         // (검사 기준 = 협업자 cleanPetLensProfileId: 양의 안전 정수만)

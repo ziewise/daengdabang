@@ -6,10 +6,12 @@
  *   상태 · 요청 · 검사는 이 파일 그대로 넘겨주기만 함. 앱(ddb-app-mode)은 아래 기존 화면 그대로.
  * 2026-10-26: 앱 카드에 이름표(data-forgot-app)만 붙임 — 웹에서는 화면이 붙기 전(미리 만든 HTML) 앱 카드가 번쩍이지 않게
  *   app/forgot-web.css 에서 감춤(가입 화면과 같은 방법). 앱 모양 · 동작 그대로.
+ * 2026-10-26(2): 앱 화면(ddb-app-mode)이 확인되면 스티커북 앱 화면(components/pwa/home-concepts/pages/StickerForgot)으로 —
+ *   웹 ForgotWebView 와 같은 값 · 함수를 넘겨 그리기만 바꿈. 앱 주소 /app/sticker/forgot 도 이 파일을 그대로 씀.
  */
 
 import Link from "next/link";
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import SignupBotChallenge, {
     signupTurnstileSiteKey,
 } from "@/components/auth/SignupBotChallenge";
@@ -23,6 +25,7 @@ import { useDdbApiReady } from "@/hooks/useDdbApiReady";
 // 웹 전용 화면(2026-10-25)
 import ForgotWebView from "@/components/auth/forgot-web/ForgotWebView";
 import { useWebScreen } from "@/hooks/useWebScreen";
+import AppForgotView from "@/components/pwa/home-concepts/pages/StickerForgot";
 // 웹 꾸밈 — 미리 만든 HTML 단계에서도 "앱 카드 감춤" 규칙이 먼저 걸리도록 여기서도 불러옴
 import "@/app/forgot-web.css";
 
@@ -36,6 +39,14 @@ type ResetResume = {
 };
 
 const RESET_RESUME_KEY = "ddb.passwordReset.resume.v1";
+
+// 앱 화면(ddb-app-mode)인가 — 브라우저에서 확인된 뒤에만 true(미리 만든 HTML 은 기존 앱 카드 그대로)
+const subscribeHtmlClass = (onChange: () => void) => {
+    const observer = new MutationObserver(onChange);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    return () => observer.disconnect();
+};
+const isAppScreen = () => document.documentElement.classList.contains("ddb-app-mode");
 
 function readResetResume(): ResetResume | null {
     if (typeof window === "undefined") return null;
@@ -116,6 +127,7 @@ function formatSeconds(seconds: number) {
 export default function ForgotPasswordPage() {
     const apiReady = useDdbApiReady();
     const webScreen = useWebScreen();
+    const appScreen = useSyncExternalStore(subscribeHtmlClass, isAppScreen, () => false);
     const challengeConfigured = Boolean(signupTurnstileSiteKey());
     const [step, setStep] = useState<Step>("email");
     const [email, setEmail] = useState("");
@@ -307,6 +319,18 @@ export default function ForgotPasswordPage() {
         setBotToken("");
         setChallengeResetKey((value) => value + 1);
     };
+
+    const viewProps = {
+        step, apiReady, challengeConfigured, email, setEmail, code, setCode, codeRef, newPassword, setNewPassword,
+        confirmPassword, setConfirmPassword, botToken, setBotToken, challengeResetKey, resendSeconds, expirySeconds,
+        expiryTotal, loading, notice, error,
+        sendCode: (event?: FormEvent) => void sendCode(event),
+        verifyCode: (event: FormEvent) => void verifyCode(event),
+        setPassword: (event: FormEvent) => void setPassword(event),
+        restart,
+    };
+    // 앱 — 스티커북 앱 화면(같은 값 · 같은 함수)
+    if (appScreen) return <AppForgotView {...viewProps} />;
 
     if (webScreen) {
         return (

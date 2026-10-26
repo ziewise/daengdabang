@@ -127,7 +127,7 @@ export function conceptTabForPath(pathname: string, c: Concept, previous: AppTab
         { tab: "dang", paths: [`/app/${c}/show`, "/daeng-showcase", "/goods-contest"] },
         { tab: "shop", paths: [`/app/${c}/shop`, `/app/${c}/item`] }, // 앱 안 상품 상세(2026-10-21)도 쇼핑
         // 비밀번호 재설정(/forgot-password, 앱 로그인의 "비밀번호를 잊으셨나요?")도 마이 — 규칙에 없어 쇼핑 탭으로 보이던 것(2026-10-17 점검)
-        { tab: "my", paths: [`/app/${c}/my`, "/mypage", "/auth", "/forgot-password", "/faq", "/notice", "/inquiry", "/return", "/legal", "/terms", "/privacy", "/social"] },
+        { tab: "my", paths: [`/app/${c}/my`, `/app/${c}/forgot`, "/mypage", "/auth", "/forgot-password", "/faq", "/notice", "/inquiry", "/return", "/legal", "/terms", "/privacy", "/social"] },
     ];
     for (const rule of rules) if (rule.paths.some((p) => matches(pathname, p))) return rule.tab;
     // 그 밖의 앱 화면(/app/…)은 홈 — 시안 화면 규칙을 먼저 본 뒤에
@@ -148,11 +148,12 @@ export function conceptSubTitle(pathname: string): string | null {
     if (/^\/app\/sticker\/report/.test(pathname)) return "건강 변화 리포트";
     if (/^\/app\/sticker\/login/.test(pathname)) return "로그인";
     if (/^\/app\/sticker\/signup/.test(pathname)) return "회원가입";
+    if (/^\/app\/sticker\/forgot/.test(pathname)) return "비밀번호 찾기";
     return null;
 }
 
 /** 아래 탭바를 숨길 화면 — 화면 아래에 구매 바 · 입력창이 붙거나 결제 · 로그인에 집중해야 하는 곳 */
-const HIDE_TABBAR_PATHS = ["/product", "/app/sticker/item", "/checkout", "/auth", "/forgot-password", "/chat", "/app/sticker/login", "/app/sticker/signup"]; // 비밀번호 재설정도 로그인처럼 입력에 집중
+const HIDE_TABBAR_PATHS = ["/product", "/app/sticker/item", "/checkout", "/auth", "/forgot-password", "/chat", "/app/sticker/login", "/app/sticker/signup", "/app/sticker/forgot"]; // 비밀번호 재설정도 로그인처럼 입력에 집중
 
 export function hidesTabBar(pathname: string): boolean {
     return HIDE_TABBAR_PATHS.some((p) => matches(pathname, p));
@@ -166,6 +167,9 @@ export const APP_LOGIN = "/app/sticker/login/";
 /** 앱 로그인 주소 — redirect 는 로그인 뒤 돌아갈 앱 안 주소 */
 export const appLoginHref = (redirect?: string | null) => (redirect ? `${APP_LOGIN}?redirect=${encodeURIComponent(redirect)}` : APP_LOGIN);
 export const APP_SIGNUP = "/app/sticker/signup/";
+/** 앱 비밀번호 찾기(2026-10-26) — 웹 /forgot-password 를 앱 안 이 주소로(앱 묶음 안이라 APK 에서도 바깥 브라우저로 나가지 않음) */
+export const APP_FORGOT = "/app/sticker/forgot/";
+export const isWebForgotPath = (pathname: string) => /^\/forgot-password(\/|$)/.test(pathname);
 /** 앱 회원가입 주소 — redirect 는 가입 뒤 돌아갈 앱 안 주소 */
 export const appSignupHref = (redirect?: string | null) => (redirect ? `${APP_SIGNUP}?redirect=${encodeURIComponent(redirect)}` : APP_SIGNUP);
 /** 웹 회원가입 화면 주소인가(/auth/signup) — 앱에서는 앱 회원가입으로 바꿔 보낸다 */

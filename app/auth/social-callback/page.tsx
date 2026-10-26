@@ -8,9 +8,11 @@
  * 2026-10-26 웹: 처리 중 화면 = 크레파스 카드(3D 로그인 그림 · 손글씨 꼬리표 · "로그인하고 있어요"). 앱 카드 옆에 hidden 으로 두고
  *   웹 CSS(app/signup-web.css "간편로그인 처리 중")로 바꿔 보여 줌 → 화면이 붙기 전에도 앱 카드가 번쩍이지 않음.
  *   실패 카드는 간편 로그인 · 간편 가입을 나눠 알림(가입 이어하기 표시가 있었으면 가입) · 웹은 기본 해요체 문구(합니다체 오류 글 대신).
+ * 2026-10-26 앱: 웹과 같은 단계(정보 확인 → 우리 아이 → 완료) · 갈림길 카드 · 처리 중 화면을 스티커북으로
+ *   (components/pwa/home-concepts/pages/StickerSocialFinish). 앱 화면인 것이 확인된 뒤에만 바꿔 그림(미리 만든 HTML 은 그대로).
  */
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { loadPetProfilesSmart, setCustomerToken, type SocialProvider } from "@/lib/customer-api";
@@ -22,9 +24,18 @@ import { trackSignupCompleted } from "@/lib/storefront-analytics";
 import { readSocialReturnKind, type SocialReturnKind } from "@/lib/signup-flow";
 import { useWebScreen } from "@/hooks/useWebScreen";
 import SocialSignupWebFinish, { SocialReturnWebNotice } from "@/components/auth/signup-web/SocialSignupWebFinish";
+import AppSocialFinish, { AppSocialReturnNotice, AppSocialWait } from "@/components/pwa/home-concepts/pages/StickerSocialFinish";
 import "../../signup-web.css";
 
 const SOCIAL_PROVIDERS = new Set<SocialProvider>(["naver", "kakao", "google"]);
+
+// 앱 화면(ddb-app-mode)인가 — 브라우저에서 확인된 뒤에만 true(미리 만든 HTML · 웹은 false)
+const subscribeHtmlClass = (onChange: () => void) => {
+    const observer = new MutationObserver(onChange);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    return () => observer.disconnect();
+};
+const isAppScreen = () => document.documentElement.classList.contains("ddb-app-mode");
 
 function cleanReturnTo(value: string | null) {
     return safeInternalRedirect(value, window.location.origin) || "/mypage";
@@ -68,6 +79,7 @@ export default function SocialCallbackPage() {
     const processedRef = useRef(false);
     // 웹 갈림길 — 새 가입 · 이미 가입된 간편 계정 · 동의 취소 · 이미 이메일로 가입 · 실패(앱은 안 씀)
     const webScreen = useWebScreen();
+    const appScreen = useSyncExternalStore(subscribeHtmlClass, isAppScreen, () => false);
     const [returnKind, setReturnKind] = useState<SocialReturnKind>("new");
     const [returnProvider, setReturnProvider] = useState("");
     // 웹 실패 카드 문구용 — 간편 가입에서 돌아왔는지(가입 이어하기 표시) · 표시만 하고 동작에는 안 씀
@@ -165,6 +177,17 @@ export default function SocialCallbackPage() {
             </main>
         );
     }
+
+    // 앱 — 웹과 같은 단계 · 갈림길을 스티커북으로(이메일 인증 20C 는 완료 화면에서)
+    if (appScreen && pendingVerification) {
+        return returnKind === "existing"
+            ? <AppSocialReturnNotice kind="existing" provider={returnProvider} onContinue={finishSignup} />
+            : <AppSocialFinish member={pendingVerification.member} provider={pendingVerification.member.authProvider || returnProvider} onFinish={finishSignup} />;
+    }
+    if (appScreen && error) {
+        return <AppSocialReturnNotice kind={returnKind === "new" || returnKind === "existing" ? "failed" : returnKind} provider={returnProvider} mode={returnMode} />;
+    }
+    if (appScreen) return <AppSocialWait />;
 
     if (pendingVerification) {
         return (
