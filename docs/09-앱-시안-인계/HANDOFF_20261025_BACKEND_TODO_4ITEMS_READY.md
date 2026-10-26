@@ -246,6 +246,22 @@
 - `components/reviews/ReviewWriteModal.tsx`(작성 창 · 탭 · 사진) · `components/reviews/ProductOwnReviews.tsx`(상품 상세 "댕다방 구매 후기")
 - 연결: `components/products/detail/ProductTabs.tsx`(탭 분리) · 마이페이지 주문 내역(`app/mypage/orders/page.tsx`)의 "후기 쓰기" · 상품 카드 별점(`components/products/ProductCard.tsx`)
 
+### 4-5b. 화면 시안 2차가 이미 있음(2026-10-25 밤 추가 · 2026-10-26 보강)
+- 서버 없이 볼 수 있는 화면 시안을 먼저 만들어 둠(배포 빌드에는 안 보임). 개발 서버에서 상품 주소에 `?rvpreview=1`(빈 화면은 `?rvpreview=empty`)
+  - 상품 상세 구역 `components/reviews/ProductOwnReviews.tsx` · 작성 창 `components/reviews/ReviewWriteModal.tsx` · 크게 보기 `ReviewLightbox.tsx`
+  - 예시 자료 모양(= 서버 응답으로 받고 싶은 모양): `lib/reviews-preview.ts`(`OwnReview` · `ReviewSummary` · 작성 정보)
+- 위 ③ 주소 제안에 **더해 주었으면 하는 값**(시안이 실제로 쓰는 것):
+
+| 어디 | 더할 값 | 화면에서 쓰는 곳 |
+|---|---|---|
+| 목록 `summary` | `fit: { small, good, big }` — 분류별 짧은 평가(사이즈 · 잘 먹었나요 등) 개수 | 점수판의 사이즈 눈금(바늘) |
+| 목록 `summary` | `keywords: [{ label, count }]` — 후기에 자주 나온 말(상위 5~8개, 서버에서 뽑기) | "자주 나온 이야기" 알약 |
+| 목록 `summary` | `similar_count` — 로그인한 손님의 아이와 같은 사이즈(또는 견종 · 몸무게 비슷) 후기 수 | 고르기 알약 "우리 아이와 같은 사이즈" |
+| 목록 거르기 | `?similar=1` — 위와 같은 기준으로 거른 목록 | 같은 알약을 눌렀을 때 |
+| 목록 `items[]` | `masked_name` · `option`(색상 · 사이즈 글) · `fit` · `pet: { name, breed, weight_kg, size }` · `helpful_count` · **`helpful_by_me`** · **`seller_reply: { body, created_at }`** | 후기 카드(보호자 · 아이 프로필, 도움돼요 상태, 댕다방 답글 말풍선) |
+| 쓸 수 있는 후기 `GET /api/v1/me/reviewable-items` | 줄마다 `delivered_at` · `deadline` · **`reward_points`**(이 후기를 쓰면 받을 금액) | 작성 창 단추 "등록하고 N원 받기"(시안은 1,000원 — 금액은 4-6 결정에 따름) |
+- 목록 정렬 이름은 시안 기준 `latest`(최신) · `helpful`(도움돼요 많은순) · `rating_high` · `rating_low` 그대로 쓰면 됨.
+
 ### 4-6. 아직 정할 것
 기본 적립금(2배의 기준) · 교환/반품/환불 상품 후기 · 삭제 시 적립 회수 · 비회원 후기 · 다른 색상/사이즈 후기 묶기 · 글자 수 · 분류별 평가 질문 · 기본 정렬
 
