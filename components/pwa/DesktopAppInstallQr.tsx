@@ -9,7 +9,7 @@
  *   그 페이지가 휴대폰을 알아서 구분해 안드로이드는 "바로 설치하기"(설치 창), 아이폰은 Safari "홈 화면에 추가" 순서를 보여 줌.
  *   설치 기능은 기존 그대로(PwaInstallProvider · MobileAppHome) — 여기서는 주소만 건넴.
  * - QR 그림: public/images/ui/app-install-qr.svg(위 주소 고정 · segno 로 미리 만듦 · 오류 정정 Q) — 새 라이브러리 없음.
- *   가운데 댕다방 앱 아이콘을 얹어도 읽히는 것 확인(가운데 7칸 가림까지 시험).
+ *   가운데 댕다방 로고(모바일 웹 헤더와 같은 동그란 icon-v2)를 얹어도 읽히는 것 확인(지름 11칸까지 시험, 실제 약 9칸).
  * - 겉 틀은 웹 크레파스 결 창(.ddb-petform — app/globals.css)을 그대로 쓰고, QR 창만의 배치는 data-mode="app-qr" 규칙.
  * - 말풍선 "댕다방, 앱에서 더 편하게 즐겨보세요 🐾" — 모바일 아이콘과 같은 시간 · 조건(useAppInstallBubble: 3초 뒤 처음, 5초 보였다가 20초마다,
  *   오늘 안 보기 · 장바구니 · 결제 · 로그인 화면 · 다른 창 열림이면 쉼). PC 에서는 말풍선 글자를 누르면 QR 창이 열림.
@@ -111,14 +111,14 @@ function AppInstallQrDialog({ onClose }: { onClose: () => void }) {
 
                 <div className="ddb-pf-body">
                     <div className="ddb-aq-layout">
-                        {/* QR 액자 — 흰 쿠션 안 QR, 가운데 앱 아이콘 */}
+                        {/* QR 액자 — 흰 쿠션 안 QR, 가운데 댕다방 로고 */}
                         <figure className="ddb-aq-qr">
                             <span className="ddb-aq-code">
                                 {/* eslint-disable-next-line @next/next/no-img-element -- 고정 QR 그림(SVG) */}
                                 <img src="/images/ui/app-install-qr.svg" alt={`댕다방 앱 설치 안내 QR 코드 (${INSTALL_PAGE_URL})`} width={29} height={29} />
                                 <span className="ddb-aq-logo" aria-hidden="true">
-                                    {/* eslint-disable-next-line @next/next/no-img-element -- 작은 3D 그림 */}
-                                    <img src="/images/ui/header-app-install.webp" alt="" />
+                                    {/* eslint-disable-next-line @next/next/no-img-element -- 댕다방 로고(모바일 웹 헤더와 같은 그림) */}
+                                    <img src="/images/pwa/icon-v2-192x192.png" alt="" />
                                 </span>
                             </span>
                             <figcaption>
