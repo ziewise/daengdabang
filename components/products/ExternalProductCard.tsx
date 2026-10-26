@@ -52,6 +52,7 @@ export default function ExternalProductCard({ product, query = "", comparisonRan
         : null;
     const quantitySummary = unitSummary(product, locale);
     const href = externalProductHref(product, query, "card");
+    if (!href) return null;
     const trackDirectClick = () => trackDirectExternalProductClick({ product, query, targetUrl: href, surface: "card" });
     const badgeTone = status === "variant_mismatch" || status === "unit_match"
         ? "bg-sky-50 text-sky-800"

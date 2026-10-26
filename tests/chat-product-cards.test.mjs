@@ -12,16 +12,16 @@ function load(path) {
     const code = ts.transpileModule(readFileSync(new URL(`../${path}`, import.meta.url), "utf8"), {
         compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, jsx: ts.JsxEmit.ReactJSX },
     }).outputText;
-    const module = { exports: {} };
+    const moduleRecord = { exports: {} };
     const localRequire = (name) => {
         if (name === "next/link") return { default: (props) => require("react").createElement("a", props) };
         if (name === "@/lib/shop") return { productHref: (p) => `/products/${p.id}/` };
         if (name.startsWith("@/")) return load(`${name.slice(2)}.ts`);
         return require(name);
     };
-    new vm.Script(`(function(require,module,exports){${code}\n})`).runInNewContext({ URL, URLSearchParams })(localRequire, module, module.exports);
-    cache.set(path, module.exports);
-    return module.exports;
+    new vm.Script(`(function(require,module,exports){${code}\n})`).runInNewContext({ URL, URLSearchParams })(localRequire, moduleRecord, moduleRecord.exports);
+    cache.set(path, moduleRecord.exports);
+    return moduleRecord.exports;
 }
 const { normalizeChatExternalProducts, chatProductImage } = load("lib/chat-products.ts");
 const { isExcludedExternalMerchant } = load("lib/external-products/policy.ts");
@@ -101,11 +101,11 @@ test("card base price and outbound delivered total keep their distinct meanings"
 
 test("search, comparison and chat share destination, offer identity and visit attribution", () => {
     for (const purchaseUrl of [
-        "https://www.lotteon.com/p/product/123?sitmNo=456&mall_no=1&affiliate=keep%2Fexact",
+        "https://www.lotteon.com/p/product/LO2382504414?sitmNo=LO2382504414_2382504415&mall_no=1&affiliate=keep%2Fexact",
         "https://urhey.co.kr/product/123?utm_source=approved%20partner&utm_campaign=existing#option",
         "https://inclear.co.kr/product/123?affiliate=existing",
     ]) {
-        const item = offer({ purchaseUrl, offerId: "offer-1", sellerName: "seller", sourceKind: "merchant",
+        const item = offer({ purchaseUrl, offerId: purchaseUrl.includes("lotteon.com") ? "LO2382504414_2382504415" : "offer-1", sellerName: "seller", sourceKind: "merchant",
             basePrice: 12000, totalPrice: 15000, shippingFee: 3000, shippingEvidence: "explicit_fee",
             category: "food", subcategory: "treats", rank: 2 });
         const [chat] = normalizeChatExternalProducts([item]);

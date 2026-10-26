@@ -494,6 +494,7 @@ export function isDisplayableExternalProduct(product: ExternalProductResult): bo
     if (isMarketEstimate(product)) return false;
     if (product.linkKind === "search" || isGenericSearchUrl(product.purchaseUrl || "")) return false;
     if (!safeReferenceTarget(product.purchaseUrl || "") && !safeReferenceTarget(product.outboundUrl || "")) return false;
+    if (!safeOutboundTarget(safeReferenceTarget(product.purchaseUrl || "") || safeReferenceTarget(product.outboundUrl || ""), { productId: product.id, offerId: product.offerId })) return false;
     return displayProductPrice(product) !== null && hasActualProductImage(product);
 }
 
@@ -590,11 +591,13 @@ export function externalProductHref(product: ExternalProductResult, query: strin
     const fallbackTarget = safeReferenceTarget(product.outboundUrl || "");
     const chosenTarget = target || fallbackTarget;
     if (!chosenTarget) return "";
+    const verifiedTarget = safeOutboundTarget(chosenTarget, { productId: product.id, offerId: product.offerId });
+    if (!verifiedTarget) return "";
     // The redirect records totalPrice. Only send a confirmed delivered total,
     // with a matching label, from every product surface (including CareTalk).
     const total = hasExplicitShippingEvidence(product) && product.priceComparable !== false
         && positiveNumber(product.totalPrice) ? product.totalPrice : null;
-    return outboundHref(chosenTarget, {
+    return outboundHref(verifiedTarget, {
         source: product.sourceName,
         product: product.title,
         query,

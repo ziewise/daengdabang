@@ -30,7 +30,9 @@ function attributionMessageWeb(mode: "naver_nt" | "utm" | "referrer"): string {
 
 export default function OutboundRedirectClient() {
     const params = useSearchParams();
-    const rawTarget = useMemo(() => safeOutboundTarget(params.get("to")), [params]);
+    const rawTarget = useMemo(() => safeOutboundTarget(params.get("to"), {
+        productId: params.get("productId"), offerId: params.get("offerId"),
+    }), [params]);
     const query = params.get("query") || "";
     const sourceName = params.get("source") || "";
     const sellerName = params.get("seller") || "";
@@ -122,7 +124,7 @@ export default function OutboundRedirectClient() {
                 </div>
 
                 {/* 주소를 못 찾았을 때는 "이동하고 있어요" 대신 그 상황 제목(웹) */}
-                <h1 className="mt-5 text-2xl font-black text-neutral-950">{isWeb && !target ? "이동할 주소를 찾지 못했어요" : "판매처로 이동하고 있어요"}</h1>
+                <h1 className="mt-5 text-2xl font-black text-neutral-950">{!target ? "상품 링크를 확인할 수 없어요" : "판매처로 이동하고 있어요"}</h1>
                 {target ? (
                     <>
                         <p className="mt-2 text-sm font-bold text-neutral-500">{host}</p>
@@ -160,7 +162,7 @@ export default function OutboundRedirectClient() {
                     </>
                 ) : (
                     <>
-                        <p className="mt-3 text-sm font-bold text-neutral-600">{isWeb ? "링크가 바뀌었거나 잘못된 주소예요. 상품 검색에서 다시 찾아 주세요." : "이동할 주소를 확인할 수 없습니다."}</p>
+                        <p className="mt-3 text-sm font-bold text-neutral-600">상품 정보와 이동 주소가 일치하는지 확인하지 못했어요. 상품 검색에서 다시 찾아 주세요.</p>
                         <Link href="/products" className="mt-5 inline-flex h-11 items-center justify-center rounded-md bg-neutral-950 px-5 text-sm font-black text-white">
                             상품 검색으로 돌아가기
                         </Link>

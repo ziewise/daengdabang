@@ -89,11 +89,46 @@ export function outboundHref(
     return `/outbound/?${params.toString()}`;
 }
 
-export function safeOutboundTarget(rawTarget: string | null): string {
+type ProductLinkIdentity = { productId?: string | null; offerId?: string | null };
+
+function lotteIdentity(value: string | null | undefined): { product: string; offer: string } | null {
+    // Public row IDs may be hashes. Only an explicit, anchored LOTTE SKU is
+    // identity evidence; never infer the expected SKU from the destination.
+    const match = String(value || "").trim().match(/^(?:(?:marketplace-)?lotteon[-:])?((?:LO|PD|LE)\d{6,20})(_\d{6,20})?$/i);
+    return match ? { product: match[1].toUpperCase(), offer: (match[1] + (match[2] || "")).toUpperCase() } : null;
+}
+
+export function safeOutboundTarget(rawTarget: string | null, identity?: ProductLinkIdentity): string {
     if (!rawTarget) return "";
     try {
         const url = new URL(rawTarget);
         if (url.protocol !== "https:" && url.protocol !== "http:") return "";
+        if (identity) {
+            const offer = lotteIdentity(identity.offerId);
+            const product = lotteIdentity(identity.productId);
+            const host = url.hostname.toLowerCase();
+            const lotteDomain = host === "lotteon.com" || host.endsWith(".lotteon.com");
+            const lotteHost = ["lotteon.com", "www.lotteon.com", "m.lotteon.com"].includes(host);
+            if (lotteDomain || offer || product) {
+                // Old hashed cards without an offer ID cannot establish which
+                // product they described. Withhold instead of trusting the URL.
+                if (!lotteHost || url.protocol !== "https:" || url.port || url.username || url.password || (!offer && !product)) return "";
+                if (offer && product && (offer.product !== product.product
+                    || (offer.offer.includes("_") && product.offer.includes("_") && offer.offer !== product.offer))) return "";
+                // A base-only offer field must not discard the stronger known
+                // variant carried by a legacy raw productId (or vice versa).
+                const expected = offer?.offer.includes("_") ? offer : product?.offer.includes("_") ? product : offer || product!;
+                const destination = url.pathname.match(/^\/p\/product\/((?:LO|PD|LE)\d{6,20})\/?$/i);
+                if (!destination || destination[1].toUpperCase() !== expected.product) return "";
+                const productQueries = url.searchParams.getAll("spdNo");
+                if (productQueries.length > 1 || (productQueries.length && productQueries[0].toUpperCase() !== expected.product)) return "";
+                const variants = url.searchParams.getAll("sitmNo");
+                if (variants.length > 1) return "";
+                const variant = variants.length ? lotteIdentity(variants[0]) : null;
+                if (variants.length && (!variant || variant.product !== expected.product)) return "";
+                if (expected.offer.includes("_") && variant?.offer !== expected.offer) return "";
+            }
+        }
         return url.toString();
     } catch {
         return "";
