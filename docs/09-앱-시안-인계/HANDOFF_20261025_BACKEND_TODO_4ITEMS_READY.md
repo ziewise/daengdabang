@@ -1,4 +1,4 @@
-# 협업자 백엔드 작업 4가지 — 한 장 정리 (2026-10-25)
+# 협업자 백엔드 작업 — 한 장 정리 (2026-10-25 · 10-26 보강: 5 주문 취소·반품·구매 확정, 6 댕자랑 사진 속도)
 
 > 웹 화면 작업을 하며 생긴 **서버 · 기능 작업**만 모았습니다.
 > 화면은 다 만들어져 있고, 서버가 없는 부분은 **스위치가 꺼져 있거나 "준비 중"으로만 보입니다(가짜 성공 없음).**
@@ -9,7 +9,9 @@
 | 1 | 회원가입 · 인증(본인인증 · 이메일 중복 확인 · 마케팅 동의 · 간편가입 결과 값) | `NEXT_PUBLIC_SIGNUP_IDENTITY` · `NEXT_PUBLIC_SIGNUP_EMAIL_CHECK` · `NEXT_PUBLIC_SIGNUP_MARKETING` | 중 (본인인증은 인증사 계약 필요) |
 | 2 | 개인정보 확인 · 수정(소식 그만 받기 · 휴대폰 등록 · 재인증) | 없음(화면에 "준비 중") | 소 |
 | 3 | 비회원 주문(주문 · 결제 확인 · 조회 · 취소) | `NEXT_PUBLIC_GUEST_ORDER` | 중~대 |
-| 4 | 자사몰 상품 후기(작성 · 사진 · 구매자 확인 · 적립 · 관리) | (화면은 서버 준비 후 우리가 만듦) | 대 |
+| 4 | 자사몰 상품 후기(작성 · 사진 · 구매자 확인 · 적립 · 관리) | 개발 서버 `?rvpreview=1` 시안(4-5b) | 대 |
+| 5 | 주문 취소 · 반품 신청 · 구매 확정(회원 주문 내역) | 취소 · 반품은 지금 1:1 문의로 접수, 구매 확정은 개발 서버 `?ocpreview=1` 시안 | 중 |
+| 6 | 댕자랑 사진 속도(저장 허용 · 목록용 작은 사진) | 없음(서버 응답만) | 소 |
 
 ---
 
@@ -272,15 +274,61 @@
 
 ---
 
-## 5. 순서 제안
+## 5. 주문 취소 · 반품 신청 · 구매 확정 (2026-10-26 추가)
+
+### 5-1. 지금 상태(화면은 다 만들어 둠 · 웹 마이페이지 주문 내역)
+| 버튼 | 보이는 때 | 지금 동작 | 서버 생기면 |
+|---|---|---|---|
+| **주문 취소 요청** | 결제 완료 · 상품 준비 중 | 창(취소 안내 + 1:1 문의 양식, 유형 `refund` "환불·주문 취소", 제목 "주문 취소 요청 · 주문 이름") | 창의 접수를 아래 ① 으로 |
+| **반품 신청**(상품 줄마다) | 배송 완료 | 창(그 상품 그림 · 이름 · 옵션 + 1:1 문의 양식, 유형 `return` "반품", 제목 "반품 신청 · 상품명") | 창의 접수를 아래 ② 로 |
+| **구매 확정** | 배송 완료 | 개발 서버 `?ocpreview=1` 에서만 보임 · 확정해도 화면만 바뀜(운영에는 안 보임) | 아래 ③ 연결 후 운영에 켬 |
+
+- 프론트 파일
+  - 주문 내역 · 상세: `app/mypage/orders/page.tsx`(`LiveOrderActions` · `canRequestReturn` · `LineReturnModal`)
+  - 취소 · 반품 창: `components/mypage/OrderHelpModal.tsx`(`cancel` · 상품별 `exchange`)
+  - 구매 확정 창: `components/mypage/PurchaseConfirmModal.tsx`(`onConfirm` 만 넘기면 실제 확정, `usePurchaseConfirmPreview`)
+- 지금 판단 기준은 화면에서 계산(`orderStatusLabel` → 결제 완료 · 상품 준비 중 · 배송중 · 배송완료). 서버가 아래 ④ 값을 주면 그것으로 바꿈.
+
+### 5-2. 할 일(서버)
+**① 주문 취소(결제 취소 · 환불)**
+- `POST /api/v1/payments/toss/orders/{orderId}/cancel-request` `{ reason, detail? }`
+- 배송 준비 전이면 바로 Toss 결제 취소(전체), 이미 준비 · 출고면 `requested` 로 남기고 운영자 처리
+- 응답: `{ orderId, status: "cancelled" | "cancel_requested", refund?: { amount, method, expectedAt } }`
+- 기존 `cancelTossTestOrder`(결제 전 멈춘 테스트 주문 지우기)와는 다른 기능
+
+**② 반품 신청(상품 줄 단위)**
+- `POST /api/v1/payments/toss/orders/{orderId}/lines/{lineId}/return-request` `{ reason, detail, photos?: mediaId[] }`
+- 상태: `requested → approved → pickup → inspected → refunded`(또는 `rejected`), 반품비(단순 변심 편도 3,000원 · 무료배송 주문 6,000원 — `/return` 기준)
+- 응답: `{ returnId, status, fee?, refund? }`, 주문 내역에 줄별 반품 상태 표시용
+
+**③ 구매 확정**
+- `POST /api/v1/payments/toss/orders/{orderId}/confirm-purchase` → `{ orderId, status: "purchase_confirmed", confirmedAt, reward?: { amount } }`
+- 자동 확정(배송 완료 후 N일 — 기간은 정책 결정) · 확정 뒤에는 반품 신청 막기 · 적립금은 기존 적립 장부에
+- 후기(4장)와 연결: 확정 또는 배송 완료 뒤 작성 가능
+
+**④ 주문 내역 응답에 더할 값**(`lib/toss-order-history.ts` `TossOrderHistoryItem` · `Line`)
+- 주문: `deliveredAt` · `cancelable` · `purchaseConfirmable` · `purchaseConfirmedAt` · `cancel?: { status, requestedAt }`
+- 줄: `lineId` · `returnable` · `return?: { returnId, status, requestedAt }` · `review?`(4장)
+
+### 5-3. 아직 정할 것
+자동 구매 확정 기간 · 부분 취소(일부 상품만) 허용 · 반품 사진 필수 여부 · 확정 적립금 금액 · 교환(같은 상품 다른 옵션) 전용 흐름
+
+## 6. 댕자랑 사진 속도 (2026-10-26 추가)
+- 측정(휴대폰 4G): 게시물 사진이 `Cache-Control: private, no-store` 라 다시 와도 매번 새로 받고, 서버가 사진 한 장 내주는 데 0.5~0.7초
+- ① 공개 게시물 사진 `GET /api/v1/showcase/posts/{id}/image` 를 `public, max-age=86400, immutable`(사진이 바뀌면 주소에 버전) + Cloudflare 캐시
+- ② 목록용 작은 사진(예: 480px · `?w=480` 또는 `image_thumb_url`) — 지금은 2칸 목록에도 원본(약 120KB)
+- 프론트는 이미 서버 연결을 미리 열어 둠(`app/layout.tsx` preconnect) — 위 두 가지만 서버에서
+
+## 7. 순서 제안
 1. **2-① 소식 그만 받기**(작음 · 법적으로 필요)
 2. **1-② 이메일 중복 확인 · 1-③ 마케팅 동의 · 1-④ 간편가입 결과 값**(작음)
 3. **4. 후기 1단계**(매출 · 신뢰에 직결)
 4. **3. 비회원 주문**(결제 · 개인정보 검토 필요)
 5. **1-① 본인인증 · 2-② 휴대폰**(인증사 계약 후)
 6. **4. 후기 2단계(영상)**
+7. **5. 주문 취소 · 반품 · 구매 확정**(실제 주문이 생기기 전에) · **6. 댕자랑 사진 캐시**(작음 — 언제든)
 
-## 6. 관련 문서
+## 8. 관련 문서
 - `HANDOFF_20261024_WEB_SIGNUP_FLOW_READY.md` — 가입 화면 흐름 자세히
 - `HANDOFF_20261025_SIGNUP_GUEST_ORDER_READY.md` — 가입 · 개인정보 · 비회원 주문 화면 자세히
 - `HANDOFF_20261025_REVIEW_FEATURE_SPEC_DRAFT.md` — 후기 기획 자세히
