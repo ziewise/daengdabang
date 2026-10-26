@@ -3316,6 +3316,18 @@ html:not(.ddb-app-mode) section#promo {
     & a.group { background: #fff; }
     & a.group[class*="row-span-2"] { --promo-cap: 76px; }
 
+    /* 떨림 막기(2026-10-26 사용자: "카드 경계선에 마우스가 닿으면 심하게 떨린다")
+       - 화면 틀의 hover:-translate-y-1 과 위 E2 의 translateY(-4px)가 겹쳐 8px 뜨던 것 → 웹은 E2 4px 하나만
+       - 카드가 뜨면 아래 가장자리가 마우스 밑에서 빠져 올림 · 내림이 반복 → 올라가 있는 동안만 투명한 잡는 자리를
+         아래로 늘려 원래 자리까지 덮음(사진은 사진 틀이 스스로 자르므로 카드 밖으로 넘치지 않게 잘라 둘 필요 없음) */
+    & a.group { translate: none; overflow: visible; }
+    & a.group::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+    }
+    & a.group:hover::before { bottom: -20px; }
+
     /* 사진 자리 — 아래 글 칸만큼 비우고 둥글게 · 주인공이 가운데 오게 */
     & a.group > [data-promo-photo] {
         bottom: var(--promo-cap);
