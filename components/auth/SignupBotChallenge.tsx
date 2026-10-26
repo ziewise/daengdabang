@@ -60,13 +60,15 @@ export default function SignupBotChallenge({
     title = "가입 보안 확인",
     description = "자동 가입을 막기 위한 확인을 완료해 주세요.",
     unavailableMessage = "가입 보안 확인을 준비 중입니다. 잠시 후 다시 이용해 주세요.",
+    headingId = "signup-bot-challenge-title",
 }: {
     onTokenChange: (token: string) => void;
     resetKey?: number;
-    action?: "signup" | "password_reset";
+    action?: "signup" | "password_reset" | "shop_chat";
     title?: string;
     description?: string;
     unavailableMessage?: string;
+    headingId?: string;
 }) {
     const siteKey = signupTurnstileSiteKey();
     const containerRef = useRef<HTMLDivElement>(null);
@@ -144,11 +146,11 @@ export default function SignupBotChallenge({
     return (
         <section
             className="grid gap-2 rounded-md border border-neutral-200 bg-neutral-50 p-3"
-            aria-labelledby="signup-bot-challenge-title"
+            aria-labelledby={headingId}
             data-signup-bot-challenge
         >
             <div>
-                <h3 id="signup-bot-challenge-title" className="text-sm font-black text-neutral-950">
+                <h3 id={headingId} className="text-sm font-black text-neutral-950">
                     {title}
                 </h3>
                 <p className="mt-1 text-xs font-bold leading-5 text-neutral-500">

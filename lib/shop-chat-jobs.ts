@@ -1,5 +1,7 @@
+import { chatSecurityFailure, type ChatSecurityCode } from "./shop-chat-security.ts";
 type JobReply = { state?: string; stage?: string; result?: unknown; queue?: unknown; detail?: { code?: string; queue?: unknown } };
-type JobOutcome = { kind: "result"; result: unknown } | { kind: "unsupported" } | { kind: "failed" };
+type JobOutcome = { kind: "result"; result: unknown } | { kind: "unsupported" } | { kind: "failed" }
+    | { kind: "blocked"; code: ChatSecurityCode; retryAfterSeconds?: number };
 
 export const CHAT_VIEW_DETACHED = "chat_view_detached";
 
@@ -126,6 +128,13 @@ export async function awaitShopChatJob(input: {
                 input.signal.removeEventListener("abort", abort);
             }
             checkCancelled();
+            const blocked = chatSecurityFailure(response.status, value, response.headers.get("Retry-After"));
+            if (blocked && (wasSubmit || !["chat_usage_limited", "chat_actor_request_pending", "chat_protection_unavailable"].includes(blocked.code))) {
+                // Explicit pre-admission protection failures cannot enter an
+                // automatic POST/GET/POST loop. Poll quota or protection unavailability backs off
+                // while retaining ownership of an already accepted request.
+                return { kind: "blocked", ...blocked };
+            }
             if (!accepted && wasSubmit && [404, 405, 501].includes(response.status)) {
                 return { kind: "unsupported" };
             }

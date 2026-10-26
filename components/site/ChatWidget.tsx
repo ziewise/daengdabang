@@ -4,6 +4,8 @@ import { FormEvent, type ComponentType, useEffect, useLayoutEffect, useMemo, use
 import Image from "next/image";
 import ChatPendingRecovery from "@/components/site/ChatPendingRecovery";
 import { CHAT_VIEW_DETACHED } from "@/lib/shop-chat-jobs";
+import { useChatBotProtection } from "@/components/site/ChatBotProtection";
+import { ShopChatSecurityError } from "@/lib/shop-chat-security";
 import ChatProductCards from "@/components/site/ChatProductCards";
 import type { ChatExternalProduct } from "@/lib/chat-products";
 import { useChatWindow } from "@/hooks/useChatWindow";
@@ -95,6 +97,7 @@ const getServerChatFontMode = () => "readable" as const;
 export default function ChatWidget({ isMobile = false, launcherHidden = false, onOpenChange, empty: Empty, fixedFontMode, focusInputOnOpen = true }: Props = {}) {
     const { user, hydrated } = useAuth();
     const [open, setOpen] = useState(false);
+    const botProtection = useChatBotProtection(open && hydrated, user?.apiAccessToken);
     const chatWindow = useChatWindow(open);
     const [initialQuestion, setInitialQuestion] = useState<{ text: string } | null>(null);
     const consumedInitialQuestion = useRef<{ text: string } | null>(null);
@@ -304,6 +307,12 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
         }
         if (recovering) { setRequestNotice("이전 요청의 답변을 기다리거나 먼저 멈춰 주세요."); return false; }
         if (!trimmed || inFlightRef.current) return false;
+        const security = botProtection.consume();
+        if (!security.allowed) {
+            setRequestNotice(security.message);
+            setInput(current => current.trim() ? current : trimmed);
+            return false;
+        }
         inFlightRef.current = true;
         const requestSequence = ++requestSequenceRef.current;
         const requestController = new AbortController();
@@ -336,6 +345,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                 history,
                 references: readyReferences,
                 accessToken: user?.apiAccessToken,
+                turnstileToken: security.token,
                 recoveryScope,
                 conversationId: conversationIdRef.current || undefined,
                 onProgress: ({ stage, message }) => {
@@ -399,6 +409,13 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
             return true;
         } catch (reason) {
             if (requestSequence === requestSequenceRef.current) {
+                if (reason instanceof ShopChatSecurityError) {
+                    setInput(current => current.trim() ? current : trimmed);
+                    setMessages(current => current.at(-1)?.role === "user" && current.at(-1)?.text === trimmed ? current.slice(0, -1) : current);
+                    setRequestNotice(reason.message);
+                    if (reason.code.startsWith("chat_verification_")) botProtection.refresh();
+                    return false;
+                }
                 if (reason instanceof ShopChatRequestCancelledError) {
                     setRequestNotice("요청을 멈췄어요. 질문을 고쳐서 다시 보내도 괜찮아요.");
                     return false;
@@ -435,12 +452,12 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
     };
 
     useEffect(() => {
-        if (!hydrated || loading || !initialQuestion || consumedInitialQuestion.current === initialQuestion) return;
+        if (!hydrated || !botProtection.ready || loading || !initialQuestion || consumedInitialQuestion.current === initialQuestion) return;
         consumedInitialQuestion.current = initialQuestion;
         void ask(initialQuestion.text);
         // ask uses the hydrated owner and current transcript; identity guard prevents a second send.
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [hydrated, loading, initialQuestion]);
+    }, [hydrated, botProtection.ready, loading, initialQuestion]);
 
     const submit = (event: FormEvent) => {
         event.preventDefault();
@@ -649,6 +666,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                         <div aria-hidden="true" className="h-px" />
                     </div>
                     <form onSubmit={submit} className={`${styles.composer} flex flex-col p-3`}>
+                        {!loading && !sessionComplete ? botProtection.challenge : null}
                         {sessionComplete ? (
                             <div role="status" className="mb-2 rounded-xl border border-amber-300 bg-amber-50 p-3 text-sm leading-6 text-neutral-900">
                                 <p className="font-bold">이번 상담의 답변 5회를 마쳤어요.</p>
