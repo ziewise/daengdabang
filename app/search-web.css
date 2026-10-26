@@ -444,9 +444,14 @@ html:not(.ddb-app-mode) main[data-search-page] {
 
     & .sr-external .xc-brand { color: #0f8a66; }
 
-    & .sr-external .xc-title {
+    /* 카드 제목 — 위 ".sr-external h3"(구역 소제목용 주아 19px)가 카드 제목(h3)에도 걸려 너무 굵고 크게 보이던 것(2026-10-26 사용자).
+       댕다방 상품 카드 이름과 같은 본문 글꼴 14px 굵게로 되돌림 */
+    & .sr-external h3.xc-title {
         color: #1e293b;
+        font-family: var(--font-wanted-sans), "Apple SD Gothic Neo", sans-serif;
+        font-size: 14px;
         font-weight: 700;
+        line-height: 1.45;
     }
 
     & .sr-external .xc-total { color: #0f8a66; }

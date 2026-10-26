@@ -53,11 +53,24 @@ function linePath(points: readonly number[]) {
 }
 
 // 가장 높은 점(봉우리) 자리 — 동그라미 표시용
+// 2026-10-26: 곡선은 점을 "당기는 점"으로만 쓰고 이웃 점 사이 가운데를 지나서, 뾰족한 봉우리일수록 원래 점보다 아래로 지나감
+// (분홍 선 0.30 → 0.86 → 0.62 에서 동그라미가 선 위로 떠 보이던 것). 봉우리 점을 당기는 곡선 조각의 실제 꼭대기에
+// 동그라미를 둔다. 맨 앞 · 맨 끝 점은 곡선이 그 점을 지나므로 그대로.
 function peak(points: readonly number[]) {
     const top = points.reduce((best, value, index) => (value > points[best] ? index : best), 0);
+    const step = CHART_W / (points.length - 1);
+    const yOf = (value: number) => CHART_PAD + (1 - value) * (CHART_H - CHART_PAD * 2);
+    if (top === 0 || top === points.length - 1) return { x: top * step, y: yOf(points[top]) };
+    // 2차 곡선(앞 가운데점 A → 당기는 점 B → 뒤 가운데점 C)에서 가장 높은 자리 t = (A − B) / (A − 2B + C)
+    const a = yOf((points[top - 1] + points[top]) / 2);
+    const b = yOf(points[top]);
+    const c = yOf((points[top] + points[top + 1]) / 2);
+    const t = Math.min(1, Math.max(0, (a - b) / (a - 2 * b + c || 1)));
+    const ax = (top - 0.5) * step;
+    const cx = (top + 0.5) * step;
     return {
-        x: top * (CHART_W / (points.length - 1)),
-        y: CHART_PAD + (1 - points[top]) * (CHART_H - CHART_PAD * 2),
+        x: (1 - t) ** 2 * ax + 2 * (1 - t) * t * top * step + t ** 2 * cx,
+        y: (1 - t) ** 2 * a + 2 * (1 - t) * t * b + t ** 2 * c,
     };
 }
 
