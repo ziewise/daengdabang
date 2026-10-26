@@ -34,7 +34,9 @@ const androidAppearanceBootstrap = `
   try {
     const root = document.documentElement;
     const isAndroid = /Android/i.test(navigator.userAgent);
-    const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    // 설치한 안드로이드 앱(DDBNative)은 휴대폰 다크 모드와 상관없이 늘 밝은 화면(2026-10-26 사용자: "갑자기 앱이 다크로").
+    // 앱 화면 테마(DayNight)가 휴대폰 다크 모드를 따라가 웹 화면도 다크로 읽혀, 아래 어두운 배경 · 앱 바 규칙이 켜지던 것. 브라우저 · 웹앱은 그대로
+    const isDark = !/DDBNative/.test(navigator.userAgent) && window.matchMedia("(prefers-color-scheme: dark)").matches;
     root.dataset.ddbPlatform = isAndroid ? "android" : "other";
     root.dataset.ddbAndroidDark = isAndroid && isDark ? "true" : "false";
   } catch {}

@@ -73,7 +73,9 @@ export function PwaInstallProvider({ children }: { children: React.ReactNode }) 
             document.documentElement.dataset.ddbPlatform = detectedPlatform;
             // Samsung Internet/installed Android PWAs can force-darken a light page
             // aggressively, so dim the decorative background beyond the browser conversion.
+            // 설치한 안드로이드 앱(네이티브)은 늘 밝은 화면 — 휴대폰 다크 모드를 따라가지 않음(2026-10-26 사용자, app/layout.tsx 첫 스크립트와 같은 규칙)
             document.documentElement.dataset.ddbAndroidDark = detectedPlatform === "android"
+                && !Capacitor.isNativePlatform()
                 && darkModeQuery.matches ? "true" : "false";
         };
         const onBeforeInstallPrompt = (event: Event) => {
