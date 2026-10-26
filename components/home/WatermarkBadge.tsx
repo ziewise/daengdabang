@@ -42,6 +42,11 @@ interface WatermarkBadgeProps {
     onClick?: () => void;
 }
 
+// 견종 얼굴 배지 — 원본(/images/breeds/<견종>.mp4) 대신 배지용 480px 영상 · 첫 장면 그림(2026-10-26, public/images/breeds/badge)
+const BREED_VIDEO = /^\/images\/breeds\/([\w-]+)\.mp4$/;
+const badgeVideoSrc = (src: string) => src.replace(BREED_VIDEO, "/images/breeds/badge/$1-480.mp4");
+const badgePosterSrc = (src: string) => (BREED_VIDEO.test(src) ? src.replace(BREED_VIDEO, "/images/breeds/badge/$1-480.webp") : undefined);
+
 export default function WatermarkBadge({
     src,
     xRatio,
@@ -212,8 +217,12 @@ export default function WatermarkBadge({
                     <div className="relative h-full w-full overflow-hidden rounded-full shadow-[0_8px_22px_rgba(0,0,0,0.32)]">
                         {/* 견종 얼굴 영상 — 16:9 가운데만 원형으로(양옆 잘림), 자동재생 루프.
                             interactive 면 hover 시 페이드아웃되며 아래 펫렌즈 카메라 버튼이 드러난다. */}
+                        {/* 2026-10-26 사용자 "처음 접속 · 새로고침 때 배지가 안 나올 때가 많아":
+                            1280×720 원본(장당 약 2MB)이 오기 전까지 동그라미가 비어 있었음 → 가운데를 자른 480px 배지 영상(약 220KB)과
+                            첫 장면 그림(poster, 약 10KB)을 써서 바로 보이게. 원본은 그대로(다른 곳에서 쓰면 그대로), 견종 영상이 아니면 원래 주소 */}
                         <video
-                            src={src}
+                            src={badgeVideoSrc(src)}
+                            poster={badgePosterSrc(src)}
                             autoPlay
                             muted
                             loop
