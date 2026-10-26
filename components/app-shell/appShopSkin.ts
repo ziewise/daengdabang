@@ -1814,17 +1814,18 @@ html.ddb-app-mode section[aria-label="댕다방 케어톡"] > header button > i:
    창(주문 도움 = 교환·반품 안내 · 문의 · 주문 취소 요청 · 반품 신청, 구매 확정): 점 무늬 속지 + 테이프 · 머리는 바느질 점선 ·
    제목은 테이프 이름표 · 주문 표는 크래프트 메모 · 안내 칸은 메모지 · 주 버튼 분홍 와펜 · 보조 버튼 크림 와펜. 문구 · 입력 · 접수 동작 그대로 ── */
 /* 진행 단계 — 도장 칩(지난 단계 민트 · 지금 분홍 · 남은 단계 크림) */
-${MYW} .mp-order-steps { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; padding: 0; list-style: none; }
-${MYW} .mp-order-steps li { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px 3px 4px; border-radius: 999px; background: #fff6ee; color: #a8968d;
-  font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; font-size: 11px; box-shadow: inset 0 0 0 1.5px #f3e3da; }
-${MYW} .mp-order-steps li > span { display: grid; place-items: center; width: 17px; height: 17px; border-radius: 999px; background: #fff; font-size: 10px; box-shadow: 0 0 0 1px #f3e3da; }
+${MYW} .mp-order-steps { display: flex; flex-wrap: nowrap; gap: 4px; margin-top: 8px; padding: 0; list-style: none; }
+${MYW} .mp-order-steps li { display: inline-flex; flex: 1 1 0; min-width: 0; justify-content: center; align-items: center; gap: 3px; padding: 3px 4px 3px 3px; border-radius: 999px; background: #fff6ee; color: #a8968d;
+  font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; font-size: 10.5px; white-space: nowrap; box-shadow: inset 0 0 0 1.5px #f3e3da; }
+${MYW} .mp-order-steps li > span { display: grid; flex: none; place-items: center; width: 15px; height: 15px; border-radius: 999px; background: #fff; font-size: 9px; box-shadow: 0 0 0 1px #f3e3da; }
 ${MYW} .mp-order-steps li[data-state="done"] { background: #e6f7ee; color: #1f9e75; box-shadow: inset 0 0 0 1.5px #b8e6cf; }
-${MYW} .mp-order-steps li[data-state="now"] { background: #ffe1ea; color: #c4456f; box-shadow: inset 0 0 0 1.5px #f6a9bf; rotate: -2deg; }
+${MYW} .mp-order-steps li[data-state="now"] { background: #ffe1ea; color: #c4456f; box-shadow: inset 0 0 0 1.5px #f6a9bf; }
 /* 상품 줄 반품 신청 — 목록 카드는 오른쪽 아래, 상세는 줄 끝(크림 와펜 작은 알약) */
 ${MYW} .mp-line-side { display: flex; align-self: flex-end; flex: none; }
 ${MYW} .mp-line-side > b, ${MYW} .mp-line-side > a:not(.mp-line-return) { display: none; }
 ${MYW} .mp-line-return-wrap { display: flex; align-self: center; flex: none; }
-${MYW} .mp-line-return { ${PATCH_CREAM} min-height: 0; padding: 5px 12px 4px; font-size: 11.5px; }
+${MYW} .mp-line-return { ${PATCH_CREAM} display: inline-flex; align-items: center; min-height: 0; height: 28px; padding: 0 11px; border-width: 2px; outline-width: 1.5px; outline-offset: -5px; font-size: 11.5px; white-space: nowrap;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.05), 0 4px 6px -4px rgba(110,60,60,.45); }
 ${MYW} .mp-line-return::before { content: "↩"; margin-right: 3px; font-size: 11px; }
 ${MYW} .mp-line-return:active { transform: scale(.94); }
 /* 주문 카드 아래 단추 줄 — 주문 취소 요청은 장미빛 크림 와펜, 구매 확정은 분홍 와펜(다른 단추는 위 공통 와펜 그대로) */
@@ -1900,11 +1901,31 @@ html.ddb-app-mode [data-signup-email-verification] :is(div, p)[class*="bg-emeral
 html.ddb-app-mode [data-signup-email-verification] :is(div, p)[class*="bg-amber-50"] { background: #fff3a6; }
 /* 앱 마이 첫 화면 — 이미 포스트잇 안이라 카드 겉모양은 빼고 안쪽만 */
 html.ddb-app-mode .my-verify [data-signup-email-verification] { padding: 2px 2px 0; border-radius: 0; background: transparent; box-shadow: none; }
+/* 비율(2026-10-26 사용자 "버튼이 커 · 디테일") — 입력칸 + 주 단추(인증번호 받기 · 인증 완료)는 한 줄에 나란히, 단추는 입력칸과 같은 높이 · 글자만큼 폭 */
+html.ddb-app-mode [data-signup-email-verification] .grid:has(> label + .btn-primary) { grid-template-columns: minmax(0, 1fr) auto; align-items: end; }
+html.ddb-app-mode [data-signup-email-verification] .grid > label + .btn-primary { height: 46px; min-height: 46px; padding: 0 16px; font-size: 14px; white-space: nowrap; }
+html.ddb-app-mode [data-signup-email-verification] .grid > label :is(input.input, input[type="email"]) { font-size: 14.5px; }
+/* 이메일 오타 수정 — 보조 단추라 입력칸 아래 오른쪽 작은 크림 와펜(주문 카드 단추와 같은 크기) */
+html.ddb-app-mode [data-signup-email-verification] [data-sev-change] { justify-self: end; width: auto; height: 32px; min-height: 32px; margin-top: 0; padding: 0 13px;
+  border-width: 2px; outline-width: 1.5px; outline-offset: -5px; font-size: 12.5px; line-height: 1; white-space: nowrap; box-shadow: 0 0 0 1px rgba(0,0,0,.05), 0 4px 6px -4px rgba(110,60,60,.45); }
+html.ddb-app-mode [data-signup-email-verification] [data-sev-change], html.ddb-app-mode [data-signup-email-verification] [data-sev-change] * { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; } /* 글자도 와펜 글꼴 */
 
-/* 주문 카드 아래 단추 — 두 칸 같은 폭(배송 문의 · 교환·반품 안내), 주문 취소 요청 · 구매 확정은 한 줄 가득(비율 맞춤) */
-${MYW} [data-live-fulfillment-actions] { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; width: 100%; }
-${MYW} [data-live-fulfillment-actions] > :is(a, button) { justify-content: center; width: 100%; min-width: 0; }
-${MYW} [data-live-fulfillment-actions] > :is([data-order-cancel], [data-order-confirm]) { grid-column: 1 / -1; }
+/* 반려견 프로필 카드(마이페이지) — 카드 안 단추 비율(2026-10-26 사용자 "디테일")
+   정보 수정 = 프로필 종이 오른쪽 아래 작은 크림 와펜 · 아래 단추 묶음 = 한 단계 작은 와펜(40) · 분홍은 대표 하나(펫렌즈)만
+   강아지 추가 등록은 이미 아이가 있으면 크림(첫 등록일 땐 분홍 그대로) — 누르면 하는 일은 그대로 */
+${MYW} #pet-profiles [data-member-pet-edit-open] { display: flex; width: auto; margin-left: auto; height: 32px; min-height: 32px; padding: 0 13px; gap: 5px;
+  border-width: 2px; outline-width: 1.5px; outline-offset: -5px; font-size: 12.5px; line-height: 1; white-space: nowrap; box-shadow: 0 0 0 1px rgba(0,0,0,.05), 0 4px 6px -4px rgba(110,60,60,.45); }
+${MYW} #pet-profiles [data-member-pet-edit-open] i { font-size: 10px; }
+${MYW} #pet-profiles [data-member-pet-create-open], ${MYW} #pet-profiles > a.btn { height: 40px; min-height: 40px; padding: 0 14px; border-width: 2.5px; outline-offset: -6px; font-size: 13.5px; line-height: 1; }
+${MYW} #pet-profiles:has(article) [data-member-pet-create-open] { ${PATCH_CREAM} height: 40px; min-height: 40px; border-width: 2.5px; outline-offset: -6px; }
+${MYW} #pet-profiles > a.btn-primary { margin-top: 12px; }
+${MYW} #pet-profiles > a.btn-secondary { margin-top: 8px; }
+
+/* 주문 카드 아래 단추 — 카드 안 보조 단추라 작은 와펜(높이 32 · 글자 12.5 · 얇은 테두리 · 바느질선 안쪽 5px)을 오른쪽에 한 줄로(2026-10-26 사용자 "버튼이 커 · 비율")
+   큰 와펜(44)은 화면의 대표 단추에만 */
+${MYW} [data-live-fulfillment-actions] { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; width: 100%; }
+${MYW} [data-live-fulfillment-actions] > :is(a, button) { width: auto; min-width: 0; min-height: 32px; height: 32px; padding: 0 13px; border-width: 2px; outline-width: 1.5px; outline-offset: -5px;
+  font-size: 12.5px; line-height: 1; white-space: nowrap; box-shadow: 0 0 0 1px rgba(0,0,0,.05), 0 4px 6px -4px rgba(110,60,60,.45); }
 
 /* 고객센터 머리 판 단추(교환·반품 접수하기 · 자주 묻는 질문 등 cs-actions) — 흰 알약 대신 와펜, 두 칸 같은 폭 */
 ${MYW} .cs-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); gap: 8px; }
