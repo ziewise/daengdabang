@@ -110,7 +110,7 @@ export default function LegalWebHero({ kind, updatedAt }: { kind: LegalKind; upd
             </nav>
 
             {/* 머리 판 */}
-            <header className="lw-hero" data-tone={look.tone}>
+            <header className="lw-hero ddb-hero-band" data-tone={look.tone}>
                 <span className="lw-hero-text">
                     <span className="lw-kicker">{look.kicker}</span>
                     <span className="lw-title" role="heading" aria-level={1}>{look.title}</span>

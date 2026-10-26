@@ -76,7 +76,7 @@ export function SearchHero({ query, ownCount, externalCount, externalLoading }: 
     };
 
     return (
-        <section className="sr-hero dw-csheet is-sky" aria-labelledby="sr-title">
+        <section className="sr-hero dw-csheet is-sky ddb-hero-band" aria-labelledby="sr-title">
             <div className="sr-hero-main">
                 <p className="sr-kicker">DAENGDABANG SEARCH</p>
                 <h1 id="sr-title" className="sr-title">

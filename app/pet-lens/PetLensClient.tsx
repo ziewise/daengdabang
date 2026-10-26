@@ -222,7 +222,7 @@ function LabHeroControls({
 function LabHero({ mode, controls }: { mode: PetLensMode; controls?: React.ReactNode }) {
     const observation = mode === "observation";
     return (
-        <section className={`dw-csheet ${observation ? "is-sky" : "is-lav"} dw-chero lab-hero ${controls ? "is-compact" : ""} hidden`} aria-labelledby="lab-hero-title">
+        <section className={`dw-csheet ${observation ? "is-sky" : "is-lav"} dw-chero ddb-hero-band lab-hero ${controls ? "is-compact" : ""} hidden`} aria-labelledby="lab-hero-title">
             <div className="min-w-0">
                 <p className="ddb-crayon-kicker dw-kicker">{observation ? "DAENGDABANG LAB · BEHAVIOR & SOUND" : "DAENGDABANG LAB · PETLENS"}</p>
                 <h1 id="lab-hero-title" className="ddb-crayon-title dw-h1">

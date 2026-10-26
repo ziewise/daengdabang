@@ -163,7 +163,7 @@ export default function HealthReport() {
             <CrayonGrainFilter />
 
             {/* 머리 판 — 이름표 · 제목 · 설명 · 아이 고르기(견종 그림 알약) · 리포트 그림 고리 */}
-            <section className="dw-csheet is-mint hr-hero" aria-labelledby="hr-title">
+            <section className="dw-csheet is-mint hr-hero ddb-hero-band" aria-labelledby="hr-title">
                 <div className="min-w-0">
                     <p className="ddb-crayon-kicker dw-kicker">DAENGDABANG LAB · HEALTH REPORT</p>
                     <h1 id="hr-title" className="hr-title">{pet.name}의 <span className="ddb-crayon-underline">건강 변화 리포트</span></h1>

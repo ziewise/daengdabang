@@ -47,7 +47,7 @@ export default function ReviewsWebHero({ products, sourceNote }: { products: Cat
 
     return (
         <div className="rv-top" data-reviews-hero>
-            <header className="rv-hero">
+            <header className="rv-hero ddb-hero-band">
                 <span className="rv-hero-text">
                     <span className="rv-kicker">REVIEWS</span>
                     <h1 className="rv-title"><small>네이버 댕다방 스토어</small>후기 많은 상품</h1>

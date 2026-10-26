@@ -46,7 +46,7 @@ export default function CommunityPage() {
     return (
         <main className="mx-auto w-full max-w-[1248px] px-4 py-10 md:px-6 md:py-14" data-daily-web data-community-page>
             <CrayonGrainFilter />
-            <section className="dw-csheet is-pink dw-chero">
+            <section className="dw-csheet is-pink dw-chero ddb-hero-band">
                 <div className="min-w-0">
                     <p className="ddb-crayon-kicker dw-kicker">DAENGDABANG COMMUNITY</p>
                     <h1 className="ddb-crayon-title dw-h1">

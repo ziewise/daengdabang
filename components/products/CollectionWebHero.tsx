@@ -50,7 +50,7 @@ export default function CollectionWebHero({ kicker, title, lead, tone, products,
 
     return (
         <div className="cw-top" data-collection-hero>
-            <header className="cw-hero" data-tone={tone}>
+            <header className="cw-hero ddb-hero-band" data-tone={tone}>
                 <span className="cw-hero-text">
                     <span className="cw-kicker">{kicker}</span>
                     <h1 className="cw-title">{title}</h1>

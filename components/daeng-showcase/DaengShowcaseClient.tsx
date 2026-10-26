@@ -365,7 +365,7 @@ export default function DaengShowcaseClient() {
             <CrayonGrainFilter />
             {/* 머리 판 — 커뮤니티와 같은 분홍 쿠션 + 무지개 고리 그림 */}
             <section className="dw-sc-wrap pt-8 md:pt-12" aria-labelledby="daeng-showcase-title">
-                <div className="dw-csheet is-pink dw-chero">
+                <div className="dw-csheet is-pink dw-chero ddb-hero-band">
                     <div className="min-w-0">
                         <div className="flex flex-wrap items-center gap-2">
                             <p className="ddb-crayon-kicker dw-kicker">DAENGDABANG SHOWCASE</p>

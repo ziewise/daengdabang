@@ -79,7 +79,7 @@ export default function ShopListHero({ pageCategory, category, subcategory, titl
     return (
         <div className="pl-top" data-pl-hero>
             {/* ① 머리 판 */}
-            <section className="pl-hero" data-tone={look.tone} aria-labelledby="pl-hero-title">
+            <section className="pl-hero ddb-hero-band" data-tone={look.tone} aria-labelledby="pl-hero-title">
                 <span className="pl-hero-text">
                     <span className="pl-kicker">{look.kicker}</span>
                     <h1 id="pl-hero-title" className="pl-title">{displayTitle}</h1>

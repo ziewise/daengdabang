@@ -32,7 +32,7 @@ export default function SupportTop({ current, kicker, title, lead, children }: {
     return (
         <>
             <CrayonGrainFilter />
-            <section className={`cs-hero dw-csheet ${SUPPORT_TINTS[current]} dw-chero`} aria-labelledby={`cs-${current}-title`}>
+            <section className={`cs-hero dw-csheet ${SUPPORT_TINTS[current]} dw-chero ddb-hero-band`} aria-labelledby={`cs-${current}-title`}>
                 <div className="min-w-0">
                     {/* 빈 표시 — 앱 규칙("div 의 첫 p + h1 = 영문 꼬리표 숨김")에 걸려 원래 보이던 앱 꼬리표가 사라지지 않게 */}
                     <span className="hidden" aria-hidden="true" />
