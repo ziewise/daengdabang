@@ -44,7 +44,8 @@ export function reviewSellerLabel(value: unknown): string {
     const url = reviewSourceUrl(value);
     if (!url) return "외부 판매점";
     const slug = new URL(url).pathname.split('/')[1];
-    return slug === 'daengdabang' ? '(주)내츄럴랩스 · 네이버 daengdabang' : `네이버 ${slug}`;
+    // 2026-10-26 사용자: 이름은 '네이버 댕다방 스토어', 판매자 표기 (주)내츄럴랩스는 그대로(스토어 회사 이름이 바뀌면 여기만)
+    return slug === 'daengdabang' ? '네이버 댕다방 스토어 · 판매자 (주)내츄럴랩스' : `네이버 ${slug}`;
 }
 
 /** A read-only projection. Original records and IDs are never rewritten or removed. */

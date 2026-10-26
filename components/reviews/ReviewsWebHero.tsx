@@ -50,7 +50,7 @@ export default function ReviewsWebHero({ products, sourceNote }: { products: Cat
             <header className="rv-hero">
                 <span className="rv-hero-text">
                     <span className="rv-kicker">REVIEWS</span>
-                    <h1 className="rv-title"><small>외부 판매점</small>후기 많은 상품</h1>
+                    <h1 className="rv-title"><small>네이버 댕다방 스토어</small>후기 많은 상품</h1>
                     <p className="rv-lead">다른 판매점에서 먼저 써 본 보호자들의 이야기가 많은 상품을 모았어요.</p>
                     <span className="rv-stats">
                         <span><i className="fa-solid fa-box-open" aria-hidden="true" />상품 <b>{products.length}</b>개</span>
@@ -103,7 +103,7 @@ export default function ReviewsWebHero({ products, sourceNote }: { products: Cat
                             </Link>
                         ))}
                     </div>
-                    <p className="rv-quote-note">외부 판매점 후기 원문 일부예요. 자사몰 구매 후기가 아니에요.</p>
+                    <p className="rv-quote-note">네이버 댕다방 스토어 후기 원문 일부예요. 이 사이트에서 직접 구매한 후기와는 따로 보여 드려요.</p>
                 </section>
             )}
 

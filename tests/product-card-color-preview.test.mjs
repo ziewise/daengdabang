@@ -92,7 +92,7 @@ const media = tree => tree.find(n => n.props?.onMouseEnter);
 test('external review stars and counts always identify the seller and never use own-store metrics', () => {
     const fixture = card({ reviewCount: 999, rating: 1, externalReviewCount: 17, externalReviewAverage: 4.94, externalReviewUrl: 'https://smartstore.naver.com/daengdabang/products/123' });
     const text = JSON.stringify(fixture.render().map(node => node.props.children));
-    assert.match(text, /외부 판매점 후기/);
+    assert.match(text, /(?:외부 판매점|네이버 댕다방 스토어) 후기/); // 2026-10-26 이름 '네이버 댕다방 스토어 후기'(판매자 표기는 아래 그대로)
     assert.match(text, /내츄럴랩스/);
     assert.match(text, /4.9/);
     assert.doesNotMatch(text, /999/);

@@ -162,7 +162,7 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
 
                 {(p.externalReviewCount ?? 0) > 0 && (
                     <div className="pd-review-line flex flex-wrap items-center gap-2 text-sm">
-                        <span className="text-xs text-neutral-500">{locale === "en" ? "External store reviews" : "외부 판매점 후기"}</span>
+                        <span className="text-xs text-neutral-500">{locale === "en" ? "Naver Daengdabang store reviews" : "네이버 댕다방 스토어 후기"}</span>
                         <i className="fa-solid fa-star text-amber-400" />
                         <span className="font-black">{p.externalReviewAverage?.toFixed(1) ?? '—'}</span>
                         <span className="text-neutral-300">|</span>

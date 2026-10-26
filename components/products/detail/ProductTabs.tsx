@@ -32,7 +32,7 @@ export default function ProductTabs({ product: p }: Props) {
         : undefined;
     const sections: { key: SectionKey; label: string }[] = [
         { key: "detail", label: t("detailInfo") },
-        { key: "review", label: ownPreview ? "구매 후기" : locale === "en" ? "External reviews" : "외부 판매점 후기" },
+        { key: "review", label: ownPreview ? "구매 후기" : locale === "en" ? "Store reviews" : "스토어 후기" /* 탭은 짧게(휴대폰 탭 줄 넘침) — 구역 제목은 "네이버 댕다방 스토어 후기" */ },
         { key: "qna", label: t("qna") },
     ];
 
@@ -94,22 +94,22 @@ export default function ProductTabs({ product: p }: Props) {
                                 댕다방 구매 후기 <b>{previewMode === "empty" ? 0 : PREVIEW_SUMMARY.count}</b>
                             </button>
                             <button type="button" role="tab" aria-selected={reviewView === "external"} onClick={() => setReviewView("external")}>
-                                외부 판매처 후기 {reviewBadge && <b>{reviewBadge}</b>}
+                                네이버 댕다방 스토어 후기 {reviewBadge && <b>{reviewBadge}</b>}
                             </button>
                         </div>
                     </>
                 ) : (
-                    <SectionTitle title={locale === "en" ? "External store reviews" : "외부 판매점 후기"} badge={reviewBadge} tone="yellow" art="review" kicker="REVIEW" />
+                    <SectionTitle title={locale === "en" ? "Naver Daengdabang store reviews" : "네이버 댕다방 스토어 후기"} badge={reviewBadge} tone="yellow" art="review" kicker="REVIEW" />
                 )}
                 {ownPreview && reviewView === "own" ? (
                     <ProductOwnReviews product={p} empty={previewMode === "empty"} />
                 ) : (
                     <>
                         <ReviewContent product={p} />
-                        {!!p.relatedExternalReviewProducts?.length && <aside className="mx-auto mt-6 max-w-3xl rounded-xl border border-neutral-200 p-5" aria-label={locale === "en" ? "Other seasons' external reviews" : "다른 시즌 상품의 외부 후기"}>
-                            <h3 className="text-sm font-bold">{locale === "en" ? "Other seasons' external reviews" : "다른 시즌 상품의 외부 후기"}</h3>
+                        {!!p.relatedExternalReviewProducts?.length && <aside className="mx-auto mt-6 max-w-3xl rounded-xl border border-neutral-200 p-5" aria-label={locale === "en" ? "Other seasons' store reviews" : "다른 시즌 상품의 네이버 댕다방 스토어 후기"}>
+                            <h3 className="text-sm font-bold">{locale === "en" ? "Other seasons' store reviews" : "다른 시즌 상품의 네이버 댕다방 스토어 후기"}</h3>
                             <p className="mt-2 text-xs leading-5 text-neutral-500">{locale === "en" ? "These source products may differ in design or specifications. Their reviews are kept separate from this product's ratings and summary." : "디자인·사양이 다를 수 있는 다른 시즌 상품의 후기입니다. 이 상품의 평점·리뷰 수·요약에는 합산하지 않습니다."}</p>
-                            <div className="mt-3 space-y-2">{p.relatedExternalReviewProducts.map(source => <Link key={source.folder} href={`/product/${source.folder}/#tab-review`} className="block rounded-lg border border-neutral-200 px-3 py-2 text-xs leading-5 hover:border-indigo-400">{source.name} · {locale === "en" ? "View source reviews" : "원래 상품의 외부 후기 보기"} →</Link>)}</div>
+                            <div className="mt-3 space-y-2">{p.relatedExternalReviewProducts.map(source => <Link key={source.folder} href={`/product/${source.folder}/#tab-review`} className="block rounded-lg border border-neutral-200 px-3 py-2 text-xs leading-5 hover:border-indigo-400">{source.name} · {locale === "en" ? "View source reviews" : "원래 상품의 스토어 후기 보기"} →</Link>)}</div>
                         </aside>}
                     </>
                 )}

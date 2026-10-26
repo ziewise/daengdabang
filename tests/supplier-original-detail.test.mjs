@@ -85,7 +85,7 @@ test('other-season reviews remain reachable through original routes without pool
         relatedExternalReviewProducts: [{ folder: 'original-2024', name: '이전 시즌 상품', url: 'https://smartstore.naver.com/daengdabang/products/123' }],
     }, editorial);
     assert.match(html, /href="\/product\/original-2024\/?#tab-review"/);
-    assert.match(html, /다른 시즌 상품의 외부 후기/);
+    assert.match(html, /다른 시즌 상품의 (?:외부|네이버 댕다방 스토어) 후기/);
     assert.match(html, /평점·리뷰 수·요약에는 합산하지 않습니다/);
 });
 

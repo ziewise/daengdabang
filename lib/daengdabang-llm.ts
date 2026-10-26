@@ -2063,7 +2063,7 @@ export function answerShopQuestion(message: string, context?: ShopQuestionContex
     if (lower.includes("저렴") || lower.includes("낮은") || lower.includes("가격")) products = applySort(products, "priceAsc");
     else if (lower.includes("리뷰")) {
         products = applySort(products, "reviewDesc");
-        answer += " 정렬에 사용한 후기는 상품에 표시된 외부 판매점 출처이며 자사몰 구매 후기와 별개입니다.";
+        answer += " 정렬에 사용한 후기는 상품에 표시된 네이버 댕다방 스토어 후기이며, 이 사이트에서 직접 구매한 후기와는 따로 셉니다.";
     }
     else products = applySort(products, "popular");
 

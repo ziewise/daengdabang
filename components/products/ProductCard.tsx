@@ -242,7 +242,7 @@ export default function ProductCard({
                     <div className="flex min-h-8 flex-wrap items-center justify-end gap-x-1 mt-1.5 text-[10px] md:text-[11px] text-neutral-500">
                         {(p.externalReviewCount ?? 0) > 0 && (
                             <>
-                                <span>{locale === "en" ? "External store reviews" : "외부 판매점 후기"}</span>
+                                <span>{locale === "en" ? "Naver Daengdabang store reviews" : "네이버 댕다방 스토어 후기"}</span>
                                 <i className="fa-solid fa-star text-amber-400" />
                                 <span className="font-bold text-neutral-700">{p.externalReviewAverage?.toFixed(1) ?? '—'}</span>
                                 <span className="text-neutral-400">({p.externalReviewCount})</span>
