@@ -257,9 +257,10 @@ export default function StickerMy() {
                             {/* 우리 아이 */}
                             <SectionLabel className="mt-6" icon="fa-paw">우리 아이</SectionLabel>
                             <div className="mt-3 flex flex-wrap items-start gap-3">
-                                {/* 실제 반려견 프로필(useAuth) — 서버가 확인한 사진만 보여 줌(웹 마이페이지와 같은 hasVerifiedPetPhoto 기준) */}
+                                {/* 실제 반려견 프로필(useAuth) — 서버가 확인한 사진만 보여 줌(웹 마이페이지와 같은 hasVerifiedPetPhoto 기준).
+                                    누르면 앱 우리 아이 화면의 그 아이 카드로(정보 수정 · 주간 리포트, 2026-10-28) */}
                                 {pets.map((pet, i) => (
-                                    <span key={`${pet.apiProfileId ?? pet.name}-${i}`} className="st-polaroid relative block w-[5.6rem] bg-white p-1.5 pb-5" style={{ rotate: `${i % 2 ? 2 : -3}deg` }}>
+                                    <Link key={`${pet.apiProfileId ?? pet.name}-${i}`} href={`/app/sticker/pets/#pet-${i}`} aria-label={`${pet.name} 프로필 보기`} className="my-pet-tap st-polaroid relative block w-[5.6rem] bg-white p-1.5 pb-5" style={{ rotate: `${i % 2 ? 2 : -3}deg` }}>
                                         <Tape className="-top-2 left-1/2 h-3 w-9 -translate-x-1/2" color="rgba(255,200,215,.85)" />
                                         <span className="relative grid aspect-square place-items-center overflow-hidden bg-[#fff3e8]">
                                             {hasVerifiedPetPhoto(pet)
@@ -268,9 +269,10 @@ export default function StickerMy() {
                                                 : <i aria-hidden="true" className="fa-solid fa-paw text-[22px] text-[#f4b9ca]" />}
                                         </span>
                                         <span className="ah-display absolute inset-x-0 bottom-0.5 truncate px-1 text-center text-[12px] text-[#e0557f]">{pet.name}</span>
-                                    </span>
+                                    </Link>
                                 ))}
-                                <Link href="/mypage/?petProfile=required#pet-profiles" className="grid aspect-[5/6] w-[5.6rem] place-items-center rounded-[6px] border-2 border-dashed border-[#f4c3d3] text-center" style={{ rotate: "2deg" }}>
+                                {/* 아이 추가 — 앱 우리 아이 화면에서 등록 창을 바로 엶(?add=1, 협업자 등록 부품 그대로) */}
+                                <Link href="/app/sticker/pets/?add=1" className="grid aspect-[5/6] w-[5.6rem] place-items-center rounded-[6px] border-2 border-dashed border-[#f4c3d3] text-center" style={{ rotate: "2deg" }}>
                                     <span>
                                         <i aria-hidden="true" className="fa-solid fa-plus text-[16px] text-[#f48fac]" />
                                         <span className="ah-display mt-1 block text-[12px] text-[#e0557f]">아이 추가</span>
@@ -378,6 +380,9 @@ const MY_CSS = `
 /* 2026-10-26 — 적립금 고르기 −/＋ 동그란 스티커(누르면 꾹) · 찜한 상품 선반(스크롤 막대 없음) · 빈 찜 포스트잇 */
 .my-step { box-shadow: 0 0 0 2px #f6dca8, 0 5px 9px -6px rgba(150,100,30,.6); -webkit-tap-highlight-color: transparent; transition: transform .3s cubic-bezier(.3,1.6,.5,1); }
 .my-step:not(:disabled):active { transform: scale(.85); }
+/* 2026-10-28 — 우리 아이 폴라로이드도 누르는 사진(누르면 살짝 눌림, 터치 반응만) */
+.my-pet-tap { -webkit-tap-highlight-color: transparent; transition: transform .3s cubic-bezier(.3,1.6,.5,1); }
+.my-pet-tap:active { transform: scale(.94); }
 .my-shelf { scrollbar-width: none; }
 .my-shelf::-webkit-scrollbar { display: none; }
 .my-wish-empty { -webkit-tap-highlight-color: transparent; transition: transform .35s cubic-bezier(.3,1.6,.5,1); }

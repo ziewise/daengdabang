@@ -1952,4 +1952,92 @@ ${LIST} .ddb-hotpick-page .ddb-hotpick-group-title { font-family: "Cafe24Ssurrou
 ${LIST} .ddb-hotpick-page .ddb-hotpick-more { ${PATCH_CREAM} min-height: 0; padding: 4px 11px 3px; font-size: 11.5px; }
 ${LIST} .ddb-hotpick-page .ddb-hotpick-rank { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; box-shadow: 0 0 0 2px #fff, 0 4px 7px -4px rgba(90, 60, 50, .45); }
 
+/* ── 35) 우리 아이(/app/sticker/pets — 반려견 프로필 추가 · 수정, 2026-10-28) ──
+   협업자 부품(MemberPetProfileEditor · MemberPetProfileCreateForm)의 단추 · 안내를 스티커북으로, 등록 · 수정 창(.ddb-petform)은
+   아래에서 올라오는 스티커북 시트(점 무늬 속지 · 테이프 · 바느질 점선 · 와펜 · 알약 스티커). 값 · 검사 · 저장 동작 그대로 ── */
+/* 정보 수정 — 카드 아래 줄 오른쪽 작은 크림 와펜(주문 카드 단추와 같은 크기) */
+html.ddb-app-mode .ap-pets [data-member-pet-edit-open] { ${PATCH_CREAM} display: inline-flex; align-items: center; gap: 5px; width: auto; height: 32px; min-height: 32px; margin: 0; padding: 0 13px;
+  border-width: 2px; outline-width: 1.5px; outline-offset: -5px; font-size: 12.5px; line-height: 1; white-space: nowrap; box-shadow: 0 0 0 1px rgba(0,0,0,.05), 0 4px 6px -4px rgba(110,60,60,.45); }
+html.ddb-app-mode .ap-pets [data-member-pet-edit-open] i { font-size: 10px; }
+html.ddb-app-mode .ap-pets [data-member-pet-edit-open]:active { transform: scale(.94); }
+/* 아이 추가 — 점선 빈 자리(마이 "아이 추가" 칸과 같은 결) · 등록 뒤 안내는 민트 메모 · 펫렌즈 시작은 분홍 와펜 */
+html.ddb-app-mode .ap-pets .pp-add > div { margin-top: 18px; gap: 10px; }
+html.ddb-app-mode .ap-pets [data-member-pet-create-open] { display: flex; align-items: center; justify-content: center; gap: 7px; width: 100%; height: 54px; min-height: 54px; padding: 0;
+  border: 2px dashed #f4c3d3; border-radius: 4px 4px 16px 4px; background: rgba(255,255,255,.55); color: #e0557f; outline: 0; box-shadow: none; text-shadow: none;
+  font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 14px; -webkit-tap-highlight-color: transparent; transition: transform .3s cubic-bezier(.3,1.6,.5,1); }
+html.ddb-app-mode .ap-pets [data-member-pet-create-open]::before { content: "+"; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 999px; background: #ffe1ea; color: #e0557f; font-size: 16px; line-height: 1; }
+html.ddb-app-mode .ap-pets [data-member-pet-create-open]:active { transform: scale(.97); }
+html.ddb-app-mode .ap-pets .pp-add p[role="status"] { border-radius: 4px 4px 14px 4px; background: #e6f7ee; color: #1f7a59; font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; rotate: -0.4deg; box-shadow: 0 6px 10px -8px rgba(40, 110, 80, .45); }
+html.ddb-app-mode .ap-pets .pp-add a.btn-primary { ${PATCH_PINK} height: 40px; min-height: 40px; border-width: 2.5px; outline-offset: -6px; font-size: 13.5px; }
+
+/* 등록 · 수정 창 — 웹 크레파스 창을 앱에서는 아래에서 올라오는 스티커북 시트로(주문 도움 창과 같은 결) */
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) { align-items: end; padding: 0; }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) .ddb-pf-backdrop { background: rgba(90, 60, 50, .38); backdrop-filter: none; }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) .ddb-pf-card { ${DOT_PAPER} width: 100%; max-height: 92dvh; border-radius: 26px 26px 0 0; color: #3d2f2a; font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif;
+  box-shadow: 0 0 0 1.5px #f1e3da, 0 -20px 50px -22px rgba(110, 70, 55, .6); animation: ddb-pm-up .28s cubic-bezier(.2, .9, .3, 1); }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) .ddb-pf-card::before { ${TAPE} top: 7px; left: 50%; width: 62px; margin-left: -31px; height: 13px; border-radius: 0; rotate: -2deg; z-index: 2;
+  background: repeating-linear-gradient(90deg, rgba(190,230,210,.95) 0 7px, rgba(220,244,232,.95) 7px 14px); }
+/* 머리 — 폴라로이드 사진 · 형광펜 이름 · 둥근 글씨 설명 · 동그란 닫기 스티커 */
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) .ddb-pf-head { gap: 14px; padding: 28px 62px 16px 18px; background: transparent; border-bottom: 2px dashed #f0d9cf; box-shadow: none; }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) .ddb-pf-avatar { width: 62px; height: 62px; border: 0; border-radius: 3px; padding: 4px 4px 9px; background: #fff; rotate: -4deg; box-shadow: 0 8px 12px -7px rgba(90, 60, 50, .5), 0 0 0 1px rgba(90, 60, 50, .06); }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) .ddb-pf-avatar img { width: 100%; height: 100%; border-radius: 1px; background: #fff3e8; object-fit: contain; filter: none; }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) .ddb-pf-avatar.is-photo img { object-fit: cover; }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) .ddb-pf-kicker { display: none; }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) .ddb-pf-head h2 { color: #3d2f2a; font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-size: 18px; line-height: 1.35; }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) .ddb-pf-name { color: #3d2f2a; background: linear-gradient(transparent 58%, rgba(255,214,228,.95) 58%, rgba(255,214,228,.95) 92%, transparent 92%); padding: 0 .12em; }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) .ddb-pf-name::after { display: none; }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) .ddb-pf-sub { margin-top: 4px; color: #8a766c; font-size: 11.5px; font-weight: 700; line-height: 1.5; }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) .ddb-pf-close { top: 26px; right: 14px; width: 36px; height: 36px; color: #c4456f; font-size: 14px; box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px #f6c6d4, 0 6px 10px -6px rgba(200, 70, 110, .5); }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) .ddb-pf-close:active { transform: scale(.9); }
+/* 본문 묶음 — 흰 종이 메모(귀퉁이만 둥글게) · 제목 카페24 · 아이콘 작은 다이컷 */
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) .ddb-pf-body { gap: 14px; padding: 16px 14px 18px; scrollbar-color: #f6c6d4 transparent; }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) .ddb-pf-sec { padding: 15px 14px 16px; border-radius: 4px 4px 16px 4px; background: #fff; box-shadow: 0 0 0 1.5px #f3e6d6, 0 10px 16px -13px rgba(110, 80, 40, .5); }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) .ddb-pf-sec:nth-child(odd) { rotate: -0.3deg; }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) .ddb-pf-sec:nth-child(even) { rotate: 0.3deg; }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) .ddb-pf-sec-head { gap: 10px; margin-bottom: 12px; }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) .ddb-pf-sec-head img { width: 38px; height: 38px; filter: drop-shadow(0 2px 2px rgba(120, 70, 50, .2)); }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) :is(.ddb-pf-sec-head h3, .ddb-pf-photos [data-member-pet-multiview-upload] > div:first-child p:first-child) { color: #3d2f2a; font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-size: 15.5px; }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) :is(.ddb-pf-sec-head p, .ddb-pf-photos [data-member-pet-multiview-upload] > div:first-child p + p) { color: #8a766c; font-size: 11.5px; }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) .ddb-pf-grid { grid-template-columns: minmax(0, 1fr); gap: 13px; }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) .ddb-pf-label { color: #b07a8a; font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 12.5px; }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) .ddb-pf-must { background: #ffe1ea; color: #c4456f; font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 800; rotate: -3deg; box-shadow: 0 0 0 1.5px #fff; }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) .ddb-pf-help { color: #a8968d; font-size: 11px; }
+/* 입력칸 — 흰 종이(분홍 초점) */
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) .input { min-height: 46px; border-radius: 14px; background: #fff; color: #5a4038; font-weight: 700; box-shadow: 0 0 0 1.5px #f3e6d6, 0 4px 8px -6px rgba(110, 80, 40, .4); }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) .input:focus { box-shadow: 0 0 0 2px #f283a3, 0 0 0 5px rgba(242, 131, 163, .15); }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) .input:disabled { background: #f6f1ec; color: #a8968d; box-shadow: 0 0 0 1.5px #efe6de; }
+/* 고르기 — 크림 판 위 알약, 고른 칸은 분홍 스티커(흰 테 · 살짝 기울기) */
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) .ddb-pf-pills { border-radius: 16px; background: #fff6ee; box-shadow: inset 0 0 0 1.5px #f6dccd; }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) .ddb-pf-pill span { min-height: 36px; border-radius: 12px; color: #a8968d; font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-size: 12.5px; transition: transform .3s cubic-bezier(.3,1.6,.5,1), background .15s ease; }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) .ddb-pf-pill input:checked + span { background: #ffe1ea; color: #c4456f; rotate: -1deg; box-shadow: 0 0 0 2px #fff, 0 5px 8px -5px rgba(200, 70, 110, .5); }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) .ddb-pf-pill:active span { transform: scale(.94); }
+/* 사진 네 칸 — 점선 빈 폴라로이드 */
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) [data-petlens-photo-view] > span:first-child { color: #b07a8a; font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; font-size: 12px; }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) [data-petlens-photo-view] > span[class*="border-dashed"] { border-radius: 4px; background: #fff6f8; box-shadow: inset 0 0 0 1.5px #f4c3d3; }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) [data-petlens-photo-view] > span[class*="border-dashed"] i { color: #f08eae; font-size: 16px; }
+/* 비율(2026-10-28) — 네 칸이 창 절반을 차지하던 것: 한 줄 네 칸 작은 폴라로이드(번갈아 ±1도) */
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) .ddb-pf-photos [data-member-pet-multiview-upload] > div.grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) [data-petlens-photo-view] > span[class*="border-dashed"] { padding: 0; box-shadow: inset 0 0 0 1.5px #f4c3d3, 0 0 0 3px #fff, 0 6px 9px -6px rgba(90, 60, 50, .45); }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) [data-petlens-photo-view]:nth-child(odd) > span[class*="border-dashed"] { rotate: -1deg; }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) [data-petlens-photo-view]:nth-child(even) > span[class*="border-dashed"] { rotate: 1deg; }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) [data-petlens-photo-view] > span[class*="border-dashed"] span span { font-size: 9px; letter-spacing: -.02em; }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) [data-petlens-photo-view] > span[class*="border-dashed"] > span[class*="bg-black"] { inset: auto 3px 3px; padding: 2px 0; font-size: 9px; }
+/* 동의 — 노란 포스트잇 · 안내/오류 — 민트 · 분홍 메모 */
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) .ddb-pf-consent { border-radius: 2px 2px 14px 2px; background: #fff3a6; color: #6b4708; font-size: 12.5px; rotate: -0.4deg; box-shadow: 0 6px 10px -8px rgba(110, 80, 40, .45); }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) .ddb-pf-consent input { accent-color: #f2789d; }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) .ddb-pf-consent a { color: #c4456f; }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) .ddb-pf-body > p[role] { border-radius: 4px 4px 14px 4px; font-size: 12px; }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) .ddb-pf-body > p[role="status"] { background: #e6f7ee; color: #1f7a59; }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) .ddb-pf-body > p[role="alert"] { background: #ffd6e2; color: #b23a5e; }
+/* 아래 줄 — 바느질 점선 위 · 안내 한 줄 · 닫기 크림 와펜 · 저장 분홍 와펜(이 창의 대표 단추라 큰 와펜) */
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) .ddb-pf-foot { flex-wrap: wrap; gap: 8px; padding: 10px 14px calc(12px + env(safe-area-inset-bottom)); background: rgba(255, 253, 248, .96); border-top: 2px dashed #f0d9cf; box-shadow: none; }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) .ddb-pf-hint { flex-basis: 100%; justify-content: center; color: #8a766c; font-size: 11.5px; }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) .ddb-pf-hint i { color: #f48fac; }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) .ddb-pf-cancel { ${PATCH_CREAM} min-height: 46px; padding: 0 20px; font-size: 14px; }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) .ddb-pf-save { ${PATCH_PINK} flex: 1; min-width: 0; min-height: 46px; padding: 0 16px; font-size: 15px; }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) .ddb-pf-save:disabled { filter: saturate(.55); opacity: .6; }
+html.ddb-app-mode .ddb-petform:not(.ddb-orderhelp) :is(.ddb-pf-save, .ddb-pf-cancel):not(:disabled):active { transform: scale(.96); }
+/* 창이 열린 동안 아래 탭바 · 케어톡 단추 숨김 */
+html.ddb-app-mode body:has(.ddb-petform) :is(nav[aria-label="앱 메뉴"], .app-care-fab) { visibility: hidden; }
+
 `;

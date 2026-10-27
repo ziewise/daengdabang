@@ -127,7 +127,7 @@ export function conceptTabForPath(pathname: string, c: Concept, previous: AppTab
         { tab: "dang", paths: [`/app/${c}/show`, "/daeng-showcase", "/goods-contest"] },
         { tab: "shop", paths: [`/app/${c}/shop`, `/app/${c}/item`] }, // 앱 안 상품 상세(2026-10-21)도 쇼핑
         // 비밀번호 재설정(/forgot-password, 앱 로그인의 "비밀번호를 잊으셨나요?")도 마이 — 규칙에 없어 쇼핑 탭으로 보이던 것(2026-10-17 점검)
-        { tab: "my", paths: [`/app/${c}/my`, `/app/${c}/forgot`, "/mypage", "/auth", "/forgot-password", "/faq", "/notice", "/inquiry", "/return", "/legal", "/terms", "/privacy", "/social"] },
+        { tab: "my", paths: [`/app/${c}/my`, `/app/${c}/forgot`, `/app/${c}/pets`, "/mypage", "/auth", "/forgot-password", "/faq", "/notice", "/inquiry", "/return", "/legal", "/terms", "/privacy", "/social"] },
     ];
     for (const rule of rules) if (rule.paths.some((p) => matches(pathname, p))) return rule.tab;
     // 그 밖의 앱 화면(/app/…)은 홈 — 시안 화면 규칙을 먼저 본 뒤에
@@ -149,6 +149,7 @@ export function conceptSubTitle(pathname: string): string | null {
     if (/^\/app\/sticker\/login/.test(pathname)) return "로그인";
     if (/^\/app\/sticker\/signup/.test(pathname)) return "회원가입";
     if (/^\/app\/sticker\/forgot/.test(pathname)) return "비밀번호 찾기";
+    if (/^\/app\/sticker\/pets/.test(pathname)) return "우리 아이";
     return null;
 }
 
@@ -170,6 +171,10 @@ export const APP_SIGNUP = "/app/sticker/signup/";
 /** 앱 비밀번호 찾기(2026-10-26) — 웹 /forgot-password 를 앱 안 이 주소로(앱 묶음 안이라 APK 에서도 바깥 브라우저로 나가지 않음) */
 export const APP_FORGOT = "/app/sticker/forgot/";
 export const isWebForgotPath = (pathname: string) => /^\/forgot-password(\/|$)/.test(pathname);
+/** 앱 우리 아이(반려견 프로필 추가 · 수정, 2026-10-28) — 웹 마이페이지 반려견 칸(/mypage/#pet-profiles · ?petProfile=required)을 앱 안 이 화면으로 */
+export const APP_PETS = "/app/sticker/pets/";
+export const isWebPetProfilesUrl = (pathname: string, search: string, hash: string) =>
+    /^\/mypage\/?$/.test(pathname) && (hash === "#pet-profiles" || new URLSearchParams(search).get("petProfile") === "required");
 /** 앱 회원가입 주소 — redirect 는 가입 뒤 돌아갈 앱 안 주소 */
 export const appSignupHref = (redirect?: string | null) => (redirect ? `${APP_SIGNUP}?redirect=${encodeURIComponent(redirect)}` : APP_SIGNUP);
 /** 웹 회원가입 화면 주소인가(/auth/signup) — 앱에서는 앱 회원가입으로 바꿔 보낸다 */

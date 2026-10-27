@@ -3,6 +3,7 @@
  * ---------------------------------------------------------------------
  * MemberPetProfileEditor(정보 수정) · MemberPetProfileCreateForm(추가 등록)이 같이 쓰는 웹 전용 겉모양.
  *  - usePetModalHost: 웹이면 document.body(창으로 띄울 자리), 앱 화면(html.ddb-app-mode)이면 null → 앱은 카드 안 펼침 그대로
+ *    (예외 2026-10-28: 앱 "우리 아이" 화면은 PetAppSheet 로 감싸 앱에서도 같은 창 — 앱 겉모양은 appShopSkin "반려견 프로필 창")
  *  - PetProfileModal: 흐린 뒤 화면 + 흰 종이 창 · 민트 띠 머리(둥근 아이 사진 · 손글씨 꼬리표 · 주아 이름 + 세 색 밑줄) ·
  *    Esc · 닫기(×) · 뒤 화면 스크롤 잠금 · 닫으면 여는 버튼으로 초점 되돌림
  *  - PetProfileWebFields: 사진 · 기본 정보 · 몸과 성격 묶음 칸. 크기 · 성별 · 모질 · 활동량은 알약 고르기(값은 기존 select 와 같음)
@@ -10,7 +11,7 @@
  */
 "use client";
 
-import { useEffect, useRef, useSyncExternalStore, type FormEvent, type ReactNode, type RefObject } from "react";
+import { createContext, useContext, useEffect, useRef, useSyncExternalStore, type FormEvent, type ReactNode, type RefObject } from "react";
 import { createPortal } from "react-dom";
 import PetLensPhotoViewFields from "@/components/petlens/PetLensPhotoViewFields";
 import { PET_BREEDS } from "@/lib/pet-companion-breeds";
@@ -25,10 +26,20 @@ function subscribeHtmlClass(onChange: () => void) {
 }
 const isWebScreen = () => !document.documentElement.classList.contains("ddb-app-mode");
 
-/** 창으로 띄울 자리 — 웹이면 body, 앱이면 null(앱은 카드 안 펼침 그대로) */
+// 앱 "우리 아이" 화면(/app/sticker/pets, 2026-10-28) — 이 안에서는 앱에서도 같은 창을 띄움(겉모양은 앱 스킨이 스티커북으로).
+// 이 표시가 없는 앱 화면(간편 가입 반려견 단계 등)은 카드 안 펼침 그대로
+const PetAppSheetContext = createContext(false);
+export function PetAppSheet({ children }: { children: ReactNode }) {
+    return <PetAppSheetContext.Provider value={true}>{children}</PetAppSheetContext.Provider>;
+}
+const noopSubscribe = () => () => {};
+
+/** 창으로 띄울 자리 — 웹이면 body, 앱이면 null(앱은 카드 안 펼침 그대로). 앱 "우리 아이" 화면 안이면 앱도 body */
 export function usePetModalHost(open: boolean) {
     const web = useSyncExternalStore(subscribeHtmlClass, isWebScreen, () => false);
-    return open && web ? document.body : null;
+    const appSheet = useContext(PetAppSheetContext);
+    const client = useSyncExternalStore(noopSubscribe, () => true, () => false); // 서버 그리기 · 첫 맞추기 땐 창 없음
+    return open && client && (web || appSheet) ? document.body : null;
 }
 
 type ModalProps = {

@@ -37,7 +37,7 @@ const PetCompanionGate = dynamic(() => import("@/components/pet-companion/PetCom
 import { Capacitor } from "@capacitor/core";
 import { useAuth, useCart } from "@/lib/store";
 import {
-    APP_FORGOT, APP_ITEM, APP_LOGIN, APP_SIGNUP, APP_TABS, DANG_SECTIONS, MEMBER_ONLY_PATHS, appLoginHref, appSignupHref, conceptIsTabRoot, isWebForgotPath, isWebLoginPath, isWebSignupPath, conceptOf, conceptSubTitle, conceptTabForPath, conceptTabs,
+    APP_FORGOT, APP_ITEM, APP_PETS, isWebPetProfilesUrl, APP_LOGIN, APP_SIGNUP, APP_TABS, DANG_SECTIONS, MEMBER_ONLY_PATHS, appLoginHref, appSignupHref, conceptIsTabRoot, isWebForgotPath, isWebLoginPath, isWebSignupPath, conceptOf, conceptSubTitle, conceptTabForPath, conceptTabs,
     hidesTabBar, isCareTalkPath, isTabRoot, tabForPath, type AppTab, type AppTabKey, type Concept,
 } from "./appTabs";
 import { APP_SHOP_SKIN_CSS } from "./appShopSkin";
@@ -254,14 +254,17 @@ const isMyPetPath = (pathname: string) => /^\/(my-pet|health-report)(\/|$)/.test
  *  - 굿즈 공모전(/goods-contest) → 댕다방 굿즈 공모전 쪽
  *  - 댕자랑(/daeng-showcase) → 댕다방 댕자랑 쪽(공유 링크의 ?post · ?author · ?topic 은 그대로 넘겨 앱에서 그 게시물 · 프로필을 엶)
  *  - 비밀번호 찾기(/forgot-password) → 앱 비밀번호 찾기(2026-10-26, 같은 부품 · 앱 묶음 안)
+ *  - 마이페이지 반려견 칸(/mypage/#pet-profiles · ?petProfile=required — 마이 "반려견 관리" · 펫렌즈 "반려견 등록하기") → 앱 우리 아이(2026-10-28)
  * 우리 아이 기록(/my-pet)은 위 APP_REPORT. 찾지 못하면 null(그 주소 그대로).
  */
-function appScreenFor(pathname: string, search: string): string | null {
+function appScreenFor(pathname: string, search: string, hash = ""): string | null {
     // 상품 상세(/product/{주소}) → 앱 안 상품 상세 틀(2026-10-21) — 앱(APK)은 상품 상세가 앱 묶음에 없어 브라우저 창으로 열렸음.
     // 앱 안에서 같은 부품으로 그려 빠르고, 로그인 · 장바구니 · 찜이 앱과 이어짐
     const productMatch = /^\/product\/([^/]+)\/?$/.exec(pathname);
     if (productMatch) return `${APP_ITEM}?p=${encodeURIComponent(decodeURIComponent(productMatch[1]))}`;
     if (isWebForgotPath(pathname)) return APP_FORGOT;
+    // 반려견 등록이 필요해서 온 경우(petProfile=required)는 그 뜻을 이어 줌 — 앱 화면이 등록 · 수정 창을 바로 엶
+    if (isWebPetProfilesUrl(pathname, search, hash)) return new URLSearchParams(search).get("petProfile") === "required" ? `${APP_PETS}?petProfile=required` : APP_PETS;
     if (isMyPetPath(pathname)) {
         // 웹 /my-pet/?profile=N(AppAiCareOverview 주간 비교 보기 등) — 앱 리포트도 같은 아이를 먼저 고르게 profile 만 이어 줌
         // (검사 기준 = 협업자 cleanPetLensProfileId: 양의 안전 정수만)
@@ -347,7 +350,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 return;
             }
             // 앱 화면이 있는 웹 주소(우리 아이 기록 · 첫 페이지 · 매일 댕생활 · 굿즈 · 댕자랑) — 같은 기능의 앱 화면으로
-            const appScreen = appScreenFor(url.pathname, url.search);
+            const appScreen = appScreenFor(url.pathname, url.search, url.hash);
             if (appScreen) {
                 event.preventDefault();
                 router.push(appScreen);
@@ -405,7 +408,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             return;
         }
         // 코드나 주소(설치 앱 바로가기 · 공유 링크 · 로그아웃 뒤 이동 등)로 들어온 경우도 같은 앱 화면으로
-        const appScreen = appScreenFor(pathname, window.location.search);
+        const appScreen = appScreenFor(pathname, window.location.search, window.location.hash);
         if (appScreen) {
             router.replace(appScreen);
             return;
