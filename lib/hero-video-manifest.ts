@@ -3,7 +3,7 @@
 // 영상 추가/교체 후 `node scripts/gen-hero-manifest.mjs`(또는 npm run dev/build)로 갱신됨.
 export const HERO_VIDEO_MANIFEST = {
     "morning_sunny": {
-        "breed": null,
+        "breed": "poodle",
         "pc": "/images/hero/fall-v1/fall_morning_sunny_pc.mp4",
         "m": "/images/hero/fall-v1/fall_morning_sunny_m.mp4"
     },
@@ -13,7 +13,7 @@ export const HERO_VIDEO_MANIFEST = {
         "m": "/images/hero/fall-v1/fall_morning_rainy_m.mp4"
     },
     "morning_cloudy": {
-        "breed": null,
+        "breed": "poodle",
         "pc": "/images/hero/fall-v1/fall_morning_sunny_pc.mp4",
         "m": "/images/hero/fall-v1/fall_morning_sunny_m.mp4"
     },
@@ -53,7 +53,7 @@ export const HERO_VIDEO_MANIFEST = {
         "m": "/images/hero/fall-v1/fall_night_sunny_m.mp4"
     },
     "night_rain": {
-        "breed": null,
+        "breed": "englishbulldog",
         "pc": "/images/hero/fall-v1/fall_night_rainy_pc.mp4",
         "m": "/images/hero/fall-v1/fall_night_rainy_m.mp4"
     },

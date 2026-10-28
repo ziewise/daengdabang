@@ -26,6 +26,11 @@ test("every desktop and mobile weather scene serves the autumn hero media", asyn
         assert.match(rain.pc, new RegExp(`/fall_${time}_rainy_pc\\.mp4$`));
         assert.match(rain.m, new RegExp(`/fall_${time}_rainy_m\\.mp4$`));
     }
+    // 배지 영상이 있는 견종만 맞춤 — 나머지는 null(기본 견종 배지)
+    assert.equal(HERO_VIDEO_MANIFEST.morning_sunny.breed, "poodle");
+    assert.equal(HERO_VIDEO_MANIFEST.morning_cloudy.breed, "poodle");
+    assert.equal(HERO_VIDEO_MANIFEST.night_rain.breed, "englishbulldog");
+    assert.equal(HERO_VIDEO_MANIFEST.afternoon_sunny.breed, null);
     for (const path of new Set(paths)) {
         assert.ok(path.startsWith("/images/hero/fall-v1/"), path);
         // 압축본(장당 약 2.8~6.2MB) — 압축 전 원본이 잘못 들어가면 여기서 걸림

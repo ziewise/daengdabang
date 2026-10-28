@@ -32,6 +32,11 @@ const HERO_VIDEO_PATH = "/images/hero/fall-v1";
 const HERO_DIR = join(root, "public", HERO_VIDEO_PATH.slice(1));
 const OUT = join(root, "lib/hero-video-manifest.ts");
 
+// 파일명에 견종이 없는 장면 중 배지 영상(public/images/breeds)이 있는 견종만 맞춤(2026-10-28 사용자 결정)
+//   · 아침 맑음 = 검은 푸들, 밤 비 = 잉글리시 불독 / 나머지는 null → 기본 견종 배지
+//   · 흐림은 맑음 장면을 복사하므로 아침 흐림도 푸들
+const SCENE_BREEDS = { morning_sunny: "poodle", night_rain: "englishbulldog" };
+
 // 파일명 날씨 표기 → 화면 날씨 3종(sunny/rain/cloudy)
 const WEATHER_ALIAS = { sunny: "sunny", rain: "rain", rainy: "rain", cloudy: "cloudy" };
 
@@ -56,6 +61,11 @@ for (const file of files) {
     manifest[key] ??= { breed: null, pc: null, m: null };
     manifest[key][device] = `${HERO_VIDEO_PATH}/${file}`;
     if (breed) manifest[key].breed = breed; // 견종은 PC/모바일 중 하나라도 있으면 채움
+}
+
+// 파일명에 견종이 없으면 위 표에서 채움
+for (const [key, breed] of Object.entries(SCENE_BREEDS)) {
+    if (manifest[key] && !manifest[key].breed) manifest[key].breed = breed;
 }
 
 for (const time of ["morning", "afternoon", "evening", "night"]) {

@@ -186,7 +186,7 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
     // 협업자가 감지한 날씨/시간 → 우리 가을 영상 경로 (PC/모바일, 2026-10-28 여름에서 교체)
     const heroVideo = pickHeroVideo(context.weather, context.timeBucket, isMobile);
     const heroBreed = pickHeroBreed(context.weather, context.timeBucket);
-    // 그 영상 속 강아지 견종에 맞는 얼굴 배지 영상 (가을 영상은 견종 이름이 없어 기본 견종, 로그인 펫 견종은 추후)
+    // 그 영상 속 강아지 견종에 맞는 얼굴 배지 영상 (가을: 아침 맑음·흐림 푸들 · 밤 비 불독, 나머지 기본 견종 / 로그인 펫 견종은 추후)
     const heroBreedVideo = pickHeroBreedVideo(context.weather, context.timeBucket);
     const weatherSummary = heroWeatherSummary(weatherReport, locale);
     const contextLabel = `${seasonLabel(context.season, locale)} ${timeBucketLabel(context.timeBucket, locale)}`;
