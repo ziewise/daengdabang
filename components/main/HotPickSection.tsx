@@ -24,6 +24,10 @@ import ProductColorImage from "@/components/products/ProductColorImage";
 import { productHref } from "@/lib/shop";
 import { productCardImage } from "@/lib/catalog/card-image";
 import { useI18n } from "@/lib/i18n";
+// 상품 카드(ProductCard)와 같은 마우스 올리면 영상 재생 — 같은 훅 · 같은 영상 맞춤(2026-10-28)
+import { useProductVideo } from "@/components/products/useProductVideo";
+import VideoBrandOverlay from "@/components/products/VideoBrandOverlay";
+import { hoverVideoFraming, hoverVideoStyle } from "@/lib/catalog/hover-video-framing";
 
 // 제품군 5개 · 1~3위 고르기(임시 순서)는 lib/catalog/hot-picks.ts — /best/ 핫픽 페이지와 같은 자료
 const GROUPS = HOT_PICK_GROUPS;
@@ -41,6 +45,10 @@ function Face({ p, rank, back, shown, ghost }: { p: CatalogProduct; rank: number
     const { locale, productName, formatPrice } = useI18n();
     const name = productName(p);
     const purchase = productPurchaseState(p);
+    // 영상은 지금 보이는 면에만 — 뒤에 숨은 면 · 키 맞춤 면은 영상을 붙이지 않음(뒤집히면 새 면에 다시 붙음)
+    const videoSrc = shown && !ghost ? p.video : undefined;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { videoRef, videoActive, activate, deactivate, previewColor, ...videoEvents } = useProductVideo(videoSrc);
     return (
         <Link
             href={productHref(p)}
@@ -50,8 +58,28 @@ function Face({ p, rank, back, shown, ghost }: { p: CatalogProduct; rank: number
             tabIndex={shown ? undefined : -1}
             className={`ddb-hotpick-face flex flex-col overflow-hidden rounded-2xl bg-white shadow-card ${back ? "ddb-hotpick-back" : ""} ${ghost ? "invisible pointer-events-none" : ""}`}
         >
-            <span className="relative block aspect-square bg-white">
-                {productCardImage(p) && <ProductColorImage src={productCardImage(p)!} alt={name} sizes="(max-width: 1024px) 46vw, 260px" className="object-contain p-2" />}
+            {/* 사진 칸 — 마우스를 올리면 상품 영상(있을 때), 내리면 사진으로. 이 동안 섹션은 뒤집기를 멈춰 영상이 끊기지 않음 */}
+            <span
+                className="relative block aspect-square overflow-hidden bg-white"
+                onMouseEnter={videoSrc ? activate : undefined}
+                onMouseLeave={videoSrc ? deactivate : undefined}
+            >
+                {productCardImage(p) && <ProductColorImage src={productCardImage(p)!} alt={name} sizes="(max-width: 1024px) 46vw, 260px" className={`object-contain p-2 transition-opacity duration-300 ${videoActive ? "opacity-0" : "opacity-100"}`} />}
+                {videoSrc && (
+                    <video
+                        ref={videoRef}
+                        src={videoSrc}
+                        style={hoverVideoStyle(videoSrc)}
+                        data-hover-video-fit="cover"
+                        muted
+                        loop={false}
+                        playsInline
+                        preload="metadata"
+                        {...videoEvents}
+                        className={`pointer-events-none absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${videoActive ? "opacity-100" : "opacity-0"}`}
+                    />
+                )}
+                {videoSrc && videoActive && <VideoBrandOverlay src={videoSrc} forceOverlay={hoverVideoFraming(videoSrc)?.restoreBrandOverlay} />}
             </span>
             <span className="block border-t border-neutral-100 p-3 md:p-4">
                 {/* 순위 배지는 사진 밖(사진 왼쪽 위에 브랜드 로고가 찍힌 상품이 많아 가리지 않게) — 브랜드 줄 앞 */}
