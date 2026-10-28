@@ -367,7 +367,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
        웹 · 설치 앱(PWA)은 같은 사이트라 그대로 */
     useEffect(() => {
         if (!Capacitor.isNativePlatform()) return;
-        const BUNDLED = ["/images/ui/", "/images/brand/", "/images/breeds/", "/images/pwa/", "/fonts/", "/_next/", "/ai/", "/videos/login.mp4",
+        const BUNDLED = ["/images/ui/", "/images/brand/", "/images/breeds/", "/images/pwa/", "/fonts/", "/_next/", "/ai/",
             "/images/logo-black-poodle-v2.png", "/images/wordmark.png", "/images/og-ai-platform-"];
         const remote = (value: string | null) => Boolean(value && value.startsWith("/") && !value.startsWith("//") && !BUNDLED.some((b) => value.startsWith(b)));
         const fix = (el: Element) => {

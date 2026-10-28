@@ -48,7 +48,7 @@ const bundledFiles = [
     "images/logo-black-poodle-v2.png",
     "images/og-ai-platform-20260804-1200x630.png",
     "images/wordmark.png",
-    "videos/login.mp4",
+    // videos/login.mp4 는 뺌(2026-10-28 사용자 승인) — 앱 로그인은 스티커북 화면이라 영상을 쓰지 않음(앱 묶음 2.5MB 절약)
 ];
 
 const launchDocument = `<!doctype html>

@@ -9,7 +9,8 @@
 /**
  * LoginPage — 풀스크린 로그인 (헤더/푸터 없음 · ConditionalChrome 가 크롬 숨김).
  * ---------------------------------------------------------------------
- * 중앙 카드: 좌 9:16 브랜드 영상(public/videos/login.mp4) + 우 로그인 폼.
+ * 중앙 카드: 좌 9:16 브랜드 영상(public/videos/login-clean-v1.mp4) + 우 로그인 폼.
+ *   2026-10-28: 원본 login.mp4 오른쪽 아래 AI 표시(반투명 별)를 지우고 소리 빼고 다시 담은 영상(2.5MB → 1.9MB). 원본은 Git 에 보관.
  * 색 톤은 영상(따뜻한 크림 방 + 흰 강아지 + 하늘 반다나)에 맞춰 크림/허니 앰버로 통일.
  * 폼: 이메일/아이디 · 비밀번호(눈 토글) · 로그인 · 간편로그인(원형) · 회원가입.
  * 로그인 로직은 기존 흐름을 유지.
@@ -153,7 +154,7 @@ export default function LoginPage() {
                 {/* 좌: 9:16 브랜드 영상 (md+ 노출) — 자동재생 무한루프 */}
                 <div className="relative hidden w-[42%] shrink-0 overflow-hidden bg-[#f6efe3] md:block">
                     <video
-                        src="/videos/login.mp4"
+                        src="/videos/login-clean-v1.mp4"
                         autoPlay
                         muted
                         loop

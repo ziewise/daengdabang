@@ -22,6 +22,9 @@ const DEPLOYMENT_OMIT_PATHS = new Set([
     // Superseded preview exports retained only as source evidence.
     "images/hero/snow.mp4",
     "images/hero/weather-clear-evening-ltr-v1.mp4",
+    // PC login now plays videos/login-clean-v1.mp4 (AI mark removed, no audio).
+    // Keep the original as source evidence; it is no longer referenced (2026-10-28 approved).
+    "videos/login.mp4",
 ]);
 const DEPLOYMENT_OMIT_PREFIXES = [
     // Keep original, uneven-speed walking clips as source evidence in Git.
