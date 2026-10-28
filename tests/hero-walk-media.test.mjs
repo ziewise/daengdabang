@@ -1,8 +1,8 @@
-// 히어로 배경 영상 검사 — 지금 쓰는 가을 영상(fall-v1) 연결 + 보존 중인 여름 보정본(steady-walk-v3) 무결성
+// 히어로 배경 영상 검사 — 지금 쓰는 가을 영상(fall-v1) 연결
 // 2026-10-28: 여름 24개 → 가을 16개로 교체. 가을은 맑음/비 2종이라 흐림은 같은 시간대 맑음 영상을 쓴다.
+// 여름 영상(steady-walk-v1~v3 · summer_*)은 사이트에서 지움(사용자 요청) — 백업: D:\Daengdabang\hero-videos\summer-backup
 import assert from "node:assert/strict";
-import { createHash } from "node:crypto";
-import { readFile, stat } from "node:fs/promises";
+import { stat } from "node:fs/promises";
 import test from "node:test";
 import { HERO_VIDEO_MANIFEST } from "../lib/hero-video-manifest.ts";
 
@@ -36,16 +36,5 @@ test("every desktop and mobile weather scene serves the autumn hero media", asyn
         // 압축본(장당 약 2.8~6.2MB) — 압축 전 원본이 잘못 들어가면 여기서 걸림
         const { size } = await stat(new URL(`../public${path}`, import.meta.url));
         assert.ok(size > 1_000_000 && size < 7_000_000, `${path}: ${size}`);
-    }
-});
-
-test("preserved summer retimed sources still match their review record", async () => {
-    // 여름 보정본은 배포에서 빠졌지만 Git 에 원본 그대로 남아 있어야 한다
-    const review = JSON.parse(await readFile(new URL("../lib/hero-walk-review.json", import.meta.url), "utf8"));
-    assert.equal(review.videos.length, 24);
-    for (const row of review.videos) {
-        assert.ok(row.path.startsWith("/images/hero/steady-walk-v3/"));
-        const bytes = await readFile(new URL(`../public${row.path}`, import.meta.url));
-        assert.equal(createHash("sha256").update(bytes).digest("hex"), row.sha256, row.path);
     }
 });

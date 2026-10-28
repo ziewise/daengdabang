@@ -31,7 +31,8 @@ const DEPLOYMENT_OMIT_PREFIXES = [
     // The active manifest exclusively uses images/hero/fall-v1/ (2026-10-28).
     "images/hero/summer_",
     // 여름 히어로(구간 속도 보정본 24개) — 가을 영상으로 교체(2026-10-28 사용자 승인).
-    // Git 원본 보존 + 로컬 백업(D:\Daengdabang\hero-videos\summer-backup), 배포에서만 제외.
+    // 이후 사이트에서도 지움(2026-10-28 사용자 요청) — 백업 D:\Daengdabang\hero-videos\summer-backup.
+    // 새 여름 영상을 다시 올릴 때는 이 이름들과 다른 폴더(예: images/hero/summer-v2/)에 둘 것 — 이 목록에 걸리면 배포에서 빠짐.
     "images/hero/steady-walk-v3/",
     // Superseded DIS interpolation and unused legacy weather backgrounds.
     // Preserve the source files in Git; spend delivery bytes on current quality.
