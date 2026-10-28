@@ -48,7 +48,9 @@ const bundledFiles = [
     "images/logo-black-poodle-v2.png",
     "images/og-ai-platform-20260804-1200x630.png",
     "images/wordmark.png",
-    // videos/login.mp4 는 뺌(2026-10-28 사용자 승인) — 앱 로그인은 스티커북 화면이라 영상을 쓰지 않음(앱 묶음 2.5MB 절약)
+    // PC 로그인 영상(auth/login 화면이 묶음에 들어가 있어 참조 검사에 걸림) — 워터마크 지운 1.9MB 새 영상(2026-10-28)
+    // 예전 videos/login.mp4(2.5MB)는 뺌 → 앱 묶음 0.6MB 감소
+    "videos/login-clean-v1.mp4",
 ];
 
 const launchDocument = `<!doctype html>
