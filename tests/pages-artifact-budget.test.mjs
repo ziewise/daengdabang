@@ -14,7 +14,9 @@ test('Pages excludes malformed intros and uneven walking originals but retains r
     const withdrawn = [1, 3, 6].map(id => `videos/intro-random-${id}-clean-v1.mp4`);
     withdrawn.push('images/hero/summer_afternoon_sunny_poodle_pc.mp4');
     withdrawn.push('images/hero/steady-walk-v1/summer_afternoon_sunny_poodle_pc.mp4');
-    const approved = ['videos/intro-random-4-clean-v1.mp4', 'images/hero/steady-walk-v3/summer_afternoon_sunny_poodle_pc.mp4'];
+    // 여름 히어로는 가을(fall-v1)로 교체 — 배포에서 빠지고 원본은 남는다(2026-10-28)
+    withdrawn.push('images/hero/steady-walk-v3/summer_afternoon_sunny_poodle_pc.mp4');
+    const approved = ['videos/intro-random-4-clean-v1.mp4', 'images/hero/fall-v1/fall_afternoon_sunny_pc.mp4'];
     for (const asset of [...withdrawn, ...approved]) {
         await write(root, `public/${asset}`, 'source');
         await write(root, `out/${asset}`, 'published');
@@ -27,7 +29,7 @@ test('Pages excludes malformed intros and uneven walking originals but retains r
     for (const asset of approved) assert.equal(await fs.readFile(path.join(root, `out/${asset}`), 'utf8'), 'published');
 });
 
-test('Pages omits legacy backgrounds while retaining all 24 current hero videos and source bytes', async t => {
+test('Pages omits legacy backgrounds while retaining all 16 current hero videos and source bytes', async t => {
     const root = await fixture(t);
     await write(root, 'public/images/hero/snow.mp4', 'preserved-original');
     await write(root, 'out/images/hero/snow.mp4', 'superseded-preview');
@@ -37,7 +39,8 @@ test('Pages omits legacy backgrounds while retaining all 24 current hero videos 
     await write(root, 'out/images/hero/default.mp4', 'legacy-fallback');
     await write(root, 'out/images/hero/weather-rain-day-v2.mp4', 'legacy-weather');
     const current = Object.values(HERO_VIDEO_MANIFEST).flatMap(({ pc, m }) => [pc, m]);
-    assert.equal(new Set(current).size, 24);
+    // 가을 16개(흐림 장면은 맑음 영상을 같이 씀)
+    assert.equal(new Set(current).size, 16);
     for (const asset of current) await write(root, `out${asset}`, asset);
     const result = await preparePagesArtifact({ repoRoot: root, outRoot: path.join(root, 'out'), commitSha: COMMIT_SHA, maxBytes: 1_000_000 });
     assert.equal(result.omittedLegacyAssetCount, 4);

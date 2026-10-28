@@ -28,8 +28,11 @@ const DEPLOYMENT_OMIT_PATHS = new Set([
 ]);
 const DEPLOYMENT_OMIT_PREFIXES = [
     // Keep original, uneven-speed walking clips as source evidence in Git.
-    // The active manifest exclusively uses images/hero/steady-walk-v3/.
+    // The active manifest exclusively uses images/hero/fall-v1/ (2026-10-28).
     "images/hero/summer_",
+    // 여름 히어로(구간 속도 보정본 24개) — 가을 영상으로 교체(2026-10-28 사용자 승인).
+    // Git 원본 보존 + 로컬 백업(D:\Daengdabang\hero-videos\summer-backup), 배포에서만 제외.
+    "images/hero/steady-walk-v3/",
     // Superseded DIS interpolation and unused legacy weather backgrounds.
     // Preserve the source files in Git; spend delivery bytes on current quality.
     "images/hero/steady-walk-v1/",

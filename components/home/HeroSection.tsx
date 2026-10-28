@@ -183,10 +183,10 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
     }
 
     const scene = useMemo(() => resolveHeroScene(context), [context]);
-    // 협업자가 감지한 날씨/시간 → 우리 여름 영상 경로 (PC/모바일)
+    // 협업자가 감지한 날씨/시간 → 우리 가을 영상 경로 (PC/모바일, 2026-10-28 여름에서 교체)
     const heroVideo = pickHeroVideo(context.weather, context.timeBucket, isMobile);
     const heroBreed = pickHeroBreed(context.weather, context.timeBucket);
-    // 그 영상 속 강아지 견종에 맞는 얼굴 배지 영상 (비로그인 = 영상 견종, 로그인 펫 견종은 추후)
+    // 그 영상 속 강아지 견종에 맞는 얼굴 배지 영상 (가을 영상은 견종 이름이 없어 기본 견종, 로그인 펫 견종은 추후)
     const heroBreedVideo = pickHeroBreedVideo(context.weather, context.timeBucket);
     const weatherSummary = heroWeatherSummary(weatherReport, locale);
     const contextLabel = `${seasonLabel(context.season, locale)} ${timeBucketLabel(context.timeBucket, locale)}`;
@@ -196,7 +196,7 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
         <section data-hero-breed={heroBreed} className="hero-shell relative isolate overflow-hidden bg-neutral-950 text-white">
             <div className="absolute inset-0">
                 <div className="hero-video-scene" aria-hidden="true">
-                    {/* 여름 영상 24종(날씨×시간×PC/모바일) 중 선택.
+                    {/* 가을 영상 16종(맑음·비 × 시간 4 × PC/모바일, 흐림은 맑음 영상) 중 선택.
                         key={heroVideo} 로 날씨/시간/기기 바뀌면 영상 자동 교체.
                         poster 는 협업자 HeroScene 에 없어 생략(preload="auto" 로 첫 프레임 빠르게).
                         모바일(9:16): scale 확대 없이 object-position "center bottom" 으로 영상 전체를 노출.
