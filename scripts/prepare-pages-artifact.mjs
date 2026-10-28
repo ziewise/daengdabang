@@ -34,6 +34,9 @@ const DEPLOYMENT_OMIT_PREFIXES = [
     // 이후 사이트에서도 지움(2026-10-28 사용자 요청) — 백업 D:\Daengdabang\hero-videos\summer-backup.
     // 새 여름 영상을 다시 올릴 때는 이 이름들과 다른 폴더(예: images/hero/summer-v2/)에 둘 것 — 이 목록에 걸리면 배포에서 빠짐.
     "images/hero/steady-walk-v3/",
+    // 가을 히어로 16개 — Cloudflare R2(https://media.daengdabang.com)에서 내려줌(2026-10-28 사용자 승인).
+    // Git 에는 원본 목록으로 남기고(scripts/gen-hero-manifest.mjs 가 스캔) 배포에서만 제외.
+    "images/hero/fall-v1/",
     // Superseded DIS interpolation and unused legacy weather backgrounds.
     // Preserve the source files in Git; spend delivery bytes on current quality.
     "images/hero/steady-walk-v1/",

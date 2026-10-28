@@ -11,6 +11,7 @@
  *   · 파일명 규칙: {season}_{time}_{weather}[_{breed}]_{device}.mp4
  *     (breed 는 선택 — 가을 영상은 견종 없음 → 기본 견종 배지 FALLBACK_BREED)
  *   · 가을 영상은 맑음/비 2종 → 흐림은 같은 시간대 맑음 영상(매니페스트에서 처리)
+ *   · 영상 주소는 Cloudflare R2(https://media.daengdabang.com/images/hero/fall-v1/…, 2026-10-28)
  *   · 즉 영상을 추가/교체할 때 "파일명만 규칙대로" 두면 코드 수정 없이 반영된다.
  *
  * ⚠ 협업자 lib/hero-assets.ts 는 수정하지 않는다(타입만 import).

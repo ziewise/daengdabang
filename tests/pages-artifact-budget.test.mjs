@@ -16,7 +16,9 @@ test('Pages excludes malformed intros and uneven walking originals but retains r
     withdrawn.push('images/hero/steady-walk-v1/summer_afternoon_sunny_poodle_pc.mp4');
     // 여름 히어로는 가을(fall-v1)로 교체 — 배포에서 빠지고 원본은 남는다(2026-10-28)
     withdrawn.push('images/hero/steady-walk-v3/summer_afternoon_sunny_poodle_pc.mp4');
-    const approved = ['videos/intro-random-4-clean-v1.mp4', 'images/hero/fall-v1/fall_afternoon_sunny_pc.mp4'];
+    // 가을 히어로도 R2 로 옮겨 배포에서 빠짐(2026-10-28)
+    withdrawn.push('images/hero/fall-v1/fall_afternoon_sunny_pc.mp4');
+    const approved = ['videos/intro-random-4-clean-v1.mp4'];
     for (const asset of [...withdrawn, ...approved]) {
         await write(root, `public/${asset}`, 'source');
         await write(root, `out/${asset}`, 'published');
@@ -29,7 +31,7 @@ test('Pages excludes malformed intros and uneven walking originals but retains r
     for (const asset of approved) assert.equal(await fs.readFile(path.join(root, `out/${asset}`), 'utf8'), 'published');
 });
 
-test('Pages omits legacy backgrounds while retaining all 16 current hero videos and source bytes', async t => {
+test('Pages omits legacy backgrounds and leaves the R2-hosted hero videos out of the artifact', async t => {
     const root = await fixture(t);
     await write(root, 'public/images/hero/snow.mp4', 'preserved-original');
     await write(root, 'out/images/hero/snow.mp4', 'superseded-preview');
@@ -41,16 +43,18 @@ test('Pages omits legacy backgrounds while retaining all 16 current hero videos 
     const current = Object.values(HERO_VIDEO_MANIFEST).flatMap(({ pc, m }) => [pc, m]);
     // 가을 16개(흐림 장면은 맑음 영상을 같이 씀)
     assert.equal(new Set(current).size, 16);
-    for (const asset of current) await write(root, `out${asset}`, asset);
+    // 주소는 R2 — 사이트 결과물에 같은 경로 사본이 있으면 빠져야 함
+    const local = [...new Set(current)].map((url) => new URL(url).pathname);
+    for (const asset of local) await write(root, `out${asset}`, asset);
     const result = await preparePagesArtifact({ repoRoot: root, outRoot: path.join(root, 'out'), commitSha: COMMIT_SHA, maxBytes: 1_000_000 });
-    assert.equal(result.omittedLegacyAssetCount, 4);
+    assert.equal(result.omittedLegacyAssetCount, 4); // 앞머리 목록(fall-v1 포함)은 non_runtime 으로 따로 셈
     await assert.rejects(fs.access(path.join(root, 'out/images/hero/snow.mp4')));
     await assert.rejects(fs.access(path.join(root, `out/images/hero/${obsolete}`)));
     assert.equal(await fs.readFile(path.join(root, 'public/images/hero/snow.mp4'), 'utf8'), 'preserved-original');
     assert.equal(await fs.readFile(path.join(root, `public/images/hero/${obsolete}`), 'utf8'), 'preserved-evening-source');
     await assert.rejects(fs.access(path.join(root, 'out/images/hero/default.mp4')));
     await assert.rejects(fs.access(path.join(root, 'out/images/hero/weather-rain-day-v2.mp4')));
-    for (const asset of current) assert.equal(await fs.readFile(path.join(root, `out${asset}`), 'utf8'), asset);
+    for (const asset of local) await assert.rejects(fs.access(path.join(root, `out${asset}`)));
 });
 
 test('Pages accepts only the exact per-video CDN revision, independently of a newer site build', async t => {
