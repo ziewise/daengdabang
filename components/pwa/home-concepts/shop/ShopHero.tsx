@@ -15,9 +15,12 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { fallbackHeroWeather, getHeroSeason, getHeroTimeBucket, normalizeHeroWeather, seasonLabel, timeBucketLabel, type HeroContext, type HeroWeather } from "@/lib/hero-assets";
+import { fallbackHeroWeather, getHeroSeason, normalizeHeroWeather, seasonLabel, timeBucketLabel, type HeroContext, type HeroWeather } from "@/lib/hero-assets";
 import { HERO_AUTO_REGION_ID, HERO_WEATHER_REGION_OPTIONS, fetchHeroWeatherReport, heroWeatherSummary, type HeroWeatherReport } from "@/lib/hero-weather";
-import { pickHeroBreedVideo, pickHeroVideo } from "@/lib/hero-summer-video";
+import { pickHeroBreedVideo, pickHeroVideoCandidates } from "@/lib/hero-summer-video";
+// 달별 시간대 표 · R2 후보 주소를 앞에서부터 재생(웹 홈과 같은 규칙, 2026-10-28)
+import { getHeroDaylightBucket } from "@/lib/hero-daylight";
+import { useHeroVideoSource } from "@/components/home/useHeroVideoSource";
 import { haptic } from "../gestures";
 import { Tape } from "../sticker-kit";
 import { useShopMedia } from "./useShopMedia";
@@ -63,7 +66,7 @@ const parseLocal = (v?: string | null) => {
 const contextOf = (w?: HeroWeather, basis?: Date | null): HeroContext => {
     const now = basis ?? new Date();
     const season = getHeroSeason(now);
-    return { weather: w ?? manualWeather() ?? fallbackHeroWeather(season), season, timeBucket: getHeroTimeBucket(now) };
+    return { weather: w ?? manualWeather() ?? fallbackHeroWeather(season), season, timeBucket: getHeroDaylightBucket(now) };
 };
 
 export default function ShopHero() {
@@ -122,7 +125,9 @@ export default function ShopHero() {
 
     // 영상 주소 — 네이티브 앱은 운영 사이트 파일, 화면 준비 전엔 빈 사진 자리(useShopMedia)
     const media = useShopMedia();
-    const video = media?.(pickHeroVideo(context.weather, context.timeBucket, true)); // 앱 = 세로(모바일) 영상
+    // 앱 = 세로(모바일) 영상 · R2 후보를 앞에서부터(파일이 없으면 onError 로 다음) — 전체 주소라 media() 는 그대로 돌려줌
+    const heroVideoSource = useHeroVideoSource(pickHeroVideoCandidates(context, true));
+    const video = media?.(heroVideoSource.src);
     // 견종 얼굴 배지(지름 약 70px) — 1280×720 원본(장당 1.9MB) 대신 가운데를 자른 240px 배지 영상(장당 약 100KB, 2026-10-26 앱 묶음 줄이기).
     // 원본은 웹 홈(HeroSection)이 그대로 씀. 새 파일: public/images/breeds/badge/<견종>-240.mp4
     const breedVideo = media?.(pickHeroBreedVideo(context.weather, context.timeBucket).replace(/^\/images\/breeds\/([\w-]+)\.mp4$/, "/images/breeds/badge/$1-240.mp4"));
@@ -141,7 +146,7 @@ export default function ShopHero() {
             <div className="shp-pol relative mt-4 bg-white p-2 pb-3">
                 <Tape className="-top-2 left-1/2 z-10 h-4 w-16 -translate-x-1/2" color="rgba(255,200,215,.9)" style={{ rotate: "-3deg" }} />
                 <div className="relative aspect-square overflow-hidden rounded-[3px] bg-[#f3ede6]">
-                    {video ? <InViewVideo key={video} src={video} muted loop playsInline preload="auto" aria-hidden="true"
+                    {video ? <InViewVideo key={video} src={video} onError={heroVideoSource.onError} muted loop playsInline preload="auto" aria-hidden="true"
                         className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: "center 70%" }} /> : null}
                 </div>
                 {/* 사진 설명 자리 — 왼쪽 끝: 지역 고르기 / 오른쪽 끝: 지역 · 온도 + 계절 시간 */}

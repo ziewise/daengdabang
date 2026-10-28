@@ -16,8 +16,10 @@
  *
  * ⚠ 협업자 lib/hero-assets.ts 는 수정하지 않는다(타입만 import).
  */
-import type { HeroWeather, HeroTimeBucket } from "@/lib/hero-assets";
+import type { HeroContext, HeroWeather, HeroTimeBucket } from "@/lib/hero-assets";
 import { HERO_VIDEO_MANIFEST } from "./hero-video-manifest";
+// R2 계절 폴더 · 날씨 칸 · 대신하기 순서로 후보 주소 목록 만들기(2026-10-28)
+import { heroVideoCandidates } from "./hero-r2-video";
 
 // 자동 생성 매니페스트를 조회용 타입으로 (key = "{time}_{weather}")
 // breed 는 파일명에 견종이 없으면 null(가을 영상) → 아래 FALLBACK_BREED
@@ -71,4 +73,17 @@ export function pickHeroBreedVideo(
 ): string {
     const breed = pickHeroBreed(weather, timeBucket);
     return `/images/breeds/${breed}.mp4`;
+}
+
+/**
+ * 재생해 볼 영상 주소 목록(앞에서부터) — 2026-10-28 계절 폴더 방식.
+ *   R2 hero/{계절}/{시간}_{날씨}_{기기}.mp4 를 날씨 칸 순서대로 → 같은 계절 다른 시간대 맑음 →
+ *   마지막 안전장치로 예전 가을 영상(매니페스트 · images/hero/fall-v1). 화면이 앞에서부터 재생해 보고 없으면 다음.
+ */
+export function pickHeroVideoCandidates(context: HeroContext, isMobile: boolean): string[] {
+    const legacy = [
+        pickHeroVideo(context.weather, context.timeBucket, isMobile),
+        isMobile ? FALLBACK_SCENE.m : FALLBACK_SCENE.pc,
+    ];
+    return heroVideoCandidates(context, isMobile, legacy);
 }

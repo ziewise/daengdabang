@@ -5,7 +5,6 @@ import type { CatalogProduct } from "@/lib/catalog";
 import {
     fallbackHeroWeather,
     getHeroSeason,
-    getHeroTimeBucket,
     normalizeHeroWeather,
     resolveHeroScene,
     seasonLabel,
@@ -23,7 +22,10 @@ import {
 import { useI18n } from "@/lib/i18n";
 // 우리 영상 매핑 — 협업자 날씨/시간 감지 결과로 여름 영상 24종(PC/모바일) 중 선택,
 // 그리고 그 영상 속 강아지 견종에 맞는 얼굴 배지 영상 선택
-import { pickHeroBreed, pickHeroBreedVideo, pickHeroVideo } from "@/lib/hero-summer-video";
+import { pickHeroBreed, pickHeroBreedVideo, pickHeroVideoCandidates } from "@/lib/hero-summer-video";
+// 달별 시간대 표(해 뜨고 지는 시각 기준) · R2 후보 주소를 앞에서부터 재생(2026-10-28)
+import { getHeroDaylightBucket } from "@/lib/hero-daylight";
+import { useHeroVideoSource } from "./useHeroVideoSource";
 // 워터마크(✦)를 브라우저 크기와 무관하게 동적 추적해 덮는 견종 얼굴 배지
 import WatermarkBadge from "./WatermarkBadge";
 // 펫렌즈 모달 런처 — 배지 클릭 시 펫렌즈 실행(Header·FloatingDock 과 동일한 런처)
@@ -105,7 +107,7 @@ function parseOpenMeteoLocalDate(value: string | null | undefined): Date | null 
 function resolveClientContext(weatherOverride?: HeroWeather, basisDate?: Date | null): HeroContext {
     const now = basisDate ?? new Date();
     const season = getHeroSeason(now);
-    const timeBucket = getHeroTimeBucket(now);
+    const timeBucket = getHeroDaylightBucket(now); // 달마다 다른 시간대(예전 시계 고정 17–21 저녁 대신)
     const weather = weatherOverride ?? readManualHeroWeather() ?? fallbackHeroWeather(season);
 
     return { weather, season, timeBucket };
@@ -184,7 +186,9 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
 
     const scene = useMemo(() => resolveHeroScene(context), [context]);
     // 협업자가 감지한 날씨/시간 → 우리 가을 영상 주소 (PC/모바일, 2026-10-28 여름에서 교체 · R2 media.daengdabang.com 에서 받음)
-    const heroVideo = pickHeroVideo(context.weather, context.timeBucket, isMobile);
+    // R2 hero/{계절}/{시간}_{날씨}_{기기}.mp4 → 없으면 대신하기 순서 → 예전 가을 영상(파일이 없으면 onError 로 다음)
+    const heroVideoSource = useHeroVideoSource(pickHeroVideoCandidates(context, isMobile));
+    const heroVideo = heroVideoSource.src;
     const heroBreed = pickHeroBreed(context.weather, context.timeBucket);
     // 그 영상 속 강아지 견종에 맞는 얼굴 배지 영상 (가을: 아침 맑음·흐림 푸들 · 밤 비 불독, 나머지 기본 견종 / 로그인 펫 견종은 추후)
     const heroBreedVideo = pickHeroBreedVideo(context.weather, context.timeBucket);
@@ -214,6 +218,7 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
                         preload="auto"
                         className="hero-scene-media"
                         style={isMobile ? { objectPosition: "center bottom" } : undefined}
+                        onError={heroVideoSource.onError}
                     />
                 </div>
                 {/* 배경 위 어두운 그라데이션 overlay 제거 — 배경 원본 톤 유지 */}
