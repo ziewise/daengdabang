@@ -60,9 +60,10 @@ const EMAIL_STEPS = [
     { label: "약관", color: "#fff1b8" },
     { label: "계정", color: "#dcf3e6" },
     { label: "우리 아이", color: "#e8ddff" },
+    { label: "완료", color: "#ffe7c2" }, // 웹 단계 줄의 "가입 완료"(2026-10-28 사용자 "웹과 똑같이") — 가입을 마쳐야만 켜짐
 ];
 /** 휴대폰 본인인증이 켜졌을 때(웹과 같은 스위치) — 약관 다음에 본인인증 */
-const EMAIL_STEPS_WITH_IDENTITY = [{ label: "시작", color: "#ffd6e2" }, EMAIL_STEPS[1], { label: "본인인증", color: "#e3f2fb" }, EMAIL_STEPS[2], EMAIL_STEPS[3]]; // 5칸 — 첫 칸 이름을 줄여 한 줄로
+const EMAIL_STEPS_WITH_IDENTITY = [{ label: "시작", color: "#ffd6e2" }, EMAIL_STEPS[1], { label: "본인인증", color: "#e3f2fb" }, EMAIL_STEPS[2], EMAIL_STEPS[3], EMAIL_STEPS[4]]; // 6칸 — 첫 칸 이름을 줄이고 좁은 탭으로 한 줄
 
 /* 서버가 아직 없는 가입 기능 스위치(lib/signup-flow) — 화면이 붙은 뒤에 읽음(미리 만든 HTML 은 운영 설정 값 그대로 → 개발 미리보기에서도 화면 어긋남 없음) */
 const noopSubscribe = () => () => {};
@@ -692,6 +693,9 @@ export default function StickerSignup() {
     };
 
     /* 공통 틀 — 크림 배경 + 속지 */
+    // 가입을 마친 뒤 화면(완료 · 이메일 인증) — 웹 단계 줄처럼 마지막 "완료" 탭이 켜진 색인 탭(돌아가기 없음)
+    const emailTabs = features.identity ? EMAIL_STEPS_WITH_IDENTITY : EMAIL_STEPS;
+    const doneTabs = <DiaryTabs tabs={emailTabs} active={emailTabs.length - 1} onPick={() => {}} compact={emailTabs.length > 5} />;
     const frame = (body: ReactNode, tabs?: ReactNode) => (
         <div className="relative isolate flex-1 overflow-x-hidden break-keep px-3.5 pb-12 pt-4" style={{ color: TEXT }}>
             <style>{KIT_CSS + HC_CSS + STICKER_CSS + PARTS_CSS + SHOW_PARTS_CSS + SIGNUP_CSS}</style>
@@ -715,6 +719,7 @@ export default function StickerSignup() {
                     onLeave={clearSignupEmailResume}
                 />
             </DiaryBody>,
+            doneTabs,
         );
     }
 
@@ -763,13 +768,14 @@ export default function StickerSignup() {
                     </div>
                 )}
             </DiaryBody>,
+            doneTabs,
         );
     }
 
     /* ───────── 가입 단계 ───────── */
     // 단계 내용 쪽 넘김 애니메이션(속지 DiaryBody 와 같은 dt-in-next / dt-in-prev) — 처음 연 쪽(dir 0)은 속지가 이미 움직이므로 없음
     const turnClass = dir > 0 ? "dt-in-next" : dir < 0 ? "dt-in-prev" : "";
-    const tabs = isSocial ? socialStepTabs(socialInfo?.label ?? "") : features.identity ? EMAIL_STEPS_WITH_IDENTITY : EMAIL_STEPS;
+    const tabs = isSocial ? socialStepTabs(socialInfo?.label ?? "") : emailTabs;
     // 공급자 준비 상태 — 웹 가입 방법 화면과 같은 판단(준비 중 · 확인 중 · 연결 오류)
     const providerState = (provider: SocialProvider) => {
         if (apiReady !== true) return "off";
@@ -926,7 +932,7 @@ export default function StickerSignup() {
                         {isSocial ? (
                             <Patch small onClick={continueSocial} disabled={!signupSecurityReady}>{socialInfo?.label}로 계속하기<i aria-hidden="true" className="fa-solid fa-arrow-right text-[11px]" /></Patch>
                         ) : (
-                            <Patch small onClick={nextFromTerms}>동의하고 계속<i aria-hidden="true" className="fa-solid fa-chevron-right text-[11px]" /></Patch>
+                            <Patch small onClick={nextFromTerms} className={requiredConsentsAccepted ? "" : "su-off"}>동의하고 계속<i aria-hidden="true" className="fa-solid fa-chevron-right text-[11px]" /></Patch>
                         )}
                     </div>
                 </>
@@ -1020,7 +1026,7 @@ export default function StickerSignup() {
 
                         <div className="grid grid-cols-[auto_1fr] gap-2.5 pt-2">
                             <Patch tone="cream" small onClick={() => goTo(features.identity ? "identity" : "terms")}><i aria-hidden="true" className="fa-solid fa-chevron-left text-[11px]" />이전</Patch>
-                            <Patch small type="submit" disabled={emailStatus === "checking"}>다음 · 우리 아이<i aria-hidden="true" className="fa-solid fa-chevron-right text-[11px]" /></Patch>
+                            <Patch small type="submit" disabled={emailStatus === "checking"} className={accountProblem() ? "su-off" : ""}>다음 · 우리 아이<i aria-hidden="true" className="fa-solid fa-chevron-right text-[11px]" /></Patch>
                         </div>
                     </form>
                 </>
@@ -1212,7 +1218,7 @@ export default function StickerSignup() {
             </Sheet>
         </DiaryBody>,
         // 색인 탭 — 지나온 단계로만 돌아감(앞 단계는 "다음" 버튼의 검사를 거쳐야 함)
-        <DiaryTabs tabs={tabs} active={step} onPick={goPick} />,
+        <DiaryTabs tabs={tabs} active={step} onPick={goPick} compact={tabs.length > 5} />,
     );
 }
 
@@ -1594,6 +1600,8 @@ export const SIGNUP_CSS = `
 .su-badge.is-req { background: #ffe1ea; color: #d2457a; }
 /* 계정 — 안내 글 · 강도 크레용 세 칸 · 규칙 알약 · 중복 확인 단추 */
 .su-err { padding-left: 4px; color: #d2457a; font-size: 11.5px; }
+/* 다음 단추 — 필수를 다 채우기 전(웹 sxw-next is-off): 흐리게, 누르면 빠진 것을 알려 줌(잠그지는 않음) */
+.st-patch.su-off { opacity: .55; filter: saturate(.7); }
 .su-meter { background: #f3e6dc; transition: background .3s; }
 .su-meter[data-on="1"] { background: #f6a9bf; }
 .su-meter[data-on="2"] { background: #f5c46a; }

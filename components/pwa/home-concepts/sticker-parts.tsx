@@ -15,12 +15,13 @@ import { useEffect, useRef, type ReactNode } from "react";
 import { haptic } from "./gestures";
 
 /** 색인 탭 */
-export function DiaryTabs({ tabs, active, onPick }: { tabs: { label: string; color: string }[]; active: number; onPick: (i: number) => void }) {
+export function DiaryTabs({ tabs, active, onPick, compact = false }: { tabs: { label: string; color: string }[]; active: number; onPick: (i: number) => void; compact?: boolean }) {
+    // compact — 탭이 6칸 이상이라 한 줄에 안 들어갈 때 좁은 탭(글자 · 안쪽 여백만 줄임, 2026-10-28)
     return (
-        <div className="relative z-[1] -mb-[3px] flex gap-1.5 pl-8 pr-2" role="tablist" aria-label="쪽 고르기">
+        <div className={`relative z-[1] -mb-[3px] flex pl-8 pr-2 ${compact ? "gap-1" : "gap-1.5"}`} role="tablist" aria-label="쪽 고르기">
             {tabs.map((t, i) => (
                 <button key={t.label} type="button" role="tab" aria-selected={active === i} onClick={() => { if (i !== active) { haptic("light"); onPick(i); } }}
-                    className={`dt-tab ah-display whitespace-nowrap ${active === i ? "is-on" : ""}`} style={{ ["--c" as string]: t.color }}>
+                    className={`dt-tab ah-display whitespace-nowrap ${active === i ? "is-on" : ""} ${compact ? "is-compact" : ""}`} style={{ ["--c" as string]: t.color }}>
                     {t.label}
                 </button>
             ))}
@@ -109,6 +110,7 @@ export const PARTS_CSS = `
   translate: 0 6px; transition: translate .35s cubic-bezier(.3,1.6,.5,1), background .25s, color .25s; box-shadow: inset 0 1px 0 rgba(255,255,255,.7); -webkit-tap-highlight-color: transparent; }
 .dt-tab.is-on { background: #fffdf8; color: #3a2f2c; translate: 0 0; box-shadow: 0 -6px 12px -8px rgba(150,90,70,.45), inset 0 1.5px 0 #fff; }
 .dt-tab:active { translate: 0 8px; }
+.dt-tab.is-compact { padding: 7px 9px 11px; font-size: 12px; }
 /* 쪽 넘김: 넘기는 방향으로 기울어 들어옴 */
 .dt-in-next { animation: dt-next .5s cubic-bezier(.2,1,.3,1); transform-origin: 0 50%; }
 .dt-in-prev { animation: dt-prev .5s cubic-bezier(.2,1,.3,1); transform-origin: 100% 50%; }
