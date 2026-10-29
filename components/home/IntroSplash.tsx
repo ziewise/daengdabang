@@ -3,6 +3,9 @@
  * ---------------------------------------------------------------------
  * 2026-10-26: 건너뛰기 안내 문구를 화면에 맞게 — 휴대폰(767px 이하) "탭하면", PC "클릭하면".
  *   인트로가 뜨면 판에 초점을 옮겨 Escape 가 바로 먹게(예전에는 먼저 판을 눌러야 키가 먹었음). 영상 · 닫기 동작 그대로
+ * 2026-10-29: 영상 목록을 R2(media-admin "인트로" 메뉴, lib/intro-r2.ts)에서 먼저 읽는다 — 켜진 영상 중 무작위(몇 개든).
+ *   1.5초 안에 못 읽거나 켜진 영상이 없으면 예전 코드 목록(lib/intro-videos.ts · 2·4·5),
+ *   R2 영상이 재생 오류면 예전 목록으로 한 번 더 시도한 뒤 닫는다.
  */
 "use client";
 
@@ -10,6 +13,7 @@ import { useEffect, useRef, useState } from "react";
 import { isAppModeNow } from "@/components/app-shell/useAppMode";
 import styles from "@/app/intro.module.css";
 import { pickIntroVideo } from "@/lib/intro-videos";
+import { loadIntroList, pickFromIntroList } from "@/lib/intro-r2";
 
 const INTRO_SEEN_KEY = "ddb.intro.seen.v2";
 const MIN_INTRO_MS = 2200;
@@ -26,6 +30,9 @@ export default function IntroSplash() {
     const closeTimerRef = useRef<number | null>(null);
     // 인트로 판 — 뜨는 순간 초점(키보드 Escape 로 바로 건너뛰기)
     const splashRef = useRef<HTMLDivElement>(null);
+    // R2 영상이 안 나오면 예전 코드 목록으로 바꿀 때 쓸 번호 요청 · 한 번만 바꾸기 표시
+    const requestedIdRef = useRef<string | null>(null);
+    const fellBackRef = useRef(false);
 
     useEffect(() => {
         // 모바일 여부 1회 판단 (영상 선택 + 인트로 본 기록 키에 공통 사용)
@@ -33,9 +40,16 @@ export default function IntroSplash() {
         introMobileRef.current = mobile;
 
         const show = () => {
-            setIntroVideoSrc(pickIntroVideo(new URLSearchParams(window.location.search).get("introVideo")));
+            const requested = new URLSearchParams(window.location.search).get("introVideo");
+            requestedIdRef.current = requested;
             shownAtRef.current = Date.now();
             setVisible(true);
+            // R2 목록(1.5초 안) → 없으면 예전 코드 목록. 그동안은 인트로 배경만 보임
+            void loadIntroList().then((list) => {
+                const fromR2 = list ? pickFromIntroList(list, requested) : null;
+                if (!fromR2) fellBackRef.current = true;
+                setIntroVideoSrc(fromR2 ?? pickIntroVideo(requested));
+            });
         };
 
         try {
@@ -172,7 +186,7 @@ export default function IntroSplash() {
             <div className={styles.videoFrame}>
                 <video
                     ref={introVideoRef}
-                    src={introVideoSrc}
+                    src={introVideoSrc || undefined} /* 목록 읽는 동안은 비워 둠(빈 주소 오류로 닫히지 않게) */
                     autoPlay
                     muted
                     playsInline
@@ -190,7 +204,16 @@ export default function IntroSplash() {
                         if (event.currentTarget.playbackRate !== 1) event.currentTarget.playbackRate = 1;
                     }}
                     onEnded={closeAfterMinimum}
-                    onError={closeAfterMinimum}
+                    onError={() => {
+                        if (!introVideoSrc) return; // 아직 고르는 중
+                        // R2 영상이 안 나오면 예전 코드 목록 영상으로 한 번 더, 그것도 안 되면 닫기
+                        if (!fellBackRef.current && introVideoSrc) {
+                            fellBackRef.current = true;
+                            setIntroVideoSrc(pickIntroVideo(requestedIdRef.current));
+                            return;
+                        }
+                        closeAfterMinimum();
+                    }}
                 />
             </div>
             {/* 휴대폰은 "탭하면", PC 는 "클릭하면"(isMobile = 처음 열 때 767px 이하) */}
