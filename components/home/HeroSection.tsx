@@ -26,6 +26,8 @@ import { pickHeroBreed, pickHeroBreedVideo, pickHeroVideoCandidates } from "@/li
 // 달별 시간대 표(해 뜨고 지는 시각 기준) · R2 후보 주소를 앞에서부터 재생(2026-10-28)
 import { getHeroDaylightBucket } from "@/lib/hero-daylight";
 import { useHeroVideoSource } from "./useHeroVideoSource";
+// media-admin 사이트 미리보기 · 확인용 주소: ?heroSeason · heroTime 고정, ?heroSrc 교체 전 영상 먼저(2026-10-29)
+import { readHeroPreview } from "@/lib/site-preview";
 // 워터마크(✦)를 브라우저 크기와 무관하게 동적 추적해 덮는 견종 얼굴 배지
 import WatermarkBadge from "./WatermarkBadge";
 // 펫렌즈 모달 런처 — 배지 클릭 시 펫렌즈 실행(Header·FloatingDock 과 동일한 런처)
@@ -109,8 +111,10 @@ function resolveClientContext(weatherOverride?: HeroWeather, basisDate?: Date | 
     const season = getHeroSeason(now);
     const timeBucket = getHeroDaylightBucket(now); // 달마다 다른 시간대(예전 시계 고정 17–21 저녁 대신)
     const weather = weatherOverride ?? readManualHeroWeather() ?? fallbackHeroWeather(season);
+    // 주소에 계절 · 시간대 고정이 있으면 그것으로(media-admin 미리보기 · 확인용 주소 전용, 일반 방문자는 없음)
+    const preview = readHeroPreview(window.location.search);
 
-    return { weather, season, timeBucket };
+    return { weather, season: preview.season ?? season, timeBucket: preview.timeBucket ?? timeBucket };
 }
 
 function localizedSceneLabel(key: string, fallback: string, locale: "ko" | "en") {
@@ -141,6 +145,8 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
     const weatherRegion = storedWeatherRegion ?? HERO_AUTO_REGION_ID;
     const [context, setContext] = useState<HeroContext>(DEFAULT_CONTEXT);
     const [weatherReport, setWeatherReport] = useState<HeroWeatherReport | null>(null);
+    // 교체 전 영상 미리보기 주소(?heroSrc — 없으면 null, 화면 시작 뒤에만 읽어 서버 HTML 과 첫 화면을 맞춤)
+    const [previewSrc, setPreviewSrc] = useState<string | null>(null);
     // 모바일(세로) 여부 — 9:16 영상, 데스크탑은 16:9 영상
     const [isMobile, setIsMobile] = useState(false);
 
@@ -162,6 +168,7 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
             if (!active) return;
 
             const manualWeather = readManualHeroWeather();
+            setPreviewSrc(readHeroPreview(window.location.search).src);
             setContext(resolveClientContext(manualWeather ?? undefined));
             setWeatherReport(null);
             if (manualWeather) return;
@@ -187,7 +194,9 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
     const scene = useMemo(() => resolveHeroScene(context), [context]);
     // 협업자가 감지한 날씨/시간 → 우리 가을 영상 주소 (PC/모바일, 2026-10-28 여름에서 교체 · R2 media.daengdabang.com 에서 받음)
     // R2 hero/{계절}/{시간}_{날씨}_{기기}.mp4 → 없으면 대신하기 순서 → 예전 가을 영상(파일이 없으면 onError 로 다음)
-    const heroVideoSource = useHeroVideoSource(pickHeroVideoCandidates(context, isMobile));
+    // 교체 전 미리보기 영상이 있으면 맨 앞(없는 파일이면 onError 로 원래 순서로 넘어감)
+    const heroCandidates = pickHeroVideoCandidates(context, isMobile);
+    const heroVideoSource = useHeroVideoSource(previewSrc ? [previewSrc, ...heroCandidates] : heroCandidates);
     const heroVideo = heroVideoSource.src;
     const heroBreed = pickHeroBreed(context.weather, context.timeBucket);
     // 그 영상 속 강아지 견종에 맞는 얼굴 배지 영상 (가을: 아침 맑음·흐림 푸들 · 밤 비 불독, 나머지 기본 견종 / 로그인 펫 견종은 추후)

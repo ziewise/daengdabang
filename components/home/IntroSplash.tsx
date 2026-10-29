@@ -6,6 +6,7 @@
  * 2026-10-29: 영상 목록을 R2(media-admin "인트로" 메뉴, lib/intro-r2.ts)에서 먼저 읽는다 — 켜진 영상 중 무작위(몇 개든).
  *   1.5초 안에 못 읽거나 켜진 영상이 없으면 예전 코드 목록(lib/intro-videos.ts · 2·4·5),
  *   R2 영상이 재생 오류면 예전 목록으로 한 번 더 시도한 뒤 닫는다.
+ *   ?introSrc=intro/파일 이면 목록 없이 그 영상(media-admin 사이트 미리보기 — 켜기 전 확인용).
  */
 "use client";
 
@@ -14,6 +15,8 @@ import { isAppModeNow } from "@/components/app-shell/useAppMode";
 import styles from "@/app/intro.module.css";
 import { pickIntroVideo } from "@/lib/intro-videos";
 import { loadIntroList, pickFromIntroList } from "@/lib/intro-r2";
+// media-admin 사이트 미리보기: ?introSrc=intro/파일 — 켜기 전 영상도 사이트 화면으로(우리 intro 폴더만, 2026-10-29)
+import { readIntroPreviewSrc } from "@/lib/site-preview";
 
 const INTRO_SEEN_KEY = "ddb.intro.seen.v2";
 const MIN_INTRO_MS = 2200;
@@ -44,6 +47,12 @@ export default function IntroSplash() {
             requestedIdRef.current = requested;
             shownAtRef.current = Date.now();
             setVisible(true);
+            // 미리보기로 고른 영상이 있으면 목록 없이 그것(재생 오류면 아래 onError 가 예전 목록으로)
+            const previewSrc = readIntroPreviewSrc(window.location.search);
+            if (previewSrc) {
+                setIntroVideoSrc(previewSrc);
+                return;
+            }
             // R2 목록(1.5초 안) → 없으면 예전 코드 목록. 그동안은 인트로 배경만 보임
             void loadIntroList().then((list) => {
                 const fromR2 = list ? pickFromIntroList(list, requested) : null;

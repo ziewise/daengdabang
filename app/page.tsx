@@ -32,6 +32,8 @@ import NewArrivalsSection from "@/components/main/NewArrivalsSection";
 import InstaSection from "@/components/main/InstaSection";
 import DailyMineTeaser from "@/components/home/DailyMineTeaser";
 import MobileAppInstallStrip from "@/components/pwa/MobileAppInstallStrip";
+// media-admin 사이트 미리보기 틀 안에서만 켜지는 보호 장치(?ddbPreview — 일반 방문자는 아무 일 없음, 2026-10-29)
+import SitePreviewGuard from "@/components/home/SitePreviewGuard";
 
 export default function HomePage() {
     // 동적 히어로에 넘길 운영자 검수 추천 상품 4개
@@ -40,6 +42,7 @@ export default function HomePage() {
     return (
         <>
             {/* 협업자 — 인트로 + 동적 히어로 (날씨/시간/계절 반응) */}
+            <SitePreviewGuard />
             <IntroSplash />
             <HeroSection featuredProducts={heroProducts} />
 
