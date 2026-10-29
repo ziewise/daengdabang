@@ -70,7 +70,7 @@ test("purchase sheet outranks floating launchers and leaves closed content inert
     assert.match(optionSheet, /openerRef\.current\?\.focus/);
 });
 
-test("checkout opens only the Toss test SDK with a server-created order", async () => {
+test("checkout opens the Toss SDK only for a server-created order in the server's mode", async () => {
     const [checkout, api, pending, success, failure, store, reconciliation, mypage, packageJson] = await Promise.all([
         source("app/checkout/page.tsx"),
         source("lib/customer-api.ts"),
@@ -104,8 +104,8 @@ test("checkout opens only the Toss test SDK with a server-created order", async 
     assert.match(checkout, /loadTossPayments\(order\.clientKey\)/);
     assert.match(checkout, /createTossTestOrder/);
     assert.match(checkout, /await cancelTossTestOrder\(pendingOrderId, accessToken\)/);
-    assert.match(checkout, /order\.mode !== "test"/);
-    assert.match(checkout, /!order\.clientKey\.startsWith\("test_ck_"\)/);
+    assert.match(checkout, /const orderMode = tossOrderMode\(order\)/);
+    assert.match(checkout, /orderMode === null/);
     assert.match(checkout, /order\.amount !== total/);
     assert.match(checkout, /amount: \{ currency: order\.currency, value: order\.amount \}/);
     assert.match(checkout, /method: "CARD"/);
@@ -129,8 +129,9 @@ test("checkout opens only the Toss test SDK with a server-created order", async 
     assert.doesNotMatch(checkout, /trackTwinOrderAttribution/);
     assert.doesNotMatch(checkout, /cart\.addOrder/);
     assert.doesNotMatch(checkout, /cart\.removeFromCart/);
-    assert.match(checkout, /data-payment-mode="test"/);
-    assert.match(checkout, /실제 출금·배송·구매 분석·코인 및 적립금 지급은 발생하지 않습니다/);
+    // 2026-10-28 사장님 결정: 테스트 안내 없이 보통 "결제" 문구(모드 짝 검사는 그대로), 정식 오픈 전 잠금 안내 창
+    assert.doesNotMatch(checkout, /data-payment-mode="test"|토스페이먼츠 테스트 모드/);
+    assert.match(checkout, /PrelaunchNoticeModal/);
 
     assert.match(api, /\/api\/v1\/payments\/toss\/orders/);
     assert.match(api, /\/api\/v1\/payments\/toss\/orders\/\$\{encodeURIComponent\(orderId\)\}\/cancel/);
@@ -143,8 +144,8 @@ test("checkout opens only the Toss test SDK with a server-created order", async 
     assert.doesNotMatch(pending, /clientKey|customerKey|accessToken|receiver|address/);
     assert.match(pending, /new URL\(path, window\.location\.origin\)\.toString\(\)/);
     assert.match(success, /confirmTossTestPayment\(\{ paymentKey, orderId, amount \}, accessToken\)/);
-    assert.match(success, /confirmation\.status !== "test_paid"/);
-    assert.match(success, /confirmation\.mode !== "test"/);
+    assert.match(success, /const paidMode = tossConfirmationMode\(confirmation\)/);
+    assert.match(success, /paidMode === null/);
     assert.match(success, /confirmation\.providerStatus !== "DONE"/);
     assert.match(success, /confirmation\.paymentKey !== paymentKey/);
     assert.match(success, /confirmation\.totalAmount !== amount/);
@@ -159,7 +160,7 @@ test("checkout opens only the Toss test SDK with a server-created order", async 
     assert.match(success, /setView\(\{ kind: "pending", retryHref: callbackPath \}\)/);
     assert.match(success, /결제 상태 확인 중/);
     assert.match(success, /<a href=\{view\.retryHref\}[^>]*>동일 결제 다시 확인<\/a>/);
-    assert.match(success, /status: "test_paid"/);
+    assert.match(success, /status: confirmation\.status,/);
     assert.doesNotMatch(success, /trackTwinOrderAttribution|creditPurchase|daenglab\/wallet/);
     assert.doesNotMatch(failure, /removePaidLines|clearCart|addOrder/);
     assert.match(failure, /cancelTossTestOrder\(orderId, getCustomerToken\(\)\)/);

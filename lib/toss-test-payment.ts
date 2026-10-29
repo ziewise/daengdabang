@@ -10,6 +10,18 @@ export {
     isTossOrderLineList,
     normalizeTossOrderLines,
 } from "@/lib/toss-order-lines";
+// 파일 이름은 테스트 결제 때부터 그대로 — test · live 짝 검사는 lib/toss-payment-mode(2026-10-28)
+export {
+    isTossPaymentMode,
+    isTossPrelaunchLockedError,
+    tossConfirmationMode,
+    tossOrderIdMode,
+    tossOrderMode,
+    tossPaidStatus,
+    tossQuoteMode,
+    type TossPaidStatus,
+    type TossPaymentMode,
+} from "@/lib/toss-payment-mode";
 
 const PENDING_PREFIX = "ddb.toss.test.pending.v1.";
 
@@ -59,7 +71,7 @@ function isPendingPayment(value: unknown): value is PendingTossTestPayment {
 
 export function savePendingTossTestPayment(pending: PendingTossTestPayment) {
     if (!isPendingPayment(pending)) {
-        throw new Error("테스트 결제 대기 정보를 저장할 수 없습니다.");
+        throw new Error("결제 대기 정보를 저장할 수 없습니다.");
     }
     try {
         window.sessionStorage.setItem(pendingKey(pending.orderId), JSON.stringify(pending));

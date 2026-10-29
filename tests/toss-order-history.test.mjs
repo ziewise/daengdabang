@@ -4,7 +4,10 @@ import test from "node:test";
 
 import {
     estimatedDeliveryLabel,
+    hasMixedTossMode,
+    isRefundOrder,
     isTestOrder,
+    netPaidAmount,
     loadTossOrderHistory,
     loadTossOrderHistoryDetail,
     mergeUniqueTossOrders,
@@ -223,6 +226,106 @@ test("order detail normalizes owner-only full delivery fields and request fields
     }), true, "the no-shipment fulfillment contract must suppress every live fulfillment action");
 });
 
+test("history labels each consistent mode and flags a mixed test/live record for review", () => {
+    const testPaid = { mode: "test", status: "test_paid", fulfillmentStatus: "not_applicable", fulfillmentMode: "test_no_shipment", isSimulation: true };
+    const livePaid = { mode: "live", status: "paid", fulfillmentStatus: "received", fulfillmentMode: "live_pending", isSimulation: false };
+    assert.equal(hasMixedTossMode(testPaid), false);
+    assert.equal(hasMixedTossMode(livePaid), false);
+    assert.equal(orderStatusLabel(testPaid), "테스트 결제완료");
+    assert.equal(orderStatusLabel(livePaid), "결제완료");
+    assert.equal(isTestOrder(livePaid), false);
+
+    for (const mixed of [
+        { ...livePaid, status: "test_paid" },
+        { ...testPaid, status: "paid" },
+        { ...livePaid, fulfillmentMode: "test_no_shipment" },
+        { ...livePaid, isSimulation: true },
+        { ...testPaid, mode: "live" },
+    ]) {
+        assert.equal(hasMixedTossMode(mixed), true, JSON.stringify(mixed));
+        assert.equal(orderStatusLabel(mixed), "결제 확인 필요");
+        // Live fulfillment actions stay suppressed for any record with a test marker.
+        assert.equal(isTestOrder(mixed), true);
+    }
+
+    // Normalized server rows of either mode stay unmixed.
+    const [live] = normalizeTossOrderHistoryList({ orders: [{
+        orderId: "LIVE-0123456789abcdef",
+        totalAmount: 5000,
+        status: "paid",
+        paymentMethod: "card",
+        mode: "live",
+        lines,
+        quote: { shippingFee: 3000, fulfillmentMode: "live_pending", isSimulation: false },
+    }] });
+    assert.equal(hasMixedTossMode(live), false);
+    assert.equal(isTestOrder(live), false);
+});
+
+test("paid orders that were later refunded stay listed with their refund state", () => {
+    const row = (orderId, status, extra = {}) => ({
+        orderId,
+        orderName: "강아지 건강 사료",
+        amount: 27000,
+        status,
+        paymentMethod: "card",
+        mode: "live",
+        createdAt: "2026-10-28T01:00:00Z",
+        lines,
+        quote: { shippingFee: 3000, fulfillmentMode: "live_pending", isSimulation: false },
+        ...extra,
+    });
+    // Shape from apps/api TossOrderCancelSummary (cancel_pending · refunded · partially_refunded).
+    const orders = normalizeTossOrderHistoryList({ orders: [
+        row("LIVE-paid-0001", "paid"),
+        row("LIVE-refund-0001", "refunded", { cancel: { status: "refunded", refundedAmount: 27000, remainingAmount: 0, refundedAt: "2026-10-28T02:00:00Z" } }),
+        row("LIVE-partial-0001", "partially_refunded", { cancel: { status: "partially_refunded", refundedAmount: 12000, remainingAmount: 15000 } }),
+        row("LIVE-cancel-0001", "cancel_pending", { cancel: { status: "cancel_pending", requestedAt: "2026-10-28T03:00:00Z", refundedAmount: 0, remainingAmount: 27000 } }),
+        // Pre-payment reservations stay hidden.
+        row("LIVE-pending-0001", "pending"),
+        row("LIVE-dropped-0001", "cancelled"),
+        row("LIVE-expired-0001", "expired"),
+        row("LIVE-confirm-0001", "confirm_pending"),
+    ] });
+    const byId = Object.fromEntries(orders.map((order) => [order.orderId, order]));
+    assert.deepEqual(Object.keys(byId).sort(), ["LIVE-cancel-0001", "LIVE-paid-0001", "LIVE-partial-0001", "LIVE-refund-0001"]);
+
+    assert.equal(orderStatusLabel(byId["LIVE-refund-0001"]), "환불완료");
+    assert.equal(orderStatusLabel(byId["LIVE-partial-0001"]), "부분 환불");
+    assert.equal(orderStatusLabel(byId["LIVE-cancel-0001"]), "취소 처리 중");
+    assert.equal(orderStatusLabel(byId["LIVE-paid-0001"]), "결제완료");
+
+    for (const id of ["LIVE-refund-0001", "LIVE-partial-0001", "LIVE-cancel-0001"]) {
+        assert.equal(isRefundOrder(byId[id]), true, id);
+        assert.equal(isTestOrder(byId[id]), false, id);
+        assert.equal(hasMixedTossMode(byId[id]), false, id);
+    }
+    assert.equal(isRefundOrder(byId["LIVE-paid-0001"]), false);
+    assert.deepEqual(byId["LIVE-partial-0001"].cancel, { status: "partially_refunded", refundedAmount: 12000, remainingAmount: 15000 });
+
+    assert.equal(netPaidAmount(byId["LIVE-paid-0001"]), 27000);
+    assert.equal(netPaidAmount(byId["LIVE-refund-0001"]), 0);
+    assert.equal(netPaidAmount(byId["LIVE-partial-0001"]), 15000);
+    assert.equal(netPaidAmount(byId["LIVE-cancel-0001"]), 27000, "not refunded yet");
+    assert.equal(netPaidAmount({ amount: 27000, status: "refunded" }), 0, "a refunded order without a summary never counts as paid");
+});
+
+test("a refund summary that disagrees with the order status or has bad amounts is ignored", () => {
+    const base = { orderId: "LIVE-refund-0002", amount: 27000, status: "refunded", mode: "live", lines };
+    for (const cancel of [
+        { status: "partially_refunded", refundedAmount: 1000, remainingAmount: 26000 },
+        { status: "refunded", refundedAmount: -1, remainingAmount: 0 },
+        { status: "refunded", refundedAmount: "lots", remainingAmount: 0 },
+        { status: "cancelled", refundedAmount: 27000, remainingAmount: 0 },
+        "refunded",
+    ]) {
+        const order = normalizeTossOrderHistoryDetail({ ...base, cancel });
+        assert.ok(order);
+        assert.equal(order.cancel, undefined, JSON.stringify(cancel));
+        assert.equal(netPaidAmount(order), 0);
+    }
+});
+
 test("history requests use authenticated GET endpoints and encode the detail id", async () => {
     const originalFetch = globalThis.fetch;
     const requests = [];
@@ -301,13 +404,21 @@ test("static order route provides list, search, detail, privacy, and test-mode f
     assert.match(page, /실제 배송 없음/);
     assert.match(page, /화면 검증용/);
     assert.match(page, /if \(isTestOrder\(order\)\) return null/);
+    assert.match(page, /hasMixedTossMode\(order\) \?/);
+    assert.match(page, /결제 모드 기록이 서로 맞지 않아 확인이 필요합니다/);
     assert.doesNotMatch(page, /localStorage|sessionStorage/);
     assert.match(helper, /\/api\/v1\/payments\/toss\/orders/);
     assert.match(helper, /Authorization: `Bearer \$\{options\.accessToken\}`/);
     assert.match(helper, /cache: "no-store"/);
     assert.match(helper, /hasMore/);
     assert.match(helper, /nextOffset/);
-    assert.match(helper, /item\.status === "paid" \|\| item\.status === "test_paid"/);
+    assert.match(helper, /\.filter\(\(item\) => isCustomerVisibleOrderStatus\(item\.status\)\)/);
+    assert.match(helper, /return status === "paid" \|\| status === "test_paid" \|\| isTossRefundStatus\(status\)/);
+    // Refund-state orders get no fulfillment actions, no arrival estimate, and count net of refunds.
+    assert.match(page, /if \(isTestOrder\(order\) \|\| isRefundOrder\(order\)\) return null/);
+    assert.match(page, /!isTestOrder\(order\) && !isRefundOrder\(order\) && estimatedDeliveryLabel\(order\)/);
+    assert.match(page, /환불 후 결제금액/);
+    assert.match(page, /total \+ netPaidAmount\(order\)/);
     assert.match(helper, /recipientNameMasked/);
     assert.match(helper, /estimatedStartDate/);
     assert.match(helper, /requestNote/);

@@ -5,6 +5,7 @@ import type { MemberRecommendationPreferences } from "@/lib/recommendation/types
 export { ddbApiBase } from "@/lib/ddb-api-base";
 import type { CustomerSupportCategory } from "@/lib/customer-support";
 import type { CheckoutPaymentMethod } from "@/lib/payment-methods";
+import type { TossPaidStatus, TossPaymentMode } from "@/lib/toss-payment-mode";
 import type { GrowthProgramId } from "@/lib/growth-programs";
 import {
     GOODS_CONTEST_GOAL,
@@ -455,6 +456,7 @@ export type TossDeliveryQuote = {
     isSimulation: boolean;
 };
 
+// 이름의 Test 는 처음 테스트 결제로 만들 때 붙은 것 — 지금은 서버가 정한 test · live 둘 다 받음(짝 검사: lib/toss-payment-mode)
 export type TossTestOrder = {
     orderId: string;
     amount: number;
@@ -462,7 +464,7 @@ export type TossTestOrder = {
     orderName: string;
     clientKey: string;
     customerKey: string;
-    mode: "test";
+    mode: TossPaymentMode;
     lines: TossOrderLine[];
     delivery?: TossDeliveryDetails | null;
     quote?: TossDeliveryQuote | null;
@@ -472,10 +474,10 @@ export type TossTestPaymentConfirmation = {
     orderId: string;
     paymentKey: string;
     totalAmount: number;
-    status: "test_paid";
+    status: TossPaidStatus;
     providerStatus: string;
     providerMethod?: string | null;
-    mode: "test";
+    mode: TossPaymentMode;
     lines: TossOrderLine[];
     paymentMethod: CheckoutPaymentMethod;
     approvedAt?: string | null;
@@ -707,7 +709,7 @@ export async function createTossTestOrder(payload: {
         body: JSON.stringify(payload),
     }, token, { requireBase: true });
     if (!order) {
-        throw new DdbApiError("테스트 주문을 만들지 못했습니다.", { code: "http_error" });
+        throw new DdbApiError("주문을 만들지 못했습니다.", { code: "http_error" });
     }
     return order;
 }
@@ -720,7 +722,7 @@ export async function cancelTossTestOrder(orderId: string, token?: string) {
         { requireBase: true },
     );
     if (!cancellation || cancellation.orderId !== orderId || cancellation.status !== "cancelled") {
-        throw new DdbApiError("테스트 주문 취소 상태를 확인하지 못했습니다.", { code: "http_error" });
+        throw new DdbApiError("주문 취소 상태를 확인하지 못했습니다.", { code: "http_error" });
     }
     return cancellation;
 }
@@ -752,7 +754,7 @@ export async function confirmTossTestPayment(payload: {
         body: JSON.stringify(payload),
     }, token, { requireBase: true });
     if (!confirmation) {
-        throw new DdbApiError("테스트 결제를 확인하지 못했습니다.", { code: "http_error" });
+        throw new DdbApiError("결제를 확인하지 못했습니다.", { code: "http_error" });
     }
     return confirmation;
 }

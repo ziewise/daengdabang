@@ -67,7 +67,7 @@ export default function LoginPage() {
         ? `/auth/signup?redirect=${encodeURIComponent(redirect)}`
         : "/auth/signup";
 
-    // 비회원은 주문서를 미리 볼 수 있지만 현재 테스트 PG창은 로그인된 심사용 계정에서만 연다.
+    // 비회원은 주문서를 미리 볼 수 있지만 PG 결제창은 로그인한 계정에서만 연다(테스트 · 실결제 모두).
     const guestCheckout = () => router.push(checkoutRedirect || "/checkout");
 
     const submit = async (event: FormEvent) => {
@@ -261,7 +261,7 @@ export default function LoginPage() {
                     )}
                     {checkoutRedirect && (
                         <p className="mt-2 text-center text-[11px] font-bold leading-5 text-neutral-400">
-                            테스트 결제창은 심사용 테스트 계정으로 로그인해야 열 수 있습니다.
+                            결제창은 로그인한 뒤 열 수 있습니다.
                         </p>
                     )}
 

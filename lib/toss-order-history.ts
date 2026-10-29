@@ -22,6 +22,19 @@ export type TossOrderDelivery = {
     trackingUrl?: string;
 };
 
+/** 결제 뒤 취소 · 환불 상태(2026-10-28 백엔드 취소 기록) — 결제 전 예약을 지운 cancelled 와는 다른 값 */
+export const TOSS_REFUND_STATUSES = ["cancel_pending", "refunded", "partially_refunded"] as const;
+export type TossRefundStatus = typeof TOSS_REFUND_STATUSES[number];
+
+/** 서버가 붙여 주는 고객용 환불 요약(사유 · 오류 코드는 서버가 보내지 않음) */
+export type TossOrderCancel = {
+    status: TossRefundStatus;
+    requestedAt?: string;
+    refundedAmount: number;
+    remainingAmount: number;
+    refundedAt?: string;
+};
+
 export type TossOrderHistoryItem = {
     orderId: string;
     orderName: string;
@@ -39,6 +52,7 @@ export type TossOrderHistoryItem = {
     estimatedDeliveryStart?: string;
     estimatedDeliveryEnd?: string;
     delivery?: TossOrderDelivery;
+    cancel?: TossOrderCancel;
 };
 
 export type TossOrderHistoryPage = {
@@ -157,6 +171,34 @@ function normalizeDelivery(value: unknown): TossOrderDelivery | undefined {
     return Object.values(delivery).some(Boolean) ? delivery : undefined;
 }
 
+export function isTossRefundStatus(value: unknown): value is TossRefundStatus {
+    return typeof value === "string" && (TOSS_REFUND_STATUSES as readonly string[]).includes(value);
+}
+
+/** 고객 주문 내역에 보이는 상태 — 결제 완료와 결제 뒤 취소 · 환불. 결제 전 예약(pending · cancelled · expired 등)은 숨김 */
+export function isCustomerVisibleOrderStatus(status: string): boolean {
+    return status === "paid" || status === "test_paid" || isTossRefundStatus(status);
+}
+
+/** 환불 요약 — 주문 상태와 같은 환불 상태 · 0 이상 정수 금액일 때만 받음 */
+function normalizeCancel(value: unknown, status: string): TossOrderCancel | undefined {
+    if (!isRecord(value)) return undefined;
+    const cancelStatus = cleanText(firstValue(value, ["status"]), 40);
+    if (!isTossRefundStatus(cancelStatus) || cancelStatus !== status) return undefined;
+    const refundedAmount = cleanInteger(firstValue(value, ["refundedAmount", "refunded_amount"]));
+    const remainingAmount = cleanInteger(firstValue(value, ["remainingAmount", "remaining_amount"]));
+    if (refundedAmount === undefined || remainingAmount === undefined) return undefined;
+    const requestedAt = cleanDate(firstValue(value, ["requestedAt", "requested_at"]));
+    const refundedAt = cleanDate(firstValue(value, ["refundedAt", "refunded_at"]));
+    return {
+        status: cancelStatus,
+        ...(requestedAt ? { requestedAt } : {}),
+        refundedAmount,
+        remainingAmount,
+        ...(refundedAt ? { refundedAt } : {}),
+    };
+}
+
 export function normalizeTossOrderHistoryItem(value: unknown): TossOrderHistoryItem | null {
     if (!isRecord(value)) return null;
     const orderId = cleanText(firstValue(value, ["orderId", "order_id"]), 64);
@@ -196,6 +238,7 @@ export function normalizeTossOrderHistoryItem(value: unknown): TossOrderHistoryI
         ?? firstValue(value, ["isSimulation", "is_simulation"]),
     ) ?? fulfillmentMode === "test_no_shipment";
     const testOrder = mode === "test" || status === "test_paid" || fulfillmentMode === "test_no_shipment" || isSimulation;
+    const cancel = normalizeCancel(firstValue(value, ["cancel"]), status);
 
     return {
         orderId,
@@ -221,6 +264,7 @@ export function normalizeTossOrderHistoryItem(value: unknown): TossOrderHistoryI
         estimatedDeliveryStart,
         estimatedDeliveryEnd: estimatedDeliveryEnd ?? estimatedDeliveryStart,
         delivery,
+        ...(cancel ? { cancel } : {}),
     };
 }
 
@@ -240,8 +284,9 @@ export function normalizeTossOrderHistoryList(value: unknown): TossOrderHistoryI
         .map(normalizeTossOrderHistoryItem)
         .filter((item): item is TossOrderHistoryItem => Boolean(item))
         // The server applies the same filter. Keep this client-side guard so a
-        // stale or partially rolled-out API cannot expose abandoned sessions.
-        .filter((item) => item.status === "paid" || item.status === "test_paid")
+        // stale or partially rolled-out API cannot expose abandoned sessions;
+        // paid orders that were later refunded stay visible with their refund state.
+        .filter((item) => isCustomerVisibleOrderStatus(item.status))
         .sort((left, right) => {
             const leftTime = Date.parse(left.createdAt ?? left.approvedAt ?? "") || 0;
             const rightTime = Date.parse(right.createdAt ?? right.approvedAt ?? "") || 0;
@@ -377,11 +422,37 @@ export function isTestOrder(order: Pick<TossOrderHistoryItem, "mode" | "status">
         || order.isSimulation === true;
 }
 
-export function orderStatusLabel(order: Pick<TossOrderHistoryItem, "mode" | "status" | "fulfillmentStatus">): string {
+/** 결제 뒤 취소 · 환불 중이거나 끝난 주문 — 배송 · 반품 · 취소 요청 같은 동작과 도착 예정 안내를 하지 않음 */
+export function isRefundOrder(order: Pick<TossOrderHistoryItem, "status">): boolean {
+    return isTossRefundStatus(order.status.toLowerCase());
+}
+
+/** 환불을 뺀 결제금액 — 전액 환불은 0, 부분 환불은 환불액을 뺀 값, 취소 처리 중(아직 환불 전)은 그대로 */
+export function netPaidAmount(order: Pick<TossOrderHistoryItem, "amount" | "status" | "cancel">): number {
+    if (order.cancel) return Math.max(0, order.amount - order.cancel.refundedAmount);
+    return order.status.toLowerCase() === "refunded" ? 0 : order.amount;
+}
+
+/**
+ * test 표시(모드 · test_paid · test_no_shipment · 모의 견적)와 live 표시(모드 · paid · live_pending · 실제 견적)가
+ * 한 주문에 섞였는가(2026-10-28). 서버는 짝을 맞춰 저장하므로 섞였다면 확인이 필요한 기록 — isTestOrder 는 그대로
+ * 참이라 배송 · 반품 같은 실주문 동작은 막히고, 화면은 "실제 출금 없음" 같은 단정 대신 확인 필요로 보여 줌.
+ */
+export function hasMixedTossMode(order: Pick<TossOrderHistoryItem, "mode" | "status"> & Partial<Pick<TossOrderHistoryItem, "fulfillmentMode" | "isSimulation">>): boolean {
+    const status = order.status.toLowerCase();
+    const testSigns = order.mode === "test" || status === "test_paid" || order.fulfillmentMode === "test_no_shipment" || order.isSimulation === true;
+    const liveSigns = order.mode === "live" || status === "paid" || order.fulfillmentMode === "live_pending" || order.isSimulation === false;
+    return testSigns && liveSigns;
+}
+
+export function orderStatusLabel(order: Pick<TossOrderHistoryItem, "mode" | "status" | "fulfillmentStatus"> & Partial<Pick<TossOrderHistoryItem, "fulfillmentMode" | "isSimulation">>): string {
     const payment = order.status.toLowerCase();
+    if ((payment === "paid" || payment === "test_paid") && hasMixedTossMode(order)) return "결제 확인 필요";
     if (payment === "test_paid") return "테스트 결제완료";
     if (["canceled", "cancelled"].includes(payment)) return "주문 취소";
     if (payment === "refunded") return "환불완료";
+    if (payment === "partially_refunded") return "부분 환불";
+    if (payment === "cancel_pending") return "취소 처리 중";
     if (["failed", "aborted", "expired"].includes(payment)) return "결제 실패";
     if (payment === "confirm_pending") return "결제 확인 중";
     if (payment === "pending") return "결제 대기";

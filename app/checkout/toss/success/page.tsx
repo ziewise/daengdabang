@@ -2,8 +2,10 @@
 /* eslint-disable react-hooks/set-state-in-effect -- this static callback page derives its state from redirect URL and hydrated cart state. */
 
 /*
- * 토스 테스트 결제 성공 돌아옴(/checkout/toss/success) — 결제 확인 · 장바구니 정리 · 주문 저장은 이 파일, 웹 겉모양은
+ * 토스 결제 성공 돌아옴(/checkout/toss/success) — 결제 확인 · 장바구니 정리 · 주문 저장은 이 파일, 웹 겉모양은
  * components/checkout/PaymentResultWeb. 2026-10-26 앱 화면 main 에 data-pay-app-view(웹에서 화면이 붙기 전 숨김 · app/payment-web.css).
+ * 2026-10-28 서버 확인 응답의 모드를 따름: test 는 test_paid · TEST-, live 는 paid · LIVE- 짝만 완료로 봄(lib/toss-payment-mode).
+ *  화면 문구는 두 모드 모두 보통 "결제" 문구(사장님 결정 — 테스트 안내 없음). 결제 확인은 정식 오픈 전 잠금과 상관없이 늘 함.
  */
 
 import { useEffect, useRef, useState } from "react";
@@ -30,6 +32,7 @@ import {
     isTossPaymentKey,
     normalizeTossOrderLines,
     parseTossAmount,
+    tossConfirmationMode,
 } from "@/lib/toss-test-payment";
 
 type ViewState =
@@ -58,22 +61,23 @@ export default function TossTestSuccessPage() {
             setView({ kind: "guest_complete", orderId: "DDB-20261025-1042", amount: 78000, buyerName: "김댕댕", email: "da****@example.com" });
             return;
         }
-        // 개발 서버 전용 미리보기 — ?pwpreview=done|checking|login|pending|failed|invalid (서버 요청 · 장바구니 변경 없음)
+        // 개발 서버 전용 미리보기 — ?pwpreview=done|done-live|checking|login|pending|failed|invalid (서버 요청 · 장바구니 변경 없음)
         const pwPreview = process.env.NODE_ENV === "development" ? query.get("pwpreview") : null;
         if (pwPreview) {
             startedRef.current = true;
-            if (pwPreview === "done") {
+            if (pwPreview === "done" || pwPreview === "done-live") {
+                const live = pwPreview === "done-live";
                 setView({
                     kind: "complete",
-                    orderId: "DDB-20261025-2210",
+                    orderId: live ? "LIVE-preview2210" : "DDB-20261025-2210",
                     amount: 158000,
                     confirmation: {
-                        orderId: "DDB-20261025-2210",
+                        orderId: live ? "LIVE-preview2210" : "DDB-20261025-2210",
                         paymentKey: "preview",
                         totalAmount: 158000,
-                        status: "test_paid",
+                        status: live ? "paid" : "test_paid",
                         providerStatus: "DONE",
-                        mode: "test",
+                        mode: live ? "live" : "test",
                         paymentMethod: "card",
                         approvedAt: new Date().toISOString(),
                         lines: [
@@ -81,12 +85,12 @@ export default function TossTestSuccessPage() {
                             { productId: cart.state.cart[0]?.productId || "rw_remix_cactus_tug_26fw", qty: 1 },
                         ],
                         delivery: { recipientName: "김댕댕", phone: "01012345678", postalCode: "04001", addressLine1: "서울 마포구 월드컵북로 396", addressLine2: "3층", deliveryZone: "mainland", requestCode: "front_door", requestNote: "" },
-                        quote: { shippingFee: 0, currency: "KRW", estimatedStartDate: "2026-10-28", estimatedEndDate: "2026-10-29", policyVersion: "preview", fulfillmentMode: "test_no_shipment", isSimulation: true },
+                        quote: { shippingFee: 0, currency: "KRW", estimatedStartDate: "2026-10-28", estimatedEndDate: "2026-10-29", policyVersion: "preview", fulfillmentMode: live ? "live_pending" : "test_no_shipment", isSimulation: !live },
                     },
                 });
             } else if (pwPreview === "login") setView({ kind: "login_required", loginHref: "/auth/login" });
             else if (pwPreview === "pending") setView({ kind: "pending", retryHref: window.location.pathname });
-            else if (pwPreview === "failed") setView({ kind: "failed", message: "서버에서 테스트 결제를 확인하지 못했습니다. 장바구니는 변경하지 않았습니다.", retryHref: window.location.pathname });
+            else if (pwPreview === "failed") setView({ kind: "failed", message: "서버에서 결제를 확인하지 못했습니다. 장바구니는 변경하지 않았습니다.", retryHref: window.location.pathname });
             else if (pwPreview === "invalid") setView({ kind: "invalid", message: "결제 결과 주소의 필수 값이 올바르지 않습니다." });
             return;
         }
@@ -107,7 +111,12 @@ export default function TossTestSuccessPage() {
             startedRef.current = true;
             confirmGuestTossPayment({ paymentKey, orderId, amount }, guestPending.guestToken)
                 .then((confirmed) => {
-                    if (confirmed.orderId !== orderId || confirmed.totalAmount !== amount) throw new Error("Unexpected guest confirmation");
+                    if (
+                        confirmed.orderId !== orderId
+                        || confirmed.totalAmount !== amount
+                        // 회원과 같은 짝 검사 — status · mode · 주문번호가 한 모드여야 완료(섞이면 실패 화면)
+                        || tossConfirmationMode(confirmed) === null
+                    ) throw new Error("Unexpected guest confirmation");
                     clearPendingTossTestPayment(orderId);
                     clearGuestPending();
                     setGuestCheckoutMode(false);
@@ -129,9 +138,11 @@ export default function TossTestSuccessPage() {
         confirmTossTestPayment({ paymentKey, orderId, amount }, accessToken)
             .then((confirmation) => {
                 const paidLines = normalizeTossOrderLines(confirmation.lines);
+                // 서버가 정한 모드의 짝만 완료 — test: status test_paid + mode test, live: status paid + mode live,
+                // 주문번호 머리 · 배송 견적도 같은 모드(lib/toss-payment-mode). 섞이면 null.
+                const paidMode = tossConfirmationMode(confirmation);
                 if (
-                    confirmation.status !== "test_paid"
-                    || confirmation.mode !== "test"
+                    paidMode === null
                     || confirmation.providerStatus !== "DONE"
                     || confirmation.orderId !== orderId
                     || confirmation.paymentKey !== paymentKey
@@ -139,12 +150,12 @@ export default function TossTestSuccessPage() {
                     || !isCheckoutPaymentMethod(confirmation.paymentMethod)
                     || paidLines === null
                 ) {
-                    throw new Error("Unexpected test confirmation response");
+                    throw new Error("Unexpected payment confirmation response");
                 }
 
                 const alreadyReconciled = cart.state.orders.some((order) => (
                     order.id === confirmation.orderId
-                    && order.status === "test_paid"
+                    && order.status === confirmation.status
                     && order.total === confirmation.totalAmount
                     && order.paymentMethod === confirmation.paymentMethod
                     && haveSamePaidLineQuantities(order.lines, paidLines)
@@ -156,7 +167,7 @@ export default function TossTestSuccessPage() {
                     lines: paidLines,
                     total: confirmation.totalAmount,
                     paymentMethod: confirmation.paymentMethod,
-                    status: "test_paid",
+                    status: confirmation.status,
                 });
                 clearPendingTossTestPayment(orderId);
                 setView({ kind: "complete", confirmation, orderId, amount });
@@ -170,7 +181,7 @@ export default function TossTestSuccessPage() {
                     kind: "failed",
                     message: error instanceof DdbApiError
                         ? error.message
-                        : "서버에서 테스트 결제를 확인하지 못했습니다. 장바구니는 변경하지 않았습니다.",
+                        : "서버에서 결제를 확인하지 못했습니다. 장바구니는 변경하지 않았습니다.",
                     ...(error instanceof DdbApiError ? {} : { retryHref: callbackPath }),
                 });
             });
@@ -189,7 +200,7 @@ export default function TossTestSuccessPage() {
         return (
             <main className="mx-auto max-w-[680px] px-4 py-16 text-center" aria-live="polite" data-pay-app-view>
                 <i className="fa-solid fa-spinner fa-spin text-4xl text-indigo-600" />
-                <h1 className="mt-4 text-2xl font-black text-neutral-950">테스트 결제 확인 중</h1>
+                <h1 className="mt-4 text-2xl font-black text-neutral-950">결제 확인 중</h1>
                 <p className="mt-2 text-sm font-bold text-neutral-600">서버가 주문번호와 금액을 다시 검증하고 있습니다.</p>
             </main>
         );
@@ -201,19 +212,18 @@ export default function TossTestSuccessPage() {
 
     if (view.kind === "complete") {
         return (
-            <main className="mx-auto max-w-[680px] px-4 py-14 text-center" data-payment-status="test_paid" data-pay-app-view>
+            <main className="mx-auto max-w-[680px] px-4 py-14 text-center" data-payment-status={view.confirmation.status} data-pay-app-view>
                 <i className="fa-solid fa-circle-check text-5xl text-emerald-600" />
-                <h1 className="mt-4 text-3xl font-black text-neutral-950">테스트 결제가 완료되었습니다.</h1>
+                <h1 className="mt-4 text-3xl font-black text-neutral-950">결제가 완료되었습니다.</h1>
                 <p className="mt-2 text-sm font-bold text-neutral-600">주문번호 {view.orderId}</p>
-                <div className="mx-auto mt-5 max-w-md rounded-xl border-2 border-sky-300 bg-sky-50 px-4 py-4 text-left">
-                    <p className="text-sm font-black text-sky-950">테스트 승인 · {view.amount.toLocaleString("ko-KR")}원</p>
-                    <p className="mt-1 text-xs font-bold text-sky-800">Toss 상태: {view.confirmation.providerStatus}</p>
-                    <p className="mt-2 text-xs font-bold leading-5 text-sky-800">
-                        실제 출금·배송·구매 분석·코인 및 적립금 지급은 발생하지 않습니다.
+                <div className="mx-auto mt-5 max-w-md rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-4 text-left">
+                    <p className="text-sm font-black text-emerald-950">결제 승인 · {view.amount.toLocaleString("ko-KR")}원</p>
+                    <p className="mt-2 text-xs font-bold leading-5 text-emerald-800">
+                        주문이 접수되었습니다. 상품 준비와 배송 진행은 주문 상세에서 확인할 수 있습니다.
                     </p>
                 </div>
                 <div className="mt-6 flex flex-wrap justify-center gap-2">
-                    <Link href={`/mypage/orders/?orderId=${encodeURIComponent(view.orderId)}`} className="btn btn-primary">테스트 주문 상세보기</Link>
+                    <Link href={`/mypage/orders/?orderId=${encodeURIComponent(view.orderId)}`} className="btn btn-primary">주문 상세보기</Link>
                     <Link href="/products" className="btn btn-secondary">쇼핑 계속하기</Link>
                 </div>
             </main>
@@ -257,7 +267,7 @@ export default function TossTestSuccessPage() {
         <main className="mx-auto max-w-[680px] px-4 py-14 text-center" data-payment-status={view.kind} data-pay-app-view>
             <i className="fa-solid fa-triangle-exclamation text-5xl text-red-600" />
             <h1 className="mt-4 text-2xl font-black text-neutral-950">
-                {view.kind === "invalid" ? "결제 결과를 확인할 수 없습니다." : "테스트 결제 확인에 실패했습니다."}
+                {view.kind === "invalid" ? "결제 결과를 확인할 수 없습니다." : "결제 확인에 실패했습니다."}
             </h1>
             <p className="mt-3 text-sm font-bold leading-6 text-neutral-600">{view.message}</p>
             <p className="mt-2 text-xs font-bold text-neutral-500">

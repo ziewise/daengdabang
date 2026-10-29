@@ -195,7 +195,7 @@ test('cart reducer rejects unavailable direct additions and increases but permit
 test('checkout checks inventory block before order submission; UI holds do not claim sold out',()=>{
     const checkout=read('app/checkout/page.tsx');
     assert.match(checkout,/if \(lines.length === 0 \|\| submitting \|\| inventoryBlocked\) return/);
-    assert.ok(checkout.indexOf('if (inventoryBlocked)')<checkout.indexOf('data-payment-mode="test"'));
+    assert.ok(checkout.indexOf('if (inventoryBlocked)')<checkout.indexOf('data-payment-method={method}'));
     assert.match(read('app/cart/page.tsx'),/purchaseStateLabel\(purchaseState, locale\)/);
     assert.match(read('components/products/ProductCard.tsx'),/!purchaseState.purchasable/);
 });

@@ -376,10 +376,11 @@ export default function CartPage() {
                         <span className="font-black">{t("paymentDue")}</span>
                         <b className="text-2xl font-black text-indigo-700">{formatPrice(selectedTotal + estimatedBaseShippingFee)}</b>
                     </div>
-                    <p data-checkout-contract="test-only" className="cart-test mt-4 rounded-lg border border-sky-200 bg-sky-50 px-3 py-3 text-xs font-bold leading-5 text-sky-900">
+                    {/* 2026-10-28 결제 모드(테스트 · 실결제)는 주문서에서 서버가 알려 줌 — 장바구니는 두 모드 모두 맞는 안내만 */}
+                    <p data-checkout-contract="server-mode" className="cart-test mt-4 rounded-lg border border-sky-200 bg-sky-50 px-3 py-3 text-xs font-bold leading-5 text-sky-900">
                         {locale === "en"
-                            ? "The current checkout supports test payments only. No real charge, shipment, or rewards will be issued."
-                            : "현재 주문서는 테스트 결제 전용입니다. 실제 출금·상품 배송·적립금 지급은 진행되지 않습니다."}
+                            ? "Payment continues in the Toss Payments secure window. Shipping and the final amount are confirmed again on the checkout page."
+                            : "결제는 주문서에서 토스페이먼츠 보안 결제창으로 진행됩니다. 배송비와 최종 금액은 주문서에서 한 번 더 확인합니다."}
                     </p>
                     <button
                         type="button"
@@ -389,7 +390,7 @@ export default function CartPage() {
                     >
                         {selectedLines.length === 0
                             ? t("selectProducts")
-                            : `${locale === "en" ? "Test checkout" : "테스트 주문서"} (${countText(selectedLines.length)})`}
+                            : `${locale === "en" ? "Checkout" : "주문서 작성"} (${countText(selectedLines.length)})`}
                     </button>
                     {/* 빠른 결제수단 — 선택값을 주문서까지 보존 */}
                     <SimplePayButtons disabled={selectedLines.length === 0 || inventoryBlocked} onSelect={goCheckout} />

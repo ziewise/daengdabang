@@ -1,7 +1,7 @@
 "use client";
 
 /*
- * CheckoutPage — 주문서(/checkout): 배송지 · 배송 요청 · 예상 도착일 · 결제수단 · 주문 상품 요약 → 토스 테스트 결제창
+ * CheckoutPage — 주문서(/checkout): 배송지 · 배송 요청 · 예상 도착일 · 결제수단 · 주문 상품 요약 → 토스 결제창(테스트 · 실결제는 서버가 정함)
  * 2026-10-24 웹 크레파스 결(app/checkout-web.css, 웹 html:not(.ddb-app-mode) 에서만):
  *  영문 손글씨 · 주아 제목 + 세 색 밑줄 · 주문 단계(장바구니 → 주문서 → 결제 완료, 지금 = 주문서) · 흰 쿠션 칸 · 파스텔 동그라미 아이콘 ·
  *  크림 입력칸 · 결제수단 쿠션 카드(고른 것 분홍 테) · 주문 상품 요약에 상품 사진(웹 전용) · 크레파스 총 결제금액 · 분홍 결제 알약.
@@ -15,8 +15,13 @@
  * 2026-10-26 웹 점검: 서버 · 개발 말투 안내(예상일 · 검증 안내)와 날것의 서버 오류 글은 웹에서만 쉬운 해요체로(useWebScreen),
  *  구매할 수 없는 옵션 안내는 웹에서 3D 그림 쿠션 카드, 남은 인디고 글자 · 돌림표는 웹 CSS(co-addr-link · co-terms-link · co-spin)로 분홍.
  *  앱 화면 · 테스트 결제 안내 · 결제 동작은 그대로.
+ * 2026-10-28 실결제 전환 준비: 결제 모드(test · live)는 서버가 정함 — 배송 견적이 먼저 알려 주고 주문 응답이 확정.
+ *  키 · 주문번호 · 배송 견적이 한 모드로 짝이 맞을 때만 결제창을 엶(lib/toss-payment-mode). 견적의 모드와 주문 모드가
+ *  다르면 열지 않고 견적부터 다시 받음. 화면 문구는 두 모드 모두 보통 "결제" 문구(사장님 결정 — 테스트 안내 없음).
+ *  정식 오픈 전 잠금: 결제 단추를 누르면 서버 확인(availability) 뒤 잠겨 있으면 주문 없이 안내 창(PrelaunchNoticeModal),
+ *  주문 만들기 403 PAYMENT_PRELAUNCH_LOCKED 도 같은 창. 회원 · 비회원 모두.
  */
-import { FormEvent, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { FormEvent, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import "../checkout-web.css";
@@ -36,6 +41,8 @@ import {
 } from "@/lib/guest-order";
 import { loadTossPayments } from "@tosspayments/tosspayments-sdk";
 import ShippingDetailsSection from "@/components/checkout/ShippingDetailsSection";
+// 2026-10-28 정식 오픈 전 결제 잠금 안내 창(주문 · 토스 결제창 없이)
+import PrelaunchNoticeModal from "@/components/checkout/PrelaunchNoticeModal";
 import { cartProducts } from "@/lib/shop";
 import { useLiveInventorySnapshot } from "@/lib/catalog/live-inventory";
 import { useAuth, useCart } from "@/lib/store";
@@ -62,6 +69,7 @@ import {
     type CheckoutDeliveryField,
     type CheckoutDeliveryQuote,
 } from "@/lib/checkout-shipping";
+import { loadTossCheckoutAvailability } from "@/lib/toss-checkout-availability";
 import {
     CHECKOUT_PAYMENT_METHODS,
     checkoutPaymentMethodFromQuery,
@@ -74,8 +82,12 @@ import {
 import {
     clearPendingTossTestPayment,
     isTossOrderId,
+    isTossPrelaunchLockedError,
     savePendingTossTestPayment,
     tossCallbackUrl,
+    tossOrderMode,
+    tossQuoteMode,
+    type TossPaymentMode,
 } from "@/lib/toss-test-payment";
 
 const PAYMENT_OPTION_COPY: Record<CheckoutPaymentMethod, {
@@ -86,23 +98,26 @@ const PAYMENT_OPTION_COPY: Record<CheckoutPaymentMethod, {
     icon: string;
 }> = {
     card: { ko: "신용·체크카드", en: "Credit / debit card", detailKo: "토스 보안창에서 카드사 선택·인증", detailEn: "Choose and authenticate your card issuer in Toss", icon: "fa-credit-card" },
-    transfer: { ko: "계좌이체", en: "Bank transfer", detailKo: "퀵계좌이체 테스트", detailEn: "Test bank transfer", icon: "fa-building-columns" },
+    transfer: { ko: "계좌이체", en: "Bank transfer", detailKo: "퀵계좌이체", detailEn: "Quick bank transfer", icon: "fa-building-columns" },
     virtual_account: { ko: "가상계좌", en: "Virtual account", detailKo: "입금통지 연동 후 활성화", detailEn: "Available after deposit webhook setup", icon: "fa-receipt" },
-    toss_pay: { ko: "토스페이", en: "Toss Pay", detailKo: "토스페이 직접 테스트창", detailEn: "Direct Toss Pay test window", icon: "fa-bolt" },
-    phone: { ko: "휴대폰 결제", en: "Mobile", detailKo: "휴대폰 결제 테스트창", detailEn: "Test carrier billing", icon: "fa-mobile-screen-button" },
-    naver_pay: { ko: "네이버페이", en: "Naver Pay", detailKo: "네이버페이 직접 테스트창", detailEn: "Direct Naver Pay test window", icon: "fa-n" },
+    toss_pay: { ko: "토스페이", en: "Toss Pay", detailKo: "토스페이 결제창 바로 열기", detailEn: "Opens Toss Pay directly", icon: "fa-bolt" },
+    phone: { ko: "휴대폰 결제", en: "Mobile", detailKo: "통신사 휴대폰 결제", detailEn: "Carrier billing", icon: "fa-mobile-screen-button" },
+    naver_pay: { ko: "네이버페이", en: "Naver Pay", detailKo: "네이버페이 결제창 바로 열기", detailEn: "Opens Naver Pay directly", icon: "fa-n" },
     kakao_pay: { ko: "카카오페이", en: "Kakao Pay", detailKo: "심사 후 활성화", detailEn: "Available after review", icon: "fa-comment" },
 };
 
 const PAYMENT_BUTTON_COPY: Record<CheckoutPaymentMethod, { ko: string; en: string }> = {
-    card: { ko: "카드 테스트 결제창 열기", en: "Open card test payment" },
-    transfer: { ko: "계좌이체 테스트창 열기", en: "Open bank transfer test" },
+    card: { ko: "카드로 결제하기", en: "Pay by card" },
+    transfer: { ko: "계좌이체로 결제하기", en: "Pay by bank transfer" },
     virtual_account: { ko: "가상계좌 준비 중", en: "Virtual account setup in progress" },
-    toss_pay: { ko: "토스페이 테스트창 열기", en: "Open Toss Pay test" },
-    phone: { ko: "휴대폰 결제 테스트창 열기", en: "Open mobile payment test" },
-    naver_pay: { ko: "네이버페이 테스트창 열기", en: "Open Naver Pay test" },
+    toss_pay: { ko: "토스페이로 결제하기", en: "Pay with Toss Pay" },
+    phone: { ko: "휴대폰으로 결제하기", en: "Pay by mobile" },
+    naver_pay: { ko: "네이버페이로 결제하기", en: "Pay with Naver Pay" },
     kakao_pay: { ko: "카카오페이 심사 중", en: "Kakao Pay under review" },
 };
+
+// 배송 견적의 모드와 서버가 만든 주문의 모드가 다를 때 — 결제창을 열지 않고 견적을 다시 받음
+const TOSS_MODE_CHANGED = "Toss payment mode changed";
 
 // 서버가 보낸 날것의 오류 글인가(아래 safePaymentError 가 그대로 돌려주는 경우) — 웹은 이때 쉬운 고정 문장 + 작은 원문 한 줄
 function isRawServerPaymentError(error: unknown) {
@@ -112,6 +127,11 @@ function isRawServerPaymentError(error: unknown) {
 }
 
 function safePaymentError(error: unknown, locale: "ko" | "en") {
+    if (error instanceof Error && error.message === TOSS_MODE_CHANGED) {
+        return locale === "en"
+            ? "Payment settings changed, so the payment window was not opened. Please try again in a moment."
+            : "결제 설정이 바뀌어 결제창을 열지 않았습니다. 잠시 후 다시 결제해 주세요.";
+    }
     if (error instanceof DdbApiError) {
         if (error.apiCode === "OPEN_ORDER_LIMIT") {
             return locale === "en"
@@ -129,11 +149,11 @@ function safePaymentError(error: unknown, locale: "ko" | "en") {
         ? String((error as { code?: unknown }).code || "")
         : "";
     if (code === "USER_CANCEL" || code === "PAY_PROCESS_CANCELED") {
-        return locale === "en" ? "The test payment was canceled." : "테스트 결제가 취소되었습니다.";
+        return locale === "en" ? "The payment was canceled." : "결제가 취소되었습니다.";
     }
     return locale === "en"
-        ? "The test payment window could not be opened. Please try again."
-        : "테스트 결제창을 열지 못했습니다. 잠시 후 다시 시도해 주세요.";
+        ? "The payment window could not be opened. Please try again."
+        : "결제창을 열지 못했습니다. 잠시 후 다시 시도해 주세요.";
 }
 
 export default function CheckoutPage() {
@@ -153,12 +173,22 @@ export default function CheckoutPage() {
         quote: CheckoutDeliveryQuote | null;
         error: string;
     } | null>(null);
+    // 결제 모드가 바뀐 것을 알았을 때 배송 견적(= 화면 안내 모드)을 다시 받는 순번
+    const [quoteRefresh, setQuoteRefresh] = useState(0);
     const [paymentMethod, setPaymentMethod] = useState<CheckoutPaymentMethod>("card");
     const [submitting, setSubmitting] = useState(false);
     const [paymentError, setPaymentError] = useState("");
     // 마지막 결제 시도에서 받은 서버 원문 오류 — paymentError 와 같을 때만 웹이 쉬운 문장으로 바꿔 보여 줌(보이는 글만, 동작 무관)
     const [rawServerError, setRawServerError] = useState("");
     const [directTermsAccepted, setDirectTermsAccepted] = useState(false);
+    // 정식 오픈 전 잠금 안내 창 — 서버가 이 계정에 결제를 열지 않았을 때만. 닫으면 결제 단추로 초점
+    // (확인 중에 단추가 잠깐 비활성이라 브라우저가 초점을 놓치므로 창이 아니라 여기서 돌려줌)
+    const [prelaunchOpen, setPrelaunchOpen] = useState(false);
+    const payButtonRef = useRef<HTMLButtonElement>(null);
+    const closePrelaunch = useCallback(() => {
+        setPrelaunchOpen(false);
+        payButtonRef.current?.focus();
+    }, []);
     const [savedAddresses, setSavedAddresses] = useState<CustomerAddress[]>([]);
     const [selectedAddressId, setSelectedAddressId] = useState("");
     const prefilledMemberRef = useRef("");
@@ -168,6 +198,13 @@ export default function CheckoutPage() {
     const guestFeature = useSyncExternalStore(subscribeGuestMode, guestOrderEnabled, () => process.env.NEXT_PUBLIC_GUEST_ORDER === "1");
     const [guestBuyer, setGuestBuyer] = useState<GuestBuyer>(emptyGuestBuyer);
     const [guestErrors, setGuestErrors] = useState<GuestBuyerErrors>({});
+
+    // 개발 서버 전용 미리보기 — ?prelaunchpreview 이면 정식 오픈 전 안내 창을 바로 띄움(배포 빌드에서는 늘 꺼짐, 서버 요청 없음)
+    useEffect(() => {
+        if (process.env.NODE_ENV !== "development") return;
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- dev-only preview flag is read from the URL after hydration.
+        if (new URLSearchParams(window.location.search).has("prelaunchpreview")) setPrelaunchOpen(true);
+    }, []);
 
     useEffect(() => {
         const requestedMethod = new URLSearchParams(window.location.search).get("payment");
@@ -183,7 +220,7 @@ export default function CheckoutPage() {
     const guestCheckout = !signedInForPayment && guestMode && guestFeature;
     const directEasyPay = paymentMethod === "toss_pay" || paymentMethod === "naver_pay";
     const quoteRequestKey = accessToken
-        ? `${accessToken}:${total}:${deliveryDraft.deliveryZone}`
+        ? `${accessToken}:${total}:${deliveryDraft.deliveryZone}:${quoteRefresh}`
         : "";
 
     useEffect(() => {
@@ -246,7 +283,7 @@ export default function CheckoutPage() {
         }, accessToken)
             .then((quote) => {
                 if (cancelled) return;
-                if (!isCheckoutDeliveryQuote(quote) || quote.fulfillmentMode !== "test_no_shipment") {
+                if (!isCheckoutDeliveryQuote(quote) || tossQuoteMode(quote) === null) {
                     throw new Error("Unsafe delivery quote response");
                 }
                 setQuoteResult({ requestKey: quoteRequestKey, quote, error: "" });
@@ -257,7 +294,7 @@ export default function CheckoutPage() {
                         requestKey: quoteRequestKey,
                         quote: null,
                         error: locale === "en"
-                            ? "The server will calculate the test estimate when you continue."
+                            ? "The server will calculate the estimate when you continue."
                             : "예상일을 미리 불러오지 못했습니다. 결제 진행 시 서버가 다시 계산합니다.",
                     });
                 }
@@ -270,6 +307,8 @@ export default function CheckoutPage() {
     const deliveryQuote = quoteResult?.requestKey === quoteRequestKey ? quoteResult.quote : null;
     const quoteError = quoteResult?.requestKey === quoteRequestKey ? quoteResult.error : "";
     const quoteLoading = Boolean(accessToken && quoteResult?.requestKey !== quoteRequestKey);
+    // 서버가 배송 견적으로 알려 준 결제 모드 — 견적 전(로그인 전 · 불러오기 실패)은 null. 문구가 아니라 주문 모드 짝 검사에만 씀
+    const paymentMode: TossPaymentMode | null = deliveryQuote ? tossQuoteMode(deliveryQuote) : null;
 
     const changeDelivery = (next: CheckoutDeliveryDraft) => {
         setDeliveryDraft(next);
@@ -301,8 +340,18 @@ export default function CheckoutPage() {
         }
         if ((!user || !accessToken) && !guestCheckout) {
             setPaymentError(locale === "en"
-                ? "Sign in again before starting a test payment."
-                : "테스트 결제를 시작하려면 먼저 로그인해 주세요.");
+                ? "Sign in again before starting a payment."
+                : "결제를 시작하려면 먼저 로그인해 주세요.");
+            return;
+        }
+        // 정식 오픈 전 잠금(2026-10-28) — 서버가 이 계정(비회원은 토큰 없이)에 결제를 열지 않았으면 주문을 만들지 않고 안내 창만.
+        // 배송지 입력 전이라도 먼저 알림. 확인 주소가 없거나(옛 서버) 실패하면 그대로 진행하고 주문 만들기에서 서버가 403 으로 다시 막음.
+        setSubmitting(true);
+        const availability = await loadTossCheckoutAvailability(accessToken || undefined);
+        setSubmitting(false);
+        if (availability === "locked") {
+            setPaymentError("");
+            setPrelaunchOpen(true);
             return;
         }
         if (guestCheckout) {
@@ -316,8 +365,8 @@ export default function CheckoutPage() {
         }
         if (directEasyPay && !directTermsAccepted) {
             setPaymentError(locale === "en"
-                ? "Agree to the Toss Payments terms before opening a direct wallet test window."
-                : "간편결제 직접 테스트창을 열려면 토스페이먼츠 약관에 동의해 주세요.");
+                ? "Agree to the Toss Payments terms before opening a direct wallet window."
+                : "간편결제 창을 열려면 토스페이먼츠 약관에 동의해 주세요.");
             return;
         }
 
@@ -362,9 +411,17 @@ export default function CheckoutPage() {
                 });
             }
 
+            // 서버가 만든 주문은 아래 검사에서 막혀도 정리 — 결제 키가 생기기 전이라 서버가 취소를 받아 줌
+            if (isTossOrderId(order.orderId)) pendingOrderId = order.orderId;
+            // 서버가 정한 모드를 따르되 mode · 키(test_ck_ / live_ck_) · 주문번호(TEST- / LIVE-) · 배송 견적
+            // (test_no_shipment / live_pending)이 한 모드로 짝이 맞을 때만. 하나라도 섞이면 null → 결제창을 열지 않음.
+            const orderMode = tossOrderMode(order);
+            if (orderMode !== null && paymentMode !== null && orderMode !== paymentMode) {
+                // 견적을 받은 뒤 서버 모드가 바뀜(테스트 ↔ 실결제) — 이 화면 그대로 결제창을 열지 않음
+                throw new Error(TOSS_MODE_CHANGED);
+            }
             if (
-                order.mode !== "test"
-                || !order.clientKey.startsWith("test_ck_")
+                orderMode === null
                 || !isTossOrderId(order.orderId)
                 || order.currency !== "KRW"
                 || !Number.isSafeInteger(order.amount)
@@ -372,14 +429,11 @@ export default function CheckoutPage() {
                 || !Array.isArray(order.lines)
                 || order.lines.length === 0
                 || !isCheckoutDeliveryServerContract(order)
-                || order.quote.fulfillmentMode !== "test_no_shipment"
-                || order.quote.isSimulation !== true
                 || order.amount !== total + order.quote.shippingFee
             ) {
                 throw new Error("Unsafe Toss order response");
             }
 
-            pendingOrderId = order.orderId;
             savePendingTossTestPayment({
                 version: 1,
                 orderId: order.orderId,
@@ -433,6 +487,15 @@ export default function CheckoutPage() {
                 }
                 clearPendingTossTestPayment(pendingOrderId);
             }
+            if (isTossPrelaunchLockedError(error)) {
+                // 주문 만들기에서 서버가 정식 오픈 전 잠금으로 막음(주문 없음) — 오류 글 대신 같은 안내 창
+                setRawServerError("");
+                setPaymentError("");
+                setPrelaunchOpen(true);
+                setSubmitting(false);
+                return;
+            }
+            if (error instanceof Error && error.message === TOSS_MODE_CHANGED) setQuoteRefresh((value) => value + 1);
             const message = safePaymentError(error, locale);
             setRawServerError(isRawServerPaymentError(error) ? message : "");
             setPaymentError(message);
@@ -488,17 +551,6 @@ export default function CheckoutPage() {
                 <li className="is-on" aria-current="step"><b>2</b>{locale === "en" ? "Checkout" : "주문서"}</li>
                 <li><b>3</b>{locale === "en" ? "Done" : "결제 완료"}</li>
             </ol>
-            <div className="mt-4 rounded-xl border-2 border-sky-300 bg-sky-50 px-4 py-3" data-payment-mode="test">
-                <p className="text-sm font-black text-sky-950">
-                    <i className="fa-solid fa-flask mr-2" />
-                    {locale === "en" ? "Toss Payments test mode" : "토스페이먼츠 테스트 모드"}
-                </p>
-                <p className="mt-1 text-xs font-bold leading-5 text-sky-800">
-                    {locale === "en"
-                        ? "Test keys are active. No real withdrawal, shipment, purchase analytics, or rewards will be created. Delivery details are stored only for this test-order review."
-                        : "테스트 키로만 진행됩니다. 실제 출금·배송·구매 분석·코인 및 적립금 지급은 발생하지 않습니다. 배송정보는 테스트 주문 확인용으로만 저장됩니다."}
-                </p>
-            </div>
             <form onSubmit={submit} className="mt-6 grid gap-6 lg:grid-cols-[1fr_320px]">
                 <section className="grid min-w-0 gap-4">
                     {/* 웹 전용 — 로그인 안 했으면 회원/비회원 고르기 · 비회원 주문자 정보(앱은 hidden) */}
@@ -550,7 +602,6 @@ export default function CheckoutPage() {
                         onBlur={validateDeliveryField}
                         locale={locale}
                         disabled={submitting}
-                        testMode
                     />
 
                     <section className="surface overflow-hidden" aria-labelledby="checkout-delivery-estimate-title">
@@ -583,11 +634,10 @@ export default function CheckoutPage() {
                                     <p className="text-lg font-black text-emerald-700">
                                         {formatCheckoutDeliveryEstimate(deliveryQuote, locale)}
                                     </p>
-                                    <p className="mt-2 text-xs font-bold leading-5 text-sky-800">
-                                        <i className="fa-solid fa-flask mr-1.5" aria-hidden="true" />
+                                    <p className="mt-2 text-xs font-bold leading-5 text-neutral-500">
                                         {locale === "en"
-                                            ? "Simulation for test-screen verification; no parcel will actually be shipped."
-                                            : "테스트 화면 검증용 모의 예상이며 실제 상품은 발송되지 않습니다."}
+                                            ? "Actual arrival may vary slightly depending on the carrier."
+                                            : "택배사 사정에 따라 도착일이 조금 달라질 수 있습니다."}
                                     </p>
                                 </>
                             ) : (
@@ -680,7 +730,7 @@ export default function CheckoutPage() {
                                     required
                                 />
                                 <span className="text-[11px] font-bold leading-5 text-neutral-700">
-                                    {locale === "en" ? "I agree to the required Toss Payments terms for direct wallet testing: " : "간편결제 직접 테스트에 필요한 토스페이먼츠 약관에 동의합니다: "}
+                                    {locale === "en" ? "I agree to the required Toss Payments terms for direct wallet payment: " : "간편결제에 필요한 토스페이먼츠 약관에 동의합니다: "}
                                     <a href="https://pages.tosspayments.com/terms/user" target="_blank" rel="noreferrer" className="co-terms-link font-black text-indigo-700 underline">전자금융거래 약관</a>
                                     {" · "}
                                     <a href="https://pages.tosspayments.com/terms/privacy/consent1" target="_blank" rel="noreferrer" className="co-terms-link font-black text-indigo-700 underline">개인정보 수집·이용</a>
@@ -756,9 +806,10 @@ export default function CheckoutPage() {
                     {!signedInForPayment && (
                         <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-3 py-3" role="alert" data-co-guest-legacy>
                             <p className="text-xs font-bold leading-5 text-amber-900">
+                                {/* 로그인 전이라 서버 결제 모드를 아직 모름 — 두 모드 모두 맞는 보통 문구 */}
                                 {locale === "en"
-                                    ? "Sign in with the review test account to open the Toss Payments test window. Guest users can preview the order form only."
-                                    : "토스페이먼츠 테스트 결제창은 심사용 테스트 계정으로 로그인해야 열립니다. 비회원은 주문서 화면만 미리 볼 수 있습니다."}
+                                    ? "Sign in to open the Toss Payments window. Guest users can preview the order form only."
+                                    : "토스페이먼츠 결제창은 로그인한 뒤 열립니다. 비회원은 주문서 화면만 미리 볼 수 있습니다."}
                             </p>
                             <Link href={loginHref} className="mt-2 inline-flex text-xs font-black text-indigo-700 underline">
                                 {locale === "en" ? "Sign in" : "로그인하기"}
@@ -779,13 +830,14 @@ export default function CheckoutPage() {
                         </p>
                     )}
                     <button
+                        ref={payButtonRef}
                         type="submit"
                         className="co-pay btn btn-primary mt-5 w-full"
                         disabled={submitting || (!signedInForPayment && !guestCheckout) || (directEasyPay && !directTermsAccepted)}
-                        data-payment-status="test_ready"
+                        data-payment-status={paymentMode ? `${paymentMode}_ready` : "ready"}
                     >
                         {submitting
-                            ? (locale === "en" ? "Opening test payment…" : "테스트 결제창 여는 중…")
+                            ? (locale === "en" ? "Opening payment…" : "결제창 여는 중…")
                             : (locale === "en" ? PAYMENT_BUTTON_COPY[paymentMethod].en : PAYMENT_BUTTON_COPY[paymentMethod].ko)}
                     </button>
                     <p className="mt-2 text-center text-[10px] font-bold leading-4 text-neutral-500">
@@ -798,6 +850,7 @@ export default function CheckoutPage() {
                     </p>
                 </aside>
             </form>
+            {prelaunchOpen && <PrelaunchNoticeModal onClose={closePrelaunch} />}
         </main>
     );
 }

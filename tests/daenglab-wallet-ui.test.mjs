@@ -76,7 +76,7 @@ test("the local demo checkout never mints a server wallet balance", async () => 
         source("app/checkout/page.tsx"),
         source("app/checkout/toss/success/page.tsx"),
     ]);
-    assert.match(checkout, /코인 및 적립금 지급은 발생하지 않습니다/);
-    assert.match(success, /코인 및 적립금 지급은 발생하지 않습니다/);
+    // 2026-10-28부터 테스트 안내 문구 없이 보통 결제 문구 — 결제 화면이 지갑 적립 API를 부르지 않는지만 확인
     assert.doesNotMatch(`${checkout}\n${success}`, /purchase-rewards|creditPurchase|daenglab\/wallet/);
+    assert.doesNotMatch(`${checkout}\n${success}`, /daengLabCoinsForLines|data-daenglab-coin-estimate/);
 });

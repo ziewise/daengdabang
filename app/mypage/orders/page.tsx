@@ -19,10 +19,13 @@ import MypageWebLoading from "@/components/mypage/MypageWebLoading";
 import {
     estimatedDeliveryLabel,
     formatOrderAmount,
+    hasMixedTossMode,
+    isRefundOrder,
     isTestOrder,
     loadTossOrderHistory,
     loadTossOrderHistoryDetail,
     mergeUniqueTossOrders,
+    netPaidAmount,
     orderDateLabel,
     orderStatusLabel,
     paymentMethodLabel,
@@ -66,6 +69,13 @@ function loginHref(orderId: string): string {
 }
 
 function statusTone(order: TossOrderHistoryItem): string {
+    if (hasMixedTossMode(order)) return "border-amber-200 bg-amber-50 text-amber-800";
+    // 결제 뒤 환불 — 전액은 빨강, 부분 환불 · 취소 처리 중은 주황(테스트 주문도 같은 색)
+    if (isRefundOrder(order)) {
+        return order.status.toLowerCase() === "refunded"
+            ? "border-red-200 bg-red-50 text-red-800"
+            : "border-amber-200 bg-amber-50 text-amber-800";
+    }
     if (isTestOrder(order)) return "border-sky-200 bg-sky-50 text-sky-800";
     const status = order.fulfillmentStatus.toLowerCase();
     if (["delivered", "completed"].includes(status)) return "border-emerald-200 bg-emerald-50 text-emerald-800";
@@ -181,6 +191,42 @@ function OrderSteps({ order }: { order: TossOrderHistoryItem }) {
 
 function DeliverySummary({ order }: { order: TossOrderHistoryItem }) {
     const estimate = estimatedDeliveryLabel(order);
+    // test · live 기록이 섞인 주문 — 배송 여부를 단정하지 않음(lib/toss-order-history 의 hasMixedTossMode)
+    if (hasMixedTossMode(order)) {
+        return (
+            <div className="mt-3 rounded-xl border border-amber-200 bg-amber-50 px-3 py-3" data-fulfillment-mode="review_required">
+                <p className="text-sm font-black text-amber-900">
+                    <i className="fa-solid fa-circle-exclamation mr-2" aria-hidden="true" />
+                    결제 기록 확인 필요
+                </p>
+                <p className="mt-1 text-xs font-bold leading-5 text-amber-800">결제 기록을 확인한 뒤 배송을 안내해 드립니다. 궁금하시면 1:1 문의에 주문번호를 남겨 주세요.</p>
+            </div>
+        );
+    }
+    // 결제 뒤 취소 · 환불(2026-10-28 백엔드 취소 기록) — 배송 대신 환불 상태
+    if (isRefundOrder(order)) {
+        const status = order.status.toLowerCase();
+        const refund = order.cancel;
+        return (
+            <div className={`mt-3 rounded-xl border px-3 py-3 ${status === "refunded" ? "border-red-100 bg-red-50/70" : "border-amber-200 bg-amber-50"}`} data-refund-status={status}>
+                <p className={`text-sm font-black ${status === "refunded" ? "text-red-800" : "text-amber-900"}`}>
+                    <i className="fa-solid fa-rotate-left mr-2" aria-hidden="true" />
+                    {orderStatusLabel(order)}
+                    {isTestOrder(order) && <span className="ml-1.5 text-xs font-bold">(테스트 결제)</span>}
+                </p>
+                <p className={`mt-1 text-xs font-bold leading-5 ${status === "refunded" ? "text-red-700" : "text-amber-800"}`}>
+                    {status === "cancel_pending"
+                        ? "결제 취소를 처리하고 있습니다. 환불이 확인되면 이 화면에 반영됩니다."
+                        : refund && refund.refundedAmount > 0
+                            ? `${formatOrderAmount(refund.refundedAmount)} 환불${refund.refundedAt ? ` · ${orderDateLabel(refund.refundedAt)}` : ""}${status === "partially_refunded" ? ` · 남은 결제 ${formatOrderAmount(refund.remainingAmount)}` : ""}`
+                            : "환불 내역은 주문 상세에서 확인할 수 있습니다."}
+                </p>
+                {status === "partially_refunded" && (
+                    <p className="mt-1 text-xs font-bold leading-5 text-amber-800">남은 상품은 확인 뒤 따로 안내해 드립니다. 궁금하시면 1:1 문의에 주문번호를 남겨 주세요.</p>
+                )}
+            </div>
+        );
+    }
     if (isTestOrder(order)) {
         return (
             <div className="mt-3 rounded-xl border border-sky-200 bg-sky-50 px-3 py-3" data-fulfillment-mode="test_no_delivery">
@@ -248,7 +294,8 @@ function LiveOrderActions({ order, className = "" }: { order: TossOrderHistoryIt
     const [confirmOpen, setConfirmOpen] = useState(false);
     // 주문 취소 요청 · 구매 확정 — 웹 · 앱 모두(2026-10-26 사용자, 앱 모양은 appShopSkin)
     const confirmPreview = usePurchaseConfirmPreview();
-    if (isTestOrder(order)) return null;
+    // 테스트 주문 · 결제 뒤 취소 · 환불 주문에는 배송 · 반품 · 취소 요청 동작을 보이지 않음
+    if (isTestOrder(order) || isRefundOrder(order)) return null;
     const summary = orderHelpSummary(order);
     const stage = orderStage(order);
     // 배송 준비 전(결제 완료 · 상품 준비 중)이면 취소 요청, 배송 완료면 구매 확정(서버 기능 전까지 미리보기에서만)
@@ -451,7 +498,7 @@ function OrderListView({
                     <div data-stat="all"><dt>전체 주문</dt><dd>{orders.length}<small>건</small></dd></div>
                     <div data-stat="moving"><dt>준비 · 배송중</dt><dd>{orders.filter((order) => { const stage = orderStage(order); return stage === 1 || stage === 2; }).length}<small>건</small></dd></div>
                     <div data-stat="done"><dt>배송 완료</dt><dd>{orders.filter((order) => orderStage(order) === 3).length}<small>건</small></dd></div>
-                    <div data-stat="sum"><dt>누적 결제</dt><dd>{formatOrderAmount(orders.filter((order) => !isTestOrder(order)).reduce((total, order) => total + order.amount, 0))}</dd></div>
+                    <div data-stat="sum"><dt>누적 결제</dt><dd>{formatOrderAmount(orders.filter((order) => !isTestOrder(order)).reduce((total, order) => total + netPaidAmount(order), 0))}</dd></div>
                 </dl>
             )}
 
@@ -545,14 +592,16 @@ function DeliveryDetail({ order }: { order: TossOrderHistoryItem }) {
     const delivery = order.delivery;
     const address = delivery ? deliveryAddress(delivery) : "";
     const request = delivery ? deliveryRequestText(delivery) : "";
+    // 섞인 기록은 실주문 동작을 막되(testOrder 그대로) "실제 배송 없음" 안내는 하지 않음
     const testOrder = isTestOrder(order);
+    const testNotice = testOrder && !hasMixedTossMode(order);
     return (
         <section className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm sm:p-6" data-mp-card>
             <div className="flex flex-wrap items-center justify-between gap-2" data-mp-band="mint" data-mp-art="home">
                 <h2 className="text-lg font-black text-neutral-950" data-mp-kicker="DELIVERY">받는 사람 정보</h2>
-                {testOrder && <span className="rounded-full bg-sky-50 px-2.5 py-1 text-xs font-black text-sky-700">화면 검증용</span>}
+                {testNotice && <span className="rounded-full bg-sky-50 px-2.5 py-1 text-xs font-black text-sky-700">화면 검증용</span>}
             </div>
-            {testOrder && (
+            {testNotice && (
                 <div className="mt-4 rounded-xl border border-sky-200 bg-sky-50 px-4 py-3">
                     <p className="text-sm font-black text-sky-900">실제 배송 없음</p>
                     <p className="mt-1 text-xs font-bold leading-5 text-sky-700">
@@ -607,13 +656,13 @@ function OrderDetailView({ order }: { order: TossOrderHistoryItem }) {
                 <div className="flex flex-wrap items-center justify-between gap-3" data-mp-band="sky" data-mp-art="cart">
                     <div>
                         <h2 className="text-lg font-black text-neutral-950" data-mp-kicker="ORDER STATUS">{orderStatusLabel(order)}</h2>
-                        {!isTestOrder(order) && estimatedDeliveryLabel(order) && (
+                        {!isTestOrder(order) && !isRefundOrder(order) && estimatedDeliveryLabel(order) && (
                             <p className="mt-1 text-sm font-black text-emerald-700">{estimatedDeliveryLabel(order)}</p>
                         )}
                     </div>
                     <LiveOrderActions order={order} />
                 </div>
-                {isTestOrder(order) && <DeliverySummary order={order} />}
+                {(isTestOrder(order) || isRefundOrder(order)) && <DeliverySummary order={order} />}
                 <OrderSteps order={order} />
                 <div className="mt-5 grid gap-5 border-t border-neutral-100 pt-5">
                     {order.lines.length > 0 ? order.lines.map((line, index) => (
@@ -638,8 +687,21 @@ function OrderDetailView({ order }: { order: TossOrderHistoryItem }) {
                         <dd className="text-right font-black text-neutral-900">{order.shippingFee === 0 ? "무료" : formatOrderAmount(order.shippingFee)}</dd>
                         <dt className="border-t border-neutral-200 pt-4 font-black text-neutral-950">총 결제금액</dt>
                         <dd className="border-t border-neutral-200 pt-4 text-right text-xl font-black text-neutral-950">{formatOrderAmount(order.amount)}</dd>
+                        {/* 결제 뒤 환불 — 서버 환불 요약(cancel)이 있을 때만 */}
+                        {order.cancel && order.cancel.refundedAmount > 0 && (
+                            <>
+                                <dt className="font-bold text-red-600">환불 금액</dt>
+                                <dd className="text-right font-black text-red-600">-{formatOrderAmount(order.cancel.refundedAmount)}</dd>
+                                <dt className="font-black text-neutral-950">환불 후 결제금액</dt>
+                                <dd className="text-right font-black text-neutral-950">{formatOrderAmount(netPaidAmount(order))}</dd>
+                            </>
+                        )}
                     </dl>
-                    {isTestOrder(order) && (
+                    {hasMixedTossMode(order) ? (
+                        <p className="mt-5 rounded-xl bg-amber-50 px-4 py-3 text-xs font-bold leading-5 text-amber-800">
+                            결제 모드 기록이 서로 맞지 않아 확인이 필요합니다. 1:1 문의에 주문번호를 남겨 주시면 확인해 드립니다.
+                        </p>
+                    ) : isTestOrder(order) && (
                         <p className="mt-5 rounded-xl bg-sky-50 px-4 py-3 text-xs font-bold leading-5 text-sky-800">
                             테스트 키 승인 기록입니다. 실제 출금·배송·적립은 발생하지 않습니다.
                         </p>

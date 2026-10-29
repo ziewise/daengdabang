@@ -1,0 +1,41 @@
+/* 정식 오픈 전 결제 잠금 안내 창(components/checkout/PrelaunchNoticeModal, 2026-10-28)
+   겉 틀 · 머리 · 단추 · 모바일 아래 시트는 globals.css 의 .ddb-petform 그대로(앱 스티커북은 appShopSkin).
+   여기는 이 창의 크기와 본문 안내 카드만 */
+.ddb-petform[data-mode="prelaunch"] .ddb-pf-card { width: min(480px, 100%); }
+.ddb-petform[data-mode="prelaunch"] .ddb-pf-head h2 { font-size: 24px; }
+
+/* 쇼핑 계속하기 — 단추 모양의 링크 */
+.ddb-petform[data-mode="prelaunch"] a.ddb-pf-cancel { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
+.ddb-petform[data-mode="prelaunch"] a.ddb-pf-cancel:focus-visible { outline: 3px solid #a8e0c6; outline-offset: 2px; }
+.ddb-petform[data-mode="prelaunch"] .ddb-pf-save { min-width: 140px; }
+
+/* 본문 — 흰 쿠션 카드에 민트 동그라미 아이콘 두 줄 */
+.ddb-prelaunch-list {
+    display: grid;
+    gap: 12px;
+    margin: 0;
+    padding: 16px 18px;
+    border-radius: 22px;
+    background: #fff;
+    list-style: none;
+    box-shadow: 0 0 0 1px #f1e8dc, 0 10px 18px -16px rgb(15 23 42 / 35%);
+}
+
+.ddb-prelaunch-list li { display: flex; align-items: flex-start; gap: 10px; color: #475569; font-size: 13.5px; font-weight: 700; line-height: 1.55; }
+
+.ddb-prelaunch-list i {
+    display: grid;
+    flex: none;
+    width: 26px;
+    height: 26px;
+    place-items: center;
+    border-radius: 999px;
+    background: #e9f8f1;
+    color: #12a17a;
+    font-size: 12px;
+}
+
+@media (max-width: 640px) {
+    .ddb-petform[data-mode="prelaunch"] .ddb-pf-card { width: 100%; }
+    .ddb-petform[data-mode="prelaunch"] .ddb-pf-head h2 { font-size: 20px; }
+}

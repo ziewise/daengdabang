@@ -4,6 +4,8 @@
  * 구매 옵션/장바구니에서 선호 결제수단을 주문서로 전달하는 빠른 선택 버튼.
  * 실제 승인은 아직 주문서 이후 PG 계약/SDK가 담당하므로 여기서는 결제를
  * 완료했다고 표시하지 않는다.
+ * 2026-10-28 결제 모드(테스트 · 실결제)는 주문서에서 서버가 알려 주므로 여기서는 테스트 전용 배지 · 문구를 빼고
+ * 두 모드 모두 맞는 안내만 둔다.
  */
 
 import { useI18n } from "@/lib/i18n";
@@ -25,9 +27,6 @@ export default function SimplePayButtons({ disabled = false, onSelect }: Props) 
                 <p className="text-[11px] font-black text-neutral-500">
                     {locale === "en" ? "Quick payment selection" : "빠른 결제수단 선택"}
                 </p>
-                <span className="shrink-0 rounded-full bg-amber-50 px-2 py-0.5 text-[9px] font-black text-amber-700">
-                    {locale === "en" ? "Test mode" : "테스트 모드"}
-                </span>
             </div>
             <div className="grid grid-cols-2 gap-2">
                 <button
@@ -78,8 +77,8 @@ export default function SimplePayButtons({ disabled = false, onSelect }: Props) 
             </div>
             <p className="mt-2 text-[10px] font-bold leading-4 text-neutral-400">
                 {locale === "en"
-                    ? "Your selection is carried to the test checkout. No real charge or shipment will occur."
-                    : "선택한 수단은 테스트 주문서로 이어지며, 실제 출금·상품 배송은 진행되지 않습니다."}
+                    ? "Your selection is carried to checkout, where payment continues in the Toss Payments secure window."
+                    : "선택한 수단은 주문서로 이어지며, 결제는 주문서에서 토스페이먼츠 보안 결제창으로 진행됩니다."}
             </p>
         </div>
     );

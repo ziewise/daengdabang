@@ -57,9 +57,12 @@ test("card checkout explains that sensitive card data stays in the Toss window",
     assert.match(checkout, /신용·체크카드/);
     assert.match(checkout, /토스페이먼츠 보안 결제창에서 입력합니다/);
     assert.match(checkout, /카드정보를 직접 수집하거나 저장하지 않습니다/);
-    assert.match(checkout, /카드 테스트 결제창 열기/);
+    // 버튼 문구는 테스트 · 실결제 모두 "카드로 결제하기"(2026-10-28 사장님 결정)
+    assert.doesNotMatch(checkout, /카드 테스트 결제창 열기/);
+    assert.match(checkout, /카드로 결제하기/);
     assert.match(login, /비회원 주문서 미리보기/);
-    assert.match(login, /심사용 테스트 계정으로 로그인해야 열 수 있습니다/);
+    assert.match(login, /결제창은 로그인한 뒤 열 수 있습니다/);
+    assert.doesNotMatch(login, /심사용 테스트 계정/);
     assert.match(optionSheet, /신용·체크카드로 구매하기/);
     assert.match(privacy, /카드번호·유효기간·CVC는 PG사 보안창에서 처리/);
     assert.match(privacy, /댕다방이 직접 수집하거나 저장하지 않음/);

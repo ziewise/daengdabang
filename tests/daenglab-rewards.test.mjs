@@ -84,8 +84,8 @@ test("shopping surfaces label coins as purchase-confirmation estimates while tes
     assert.match(optionSheet, /구매확정 후 적립/);
     assert.match(cart, /daengLabCoinsForLines\(selectedLines\)/);
     assert.match(cart, /결제 확인 \+ 구매확정 후 적립 · 행동·소리 분석 1회당 10C/);
+    // 주문서는 코인 예상을 보이지 않음(2026-10-28부터 테스트 안내 문구 없이 보통 결제 문구)
     assert.doesNotMatch(checkout, /daengLabCoinsForLines|DaengLabCoinMark|data-daenglab-coin-estimate/);
-    assert.match(checkout, /코인 및 적립금 지급은 발생하지 않습니다/);
     for (const value of [productInfo, optionSheet, cart]) {
         assert.match(value, /data-daenglab-coin-estimate/);
     }

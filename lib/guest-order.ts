@@ -14,7 +14,8 @@
  *   "비회원으로 주문 중" 표시와, 서버가 준 비회원 조회 토큰(조회 화면 30분)만 둠.
  */
 import { ddbApiBase } from "@/lib/ddb-api-base";
-import type { TossTestOrder } from "@/lib/customer-api";
+import { DdbApiError, type TossTestOrder } from "@/lib/customer-api";
+import { TOSS_PRELAUNCH_LOCKED_CODE } from "@/lib/toss-payment-mode";
 
 /* ───────── 스위치 · 미리보기 ───────── */
 export function guestPreviewOn() {
@@ -134,6 +135,8 @@ type GuestOrderPayload = {
  * 연동 약속(협업자): POST /api/v1/payments/toss/guest-orders
  *   { lines, paymentMethod, delivery, buyer: { name, phone, email }, lookup_password }
  *   → 회원 주문과 같은 TossTestOrder 모양 + guest_token(이 주문만 다룰 수 있는 짧은 토큰)
+ *   모드 짝도 회원 주문과 같음(lib/toss-payment-mode): test = test_ck_ · TEST- · test_no_shipment,
+ *   live = live_ck_ · LIVE- · live_pending. 주문서가 회원 주문과 똑같이 검사하고, 짝이 안 맞으면 결제창을 열지 않음.
  */
 export async function createGuestTossOrder(payload: GuestOrderPayload, buyer: GuestBuyer): Promise<GuestTossOrder> {
     if (guestPreviewOn()) throw new Error("미리보기에서는 비회원 결제창을 열지 않아요.");
@@ -146,13 +149,27 @@ export async function createGuestTossOrder(payload: GuestOrderPayload, buyer: Gu
             lookup_password: buyer.lookupPassword,
         }),
     });
+    if (response.status === 403) {
+        // 정식 오픈 전 잠금(회원 주문과 같은 403 PAYMENT_PRELAUNCH_LOCKED) — 주문서가 같은 안내 창을 띄우도록 같은 오류 모양으로
+        const body = await response.json().catch(() => null) as { detail?: { code?: unknown; message?: unknown } } | null;
+        if (body?.detail?.code === TOSS_PRELAUNCH_LOCKED_CODE) {
+            throw new DdbApiError(typeof body.detail.message === "string" ? body.detail.message : "현재는 정식오픈전입니다.", {
+                code: "http_error",
+                status: 403,
+                apiCode: TOSS_PRELAUNCH_LOCKED_CODE,
+            });
+        }
+    }
     if (!response.ok) throw new Error("Guest order failed");
     const data = await response.json() as TossTestOrder & { guest_token?: string };
     if (!data?.orderId || !data.guest_token) throw new Error("Guest order response invalid");
     return { ...data, guestToken: data.guest_token };
 }
 
-/** 결제창에서 돌아왔을 때 — 연동 약속: POST /api/v1/payments/toss/guest-orders/confirm (헤더 X-Guest-Order-Token) */
+/**
+ * 결제창에서 돌아왔을 때 — 연동 약속: POST /api/v1/payments/toss/guest-orders/confirm (헤더 X-Guest-Order-Token)
+ *   → { orderId, totalAmount, status, mode } — status · mode 는 회원 결제 확인과 같은 짝(test_paid + test · paid + live)
+ */
 export async function confirmGuestTossPayment(payload: { paymentKey: string; orderId: string; amount: number }, guestToken: string) {
     const response = await fetch(apiUrl("/api/v1/payments/toss/guest-orders/confirm"), {
         method: "POST",
@@ -160,7 +177,7 @@ export async function confirmGuestTossPayment(payload: { paymentKey: string; ord
         body: JSON.stringify(payload),
     });
     if (!response.ok) throw new Error("Guest payment confirm failed");
-    return response.json() as Promise<{ orderId: string; totalAmount: number; status: string }>;
+    return response.json() as Promise<{ orderId: string; totalAmount: number; status: string; mode?: string }>;
 }
 
 /* 결제 도중 기억(결제창 → 돌아옴) — 이름 · 가린 연락처 · 조회 토큰만 */

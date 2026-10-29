@@ -4,9 +4,10 @@
  * /checkout/toss/success · /checkout/toss/fail 의 웹 전용 겉모양. 결제 확인 · 장바구니 정리 · 주문 저장 · 주문 취소는
  * 기존 페이지 그대로 하고, 이 파일은 그 결과(view)만 받아 그림. 앱(ddb-app-mode)은 기존 화면 그대로.
  * 결: 비회원 주문 완료 · 조회(guest-web.css 의 .gw-*)와 같은 파스텔 쿠션 — 회원 · 비회원 완료 화면이 한 가족처럼 보이게.
- *  - PaymentDoneWeb   : 축하 그림 · 주문번호 표(복사) · 테스트 결제 안내 · 진행 단계 · 주문 상품 · 결제/배송 정보 · 이어서 하기
+ *  - PaymentDoneWeb   : 축하 그림 · 주문번호 표(복사) · 진행 단계 · 주문 상품 · 결제/배송 정보 · 이어서 하기
  *  - PaymentStateWeb  : 확인 중(세 단계 진행) · 로그인 필요 · 상태 확인 중(다시 확인) · 확인 실패 · 주소 오류
  *  - PaymentFailWeb   : 결제가 안 됐어요 — 까닭(코드별 쉬운 말) · 오류 코드 · 장바구니 그대로 · 다시 결제 · 문의
+ * 2026-10-28 테스트 · 실결제 모두 보통 "결제" 문구(사장님 결정 — 테스트 결제 안내 없음). 모드 짝 검사는 결제 완료 페이지가 함.
  */
 "use client";
 
@@ -76,7 +77,6 @@ export function PaymentDoneWeb({ confirmation, orderId, amount, userName }: {
     const quote = confirmation.quote;
     const shippingFee = quote?.shippingFee ?? 0;
     const itemsTotal = Math.max(0, confirmation.totalAmount - shippingFee);
-    const simulation = quote ? quote.isSimulation || quote.fulfillmentMode === "test_no_shipment" : true;
     const request = delivery
         ? delivery.requestCode === "other"
             ? delivery.requestNote
@@ -107,7 +107,7 @@ export function PaymentDoneWeb({ confirmation, orderId, amount, userName }: {
     };
 
     return (
-        <main className="gw-lookup pw-page" data-guest-web="pay-done" data-payment-status="test_paid">
+        <main className="gw-lookup pw-page" data-guest-web="pay-done" data-payment-status={confirmation.status}>
             {/* 축하 판 — 그림 · 제목 · 주문번호 표 */}
             <section className="gw-done pw-done" aria-labelledby="pw-done-title">
                 <span className="pw-confetti" aria-hidden="true" />
@@ -128,12 +128,6 @@ export function PaymentDoneWeb({ confirmation, orderId, amount, userName }: {
                         <i className={copied ? "fa-solid fa-check" : "fa-regular fa-copy"} aria-hidden="true" />{copied ? "복사했어요" : "주문번호 복사"}
                     </button>
                 </div>
-
-                {/* 테스트 결제 안내 — 실제 출금 · 배송이 없다는 것을 정직하게 */}
-                <p className="pw-test" role="note">
-                    <i className="fa-solid fa-flask" aria-hidden="true" />
-                    <span><b>토스페이먼츠 테스트 결제</b>실제 출금과 배송은 일어나지 않아요.</span>
-                </p>
             </section>
 
             {/* 주문 내용 — 진행 단계 · 상품 · 결제/배송 */}
@@ -158,7 +152,7 @@ export function PaymentDoneWeb({ confirmation, orderId, amount, userName }: {
                         <i className="fa-solid fa-calendar-check" aria-hidden="true" />
                         <span>
                             <b>예상 도착 {dayLabel(quote.estimatedStartDate)}{quote.estimatedEndDate && quote.estimatedEndDate !== quote.estimatedStartDate ? ` ~ ${dayLabel(quote.estimatedEndDate)}` : ""}</b>
-                            {simulation ? "테스트 주문이라 날짜는 예시로만 보여 드려요." : "택배사 사정에 따라 조금 달라질 수 있어요."}
+                            택배사 사정에 따라 조금 달라질 수 있어요.
                         </span>
                     </p>
                 )}
@@ -344,7 +338,7 @@ const FAIL_REASON: Record<string, { title: string; tip: string; icon: string }> 
 export function PaymentFailWeb({ code, message, orderId }: { code: string; message: string; orderId: string }) {
     const reason = FAIL_REASON[code];
     return (
-        <main className="gw-lookup pw-page" data-guest-web="pay-fail" data-payment-status="test_failed">
+        <main className="gw-lookup pw-page" data-guest-web="pay-fail" data-payment-status="failed">
             <section className="gw-done pw-state" data-tone="rose" aria-labelledby="pw-fail-title">
                 {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                 <img src={`${UI}goods-pay-none-256.webp`} alt="" aria-hidden="true" />
@@ -367,7 +361,6 @@ export function PaymentFailWeb({ code, message, orderId }: { code: string; messa
                 </dl>
 
                 <ul>
-                    <li><i className="fa-solid fa-flask" aria-hidden="true" /><span>테스트 결제라 실제 출금 · 배송은 일어나지 않아요.</span></li>
                     <li><i className="fa-solid fa-arrows-rotate" aria-hidden="true" /><span>장바구니에서 고른 상품 그대로 바로 다시 결제할 수 있어요.</span></li>
                 </ul>
                 <div className="gw-done-go">
