@@ -146,7 +146,7 @@ test("the companion reserves the visible floating rail after scroll idle", async
     assert.match(collision, /Candidate axes are built from every edge/);
     const stickyBar = productInfo.slice(productInfo.indexOf("스크롤 추적 하단 고정 바"));
     assert.doesNotMatch(stickyBar.slice(0, stickyBar.indexOf("mx-auto")), /data-pet-guide-target="product-actions"/);
-    assert.match(stickyBar, /onClick=\{openPrelaunchNotice\}[\s\S]{0,100}data-pet-guide-target="product-actions"/);
+    assert.match(stickyBar, /onClick=\{\(\) => setSheetMode\("buy"\)\}[\s\S]{0,100}data-pet-guide-target="product-actions"/);
 });
 
 test("the moving companion never steals a mobile header action", async () => {

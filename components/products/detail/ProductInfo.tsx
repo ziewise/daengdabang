@@ -1,6 +1,5 @@
 "use client";
 
-import { openPrelaunchNotice } from "@/lib/prelaunch";
 import { reviewSellerLabel } from "@/lib/catalog/review-groups";
 
 /**
@@ -314,12 +313,6 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
                     </button>
                 )}
 
-                <p data-checkout-contract="prelaunch" className="pd-prelaunch text-xs font-medium leading-5 text-neutral-500">
-                    {locale === "en"
-                        ? "Enjoy a first look. Orders open with our official launch."
-                        : "지금은 미리보기 기간이에요. 주문은 정식 오픈 후에 만나요."}
-                </p>
-
                 {/* 메인 액션 — 누르면 옵션 시트. 이 영역이 화면 밖이면 하단 바 노출 */}
                 <div ref={actionRef} data-pet-guide-target="product-actions" className="pd-actions grid grid-cols-[56px_1fr_1fr] gap-2">
                     <button
@@ -346,11 +339,12 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
                     </button>
                     <button
                         type="button"
-                        onClick={openPrelaunchNotice}
+                        onClick={() => setSheetMode("buy")}
+                        disabled={!purchaseState.purchasable}
                         className="pd-buy flex h-14 min-w-0 items-center justify-center gap-1.5 rounded-md bg-indigo-600 px-1 text-base font-black text-white transition hover:bg-indigo-700"
                     >
                         <i className="fa-solid fa-credit-card shrink-0 text-sm" />
-                        <span className="break-keep whitespace-normal text-center leading-tight">{locale === "en" ? "Opening soon" : "오픈 준비 중"}</span>
+                        <span className="break-keep whitespace-normal text-center leading-tight">{locale === "en" ? "Buy now" : "바로 구매"}</span>
                     </button>
                 </div>
             </div>
@@ -389,11 +383,12 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
                     </button>
                     <button
                         type="button"
-                        onClick={openPrelaunchNotice}
+                        onClick={() => setSheetMode("buy")}
+                        disabled={!purchaseState.purchasable}
                         data-pet-guide-target="product-actions"
                         className="pd-bar-buy h-11 shrink-0 rounded-md bg-indigo-600 px-4 text-sm font-black text-white transition hover:bg-indigo-700 sm:px-6"
                     >
-                        {locale === "en" ? "Opening soon" : "오픈 준비 중"}
+                        {locale === "en" ? "Buy now" : "바로 구매"}
                     </button>
                 </div>
             </div>

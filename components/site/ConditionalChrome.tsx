@@ -21,7 +21,7 @@ const Header = dynamic(() => import("@/components/header/Header"));
 const Footer = dynamic(() => import("@/components/footer/Footer"));
 const FloatingDock = dynamic(() => import("@/components/site/FloatingDock"));
 const PetCompanionGate = dynamic(() => import("@/components/pet-companion/PetCompanionGate"));
-const PrelaunchNotice = dynamic(() => import("@/components/site/PrelaunchNotice"));
+// 2026-10-31 결제 다시 엶(토스 심사: 결제창이 보여야 함) — 첫 방문 "정식 오픈 준비" 창은 띄우지 않는다.
 // 웹 배경 장난감 벽지 — 웹 화면에서만, 화면에서만 그림(ssr: false — 페이지 길이를 알아야 해서). 앱 화면은 쓰지 않음
 const ToyWallpaper = dynamic(() => import("@/components/site/ToyWallpaper"), { ssr: false });
 import { useAppMode } from "@/components/app-shell/useAppMode";
@@ -75,7 +75,6 @@ export default function ConditionalChrome({ children }: { children: React.ReactN
             <Footer />
             <FloatingDock />
             <PetCompanionGate />
-            <PrelaunchNotice />
         </>
     );
 }
