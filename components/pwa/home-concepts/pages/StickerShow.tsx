@@ -951,7 +951,7 @@ export default function StickerShow() {
                 </DiaryBody>
             </div>
             {/* 오늘의 한 장 올리기 — 오른쪽 아래 카메라 스티커(댕자랑 쪽에서만) · 그림은 사용자 3D 사진첨부 아이콘.
-                크기 · 오른쪽 줄은 케어톡 떠 있는 버튼과 같게(52px · right 12px, 2026-10-20). data-app-fab: 이 버튼이 있으면 케어톡 버튼이 자동으로 바로 위로 올라감(AppShell CSS) */}
+                크기 · 오른쪽 줄은 케어톡 떠 있는 버튼과 같게(52px · right 12px, 2026-10-20). data-app-fab: 케어톡 버튼이 있으면 이 버튼이 케어톡 바로 위로 올라감 · 스크롤 중엔 숨김(AppShell CSS, 2026-11-05) */}
             {tab === 0 ? (
                 <button type="button" onClick={() => openComposer(topicOn)} aria-label="오늘의 한 장 올리기" data-app-fab className="sh-fab fixed right-3 z-[2100] grid h-[52px] w-[52px] place-items-center rounded-full text-[20px] text-white"
                     style={{ bottom: "calc(var(--app-tabbar-h, 88px) + 4px)" }}>

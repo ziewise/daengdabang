@@ -535,6 +535,34 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         return () => window.cancelAnimationFrame(frame);
     }, [pathname]);
 
+    /* 스크롤하는 동안 떠 있는 버튼(케어톡 · 오늘의 한 장 올리기 · 강아지 집)을 모두 숨기고, 멈추면 다시 보이게(2026-11-05 사용자).
+       여기서는 html 에 data-app-scrolling="true" 표시만 붙였다 떼고, 숨기는 모양은 아래 CSS 가 맡는다.
+       멈춘 뒤 0.18초 쉬면 다시 보임 — 웹 모바일(hooks/useMobileFloatingVisibility)과 같은 쉼.
+       화면 안쪽 칸(목록 · 판)의 스크롤도 잡되, 위아래로 움직일 때만(가로로 넘기는 사진 줄은 버튼을 숨기지 않음) */
+    useEffect(() => {
+        const root = document.documentElement;
+        let timer = 0;
+        const lastTop = new WeakMap<object, number>(); // 칸마다 마지막 위아래 위치
+        const onScroll = (event: Event) => {
+            const el = (event.target === document ? document.scrollingElement ?? root : event.target) as Element;
+            if (!el || typeof el.scrollTop !== "number") return;
+            const top = el.scrollTop;
+            const prev = lastTop.get(el);
+            lastTop.set(el, top);
+            if (prev !== undefined && Math.abs(top - prev) < 2) return; // 위아래로 거의 안 움직임(가로 넘김 등)
+            if (prev === undefined && el !== (document.scrollingElement ?? root)) return; // 안쪽 칸 첫 신호는 기준만 잡음
+            if (root.dataset.appScrolling !== "true") root.dataset.appScrolling = "true";
+            window.clearTimeout(timer);
+            timer = window.setTimeout(() => { delete root.dataset.appScrolling; }, 180);
+        };
+        document.addEventListener("scroll", onScroll, { capture: true, passive: true });
+        return () => {
+            document.removeEventListener("scroll", onScroll, { capture: true });
+            window.clearTimeout(timer);
+            delete root.dataset.appScrolling;
+        };
+    }, []);
+
     /* 펫렌즈 행동·소리 — 녹화가 끝나 전체 화면 촬영 창(협업자 data-petlens-capture-viewport, body 바로 아래에 붙음)이 저절로 닫히면
        녹화된 영상 칸이 보이는 위치로 화면을 옮긴다(사용자 2026-10-17). 앱 전용 · 스크롤만 — 협업자 녹화 · 분석 동작은 그대로.
        영상이 없을 때(닫기 · 중단으로 닫음)는 움직이지 않음 */
@@ -804,9 +832,16 @@ html.ddb-app-mode { --header-height: var(--app-topbar-h); }
 .app-care-fab .app-care-img { filter: drop-shadow(0 6px 10px rgba(110, 80, 200, .35)); }
 .app-care-fab:active .app-care-img { transform: scale(.88); transition-duration: .1s; }
 .app-care-fab .app-care-dot { top: 4px; right: 4px; width: 9px; height: 9px; border-width: 2px; }
-/* 화면에 자기 떠 있는 버튼(data-app-fab, 예: 댕자랑 "오늘의 한 장 올리기")이 있으면 케어톡 버튼은 자동으로 그 바로 위로(겹치지 않게, 2026-10-20).
-   화면 버튼은 탭바 위 4px · 52px, 케어톡은 그 위 12px 간격. 새 화면 버튼도 data-app-fab 만 붙이면 같은 규칙 */
-html.ddb-app-mode body:has([data-app-fab]) .app-care-fab { bottom: calc(var(--app-tabbar-h) + 4px + 52px + 12px) !important; }
+/* 화면에 자기 떠 있는 버튼(data-app-fab, 예: 댕자랑 "오늘의 한 장 올리기")이 있을 때 — 케어톡은 맨 아래(탭바 위 4px) 그대로,
+   화면 버튼이 케어톡 바로 위로(52px + 12px 간격) 올라감(2026-11-05 사용자 "케어톡이 아래로", 예전 10-20 에는 반대).
+   케어톡 버튼이 없을 때(창 · 검색이 열림 등)는 화면 버튼이 맨 아래 제자리. 새 화면 버튼도 data-app-fab 만 붙이면 같은 규칙 */
+html.ddb-app-mode body:has(.app-care-fab) [data-app-fab] { bottom: calc(var(--app-tabbar-h) + 4px + 52px + 12px) !important; }
+/* 스크롤하는 동안(html[data-app-scrolling], 위 효과) 떠 있는 버튼 모두 살짝 내려앉으며 사라졌다가, 멈추면 다시 통 올라옴(2026-11-05 사용자) */
+.app-care-fab, html.ddb-app-mode [data-app-fab] { transition: opacity .22s ease, transform .3s cubic-bezier(.22,1,.36,1), visibility 0s; }
+html.ddb-app-mode[data-app-scrolling="true"] :is(.app-care-fab, [data-app-fab], button[data-pet-companion-home]) {
+  opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; transform: translateY(12px) scale(.8) !important;
+  transition: opacity .15s ease, transform .2s ease, visibility 0s .2s; }
+@media (prefers-reduced-motion: reduce) { .app-care-fab, html.ddb-app-mode [data-app-fab] { transition: none; } }
 /* 글자 입력 중(키보드가 올라와 있을 때) — 탭바 · 떠 있는 케어톡 버튼 숨김(키보드 위로 따라 올라오지 않게) */
 html.ddb-app-typing nav[aria-label="앱 메뉴"], html.ddb-app-typing .app-care-fab { display: none; }
 
@@ -953,9 +988,10 @@ html.ddb-app-mode button[data-pet-companion-home][data-home-occupied="true"]::af
   background: radial-gradient(closest-side, rgba(255,226,140,.75), transparent); animation: app-house-glow 2.8s ease-in-out infinite; pointer-events: none; }
 @keyframes app-house-glow { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
 html.ddb-app-mode button[data-pet-companion-home][data-buybar="true"] { bottom: calc(112px + env(safe-area-inset-bottom, 0px)) !important; }
-/* 강아지 집과 케어톡 버튼이 겹치지 않게(2026-10-21) — 집은 케어톡 자리(오른쪽 아래)에, 케어톡은 그 바로 위로(12px 간격) */
-html.ddb-app-mode body:has(button[data-pet-companion-home]) .app-care-fab { bottom: calc(var(--app-tabbar-h) + 4px + 52px + 12px) !important; }
-html.ddb-app-mode body:has(button[data-pet-companion-home][data-buybar="true"]) .app-care-fab { bottom: calc(112px + 52px + 12px + env(safe-area-inset-bottom, 0px)) !important; }
+/* 강아지 집과 케어톡 버튼이 겹치지 않게 — 케어톡은 맨 아래(오른쪽 아래) 그대로, 집이 그 바로 위로(12px 간격).
+   2026-11-05 사용자 "케어톡이 아래로"(예전 10-21 에는 집이 아래 · 케어톡이 위). 케어톡 버튼이 없으면 집은 맨 아래 제자리 */
+html.ddb-app-mode body:has(.app-care-fab) button[data-pet-companion-home] { bottom: calc(var(--app-tabbar-h) + 4px + 52px + 12px) !important; }
+html.ddb-app-mode body:has(.app-care-fab) button[data-pet-companion-home][data-buybar="true"] { bottom: calc(112px + 52px + 12px + env(safe-area-inset-bottom, 0px)) !important; }
 html.ddb-app-mode button[data-pet-companion-home]:active { transform: scale(.88) !important; }
 html.ddb-app-mode button[data-pet-companion-home][data-mobile-hidden="true"] { transform: translateY(12px) scale(.8) !important; }
 
