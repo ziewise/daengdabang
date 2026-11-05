@@ -5,7 +5,7 @@ export const DELIVERY_POLICY = {
     islandSurchargeKrw: 5_000,
     dispatch: "결제 확인 후 1~2영업일 이내 출고",
     arrival: "결제 후 최대 7일 이내 도착",
-    carriers: "한진택배 또는 CJ대한통운",
+    carriers: "CJ대한통운", // 택배사는 CJ대한통운 한 곳(2026-11-05) — 바뀌면 이 값과 상품 상세 · 자주 묻는 질문 · 이용 안내 문구를 같이 고칠 것
 } as const;
 
 export const RETURN_POLICY = {

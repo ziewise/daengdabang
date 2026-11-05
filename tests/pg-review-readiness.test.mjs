@@ -33,7 +33,8 @@ test("product and legal pages disclose the maximum delivery period", async () =>
     assert.match(policy, /교환배송비/);
     assert.match(policy, /반품\/교환 불가능 사유/);
     assert.match(policyData, /freeThresholdKrw: 30_000/);
-    assert.match(policyData, /한진택배 또는 CJ대한통운/);
+    assert.match(policyData, /carriers: "CJ대한통운"/); // 택배사는 CJ대한통운 한 곳
+    assert.doesNotMatch(policyData, /한진/);
     assert.match(policyData, /충청남도 천안시 서북구 한들2로 150/);
     assert.match(returnPage, /DeliveryReturnPolicyDetails/);
     assert.match(footer, /ReturnPolicyDialogLink/);

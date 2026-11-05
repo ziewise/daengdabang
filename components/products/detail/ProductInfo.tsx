@@ -250,7 +250,7 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
                                     : "제주 +3,000원 · 그 외 도서 +5,000원 · 1~2영업일 내 출고 · 결제 후 최대 7일 내 도착"}
                             </p>
                             <p className="break-keep text-xs font-bold leading-5 text-neutral-500">
-                                {locale === "en" ? "Hanjin Express or CJ Logistics" : "한진택배 또는 CJ대한통운"}
+                                {locale === "en" ? "CJ Logistics" : "CJ대한통운"}
                                 {locale === "en" ? (
                                     <a href="#delivery-return-policy" className="ml-2 font-black text-indigo-700 underline underline-offset-2">
                                         Delivery &amp; returns

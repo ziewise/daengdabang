@@ -15,7 +15,7 @@ const won = (value: number) => `${value.toLocaleString("ko-KR")}원`;
 const FACTS = [
     { art: "goods-pay-ready-256.webp", label: "배송비", value: won(DELIVERY_POLICY.baseFeeKrw), note: `${(DELIVERY_POLICY.freeThresholdKrw / 10_000).toLocaleString("ko-KR")}만원 이상 무료` },
     { art: "web-cs-orders-160.webp", label: "출고", value: "1~2영업일", note: "결제 확인 후 · 7일 안에 도착" },
-    { art: "web-cs-step-inspect-256.webp", label: "택배사", value: "한진 · CJ대한통운", note: "제주 · 도서 지역 추가비 있음" },
+    { art: "web-cs-step-inspect-256.webp", label: "택배사", value: "CJ대한통운", note: "제주 · 도서 지역 추가비 있음" },
     { art: "web-cs-return-160.webp", label: "반품 · 교환", value: "수령 후 7일", note: `반품 편도 ${won(RETURN_POLICY.oneWayFeeKrw)}` },
 ];
 
@@ -30,7 +30,7 @@ export default function ProductDeliveryReturnPolicy() {
                     <section>
                         <h4 className="font-black text-neutral-950">Delivery</h4>
                         <p className="mt-2">KRW 3,000; free for orders of KRW 30,000 or more. Jeju +KRW 3,000; other islands +KRW 5,000.</p>
-                        <p>Ships in 1–2 business days via Hanjin Express or CJ Logistics and arrives within 7 days of payment.</p>
+                        <p>Ships in 1–2 business days via CJ Logistics and arrives within 7 days of payment.</p>
                     </section>
                     <section className="border-t border-neutral-200 pt-5">
                         <h4 className="font-black text-neutral-950">Return / exchange</h4>
