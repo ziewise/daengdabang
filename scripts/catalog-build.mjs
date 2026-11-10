@@ -10,6 +10,15 @@ const nativeRequire = createRequire(import.meta.url);
 /** Execute the existing publication gates at build time, with no browser bundle. */
 export function loadBuildCatalog() {
     const cache = new Map();
+    // Match next.config.mjs in both GitHub Actions and Cloudflare Pages.
+    // Build scripts execute before Next injects its `env` values, so the
+    // Cloudflare commit must also be resolved here for immutable detail URLs.
+    const buildProcess = Object.create(process);
+    buildProcess.env = {
+        ...process.env,
+        NEXT_PUBLIC_STOREFRONT_ASSET_COMMIT_SHA:
+            process.env.NEXT_PUBLIC_STOREFRONT_ASSET_COMMIT_SHA || process.env.CF_PAGES_COMMIT_SHA || "",
+    };
     function load(file) {
         file = resolve(file);
         if (cache.has(file)) return cache.get(file).exports;
@@ -32,7 +41,7 @@ export function loadBuildCatalog() {
             if (!target) throw new Error(`Unresolved catalog dependency: ${id}`);
             return load(target);
         };
-        new Function("require", "module", "exports", compiled)(requireLocal, loadedModule, loadedModule.exports);
+        new Function("require", "module", "exports", "process", compiled)(requireLocal, loadedModule, loadedModule.exports, buildProcess);
         return loadedModule.exports;
     }
     return load(resolve(root, "lib/catalog/data.ts"));
