@@ -7,8 +7,6 @@ import {
     getHeroSeason,
     normalizeHeroWeather,
     resolveHeroScene,
-    seasonLabel,
-    timeBucketLabel,
     type HeroContext,
     type HeroWeather,
 } from "@/lib/hero-assets";
@@ -202,7 +200,6 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
     // 그 영상 속 강아지 견종에 맞는 얼굴 배지 영상 (가을: 아침 맑음·흐림 푸들 · 밤 비 불독, 나머지 기본 견종 / 로그인 펫 견종은 추후)
     const heroBreedVideo = pickHeroBreedVideo(context.weather, context.timeBucket);
     const weatherSummary = heroWeatherSummary(weatherReport, locale);
-    const contextLabel = `${seasonLabel(context.season, locale)} ${timeBucketLabel(context.timeBucket, locale)}`;
     const sceneLabel = localizedSceneLabel(scene.key, scene.label, locale);
 
     return (
@@ -259,14 +256,14 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
             </div>
 
             <div className="hero-content-stage relative z-10 mx-auto flex max-w-[1280px] flex-col justify-start px-4 pt-6 pb-20 md:px-6 md:py-20 md:justify-center">
-                <div className="max-w-[720px]">
+                {/* 모바일: 배지 줄은 위, 문구(컬렉션 이름 · 제목)는 히어로 왼쪽 아래로 — 영상을 덜 가리게(2026-11-10 사용자).
+                    이 판이 히어로 높이만큼 늘어나고(flex-1) 문구 묶음이 mt-auto 로 아래에 붙는다. PC(md 이상)는 예전 그대로 */}
+                <div className="flex max-w-[720px] flex-1 flex-col md:block md:flex-none">
                     <div className="flex flex-wrap items-center gap-2">
                         <span className="rounded-full bg-neutral-900/40 px-3 py-1 text-xs font-black text-white ring-1 ring-white/20 backdrop-blur">
                             {sceneLabel}
                         </span>
-                        <span className="rounded-full bg-neutral-900/40 px-3 py-1 text-xs font-black text-white ring-1 ring-white/20 backdrop-blur">
-                            {contextLabel}
-                        </span>
+                        {/* 계절 · 시간 배지(예: 가을 아침)는 PC · 모바일 모두 뺌(2026-11-10 사용자) — 영상 고르기는 계절 · 시간 그대로 씀 */}
                         <select
                             className="hero-region-select"
                             value={weatherRegion}
@@ -291,7 +288,8 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
                         {/* 펫렌즈 진입은 우하단 플로팅 FAB(FloatingDock)로 이동 — 히어로 버튼 제거 */}
                     </div>
                     {/* hero-title-lockup(flex) 제거 — 라벨/제목을 세로로, 왼쪽 끝선 정렬 */}
-                    <div className="mt-4">
+                    {/* 모바일은 mt-auto 로 히어로 왼쪽 아래 · 아래 흰 그라데이션(h-44)에 글자가 묻히지 않게 그 위에서 멈춤(pb-16) */}
+                    <div className="mt-auto pb-16 md:mt-4 md:pb-0">
                         {/* 컬렉션 라벨 */}
                         <p className="text-xs font-black uppercase tracking-[0.25em] text-white md:text-sm [text-shadow:0_1px_3px_rgb(0_0_0_/_75%),0_2px_12px_rgb(0_0_0_/_55%)]">
                             DAENGDABANG · COLLECTION

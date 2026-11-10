@@ -677,12 +677,9 @@ export async function fetchHeroWeatherReport(options: { regionId?: string | null
 
 export function heroWeatherSummary(report: HeroWeatherReport | null, locale: "ko" | "en" = "ko"): string | null {
     if (!report) return null;
-    const rawLocationName = locale === "en" ? report.locationNameEn || report.locationName : report.locationName;
-    const locationName = report.locationSource === "ip" || report.locationSource === "timezone" || report.locationSource === "default"
-        ? locale === "en"
-            ? `${rawLocationName} area`
-            : `${rawLocationName} 인근`
-        : rawLocationName;
+    // 위치 배지는 지역명만(예: "서울 · 4°") — 예전에는 접속 주소(IP) · 시간대로 짐작한 위치에 "인근"(area)을 붙여
+    // 기기마다 "서울" / "서울 인근"으로 달라 보였음(2026-11-10 사용자: PC 처럼 지역명만)
+    const locationName = locale === "en" ? report.locationNameEn || report.locationName : report.locationName;
     const parts = [locationName];
     if (report.temperatureC !== null) parts.push(`${Math.round(report.temperatureC)}°`);
     if (report.windSpeedKmh !== null && report.windSpeedKmh >= 12) {
