@@ -288,8 +288,8 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
                         {/* 펫렌즈 진입은 우하단 플로팅 FAB(FloatingDock)로 이동 — 히어로 버튼 제거 */}
                     </div>
                     {/* hero-title-lockup(flex) 제거 — 라벨/제목을 세로로, 왼쪽 끝선 정렬 */}
-                    {/* 모바일은 mt-auto 로 히어로 왼쪽 아래 · 아래 흰 그라데이션(h-44)에 글자가 묻히지 않게 그 위에서 멈춤(pb-16) */}
-                    <div className="mt-auto pb-16 md:mt-4 md:pb-0">
+                    {/* 모바일은 mt-auto 로 히어로 왼쪽 아래 · 11-10 사용자 "좀 더 아래로" — 아래 흰 그라데이션 윗부분까지 내림(pb-4, 글자 그림자로 읽힘) */}
+                    <div className="mt-auto pb-4 md:mt-4 md:pb-0">
                         {/* 컬렉션 라벨 */}
                         <p className="text-xs font-black uppercase tracking-[0.25em] text-white md:text-sm [text-shadow:0_1px_3px_rgb(0_0_0_/_75%),0_2px_12px_rgb(0_0_0_/_55%)]">
                             DAENGDABANG · COLLECTION
