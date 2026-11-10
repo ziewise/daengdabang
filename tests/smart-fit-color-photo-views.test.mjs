@@ -76,7 +76,7 @@ test("color changes reuse the saved fitting until the customer explicitly reques
 test("every wearable color switch tries locally before an optional saved-fit comparison or regeneration", async () => {
     const modal = await source("components/products/detail/PetTryOnPreview.tsx");
 
-    const eligibility = await source("lib/pet-tryon-eligibility.ts");
+    const eligibility = await source("lib/pet-tryon-eligibility-core.ts");
     const wearableSet = eligibility.match(/const PET_WEARABLE_SUBCATEGORIES = new Set\(\[([^\]]+)\]\)/);
     assert.ok(wearableSet, "the Smart Fit wearable allow-list must remain explicit");
     for (const category of ["wear", "harness", "goggles", "leash"]) {

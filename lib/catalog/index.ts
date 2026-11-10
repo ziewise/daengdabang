@@ -22,7 +22,7 @@ export {
     SUBCATEGORY_LABEL,
 } from "./labels";
 
-export { ALL_CATALOG, CATALOG, findById } from "./data";
+export { ALL_CATALOG, CATALOG, findById } from "./runtime-data";
 export {
     catalogPriceBadgeClass,
     catalogPriceBadgeKind,

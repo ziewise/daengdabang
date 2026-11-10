@@ -112,9 +112,8 @@ export default function ProductCard({
                         <i className={`fa-solid ${p.icon} text-4xl md:text-5xl text-white/95 drop-shadow-md`} />
                     )}
 
-                {/* 영상 — videoActive 시 fade in.
-                    preload=metadata: 메타데이터(moov)만 미리 받아 hover 즉시 재생.
-                    영상은 faststart(moov 앞)로 remux 돼 있어 metadata 요청이 가볍다. */}
+                {/* Load videos on hover or visible mobile playback, keeping
+                    offscreen videos from competing with product photos. */}
                     {hasVideo && (
                         <video
                             ref={videoRef}
@@ -124,7 +123,7 @@ export default function ProductCard({
                             muted
                             loop={false}
                             playsInline
-                            preload="metadata"
+                            preload="none"
                             {...videoEvents}
                             className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 pointer-events-none ${videoActive ? "opacity-100" : "opacity-0"}`}
                         />

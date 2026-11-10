@@ -1,4 +1,4 @@
-import { CATALOG } from "./data";
+import { CATALOG } from "./runtime-data";
 import { SUBCATEGORY_LABEL } from "./labels";
 import type { CatalogProduct, CategorySlug, PromoSlug, SortKey, SubcategorySlug } from "./types";
 

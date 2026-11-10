@@ -130,7 +130,7 @@ function mount({ geometryVerified = true, localPreview, serverPreview, hasMaster
             readPetTryOnFitMasterWithLegacy: () => ({ status: "missing" }),
             removePetTryOnFitMaster() {}, savePetTryOnFitMaster() {},
         },
-        "@/lib/pet-tryon-eligibility": {
+        "@/lib/pet-tryon-eligibility-core": {
             getPetTryOnEligibility: () => ({ eligible: true, zeroAiColorPreview: "server_verified" }),
             isPetTryOnDogPackProduct: noProductKind,
         },

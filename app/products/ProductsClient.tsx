@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
@@ -86,8 +86,18 @@ function sortFromParams(params: SearchLike): SortKey {
     return isSort(value) ? value : "newest";
 }
 
-export default function ProductsClient({ initialCategory, title, variant }: Props) {
+// Only this URL observer needs client rendering. Keep the actual product grid
+// in the exported HTML so customers can see products before JavaScript loads.
+function ProductUrlSync({ onChange }: { onChange: (value: string) => void }) {
     const params = useSearchParams();
+    const value = params.toString();
+    useEffect(() => onChange(value), [value, onChange]);
+    return null;
+}
+
+export default function ProductsClient({ initialCategory, title, variant }: Props) {
+    const [urlSearch, setUrlSearch] = useState("");
+    const params = useMemo(() => new URLSearchParams(urlSearch), [urlSearch]);
     const router = useRouter();
     const isSearchPage = variant === "search";
     const [query, setQuery] = useState(params.get("q") ?? "");
@@ -301,6 +311,7 @@ export default function ProductsClient({ initialCategory, title, variant }: Prop
     if (isSearchPage) {
         return (
             <main className="mx-auto w-full min-w-0 max-w-[1280px] px-4 py-8 md:px-6" data-daily-web data-search-page>
+                <Suspense fallback={null}><ProductUrlSync onChange={setUrlSearch} /></Suspense>
                 <CrayonGrainFilter />
                 <SearchHero
                     query={query}
@@ -386,6 +397,7 @@ export default function ProductsClient({ initialCategory, title, variant }: Prop
 
     return (
         <main className="mx-auto w-full min-w-0 max-w-[1280px] px-4 py-8 md:px-6" data-pl-page>
+            <Suspense fallback={null}><ProductUrlSync onChange={setUrlSearch} /></Suspense>
             <ShopListHero
                 pageCategory={initialCategory}
                 category={category}

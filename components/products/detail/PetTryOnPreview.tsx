@@ -31,7 +31,7 @@ import {
 import {
     getPetTryOnEligibility,
     isPetTryOnDogPackProduct,
-} from "@/lib/pet-tryon-eligibility";
+} from "@/lib/pet-tryon-eligibility-core";
 import {
     PetTryOnEmailDeliveryControls,
     usePetTryOnTask,

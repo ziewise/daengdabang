@@ -78,7 +78,7 @@ export default function ShopProductCard({ product, index = 0, showBest = false, 
                         <i aria-hidden="true" className={`fa-solid ${p.icon} text-4xl text-[#e8c9b8]`} />
                     ) : null}
                     {hasVideo ? (
-                        <video ref={videoRef} src={video}style={hoverVideoStyle(p.video)} data-hover-video-fit="cover" muted loop={false} playsInline preload="metadata"
+                        <video ref={videoRef} src={video}style={hoverVideoStyle(p.video)} data-hover-video-fit="cover" muted loop={false} playsInline preload="none"
                             {...videoEvents}
                             className={`pointer-events-none absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${videoActive ? "opacity-100" : "opacity-0"}`} />
                     ) : null}

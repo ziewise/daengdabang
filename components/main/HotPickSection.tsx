@@ -74,7 +74,7 @@ function Face({ p, rank, back, shown, ghost }: { p: CatalogProduct; rank: number
                         muted
                         loop={false}
                         playsInline
-                        preload="metadata"
+                        preload="none"
                         {...videoEvents}
                         className={`pointer-events-none absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${videoActive ? "opacity-100" : "opacity-0"}`}
                     />

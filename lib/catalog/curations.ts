@@ -1,4 +1,4 @@
-import { CATALOG } from "./data";
+import { CATALOG } from "./runtime-data";
 import { applySort } from "./queries";
 import type { BestPeriod, CatalogProduct } from "./types";
 
@@ -50,5 +50,7 @@ export function getNewProducts(limit = 12): CatalogProduct[] {
 }
 
 export function isNewProduct(product: CatalogProduct): boolean {
-    return getNewProducts(36).some((item) => item.id === product.id);
+    return NEW_PRODUCT_IDS.has(product.id);
 }
+
+const NEW_PRODUCT_IDS = new Set(getNewProducts(36).map(product => product.id));

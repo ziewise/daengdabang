@@ -25,7 +25,7 @@ import { usePets } from "@/hooks/usePets";
 import { cartPetOptions } from "@/lib/pet-attribution";
 import { loadTwinProductStats, type TwinProductStat } from "@/lib/storefront-analytics";
 import { useI18n } from "@/lib/i18n";
-import { getPetTryOnEligibility } from "@/lib/pet-tryon-eligibility";
+import { getPetTryOnEligibility } from "@/lib/pet-tryon-eligibility-core";
 import { daengLabCoinsForUnitPrice } from "@/lib/daenglab-rewards";
 import DaengLabCoinMark from "@/components/petlens/DaengLabCoinMark";
 import ProductShareActions from "./ProductShareActions";
