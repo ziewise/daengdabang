@@ -152,9 +152,10 @@ test('OptionSheet prevents sold-out current selections and mixed accumulated pic
 });
 test('OptionSheet disables exact sold-out and unknown sizes while retaining zero-stock size',()=>{
     const result=optionSheet(product(),[0,null,1,[]]);
-    const optionRows=result.elements.filter(n=>n.type==='option'&&n.props.value!=='');
-    assert.equal(optionRows.find(n=>n.props.value===0).props.disabled,false);
-    assert.equal(optionRows.find(n=>n.props.value===1).props.disabled,true);
+    // 2026-11-11 사이즈 고르기 = 꾸민 드롭다운(기본 select 대신) — 줄마다 data-size-option, 품절 · 확인 필요 줄은 못 누름
+    const optionRows=result.elements.filter(n=>n.props?.['data-size-option']!==undefined);
+    assert.equal(optionRows.find(n=>n.props['data-size-option']===0).props.disabled,false);
+    assert.equal(optionRows.find(n=>n.props['data-size-option']===1).props.disabled,true);
     const add=result.elements.find(n=>n.props?.['data-add-option']);assert.equal(add.props.disabled,true);add.props.onClick();assert.equal(result.changes.length,0);
 });
 

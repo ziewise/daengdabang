@@ -60,6 +60,9 @@ export default function OptionSheet({ product, open, mode, initialColorIdx = nul
     const [sizeIdx, setSizeIdx] = useState<number | null>(null);
     const [qty, setQty] = useState(1);
     const [picks, setPicks] = useState<Pick[]>([]);
+    // 사이즈 고르기 목록(꾸민 드롭다운, 2026-11-11 사용자 B안) — 열림 여부만, 고른 값은 sizeIdx 그대로
+    const [sizeListOpen, setSizeListOpen] = useState(false);
+    const sizeListOpenRef = useRef(false);
     const dialogRef = useRef<HTMLDivElement>(null);
     const closeButtonRef = useRef<HTMLButtonElement>(null);
     const openerRef = useRef<HTMLElement | null>(null);
@@ -78,7 +81,13 @@ export default function OptionSheet({ product, open, mode, initialColorIdx = nul
         setSizeIdx(null);
         setQty(1);
         setPicks([]);
+        setSizeListOpen(false);
     }, [open, initialColorIdx]);
+
+    // Esc 는 펼친 사이즈 목록부터 닫음(창 닫기는 그다음) — 키 처리 안에서 읽을 수 있게 ref 로도 둠
+    useEffect(() => {
+        sizeListOpenRef.current = sizeListOpen;
+    }, [sizeListOpen]);
 
     useEffect(() => {
         if (!open) return;
@@ -89,6 +98,10 @@ export default function OptionSheet({ product, open, mode, initialColorIdx = nul
         const onKeyDown = (event: KeyboardEvent) => {
             if (event.key === "Escape") {
                 event.preventDefault();
+                if (sizeListOpenRef.current) {
+                    setSizeListOpen(false);
+                    return;
+                }
                 onCloseRef.current();
                 return;
             }
@@ -287,30 +300,78 @@ export default function OptionSheet({ product, open, mode, initialColorIdx = nul
                     {hasSizes && (
                         <div className="mt-4">
                             {/* 번호 — 색상도 있으면 "옵션 2", 사이즈만 있으면 번호 없이 "옵션"(2026-11-11 사용자 "옵션이 하나면 번호 없이") */}
-                            <label className="mb-1.5 block text-xs font-black text-neutral-500" data-option-title>
+                            <p className="mb-1.5 block text-xs font-black text-neutral-500" data-option-title>
                                 {optionTitle(2)} <span className="text-rose-500">({t("optionRequired")})</span>
-                            </label>
-                            <select
-                                value={sizeIdx ?? ""}
-                                onChange={(e) => setSizeIdx(e.target.value === "" ? null : Number(e.target.value))}
-                                aria-label={t("chooseOption")}
-                                className={`h-11 w-full rounded-md border bg-white px-3 text-sm font-bold text-neutral-900 transition focus:border-indigo-500 focus:outline-none ${
-                                    sizeIdx != null ? "border-neutral-200" : "border-rose-200"
-                                }`}
-                            >
-                                <option value="">{p.optionLabel ?? "사이즈"}</option>
-                                {sizes.map((s, i) => {
-                                    const sizeState = productPurchaseState(p, { size: s.name, ...(colorIdx != null ? { color: colors[colorIdx]?.name } : {}) });
-                                    const sizeStatus = purchaseStateLabel(sizeState, locale);
-                                    return (
-                                    <option key={s.name} value={i} disabled={!sizeState.purchasable} className="text-neutral-900">
-                                        {s.name}
-                                        {s.delta ? ` (${s.delta > 0 ? "+" : "−"}${formatPrice(Math.abs(s.delta))})` : ""}
-                                        {sizeStatus ? ` · ${sizeStatus}` : ""}
-                                    </option>
-                                    );
-                                })}
-                            </select>
+                            </p>
+                            {/* 꾸민 드롭다운(2026-11-11 사용자 B안 — 기본 select 의 회색 목록 · 화살표가 안 어울림) — 누르면 아래에 목록이 펼쳐지고,
+                                줄마다 사이즈 · 추가 금액 · 상태 알약(품절 회색 · 본사 요청 분홍). 품절 줄은 못 누름. 고르면 접힘. 꾸밈은 웹 product-detail-web.css · 앱 appShopSkin */}
+                            <div data-size-picker>
+                                <button
+                                    type="button"
+                                    onClick={() => setSizeListOpen((current) => !current)}
+                                    aria-haspopup="listbox"
+                                    aria-expanded={sizeListOpen}
+                                    aria-controls={`${p.id}-${mode}-size-list`}
+                                    aria-label={`${optionTitle(2)} · ${sizeIdx != null ? sizes[sizeIdx]?.name : t("chooseOption")}`}
+                                    data-size-trigger
+                                    data-picked={sizeIdx != null || undefined}
+                                    className={`flex h-12 w-full items-center justify-between gap-2 rounded-full border bg-white pl-4 pr-1.5 text-left text-sm font-bold text-neutral-900 transition ${
+                                        sizeIdx != null ? "border-neutral-200" : "border-rose-200"
+                                    }`}
+                                >
+                                    {sizeIdx != null ? (
+                                        <span className="min-w-0 truncate">
+                                            {sizes[sizeIdx]?.name}
+                                            {sizes[sizeIdx]?.delta ? ` (${sizes[sizeIdx].delta > 0 ? "+" : "−"}${formatPrice(Math.abs(sizes[sizeIdx].delta))})` : ""}
+                                        </span>
+                                    ) : (
+                                        <span className="min-w-0 truncate font-semibold text-neutral-400" data-size-placeholder>{t("chooseOption")}</span>
+                                    )}
+                                    <span aria-hidden="true" data-size-chevron className={`grid h-9 w-9 shrink-0 place-items-center rounded-full bg-rose-50 text-rose-600 transition-transform ${sizeListOpen ? "rotate-180" : ""}`}>
+                                        <i className="fa-solid fa-chevron-down text-xs" />
+                                    </span>
+                                </button>
+                                <div
+                                    id={`${p.id}-${mode}-size-list`}
+                                    role="listbox"
+                                    aria-label={optionTitle(2)}
+                                    hidden={!sizeListOpen}
+                                    data-size-list
+                                    className="mt-2 grid gap-0.5 rounded-2xl border border-neutral-200 bg-white p-1.5 shadow-lg"
+                                >
+                                    {sizes.map((s, i) => {
+                                        const sizeState = productPurchaseState(p, { size: s.name, ...(colorIdx != null ? { color: colors[colorIdx]?.name } : {}) });
+                                        const sizeStatus = purchaseStateLabel(sizeState, locale);
+                                        return (
+                                            <button
+                                                key={s.name}
+                                                type="button"
+                                                role="option"
+                                                aria-selected={sizeIdx === i}
+                                                disabled={!sizeState.purchasable}
+                                                data-size-option={i}
+                                                onClick={() => {
+                                                    setSizeIdx(i);
+                                                    setSizeListOpen(false);
+                                                }}
+                                                className={`flex items-center justify-between gap-2 rounded-xl px-3 py-2.5 text-left text-sm font-bold transition disabled:cursor-not-allowed disabled:text-neutral-400 ${
+                                                    sizeIdx === i ? "bg-rose-50 text-rose-700" : "text-neutral-800"
+                                                }`}
+                                            >
+                                                <span className="min-w-0">
+                                                    {s.name}
+                                                    {s.delta ? ` (${s.delta > 0 ? "+" : "−"}${formatPrice(Math.abs(s.delta))})` : ""}
+                                                </span>
+                                                {sizeStatus && (
+                                                    <span data-size-tag={sizeState.purchasable ? "ok" : "out"} className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-black ${sizeState.purchasable ? "bg-rose-50 text-rose-600" : "bg-neutral-100 text-neutral-500"}`}>
+                                                        {sizeStatus}
+                                                    </span>
+                                                )}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            </div>
                         </div>
                     )}
 

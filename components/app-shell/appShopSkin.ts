@@ -509,6 +509,17 @@ ${SHEET} div[class*="inline-flex"][class*="h-11"] button { color: #e8628e; }
 ${SHEET} > div:last-child { background: rgba(255, 252, 245, .97); border-top: 2px dashed #f0d9cf; }
 ${SHEET} > div:last-child > div:first-child > span { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
 ${SHEET} > div:last-child b[class*="text-2xl"] { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; }
+/* 사이즈 꾸민 드롭다운(2026-11-11 사용자 B안) — 단추는 크림 와펜(추가 단추와 같은 결) · 흰 동그라미 화살표, 목록은 흰 메모 종이 ·
+   고른 줄 분홍 · 상태 알약(본사 요청 분홍 · 품절 회색). 앱은 마우스 올림 꾸밈 없음 */
+${SHEET} button[data-size-trigger] { ${PATCH_CREAM} height: 48px; color: #c4456f; }
+${SHEET} [data-size-placeholder] { color: #c98aa0; }
+${SHEET} [data-size-chevron] { background: #fff; color: #e8628e; box-shadow: 0 0 0 1.5px #f4a9bf; }
+${SHEET} [data-size-list] { border: 0; border-radius: 6px 6px 18px 6px; background: #fff; box-shadow: 0 0 0 1.5px #f1e3da, 0 10px 16px -10px rgba(110, 80, 40, .5); }
+${SHEET} [data-size-option] { color: #3d2f2a; }
+${SHEET} [data-size-option][aria-selected="true"] { background: #fff3f6; color: #c4456f; }
+${SHEET} [data-size-option]:disabled { color: #bcaea6; }
+${SHEET} [data-size-tag="ok"] { background: #ffeef3; color: #c8486f; }
+${SHEET} [data-size-tag="out"] { background: #f4ece6; color: #9a8a80; }
 ${SHEET} [data-daenglab-coin-estimate] { border-radius: 14px; background: #fff3f6; outline: 1.5px dashed #f2a3bd; outline-offset: -5px; box-shadow: 0 0 0 2px #fff, 0 6px 10px -8px rgba(110, 80, 40, .45); }
 
 /* ── 15) 주문/결제(/checkout) — 테이프 붙인 종이 카드 · 흰 칼선 아이콘 스티커 · 테이프 이름표 칸 제목 · 종이 입력칸 ·

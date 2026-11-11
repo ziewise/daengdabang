@@ -359,6 +359,21 @@ html:not(.ddb-app-mode) main[data-product-detail-content] [data-purchase-option-
 
     & select:focus { box-shadow: 0 0 0 2.5px #f7a8bf, 0 0 0 7px rgb(247 168 191 / 22%); }
 
+    /* 사이즈 꾸민 드롭다운(2026-11-11 사용자 B안) — 흰 알약 단추 + 분홍 동그라미 화살표 · 펼치면 크림 테 흰 목록 ·
+       고른 줄 분홍 · 상태 알약(본사 요청 분홍 · 품절 회색) */
+    & [data-size-trigger] { height: 48px; border: 0; padding-left: 18px; background: #fff; color: #334155; box-shadow: 0 0 0 2px #f3e3cc; }
+    & [data-size-trigger][aria-expanded="true"],
+    & [data-size-trigger]:focus-visible { outline: none; box-shadow: 0 0 0 2.5px #f7a8bf, 0 0 0 7px rgb(247 168 191 / 22%); }
+    & [data-size-placeholder] { color: #a89a86; }
+    & [data-size-chevron] { width: 34px; height: 34px; background: #ffeef3; color: #d0436d; }
+    & [data-size-list] { border: 0; border-radius: 20px; padding: 6px; box-shadow: 0 0 0 1.5px #f1e9de, 0 18px 26px -20px rgb(120 80 30 / 45%); }
+    & [data-size-option] { border-radius: 14px; color: #334155; }
+    & [data-size-option]:hover:not(:disabled) { background: #fff8fa; }
+    & [data-size-option][aria-selected="true"] { background: #fff3f6; color: #d0436d; }
+    & [data-size-option]:disabled { color: #b8b0a4; }
+    & [data-size-tag="ok"] { background: #ffeef3; color: #c8486f; }
+    & [data-size-tag="out"] { background: #f1ece4; color: #8c8273; }
+
     & .inline-flex.h-11 { height: 46px; border: 0; border-radius: 999px; padding: 0 4px; box-shadow: 0 0 0 1.5px #f1e3cc; }
     & .inline-flex.h-11 > button { width: 36px; height: 36px; border-radius: 999px; background: #ffeef3; color: #d0436d; }
 
