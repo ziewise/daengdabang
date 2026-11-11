@@ -17,11 +17,11 @@ import Image from "next/image";
 import { useState, useSyncExternalStore, type FormEvent } from "react";
 import "@/app/guest-web.css";
 import "@/app/mypage-web.css";
+import CommerceOrderActions from "@/components/mypage/CommerceOrderActions";
 import OrderHelpModal from "@/components/mypage/OrderHelpModal";
 import {
     guestOrderEnabled,
     lookupGuestOrder,
-    requestGuestOrderCancel,
     type GuestOrder,
     type GuestOrderStatus,
 } from "@/lib/guest-order";
@@ -52,7 +52,7 @@ const dateText = (iso: string) => {
 };
 
 export default function GuestOrderLookup() {
-    const ready = useSyncExternalStore(noop, guestOrderEnabled, () => process.env.NEXT_PUBLIC_GUEST_ORDER === "1");
+    const ready = useSyncExternalStore(noop, guestOrderEnabled, () => process.env.NEXT_PUBLIC_GUEST_ORDER !== "0");
     const [orderNumber, setOrderNumber] = useState("");
     const [password, setPassword] = useState("");
     const [show, setShow] = useState(false);
@@ -78,9 +78,9 @@ export default function GuestOrderLookup() {
             return;
         }
         setError(found.reason === "not_found"
-            ? { tone: "error", text: "주문번호나 주문 조회 비밀번호가 맞지 않아요. 주문 완료 메일의 주문번호를 다시 확인해 주세요." }
+            ? { tone: "error", text: "주문번호나 주문 조회 비밀번호가 맞지 않아요. 주문 완료 화면의 주문번호를 다시 확인해 주세요." }
             : found.reason === "locked"
-                ? { tone: "warn", text: "여러 번 틀려 잠시 조회를 막았어요. 10분 뒤에 다시 시도하거나 1:1 문의를 남겨 주세요." }
+                ? { tone: "warn", text: "여러 번 틀려 잠시 조회를 막았어요. 잠시 후 다시 시도하거나 1:1 문의를 남겨 주세요." }
                 : { tone: "warn", text: "비회원 주문 조회를 지금 열 수 없어요. 잠시 후 다시 시도하거나 1:1 문의를 남겨 주세요." });
     };
 
@@ -101,7 +101,6 @@ export default function GuestOrderLookup() {
                     order={result.order}
                     token={result.token}
                     onBack={() => { setResult(null); setError(null); }}
-                    onChange={(order) => setResult({ order, token: result.token })}
                 />
             ) : (
                 <>
@@ -115,7 +114,7 @@ export default function GuestOrderLookup() {
                         )}
                         <form className="gw-form-grid" onSubmit={submit} noValidate>
                             <label className="gw-field">
-                                <span>주문번호 <small>주문 완료 메일 · 문자에 있어요</small></span>
+                                <span>주문번호 <small>주문 완료 화면에서 확인해 주세요</small></span>
                                 <span className="gw-inwrap">
                                     <i className="fa-solid fa-receipt" aria-hidden="true" />
                                     <input className="gw-in" value={orderNumber} onChange={(event) => { setOrderNumber(event.target.value.toUpperCase()); setError(null); }} placeholder="예: DDB-20261025-1042" autoComplete="off" disabled={!ready || loading} aria-invalid={error?.tone === "error"} />
@@ -141,7 +140,7 @@ export default function GuestOrderLookup() {
                     <section className="gw-helps" aria-label="도움말">
                         <div>
                             <i className="fa-solid fa-envelope-open-text" aria-hidden="true" />
-                            <span><b>주문번호를 모르겠어요</b><small>주문할 때 넣은 이메일로 보낸 주문 완료 메일에 있어요. 스팸함도 확인해 주세요.</small></span>
+                            <span><b>주문번호를 모르겠어요</b><small>주문 완료 화면에서 안내한 번호를 확인해 주세요. 찾기 어려우면 1:1 문의로 도와드려요.</small></span>
                         </div>
                         <InquiryHelp />
                         <Link href="/auth/login?redirect=%2Fmypage%2Forders%2F">
@@ -184,12 +183,9 @@ function InquiryHelp() {
 }
 
 /** 조회 결과 */
-function OrderResult({ order, token, onBack, onChange }: { order: GuestOrder; token: string; onBack: () => void; onChange: (order: GuestOrder) => void }) {
-    const status = STATUS[order.status];
+function OrderResult({ order, token, onBack }: { order: GuestOrder; token: string; onBack: () => void }) {
+    const status = STATUS[order.status] || { label: "결제 확인 중", tone: "gray", step: -1 };
     const [modal, setModal] = useState<"inquiry" | "return" | null>(null);
-    const [cancelAsk, setCancelAsk] = useState(false);
-    const [cancelling, setCancelling] = useState(false);
-    const [cancelError, setCancelError] = useState("");
     const ticket = {
         orderId: order.orderNumber,
         orderName: order.lines[0] ? `${order.lines[0].name}${order.lines.length > 1 ? ` 외 ${order.lines.length - 1}건` : ""}` : "주문 상품",
@@ -198,19 +194,6 @@ function OrderResult({ order, token, onBack, onChange }: { order: GuestOrder; to
         dateLabel: dateText(order.orderedAt),
         amountLabel: won(order.totalPaid),
         statusLabel: status.label,
-    };
-
-    const cancel = async () => {
-        setCancelling(true);
-        setCancelError("");
-        const ok = await requestGuestOrderCancel(order.orderNumber, token);
-        setCancelling(false);
-        if (ok) {
-            setCancelAsk(false);
-            onChange({ ...order, status: "cancel_requested", cancellable: false });
-        } else {
-            setCancelError("취소 요청을 보내지 못했어요. 잠시 후 다시 시도하거나 1:1 문의를 남겨 주세요.");
-        }
     };
 
     return (
@@ -238,7 +221,7 @@ function OrderResult({ order, token, onBack, onChange }: { order: GuestOrder; to
                         })}
                     </ol>
                 )}
-                {status.step < 0 && <p className="gw-msg is-info"><i className="fa-solid fa-circle-info" aria-hidden="true" />{order.status === "cancel_requested" ? "취소 요청을 받았어요. 처리되면 주문하신 이메일로 알려 드리고, 결제 수단으로 환불돼요." : `${status.label} 상태예요.`}</p>}
+                {status.step < 0 && <p className="gw-msg is-info"><i className="fa-solid fa-circle-info" aria-hidden="true" />{order.status === "cancel_requested" ? "취소 요청을 받았어요. 처리 상태는 이 화면에서 다시 조회할 수 있고, 환불은 결제 수단으로 진행돼요." : `${status.label} 상태예요.`}</p>}
 
                 {order.tracking && (
                     <p className="gw-shipline"><i className="fa-solid fa-truck-fast" aria-hidden="true" /><b>{order.tracking.carrier}</b>송장 {order.tracking.number}</p>
@@ -277,6 +260,7 @@ function OrderResult({ order, token, onBack, onChange }: { order: GuestOrder; to
                     </div>
                 </div>
 
+                <CommerceOrderActions orderId={order.orderNumber} guestToken={token} />
                 <div className="gw-acts" aria-label="할 수 있는 일">
                     {order.tracking?.url ? (
                         <a href={order.tracking.url} target="_blank" rel="noopener noreferrer">
@@ -289,30 +273,12 @@ function OrderResult({ order, token, onBack, onChange }: { order: GuestOrder; to
                             <img src={`${UI}web-cs-step-ship-256.webp`} alt="" aria-hidden="true" />배송 조회<small>{order.tracking ? "송장 번호로 확인" : "발송 뒤에 열려요"}</small>
                         </button>
                     )}
-                    <button type="button" onClick={() => setCancelAsk(true)} disabled={!order.cancellable}>
-                        {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
-                        <img src={`${UI}web-cs-refund-160.webp`} alt="" aria-hidden="true" />주문 취소<small>{order.cancellable ? "상품 준비 전까지" : "준비가 시작돼 문의로"}</small>
-                    </button>
-                    <button type="button" onClick={() => setModal("return")}>
-                        {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
-                        <img src={`${UI}web-cs-return-160.webp`} alt="" aria-hidden="true" />교환 · 반품<small>받은 뒤 7일 안</small>
-                    </button>
                     <button type="button" onClick={() => setModal("inquiry")}>
                         {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                         <img src={`${UI}web-cs-inquiry-160.webp`} alt="" aria-hidden="true" />1:1 문의<small>이 주문으로 문의</small>
                     </button>
                 </div>
 
-                {cancelAsk && (
-                    <div className="gw-msg is-warn" role="alertdialog" aria-label="주문 취소 확인" style={{ display: "grid", gap: 10 }}>
-                        <span><i className="fa-solid fa-triangle-exclamation" aria-hidden="true" /> <b>이 주문을 취소할까요?</b> 결제한 수단으로 {won(order.totalPaid)}이 환불돼요.</span>
-                        <span style={{ display: "flex", gap: 8 }}>
-                            <button type="button" className="gw-pill" onClick={() => setCancelAsk(false)}>그대로 둘게요</button>
-                            <button type="button" className="gw-pill is-pink" onClick={() => void cancel()} disabled={cancelling}>{cancelling ? "요청하는 중" : "주문 취소 요청"}</button>
-                        </span>
-                        {cancelError && <span>{cancelError}</span>}
-                    </div>
-                )}
             </section>
 
             <section className="gw-join" aria-label="회원가입 안내">

@@ -1051,6 +1051,17 @@ export async function consentOutboundEmailPreference(token?: string): Promise<Ou
     return normalizeOutboundEmailPreference(response);
 }
 
+export async function withdrawOutboundEmailPreference(token?: string): Promise<OutboundEmailPreference> {
+    const response = await apiJson<ApiOutboundPreference>(
+        "/api/v1/growth/outbound-preferences/email/withdraw",
+        { method: "POST" }, token, { requireBase: true },
+    );
+    if (!response || response.channel !== "email" || !response.suppressed) {
+        throw new DdbApiError("수신 거부 결과를 확인하지 못했습니다.", { code: "http_error" });
+    }
+    return normalizeOutboundEmailPreference(response);
+}
+
 function normalizeDaengLabWallet(wallet: ApiDaengLabWallet): DaengLabWallet {
     return {
         rewardPoints: Number(wallet.reward_points || 0),

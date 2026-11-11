@@ -66,7 +66,7 @@ export function GuestBuyerForm({ buyer, onChange, errors, loginHref, onCopyToDel
                 <img src={`${UI}header-cart-128.webp`} alt="" aria-hidden="true" />
                 <span>
                     <h2 id="gw-buyer-title">주문하는 분 <small className="gw-tag is-sky">비회원</small></h2>
-                    <small>주문 확인 메일과 배송 안내를 받을 정보예요.</small>
+                    <small>주문 확인·배송 안내·고객 응대에 사용할 정보예요.</small>
                 </span>
                 <button type="button" onClick={() => setGuestCheckoutMode(false)} aria-label="주문 방법 다시 고르기">방법 바꾸기</button>
             </header>
@@ -83,7 +83,7 @@ export function GuestBuyerForm({ buyer, onChange, errors, loginHref, onCopyToDel
                     {errors.phone && <span className="gw-err">{errors.phone}</span>}
                 </label>
                 <label className="gw-field is-wide">
-                    <span>이메일 <small>주문 확인 · 영수증을 보내 드려요</small></span>
+                    <span>이메일 <small>주문 관련 연락에 사용해요</small></span>
                     <input id="guest-buyer-email" className="gw-in" type="email" value={buyer.email} onChange={(event) => set("email", event.target.value)} autoComplete="email" inputMode="email" placeholder="daeng@example.com" aria-invalid={Boolean(errors.email)} disabled={disabled} />
                     {errors.email && <span className="gw-err">{errors.email}</span>}
                 </label>

@@ -65,6 +65,12 @@ export default function NativeAppBridge() {
             void StatusBar.setBackgroundColor({ color: "#fffaf0" });
         }
 
+        // The shopping catalog is bundled locally; prepare it while the home screen is idle.
+        const warmShopping = () => router.prefetch("/app/sticker/shop/");
+        const idleWarmup = typeof window.requestIdleCallback === "function"
+            ? window.requestIdleCallback(warmShopping, { timeout: 3000 }) : undefined;
+        const warmupTimer = idleWarmup === undefined ? window.setTimeout(warmShopping, 1500) : undefined;
+
         const onDocumentClick = (event: MouseEvent) => {
             if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
             const target = event.target;
@@ -113,6 +119,8 @@ export default function NativeAppBridge() {
             App.addListener("appUrlOpen", ({ url }) => {
                 const incoming = new URL(url);
                 if (incoming.protocol === "daengdabang:") {
+                    void Browser.close().catch(() => {});
+                    if (incoming.searchParams.has("phone_result")) window.dispatchEvent(new CustomEvent("ddb-phone-link-result", { detail: incoming.searchParams.get("phone_result") }));
                     const nativePath = `/${incoming.hostname}${incoming.pathname}`;
                     if (isBundledNativeRoute(nativePath)) {
                         router.push(`${nativePath}${incoming.search}${incoming.hash}`);
@@ -143,6 +151,8 @@ export default function NativeAppBridge() {
 
         return () => {
             document.removeEventListener("click", onDocumentClick, true);
+            if (idleWarmup !== undefined) window.cancelIdleCallback(idleWarmup);
+            if (warmupTimer !== undefined) window.clearTimeout(warmupTimer);
             delete document.documentElement.dataset.ddbNativeApp;
             void Promise.all(listenerHandles).then((handles) => handles.forEach((handle) => void handle.remove()));
         };

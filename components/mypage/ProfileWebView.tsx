@@ -19,11 +19,13 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
+import SocialPhoneRegistration from "@/components/mypage/SocialPhoneRegistration";
 import MypageInquiryLink from "@/components/mypage/MypageInquiryLink";
 import { beginSocialAuth } from "@/components/auth/SocialAuthButtons";
 import {
     changeCurrentCustomerPassword,
     consentOutboundEmailPreference,
+    withdrawOutboundEmailPreference,
     customerApiErrorMessage,
     DdbApiError,
     getCustomerToken,
@@ -510,15 +512,9 @@ function InfoPanel({ user, token, accountDisplay, internalEmail, verifiedAt, onS
                     </li>
                 )}
 
-                <SettingRow
-                    icon="fa-mobile-screen-button"
-                    label="휴대폰 번호"
-                    soon
-                    value={<><b className="is-muted">등록 전</b><Chip tone="warn">준비 중</Chip></>}
-                    action={<button type="button" className="pf-act" disabled><i className="fa-solid fa-clock" aria-hidden="true" />준비 중</button>}
-                />
+                <SocialPhoneRegistration />
             </ul>
-            <p className="pf-foot-note"><i className="fa-solid fa-circle-info" aria-hidden="true" />이메일은 로그인 아이디라 직접 바꿀 수 없어요. 휴대폰 번호는 본인인증이 연결되면 등록 · 변경할 수 있어요.</p>
+            <p className="pf-foot-note"><i className="fa-solid fa-circle-info" aria-hidden="true" />이메일은 로그인 아이디라 직접 바꿀 수 없어요. 휴대폰 번호는 카카오·네이버 계정에서 제공하는 번호로 등록·변경할 수 있어요.</p>
         </>
     );
 }
@@ -697,6 +693,18 @@ function NoticePanel({ token, internalEmail }: { token?: string; internalEmail: 
         }
     };
 
+    const unsubscribe = async () => {
+        if (saving) return;
+        setSaving(true); setMessage(null);
+        try {
+            await withdrawOutboundEmailPreference(getCustomerToken() || undefined);
+            setState("off"); setAgree(false); setEditing(false);
+            setMessage({ ok: true, text: "이메일 소식 수신을 중단했어요. 주문·배송 안내는 계속 받을 수 있어요." });
+        } catch {
+            setMessage({ ok: false, text: "수신 거부를 저장하지 못했어요. 잠시 후 다시 시도해 주세요." });
+        } finally { setSaving(false); }
+    };
+
     return (
         <>
             <PanelHead title="알림 수신" sub="새 상품 · 할인 · 이벤트 소식을 받을지 정해요. 선택 사항이에요." />
@@ -714,21 +722,9 @@ function NoticePanel({ token, internalEmail }: { token?: string; internalEmail: 
                     action={state === "off" && !editing ? (
                         <button type="button" className="pf-act" onClick={() => { setEditing(true); setMessage(null); }}><i className="fa-solid fa-bell" aria-hidden="true" />받기</button>
                     ) : state === "on" ? (
-                        <MypageInquiryLink
-                            href="/inquiry?category=other#inquiry-form"
-                            className="pf-act"
-                            preset={{
-                                kicker: "MY NEWS",
-                                title: "이메일 소식 그만 받기",
-                                sub: "이메일 소식 수신을 멈춰 드려요. 받는 이메일 주소를 적어 주세요.",
-                                art: "/images/ui/web-cs-mail-256.webp",
-                                category: "other",
-                                subject: "[기타 문의] 이메일 소식 수신 거부",
-                                hint: "처리되면 날짜와 함께 결과를 알려 드려요.",
-                            }}
-                        >
-                            <i className="fa-solid fa-bell-slash" aria-hidden="true" />그만 받기
-                        </MypageInquiryLink>
+                        <button type="button" className="pf-act" disabled={saving} onClick={unsubscribe}>
+                            <i className="fa-solid fa-bell-slash" aria-hidden="true" />{saving ? "저장하는 중" : "그만 받기"}
+                        </button>
                     ) : internalEmail ? (
                         <Link href="/mypage/#daenglab-wallet" className="pf-act"><i className="fa-solid fa-at" aria-hidden="true" />이메일 등록</Link>
                     ) : undefined}

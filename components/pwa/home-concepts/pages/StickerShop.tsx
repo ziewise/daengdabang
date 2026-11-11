@@ -128,7 +128,7 @@ export default function StickerShop() {
                 </DiaryBody>
 
                 {/* 속지 2 — ④ 댕다방 핫픽 · 신상품: 다른 화면과 같은 색인 탭, 옆으로 밀면 넘어감 */}
-                <section aria-label="댕다방 핫픽과 신상품" className="mt-7">
+                <section aria-label="댕다방 핫픽과 신상품" className="mt-7" style={{ contentVisibility: "auto", containIntrinsicSize: "auto 900px" }}>
                     <DiaryTabs tabs={SHELF_TABS} active={shelf} onPick={(i) => setShelf(i as 0 | 1)} />
                     <DiaryBody pageKey={`shelf-${shelf}`} dir={shelf === 0 ? -1 : 1} className="!pl-8 !pr-3"
                         onSwipe={(st) => { const n = shelf + st; if (n === 0 || n === 1) { haptic("light"); setShelf(n); } }}>

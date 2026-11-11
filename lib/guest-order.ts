@@ -2,16 +2,16 @@
  * guest-order.ts — 비회원 주문 · 조회의 "연동 자리"(2026-10-25)
  * ---------------------------------------------------------------------
  * 화면(components/guest · 주문 로그인 · 주문서 · 결제 완료 · /order-lookup)은 다 만들어 두고,
- * 서버가 아직 없는 기능은 스위치로 켜고 끔. 꺼져 있으면(기본) 비회원 결제 · 조회 단추는 "준비 중"으로 막히고 가짜 성공은 없음.
+ * 서버 기능이 연결되어 기본 활성화. 명시적으로 비활성화하면 비회원 결제 · 조회 단추는 "준비 중"으로 막히고 가짜 성공은 없음.
  *
  * 스위치(빌드 환경 변수)
- *   NEXT_PUBLIC_GUEST_ORDER=1   비회원 주문 만들기 · 결제 확인 · 비회원 주문 조회 · 취소 요청
+ *   NEXT_PUBLIC_GUEST_ORDER=0 (비활성화)   비회원 주문 만들기 · 결제 확인 · 비회원 주문 조회 · 취소 요청
  *
  * 개발 미리보기(배포 빌드에는 없음): npm run dev 에서 localStorage "ddb.guest.preview" = "1" 이면 스위치가 켜지고
  *   조회 · 취소는 서버 대신 예시 주문을 돌려줌(결제는 미리보기에서도 열지 않음 — 실제 결제창은 서버가 있어야 함).
  *
  * 비회원 정보 보관: 주문 조회 비밀번호는 서버로만 보내고 저장하지 않음. 이 탭(sessionStorage)에는
- *   "비회원으로 주문 중" 표시와, 서버가 준 비회원 조회 토큰(조회 화면 30분)만 둠.
+ *   "비회원으로 주문 중" 표시와, 서버가 준 비회원 조회 토큰(1시간 유효)만 둠.
  */
 import { ddbApiBase } from "@/lib/ddb-api-base";
 import { DdbApiError, type TossTestOrder } from "@/lib/customer-api";
@@ -29,7 +29,7 @@ export function guestPreviewOn() {
 
 /** 비회원 주문 · 조회가 서버와 연결됐는가 */
 export function guestOrderEnabled() {
-    return process.env.NEXT_PUBLIC_GUEST_ORDER === "1" || guestPreviewOn();
+    return process.env.NEXT_PUBLIC_GUEST_ORDER !== "0" || guestPreviewOn();
 }
 
 const apiUrl = (path: string) => `${ddbApiBase().replace(/\/$/, "")}${path}`;
@@ -138,15 +138,22 @@ type GuestOrderPayload = {
  *   모드 짝도 회원 주문과 같음(lib/toss-payment-mode): test = test_ck_ · TEST- · test_no_shipment,
  *   live = live_ck_ · LIVE- · live_pending. 주문서가 회원 주문과 똑같이 검사하고, 짝이 안 맞으면 결제창을 열지 않음.
  */
+let guestAttempt: { fingerprint: string; key: string } | undefined;
+
 export async function createGuestTossOrder(payload: GuestOrderPayload, buyer: GuestBuyer): Promise<GuestTossOrder> {
     if (guestPreviewOn()) throw new Error("미리보기에서는 비회원 결제창을 열지 않아요.");
+    const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(JSON.stringify({ payload, buyer })));
+    const fingerprint = Array.from(new Uint8Array(digest), n => n.toString(16).padStart(2, "0")).join("");
+    if (guestAttempt?.fingerprint !== fingerprint) guestAttempt = { fingerprint, key: crypto.randomUUID() };
     const response = await fetch(apiUrl("/api/v1/payments/toss/guest-orders"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
             ...payload,
+            idempotencyKey: guestAttempt.key,
             buyer: { name: buyer.name.trim(), phone: buyer.phone.trim(), email: buyer.email.trim() },
             lookup_password: buyer.lookupPassword,
+            privacy_consent: buyer.agreePrivacy,
         }),
     });
     if (response.status === 403) {

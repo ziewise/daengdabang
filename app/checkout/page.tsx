@@ -214,7 +214,7 @@ export default function CheckoutPage() {
     const prefilledAddressRef = useRef("");
     // 웹 비회원 주문 — "비회원으로 주문 중" 표시(이 탭) · 주문자 정보 · 서버 연결 여부(꺼져 있으면 결제는 지금처럼 로그인 뒤)
     const guestMode = useSyncExternalStore(subscribeGuestMode, readGuestMode, () => false);
-    const guestFeature = useSyncExternalStore(subscribeGuestMode, guestOrderEnabled, () => process.env.NEXT_PUBLIC_GUEST_ORDER === "1");
+    const guestFeature = useSyncExternalStore(subscribeGuestMode, guestOrderEnabled, () => process.env.NEXT_PUBLIC_GUEST_ORDER !== "0");
     const [guestBuyer, setGuestBuyer] = useState<GuestBuyer>(emptyGuestBuyer);
     const [guestErrors, setGuestErrors] = useState<GuestBuyerErrors>({});
 

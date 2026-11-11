@@ -414,8 +414,8 @@ test("static order route provides list, search, detail, privacy, and test-mode f
     assert.match(helper, /nextOffset/);
     assert.match(helper, /\.filter\(\(item\) => isCustomerVisibleOrderStatus\(item\.status\)\)/);
     assert.match(helper, /return status === "paid" \|\| status === "test_paid" \|\| isTossRefundStatus\(status\)/);
-    // Refund-state orders get no fulfillment actions, no arrival estimate, and count net of refunds.
-    assert.match(page, /if \(isTestOrder\(order\) \|\| isRefundOrder\(order\)\) return null/);
+    // Refunded orders use server eligibility; no fake confirmation or arrival estimate.
+    assert.match(page, /<CommerceOrderActions orderId=\{order.orderId\}/);
     assert.match(page, /!isTestOrder\(order\) && !isRefundOrder\(order\) && estimatedDeliveryLabel\(order\)/);
     assert.match(page, /환불 후 결제금액/);
     assert.match(page, /total \+ netPaidAmount\(order\)/);

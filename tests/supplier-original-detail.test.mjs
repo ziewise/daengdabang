@@ -37,7 +37,7 @@ test('reviewed video CDN pin survives later builds without bypassing the publica
 });
 
 function loadModule(relative, dependencies = {}, env = {}) {
-    dependencies = { "@/lib/catalog/hover-video-framing": hoverVideoFraming, ...dependencies };
+    dependencies = { "@/components/reviews/PurchaseReviews": () => null, "@/lib/catalog/hover-video-framing": hoverVideoFraming, ...dependencies };
     dependencies = { './product-lookup': productLookup, './product-groups.json': [], './review-groups': reviewGroups, './review-refresh': reviewRefresh, './review-refresh.json': {sources:{}}, ...dependencies };
     const { outputText } = ts.transpileModule(readFileSync(new URL(`../${relative}`, import.meta.url), "utf8"), {
         compilerOptions: { module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX, esModuleInterop: true },

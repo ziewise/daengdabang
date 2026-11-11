@@ -10,6 +10,7 @@ import { openChatWidget } from "@/lib/chat-widget-events";
 import ProductDeliveryReturnPolicy from "@/components/products/detail/ProductDeliveryReturnPolicy";
 import { getProductDetailContent } from "@/lib/catalog/product-detail-content";
 // 자사몰 구매 후기 시안(개발 서버 + ?rvpreview=1 + 웹 화면에서만 — 배포 빌드에는 안 보임)
+import PurchaseReviews from "@/components/reviews/PurchaseReviews";
 import ProductOwnReviews from "@/components/reviews/ProductOwnReviews";
 import { useReviewPreview, PREVIEW_SUMMARY } from "@/lib/reviews-preview";
 import { useWebScreen } from "@/hooks/useWebScreen";
@@ -85,6 +86,7 @@ export default function ProductTabs({ product: p }: Props) {
             </section>
 
             <section id="tab-review" className="scroll-mt-32 pt-14">
+                {!ownPreview && <PurchaseReviews productId={p.id} />}
                 {ownPreview ? (
                     <>
                         {/* 시안: 댕다방 구매 후기 | 외부 판매처 후기 — 출처를 섞지 않고 두 갈래로 */}

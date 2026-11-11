@@ -43,7 +43,7 @@ export default function GuestOrderDone({ orderId, amount, buyerName, email }: { 
                 </div>
 
                 <ul>
-                    <li><i className="fa-solid fa-envelope-open-text" aria-hidden="true" /><span>주문 완료 메일을 {email || "주문할 때 넣은 이메일"}로 보내 드려요.</span></li>
+                    <li><i className="fa-solid fa-envelope-open-text" aria-hidden="true" /><span>주문번호를 복사해 보관해 주세요. 문의 시 {email || "주문할 때 넣은 이메일"}로 주문 정보를 확인해요.</span></li>
                     <li><i className="fa-solid fa-key" aria-hidden="true" /><span>비회원 주문 조회에서 주문번호와 주문 조회 비밀번호로 배송 · 취소 · 교환 · 반품 · 문의를 할 수 있어요.</span></li>
                     <li><i className="fa-solid fa-truck-fast" aria-hidden="true" /><span>상품이 발송되면 조회 화면에서 택배사와 송장 번호를 볼 수 있어요.</span></li>
                 </ul>

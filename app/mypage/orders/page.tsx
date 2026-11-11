@@ -8,7 +8,7 @@ import MypageSidebar from "@/components/mypage/MypageSidebar";
 // 웹: 배송 문의 · 교환·반품 안내를 마이페이지 안 창으로(2026-10-24)
 import OrderHelpModal from "@/components/mypage/OrderHelpModal";
 // 구매 확정 창(2026-10-26) — 서버 기능 전까지 개발 서버 미리보기(?ocpreview=1)에서만 보임
-import PurchaseConfirmModal, { usePurchaseConfirmPreview } from "@/components/mypage/PurchaseConfirmModal";
+import CommerceOrderActions, { OrderRequestForm } from "@/components/mypage/CommerceOrderActions";
 import { ddbApiBase } from "@/lib/ddb-api-base";
 import { getCustomerToken } from "@/lib/customer-api";
 import { findProduct, productHref, versionProductImage } from "@/lib/shop";
@@ -279,62 +279,12 @@ function canRequestReturn(order: TossOrderHistoryItem): boolean {
 /** 상품별 반품 신청 창 — 고른 상품이 있을 때만 */
 function LineReturnModal({ order, line, onClose }: { order: TossOrderHistoryItem; line: TossOrderHistoryLine | null; onClose: () => void }) {
     if (!line) return null;
-    return (
-        <OrderHelpModal
-            order={orderHelpSummary(order)}
-            line={{ name: line.name, option: [line.color, line.size].filter(Boolean).join(" · ") || undefined, image: lineImage(line)?.src }}
-            initialMode="exchange"
-            onClose={onClose}
-        />
-    );
+    return <OrderRequestForm orderId={order.orderId} lineId={`${order.orderId}:${order.lines.indexOf(line)}`} onClose={onClose} />;
 }
 
 function LiveOrderActions({ order, className = "" }: { order: TossOrderHistoryItem; className?: string }) {
-    const [help, setHelp] = useState<"inquiry" | "return" | "cancel" | null>(null);
-    const [confirmOpen, setConfirmOpen] = useState(false);
-    // 주문 취소 요청 · 구매 확정 — 웹 · 앱 모두(2026-10-26 사용자, 앱 모양은 appShopSkin)
-    const confirmPreview = usePurchaseConfirmPreview();
-    // 테스트 주문 · 결제 뒤 취소 · 환불 주문에는 배송 · 반품 · 취소 요청 동작을 보이지 않음
-    if (isTestOrder(order) || isRefundOrder(order)) return null;
-    const summary = orderHelpSummary(order);
-    const stage = orderStage(order);
-    // 배송 준비 전(결제 완료 · 상품 준비 중)이면 취소 요청, 배송 완료면 구매 확정(서버 기능 전까지 미리보기에서만)
-    const cancelable = stage !== null && stage <= 1;
-    const confirmable = confirmPreview && stage === 3;
-    return (
-        <div className={`flex flex-wrap gap-2 ${className}`} data-live-fulfillment-actions="true">
-            {order.delivery?.trackingUrl ? (
-                <a
-                    href={order.delivery.trackingUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn btn-secondary"
-                >
-                    배송 조회
-                </a>
-            ) : (
-                <Link href="/inquiry?category=delivery#inquiry-form" className="btn btn-secondary" onClick={(event) => { if (opensInModal(event)) { event.preventDefault(); setHelp("inquiry"); } }}>배송 문의</Link>
-            )}
-            <Link href="/return" className="btn btn-secondary" onClick={(event) => { if (opensInModal(event)) { event.preventDefault(); setHelp("return"); } }}>교환·반품 안내</Link>
-            {/* 주문 취소 요청 — 1:1 문의(환불·주문 취소)로 접수(결제 취소 서버 기능 전까지) */}
-            {cancelable && (
-                <Link href="/inquiry?category=refund#inquiry-form" className="btn btn-secondary" data-order-cancel onClick={(event) => { if (opensInModal(event)) { event.preventDefault(); setHelp("cancel"); } }}>주문 취소 요청</Link>
-            )}
-            {/* 구매 확정 — 서버 기능 전까지 미리보기에서만(확정해도 화면만 바뀜) */}
-            {confirmable && (
-                <button type="button" className="btn btn-primary" data-order-confirm onClick={() => setConfirmOpen(true)}>구매 확정</button>
-            )}
-            {help && <OrderHelpModal order={summary} initialMode={help} onClose={() => setHelp(null)} />}
-            {confirmOpen && (
-                <PurchaseConfirmModal
-                    order={summary}
-                    lines={order.lines.map((line) => ({ name: line.name, option: [line.color, line.size].filter(Boolean).join(" · ") || undefined, image: lineImage(line)?.src, qty: line.qty }))}
-                    preview
-                    onClose={() => setConfirmOpen(false)}
-                />
-            )}
-        </div>
-    );
+    if (isTestOrder(order)) return null;
+    return <div className={className}><CommerceOrderActions orderId={order.orderId} /></div>;
 }
 
 function OrderCard({ order }: { order: TossOrderHistoryItem }) {
