@@ -85,16 +85,8 @@ export default function MyPage() {
     const petLensReady = Boolean(user && hasPetLensReadyProfile(user.pets));
     const profileNeedingAttentionIndex = user?.pets.findIndex(petLensProfileNeedsAttention) ?? -1;
     const heroTryOnProduct = firstTryOnProduct();
-    // 웹 머리 요약 칸용 — 지갑 카드가 불러온 뒤 알려 주는 코인 잔액만 받아 보여 줌(읽기 전용, 서버 호출 없음)
-    const [walletCoins, setWalletCoins] = useState<number | null>(null);
-    useEffect(() => {
-        const onWallet = (event: Event) => {
-            const coins = (event as CustomEvent<{ daengLabCoins?: number }>).detail?.daengLabCoins;
-            if (typeof coins === "number") setWalletCoins(coins);
-        };
-        window.addEventListener("ddb:daenglab-wallet", onWallet);
-        return () => window.removeEventListener("ddb:daenglab-wallet", onWallet);
-    }, []);
+    // 코인 잔액 받기(ddb:daenglab-wallet 알림)는 뺌(2026-11-11) — 대시보드 "코인 · 적립금" 탭에 숫자 배지를 안 보여서 쓸 곳이 없음.
+    //   잔액은 아래 지갑 카드(DaengLabWalletCard)가 그대로 보여 줌
     // 웹에서 지금 보이는 대시보드 칸(앱은 이 값과 상관없이 모두 보임 — 숨김은 app/mypage-web.css 웹 전용)
     const [dashTab, setDashTab] = useState<DashTab>(() => (
         typeof window === "undefined" ? "pets" : HASH_TAB[window.location.hash] ?? "pets"
@@ -163,7 +155,8 @@ export default function MyPage() {
             <div className="hidden mp-tabs" role="tablist" aria-label="마이페이지 대시보드 보기">
                 {([
                     { id: "pets", label: "우리 아이", value: user.pets.length, unit: "마리" },
-                    { id: "wallet", label: "코인 · 적립금", value: walletCoins ?? "–", unit: "C" },
+                    // 코인 · 적립금 탭은 글자만(11-11 사용자 "코인 표시 없이 문구만") — value 없음 = 숫자 배지 안 그림
+                    { id: "wallet", label: "코인 · 적립금", value: null, unit: "" },
                     { id: "orders", label: "최근 결제", value: store.state.orders.length, unit: "건" },
                     { id: "wish", label: "찜한 상품", value: wishedProducts.length, unit: "개" },
                 ] as const).map((tab) => (
@@ -176,7 +169,8 @@ export default function MyPage() {
                         onClick={() => setDashTab(tab.id)}
                     >
                         <span>{tab.label}</span>
-                        <b>{tab.value}{tab.unit}</b>
+                        {/* 숫자 배지 — 값이 있는 탭(우리 아이 · 최근 결제 · 찜한 상품)만 */}
+                        {tab.value !== null && <b>{tab.value}{tab.unit}</b>}
                     </button>
                 ))}
             </div>
