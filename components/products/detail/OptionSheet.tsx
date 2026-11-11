@@ -284,8 +284,9 @@ export default function OptionSheet({ product, open, mode, initialColorIdx = nul
                     {/* 사이즈 — 드롭다운(있는 제품만). 미선택이면 빨간 테두리 + "선택하세요" */}
                     {hasSizes && (
                         <div className="mt-4">
-                            <label className="mb-1.5 block text-xs font-black text-neutral-500">
-                                {t("option")} 2 <span className="text-rose-500">({t("optionRequired")})</span>
+                            {/* 번호 — 색상이 있으면 옵션 2, 사이즈만 있는 상품은 옵션 1(2026-11-11 사용자 "고를 옵션이 하나인데 옵션 2로 나와") */}
+                            <label className="mb-1.5 block text-xs font-black text-neutral-500" data-option-number={hasColors ? 2 : 1}>
+                                {t("option")} {hasColors ? 2 : 1} <span className="text-rose-500">({t("optionRequired")})</span>
                             </label>
                             <select
                                 value={sizeIdx ?? ""}
