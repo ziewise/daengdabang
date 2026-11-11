@@ -139,8 +139,11 @@ test('OptionSheet permits supplier-request units without exposing fulfillment la
     assert.deepEqual(result.added,[['p_1',12,'Blue','S']]);
     assert.equal(result.commits.length,1);
     assert.equal(result.elements.some(n=>n.props?.['data-inventory-state']==='available'),false);
-    const option=result.elements.find(n=>n.type==='option'&&n.props.value===0);
-    assert.equal(option.props.children.join(''),'S');
+    // 2026-11-11 사이즈 고르기 = 꾸민 드롭다운 — 줄(data-size-option)의 이름 칸은 사이즈만, 본사 요청 상태 알약은 없음
+    const option=result.elements.find(n=>n.props?.['data-size-option']===0);
+    const optionName=nodes(option.props.children).find(n=>n.type==='span');
+    assert.equal(optionName.props.children.join(''),'S');
+    assert.equal(nodes(option.props.children).some(n=>n.props?.['data-size-tag']),false);
 });
 test('OptionSheet prevents sold-out current selections and mixed accumulated picks from committing',()=>{
     for(const draft of [[0,1,1,[]],[0,0,1,[{colorIdx:0,sizeIdx:0,qty:1},{colorIdx:0,sizeIdx:1,qty:1}]]]) {
