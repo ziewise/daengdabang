@@ -53,7 +53,13 @@ export function RegionProvider({ children }: { children: React.ReactNode }) {
     // 마운트: 저장된 국가 복원 → 통화만 반영(언어는 i18n 이 자체 복원하도록 둔다)
     useEffect(() => {
         const saved = window.localStorage.getItem(STORAGE_KEY);
-        if (saved === "KR" || saved === "US") {
+        // 2026-11-11 사용자 "원화 그대로" — 가격은 늘 원화. 예전 선택 창에서 미국(달러)을 골라 둔 방문자도 대한민국(원화)으로 되돌림
+        //   (언어는 건드리지 않음 — 영어로 보던 사람은 영어 그대로, 가격만 ₩)
+        if (saved === "US") {
+            window.localStorage.setItem(STORAGE_KEY, "KR");
+            return;
+        }
+        if (saved === "KR") {
             // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate saved country once after mount.
             setCountryState(saved);
             const meta = COUNTRIES.find((c) => c.code === saved)!;

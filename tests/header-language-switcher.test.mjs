@@ -8,7 +8,8 @@ async function source(path) {
     return readFile(new URL(path, root), "utf8");
 }
 
-test("the header opens the latest country and language modal from the globe badge", async () => {
+// 2026-11-11 사용자: 한/영 배지는 창(RegionModal) 없이 누르면 바로 한국어 ↔ English, 가격은 늘 원화
+test("the header language badge toggles Korean and English directly without the region modal", async () => {
     const [switcher, header, brandLogo, mobilePanel] = await Promise.all([
         source("components/header/LanguageSwitcher.tsx"),
         source("components/header/Header.tsx"),
@@ -16,13 +17,12 @@ test("the header opens the latest country and language modal from the globe badg
         source("components/header/MobilePanel.tsx"),
     ]);
 
-    assert.match(switcher, /import RegionModal from "\.\/RegionModal"/);
+    assert.doesNotMatch(switcher, /import RegionModal/);
     // 2026-10-18: 헤더 언어 버튼 그림을 지구본 → 한/영 배지로(사용자 그림)
     assert.match(switcher, /src="\/images\/ui\/header-lang-128\.webp"/);
-    assert.match(switcher, /onClick=\{\(\) => setOpen\(true\)\}/);
-    assert.match(switcher, /aria-haspopup="dialog"/);
-    assert.match(switcher, /aria-expanded=\{open\}/);
-    assert.match(switcher, /<RegionModal open=\{open\} onClose=\{\(\) => setOpen\(false\)\} \/>/);
+    assert.match(switcher, /const \{ locale, toggleLocale \} = useI18n\(\)/);
+    assert.match(switcher, /onClick=\{toggleLocale\}/);
+    assert.doesNotMatch(switcher, /aria-haspopup="dialog"/);
 
     const petLensIndex = header.indexOf("data-pet-guide-target=\"pet-lens\"");
     const switcherIndex = header.indexOf("<LanguageSwitcher />", petLensIndex);
@@ -38,6 +38,11 @@ test("the header opens the latest country and language modal from the globe badg
     assert.match(brandLogo, /min-\[360px\]:h-11/);
     assert.match(brandLogo, /shrink-0 flex-nowrap items-center whitespace-nowrap/);
     assert.match(mobilePanel, /<LanguageSwitcher compact \/>/);
+});
+
+test("saved US country falls back to KRW prices while keeping the region modal code", async () => {
+    const region = await source("lib/region.tsx");
+    assert.match(region, /if \(saved === "US"\) \{\s*window\.localStorage\.setItem\(STORAGE_KEY, "KR"\);\s*return;/);
 });
 
 test("country selection automatically applies display currency and language", async () => {

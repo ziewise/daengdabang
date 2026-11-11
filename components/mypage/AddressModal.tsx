@@ -10,12 +10,15 @@
  *    검색을 불러오지 못하면(네트워크 · 차단) 우편번호 · 기본 주소를 직접 적을 수 있게 칸이 열림
  *  - 기본 배송지 켜기 단추 · 아래 버튼 줄(암호화 안내 · 닫기 · 분홍 저장)
  * 앱 화면은 이 창을 쓰지 않음(카드 아래 입력 칸 그대로).
+ * 2026-11-11: 주소 검색 전용 창(AddressSearchModal)을 주문/결제 화면(app/checkout)도 같이 씀 — 그래서 꾸밈(mypage-web.css)을 여기서 직접 불러옴.
  */
 "use client";
 
 import { useCallback, useEffect, useId, useRef, useState, type FormEvent } from "react";
 import { createPortal } from "react-dom";
 import type { CustomerAddressInput } from "@/lib/customer-api";
+// 주소 검색 창 · 배송지 창 꾸밈(.ddb-addr* · .ddb-as-*) — 마이페이지 밖(주문/결제)에서 열어도 같은 모양이 되게
+import "@/app/mypage-web.css";
 
 // 카카오(다음) 우편번호 서비스 — 무료 · 키 없음. 필요할 때 한 번만 불러옴
 const POSTCODE_SRC = "https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
@@ -67,10 +70,11 @@ function composeAddress(data: PostcodeData) {
     return extras.length ? `${base} (${extras.join(", ")})` : base;
 }
 
-type PickedAddress = { postalCode: string; address: string; other: string };
+// 주소 검색에서 고른 주소(우편번호 · 기본 주소 · 다른 표기 주소) — 주문/결제 화면도 같이 씀
+export type PickedAddress = { postalCode: string; address: string; other: string };
 
-/** 주소 검색 전용 창 — 검색 · 고르기 · 적용 */
-function AddressSearchModal({ onApply, onClose, onFailed }: { onApply: (picked: PickedAddress) => void; onClose: () => void; onFailed: () => void }) {
+/** 주소 검색 전용 창 — 검색 · 고르기 · 적용(마이페이지 배송지 창 · 주문/결제 배송지 칸 같이 씀) */
+export function AddressSearchModal({ onApply, onClose, onFailed }: { onApply: (picked: PickedAddress) => void; onClose: () => void; onFailed: () => void }) {
     const titleId = useId();
     const boxRef = useRef<HTMLDivElement>(null);
     const closeRef = useRef<HTMLButtonElement>(null);

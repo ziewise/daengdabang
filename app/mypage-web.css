@@ -2013,6 +2013,29 @@ html:not(.ddb-app-mode) main:has(nav[aria-label="마이페이지 메뉴"]) {
 .ddb-as-actions { display: flex; justify-content: flex-end; gap: 10px; }
 .ddb-as-actions .ddb-pf-save { min-width: 160px; }
 
+/* 저장된 배송지 고르기 창(components/checkout/SavedAddressPickerModal.tsx · 2026-11-11 사용자 "배송지 관리 주소 가져오기")
+   주소 검색 창과 같은 창 · 같은 하늘 카드(.ddb-addr-picked) — 카드마다 이름 알약(배송지 이름 + 우편번호) · 주소 · 받는 분 · 연락처 · "이 주소로".
+   지금 채운 주소는 하늘 테. 비었을 때는 3D 집 그림 + 안내, 못 불러오면 안내 + 다시 불러오기 */
+.ddb-sa-body { overflow-y: auto; padding-bottom: 14px; }
+.ddb-sa-list { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.ddb-sa .ddb-addr-picked strong { word-break: keep-all; }
+.ddb-sa .ddb-addr-picked small { grid-column: 1; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; color: #64748b; font-size: 12.5px; font-weight: 700; }
+.ddb-sa .ddb-addr-picked button { grid-row: 1 / span 3; }
+.ddb-sa .ddb-addr-picked[data-current] { box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%), 0 0 0 2.5px #7cc4dc; }
+.ddb-sa .ddb-addr-picked[data-current] button { background: #0e8aa0; color: #fff; box-shadow: none; }
+.ddb-sa-badge { padding: 2px 8px; border-radius: 999px; background: #fff; color: #12a17a; font-size: 10.5px; font-weight: 800; }
+.ddb-sa-empty { display: grid; justify-items: center; gap: 8px; padding: 22px 12px 10px; text-align: center; }
+.ddb-sa-empty img { width: 72px; height: 72px; object-fit: contain; filter: drop-shadow(0 8px 10px rgb(15 23 42 / 15%)); }
+.ddb-sa-empty strong { color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 18px; font-weight: 400; }
+.ddb-sa-empty span { max-width: 360px; color: #8391a3; font-size: 13px; font-weight: 600; line-height: 1.6; word-break: keep-all; }
+.ddb-sa-empty .ddb-as-hint { justify-self: stretch; }
+.ddb-sa :is(.ddb-sa-manage, .ddb-sa-empty .ddb-pf-cancel) { display: inline-flex; align-items: center; justify-content: center; gap: 7px; text-decoration: none; }
+/* 휴대폰 폭 — 카드 한 줄로 쌓고 "이 주소로"는 맨 아래 넓게 */
+@media (max-width: 640px) {
+    .ddb-sa .ddb-addr-picked button { grid-row: auto; grid-column: 1; justify-self: stretch; justify-content: center; }
+    .ddb-sa .ddb-as-actions > * { flex: 1; }
+}
+
 @media (max-width: 640px) {
     .ddb-addr-ziprow .input { flex: 1 1 auto; min-width: 0; }
     .ddb-addr-searchbtn { padding: 0 16px; }
