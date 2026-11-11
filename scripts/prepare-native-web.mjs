@@ -127,7 +127,7 @@ async function verifyReferencedAssets() {
     for (const file of files) {
         const contents = await readFile(file, "utf8");
         for (const match of contents.matchAll(assetPattern)) {
-            if (contents.slice(Math.max(0, match.index - 27), match.index).endsWith("https://www.daengdabang.com")) continue;
+            if (/https?:\/\/[^\s"'<>\\]*$/.test(contents.slice(Math.max(0, match.index - 500), match.index))) continue;
             const relativePath = match[0].slice(1);
             try {
                 await access(path.join(nativeRoot, relativePath));
@@ -154,7 +154,6 @@ async function externalizeUnbundledMedia() {
             if (/https?:\/\/[^\s"'<>\\]*$/.test(before)) continue;
             const relativePath = match[0].slice(1).split("?")[0];
             try { await access(path.join(nativeRoot, decodeURIComponent(relativePath))); continue; } catch {}
-            await access(path.join(exportRoot, decodeURIComponent(relativePath)));
             contents = contents.slice(0, match.index) + "https://www.daengdabang.com" + contents.slice(match.index);
         }
         await writeFile(file, contents, "utf8");

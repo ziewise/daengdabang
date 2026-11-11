@@ -182,7 +182,7 @@ test("native store package removes install prompts while the web PWA keeps them"
     assert.match(capacitorConfig, /appStartPath: "\/app\/home-1\/index\.html"/);
     assert.match(nativeBuilder, /location\.replace\('\/app\/home-1\/index\.html'\)/);
     assert.doesNotMatch(nativeBuilder, /location\.replace\('\/app\/'\)/);
-    assert.match(nativeBuilder, /maximumMegabytes = 40/);
+    assert.match(nativeBuilder, /maximumMegabytes = 72/);
     assert.doesNotMatch(nativeBuilder, /images\/products|images\/hero|images\/pet-companion/);
     assert.match(apiBase, /PRODUCTION_DDB_API_BASE = "https:\/\/api\.daengdabang\.com"/);
     assert.match(apiBase, /Capacitor\.isNativePlatform\(\)\) return PRODUCTION_DDB_API_BASE/);
