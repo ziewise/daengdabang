@@ -73,6 +73,8 @@ export default function NativeAppBridge() {
             if (!(target instanceof Element)) return;
             const anchor = target.closest<HTMLAnchorElement>("a[href]");
             if (!anchor || anchor.hasAttribute("download")) return;
+            // Auth links retain their WebView navigation and callback flow.
+            if (anchor.hasAttribute("data-native-auth")) return;
 
             const href = anchor.getAttribute("href");
             if (!href || href.startsWith("#")) return;

@@ -187,7 +187,7 @@ export default function SocialAuthButtons({
                 ? socialLoginHref(provider.id, returnTo)
                 : `${INITIAL_API_BASE}/api/v1/auth/social/${provider.id}/start?${new URLSearchParams({ return_to: returnTo, mode: "login" })}`;
             return (
-                <a key={provider.id} role="button" href={disabled ? undefined : href}
+                <a key={provider.id} role="button" href={disabled ? undefined : href} data-native-auth
                     aria-disabled={disabled} aria-label={label} title={provider.label}
                     tabIndex={disabled ? -1 : 0} className={className}
                     onKeyDown={(event) => { if (event.key === " ") { event.preventDefault(); start(provider.id); } }}
