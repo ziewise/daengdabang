@@ -47,6 +47,8 @@ import SavedAddressPickerModal, { type SavedAddressLoadState } from "@/component
 // 2026-10-28 정식 오픈 전 결제 잠금 안내 창(주문 · 토스 결제창 없이)
 import PrelaunchNoticeModal from "@/components/checkout/PrelaunchNoticeModal";
 import { cartProducts } from "@/lib/shop";
+// 바로 구매 전용 목록(2026-11-11) — 주소에 buy=now 면 장바구니 대신 이 목록만 주문 · 결제
+import { isBuyNowCheckout, markBuyNowOrder, readBuyNowLines, type BuyNowLine } from "@/lib/buy-now";
 import { useLiveInventorySnapshot } from "@/lib/catalog/live-inventory";
 import { useAuth, useCart } from "@/lib/store";
 // 웹 화면인가 — 웹 전용 문구(쉬운 말)만 고를 때 씀, 결제 동작과는 무관
@@ -165,7 +167,16 @@ export default function CheckoutPage() {
     const { t, locale, formatPrice, productName } = useI18n();
     const liveInventory = useLiveInventorySnapshot();
     const webScreen = useWebScreen();
-    const evaluatedCartLines = cartProducts(cart.lines, liveInventory);
+    // 바로 구매 주문서(?buy=now)면 바로 구매 목록만 — null = 장바구니 주문서, [] = 바로 구매인데 목록이 없거나 지남(장바구니로 바꾸지 않음)
+    //   주소 · 저장소는 화면을 그린 뒤 읽음(서버에서 만든 화면과 첫 화면이 같아야 해서)
+    const [buyNowLines, setBuyNowLines] = useState<BuyNowLine[] | null>(null);
+    useEffect(() => {
+        if (!isBuyNowCheckout(window.location.search)) return;
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- buy-now handoff is read from the URL and storage after hydration.
+        setBuyNowLines(readBuyNowLines() ?? []);
+    }, []);
+    const buyNow = buyNowLines !== null;
+    const evaluatedCartLines = cartProducts(buyNow ? buyNowLines : cart.lines, liveInventory);
     const inventoryBlocked = evaluatedCartLines.some(line => line.selectionBlocked);
     const lines = evaluatedCartLines.filter((line) => line.selected);
     const total = lines.reduce((sum, line) => sum + line.subtotal, 0);
@@ -448,6 +459,8 @@ export default function CheckoutPage() {
 
             // 서버가 만든 주문은 아래 검사에서 막혀도 정리 — 결제 키가 생기기 전이라 서버가 취소를 받아 줌
             if (isTossOrderId(order.orderId)) pendingOrderId = order.orderId;
+            // 바로 구매 주문이면 주문번호를 적어 둠 — 결제 완료 화면이 장바구니에서 빼지 않게(장바구니에 없던 상품)
+            if (buyNow && isTossOrderId(order.orderId)) markBuyNowOrder(order.orderId);
             // 서버가 정한 모드를 따르되 mode · 키(test_ck_ / live_ck_) · 주문번호(TEST- / LIVE-) · 배송 견적
             // (test_no_shipment / live_pending)이 한 모드로 짝이 맞을 때만. 하나라도 섞이면 null → 결제창을 열지 않음.
             const orderMode = tossOrderMode(order);

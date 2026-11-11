@@ -107,7 +107,8 @@ test("cart and checkout subscribe to the same live snapshot used for line evalua
     for (const path of ["app/cart/page.tsx", "app/checkout/page.tsx"]) {
         const source = await readFile(new URL(path, root), "utf8");
         assert.match(source, /const liveInventory = useLiveInventorySnapshot\(\)/);
-        assert.match(source, /cartProducts\(cart\.lines, liveInventory\)/);
+        // 2026-11-11 주문서는 바로 구매(buy=now)면 바로 구매 목록을, 아니면 장바구니를 같은 실시간 재고로 평가
+        assert.match(source, /cartProducts\((?:buyNow \? buyNowLines : )?cart\.lines, liveInventory\)/);
     }
 });
 

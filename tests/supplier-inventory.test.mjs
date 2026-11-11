@@ -53,6 +53,7 @@ function optionSheet(p, draft = [0,0,3,[]], mode='cart') {
         '@/lib/daenglab-rewards':{daengLabCoinsForLine:()=>0,daengLabCoinsForLines:()=>0},
         '@/components/petlens/DaengLabCoinMark':()=>null,'@/components/shop/SimplePayButtons':()=>null,
         '@/lib/payment-methods':{checkoutHref:()=>'/checkout'},
+        '@/lib/buy-now':{buyNowCheckoutHref:()=>'/checkout?buy=now',saveBuyNow:lines=>routes.push({buyNow:lines})},
     });
     const tree=mod.default({product:p,open:true,mode,onClose:()=>{},onCommitted:()=>commits.push(true)});
     return {elements:nodes(tree),added,routes,commits,changes};

@@ -24,6 +24,8 @@ import {
 } from "@/lib/customer-api";
 import { isCheckoutPaymentMethod } from "@/lib/payment-methods";
 import { haveSamePaidLineQuantities } from "@/lib/cart-payment-reconciliation";
+// 바로 구매 주문(2026-11-11) — 장바구니에 넣지 않고 산 상품이라 장바구니에서 빼지 않음
+import { consumeBuyNowOrder } from "@/lib/buy-now";
 import { useAuth, useCart } from "@/lib/store";
 import { isTossConfirmationPendingError } from "@/lib/toss-confirmation-state";
 import {
@@ -160,7 +162,9 @@ export default function TossTestSuccessPage() {
                     && order.paymentMethod === confirmation.paymentMethod
                     && haveSamePaidLineQuantities(order.lines, paidLines)
                 ));
-                if (!alreadyReconciled) cart.removePaidLines(paidLines);
+                // 바로 구매 주문이면 장바구니는 그대로(같은 상품이 장바구니에 따로 담겨 있어도 줄이지 않음) · 바로 구매 목록만 지움
+                const fromBuyNow = consumeBuyNowOrder(confirmation.orderId);
+                if (!alreadyReconciled && !fromBuyNow) cart.removePaidLines(paidLines);
                 cart.addOrder({
                     id: confirmation.orderId,
                     createdAt: confirmation.approvedAt || new Date().toISOString(),

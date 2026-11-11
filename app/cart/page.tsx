@@ -79,7 +79,9 @@ export default function CartPage() {
 
     // 선택된 라인만 합계·결제 대상
     const selectedLines = lines.filter((l) => l.selected);
-    const inventoryBlocked = lines.some(line => line.selectionBlocked);
+    // 구매할 수 없게 바뀐 상품(품절 · 재고 확인 필요 · 판매 중지) — 2026-11-11 사용자: 이 상품 때문에 다른 상품까지 결제가 막히면 안 됨.
+    //   결제 대상에서는 자동으로 빠지고(아래 안내로 보여 줌), "구매할 수 없는 상품 삭제"로 한 번에 지울 수 있음. 장바구니에는 남아 있음
+    const unavailableLines = lines.filter(line => !line.purchaseState.purchasable);
     const selectedTotal = selectedLines.reduce((sum, l) => sum + l.subtotal, 0);
     const estimatedBaseShippingFee = baseShippingFee(selectedTotal);
     const expectedDaengLabCoins = daengLabCoinsForLines(selectedLines);
@@ -90,7 +92,8 @@ export default function CartPage() {
     // 결제하기 — 로그인 회원은 바로 결제, 비로그인은 로그인 화면(비회원은 주문서 미리보기 가능)으로
     const goCheckout = (preferredPayment: "card" | QuickPaymentMethod = "card") => {
         if (selectedLines.length === 0) return;
-        if (inventoryBlocked) return;
+        // 구매할 수 없는 상품은 결제 대상 표시를 끄고 감 — 주문서는 결제 대상에 살 수 없는 상품이 남아 있으면 막으므로(몰래 빼지 않고 안내 후 뺌)
+        lines.filter(line => line.selectionBlocked).forEach(line => cart.setSelected(line.product.id, false, line.color, line.size));
         const nextCheckoutHref = checkoutHref(preferredPayment);
         router.push(user ? nextCheckoutHref : `/auth/login?redirect=${encodeURIComponent(nextCheckoutHref)}`);
     };
@@ -113,6 +116,25 @@ export default function CartPage() {
         });
         if (!ok) return;
         selectedLines.forEach((l) => cart.removeFromCart(l.product.id, l.color, l.size));
+    };
+
+    // 구매할 수 없는 상품 한 번에 삭제(체크 칸이 잠겨 선택 삭제로는 못 지우는 줄) — 같은 확인 창
+    const removeUnavailable = async () => {
+        if (unavailableLines.length === 0) return;
+        const message = locale === "en"
+            ? `Remove ${unavailableLines.length} unavailable item(s)?`
+            : `구매할 수 없는 상품 ${unavailableLines.length}개를 삭제할까요?`;
+        const ok = await askConfirm({
+            title: message,
+            message: locale === "en" ? undefined : "품절이거나 재고 확인이 필요한 상품만 빠지고, 나머지는 그대로예요.",
+            confirmLabel: locale === "en" ? "Remove" : "삭제할게요",
+            cancelLabel: locale === "en" ? "Cancel" : "그대로 둘게요",
+            art: "header-cart-128.webp",
+            tone: "danger",
+            appText: message,
+        });
+        if (!ok) return;
+        unavailableLines.forEach((l) => cart.removeFromCart(l.product.id, l.color, l.size));
     };
 
     if (lines.length === 0) {
@@ -160,7 +182,20 @@ export default function CartPage() {
                 <li><b>2</b>{locale === "en" ? "Checkout" : "주문서"}</li>
                 <li><b>3</b>{locale === "en" ? "Done" : "결제 완료"}</li>
             </ol>
-            {inventoryBlocked && <p role="alert" className="cart-alert mt-3 rounded-lg bg-amber-50 p-3 text-sm font-bold text-amber-900">{locale === "en" ? "Some options cannot be purchased. Remove these lines or choose another option before checkout." : "구매할 수 없는 옵션이 있습니다. 해당 상품을 삭제하거나 다른 옵션으로 다시 담은 뒤 결제해 주세요."}</p>}
+            {/* 구매할 수 없는 상품 안내 — 결제는 막지 않고 "이번 결제에서 빠짐"을 알리고 한 번에 삭제 단추(2026-11-11) */}
+            {unavailableLines.length > 0 && (
+                <div role="status" className="cart-alert mt-3 flex flex-wrap items-center justify-between gap-2 rounded-lg bg-amber-50 p-3 text-sm font-bold text-amber-900" data-cart-unavailable>
+                    <span className="min-w-0">
+                        {locale === "en"
+                            ? `${unavailableLines.length} item(s) can't be purchased now and are left out of this checkout.`
+                            : `구매할 수 없는 상품 ${unavailableLines.length}개는 이번 결제에서 빠져요. 다른 상품은 그대로 결제할 수 있어요.`}
+                    </span>
+                    <button type="button" onClick={removeUnavailable} className="cart-unavail-del shrink-0 rounded-full bg-white px-3 py-1.5 text-xs font-black text-rose-600 ring-1 ring-rose-200" data-cart-remove-unavailable>
+                        <i className="fa-solid fa-trash-can mr-1 text-[10px]" aria-hidden="true" />
+                        {locale === "en" ? "Remove unavailable items" : "구매할 수 없는 상품 삭제"}
+                    </button>
+                </div>
+            )}
             <div className="cart-layout mt-6 grid gap-6 lg:grid-cols-[1fr_320px]">
                 <section>
                     {/* 전체선택 / 선택삭제 바 */}
@@ -186,7 +221,7 @@ export default function CartPage() {
                     </div>
 
                     <div className="cart-lines grid gap-3">
-                        {lines.map(({ product, qty, subtotal, color, size, image, selected, petAssignment, purchaseState, selectionBlocked }) => (
+                        {lines.map(({ product, qty, subtotal, color, size, image, selected, petAssignment, purchaseState }) => (
                             <article key={`${product.id}-${color ?? ""}-${size ?? ""}`} data-selected={selected ? "" : undefined} className="cart-line surface relative flex gap-3.5 p-4">
                                 {/* 결제 대상 체크 */}
                                 <CheckBtn
@@ -236,7 +271,6 @@ export default function CartPage() {
                                         <i className="fa-solid fa-truck-fast mr-1 text-[10px]" />
                                         {purchaseState.purchasable && !purchaseState.supplierRequest ? arrival : purchaseStateLabel(purchaseState, locale)}
                                     </p>}
-                                    {selectionBlocked && <button type="button" onClick={() => cart.setSelected(product.id, false, color, size)} className="cart-blocked mt-2 text-xs font-black text-indigo-700 underline">{locale === "en" ? "Keep this item but exclude it from checkout" : "장바구니에 보관하고 결제에서 제외"}</button>}
                                     </div>
                                     <div className="cart-pet mt-2.5 rounded-lg border border-indigo-100 bg-indigo-50/60 px-3 py-2">
                                         <label className="block">
@@ -383,7 +417,7 @@ export default function CartPage() {
                     <button
                         type="button"
                         onClick={() => goCheckout("card")}
-                        disabled={selectedLines.length === 0 || inventoryBlocked}
+                        disabled={selectedLines.length === 0}
                         className="cart-go btn btn-primary mt-5 w-full disabled:cursor-not-allowed disabled:opacity-40"
                     >
                         {selectedLines.length === 0
@@ -391,7 +425,7 @@ export default function CartPage() {
                             : `${locale === "en" ? "Checkout" : "주문서 작성"} (${countText(selectedLines.length)})`}
                     </button>
                     {/* 빠른 결제수단 — 선택값을 주문서까지 보존 */}
-                    <SimplePayButtons disabled={selectedLines.length === 0 || inventoryBlocked} onSelect={goCheckout} />
+                    <SimplePayButtons disabled={selectedLines.length === 0} onSelect={goCheckout} />
                 </aside>
             </div>
             {/* 웹 확인 창(선택 삭제) — 열렸을 때만 body 에 붙음 */}

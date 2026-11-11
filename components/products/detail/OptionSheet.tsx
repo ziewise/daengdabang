@@ -25,7 +25,9 @@ import { useI18n } from "@/lib/i18n";
 import { daengLabCoinsForLine, daengLabCoinsForLines } from "@/lib/daenglab-rewards";
 import DaengLabCoinMark from "@/components/petlens/DaengLabCoinMark";
 import SimplePayButtons from "@/components/shop/SimplePayButtons";
-import { checkoutHref, type CheckoutPaymentMethod, type QuickPaymentMethod } from "@/lib/payment-methods";
+import { type CheckoutPaymentMethod, type QuickPaymentMethod } from "@/lib/payment-methods";
+// 바로 구매 전용 목록(2026-11-11) — 바로 구매는 장바구니에 넣지 않고 이 목록만 주문서로
+import { buyNowCheckoutHref, saveBuyNow, type BuyNowLine } from "@/lib/buy-now";
 
 interface Props {
     product: CatalogProduct;
@@ -186,25 +188,26 @@ export default function OptionSheet({ product, open, mode, initialColorIdx = nul
 
     const confirm = (preferredPayment: Extract<CheckoutPaymentMethod, "card"> | QuickPaymentMethod = "card") => {
         if (!canConfirm) return;
-        if (hasOptions) {
-            effective.forEach((x) =>
-                addToCart(
-                    p.id,
-                    x.qty,
-                    hasColors ? colors[x.colorIdx]?.name : undefined,
-                    hasSizes ? sizes[x.sizeIdx]?.name : undefined,
-                ),
-            );
-        } else {
-            addToCart(p.id, qty);
-        }
+        // 고른 줄(색상 · 사이즈 · 수량) — 담기와 바로 구매가 같은 값을 씀
+        const chosen: BuyNowLine[] = hasOptions
+            ? effective.map((x) => ({
+                productId: p.id,
+                qty: x.qty,
+                ...(hasColors && colors[x.colorIdx]?.name ? { color: colors[x.colorIdx].name } : {}),
+                ...(hasSizes && sizes[x.sizeIdx]?.name ? { size: sizes[x.sizeIdx].name } : {}),
+            }))
+            : [{ productId: p.id, qty }];
         onClose();
         onCommitted?.(mode);
-        // 비로그인 구매 시 로그인 화면으로 이동한다. 비회원은 주문서 미리보기까지만 가능하다.
         if (mode === "buy") {
-            const nextCheckoutHref = checkoutHref(preferredPayment);
+            // 바로 구매(2026-11-11 사용자) — 장바구니에 넣지 않고 바로 구매 목록만 저장 → 주문서는 이 상품만(장바구니 상품은 그대로 남음).
+            // 비로그인 구매 시 로그인 화면으로 이동한다(로그인 뒤 같은 바로 구매 주문서로 돌아옴). 비회원은 주문서 미리보기까지만 가능하다.
+            saveBuyNow(chosen);
+            const nextCheckoutHref = buyNowCheckoutHref(preferredPayment);
             router.push(user ? nextCheckoutHref : `/auth/login?redirect=${encodeURIComponent(nextCheckoutHref)}`);
+            return;
         }
+        chosen.forEach((line) => addToCart(line.productId, line.qty, line.color, line.size));
     };
 
     return (

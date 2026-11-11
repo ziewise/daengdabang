@@ -45,7 +45,8 @@ test("product and cart purchase actions preserve the selected method through log
     assert.match(simplePay, /네이버페이로 주문서 이동/);
     assert.match(simplePay, /카카오페이 심사 후 활성화/);
     assert.match(simplePay, /<button\s+type="button"\s+disabled\s+aria-disabled="true"/);
-    assert.match(optionSheet, /checkoutHref\(preferredPayment\)/);
+    // 2026-11-11 바로 구매는 바로 구매 전용 주문서(buy=now)로 — 결제수단은 그대로 넘김
+    assert.match(optionSheet, /buyNowCheckoutHref\(preferredPayment\)/);
     assert.match(optionSheet, /encodeURIComponent\(nextCheckoutHref\)/);
     assert.match(optionSheet, /Pay by credit \/ debit card/);
     assert.match(optionSheet, /<SimplePayButtons disabled=\{!canConfirm\} onSelect=\{confirm\}/);
