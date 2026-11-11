@@ -2,6 +2,12 @@ name: Native package validation
 
 on:
   workflow_dispatch:
+    inputs:
+      release:
+        description: Build and verify a signed Android release APK
+        required: false
+        default: false
+        type: boolean
   push:
     branches:
       - main
@@ -39,6 +45,36 @@ jobs:
       - name: Build debug Android App Bundle and installable APK
         working-directory: android
         run: ./gradlew :app:bundleDebug :app:assembleDebug --stacktrace
+
+      - name: Build signed Android release
+        if: ${{ inputs.release }}
+        working-directory: android
+        env:
+          DDB_ANDROID_KEYSTORE_BASE64: ${{ secrets.DDB_ANDROID_KEYSTORE_BASE64 }}
+          DDB_ANDROID_KEYSTORE_PASSWORD: ${{ secrets.DDB_ANDROID_KEYSTORE_PASSWORD }}
+          DDB_ANDROID_KEY_ALIAS: ${{ secrets.DDB_ANDROID_KEY_ALIAS }}
+          DDB_ANDROID_CERT_SHA256: ${{ secrets.DDB_ANDROID_CERT_SHA256 }}
+        run: |
+          set -euo pipefail
+          test -n "$DDB_ANDROID_KEYSTORE_BASE64"
+          test -n "$DDB_ANDROID_KEYSTORE_PASSWORD"
+          test -n "$DDB_ANDROID_KEY_ALIAS"
+          test -n "$DDB_ANDROID_CERT_SHA256"
+          export DDB_ANDROID_KEYSTORE_PATH="$RUNNER_TEMP/ddb-release.p12"
+          trap 'rm -f "$DDB_ANDROID_KEYSTORE_PATH"' EXIT
+          umask 077
+          printf '%s' "$DDB_ANDROID_KEYSTORE_BASE64" | base64 --decode > "$DDB_ANDROID_KEYSTORE_PATH"
+          ./gradlew :app:assembleRelease --stacktrace
+          build_tools="$(find "$ANDROID_HOME/build-tools" -mindepth 1 -maxdepth 1 -type d | sort -V | tail -n 1)"
+          apk="app/build/outputs/apk/release/app-release.apk"
+          "$build_tools/apksigner" verify --verbose --print-certs "$apk" | tee app/build/outputs/apk/release/signature.txt
+          grep -F "Signer #1 certificate SHA-256 digest: $DDB_ANDROID_CERT_SHA256" app/build/outputs/apk/release/signature.txt
+          "$build_tools/zipalign" -c -P 16 -v 4 "$apk" > app/build/outputs/apk/release/alignment.txt
+          "$build_tools/aapt" dump badging "$apk" > app/build/outputs/apk/release/package.txt
+          if grep -q 'application-debuggable' app/build/outputs/apk/release/package.txt; then
+            echo "Release APK must not be debuggable" >&2
+            exit 1
+          fi
 
       - name: Verify APK signature and package metadata
         shell: bash
@@ -80,6 +116,14 @@ jobs:
             android/app/build/outputs/apk/debug/app-debug-webview.json
           if-no-files-found: error
           retention-days: 14
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ inputs.release && success() }}
+        with:
+          name: daengdabang-android-signed-release
+          path: android/app/build/outputs/apk/release/
+          if-no-files-found: error
+          retention-days: 30
 
       - uses: actions/upload-artifact@v4
         with:

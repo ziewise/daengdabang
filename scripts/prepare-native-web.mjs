@@ -190,6 +190,15 @@ for (const relativePath of [...bundledRoutes, ...bundledDirectories, ...bundledF
 }
 
 await writeFile(path.join(nativeRoot, "index.html"), launchDocument, "utf8");
+// Keep provenance inside the APK: web deployments cannot update these files.
+const androidGradle = await readFile(path.join(projectRoot, "android", "app", "build.gradle"), "utf8");
+await writeFile(path.join(nativeRoot, "native-build.json"), JSON.stringify({
+    versionName: /versionName\s+"([^"]+)"/.exec(androidGradle)?.[1] ?? null,
+    versionCode: Number(/versionCode\s+(\d+)/.exec(androidGradle)?.[1] ?? 0),
+    sourceCommit: process.env.GITHUB_SHA || process.env.NEXT_PUBLIC_STOREFRONT_ASSET_COMMIT_SHA || null,
+    builtAt: new Date().toISOString(),
+    appStartPath: "/app/home-1/index.html",
+}, null, 2) + "\n", "utf8");
 // Native product pages run the same graph through Core ML/NNAPI. The browser
 // WebGPU/WASM artifacts are intentionally omitted from the install package.
 await removeWebOnlyOnnxRuntimeMedia();

@@ -61,3 +61,7 @@ if grep -F "FATAL EXCEPTION" "$app_log"; then
   cat "$app_log"
   exit 1
 fi
+
+if [ -f android/app/build/outputs/apk/release/app-release.apk ]; then
+  sh scripts/verify-android-release-startup.sh
+fi
