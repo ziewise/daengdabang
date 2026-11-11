@@ -184,7 +184,8 @@ test("native store package removes install prompts while the web PWA keeps them"
     assert.doesNotMatch(nativeBuilder, /location\.replace\('\/app\/'\)/);
     assert.match(nativeBuilder, /maximumMegabytes = 40/);
     assert.doesNotMatch(nativeBuilder, /images\/products|images\/hero|images\/pet-companion/);
-    assert.match(apiBase, /Capacitor\.isNativePlatform\(\).*https:\/\/api\.daengdabang\.com/s);
+    assert.match(apiBase, /PRODUCTION_DDB_API_BASE = "https:\/\/api\.daengdabang\.com"/);
+    assert.match(apiBase, /Capacitor\.isNativePlatform\(\)\) return PRODUCTION_DDB_API_BASE/);
 });
 
 test("Android force-dark receives a stronger platform-scoped readability veil", () => {
