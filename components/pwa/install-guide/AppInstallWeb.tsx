@@ -17,6 +17,7 @@ import type { RefObject } from "react";
 import { useEffect } from "react";
 import { useShopMedia } from "@/components/pwa/home-concepts/shop/useShopMedia";
 import { BENEFITS, PREVIEWS, STEPS } from "./AppInstallGuide";
+import AndroidApkInstall from "./AndroidApkInstall";
 import "@/app/app-install-web.css";
 
 type Platform = "ios" | "android" | "other";
@@ -95,14 +96,14 @@ export function InstallWebPage({ showInstall, isStandalone, isInAppBrowser, plat
                         <br />
                         즐겨보세요
                     </h1>
-                    <p className="aiw-lead">앱 스토어 없이 홈 화면에 추가하면, 댕다방이 앱처럼 바로 열려요.</p>
+                    <p className="aiw-lead">안드로이드는 최신 앱 설치·업데이트, 아이폰은 홈 화면에 추가해서 편하게 이용하세요.</p>
                     <ul className="aiw-chips" aria-label="앱 설치 특징">
                         <li><i className="fa-solid fa-store-slash" aria-hidden="true" /> 앱 스토어 없이</li>
                         <li><i className="fa-solid fa-house" aria-hidden="true" /> 홈 화면에서 바로</li>
                         <li><i className="fa-solid fa-user-check" aria-hidden="true" /> 웹과 같은 계정</li>
                     </ul>
                     {showInstall ? (
-                        isStandalone ? (
+                        platform === "android" ? <AndroidApkInstall /> : isStandalone ? (
                             <p className="aiw-installed"><i className="fa-solid fa-circle-check" aria-hidden="true" /> 홈 화면 앱으로 실행 중이에요</p>
                         ) : (
                             <button type="button" className="aiw-install" onClick={onInstall}>
@@ -111,6 +112,7 @@ export function InstallWebPage({ showInstall, isStandalone, isInAppBrowser, plat
                             </button>
                         )
                     ) : null}
+                    {showInstall && platform === "other" ? <div className="mt-4"><AndroidApkInstall /></div> : null}
                 </div>
                 <InstallWebPreview />
             </section>
@@ -190,6 +192,7 @@ export function InstallWebSheet({ title, platform, isInAppBrowser, browserHint, 
                     <InstallWebSteps platform={platform} />
                 </div>
                 <div className="aiw-sheet-actions">
+                    {platform === "android" ? <AndroidApkInstall /> : null}
                     {isInAppBrowser ? (
                         <button type="button" className="aiw-ghost" onClick={onCopy}>
                             <i className={`fa-solid ${copied ? "fa-check" : "fa-copy"}`} aria-hidden="true" />

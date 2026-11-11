@@ -148,8 +148,8 @@ function AppInstallQrDialog({ onClose }: { onClose: () => void }) {
                                 </div>
                                 <ol>
                                     <li>QR을 찍고 <b>삼성 인터넷</b>이나 <b>Chrome</b>으로 열어요</li>
-                                    <li>안내 페이지의 <b>바로 설치하기</b>를 눌러요</li>
-                                    <li>버튼이 없으면 메뉴 → <b>홈 화면에 추가</b></li>
+                                    <li>안내 페이지의 <b>앱 설치·업데이트</b>를 눌러요</li>
+                                    <li>받은 파일을 열고 <b>설치</b> 또는 <b>업데이트</b>를 눌러요</li>
                                 </ol>
                             </section>
                         </div>

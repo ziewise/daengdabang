@@ -17,6 +17,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: native-package-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   android:
     name: Android API 36 installable package
@@ -39,6 +43,15 @@ jobs:
       - name: Install web dependencies
         run: npm ci
 
+      - name: Plan the next Android version and download the upgrade baseline
+        if: ${{ inputs.release || github.ref == 'refs/heads/main' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/android-release.mjs prepare
+
+      - name: Run storefront regression tests
+        run: npm test
+
       - name: Build and sync native assets
         run: npm run native:sync
 
@@ -47,7 +60,7 @@ jobs:
         run: ./gradlew :app:bundleDebug :app:assembleDebug --stacktrace
 
       - name: Build signed Android release
-        if: ${{ inputs.release }}
+        if: ${{ inputs.release || github.ref == 'refs/heads/main' }}
         working-directory: android
         env:
           DDB_ANDROID_KEYSTORE_BASE64: ${{ secrets.DDB_ANDROID_KEYSTORE_BASE64 }}
@@ -70,12 +83,15 @@ jobs:
           "$build_tools/apksigner" verify --verbose --print-certs "$apk" | tee app/build/outputs/apk/release/signature.txt
           grep -F "Number of signers: 1" app/build/outputs/apk/release/signature.txt
           grep -F "certificate SHA-256 digest: $DDB_ANDROID_CERT_SHA256" app/build/outputs/apk/release/signature.txt
+          "$build_tools/apksigner" verify --print-certs "$DDB_PREVIOUS_ANDROID_APK" > app/build/outputs/apk/release/previous-signature.txt
+          grep -F "certificate SHA-256 digest: $DDB_ANDROID_CERT_SHA256" app/build/outputs/apk/release/previous-signature.txt
           "$build_tools/zipalign" -c -P 16 -v 4 "$apk" > app/build/outputs/apk/release/alignment.txt
           "$build_tools/aapt" dump badging "$apk" > app/build/outputs/apk/release/package.txt
           if grep -q 'application-debuggable' app/build/outputs/apk/release/package.txt; then
             echo "Release APK must not be debuggable" >&2
             exit 1
           fi
+          cp "$RUNNER_TEMP/android-release-plan.json" app/build/outputs/apk/release/release-plan.json
 
       - name: Verify APK signature and package metadata
         shell: bash
@@ -119,7 +135,7 @@ jobs:
           retention-days: 14
 
       - uses: actions/upload-artifact@v4
-        if: ${{ always() && inputs.release && hashFiles('android/app/build/outputs/apk/release/app-release.apk') != '' }}
+        if: ${{ always() && hashFiles('android/app/build/outputs/apk/release/app-release.apk') != '' }}
         with:
           name: daengdabang-android-signed-release
           path: android/app/build/outputs/apk/release/
@@ -132,6 +148,29 @@ jobs:
           path: android/app/build/outputs/bundle/debug/app-debug.aab
           if-no-files-found: error
           retention-days: 14
+
+  publish-android:
+    name: Publish verified Android update
+    needs: android
+    if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.19.0
+      - uses: actions/download-artifact@v4
+        with:
+          name: daengdabang-android-signed-release
+          path: android-release
+      - name: Publish complete release and verify the public download
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DDB_ANDROID_CERT_SHA256: ${{ secrets.DDB_ANDROID_CERT_SHA256 }}
+        run: node scripts/android-release.mjs publish android-release
 
   ios:
     name: iOS simulator build

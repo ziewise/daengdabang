@@ -65,10 +65,10 @@ export const STEPS: Record<Platform, Step[]> = {
         { icon: "fa-check", text: <>오른쪽 위 <b>추가</b>를 누르면 홈 화면에 댕다방이 생겨요</> },
     ],
     android: [
-        // 2026-10-26 사용자: 안드로이드는 삼성 인터넷을 기본으로 많이 써서 Chrome 과 함께 안내
-        { icon: "fa-bars", text: <>브라우저 <b>메뉴</b>를 열어요 <span className="ig-soft">(삼성 인터넷은 아래쪽 <b>≡</b>, Chrome은 오른쪽 위 <b>︙</b>)</span></> },
-        { icon: "fa-square-plus", text: <>삼성 인터넷은 <b>현재 페이지 추가 → 홈 화면</b>, Chrome은 <b>앱 설치</b> 또는 <b>홈 화면에 추가</b>를 골라요</> },
-        { icon: "fa-check", text: <><b>추가</b> · <b>설치</b>를 누르면 홈 화면에 댕다방이 생겨요</> },
+        { icon: "fa-globe", text: <><b>삼성 인터넷</b>이나 <b>Chrome</b>으로 이 페이지를 열어요</> },
+        { icon: "fa-download", text: <><b>앱 설치·업데이트</b>를 눌러 최신 파일을 받아요</> },
+        { icon: "fa-file-arrow-down", text: <>다운로드한 파일을 열어요. 설치 허용을 요청하면 이 브라우저의 설치를 허용해 주세요</> },
+        { icon: "fa-check", text: <>처음이면 <b>설치</b>, 1.0.2 이상이 설치돼 있으면 <b>업데이트</b>를 눌러요. 업데이트할 때 기존 앱을 삭제하지 마세요</> },
     ],
     other: [
         { icon: "fa-window-maximize", text: <>브라우저 주소창의 <b>설치 아이콘</b>이나 메뉴를 열어요</> },

@@ -10,6 +10,7 @@ import {
     useState,
 } from "react";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 import { Capacitor } from "@capacitor/core";
 
 // 설치 안내 창 겉모양(스티커북, 2026-10-18) — 창이 열릴 때만 불러온다(모든 페이지에 싣지 않음)
@@ -54,6 +55,7 @@ function detectStandalone(): boolean {
 }
 
 export function PwaInstallProvider({ children }: { children: React.ReactNode }) {
+    const router = useRouter();
     const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
     const [isHelpOpen, setIsHelpOpen] = useState(false);
     const [isReady, setIsReady] = useState(false);
@@ -145,6 +147,10 @@ export function PwaInstallProvider({ children }: { children: React.ReactNode }) 
     }, []);
 
     const requestInstall = useCallback(async (): Promise<InstallOutcome> => {
+        if (platform === "android") {
+            router.push("/app/");
+            return "instructions";
+        }
         if (deferredPrompt) {
             await deferredPrompt.prompt();
             const choice = await deferredPrompt.userChoice;
@@ -153,7 +159,7 @@ export function PwaInstallProvider({ children }: { children: React.ReactNode }) 
         }
         openInstallHelp();
         return "instructions";
-    }, [deferredPrompt, openInstallHelp]);
+    }, [deferredPrompt, openInstallHelp, platform, router]);
 
     const copyAppAddress = async () => {
         try {

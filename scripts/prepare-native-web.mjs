@@ -10,6 +10,7 @@ import {
 } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { resolveAndroidVersion } from "./android-release-version.mjs";
 
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(scriptDirectory, "..");
@@ -191,10 +192,9 @@ for (const relativePath of [...bundledRoutes, ...bundledDirectories, ...bundledF
 
 await writeFile(path.join(nativeRoot, "index.html"), launchDocument, "utf8");
 // Keep provenance inside the APK: web deployments cannot update these files.
-const androidGradle = await readFile(path.join(projectRoot, "android", "app", "build.gradle"), "utf8");
+const androidVersion = resolveAndroidVersion(JSON.parse(await readFile(path.join(projectRoot, "android", "version.json"), "utf8")));
 await writeFile(path.join(nativeRoot, "native-build.json"), JSON.stringify({
-    versionName: /versionName\s+"([^"]+)"/.exec(androidGradle)?.[1] ?? null,
-    versionCode: Number(/versionCode\s+(\d+)/.exec(androidGradle)?.[1] ?? 0),
+    ...androidVersion,
     sourceCommit: process.env.GITHUB_SHA || process.env.NEXT_PUBLIC_STOREFRONT_ASSET_COMMIT_SHA || null,
     builtAt: new Date().toISOString(),
     appStartPath: "/app/home-1/index.html",
