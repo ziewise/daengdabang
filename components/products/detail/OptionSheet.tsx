@@ -51,6 +51,9 @@ export default function OptionSheet({ product, open, mode, initialColorIdx = nul
     const sizes = p.sizes ?? [];
     const hasColors = colors.length > 0;
     const hasSizes = sizes.length > 0;
+    // 옵션 이름표 번호 — 색상 · 사이즈 둘 다 있을 때만 "옵션 1 · 옵션 2", 하나뿐이면 번호 없이 "옵션"(2026-11-11 사용자)
+    const numberedOptions = hasColors && hasSizes;
+    const optionTitle = (n: 1 | 2) => (numberedOptions ? `${t("option")} ${n}` : t("option"));
     const hasOptions = hasColors || hasSizes;
     // null = 아직 고르지 않음 — 옵션 선택을 강제하기 위해 기본 미선택으로 둔다
     const [colorIdx, setColorIdx] = useState<number | null>(initialColorIdx);
@@ -246,8 +249,8 @@ export default function OptionSheet({ product, open, mode, initialColorIdx = nul
                     {/* 옵션 1(색상) — 따로 한 줄(2026-11-11 사용자 "제품 이름 옆에 있으니 헷갈려"): 사진 · 이름 줄 아래, 옵션 2 와 같은 이름표 모양 */}
                     {hasColors && (
                         <div className="mt-4" data-option-row="color">
-                            <p className="mb-1.5 block text-xs font-black text-neutral-500">
-                                {t("option")} 1 <span className="text-rose-500">({t("optionRequired")})</span>
+                            <p className="mb-1.5 block text-xs font-black text-neutral-500" data-option-title>
+                                {optionTitle(1)} <span className="text-rose-500">({t("optionRequired")})</span>
                                 {colorIdx != null && (
                                     <span className="text-neutral-900"> · {colors[colorIdx]?.name}</span>
                                 )}
@@ -283,8 +286,9 @@ export default function OptionSheet({ product, open, mode, initialColorIdx = nul
                     {/* 사이즈 — 드롭다운(있는 제품만). 미선택이면 빨간 테두리 + "선택하세요" */}
                     {hasSizes && (
                         <div className="mt-4">
-                            <label className="mb-1.5 block text-xs font-black text-neutral-500">
-                                {t("option")} 2 <span className="text-rose-500">({t("optionRequired")})</span>
+                            {/* 번호 — 색상도 있으면 "옵션 2", 사이즈만 있으면 번호 없이 "옵션"(2026-11-11 사용자 "옵션이 하나면 번호 없이") */}
+                            <label className="mb-1.5 block text-xs font-black text-neutral-500" data-option-title>
+                                {optionTitle(2)} <span className="text-rose-500">({t("optionRequired")})</span>
                             </label>
                             <select
                                 value={sizeIdx ?? ""}
