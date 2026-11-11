@@ -402,16 +402,16 @@ html:not(.ddb-app-mode) main[data-product-detail-content] [data-purchase-option-
 
     & > div:last-child [class*="bg-indigo-50"] { border-radius: 16px; background: #f3f0fe; }
 
-    /* 담기 · 구매 확정 단추만 분홍 알약(빠른결제 단추는 border-2 흰 칸이라 제외 — 2026-10-26 점검) */
-    & > div:last-child button.h-12:not([class*="border-2"]) {
+    /* 담기 · 구매 확정 단추만 분홍 알약 — 빠른 결제 단추(data-quick-pay)는 브랜드 색 그대로 두려고 제외(2026-11-11 A안) */
+    & > div:last-child button.h-12:not([class*="border-2"]):not([data-quick-pay]) {
         height: 54px;
         border-radius: 999px;
         background: #e9789a;
         box-shadow: 0 10px 18px -12px rgb(200 80 120 / 70%);
     }
 
-    & > div:last-child button.h-12:not([class*="border-2"]):hover:not(:disabled) { background: #e26690; }
-    & > div:last-child button.h-12:not([class*="border-2"]):disabled { background: #f3c7d4; box-shadow: none; }
+    & > div:last-child button.h-12:not([class*="border-2"]):not([data-quick-pay]):hover:not(:disabled) { background: #e26690; }
+    & > div:last-child button.h-12:not([class*="border-2"]):not([data-quick-pay]):disabled { background: #f3c7d4; box-shadow: none; }
 }
 
 @media (min-width: 640px) {
