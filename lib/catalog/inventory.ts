@@ -107,6 +107,5 @@ export function purchaseStateLabel(value: PurchaseState, locale: "ko" | "en" = "
     if (value.state === "sold_out") return locale === "en" ? "Sold out" : "품절";
     if (value.state === "paused") return locale === "en" ? "Sales paused" : "판매 중지";
     if (value.state === "unknown") return locale === "en" ? "Inventory confirmation required" : "재고 확인 필요";
-    if (value.supplierRequest) return locale === "en" ? "Ships after supplier request" : "본사 요청 배송";
     return "";
 }

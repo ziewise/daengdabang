@@ -232,12 +232,10 @@ export default function CartPage() {
                                     {/* 배송 안내 묶음(휴대폰 웹에서는 카드 전체 폭) */}
                                     <div className="cart-meta">
                                     {/* 도착 예정일 — 1~2영업일 출고 기준 */}
-                                    <p className="cart-arrival mt-1.5 text-xs font-black text-emerald-600">
+                                    {(!purchaseState.purchasable || !purchaseState.supplierRequest) && <p className="cart-arrival mt-1.5 text-xs font-black text-emerald-600">
                                         <i className="fa-solid fa-truck-fast mr-1 text-[10px]" />
                                         {purchaseState.purchasable && !purchaseState.supplierRequest ? arrival : purchaseStateLabel(purchaseState, locale)}
-                                    </p>
-                                    {purchaseState.supplierRequest && <p className="mt-1 text-xs font-bold text-amber-800">{locale === "en" ? "Dispatch timing will be confirmed after the supplier request." : "본사 요청 후 발송 일정을 확인해 안내합니다."}</p>}
-                                    {purchaseState.sourceDate && <p className="mt-1 text-[11px] text-neutral-500">{locale === "en" ? "Inventory sheet dated" : "재고표 기준일"}: {purchaseState.sourceDate}</p>}
+                                    </p>}
                                     {selectionBlocked && <button type="button" onClick={() => cart.setSelected(product.id, false, color, size)} className="cart-blocked mt-2 text-xs font-black text-indigo-700 underline">{locale === "en" ? "Keep this item but exclude it from checkout" : "장바구니에 보관하고 결제에서 제외"}</button>}
                                     </div>
                                     <div className="cart-pet mt-2.5 rounded-lg border border-indigo-100 bg-indigo-50/60 px-3 py-2">

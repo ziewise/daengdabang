@@ -239,7 +239,6 @@ export default function OptionSheet({ product, open, mode, initialColorIdx = nul
                         </div>
                         <div className="min-w-0 flex-1">
                             <p className="line-clamp-2 text-sm font-bold leading-snug text-neutral-800 sm:line-clamp-none">{displayName}</p>
-                            {p.inventory?.sourceDate && <p className="mt-1 text-[11px] text-neutral-500">{p.supplierCatalogSource === "jsk_approved_account" ? (locale === "en" ? "Supplier checked" : "본사 확인일") : (locale === "en" ? "Inventory sheet dated" : "재고표 기준일")}: {p.inventory.sourceDate}</p>}
                             {!summaryState.purchasable && <p role="status" className="mt-2 text-sm font-bold text-amber-900">{purchaseStateLabel(summaryState, locale)}</p>}
                         </div>
                     </div>
@@ -314,7 +313,6 @@ export default function OptionSheet({ product, open, mode, initialColorIdx = nul
                     {selectionComplete && purchaseStateLabel(selectedState, locale) && (
                         <p role="status" data-inventory-state={selectedState.state} className="mt-3 rounded-lg bg-amber-50 p-3 text-sm font-bold text-amber-900">
                             {purchaseStateLabel(selectedState, locale)}
-                            {selectedState.supplierRequest && (locale === "en" ? " · Dispatch timing will be confirmed after the supplier request." : " · 본사 요청 후 발송 일정을 확인해 안내합니다.")}
                         </p>
                     )}
 

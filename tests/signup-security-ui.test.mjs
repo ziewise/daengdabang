@@ -66,7 +66,7 @@ test("social signup carries the same consent versions and bot token and stays di
     assert.match(buttons, /botToken: signupSecurity\.botToken/);
     assert.match(buttons, /termsVersion: signupSecurity\.termsVersion/);
     assert.match(buttons, /privacyVersion: signupSecurity\.privacyVersion/);
-    assert.match(buttons, /enabledByProvider\?\.\[provider\.id\] !== true/);
+    assert.match(buttons, /mode === "signup"\s*\? apiReady !== true \|\| !signupSecurityReady \|\| !statusChecked \|\| enabledByProvider\?\.\[provider\] !== true/);
     assert.match(api, /query\.set\("bot_token", options\.botToken\)/);
     assert.match(api, /query\.set\("terms_version", options\.termsVersion\)/);
     assert.match(api, /query\.set\("privacy_version", options\.privacyVersion\)/);

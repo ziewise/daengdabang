@@ -245,7 +245,7 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
                                 </b>
                             </p>
                             <p className="mt-1 break-keep text-xs font-bold leading-5 text-neutral-500">
-                                {hasSupplierRequest ? (locale === "en" ? "Jeju +3,000 · other islands +5,000 · supplier-request options have separately confirmed dispatch timing." : "제주 +3,000원 · 그 외 도서 +5,000원 · 본사 요청 배송 옵션은 발송 일정을 확인해 별도로 안내합니다.") : locale === "en"
+                                {hasSupplierRequest ? (locale === "en" ? "Jeju +3,000 · other islands +5,000" : "제주 +3,000원 · 그 외 도서 +5,000원") : locale === "en"
                                     ? "Jeju +3,000 · other islands +5,000 · ships in 1-2 business days · arrives within 7 days"
                                     : "제주 +3,000원 · 그 외 도서 +5,000원 · 1~2영업일 내 출고 · 결제 후 최대 7일 내 도착"}
                             </p>
@@ -267,10 +267,9 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
                 </ul>
 
                 <PurchaseEvidenceCard product={p} />
-                {(purchaseState.tracked || !purchaseState.purchasable) && (
+                {!purchaseState.purchasable && (
                     <div data-inventory-state={purchaseState.state} className="pd-stock rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm">
                         <p className="font-bold text-amber-950">{purchaseStateLabel(purchaseState, locale) || (locale === "en" ? "Availability varies by option." : "옵션별 판매 상태를 선택창에서 확인해 주세요.")}</p>
-                        {purchaseState.sourceDate && <p className="mt-1 text-xs text-amber-800">{p.supplierCatalogSource === "jsk_approved_account" ? (locale === "en" ? "Supplier checked" : "본사 확인일") : (locale === "en" ? "Inventory sheet dated" : "재고표 기준일")}: {purchaseState.sourceDate}</p>}
                         {!purchaseState.purchasable && <button type="button" onClick={() => setSheetMode("cart")} className="mt-2 text-xs font-black underline">{locale === "en" ? "View option status" : "옵션별 재고 보기"}</button>}
                     </div>
                 )}

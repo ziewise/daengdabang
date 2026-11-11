@@ -61,7 +61,8 @@ function optionSheet(p, draft = [0,0,3,[]], mode='cart') {
 test('numeric-zero public contract permits purchase without a stock quantity cap',()=>{
     const value=inventory.optionPurchaseState(product(),'Blue','S');
     assert.equal(value.purchasable,true);assert.equal(value.supplierRequest,true);
-    assert.equal(inventory.purchaseStateLabel(value),'본사 요청 배송');
+    assert.equal(inventory.purchaseStateLabel(value),'');
+    assert.equal(inventory.purchaseStateLabel(value,'en'),'');
 });
 test('supplier observation date does not overwrite or inherit the warehouse sheet date',()=>{
     const doc={schemaVersion:1,sourceDate:'2026-08-29',products:{
@@ -131,13 +132,15 @@ test('inventory never promotes unreviewed recommendations and blocks held legacy
     assert.equal(isLegacyRecommendationOperationallyEligible(p),false);
     assert.equal(isLegacyRecommendationOperationallyEligible(product()),true);
 });
-test('OptionSheet permits multiple zero-stock units, retains price and announces supplier request',()=>{
+test('OptionSheet permits supplier-request units without exposing fulfillment labels',()=>{
     const result=optionSheet(product(),[0,0,12,[]]);
     const confirm=result.elements.find(n=>n.props?.['data-confirm-options']);
     assert.equal(confirm.props.disabled,false);confirm.props.onClick();
     assert.deepEqual(result.added,[['p_1',12,'Blue','S']]);
     assert.equal(result.commits.length,1);
-    assert.ok(result.elements.some(n=>n.props?.['data-inventory-state']==='available'));
+    assert.equal(result.elements.some(n=>n.props?.['data-inventory-state']==='available'),false);
+    const option=result.elements.find(n=>n.type==='option'&&n.props.value===0);
+    assert.equal(option.props.children.join(''),'S');
 });
 test('OptionSheet prevents sold-out current selections and mixed accumulated picks from committing',()=>{
     for(const draft of [[0,1,1,[]],[0,0,1,[{colorIdx:0,sizeIdx:0,qty:1},{colorIdx:0,sizeIdx:1,qty:1}]]]) {

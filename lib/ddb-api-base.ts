@@ -1,10 +1,12 @@
 import { Capacitor } from "@capacitor/core";
 
+export const PRODUCTION_DDB_API_BASE = "https://api.daengdabang.com";
+
 function inferredApiBase() {
     if (typeof window === "undefined") return "";
-    if (Capacitor.isNativePlatform()) return "https://api.daengdabang.com";
+    if (Capacitor.isNativePlatform()) return PRODUCTION_DDB_API_BASE;
     if (window.location.hostname === "daengdabang.com" || window.location.hostname === "www.daengdabang.com") {
-        return "https://api.daengdabang.com";
+        return PRODUCTION_DDB_API_BASE;
     }
     return "";
 }

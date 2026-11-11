@@ -1,9 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { loadSocialProviders, startSocialLogin, type SocialProvider } from "@/lib/customer-api";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { loadSocialProviders, socialLoginHref, startSocialLogin, type SocialProvider } from "@/lib/customer-api";
+import { PRODUCTION_DDB_API_BASE } from "@/lib/ddb-api-base";
 import { useDdbApiReady } from "@/hooks/useDdbApiReady";
 import { clearSignupEmailResume, saveSignupEmailResume } from "@/lib/signup-email-verification";
+
+const INITIAL_API_BASE = (process.env.NEXT_PUBLIC_DDB_API_BASE || process.env.NEXT_PUBLIC_API_URL || PRODUCTION_DDB_API_BASE).replace(/\/$/, "");
 
 const PROVIDERS: Array<{
     id: SocialProvider;
@@ -152,7 +155,14 @@ export default function SocialAuthButtons({
         && signupSecurity.termsVersion.trim()
         && signupSecurity.privacyVersion.trim()
     );
-    const connectionError = apiReady === true && statusChecked && !enabledByProvider;
+    // Login can go straight to the server, which validates provider availability.
+    // Signup still needs confirmed availability as well as consent and bot checks.
+    const isDisabled = (provider: SocialProvider) => (
+        mode === "signup"
+            ? apiReady !== true || !signupSecurityReady || !statusChecked || enabledByProvider?.[provider] !== true
+            : apiReady === false || enabledByProvider?.[provider] === false
+    );
+    const connectionError = mode === "signup" && apiReady === true && statusChecked && !enabledByProvider;
     const connectionNotice = connectionError ? (
         <div role="status" className="flex flex-wrap items-center justify-center gap-2 text-xs font-bold text-amber-800">
             <span>로그인 연결을 확인하지 못했어요.</span>
@@ -163,13 +173,36 @@ export default function SocialAuthButtons({
     ) : null;
 
     const start = (provider: SocialProvider) => {
-        if (
-            apiReady !== true
-            || !statusChecked
-            || enabledByProvider?.[provider] !== true
-            || !signupSecurityReady
-        ) return;
+        if (isDisabled(provider)) return;
         beginSocialAuth(provider, mode, returnTo, mode === "signup" ? signupSecurity : undefined);
+    };
+
+    const renderProvider = (provider: typeof PROVIDERS[number], className: string, children: ReactNode) => {
+        const disabled = isDisabled(provider.id);
+        const label = `${provider.label} ${mode === "signup" ? "간편가입" : "간편로그인"}`;
+        if (mode === "login") {
+            // A real link works from the first HTML paint, before hydration or
+            // the background provider lookup. The server checks availability.
+            const href = apiReady === true
+                ? socialLoginHref(provider.id, returnTo)
+                : `${INITIAL_API_BASE}/api/v1/auth/social/${provider.id}/start?${new URLSearchParams({ return_to: returnTo, mode: "login" })}`;
+            return (
+                <a key={provider.id} role="button" href={disabled ? undefined : href}
+                    aria-disabled={disabled} aria-label={label} title={provider.label}
+                    tabIndex={disabled ? -1 : 0} className={className}
+                    onKeyDown={(event) => { if (event.key === " ") { event.preventDefault(); start(provider.id); } }}
+                    onClick={(event) => { event.preventDefault(); start(provider.id); }}>
+                    {children}
+                </a>
+            );
+        }
+        return (
+            <button key={provider.id} type="button" disabled={disabled}
+                aria-disabled={disabled} aria-label={label} title={provider.label}
+                className={className} onClick={() => start(provider.id)}>
+                {children}
+            </button>
+        );
     };
 
     // compact — 로그인 카드용 원형 아이콘(라벨 없음, 비활성은 흐리게)
@@ -177,30 +210,10 @@ export default function SocialAuthButtons({
         return (
             <div className="grid gap-3">
                 <div className="flex items-center justify-center gap-3">
-                    {PROVIDERS.map((provider) => {
-                        const disabled = (
-                            apiReady !== true
-                            || !statusChecked
-                            || enabledByProvider?.[provider.id] !== true
-                            || !signupSecurityReady
-                        );
-                        return (
-                            <button
-                                key={provider.id}
-                                type="button"
-                                disabled={disabled}
-                                onClick={() => start(provider.id)}
-                                aria-label={`${provider.label} ${mode === "signup" ? "간편가입" : "간편로그인"}`}
-                                title={provider.label}
-                                className={[
-                                    "flex h-11 w-11 items-center justify-center rounded-full border text-base font-black shadow-sm transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50",
-                                    provider.className,
-                                ].join(" ")}
-                            >
-                                {provider.icon === "N" ? <span>N</span> : <i className={provider.icon} />}
-                            </button>
-                        );
-                    })}
+                    {PROVIDERS.map((provider) => renderProvider(provider, [
+                        "flex h-11 w-11 items-center justify-center rounded-full border text-base font-black shadow-sm transition hover:-translate-y-0.5 aria-disabled:cursor-not-allowed aria-disabled:opacity-50",
+                        provider.className,
+                    ].join(" "), provider.icon === "N" ? <span>N</span> : <i className={provider.icon} />))}
                 </div>
                 {connectionNotice}
             </div>
@@ -214,7 +227,7 @@ export default function SocialAuthButtons({
                     {mode === "signup" ? "간편가입" : "간편로그인"}
                 </h2>
                 {apiReady === false && <span className="text-xs font-black text-amber-700">서비스 준비 중</span>}
-                {apiReady === true && !statusChecked && <span className="text-xs font-black text-neutral-500">확인 중</span>}
+                {mode === "signup" && apiReady === true && !statusChecked && <span className="text-xs font-black text-neutral-500">확인 중</span>}
                 {apiReady === true && statusChecked && enabledByProvider && disabledCount > 0 && (
                     <span className="text-xs font-black text-amber-700">준비 중</span>
                 )}
@@ -226,34 +239,13 @@ export default function SocialAuthButtons({
             )}
             {connectionNotice}
             <div className="grid gap-2 sm:grid-cols-3">
-                {PROVIDERS.map((provider) => {
-                    const disabled = (
-                        apiReady !== true
-                        || !statusChecked
-                        || enabledByProvider?.[provider.id] !== true
-                        || !signupSecurityReady
-                    );
-                    return (
-                        <button
-                            key={provider.id}
-                            type="button"
-                            disabled={disabled}
-                            onClick={() => start(provider.id)}
-                            aria-label={`${provider.label} ${mode === "signup" ? "간편가입" : "간편로그인"}`}
-                            className={[
-                                "flex h-11 items-center justify-center gap-2 rounded-md border px-3 text-sm font-black transition disabled:cursor-not-allowed disabled:opacity-50",
-                                provider.className,
-                            ].join(" ")}
-                        >
-                            {provider.icon === "N" ? (
-                                <span className="text-base font-black">N</span>
-                            ) : (
-                                <i className={`${provider.icon} text-sm`} />
-                            )}
-                            {provider.label}
-                        </button>
-                    );
-                })}
+                {PROVIDERS.map((provider) => renderProvider(provider, [
+                    "flex h-11 items-center justify-center gap-2 rounded-md border px-3 text-sm font-black transition aria-disabled:cursor-not-allowed aria-disabled:opacity-50",
+                    provider.className,
+                ].join(" "), <>
+                    {provider.icon === "N" ? <span className="text-base font-black">N</span> : <i className={`${provider.icon} text-sm`} />}
+                    {provider.label}
+                </>))}
             </div>
         </section>
     );
