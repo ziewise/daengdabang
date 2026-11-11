@@ -12,6 +12,7 @@
 
 import { useEffect, useSyncExternalStore } from "react";
 import { usePwaInstall } from "@/components/pwa/PwaInstallProvider";
+import { isNativeAppRuntime } from "@/lib/native-runtime";
 
 const FLAG_KEY = "ddb.appMode.v1";
 // 개발 서버에서만 켜지는 시안 확인용 규칙(운영 빌드는 false)
@@ -46,7 +47,7 @@ function subscribe(onChange: () => void) {
 /** 효과(useEffect) 안에서 바로 쓰는 판별 — 앱 틀보다 먼저 실행되는 자식 화면용(예: 쇼핑 탭에서 인트로 영상 건너뛰기) */
 export function isAppModeNow(): boolean {
     const nav = navigator as Navigator & { standalone?: boolean };
-    const native = Boolean((window as Window & { Capacitor?: { isNativePlatform?: () => boolean } }).Capacitor?.isNativePlatform?.());
+    const native = isNativeAppRuntime();
     return native || window.matchMedia("(display-mode: standalone)").matches || nav.standalone === true || readFlag();
 }
 

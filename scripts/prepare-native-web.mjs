@@ -21,6 +21,10 @@ const bundledRoutes = [
     "app",
     "auth",
     "cart", // 2026-10-21: 앱 안 상품 상세에서 담은 상품이 보이게 장바구니도 앱 안(약 1MB)
+    // Shopping lists used to leave the APK for a remote page. Include their
+    // exported documents and RSC payloads so product/back navigation stays local.
+    "products", "category", "brand", "brands", "best", "new", "bundle", "search",
+    "checkout", "order-lookup", "inquiry", "return", "faq", "notice", "recommendations",
     "chat",
     "legal",
     "my-pet",
@@ -123,6 +127,7 @@ async function verifyReferencedAssets() {
     for (const file of files) {
         const contents = await readFile(file, "utf8");
         for (const match of contents.matchAll(assetPattern)) {
+            if (contents.slice(Math.max(0, match.index - 27), match.index).endsWith("https://www.daengdabang.com")) continue;
             const relativePath = match[0].slice(1);
             try {
                 await access(path.join(nativeRoot, relativePath));
@@ -134,6 +139,25 @@ async function verifyReferencedAssets() {
 
     if (missing.size > 0) {
         throw new Error(`Native bundle is missing referenced assets:\n${[...missing].sort().join("\n")}`);
+    }
+}
+
+async function externalizeUnbundledMedia() {
+    // A list's initial HTML must not request product images from localhost and
+    // retry them after hydration. Keep local UI assets and resolve the rest to
+    // the same production asset origin used by AppShell's dynamic images.
+    for (const file of await collectTextFiles(nativeRoot)) {
+        let contents = await readFile(file, "utf8");
+        const matches = [...contents.matchAll(/\/(images|videos)\/[^"'\\\s<>)]+/g)];
+        for (const match of matches.reverse()) {
+            const before = contents.slice(Math.max(0, match.index - 300), match.index);
+            if (/https?:\/\/[^\s"'<>\\]*$/.test(before)) continue;
+            const relativePath = match[0].slice(1).split("?")[0];
+            try { await access(path.join(nativeRoot, decodeURIComponent(relativePath))); continue; } catch {}
+            await access(path.join(exportRoot, decodeURIComponent(relativePath)));
+            contents = contents.slice(0, match.index) + "https://www.daengdabang.com" + contents.slice(match.index);
+        }
+        await writeFile(file, contents, "utf8");
     }
 }
 
@@ -203,11 +227,13 @@ await writeFile(path.join(nativeRoot, "native-build.json"), JSON.stringify({
 // WebGPU/WASM artifacts are intentionally omitted from the install package.
 await removeWebOnlyOnnxRuntimeMedia();
 await removeNativeExcludedFiles();
+await externalizeUnbundledMedia();
 await verifyReferencedAssets();
 
 const bytes = await directorySize(nativeRoot);
 const megabytes = bytes / 1024 / 1024;
-const maximumMegabytes = 40;
+// Includes the brand/list documents (about 25 MB), without product photographs.
+const maximumMegabytes = 72;
 if (megabytes > maximumMegabytes) {
     throw new Error(`Native web bundle is ${megabytes.toFixed(2)} MB; maximum is ${maximumMegabytes} MB.`);
 }

@@ -12,6 +12,7 @@ import {
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { Capacitor } from "@capacitor/core";
+import { isNativeAppRuntime } from "@/lib/native-runtime";
 
 // 설치 안내 창 겉모양(스티커북, 2026-10-18) — 창이 열릴 때만 불러온다(모든 페이지에 싣지 않음)
 const InstallHelpSheet = dynamic(() => import("./install-guide/InstallHelpSheet"), { ssr: false });
@@ -91,7 +92,7 @@ export function PwaInstallProvider({ children }: { children: React.ReactNode }) 
         };
 
         const readyTimer = window.setTimeout(() => {
-            const nativeApp = Capacitor.isNativePlatform();
+            const nativeApp = isNativeAppRuntime();
             setIsNativeApp(nativeApp);
             document.documentElement.dataset.ddbNativeApp = nativeApp ? "true" : "false";
             setPlatform(detectPlatform());

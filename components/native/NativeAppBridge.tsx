@@ -23,20 +23,17 @@ const NATIVE_ROUTE_PREFIXES = [
     "/privacy",
     "/terms",
     "/cart", // 2026-10-21: 장바구니도 앱 안(앱 상품 상세에서 담은 상품이 그대로 보이게) — prepare-native-web 묶음에 추가
+    "/products", "/category", "/brand", "/brands", "/best", "/new",
+    "/bundle", "/search", "/checkout", "/order-lookup", "/inquiry", "/return", "/faq", "/notice", "/recommendations",
 ] as const;
 // 앱 틀(AppShell)이 같은 기능의 앱 화면으로 바꿔 보내는 주소 — 브라우저 창으로 열지 않고 그대로 둔다(2026-10-21: 상품 상세 → 앱 상품 상세)
 const APP_SHELL_ROUTED_PREFIXES = ["/product"] as const;
 function isAppShellRoutedRoute(pathname: string) {
     return APP_SHELL_ROUTED_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
 }
-const NATIVE_TRYON_ROUTE_PREFIXES = ["/products"] as const;
 
 function isBundledNativeRoute(pathname: string) {
     return NATIVE_ROUTE_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
-}
-
-function isNativeTryOnRoute(pathname: string) {
-    return NATIVE_TRYON_ROUTE_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
 }
 
 function canonicalWebUrl(url: URL) {
@@ -69,6 +66,7 @@ export default function NativeAppBridge() {
         }
 
         const onDocumentClick = (event: MouseEvent) => {
+            if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
             const target = event.target;
             if (!(target instanceof Element)) return;
             const anchor = target.closest<HTMLAnchorElement>("a[href]");
@@ -82,19 +80,26 @@ export default function NativeAppBridge() {
 
             const url = new URL(anchor.href, window.location.href);
             const isLocal = url.origin === window.location.origin;
+            const isStorefront = isLocal || url.origin === "https://daengdabang.com" || url.origin === WEB_ORIGIN;
+            const product = isStorefront ? /^\/product\/([^/]+)\/?$/.exec(url.pathname) : null;
+            if (product && anchor.dataset.nativeExternal === undefined) {
+                event.preventDefault();
+                event.stopPropagation();
+                router.push(`/app/sticker/item/?p=${encodeURIComponent(decodeURIComponent(product[1]))}${url.hash}`);
+                return;
+            }
+            if (!isLocal && isStorefront && isBundledNativeRoute(url.pathname) && anchor.dataset.nativeExternal === undefined) {
+                event.preventDefault();
+                event.stopPropagation();
+                router.push(`${url.pathname}${url.search}${url.hash}`);
+                return;
+            }
             const staysInApp = isLocal
                 && (isBundledNativeRoute(url.pathname) || isAppShellRoutedRoute(url.pathname))
                 && anchor.dataset.nativeExternal === undefined;
 
             void Haptics.impact({ style: ImpactStyle.Light }).catch(() => undefined);
             if (staysInApp) return;
-
-            if (isNativeTryOnRoute(url.pathname) && anchor.dataset.nativeExternal === undefined) {
-                event.preventDefault();
-                event.stopPropagation();
-                window.location.assign(canonicalWebUrl(url));
-                return;
-            }
 
             event.preventDefault();
             event.stopPropagation();
