@@ -241,43 +241,45 @@ export default function OptionSheet({ product, open, mode, initialColorIdx = nul
                             <p className="line-clamp-2 text-sm font-bold leading-snug text-neutral-800 sm:line-clamp-none">{displayName}</p>
                             {p.inventory?.sourceDate && <p className="mt-1 text-[11px] text-neutral-500">{p.supplierCatalogSource === "jsk_approved_account" ? (locale === "en" ? "Supplier checked" : "본사 확인일") : (locale === "en" ? "Inventory sheet dated" : "재고표 기준일")}: {p.inventory.sourceDate}</p>}
                             {!summaryState.purchasable && <p role="status" className="mt-2 text-sm font-bold text-amber-900">{purchaseStateLabel(summaryState, locale)}</p>}
-                            {hasColors && (
-                                <>
-                                    <p className="mt-2 text-xs font-black text-neutral-500">
-                                        {t("option")} 1 <span className="text-rose-500">({t("optionRequired")})</span>
-                                        {colorIdx != null && (
-                                            <span className="text-neutral-900"> · {colors[colorIdx]?.name}</span>
-                                        )}
-                                    </p>
-                                    <div className="mt-1.5 flex flex-wrap gap-1.5 sm:mt-2 sm:gap-2">
-                                        {colors.map((c, i) => {
-                                            const colorState = productPurchaseState(p, { color: c.name });
-                                            const colorStatus = purchaseStateLabel(colorState, locale);
-                                            return (
-                                            <button
-                                                key={`${c.name}-${i}`}
-                                                type="button"
-                                                onClick={() => setColorIdx(i)}
-                                                disabled={!colorState.purchasable}
-                                                aria-label={[c.name, colorStatus].filter(Boolean).join(" · ")}
-                                                aria-current={i === colorIdx}
-                                                title={[c.name, colorStatus].filter(Boolean).join(" · ")}
-                                                className={`relative h-8 w-8 overflow-hidden rounded-full transition disabled:cursor-not-allowed disabled:opacity-40 sm:h-9 sm:w-9 ${
-                                                    i === colorIdx
-                                                        ? "ring-2 ring-indigo-600 ring-offset-1"
-                                                        : "ring-1 ring-neutral-300 hover:ring-indigo-300"
-                                                }`}
-                                            >
-                                                <ProductColorImage src={c.chip || c.image} color={c} alt={c.name} sizes="36px" className="object-cover" />
-                                                {!colorState.purchasable && <span aria-hidden="true" className="absolute inset-0 flex items-center justify-center bg-white/50 font-black">×</span>}
-                                            </button>
-                                            );
-                                        })}
-                                    </div>
-                                </>
-                            )}
                         </div>
                     </div>
+
+                    {/* 옵션 1(색상) — 따로 한 줄(2026-11-11 사용자 "제품 이름 옆에 있으니 헷갈려"): 사진 · 이름 줄 아래, 옵션 2 와 같은 이름표 모양 */}
+                    {hasColors && (
+                        <div className="mt-4" data-option-row="color">
+                            <p className="mb-1.5 block text-xs font-black text-neutral-500">
+                                {t("option")} 1 <span className="text-rose-500">({t("optionRequired")})</span>
+                                {colorIdx != null && (
+                                    <span className="text-neutral-900"> · {colors[colorIdx]?.name}</span>
+                                )}
+                            </p>
+                            <div className="flex flex-wrap gap-1.5 sm:gap-2">
+                                {colors.map((c, i) => {
+                                    const colorState = productPurchaseState(p, { color: c.name });
+                                    const colorStatus = purchaseStateLabel(colorState, locale);
+                                    return (
+                                    <button
+                                        key={`${c.name}-${i}`}
+                                        type="button"
+                                        onClick={() => setColorIdx(i)}
+                                        disabled={!colorState.purchasable}
+                                        aria-label={[c.name, colorStatus].filter(Boolean).join(" · ")}
+                                        aria-current={i === colorIdx}
+                                        title={[c.name, colorStatus].filter(Boolean).join(" · ")}
+                                        className={`relative h-8 w-8 overflow-hidden rounded-full transition disabled:cursor-not-allowed disabled:opacity-40 sm:h-9 sm:w-9 ${
+                                            i === colorIdx
+                                                ? "ring-2 ring-indigo-600 ring-offset-1"
+                                                : "ring-1 ring-neutral-300 hover:ring-indigo-300"
+                                        }`}
+                                    >
+                                        <ProductColorImage src={c.chip || c.image} color={c} alt={c.name} sizes="36px" className="object-cover" />
+                                        {!colorState.purchasable && <span aria-hidden="true" className="absolute inset-0 flex items-center justify-center bg-white/50 font-black">×</span>}
+                                    </button>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    )}
 
                     {/* 사이즈 — 드롭다운(있는 제품만). 미선택이면 빨간 테두리 + "선택하세요" */}
                     {hasSizes && (
