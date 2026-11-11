@@ -6,7 +6,7 @@ PWA는 웹 배포를 받아오지만 설치된 APK의 `assets/public`은 APK를 
 
 1. `android/app/build.gradle`의 `versionCode`를 이전 배포보다 높이고 `versionName`을 정한다.
 2. 최신 main을 포함한 커밋에서 **Native package validation**을 수동 실행하고 `release`를 켠다.
-3. Android 서명·정렬·에뮬레이터 홈 실행·동일 서명 재설치 검사와 iOS 검사가 성공했는지 확인한다.
+3. Android 서명·정렬·에뮬레이터 홈 실행·동일 서명 재설치 검사가 성공했는지 확인한다. 수동 Android 배포에서는 iOS 빌드를 생략하며, main push 검사는 두 플랫폼을 계속 확인한다.
 4. `daengdabang-android-signed-release` 결과의 `app-release.apk`를 사용한다. `app-debug.apk`는 배포하지 않는다.
 5. APK 안 `assets/public/native-build.json`의 소스 커밋과 버전, 서명 SHA-256을 확인한다.
 6. `android-v{versionName}-build{versionCode}` GitHub Release에 버전이 포함된 APK와 SHA-256 체크섬을 올린다. 공개 다운로드를 다시 받아 해시를 대조한다.
