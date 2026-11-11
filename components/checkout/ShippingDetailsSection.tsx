@@ -22,6 +22,8 @@ export type ShippingDetailsSectionProps = {
     className?: string;
     onAddressSearch?: () => void;
     addressSearchPending?: boolean;
+    /** 저장된 배송지 고르기 창 열기(2026-11-11) — 회원일 때만 주문/결제 화면이 넘김. 없으면 버튼을 그리지 않음 */
+    onSavedAddressOpen?: () => void;
 };
 
 const COPY = {
@@ -46,6 +48,8 @@ const COPY = {
         island: "그 외 도서지역 · 5,000원 추가",
         addressSearch: "주소 검색",
         addressSearching: "검색 중…",
+        savedAddressOpen: "저장된 배송지 불러오기",
+        savedAddressHint: "배송지 관리에 저장한 주소로 바로 채울 수 있어요.",
         requestTitle: "배송 요청사항",
         requestDescription: "배송 방법을 선택해 주세요.",
         requestLabel: "요청사항",
@@ -75,6 +79,8 @@ const COPY = {
         island: "Other islands · KRW 5,000 surcharge",
         addressSearch: "Find address",
         addressSearching: "Searching…",
+        savedAddressOpen: "Use a saved address",
+        savedAddressHint: "Fill this form from an address saved in My Page.",
         requestTitle: "Delivery request",
         requestDescription: "Choose how you would like the order delivered.",
         requestLabel: "Request",
@@ -115,6 +121,7 @@ export default function ShippingDetailsSection({
     className = "",
     onAddressSearch,
     addressSearchPending = false,
+    onSavedAddressOpen,
 }: ShippingDetailsSectionProps) {
     const copy = COPY[locale];
     const fieldId = (field: CheckoutDeliveryField) => `${idPrefix}-${field}`;
@@ -156,6 +163,23 @@ export default function ShippingDetailsSection({
 
                 <fieldset disabled={disabled} className="grid gap-4 p-4 sm:p-5">
                     <legend className="sr-only">{copy.addressTitle}</legend>
+                    {/* 저장된 배송지 불러오기(회원만) — 누르면 고르기 창, 고른 주소로 받는 분 · 연락처 · 주소를 채움.
+                        border-indigo-200 결 = 주소 검색 버튼과 같은 모양(웹은 checkout-web.css 가 분홍 알약으로) */}
+                    {onSavedAddressOpen && (
+                        <div className="flex flex-wrap items-center justify-between gap-2" data-checkout-saved-address-row>
+                            <p className="text-xs font-bold leading-5 text-neutral-500">{copy.savedAddressHint}</p>
+                            <button
+                                type="button"
+                                onClick={onSavedAddressOpen}
+                                disabled={disabled}
+                                className="h-11 shrink-0 rounded-xl border-2 border-indigo-200 bg-white px-4 text-sm font-black text-indigo-700 transition hover:border-indigo-400 hover:bg-indigo-50 disabled:cursor-not-allowed disabled:opacity-50"
+                                data-checkout-saved-address-open
+                            >
+                                <i className="fa-solid fa-address-book mr-1.5" aria-hidden="true" />
+                                {copy.savedAddressOpen}
+                            </button>
+                        </div>
+                    )}
                     <div className="grid gap-4 sm:grid-cols-2">
                         <div>
                             <label htmlFor={fieldId("recipientName")} className="mb-1.5 block text-xs font-black text-neutral-600">
@@ -237,6 +261,7 @@ export default function ShippingDetailsSection({
                                     disabled={disabled || addressSearchPending}
                                     className="h-12 shrink-0 rounded-xl border-2 border-indigo-200 bg-white px-4 text-sm font-black text-indigo-700 transition hover:border-indigo-400 hover:bg-indigo-50 disabled:cursor-not-allowed disabled:opacity-50"
                                 >
+                                    <i className="fa-solid fa-magnifying-glass mr-1.5" aria-hidden="true" />
                                     {addressSearchPending ? copy.addressSearching : copy.addressSearch}
                                 </button>
                             )}

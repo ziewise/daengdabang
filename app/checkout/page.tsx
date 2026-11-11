@@ -41,6 +41,9 @@ import {
 } from "@/lib/guest-order";
 import { loadTossPayments } from "@tosspayments/tosspayments-sdk";
 import ShippingDetailsSection from "@/components/checkout/ShippingDetailsSection";
+// 2026-11-11 배송지 칸 버튼 — 주소 검색(마이페이지 배송지 창과 같은 카카오 우편번호 검색 창) · 저장된 배송지 고르기 창
+import { AddressSearchModal, type PickedAddress } from "@/components/mypage/AddressModal";
+import SavedAddressPickerModal, { type SavedAddressLoadState } from "@/components/checkout/SavedAddressPickerModal";
 // 2026-10-28 정식 오픈 전 결제 잠금 안내 창(주문 · 토스 결제창 없이)
 import PrelaunchNoticeModal from "@/components/checkout/PrelaunchNoticeModal";
 import { cartProducts } from "@/lib/shop";
@@ -191,6 +194,11 @@ export default function CheckoutPage() {
     }, []);
     const [savedAddresses, setSavedAddresses] = useState<CustomerAddress[]>([]);
     const [selectedAddressId, setSelectedAddressId] = useState("");
+    // 저장된 배송지 불러오기 결과(불러오는 중 · 받음 · 못 받음) — 고르기 창 안내 글만 바꿈
+    const [savedAddressLoad, setSavedAddressLoad] = useState<SavedAddressLoadState>("loading");
+    // 배송지 칸 창 — 저장된 배송지 고르기 · 주소 검색(둘 다 보이는 창만, 채우기는 아래 기존 함수)
+    const [savedPickerOpen, setSavedPickerOpen] = useState(false);
+    const [addressSearchOpen, setAddressSearchOpen] = useState(false);
     const prefilledMemberRef = useRef("");
     const prefilledAddressRef = useRef("");
     // 웹 비회원 주문 — "비회원으로 주문 중" 표시(이 탭) · 주문자 정보 · 서버 연결 여부(꺼져 있으면 결제는 지금처럼 로그인 뒤)
@@ -242,6 +250,7 @@ export default function CheckoutPage() {
             .then((addresses) => {
                 if (cancelled) return;
                 setSavedAddresses(addresses);
+                setSavedAddressLoad("ready");
                 const preferred = addresses.find((address) => address.isDefault) || addresses[0];
                 if (!preferred || prefilledAddressRef.current) return;
                 prefilledAddressRef.current = preferred.id;
@@ -255,7 +264,7 @@ export default function CheckoutPage() {
                     addressLine2: current.addressLine2 || preferred.addressLine2,
                 }));
             })
-            .catch(() => undefined);
+            .catch(() => { if (!cancelled) setSavedAddressLoad("failed"); });
         return () => { cancelled = true; };
     }, [accessToken]);
 
@@ -272,6 +281,32 @@ export default function CheckoutPage() {
             addressLine1: selected.addressLine1,
             addressLine2: selected.addressLine2,
         });
+    };
+
+    // 저장된 배송지 다시 불러오기(고르기 창 "다시 불러오기" · 처음에 못 받았을 때) — 같은 기존 불러오기 함수
+    const reloadSavedAddresses = useCallback(() => {
+        if (!accessToken) return;
+        setSavedAddressLoad("loading");
+        loadCustomerAddresses(accessToken)
+            .then((addresses) => {
+                setSavedAddresses(addresses);
+                setSavedAddressLoad("ready");
+            })
+            .catch(() => setSavedAddressLoad("failed"));
+    }, [accessToken]);
+    const openSavedPicker = () => {
+        setSavedPickerOpen(true);
+        if (savedAddressLoad === "failed") reloadSavedAddresses();
+    };
+    // 창 닫기 — 창 안 초점 · Esc 처리가 다시 돌지 않게 같은 함수로 고정
+    const closeSavedPicker = useCallback(() => setSavedPickerOpen(false), []);
+    const closeAddressSearch = useCallback(() => setAddressSearchOpen(false), []);
+    // 검색 창을 못 불러오면 창 안에 안내가 뜨고, 주문서 칸은 원래처럼 직접 적을 수 있음(따로 할 일 없음)
+    const addressSearchFailed = useCallback(() => undefined, []);
+    // 고른 저장 주소로 채우기 = 기존 applySavedAddress 그대로
+    const pickSavedAddress = (addressId: string) => {
+        applySavedAddress(addressId);
+        setSavedPickerOpen(false);
     };
 
     useEffect(() => {
@@ -574,27 +609,8 @@ export default function CheckoutPage() {
                             )}
                         </div>
                     )}
-                    {savedAddresses.length > 0 && (
-                        <section className="surface flex flex-wrap items-center gap-3 p-4" aria-label="저장된 배송지 선택">
-                            <label htmlFor="checkout-saved-address" className="text-xs font-black text-neutral-600">
-                                저장된 배송지
-                            </label>
-                            <select
-                                id="checkout-saved-address"
-                                value={selectedAddressId}
-                                onChange={(event) => applySavedAddress(event.target.value)}
-                                disabled={submitting}
-                                className="min-h-10 min-w-[220px] flex-1 rounded-xl border border-neutral-200 bg-white px-3 text-sm font-black text-neutral-900"
-                            >
-                                {savedAddresses.map((address) => (
-                                    <option key={address.id} value={address.id}>
-                                        {address.label}{address.isDefault ? " · 기본" : ""} — {address.recipientName}
-                                    </option>
-                                ))}
-                            </select>
-                            <Link href="/mypage/address/" className="co-addr-link text-xs font-black text-indigo-700 hover:underline">배송지 관리</Link>
-                        </section>
-                    )}
+                    {/* 예전 "저장된 배송지" 고르기 줄(목록이 있을 때만 보이던 select)은 뺌(2026-11-11) —
+                        배송지 칸 안 "저장된 배송지 불러오기" 버튼 → 고르기 창으로 바꿈(채우기는 같은 applySavedAddress) */}
                     <ShippingDetailsSection
                         value={deliveryDraft}
                         onChange={changeDelivery}
@@ -602,7 +618,32 @@ export default function CheckoutPage() {
                         onBlur={validateDeliveryField}
                         locale={locale}
                         disabled={submitting}
+                        // 우편번호 옆 "주소 검색" — 고른 우편번호 · 기본 주소를 채우고 상세 주소 칸으로 초점
+                        onAddressSearch={() => setAddressSearchOpen(true)}
+                        // 회원만 "저장된 배송지 불러오기"(비회원은 저장 주소가 없음)
+                        onSavedAddressOpen={signedInForPayment ? openSavedPicker : undefined}
                     />
+                    {addressSearchOpen && (
+                        <AddressSearchModal
+                            onApply={(picked: PickedAddress) => {
+                                changeDelivery({ ...deliveryDraft, postalCode: picked.postalCode, addressLine1: picked.address });
+                                setAddressSearchOpen(false);
+                                focusDeliveryField("addressLine2");
+                            }}
+                            onClose={closeAddressSearch}
+                            onFailed={addressSearchFailed}
+                        />
+                    )}
+                    {savedPickerOpen && (
+                        <SavedAddressPickerModal
+                            addresses={savedAddresses}
+                            state={savedAddressLoad}
+                            selectedId={selectedAddressId}
+                            onPick={pickSavedAddress}
+                            onRetry={reloadSavedAddresses}
+                            onClose={closeSavedPicker}
+                        />
+                    )}
 
                     <section className="surface overflow-hidden" aria-labelledby="checkout-delivery-estimate-title">
                         <div className="border-b border-neutral-200 bg-neutral-50/80 px-4 py-4 sm:px-5">
