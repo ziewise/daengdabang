@@ -5,17 +5,28 @@ set -eu
 # The release signature differs from the CI-generated debug signature.
 package_name="com.daengdabang.app"
 artifact_dir="android/app/build/outputs/apk/release"
+capture_receipts() {
+    adb shell dumpsys activity activities > "$artifact_dir/activity.txt" || true
+    adb logcat -d -v threadtime > "$artifact_dir/logcat.txt" || true
+    adb exec-out screencap -p > "$artifact_dir/launch.png" || true
+}
+trap capture_receipts EXIT
 adb uninstall "$package_name"
 adb logcat -c
 adb install "$artifact_dir/app-release.apk"
+adb shell input keyevent KEYCODE_WAKEUP
+adb shell wm dismiss-keyguard
 adb shell am start -W -n "$package_name/.MainActivity" > "$artifact_dir/launch.txt"
 
 attempt=0
 while [ "$attempt" -lt 20 ]; do
     sleep 2
-    adb shell uiautomator dump /sdcard/ddb-release-window.xml > /dev/null
-    adb pull /sdcard/ddb-release-window.xml "$artifact_dir/window.xml" > /dev/null
-    if grep -q '댕다방에 오신 걸 환영해요' "$artifact_dir/window.xml"; then break; fi
+    # A freshly launched WebView may not have an accessibility root yet.
+    # A failed dump/pull is a retry, not proof that the app failed to open.
+    if adb shell uiautomator dump /sdcard/ddb-release-window.xml > /dev/null \
+        && adb pull /sdcard/ddb-release-window.xml "$artifact_dir/window.xml" > /dev/null; then
+        if grep -q '댕다방에 오신 걸 환영해요' "$artifact_dir/window.xml"; then break; fi
+    fi
     attempt=$((attempt + 1))
 done
 grep -q '댕다방에 오신 걸 환영해요' "$artifact_dir/window.xml"
