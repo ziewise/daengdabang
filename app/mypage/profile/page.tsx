@@ -17,6 +17,8 @@ import PasswordChangeModal from "@/components/mypage/PasswordChangeModal";
 import { normalizedMemberName } from "@/lib/member-name";
 // 웹(2026-10-25): 한 번 더 확인 → 내 정보 · 로그인 보안 · 알림 수신 · 다른 정보(기존 기능 그대로). 앱은 아래 기존 화면
 import ProfileWebView from "@/components/mypage/ProfileWebView";
+import SocialPhoneRegistration from "@/components/mypage/SocialPhoneRegistration";
+import EmailPreferenceSetting from "@/components/mypage/EmailPreferenceSetting";
 import { useWebScreen } from "@/hooks/useWebScreen";
 // 2026-10-26 웹 오류 문구 — 서버 원문 대신 해요체 문장(앱은 원래 문구)
 import { mypageErrorText } from "@/components/mypage/mypageWebText";
@@ -75,7 +77,7 @@ function ProfileEditor({
             <div className="border-b border-neutral-200 bg-neutral-50/80 px-5 py-4" data-mp-band="sky" data-mp-art="me">
                 <h2 id="profile-basic-heading" className="text-lg font-black text-neutral-950" data-mp-kicker="MY INFO">기본 정보</h2>
                 <p className="mt-1 text-xs font-bold leading-5 text-neutral-500">
-                    이름만 직접 변경할 수 있으며 이메일·가입 계정 변경은 본인 확인이 필요합니다.
+                    이름과 휴대폰 번호, 이메일 소식 수신 여부를 관리할 수 있어요.
                 </p>
             </div>
             <form className="grid gap-5 p-5 sm:p-6" aria-label="회원 기본 정보" onSubmit={submit}>
@@ -185,12 +187,16 @@ export default function MypageProfilePage() {
             title="개인정보 확인/수정"
             description={webScreen
                 ? "내 정보 · 로그인 보안 · 알림 수신을 한곳에서 확인하고 바꿀 수 있어요. 보호를 위해 들어올 때 한 번 더 확인해요."
-                : "현재 로그인한 회원의 기본 정보를 확인하고 이름을 안전하게 변경할 수 있습니다."}
+                : "내 정보와 휴대폰 번호, 이메일 소식 수신 설정을 확인하고 바꿀 수 있어요."}
         >
             {/* 웹 — 새 개인정보 화면(앱에서는 hidden). 앱 — 기존 화면(웹에서는 data-pf-legacy 로 숨김) */}
             <ProfileWebView user={user} onSavedName={updateMemberName} />
             <div data-pf-legacy>
                 <ProfileEditor user={user} onSaved={updateMemberName} />
+                {!webScreen && <ul className="mt-4 grid gap-4">
+                    <SocialPhoneRegistration />
+                    <EmailPreferenceSetting token={user.apiAccessToken || getCustomerToken() || undefined} />
+                </ul>}
             </div>
             {/* 앱 전용(로컬 시안): 앱에서는 마이페이지 메뉴를 숨기므로 회원 탈퇴를 정보 수정 맨 아래 작은 글씨로 둔다.
                 웹은 기존처럼 메뉴에 있으니 hidden — 앱 겉모양 CSS(appShopSkin.ts)에서만 보임. 기존 탈퇴 화면으로 연결 */}

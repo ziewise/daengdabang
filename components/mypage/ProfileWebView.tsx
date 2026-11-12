@@ -659,6 +659,7 @@ function SecurityPanel({ user, token, provider, providerLabel, accountDisplay, i
 /* ═════════ 알림 수신 ═════════ */
 function NoticePanel({ token, internalEmail }: { token?: string; internalEmail: boolean }) {
     const [state, setState] = useState<"loading" | "on" | "off" | "unknown">(internalEmail || !token ? "unknown" : "loading");
+    const [consented, setConsented] = useState(false);
     const [editing, setEditing] = useState(false);
     const [agree, setAgree] = useState(false);
     const [saving, setSaving] = useState(false);
@@ -668,7 +669,10 @@ function NoticePanel({ token, internalEmail }: { token?: string; internalEmail: 
         if (internalEmail || !token) return;
         let alive = true;
         loadOutboundEmailPreference(token)
-            .then((preference) => { if (alive) setState(preference.sendAuthorized ? "on" : "off"); })
+            .then((preference) => { if (alive) {
+                setState(preference.sendAuthorized ? "on" : "off");
+                setConsented(preference.consented && !preference.suppressed);
+            } })
             .catch(() => { if (alive) setState("unknown"); });
         return () => { alive = false; };
     }, [internalEmail, token]);
@@ -680,6 +684,7 @@ function NoticePanel({ token, internalEmail }: { token?: string; internalEmail: 
         setMessage(null);
         try {
             const preference = await consentOutboundEmailPreference(token);
+            setConsented(preference.consented && !preference.suppressed);
             const today = new Date();
             setState(preference.sendAuthorized ? "on" : "off");
             setEditing(false);
@@ -697,7 +702,8 @@ function NoticePanel({ token, internalEmail }: { token?: string; internalEmail: 
         if (saving) return;
         setSaving(true); setMessage(null);
         try {
-            await withdrawOutboundEmailPreference(getCustomerToken() || undefined);
+            await withdrawOutboundEmailPreference(token);
+            setConsented(false);
             setState("off"); setAgree(false); setEditing(false);
             setMessage({ ok: true, text: "이메일 소식 수신을 중단했어요. 주문·배송 안내는 계속 받을 수 있어요." });
         } catch {
@@ -719,9 +725,9 @@ function NoticePanel({ token, internalEmail }: { token?: string; internalEmail: 
                             {state === "on" && <Chip tone="ok" icon="fa-check">수신 동의</Chip>}
                         </>
                     )}
-                    action={state === "off" && !editing ? (
+                    action={state === "off" && !consented && !editing ? (
                         <button type="button" className="pf-act" onClick={() => { setEditing(true); setMessage(null); }}><i className="fa-solid fa-bell" aria-hidden="true" />받기</button>
-                    ) : state === "on" ? (
+                    ) : consented || state === "on" ? (
                         <button type="button" className="pf-act" disabled={saving} onClick={unsubscribe}>
                             <i className="fa-solid fa-bell-slash" aria-hidden="true" />{saving ? "저장하는 중" : "그만 받기"}
                         </button>
