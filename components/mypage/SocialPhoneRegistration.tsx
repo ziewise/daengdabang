@@ -13,6 +13,8 @@ export default function SocialPhoneRegistration() {
         if (result === "registered") setMessage("소셜계정의 휴대폰 번호를 등록했어요.");
         else if (result === "phone_unavailable") setMessage("소셜계정에서 휴대폰 번호를 제공하지 않았어요. 번호 제공에 동의하거나 다른 계정을 이용해 주세요.");
         else if (result === "account_mismatch") setMessage("다른 댕다방 회원과 연결된 소셜계정이에요. 현재 회원의 계정을 이용해 주세요.");
+        else if (result === "cancelled") setMessage("번호 등록을 취소했어요. 기존에 등록한 번호는 그대로 유지돼요.");
+        else if (result === "provider_unavailable") setMessage("소셜계정의 번호를 확인하지 못했어요. 잠시 후 다시 시도하거나 다른 소셜계정을 이용해 주세요.");
         };
         void refresh(); showResult(new URLSearchParams(window.location.search).get("phone_result"));
         const completed = (event: Event) => { setBusy(false); showResult((event as CustomEvent<string>).detail); void refresh(); };
