@@ -11,7 +11,7 @@
  */
 
 import { appLoginHref, appSignupHref } from "@/components/app-shell/appTabs";
-import Link from "next/link";
+import Link from "@/components/app-shell/AppLink";
 import type { ReactNode, Ref } from "react";
 import { PawWeek, TEXT, TEXT_SOFT, type Cover } from "./kit";
 import { SIGNUP_BONUS_COINS, untilTomorrow, useMember, useShowcaseTopic, useWeeklyRecords, type useTodayDemo } from "./shared";

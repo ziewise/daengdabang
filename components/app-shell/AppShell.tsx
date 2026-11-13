@@ -21,7 +21,7 @@
 
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/app-shell/AppLink";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { preload } from "react-dom";
@@ -32,28 +32,15 @@ const SearchModal = dynamic(() => import("@/components/header/SearchModal"), { s
 const ChatWidget = dynamic(() => import("@/components/site/ChatWidget"), { ssr: false });
 // 산책 친구(협업자 PetCompanionGate) — 쇼핑 탭에서만, 쇼핑 탭에 들어갈 때 처음 불러옴(다른 탭은 받지 않아 가벼움 · 2026-10-21 사용자 "쇼핑에서 다시 보이게")
 // 앱(APK · iOS)에서 앱 묶음에 없는 사진 · 영상을 받을 운영 사이트 주소
-const NATIVE_WEB_ORIGIN = "https://www.daengdabang.com";
 const PetCompanionGate = dynamic(() => import("@/components/pet-companion/PetCompanionGate"), { ssr: false });
 import { Capacitor } from "@capacitor/core";
+import { fixNativeMediaElement } from "@/lib/native-media";
 import { useAuth, useCart } from "@/lib/store";
 import {
     APP_FORGOT, APP_ITEM, APP_PETS, isWebPetProfilesUrl, APP_LOGIN, APP_SIGNUP, APP_TABS, DANG_SECTIONS, MEMBER_ONLY_PATHS, appLoginHref, appSignupHref, conceptIsTabRoot, isWebForgotPath, isWebLoginPath, isWebSignupPath, conceptOf, conceptSubTitle, conceptTabForPath, conceptTabs,
     hidesTabBar, isCareTalkPath, isTabRoot, tabForPath, type AppTab, type AppTabKey, type Concept,
 } from "./appTabs";
-import { APP_SHOP_SKIN_CSS } from "./appShopSkin";
-
-// 앱 겉모양 CSS 판 번호 — 내용으로 만든 짧은 값(내용이 바뀌면 주소가 바뀌어 예전 파일을 쓰지 않음)
-const APP_SKIN_VERSION = (() => {
-    let hash = 5381;
-    for (let i = 0; i < APP_SHOP_SKIN_CSS.length; i += 1) hash = ((hash << 5) + hash + APP_SHOP_SKIN_CSS.charCodeAt(i)) | 0;
-    return (hash >>> 0).toString(36);
-})();
-
-/* 무거운 화면 미리 받기 늦추기(2026-10-21 앱 속도) — 쇼핑 · 장바구니 화면은 상품 자료(6.6MB 스크립트)를 쓴다.
-   링크가 화면에 보이면 바로 미리 받던 것(Next 기본)을, 앱 홈이 막 뜬 순간 폰이 1초 가까이 멈추는 원인이라
-   첫 화면이 다 뜨고 한가할 때(2.5초 뒤 · 쉬는 틈)로 미룬다. 누르면 그대로 열리고, 미리 받은 뒤에는 예전처럼 빠르게 열림 */
-const HEAVY_PREFETCH = ["/app/sticker/shop", "/cart"];
-const isHeavyPrefetch = (href: string) => HEAVY_PREFETCH.some((p) => href === p || href.startsWith(`${p}/`) || href.startsWith(`${p}?`));
+const APP_SKIN_VERSION = process.env.NEXT_PUBLIC_APP_SKIN_VERSION;
 
 /**
  * 탭 아이콘(40×40 그림을 28px로) — 헤더 검색 · 장바구니와 같은 말랑한 젤리 그림(탭 색 그라데이션 면 + 흰 무늬 + 윗쪽 광택).
@@ -298,33 +285,11 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     preload("/fonts/NanumSquareRoundB.woff2", { as: "font", type: "font/woff2", crossOrigin: "anonymous" });
     const pathname = usePathname();
     const router = useRouter();
-    // 쇼핑 · 장바구니 미리 받기 — 앱을 연 뒤 한가할 때 한 번(위 HEAVY_PREFETCH 설명). 앱 틀은 탭을 옮겨도 그대로라 앱을 켤 때 한 번만
-    useEffect(() => {
-        let idle = 0;
-        const run = () => {
-            for (const href of ["/app/sticker/shop/", "/cart/"]) router.prefetch(href);
-            // 쇼핑에서만 나오는 산책 친구의 코드 · 꾸밈(CSS 51KB)도 미리 — 처음 쇼핑에 들어갈 때 꾸밈 파일이 새로 붙으며
-            // 화면 전체 꾸밈을 다시 계산하던 것을 한가할 때로(불러오기만, 그리지는 않음 — 화면에 붙는 건 그대로 쇼핑 탭에서만)
-            void import("@/components/pet-companion/PetCompanionGate").catch(() => undefined);
-        };
-        const timer = window.setTimeout(() => {
-            const w = window as Window & { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number };
-            if (w.requestIdleCallback) idle = w.requestIdleCallback(run, { timeout: 3000 });
-            else run();
-        }, 2500);
-        return () => {
-            window.clearTimeout(timer);
-            const w = window as Window & { cancelIdleCallback?: (id: number) => void };
-            if (idle && w.cancelIdleCallback) w.cancelIdleCallback(idle);
-        };
-        // eslint-disable-next-line react-hooks/exhaustive-deps -- 앱을 켤 때 한 번만(router 는 바뀌지 않음)
-    }, []);
     const { count: cartCount, hydrated: cartHydrated } = useCart();
     const [searchOpen, setSearchOpen] = useState(false);
     // 검색창 · 케어톡 창은 처음 열 때부터 붙여 둠(닫힘 애니메이션 · 대화 내용 유지를 위해 한 번 붙이면 계속)
     const [searchMounted, setSearchMounted] = useState(false);
     const [chatMounted, setChatMounted] = useState(false);
-    useEffect(() => { if (searchOpen) setSearchMounted(true); }, [searchOpen]);
     useEffect(() => {
         const mountChat = () => setChatMounted(true);
         window.addEventListener(CHAT_WIDGET_OPEN_EVENT, mountChat);
@@ -367,22 +332,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
        웹 · 설치 앱(PWA)은 같은 사이트라 그대로 */
     useEffect(() => {
         if (!Capacitor.isNativePlatform()) return;
-        const BUNDLED = ["/images/ui/", "/images/brand/", "/images/breeds/", "/images/pwa/", "/fonts/", "/_next/", "/ai/",
-            "/images/logo-black-poodle-v2.png", "/images/wordmark.png", "/images/og-ai-platform-"];
-        const remote = (value: string | null) => Boolean(value && value.startsWith("/") && !value.startsWith("//") && !BUNDLED.some((b) => value.startsWith(b)));
-        const fix = (el: Element) => {
-            for (const attr of ["src", "poster"]) {
-                const value = el.getAttribute(attr);
-                if (remote(value)) el.setAttribute(attr, `${NATIVE_WEB_ORIGIN}${value}`);
-            }
-            const srcset = el.getAttribute("srcset");
-            if (srcset && (srcset.startsWith("/") || srcset.includes(" /"))) {
-                el.setAttribute("srcset", srcset.split(",").map((part) => {
-                    const [url, ...rest] = part.trim().split(/\s+/);
-                    return [remote(url) ? `${NATIVE_WEB_ORIGIN}${url}` : url, ...rest].join(" ");
-                }).join(", "));
-            }
-        };
+        const fix = fixNativeMediaElement;
         const scan = (root: ParentNode) => root.querySelectorAll("img, video, source").forEach(fix);
         scan(document);
         const observer = new MutationObserver((records) => {
@@ -630,7 +580,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             {/* 쇼핑 탭 웹 화면(상세 · 장바구니 · 결제 · 목록) · 검색 창 — 앱에서만 스티커북 겉모양(appShopSkin.ts).
                 화면 파일마다 복사되지 않게 정적 파일 /app/skin.css 하나로(app/app/skin.css/route.ts) — <head> 로 올라가 첫 그림 전에 적용(React 19).
                 ?v= 는 내용이 바뀌면 바뀌는 값(예전 파일을 붙잡지 않게) */}
-            <link rel="stylesheet" href={`/app/skin.css?v=${APP_SKIN_VERSION}`} precedence="default" />
+            {activeKey === "shop" || myWeb || labWeb || searchMounted || chatMounted ? (
+                <link rel="stylesheet" href={`/app/skin.css?v=${APP_SKIN_VERSION}`} precedence="default" />
+            ) : null}
 
             {/* ── 상단바 — 앱 상단바(크림 판 · 젤리 버튼 · 카페24) ── */}
             <header className="app-bar fixed inset-x-0 top-0 z-[1000] pt-[env(safe-area-inset-top,0px)]">
@@ -642,7 +594,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                         </Link>
 
                         <div className="ml-auto flex items-center gap-2">
-                            <button type="button" onClick={() => setSearchOpen(true)} className="app-icon-btn app-jelly-btn app-press" aria-label="검색">
+                            <button type="button" onClick={() => { setSearchMounted(true); setSearchOpen(true); }} className="app-icon-btn app-jelly-btn app-press" aria-label="검색">
                                 <JellyIcon k="search" />
                             </button>
                             <Link href="/cart/" prefetch={false} className="app-icon-btn app-jelly-btn app-press relative" aria-label="장바구니">
@@ -729,7 +681,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                                 <li key={t.key} className="flex">
                                     <Link
                                         href={t.href}
-                                        prefetch={isHeavyPrefetch(t.href) ? false : undefined}
+                                        prefetch={false}
                                         className={`app-tab app-press ${on ? "is-on" : ""} ${concept && t.key === "shop" ? "is-hero" : ""}`}
                                         aria-current={on ? "page" : undefined}
                                     >

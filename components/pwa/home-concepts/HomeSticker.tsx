@@ -19,7 +19,7 @@
  */
 
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/app-shell/AppLink";
 import { useRef, useState } from "react";
 import { Peek, haptic, useExpandNav, usePressable } from "./gestures";
 import { LoginInvite, PostIt, STICKER_CSS, Tape } from "./sticker-kit";

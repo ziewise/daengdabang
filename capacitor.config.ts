@@ -5,7 +5,7 @@ const config: CapacitorConfig = {
     appName: "댕다방",
     webDir: "native/www",
     backgroundColor: "#fffaf0",
-    loggingBehavior: "production",
+    loggingBehavior: "debug",
     appendUserAgent: " DDBNative/1.0",
     server: {
         // Capacitor's Android HTML5 fallback maps extensionless paths to the

@@ -115,6 +115,9 @@ jobs:
           target: google_apis
           arch: x86_64
           profile: pixel_6
+          cores: 2
+          ram-size: 3072M
+          emulator-options: -no-window -gpu swiftshader -no-snapshot -noaudio -no-boot-anim -camera-back none -feature -Vulkan
           disable-animations: true
           # The emulator action invokes each script line in a separate shell, so
           # keep the stateful startup checks in one standalone POSIX script.
@@ -131,6 +134,7 @@ jobs:
             android/app/build/outputs/apk/debug/app-debug-logcat.txt
             android/app/build/outputs/apk/debug/app-debug-launch.png
             android/app/build/outputs/apk/debug/app-debug-webview.json
+            android/app/build/outputs/apk/debug/startup-health.txt
           if-no-files-found: error
           retention-days: 14
 

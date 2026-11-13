@@ -14,7 +14,7 @@
  */
 
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/app-shell/AppLink";
 import { forwardRef, useEffect, useState, type CSSProperties, type ReactNode } from "react";
 
 export const TEXT = "#3a2f2c";

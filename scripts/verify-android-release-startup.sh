@@ -31,6 +31,9 @@ grep -qx 'ddb-upgrade-preserves-data' "$artifact_dir/retained-data.txt"
 adb shell dumpsys package "$package_name" > "$artifact_dir/installed-package.txt"
 grep -q "versionCode=$DDB_ANDROID_VERSION_CODE " "$artifact_dir/installed-package.txt"
 printf '{"fromVersionCode":%s,"toVersionCode":%s,"dataRetained":true}\n' "$DDB_PREVIOUS_ANDROID_VERSION_CODE" "$DDB_ANDROID_VERSION_CODE" > "$artifact_dir/upgrade-check.json"
+# The old-version launch is only upgrade preparation; measure the new APK.
+adb shell am force-stop "$package_name"
+adb logcat -c
 adb shell input keyevent KEYCODE_WAKEUP
 adb shell wm dismiss-keyguard
 adb shell am start -W -n "$package_name/.MainActivity" > "$artifact_dir/launch.txt"
@@ -52,3 +55,5 @@ test -n "$app_pid"
 adb logcat -d -v threadtime --pid="$app_pid" > "$artifact_dir/logcat.txt"
 if grep -q 'FATAL EXCEPTION' "$artifact_dir/logcat.txt"; then exit 1; fi
 adb exec-out screencap -p > "$artifact_dir/launch.png"
+sh scripts/assert-android-responsive.sh "$artifact_dir/startup-health.txt"
+python3 scripts/verify-android-interactions.py "$artifact_dir"

@@ -7,7 +7,6 @@ import { Browser } from "@capacitor/browser";
 import { Capacitor } from "@capacitor/core";
 import { Haptics, ImpactStyle } from "@capacitor/haptics";
 import { Network } from "@capacitor/network";
-import { StatusBar, Style } from "@capacitor/status-bar";
 
 const WEB_ORIGIN = "https://www.daengdabang.com";
 const NATIVE_ROUTE_PREFIXES = [
@@ -59,17 +58,8 @@ export default function NativeAppBridge() {
         if (!Capacitor.isNativePlatform()) return;
 
         document.documentElement.dataset.ddbNativeApp = "true";
-        void StatusBar.setOverlaysWebView({ overlay: false });
-        void StatusBar.setStyle({ style: Style.Dark });
-        if (Capacitor.getPlatform() === "android") {
-            void StatusBar.setBackgroundColor({ color: "#fffaf0" });
-        }
-
-        // The shopping catalog is bundled locally; prepare it while the home screen is idle.
-        const warmShopping = () => router.prefetch("/app/sticker/shop/");
-        const idleWarmup = typeof window.requestIdleCallback === "function"
-            ? window.requestIdleCallback(warmShopping, { timeout: 3000 }) : undefined;
-        const warmupTimer = idleWarmup === undefined ? window.setTimeout(warmShopping, 1500) : undefined;
+        // StatusBar is configured natively in capacitor.config.ts. Reapplying
+        // its window/layout settings here competes with the first WebView draw.
 
         const onDocumentClick = (event: MouseEvent) => {
             if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
@@ -151,8 +141,6 @@ export default function NativeAppBridge() {
 
         return () => {
             document.removeEventListener("click", onDocumentClick, true);
-            if (idleWarmup !== undefined) window.cancelIdleCallback(idleWarmup);
-            if (warmupTimer !== undefined) window.clearTimeout(warmupTimer);
             delete document.documentElement.dataset.ddbNativeApp;
             void Promise.all(listenerHandles).then((handles) => handles.forEach((handle) => void handle.remove()));
         };

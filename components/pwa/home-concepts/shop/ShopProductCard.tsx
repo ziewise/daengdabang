@@ -13,7 +13,7 @@
  * 모양: 테이프 붙인 크래프트 종이 · 사진은 흰 테두리로 오려 붙임 · 가격은 노란 가격표 태그 · 기울기 ±1도.
  */
 
-import Link from "next/link";
+import Link from "@/components/app-shell/AppLink";
 import type { CatalogProduct } from "@/lib/catalog";
 import { getBestRank, isNewProduct } from "@/lib/catalog";
 import { catalogPriceBadgeLabel } from "@/lib/catalog/price-badge";

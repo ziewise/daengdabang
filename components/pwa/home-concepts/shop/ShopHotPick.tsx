@@ -13,7 +13,7 @@
  */
 
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/app-shell/AppLink";
 import { useMemo, useState } from "react";
 import type { CatalogProduct } from "@/lib/catalog";
 import { HOT_PICK_GROUPS, pickHotPickTopThree } from "@/lib/catalog/hot-picks";

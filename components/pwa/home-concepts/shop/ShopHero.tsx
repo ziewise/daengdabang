@@ -13,7 +13,7 @@
  *  - 산책 친구는 히어로 위로 오지 않음(충돌 회피 표시) · 히어로가 화면에 크게 보이는 동안은 숨었다가 내려가면 나타남
  */
 
-import Link from "next/link";
+import Link from "@/components/app-shell/AppLink";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { fallbackHeroWeather, getHeroSeason, normalizeHeroWeather, seasonLabel, timeBucketLabel, type HeroContext, type HeroWeather } from "@/lib/hero-assets";
 import { HERO_AUTO_REGION_ID, HERO_WEATHER_REGION_OPTIONS, fetchHeroWeatherReport, heroWeatherSummary, type HeroWeatherReport } from "@/lib/hero-weather";

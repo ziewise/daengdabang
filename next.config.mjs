@@ -1,4 +1,5 @@
-import { realpathSync } from "node:fs";
+import { readFileSync, realpathSync } from "node:fs";
+import { createHash } from "node:crypto";
 import { dirname, parse, resolve } from "node:path";
 
 function commonAncestor(first, second) {
@@ -32,6 +33,11 @@ const nextConfig = {
     // the immutable commit that contains the reviewed media.
     env: {
         NEXT_PUBLIC_STOREFRONT_ASSET_COMMIT_SHA: storefrontAssetCommitSha,
+        // Cache-bust the exported CSS without shipping/building its 440 KB
+        // string in the client bundle just to calculate a version hash.
+        NEXT_PUBLIC_APP_SKIN_VERSION: createHash("sha256")
+            .update(readFileSync(new URL("./components/app-shell/appShopSkin.ts", import.meta.url)))
+            .digest("hex").slice(0, 12),
     },
     images: {
         unoptimized: true,

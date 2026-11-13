@@ -1,0 +1,25 @@
+/* Apply before the first native WebView frame (UA bootstrap in layout.tsx).
+   Multi-pass alpha outlines force large offscreen GPU surfaces on Android.
+   Keep the sticker artwork, colors and a single soft shadow. */
+html[data-ddb-native-app="true"] :is(.st-diecut-img, .hm-short) {
+    filter: drop-shadow(0 3px 3px rgba(90, 60, 50, .22));
+}
+html.ddb-app-mode[data-ddb-native-app="true"] button[data-pet-companion-home]::before {
+    filter: drop-shadow(0 3px 3px rgba(90, 60, 50, .22));
+}
+html[data-ddb-native-app="true"] .app-tab-svg {
+    filter: none;
+}
+html[data-ddb-native-app="true"] .app-tab:not(.is-on):not(.is-hero) .app-tab-svg {
+    opacity: .72;
+}
+html[data-ddb-native-app="true"] .app-care-img {
+    filter: drop-shadow(0 3px 3px rgba(110, 80, 200, .25));
+}
+/* Keep press/entry motion; stop decorative effects that repaint indefinitely. */
+html[data-ddb-native-app="true"] :is(.st-box, .ah-wait, .st-slot.is-today) {
+    animation: none;
+}
+html[data-ddb-native-app="true"] :is(.ah-wait, .st-slot.is-today)::after {
+    animation: none;
+}

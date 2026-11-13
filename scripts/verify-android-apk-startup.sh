@@ -9,6 +9,12 @@ launch_log="$artifact_dir/app-debug-launch.txt"
 app_log="$artifact_dir/app-debug-logcat.txt"
 webview_state="$artifact_dir/app-debug-webview.json"
 
+# First-boot package optimization is unrelated to app startup. Use the same
+# phone-sized surface for every run, then measure without setup contention.
+adb shell wm size 720x1600
+adb shell wm density 320
+sleep 45
+trap 'test -f "$artifact_dir/startup-health.txt" || adb logcat -d -v threadtime > "$artifact_dir/startup-health.txt"' EXIT
 adb logcat -c
 adb install -r "$apk_path"
 adb shell am force-stop "$package_name"
@@ -61,6 +67,8 @@ if grep -F "FATAL EXCEPTION" "$app_log"; then
   cat "$app_log"
   exit 1
 fi
+
+sh scripts/assert-android-responsive.sh "$artifact_dir/startup-health.txt"
 
 if [ -f android/app/build/outputs/apk/release/app-release.apk ]; then
   sh scripts/verify-android-release-startup.sh

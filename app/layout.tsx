@@ -3,6 +3,7 @@ import Script from "next/script";
 import { Geist, Geist_Mono, Gaegu, Jua } from "next/font/google";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "./globals.css";
+import "./native-performance.css";
 // 산책 친구 설정 창 웹 겉모양(2026-10-26) — 협업자 산책 친구 코드는 그대로, 창의 data 표시로만 꾸밈(앱은 그대로)
 import "./pet-companion-web.css";
 // 헤더·푸터·도크는 경로별 토글(ConditionalChrome) — 로그인 등 풀스크린 페이지에서 숨김
@@ -53,6 +54,7 @@ const appStartRoute = `
   try {
     var nav = window.navigator;
     var native = /DDBNative/.test(nav.userAgent);
+    if (native) document.documentElement.dataset.ddbNativeApp = "true";
     var installed = native || nav.standalone === true || window.matchMedia("(display-mode: standalone)").matches;
     var path = location.pathname;
     if (installed && /^\\/app(\\/(index\\.html)?)?$/.test(path)) {

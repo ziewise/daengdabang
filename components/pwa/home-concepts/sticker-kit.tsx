@@ -10,7 +10,7 @@
  */
 
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/app-shell/AppLink";
 import { forwardRef, useState, type CSSProperties, type ReactNode } from "react";
 import { appLoginHref, appSignupHref } from "@/components/app-shell/appTabs";
 import { haptic } from "./gestures";
