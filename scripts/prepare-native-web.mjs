@@ -119,6 +119,19 @@ async function collectTextFiles(directory) {
     return files;
 }
 
+async function copyPetCompanionPosters() {
+    // Motion sheets stay remote (~79 MB). Keep every breed's small fallback in
+    // the APK so loading, failed requests and offline use never show only a shadow.
+    // These paths are built at runtime, so the HTML reference scan cannot see them.
+    const relativeRoot = "images/pet-companion/cute-v4-breeds";
+    const entries = await readdir(path.join(exportRoot, relativeRoot));
+    const coreSheets = entries.filter((entry) => entry.endsWith("-core.webp"));
+    if (!coreSheets.length) throw new Error("No pet companion breeds found in the web export.");
+    for (const coreSheet of coreSheets) {
+        await copyRelative(`${relativeRoot}/${coreSheet.replace(/-core\.webp$/, "-poster.webp")}`);
+    }
+}
+
 async function verifyReferencedAssets() {
     const missing = new Set();
     const files = await collectTextFiles(nativeRoot);
@@ -212,6 +225,7 @@ await mkdir(nativeRoot, { recursive: true });
 for (const relativePath of [...bundledRoutes, ...bundledDirectories, ...bundledFiles]) {
     await copyRelative(relativePath);
 }
+await copyPetCompanionPosters();
 
 await writeFile(path.join(nativeRoot, "index.html"), launchDocument, "utf8");
 // Keep provenance inside the APK: web deployments cannot update these files.

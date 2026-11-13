@@ -26,9 +26,16 @@ function connect(url) {
     });
 }
 
-function evaluateDocument(socket) {
+let nextRequestId = 0;
+
+function evaluateDocument(socket, expression = `(() => ({
+    url: window.location.href,
+    title: document.title,
+    readyState: document.readyState,
+    text: document.body?.innerText || "",
+}))()`) {
     return new Promise((resolve, reject) => {
-        const requestId = 1;
+        const requestId = ++nextRequestId;
         const timer = setTimeout(() => {
             reject(new Error("Timed out while reading the Android WebView document."));
         }, 5_000);
@@ -51,16 +58,64 @@ function evaluateDocument(socket) {
             id: requestId,
             method: "Runtime.evaluate",
             params: {
-                expression: `(() => ({
-                    url: window.location.href,
-                    title: document.title,
-                    readyState: document.readyState,
-                    text: document.body?.innerText || "",
-                }))()`,
+                expression,
+                awaitPromise: true,
                 returnByValue: true,
             },
         }));
     });
+}
+
+async function verifyPetCompanion(socket) {
+    await evaluateDocument(socket, `(() => {
+        sessionStorage.setItem("ddb.petCompanion.guestHeroVisual.v1", JSON.stringify({
+            breedId: "toy-poodle", characterId: "poodle",
+        }));
+        document.querySelector('a.app-tab[href="/app/sticker/shop/"]').click();
+    })()`);
+    let companion;
+    for (let attempt = 0; attempt < maximumAttempts; attempt += 1) {
+        companion = await evaluateDocument(socket, `(() => {
+            const root = document.querySelector('[data-pet-companion-root]');
+            const character = root?.querySelector('[data-breed]');
+            const canvas = character?.querySelector('canvas');
+            // The hero can occupy the whole initial viewport. Move to the
+            // shopping content where the walker has space to become visible.
+            if (character && window.scrollY === 0) window.scrollTo(0, 430);
+            let visible = Boolean(canvas);
+            for (let element = canvas; element; element = element.parentElement) {
+                const style = getComputedStyle(element);
+                if (style.display === 'none' || style.visibility !== 'visible' || Number(style.opacity) === 0) visible = false;
+            }
+            return {
+                src: character?.dataset.breedAsset,
+                poster: character?.dataset.breedPoster,
+                status: canvas?.dataset.petSpriteStatus,
+                width: character?.getBoundingClientRect().width || 0,
+                hidden: root?.getAttribute('aria-hidden'),
+                visible,
+            };
+        })()`);
+        if (companion?.status === "ready" && companion.visible && companion.width > 0 && companion.hidden !== "true") break;
+        await delay(1_000);
+    }
+    if (companion?.status !== "ready" || !companion.visible || companion.width <= 0 || companion.hidden === "true"
+        || !companion.src.startsWith("https://www.daengdabang.com/images/pet-companion/")) {
+        throw new Error(`Android shopping companion did not render: ${JSON.stringify(companion)}`);
+    }
+    // Load the fallback independently: a successful motion atlas must not hide
+    // a missing offline poster (the original APK failed both requests).
+    companion.posterLoaded = await evaluateDocument(socket, `new Promise(resolve => {
+        const poster = document.querySelector('[data-pet-companion-root] [data-breed]')?.dataset.breedPoster;
+        if (!poster?.startsWith('/images/pet-companion/')) return resolve(false);
+        const image = new Image();
+        image.onload = () => resolve(image.naturalWidth > 0);
+        image.onerror = () => resolve(false);
+        setTimeout(() => resolve(false), 3000);
+        image.src = poster;
+    })`);
+    if (!companion.posterLoaded) throw new Error("Android companion offline poster is missing.");
+    return companion;
 }
 
 let lastState;
@@ -78,7 +133,6 @@ for (let attempt = 1; attempt <= maximumAttempts; attempt += 1) {
 
         socket = await connect(target.webSocketDebuggerUrl);
         lastState = await evaluateDocument(socket);
-        socket.close();
 
         if (
             lastState?.readyState === "complete"
@@ -87,9 +141,12 @@ for (let attempt = 1; attempt <= maximumAttempts; attempt += 1) {
             && lastState.title.includes("댕다방")
             && lastState.text.includes(expectedText)
         ) {
+            lastState.companion = await verifyPetCompanion(socket);
+            socket.close();
             process.stdout.write(`${JSON.stringify(lastState, null, 2)}\n`);
             process.exit(0);
         }
+        socket.close();
     } catch (error) {
         socket?.close();
         lastError = error;

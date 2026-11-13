@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from "react";
+import { isNativeAppRuntime } from "@/lib/native-runtime";
 import {
     getPetBreedVisual,
     getPetBreedRenderTokens,
@@ -37,6 +38,9 @@ type Props = {
 
 const BREED_MOTION_ASSET_ROOT = "/images/pet-companion/cute-v4-breeds";
 const BREED_MOTION_ASSET_VERSION = "20260730-1";
+const NATIVE_ASSET_ORIGIN = "https://www.daengdabang.com";
+const subscribeToRuntime = () => () => {};
+const getServerRuntime = () => false;
 type TurnPhase = "rest" | "out" | "in";
 
 export default function PetCompanionCharacter({
@@ -53,6 +57,10 @@ export default function PetCompanionCharacter({
     variant = "live",
     className = "",
 }: Props) {
+    // Detached Image objects and CSS backgrounds are outside AppShell's media
+    // observer. Resolve the unbundled atlases here, after hydration; the poster
+    // is packaged locally so a failed/offline atlas still leaves a visible dog.
+    const nativeRuntime = useSyncExternalStore(subscribeToRuntime, isNativeAppRuntime, getServerRuntime);
     const [displayFacing, setDisplayFacing] = useState(facing);
     const [turnPhase, setTurnPhase] = useState<TurnPhase>("rest");
     const displayFacingRef = useRef(facing);
@@ -100,9 +108,10 @@ export default function PetCompanionCharacter({
 
     const breed = getPetBreedVisual(breedId || legacyCharacterBreedId(characterId));
     const renderTokens = getPetBreedRenderTokens(breed);
-    const breedCoreSrc = `${BREED_MOTION_ASSET_ROOT}/${breed.assetId}-core.webp?v=${BREED_MOTION_ASSET_VERSION}`;
+    const motionAssetRoot = `${nativeRuntime ? NATIVE_ASSET_ORIGIN : ""}${BREED_MOTION_ASSET_ROOT}`;
+    const breedCoreSrc = `${motionAssetRoot}/${breed.assetId}-core.webp?v=${BREED_MOTION_ASSET_VERSION}`;
     const breedPosterSrc = `${BREED_MOTION_ASSET_ROOT}/${breed.assetId}-poster.webp?v=${BREED_MOTION_ASSET_VERSION}`;
-    const breedVerticalSrc = `${BREED_MOTION_ASSET_ROOT}/${breed.assetId}-vertical.webp?v=${BREED_MOTION_ASSET_VERSION}`;
+    const breedVerticalSrc = `${motionAssetRoot}/${breed.assetId}-vertical.webp?v=${BREED_MOTION_ASSET_VERSION}`;
     const characterStyle = {
         "--pet-breed-scale-x": String(renderTokens.scaleX),
         "--pet-breed-scale-y": String(renderTokens.scaleY),

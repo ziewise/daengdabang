@@ -183,7 +183,15 @@ test("native store package removes install prompts while the web PWA keeps them"
     assert.match(nativeBuilder, /location\.replace\('\/app\/home-1\/index\.html'\)/);
     assert.doesNotMatch(nativeBuilder, /location\.replace\('\/app\/'\)/);
     assert.match(nativeBuilder, /maximumMegabytes = 72/);
-    assert.doesNotMatch(nativeBuilder, /images\/products|images\/hero|images\/pet-companion/);
+    assert.doesNotMatch(nativeBuilder, /images\/products|images\/hero/);
+    // Small offline posters are required; the large animation directory must
+    // not be copied wholesale into the install package.
+    const bundledDirectories = nativeBuilder.slice(
+        nativeBuilder.indexOf("const bundledDirectories ="),
+        nativeBuilder.indexOf("const bundledFiles ="),
+    );
+    assert.doesNotMatch(bundledDirectories, /images\/pet-companion/);
+    assert.match(nativeBuilder, /await copyPetCompanionPosters\(\)/);
     assert.match(apiBase, /PRODUCTION_DDB_API_BASE = "https:\/\/api\.daengdabang\.com"/);
     assert.match(apiBase, /Capacitor\.isNativePlatform\(\)\) return PRODUCTION_DDB_API_BASE/);
 });
