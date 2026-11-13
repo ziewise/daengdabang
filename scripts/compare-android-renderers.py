@@ -45,6 +45,18 @@ try:
     adb('root'); adb('wait-for-device')
     adb('shell','wm','size','720x1600'); adb('shell','wm','density','320')
     for _ in range(3): time.sleep(30)
+    # The fresh emulator's Pixel Launcher can ANR before any APK is installed.
+    # Record that infrastructure failure and close only that process/dialog.
+    # App ANRs remain fatal; never dismiss one during baseline/candidate runs.
+    boot_anr=adb('shell','dumpsys','activity','lastanr')
+    (OUT/'boot-last-anr.txt').write_text(boot_anr)
+    (OUT/'boot.png').write_bytes(adb('exec-out','screencap','-p',binary=True))
+    if 'com.google.android.apps.nexuslauncher' in boot_anr:
+        adb('shell','am','force-stop','com.google.android.apps.nexuslauncher')
+        time.sleep(10)
+    adb('shell','input','keyevent','KEYCODE_WAKEUP')
+    adb('shell','wm','dismiss-keyguard')
+    dump()  # An unresponsive boot UI invalidates the environment, not the APK.
     for label,apk in [('baseline','baseline.apk'),('candidate','candidate/app-release.apk')]:
         data=Path(apk).read_bytes()
         with zipfile.ZipFile(apk) as z: metadata=json.loads(z.read('assets/public/native-build.json'))
@@ -67,7 +79,11 @@ try:
                 (OUT/(stem+'.png')).write_bytes(adb('exec-out','screencap','-p',binary=True))
                 root=dump(); tap(root,'홈'); wait('댕다방에 오신 걸 환영해요')
                 record['uiPassed']=True
-            except Exception as e: record['error']=str(e)
+            except Exception as e:
+                record['error']=str(e)
+                (OUT/(stem+'-failed.png')).write_bytes(adb('exec-out','screencap','-p',binary=True))
+                try: (OUT/(stem+'-failed.xml')).write_text(adb('shell','cat','/sdcard/compare.xml'))
+                except subprocess.SubprocessError: pass
             logs=adb('logcat','-d','-v','threadtime')
             (OUT/(stem+'.log')).write_text(logs)
             record['anr']=bool(re.search(r'ANR in com\.daengdabang\.app|Input dispatching timed out.*com\.daengdabang\.app',logs))
