@@ -34,6 +34,9 @@ def wait_text(needle, name, attempts=18):
         try:
             root = dump(name)
             last = text(root)
+            if "isn't responding" in last:
+                screenshot('not-responding')
+                raise AssertionError('Android reported an unresponsive app')
             if needle in last:
                 return root
         except (subprocess.SubprocessError, ET.ParseError):
@@ -64,6 +67,13 @@ if sys.argv[1] == 'download':
 
 report = {'publicApkUnmodified': True}
 try:
+    # Only this disposable Google APIs emulator is rooted. Chromium documents
+    # these command-line switches for automated tests of an empty browser.
+    adb('root')
+    adb('wait-for-device')
+    adb('shell', "echo '_ --disable-fre --no-first-run --no-default-browser-check' > /data/local/tmp/chrome-command-line")
+    adb('shell', 'chmod', '644', '/data/local/tmp/chrome-command-line')
+    adb('logcat', '-c')
     adb('install', str(APK))
     package = adb('shell', 'dumpsys', 'package', PACKAGE)
     (OUT / 'installed-package.txt').write_text(package, encoding='utf-8')
@@ -73,16 +83,15 @@ try:
     root = wait_text('댕다방에 오신 걸 환영해요', 'home')
     screenshot('home')
     tap_node(root, '쇼핑')
-    time.sleep(8)
-    root = dump('shopping-top')
+    root = wait_text('댕다방 핫픽', 'shopping-top')
     screenshot('shopping-top')
-    assert '먹거리' in text(root), 'Shopping tab did not open'
     width, height = map(int, re.search(r'(\d+)x(\d+)', adb('shell', 'wm', 'size')).groups())
     for index in range(2):
         adb('shell', 'input', 'swipe', str(width // 2), str(int(height * .70)), str(width // 2), str(int(height * .38)), '450')
         time.sleep(3)
         root = dump(f'shopping-{index + 1}')
         screenshot(f'shopping-{index + 1}')
+        assert "isn't responding" not in text(root)
     report['shoppingRendered'] = True
     report['companionAccessibilityPresent'] = '산책 친구' in text(root)
     # Use the released app's existing incoming-link handler. It opens this
@@ -106,6 +115,9 @@ try:
     report['passed'] = True
 finally:
     screenshot('final-state')
+    (OUT / 'logcat.txt').write_text(adb('logcat', '-d', '-v', 'threadtime'), encoding='utf-8')
+    (OUT / 'last-anr.txt').write_text(adb('shell', 'dumpsys', 'activity', 'lastanr'), encoding='utf-8')
+    (OUT / 'anr-traces.txt').write_text(adb('shell', 'cat /data/anr/* 2>/dev/null || true'), encoding='utf-8')
     (OUT / 'activity.txt').write_text(adb('shell', 'dumpsys', 'activity', 'activities'), encoding='utf-8')
     (OUT / 'report.json').write_text(json.dumps(report, indent=2), encoding='utf-8')
     print(json.dumps(report))
