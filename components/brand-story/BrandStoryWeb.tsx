@@ -20,6 +20,7 @@ import { CATALOG, CATEGORY_LABEL, listBrands, type CategorySlug } from "@/lib/ca
 import BizFormButton from "@/components/contact/BizFormButton";
 import { BRAND_STANDARDS } from "@/lib/brand-standards";
 import SceneDeck from "@/components/brand-story/SceneDeck";
+import BrandGivingPromise from "@/components/brand-story/BrandGivingPromise";
 
 const UI = "/images/ui/";
 
@@ -146,6 +147,8 @@ export default function BrandStoryWeb() {
                     <p>편하게 둘러보고, 충분히 비교하고, 궁금한 점은 물어볼 수 있는 곳. 서두르지 않고 우리 아이에게 맞는 선택을 할 수 있도록 돕는 것, 그것이 댕다방이 만들어가고 싶은 쇼핑 경험입니다.</p>
                 </div>
             </section>
+
+            <BrandGivingPromise id="bsw-giving" />
 
             {/* ④ 다섯 장면 */}
             <section className="bsw-section" aria-labelledby="bsw-scenes-title">

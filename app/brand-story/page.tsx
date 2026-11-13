@@ -5,11 +5,12 @@ import BrandStoryHeroVideo from "./BrandStoryHeroVideo";
 import styles from "./brand-story.module.css";
 // 웹 화면(2026-10-25 2차) — 웹은 BrandStoryWeb(장면 · 숫자 · 기준 · 흐름 · 약속), 아래 기존 구조는 앱 전용(app/brand-story-web.css 가 갈라 보여 줌)
 import BrandStoryWeb from "@/components/brand-story/BrandStoryWeb";
+import BrandGivingPromise from "@/components/brand-story/BrandGivingPromise";
 import "../brand-story-web.css";
 
 export const metadata: Metadata = {
     title: "브랜드 스토리 | 댕다방",
-    description: "반려견의 실제 하루에서 시작하는 댕다방의 큐레이션 기준과 약속",
+    description: "우리 아이의 좋은 하루에서 모든 강아지의 내일까지. 댕다방의 큐레이션 기준과 유기견 보호를 위한 기부 약속을 소개합니다.",
     alternates: { canonical: "/brand-story" },
 };
 
@@ -103,6 +104,10 @@ export default function BrandStoryPage() {
                     </p>
                 </div>
             </section>
+
+            <div className={styles.givingSection}>
+                <BrandGivingPromise id="brand-giving" />
+            </div>
 
             <section id="our-standard" className={styles.principleSection} aria-labelledby="brand-standard-title">
                 <div className={styles.sectionHeading}>
