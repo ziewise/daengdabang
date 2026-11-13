@@ -37,6 +37,8 @@
     word-break: keep-all;
 }
 
+.title .contextLine { margin-bottom: 6px; color: #725362; font-size: .7em; }
+
 .title em {
     position: relative;
     isolation: isolate;
