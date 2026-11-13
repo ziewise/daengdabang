@@ -61,7 +61,8 @@ def summarize(trace):
 
 def capture(stem,action):
     remote='/data/misc/perfetto-traces/'+stem+'.perfetto-trace'
-    proc=subprocess.Popen(['adb','shell','perfetto','--txt','-c','/data/local/tmp/audit-config.txt','-o',remote],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+    proc=subprocess.Popen(['adb','shell','perfetto','--txt','-c','-','-o',remote],stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+    proc.stdin.write(CONFIG.encode()); proc.stdin.close(); proc.stdin=None
     time.sleep(1)
     action()
     stdout,stderr=proc.communicate(timeout=40)
@@ -81,7 +82,6 @@ try:
     boot=adb('shell','dumpsys','activity','lastanr'); (OUT/'boot-anr.txt').write_text(boot)
     if 'com.google.android.apps.nexuslauncher' in boot: adb('shell','am','force-stop','com.google.android.apps.nexuslauncher')
     adb('shell','wm','dismiss-keyguard'); ui()
-    adb('push',str(OUT/'config.txt'),'/data/local/tmp/audit-config.txt')
     for idx,label in enumerate(report['order']):
         stem=f'{idx+1}-{label}'
         rec={'version':label,'order':idx+1}
