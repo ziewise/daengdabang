@@ -19,8 +19,11 @@ adb logcat -c
 # Install the actual previous public release, create private app data, then
 # update without uninstalling. A fresh-install-only test misses signing bugs.
 test -n "$DDB_PREVIOUS_ANDROID_APK"
-adb root > "$artifact_dir/emulator-root.txt"
-adb wait-for-device
+# `adb root` restarts adbd. Some emulator builds close the connection before
+# returning success, even though root was enabled. Reconnect, then require the
+# actual UID instead of treating that transport restart as an APK failure.
+adb root > "$artifact_dir/emulator-root.txt" 2>&1 || true
+timeout 30 adb wait-for-device
 test "$(adb shell id -u | tr -d '\r')" = "0"
 adb install "$DDB_PREVIOUS_ANDROID_APK" > "$artifact_dir/previous-install.txt"
 adb shell am start -W -n "$package_name/.MainActivity" > "$artifact_dir/previous-launch.txt"
