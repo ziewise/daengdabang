@@ -8,6 +8,8 @@ artifact_dir="android/app/build/outputs/apk/release"
 capture_receipts() {
     adb shell dumpsys activity activities > "$artifact_dir/activity.txt" || true
     adb logcat -d -v threadtime > "$artifact_dir/logcat.txt" || true
+    adb shell dumpsys activity lastanr > "$artifact_dir/last-anr.txt" || true
+    adb shell 'cat /data/anr/anr_* 2>/dev/null' > "$artifact_dir/anr-traces.txt" || true
     adb exec-out screencap -p > "$artifact_dir/final-state.png" || true
 }
 trap capture_receipts EXIT

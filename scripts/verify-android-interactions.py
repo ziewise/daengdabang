@@ -58,6 +58,7 @@ try:
         adb('logcat', '-c')
         start = time.monotonic()
         launch = adb('shell', 'am', 'start', '-W', '-n', PACKAGE+'/.MainActivity')
+        assert 'GrantPermissionsActivity' not in launch, 'Startup must not open an unsolicited permission activity'
         root = wait_for('댕다방에 오신 걸 환영해요')
         home_ms = round((time.monotonic()-start)*1000)
         start = time.monotonic()
