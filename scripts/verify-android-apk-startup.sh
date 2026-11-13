@@ -14,6 +14,23 @@ webview_state="$artifact_dir/app-debug-webview.json"
 adb shell wm size 720x1600
 adb shell wm density 320
 sleep 45
+sleep 45
+# A fresh Google APIs emulator can leave a Pixel Launcher ANR above all apps
+# before our APK is installed. Record it and close only that boot process.
+# Never dismiss or suppress a DaengDaBang ANR during the actual checks.
+adb shell dumpsys activity lastanr > "$artifact_dir/emulator-boot-anr.txt"
+if grep -q 'com.google.android.apps.nexuslauncher' "$artifact_dir/emulator-boot-anr.txt"; then
+    adb shell am force-stop com.google.android.apps.nexuslauncher
+    sleep 10
+fi
+adb shell input keyevent KEYCODE_WAKEUP
+adb shell wm dismiss-keyguard
+adb shell uiautomator dump /sdcard/ddb-emulator-boot.xml > /dev/null
+adb pull /sdcard/ddb-emulator-boot.xml "$artifact_dir/emulator-boot-window.xml" > /dev/null
+if grep -E "isn.t responding|응답하지" "$artifact_dir/emulator-boot-window.xml"; then
+    echo 'Android emulator is unresponsive before APK installation.' >&2
+    exit 1
+fi
 trap 'test -f "$artifact_dir/startup-health.txt" || adb logcat -d -v threadtime > "$artifact_dir/startup-health.txt"' EXIT
 adb logcat -c
 adb install -r "$apk_path"
