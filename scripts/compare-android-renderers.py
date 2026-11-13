@@ -80,4 +80,4 @@ try:
 finally:
     (OUT/'comparison.json').write_text(json.dumps(report,indent=2))
     (OUT/'last-anr.txt').write_text(adb('shell','dumpsys','activity','lastanr'))
-    (OUT/'anr-traces.txt').write_text(adb('shell','cat /data/anr/anr_* 2>/dev/null'))
+    (OUT/'anr-traces.txt').write_text(adb('shell','cat /data/anr/anr_* 2>/dev/null || true'))
