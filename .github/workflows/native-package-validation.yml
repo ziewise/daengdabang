@@ -1,115 +1,41 @@
 name: Native package validation
-
 on:
   workflow_dispatch:
     inputs:
       release:
-        description: Build and verify a signed Android release APK
-        required: false
-        default: false
         type: boolean
-  push:
-    branches:
-      - main
-      - codex/native-store-packaging-20260822
-      - codex/android-open-fix-20260831
-
+        default: false
 permissions:
   contents: read
-
-concurrency:
-  group: native-package-${{ github.ref }}
-  cancel-in-progress: false
-
+  actions: read
 jobs:
-  android:
-    name: Android API 36 installable package
+  compare:
+    name: Compare APKs with ${{ matrix.gpu }}
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        gpu: [swangle, lavapipe]
     steps:
       - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
         with:
-          node-version: 24.19.0
-          cache: npm
-
-      - uses: actions/setup-java@v4
+          sparse-checkout: scripts/compare-android-renderers.py
+          sparse-checkout-cone-mode: false
+      - uses: actions/download-artifact@v4
         with:
-          distribution: temurin
-          java-version: "21"
-          cache: gradle
-
-      - name: Install web dependencies
-        run: npm ci
-
-      - name: Plan the next Android version and download the upgrade baseline
-        if: ${{ inputs.release || github.ref == 'refs/heads/main' }}
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: node scripts/android-release.mjs prepare
-
-      - name: Run storefront regression tests
-        run: npm test
-
-      - name: Build and sync native assets
-        run: npm run native:sync
-
-      - name: Build debug Android App Bundle and installable APK
-        working-directory: android
-        run: ./gradlew :app:bundleDebug :app:assembleDebug --stacktrace
-
-      - name: Build signed Android release
-        if: ${{ inputs.release || github.ref == 'refs/heads/main' }}
-        working-directory: android
-        env:
-          DDB_ANDROID_KEYSTORE_BASE64: ${{ secrets.DDB_ANDROID_KEYSTORE_BASE64 }}
-          DDB_ANDROID_KEYSTORE_PASSWORD: ${{ secrets.DDB_ANDROID_KEYSTORE_PASSWORD }}
-          DDB_ANDROID_KEY_ALIAS: ${{ secrets.DDB_ANDROID_KEY_ALIAS }}
-          DDB_ANDROID_CERT_SHA256: ${{ secrets.DDB_ANDROID_CERT_SHA256 }}
-        run: |
-          set -euo pipefail
-          test -n "$DDB_ANDROID_KEYSTORE_BASE64"
-          test -n "$DDB_ANDROID_KEYSTORE_PASSWORD"
-          test -n "$DDB_ANDROID_KEY_ALIAS"
-          test -n "$DDB_ANDROID_CERT_SHA256"
-          export DDB_ANDROID_KEYSTORE_PATH="$RUNNER_TEMP/ddb-release.p12"
-          trap 'rm -f "$DDB_ANDROID_KEYSTORE_PATH"' EXIT
-          umask 077
-          printf '%s' "$DDB_ANDROID_KEYSTORE_BASE64" | base64 --decode > "$DDB_ANDROID_KEYSTORE_PATH"
-          ./gradlew :app:assembleRelease --stacktrace
-          build_tools="$(find "$ANDROID_HOME/build-tools" -mindepth 1 -maxdepth 1 -type d | sort -V | tail -n 1)"
-          apk="app/build/outputs/apk/release/app-release.apk"
-          "$build_tools/apksigner" verify --verbose --print-certs "$apk" | tee app/build/outputs/apk/release/signature.txt
-          grep -F "Number of signers: 1" app/build/outputs/apk/release/signature.txt
-          grep -F "certificate SHA-256 digest: $DDB_ANDROID_CERT_SHA256" app/build/outputs/apk/release/signature.txt
-          "$build_tools/apksigner" verify --print-certs "$DDB_PREVIOUS_ANDROID_APK" > app/build/outputs/apk/release/previous-signature.txt
-          grep -F "certificate SHA-256 digest: $DDB_ANDROID_CERT_SHA256" app/build/outputs/apk/release/previous-signature.txt
-          "$build_tools/zipalign" -c -P 16 -v 4 "$apk" > app/build/outputs/apk/release/alignment.txt
-          "$build_tools/aapt" dump badging "$apk" > app/build/outputs/apk/release/package.txt
-          if grep -q 'application-debuggable' app/build/outputs/apk/release/package.txt; then
-            echo "Release APK must not be debuggable" >&2
-            exit 1
-          fi
-          cp "$RUNNER_TEMP/android-release-plan.json" app/build/outputs/apk/release/release-plan.json
-
-      - name: Verify APK signature and package metadata
-        shell: bash
-        run: |
-          set -euo pipefail
-          build_tools="$(find "$ANDROID_HOME/build-tools" -mindepth 1 -maxdepth 1 -type d | sort -V | tail -n 1)"
-          "$build_tools/apksigner" verify --verbose --print-certs android/app/build/outputs/apk/debug/app-debug.apk
-          "$build_tools/zipalign" -c -P 16 -v 4 android/app/build/outputs/apk/debug/app-debug.apk
-          "$build_tools/aapt" dump badging android/app/build/outputs/apk/debug/app-debug.apk | tee android/app/build/outputs/apk/debug/app-debug-badging.txt
-
-      - name: Enable KVM for the Android emulator
+          github-token: ${{ github.token }}
+          run-id: 43477332143
+          name: daengdabang-android-signed-release
+          path: candidate
+      - name: Download unchanged public baseline
+        run: python3 scripts/compare-android-renderers.py download
+      - name: Enable KVM
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
-
-      - name: Verify the installed app opens and stays alive
-        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
+      - uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
         with:
           api-level: 35
           target: google_apis
@@ -117,103 +43,12 @@ jobs:
           profile: pixel_6
           cores: 2
           ram-size: 3072M
-          emulator-options: -no-window -gpu swiftshader -no-snapshot -noaudio -no-boot-anim -camera-back none -feature -Vulkan
+          emulator-options: -no-window -gpu ${{ matrix.gpu }} -no-snapshot -noaudio -no-boot-anim -camera-back none -feature -Vulkan
           disable-animations: true
-          # The emulator action invokes each script line in a separate shell, so
-          # keep the stateful startup checks in one standalone POSIX script.
-          script: sh scripts/verify-android-apk-startup.sh
-
+          script: python3 scripts/compare-android-renderers.py ${{ matrix.gpu }}
       - uses: actions/upload-artifact@v4
-        if: ${{ always() && hashFiles('android/app/build/outputs/apk/debug/app-debug.apk') != '' }}
+        if: always()
         with:
-          name: daengdabang-android-debug-apk
-          path: |
-            android/app/build/outputs/apk/debug/app-debug.apk
-            android/app/build/outputs/apk/debug/app-debug-badging.txt
-            android/app/build/outputs/apk/debug/app-debug-launch.txt
-            android/app/build/outputs/apk/debug/app-debug-logcat.txt
-            android/app/build/outputs/apk/debug/app-debug-launch.png
-            android/app/build/outputs/apk/debug/app-debug-webview.json
-            android/app/build/outputs/apk/debug/startup-health.txt
-          if-no-files-found: error
-          retention-days: 14
-
-      - uses: actions/upload-artifact@v4
-        if: ${{ always() && hashFiles('android/app/build/outputs/apk/release/app-release.apk') != '' }}
-        with:
-          name: daengdabang-android-signed-release
-          path: android/app/build/outputs/apk/release/
-          if-no-files-found: error
-          retention-days: 30
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: daengdabang-android-debug-aab
-          path: android/app/build/outputs/bundle/debug/app-debug.aab
-          if-no-files-found: error
-          retention-days: 14
-
-  publish-android:
-    name: Publish verified Android update
-    needs: android
-    if: ${{ github.ref == 'refs/heads/main' }}
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      actions: read
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24.19.0
-      - uses: actions/download-artifact@v4
-        with:
-          name: daengdabang-android-signed-release
-          path: android-release
-      - name: Publish complete release and verify the public download
-        env:
-          GH_TOKEN: ${{ github.token }}
-          DDB_ANDROID_CERT_SHA256: ${{ secrets.DDB_ANDROID_CERT_SHA256 }}
-        run: node scripts/android-release.mjs publish android-release
-
-  ios:
-    name: iOS simulator build
-    # The manual Android release does not ship an iOS app. Push validation
-    # continues to build both platforms.
-    if: ${{ !inputs.release }}
-    runs-on: macos-latest
-    timeout-minutes: 45
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24.19.0
-          cache: npm
-
-      - name: Install web dependencies
-        run: npm ci
-
-      - name: Build and sync native assets
-        run: npm run native:sync
-
-      - name: Build unsigned simulator app
-        run: >-
-          xcodebuild
-          -project ios/App/App.xcodeproj
-          -scheme App
-          -configuration Debug
-          -sdk iphonesimulator
-          -derivedDataPath ios/DerivedData
-          CODE_SIGNING_ALLOWED=NO
-          build
-
-      - name: Package simulator build
-        run: ditto -c -k --sequesterRsrc --keepParent ios/DerivedData/Build/Products/Debug-iphonesimulator/App.app daengdabang-ios-simulator.zip
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: daengdabang-ios-simulator
-          path: daengdabang-ios-simulator.zip
-          if-no-files-found: error
+          name: renderer-comparison-${{ matrix.gpu }}
+          path: verification/
           retention-days: 14
