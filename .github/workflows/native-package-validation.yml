@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        gpu: [swangle, lavapipe]
+        gpu: [swiftshader, swangle, lavapipe]
     steps:
       - uses: actions/checkout@v4
         with:
