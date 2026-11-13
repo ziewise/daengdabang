@@ -32,7 +32,7 @@ const ShopShelf = dynamic(() => import("../shop/ShopShelf"), {
     loading: () => <div style={{ minHeight: 900 }} role="status" className="ah-light pt-8 text-center text-[12px]">상품을 불러오고 있어요.</div>,
 });
 import Link from "@/components/app-shell/AppLink";
-import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import { useMemo, useSyncExternalStore } from "react";
 import type { CategorySlug } from "@/lib/catalog/types";
 import { CATEGORY_GROUPS, WEB_PROMO_CARDS, type PromoCard } from "@/lib/menu-data";
 import { promoCardForSeason, seasonOf } from "@/lib/promo-season";
@@ -47,6 +47,7 @@ import { useShopMedia } from "../shop/useShopMedia";
 import { SHOW_PARTS_CSS } from "../show-parts";
 // 화면에 보일 때만 재생하는 영상(앱 속도, 2026-10-18)
 import InViewVideo from "../InViewVideo";
+import { useVisibleCarousel } from "../shop/useVisibleCarousel";
 
 /* 브랜드 — 웹 BrandSlider 와 같은 내용(브랜드마다 2장).
    pos: 가로로 긴 웹 배너를 4:3 칸에 채울 때 보일 위치(object-position) — 강아지가 한쪽에 있는 사진은 강아지 쪽으로(사용자 2026-10-17) */
@@ -172,17 +173,11 @@ function AppPromoCards() {
 /* ───────── ⑤ 기획전 카드 — 사진(영상)은 위, 아래는 제목만(큰 카드도 한 줄) ───────── */
 function PromoSticker({ tile, i }: { tile: PromoCard; i: number }) {
     const featured = Boolean(tile.featured);
-    const [idx, setIdx] = useState(0);
-    useEffect(() => {
-        const n = tile.images?.length ?? 0;
-        if (n < 2) return;
-        const t = window.setInterval(() => setIdx((v) => (v + 1) % n), 3000); // 웹과 같이 3초마다 바뀜
-        return () => window.clearInterval(t);
-    }, [tile.images]);
+    const { ref, index: idx } = useVisibleCarousel(tile.images?.length ?? 0, 3000);
     const title = featured ? (tile.titleFull ?? tile.title).replace(/\s*\n\s*/g, " ") : tile.title; // 큰 카드 제목도 한 줄
     const media = useShopMedia(); // 사진 · 영상 주소(네이티브 앱은 운영 사이트 파일) — 준비 전엔 빈 사진 자리
     return (
-        <Link href={tile.href} aria-label={`${title} — ${tile.desc}`} onClick={() => haptic("light")} className={`shp-promo relative block bg-white p-1.5 pb-2.5 ${featured ? "col-span-2" : ""}`}
+        <Link ref={ref} href={tile.href} aria-label={`${title} — ${tile.desc}`} onClick={() => haptic("light")} className={`shp-promo relative block bg-white p-1.5 pb-2.5 ${featured ? "col-span-2" : ""}`}
             style={{ rotate: `${featured ? -0.6 : [0, 0.9, -0.8, 0.7, -0.9][i % 5]}deg` }}>
             <Tape className="-top-2 left-1/2 z-10 h-3.5 w-12 -translate-x-1/2" color={["rgba(255,200,215,.9)", "rgba(190,224,255,.85)", "rgba(220,205,255,.9)", "rgba(200,240,215,.9)", "rgba(255,232,170,.9)"][i % 5]} />
             <span className={`relative block overflow-hidden rounded-[3px] ${featured ? "aspect-[16/10]" : "aspect-[4/3]"}`} style={{ background: "#f6efe8" }}>
@@ -202,14 +197,10 @@ function PromoSticker({ tile, i }: { tile: PromoCard; i: number }) {
 
 /* ───────── 대표 브랜드 스티커 — 웹 슬라이더처럼 4.5초마다 그 브랜드의 두 장이 바뀜 · 글자는 브랜드 이름만 ───────── */
 function BrandSticker({ brand, i }: { brand: (typeof BRANDS)[number]; i: number }) {
-    const [k, setK] = useState(0);
-    useEffect(() => {
-        const t = window.setInterval(() => setK((v) => (v + 1) % brand.slides.length), 4500);
-        return () => window.clearInterval(t);
-    }, [brand.slides.length]);
+    const { ref, index: k } = useVisibleCarousel(brand.slides.length, 4500);
     const media = useShopMedia(); // 브랜드 사진 주소(네이티브 앱은 운영 사이트 파일)
     return (
-        <Link href={brand.href} aria-label={`${brand.name} ${brand.cta}`} onClick={() => haptic("light")} className="shp-brand relative block rounded-[12px] bg-white p-1.5 pb-2.5" style={{ rotate: `${i ? 0.8 : -0.8}deg` }}>
+        <Link ref={ref} href={brand.href} aria-label={`${brand.name} ${brand.cta}`} onClick={() => haptic("light")} className="shp-brand relative block rounded-[12px] bg-white p-1.5 pb-2.5" style={{ rotate: `${i ? 0.8 : -0.8}deg` }}>
             {/* 기획전 카드처럼 위에 마스킹테이프 */}
             <Tape className="-top-2 left-1/2 z-10 h-3.5 w-12 -translate-x-1/2" color={i ? "rgba(255,226,150,.9)" : "rgba(200,240,215,.9)"} style={{ rotate: `${i ? 4 : -4}deg` }} />
             <span className="relative block aspect-[4/3] overflow-hidden rounded-[8px] bg-[#f6efe8]">

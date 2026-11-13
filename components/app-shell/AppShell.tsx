@@ -40,7 +40,7 @@ import {
     APP_FORGOT, APP_ITEM, APP_PETS, isWebPetProfilesUrl, APP_LOGIN, APP_SIGNUP, APP_TABS, DANG_SECTIONS, MEMBER_ONLY_PATHS, appLoginHref, appSignupHref, conceptIsTabRoot, isWebForgotPath, isWebLoginPath, isWebSignupPath, conceptOf, conceptSubTitle, conceptTabForPath, conceptTabs,
     hidesTabBar, isCareTalkPath, isTabRoot, tabForPath, type AppTab, type AppTabKey, type Concept,
 } from "./appTabs";
-const APP_SKIN_VERSION = process.env.NEXT_PUBLIC_APP_SKIN_VERSION;
+import AppSkin from "./AppSkin";
 
 /**
  * 탭 아이콘(40×40 그림을 28px로) — 헤더 검색 · 장바구니와 같은 말랑한 젤리 그림(탭 색 그라데이션 면 + 흰 무늬 + 윗쪽 광택).
@@ -580,9 +580,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             {/* 쇼핑 탭 웹 화면(상세 · 장바구니 · 결제 · 목록) · 검색 창 — 앱에서만 스티커북 겉모양(appShopSkin.ts).
                 화면 파일마다 복사되지 않게 정적 파일 /app/skin.css 하나로(app/app/skin.css/route.ts) — <head> 로 올라가 첫 그림 전에 적용(React 19).
                 ?v= 는 내용이 바뀌면 바뀌는 값(예전 파일을 붙잡지 않게) */}
-            {activeKey === "shop" || myWeb || labWeb || searchMounted || chatMounted ? (
-                <link rel="stylesheet" href={`/app/skin.css?v=${APP_SKIN_VERSION}`} precedence="default" />
-            ) : null}
+            <AppSkin active={shopWeb || myWeb || labWeb || careTalk || searchOpen || chatOpen} />
 
             {/* ── 상단바 — 앱 상단바(크림 판 · 젤리 버튼 · 카페24) ── */}
             <header className="app-bar fixed inset-x-0 top-0 z-[1000] pt-[env(safe-area-inset-top,0px)]">
@@ -665,7 +663,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
             {/* ── 산책 친구 — 쇼핑 탭 화면에서만(2026-10-21 사용자 결정 — 10-18 에 앱 전체에서 껐다가 쇼핑만 다시). 협업자 PetCompanionGate 그대로 ·
                 장바구니 · 결제에서는 스스로 숨음. 다른 탭(홈 · 연구소 · 댕다방 · 마이)은 계속 도는 애니메이션 · 화면 감시가 없게 그대로 꺼 둠 ── */}
-            {activeKey === "shop" ? <PetCompanionGate /> : null}
+            {activeKey === "shop" ? <PetCompanionGate appMode /> : null}
 
             {/* ── 아래 탭바 — 크림 종이 판. 아이콘은 헤더와 같은 젤리 그림, 고른 탭은 파스텔 젤리 판 위로 통 + 카페24 이름 ── */}
             {showTabBar && (
@@ -741,6 +739,15 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 }
 
 const CSS = `
+/* Base app layout stays active when the optional shopping/dialog skin sleeps. */
+html.ddb-app-mode, html.ddb-app-mode * { scrollbar-width: none; }
+html.ddb-app-mode::-webkit-scrollbar, html.ddb-app-mode *::-webkit-scrollbar { display: none; width: 0; height: 0; }
+html.ddb-app-mode body { word-break: keep-all; overflow-wrap: break-word; }
+html.ddb-app-mode button[aria-label*="산책 친구. 드래그"] span,
+html.ddb-app-mode #pet-companion-quick-actions button[aria-label="빠른 메뉴 닫기"] {
+  font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400;
+}
+html.ddb-app-mode main[class*="app-topbar-h"] > .mx-auto { width: 100%; width: -webkit-fill-available; width: stretch; min-width: 0; }
 /* 카페24 써라운드 — 앱 홈 시안과 같은 글씨. 앱에서 늘 붙어 있는 앱 틀 CSS 한 곳에만 선언(2026-10-22 속도: 화면마다 선언이 다시 들어와 글자 전체를 다시 배치하던 것).
    웹 화면은 이 선언이 없어 웹 모양 그대로 */
 @font-face { font-family: "Cafe24Ssurround"; src: url("/fonts/Cafe24Ssurround.woff2") format("woff2"); font-display: swap; }

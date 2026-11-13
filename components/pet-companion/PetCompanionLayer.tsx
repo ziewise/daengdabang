@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import AppSkin from "@/components/app-shell/AppSkin";
 import { createPortal } from "react-dom";
 import {
     useCallback,
@@ -65,6 +66,7 @@ import PetCompanionCharacter, {
 import styles from "./PetCompanionLayer.module.css";
 
 type Props = {
+    appMode?: boolean;
     settings: PetCompanionSettings;
     /** Guest-home visual only; never persisted into a member or panel profile. */
     visualBreedId?: string;
@@ -233,6 +235,7 @@ function externalDialogIsOpen({
 }
 
 export default function PetCompanionLayer({
+    appMode = false,
     settings,
     visualBreedId,
     visualCharacterId,
@@ -2598,6 +2601,7 @@ export default function PetCompanionLayer({
             data-pet-companion-rotation-key={runtimePetKey}
             aria-hidden={hidden ? "true" : undefined}
         >
+            <AppSkin active={appMode && quickActionsOpen} />
             {entryPortal && createPortal(
                 <span
                     ref={entryCloneRef}

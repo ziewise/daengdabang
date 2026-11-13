@@ -22,6 +22,7 @@ import {
     type PetCompanionSettings,
 } from "@/lib/pet-companion";
 import styles from "./PetCompanionLayer.module.css";
+import AppSkin from "@/components/app-shell/AppSkin";
 
 const PetCompanionLayer = dynamic(() => import("./PetCompanionLayer"), { ssr: false });
 
@@ -41,7 +42,7 @@ function isHiddenRoute(pathname: string | null) {
     return HIDDEN_PATHS.some((path) => pathname === path || pathname?.startsWith(`${path}/`));
 }
 
-export default function PetCompanionGate() {
+export default function PetCompanionGate({ appMode = false }: { appMode?: boolean }) {
     const pathname = usePathname();
     const heroActive = isHeroRoute(pathname);
     const { state, hydrated } = useStore();
@@ -343,6 +344,7 @@ export default function PetCompanionGate() {
 
     return (
         <>
+            <AppSkin active={appMode && panelOpen} />
             {effectiveSettings && (
                 <button
                     ref={homeLaunchRef}
@@ -411,6 +413,7 @@ export default function PetCompanionGate() {
             </button>
             {(!waitingForGuestVisual || productRecommendationActive || signupGuideActive || panelOpen) && (panelOpen || effectiveSettings?.enabled) && effectiveSettings && (
                 <PetCompanionLayer
+                    appMode={appMode}
                     key={pathname || "root"}
                     settings={effectiveSettings}
                     visualBreedId={guestVisual?.breedId}

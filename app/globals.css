@@ -3462,7 +3462,9 @@ html:not(.ddb-app-mode) [data-home-install-strip] { display: none; }
 /* 메인 구역 보이는 순서(2026-10-24 사용자) — 대표 브랜드 → 매일 댕생활 → 기획전 → 신상품 → 인스타.
    큰 사진 구역(브랜드 · 기획전)이 연달아 붙지 않게 사이에 파스텔 판(매일 댕생활)을 두고, 기획전에서 신상품으로 쇼핑 흐름을 잇는다.
    코드 순서(app/page.tsx · 테스트가 지키는 순서)는 그대로 두고 웹 화면에서 보이는 순서만 바꿈. 앱은 그대로 */
-html:not(.ddb-app-mode) main:has(> section#promo) {
+/* Explicit route marker: the former :has() + general sibling selector made
+   Chromium invalidate the entire body when unrelated app carousels/pets changed. */
+html:not(.ddb-app-mode) main[data-home-page] {
     & > section[data-daily-mine-teaser] { order: 1; }
     & > section#promo { order: 2; }
     & > section#new { order: 3; }
