@@ -73,6 +73,14 @@ try:
     adb('wait-for-device')
     adb('shell', "echo '_ --disable-fre --no-first-run --no-default-browser-check' > /data/local/tmp/chrome-command-line")
     adb('shell', 'chmod', '644', '/data/local/tmp/chrome-command-line')
+    adb('shell', 'wm', 'size', '720x1600')
+    adb('shell', 'wm', 'density', '320')
+    # sys.boot_completed precedes first-boot package optimization and Google
+    # service setup. Let these finish before judging input latency in the app.
+    for index in range(3):
+        print(f'Allowing first-boot setup to settle ({index + 1}/3)', flush=True)
+        time.sleep(30)
+    (OUT / 'boot-load.txt').write_text(adb('shell', 'cat', '/proc/loadavg'), encoding='utf-8')
     adb('logcat', '-c')
     adb('install', str(APK))
     package = adb('shell', 'dumpsys', 'package', PACKAGE)
@@ -85,7 +93,7 @@ try:
     tap_node(root, '쇼핑')
     root = wait_text('댕다방 핫픽', 'shopping-top')
     screenshot('shopping-top')
-    width, height = map(int, re.search(r'(\d+)x(\d+)', adb('shell', 'wm', 'size')).groups())
+    width, height = map(int, re.findall(r'(\d+)x(\d+)', adb('shell', 'wm', 'size'))[-1])
     for index in range(2):
         adb('shell', 'input', 'swipe', str(width // 2), str(int(height * .70)), str(width // 2), str(int(height * .38)), '450')
         time.sleep(3)
