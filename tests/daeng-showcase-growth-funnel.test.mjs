@@ -20,20 +20,24 @@ const TOPIC_ID = "dst_daily_walk_20260810";
 const AUTHOR_ID = `dsa_${"b".repeat(20)}`;
 
 function loadShowcaseApi(fetchImpl) {
+    const runtime = { fetch: fetchImpl, Headers, URL, URLSearchParams, FormData,
+        AbortController, DOMException, TypeError, setTimeout, clearTimeout };
+    const transport = { exports: {} };
+    vm.runInNewContext(ts.transpileModule(read("../lib/showcase-request.ts"), {
+        compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
+    }).outputText, { ...runtime, module: transport, exports: transport.exports });
     const compiled = ts.transpileModule(read("../lib/daeng-showcase.ts"), {
         compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
     }).outputText;
     const moduleRecord = { exports: {} };
     vm.runInNewContext(compiled, {
+        ...runtime,
         module: moduleRecord,
         exports: moduleRecord.exports,
-        fetch: fetchImpl,
-        Headers,
-        URL,
-        URLSearchParams,
         require(specifier) {
             if (specifier === "@/lib/ddb-api-base") return { ddbApiBase: () => "https://api.example.test" };
             if (specifier === "@/lib/customer-api") return { getCustomerToken: () => "" };
+            if (specifier === "@/lib/showcase-request") return transport.exports;
             if (specifier === "@/lib/daeng-showcase-share") {
                 return { buildShowcaseTopicShareLink, SHOWCASE_TOPIC_ID_PATTERN };
             }
@@ -42,6 +46,24 @@ function loadShowcaseApi(fetchImpl) {
     });
     return moduleRecord.exports;
 }
+
+test("the public feed uses transport recovery without dropping authorization or photo URLs", async () => {
+    const requests = [];
+    const api = loadShowcaseApi(async (url, init) => {
+        requests.push({ url, init });
+        if (requests.length === 1) throw new TypeError("connection reset");
+        return Response.json({ items: [topicPayload({ active: true }).topic.featured_post] });
+    });
+    const feed = await api.loadShowcaseFeed("all", { token: "synthetic", limit: 12 });
+    assert.equal(requests.length, 2);
+    assert.equal(feed.items[0].postId, POST_ID);
+    assert.equal(feed.items[0].imageUrl, `https://api.example.test/api/v1/showcase/posts/${POST_ID}/image`);
+    for (const request of requests) {
+        assert.equal(request.init.headers.get("Authorization"), "Bearer synthetic");
+        assert.equal(request.init.cache, "no-store");
+        assert.equal(new URL(request.url).searchParams.get("limit"), "12");
+    }
+});
 
 function topicPayload({ active, topicId = TOPIC_ID, featured = true }) {
     return {

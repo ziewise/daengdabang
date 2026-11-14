@@ -1,5 +1,6 @@
 import { ddbApiBase } from "@/lib/ddb-api-base";
 import { getCustomerToken } from "@/lib/customer-api";
+import { fetchShowcaseJson } from "@/lib/showcase-request";
 import {
     buildShowcaseTopicShareLink,
     SHOWCASE_TOPIC_ID_PATTERN,
@@ -246,13 +247,18 @@ async function requestJson<T>(
     if (!options.anonymousAllowed && !accessToken) {
         throw new ShowcaseApiError("로그인 후 이용해 주세요.", { status: 401, apiCode: "login_required" });
     }
-    const response = await fetch(apiUrl(path), {
-        ...init,
-        headers,
-        cache: "no-store",
-    });
-    if (!response.ok) throw await responseError(response);
-    return response.json() as Promise<T>;
+    try {
+        return await fetchShowcaseJson<T>(apiUrl(path), {
+            ...init,
+            headers,
+            cache: "no-store",
+        }, responseError);
+    } catch (error) {
+        if (error instanceof DOMException && error.name === "TimeoutError") {
+            throw new ShowcaseApiError("연결이 지연되고 있어요. 잠시 후 다시 불러와 주세요.");
+        }
+        throw error;
+    }
 }
 
 function trustedImageUrl(value: string, postId: string) {
