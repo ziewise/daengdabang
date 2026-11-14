@@ -142,6 +142,25 @@ async function verifyShoppingMedia(socket) {
     if (!posterLoaded) throw new Error("The native shopping hero offline poster is missing.");
     await evaluateDocument(socket, `new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))`);
     screenshot("shop-media");
+    // The first shelf has different brands from the category grid. It used to
+    // download their originals even though the category card photos were local.
+    await evaluateDocument(socket, `window.scrollTo({top:700,behavior:'instant'})`);
+    let shelf;
+    for (let attempt = 0; attempt < maximumAttempts; attempt++) {
+        shelf = await evaluateDocument(socket, `(() => {
+            const rows = [...document.querySelectorAll('.hp-row')];
+            const photos = rows.flatMap(row => [...row.querySelectorAll('img')])
+                .filter(image => /\\/images\\/(products|ui\\/shop-media)\\//.test(image.src));
+            return {groups:rows.length, photos:photos.map(image=>({src:image.currentSrc||image.src,width:image.naturalWidth,complete:image.complete}))};
+        })()`);
+        if (shelf.groups === 5 && shelf.photos.length === 15 && shelf.photos.every(photo => photo.width && photo.complete)) break;
+        await delay(1_000);
+    }
+    if (shelf.groups !== 5 || shelf.photos.length !== 15 || shelf.photos.some(photo => !photo.width || !photo.complete || new URL(photo.src).hostname !== 'localhost')) {
+        throw new Error(`Native first shelf still depends on remote images: ${JSON.stringify(shelf)}`);
+    }
+    screenshot("shelf-media");
+    await evaluateDocument(socket, `window.scrollTo({top:0,behavior:'instant'})`);
     await evaluateDocument(socket, `document.querySelector('nav[aria-label="상품군"] a').click()`);
     let products;
     for (let attempt = 0; attempt < maximumAttempts; attempt++) {
@@ -185,7 +204,7 @@ async function verifyShoppingMedia(socket) {
         community = await evaluateDocument(socket, `(() => {
             const photos = [...document.querySelectorAll('.sh-photo > img')].slice(0, 4);
             if (photos.length && window.scrollY < 100) photos[0].scrollIntoView({block:'center'});
-            return {photos:photos.map(image => ({width:image.naturalWidth, height:image.naturalHeight,
+            return {photos:photos.map(image => ({src:image.currentSrc, width:image.naturalWidth, height:image.naturalHeight,
                 ready:image.complete && image.naturalWidth > 0 && !image.parentElement.querySelector('[role="status"]')})),
                 retry:document.body.innerText.includes('사진 다시 불러오기')};
         })()`);
@@ -197,7 +216,10 @@ async function verifyShoppingMedia(socket) {
     if (community.photos.length < 2 || community.photos.some(photo => !photo.ready)) {
         throw new Error(`Native community photographs did not load: ${JSON.stringify(community)}`);
     }
-    return {posterLoaded, products, maxPlaying, community};
+    if (community.photos.some(photo => !photo.src.includes('size=card') || Math.max(photo.width, photo.height) > 480)) {
+        throw new Error(`Native community feed fetched full-size photographs: ${JSON.stringify(community)}`);
+    }
+    return {posterLoaded, shelf, products, maxPlaying, community};
 }
 
 async function verifyOnDemandInference(socket) {

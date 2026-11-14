@@ -125,9 +125,11 @@ export default function StickerShow() {
 
     // 처음 쪽: 주소 ?tab= 그대로(처음 그릴 때부터)
     const [tab, setTab] = useState(() => initialTab);
+    const [goodsRequested, setGoodsRequested] = useState(() => initialTab === 1);
     const [dir, setDir] = useState(1);
     const go = (i: number) => {
         setDir(i > tab ? 1 : -1);
+        if (i === 1) setGoodsRequested(true);
         setTab(i);
     };
 
@@ -163,6 +165,7 @@ export default function StickerShow() {
         setLive((l) => ({ ...l, loading: true, error: false }));
         loadLiveFeed(scope, cursor || undefined, token, ac.signal, FEED_PAGE)
             .then((r) => {
+                if (ac.signal.aborted) return;
                 const head = n === 1 && scope === "all" ? [...linked.current, ...created.current].filter((c, i, all) => !r.posts.some((p) => p.id === c.id) && all.findIndex((x) => x.id === c.id) === i) : [];
                 setPosts([...head, ...r.posts]);
                 setPageNo(n);
@@ -432,16 +435,18 @@ export default function StickerShow() {
 
     /* 첫 쪽 · 주제 — 화면을 그린 뒤, 로그인 상태가 바뀌면 다시(응원 · 팔로우 표시가 회원 기준으로) */
     useEffect(() => {
+        if (!authHydrated) return;
         const id = window.setTimeout(() => loadPage(1, "", "all"), 0);
         return () => { window.clearTimeout(id); feedAbort.current?.abort(); };
-    }, [loadPage]);
+    }, [authHydrated, loadPage]);
     useEffect(() => {
+        if (!authHydrated) return;
         const ac = new AbortController();
         const id = window.setTimeout(() => {
             setTopicState({ loading: true, error: "" });
             const topicId = new URLSearchParams(window.location.search).get("topic") || "";
             loadShowcaseTopic({ topicId: SHOWCASE_TOPIC_ID_PATTERN.test(topicId) ? topicId : undefined, token: token || undefined, signal: ac.signal })
-                .then((t) => { setTopic(t); setFeatured(t?.featuredPost ? toPost(t.featuredPost) : null); setTopicState({ loading: false, error: "" }); })
+                .then((t) => { if (ac.signal.aborted) return; setTopic(t); setFeatured(t?.featuredPost ? toPost(t.featuredPost) : null); setTopicState({ loading: false, error: "" }); })
                 .catch((reason) => {
                     if (ac.signal.aborted) return;
                     setTopic(null);
@@ -450,7 +455,7 @@ export default function StickerShow() {
                 });
         }, 0);
         return () => { window.clearTimeout(id); ac.abort(); };
-    }, [token, topicKey]);
+    }, [authHydrated, token, topicKey]);
     /* 공유 링크(?post= · ?author=) — 협업자 DaengShowcaseClient 처럼 그 게시물을 피드 맨 앞에 넣고 바로 펼침 · 작성자 프로필을 엶.
        한 번만(처음 그릴 때). 못 찾으면 협업자와 같은 안내 */
     const deepLinkDone = useRef(false);
@@ -509,6 +514,7 @@ export default function StickerShow() {
     const [contestLoginNotice, setContestLoginNotice] = useState(false);
     const contestError = useCallback((message: string) => { setToast(message); if (message.includes("로그인")) setContestLoginNotice(true); }, []);
     useEffect(() => {
+        if (!goodsRequested) return;
         const ac = new AbortController();
         loadPublishedGrowthContent(ac.signal).then((published) => {
             if (ac.signal.aborted) return;
@@ -516,12 +522,13 @@ export default function StickerShow() {
             setContentReady(true);
         });
         return () => ac.abort();
-    }, []);
+    }, [goodsRequested]);
     useEffect(() => {
         const id = window.setTimeout(() => { setGuestToken(getGoodsContestGuestToken()); setGuestTokenReady(true); }, 0);
         return () => window.clearTimeout(id);
     }, []);
     useEffect(() => {
+        if (!goodsRequested) return;
         const ac = new AbortController();
         loadGoodsContestSummary(ac.signal)
             .then((v) => { if (!ac.signal.aborted) { setSummary(v); setSummaryState("ready"); } })
@@ -532,9 +539,9 @@ export default function StickerShow() {
                 contestError(contestErrorMessage(error, "load"));
             });
         return () => ac.abort();
-    }, [summaryRetry, contestError]);
+    }, [goodsRequested, summaryRetry, contestError]);
     useEffect(() => {
-        if (!authHydrated || !guestTokenReady || identityKey === "anonymous") return; // 웹처럼 로그인 정보가 준비된 뒤에만(회원이 비회원 선택을 먼저 부르지 않게)
+        if (!goodsRequested || !authHydrated || !guestTokenReady || identityKey === "anonymous") return; // 웹처럼 로그인 정보가 준비된 뒤에만(회원이 비회원 선택을 먼저 부르지 않게)
         const ac = new AbortController();
         (token ? loadMyGoodsContestSelections(token, ac.signal) : loadGuestGoodsContestSelections(guestToken, ac.signal))
             .then((v) => { if (!ac.signal.aborted) setSelection({ owner: identityKey, state: "ready", ids: v.selectedItemIds }); })
@@ -545,7 +552,7 @@ export default function StickerShow() {
                 contestError(contestErrorMessage(error, "load"));
             });
         return () => ac.abort();
-    }, [authHydrated, guestTokenReady, identityKey, token, guestToken, selectionRetry, contestError]);
+    }, [goodsRequested, authHydrated, guestTokenReady, identityKey, token, guestToken, selectionRetry, contestError]);
     // 웹 GoodsContest 와 같음 — 로그인 정보(hydrated)까지 준비돼야 회원/비회원을 가름(회원에게 비회원 속지가 먼저 보이지 않게)
     const selectionState = !authHydrated || !guestTokenReady ? "loading" : identityKey === "anonymous" ? "anonymous" : selection.owner === identityKey ? selection.state : "loading";
     const selectedSet = new Set(selection.owner === identityKey && selection.state === "ready" ? selection.ids : []);
@@ -703,7 +710,7 @@ export default function StickerShow() {
                                                 className="sh-feat mt-4 flex w-full items-center gap-3 rounded-[12px] bg-white/80 p-2.5 text-left">
                                                 <span className="sh-feat-pol relative shrink-0 bg-white p-1 pb-2.5">
                                                     <Tape className="-top-1.5 left-1/2 z-10 h-3 w-9 -translate-x-1/2" color="rgba(255,226,150,.9)" style={{ rotate: "-5deg" }} />
-                                                    <span className="sh-feat-photo relative block h-[4.6rem] w-[4.6rem] overflow-hidden bg-[#fff3e8]"><PostPhoto src={featured.img} sizes="80px" /></span>
+                                                    <span className="sh-feat-photo relative block h-[4.6rem] w-[4.6rem] overflow-hidden bg-[#fff3e8]"><PostPhoto src={featured.img} sizes="80px" thumbnail /></span>
                                                 </span>
                                                 <span className="min-w-0 flex-1">
                                                     <span className="ah-display inline-flex items-center gap-1 rounded-full bg-[#fff1c4] px-2 py-0.5 text-[10.5px] text-[#a8720f]"><i aria-hidden="true" className="fa-solid fa-crown text-[9px]" />대표 댕자랑</span>
@@ -758,7 +765,7 @@ export default function StickerShow() {
                                             <Tape className="-top-2 left-1/2 z-10 h-3.5 w-12 -translate-x-1/2" color={["rgba(255,200,218,.85)", "rgba(190,224,255,.85)", "rgba(255,232,170,.9)"][i % 3]} style={{ rotate: `${i % 2 ? 6 : -6}deg` }} />
                                             <div role="button" tabIndex={0} aria-label={`${p.author}의 댕자랑 — 톡하면 자세히, 두 번 톡하면 응원`} onClick={(e) => onPhotoTap(p, e)}
                                                 className="sh-photo relative block aspect-square overflow-hidden bg-[#fff3e8]">
-                                                <PostPhoto src={p.img} sizes="45vw" eager={i < 4} />
+                                                <PostPhoto src={p.img} sizes="45vw" eager={i < 4} thumbnail />
                                                 {p.topic ? <span className="ah-display absolute left-1.5 top-1.5 rounded-full bg-white/90 px-2 py-0.5 text-[10px] text-[#e0557f]">댕주제</span> : null}
                                                 {p.mine ? <span className="ah-display absolute right-1.5 top-1.5 rounded-full bg-[#e0557f] px-2 py-0.5 text-[10px] text-white">나</span> : null}
                                                 {burst?.id === p.id ? <BoneBurst key={burst.k} x={burst.x} y={burst.y} /> : null}

@@ -17,6 +17,7 @@ import { createPortal } from "react-dom";
 import { copyText } from "@/components/growth/GrowthShareCard";
 import { SHOWCASE_MAX_UPLOAD_BYTES, validateShowcaseImage } from "@/lib/daeng-showcase";
 import { prepareUploadImage } from "@/lib/upload-image";
+import { showcaseThumbnailUrl } from "@/lib/showcase-image";
 import { buildShowcaseDeepLink, showcaseMemberShareCampaign } from "@/lib/daeng-showcase-share";
 import { haptic } from "./gestures";
 import { TEXT, TEXT_SOFT } from "./kit";
@@ -57,15 +58,33 @@ function shareCopyOf(target: ShareTarget) {
 }
 
 /** 게시물 사진 — 로딩/실패 상태를 표시하고 실패한 사진만 다시 요청한다. */
-export function PostPhoto({ src, sizes, className = "", eager = false }: { src: string; sizes: string; className?: string; eager?: boolean }) {
+export function PostPhoto({ src, sizes, className = "", eager = false, thumbnail = false }: { src: string; sizes: string; className?: string; eager?: boolean; thumbnail?: boolean }) {
     const [loaded, setLoaded] = useState("");
     const [failed, setFailed] = useState("");
     const [attempt, setAttempt] = useState(0);
-    const key = `${src}:${attempt}`;
+    const [nearby, setNearby] = useState(false);
+    const sentinel = useRef<HTMLSpanElement>(null);
+    const requested = eager || nearby || src.startsWith("blob:");
+    const imageSrc = thumbnail ? showcaseThumbnailUrl(src) : src;
+    const key = `${imageSrc}:${attempt}`;
+    useEffect(() => {
+        if (requested || !sentinel.current) return;
+        // Browser lazy loading can fetch several screens at once on Android.
+        // Admit photos only just before they enter the visible scroll area.
+        const observer = new IntersectionObserver(entries => {
+            if (entries.some(entry => entry.isIntersecting)) {
+                setNearby(true);
+                observer.disconnect();
+            }
+        }, { rootMargin: "200px" });
+        observer.observe(sentinel.current);
+        return () => observer.disconnect();
+    }, [requested]);
     return <>
-        <Image key={key} src={src} alt="" fill sizes={sizes} loading={eager || src.startsWith("blob:") ? "eager" : "lazy"}
+        <span ref={sentinel} className="pointer-events-none absolute inset-0" aria-hidden="true" />
+        {requested ? <Image key={key} src={imageSrc} alt="" fill sizes={sizes} loading="eager" fetchPriority={eager ? "high" : "auto"}
             onLoad={() => setLoaded(key)} onError={() => setFailed(key)}
-            className={`object-cover ${className}`} draggable={false} />
+            className={`object-cover ${className}`} draggable={false} /> : null}
         {loaded !== key ? <span className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 bg-[#fff3e8] text-[#9b7467]" role="status">
             <Image src="/images/ui/stickers/caretalk-photo.webp" alt="" width={40} height={40} className="h-10 w-10" />
             {failed === key ? <button type="button" className="ah-light rounded-full bg-white px-2.5 py-1.5 text-[11px]"
@@ -358,7 +377,7 @@ export function ProfileSheet({ open, onClose, head, profile, error, onFollow, on
                 {(profile?.posts ?? []).slice(0, 12).map((p, i) => (
                     <li key={p.id}>
                         <button type="button" onClick={(e) => onOpenPost(p, e.currentTarget)} className="st-polaroid block w-full bg-white p-1 pb-1.5 text-left" style={{ rotate: `${[-1, 0.8, -0.6][i % 3]}deg` }}>
-                            <span className="relative block aspect-square overflow-hidden rounded-[3px] bg-[#fff3e8]"><PostPhoto src={p.img} sizes="30vw" /></span>
+                            <span className="relative block aspect-square overflow-hidden rounded-[3px] bg-[#fff3e8]"><PostPhoto src={p.img} sizes="30vw" thumbnail /></span>
                             <span className="ah-display mt-1 flex items-center gap-1 px-0.5 text-[10.5px] text-[#9c8f88]"><i aria-hidden="true" className="fa-solid fa-bone" />{p.bones}</span>
                         </button>
                     </li>
@@ -405,7 +424,7 @@ export function ShareSheet({ open, onClose, target }: { open: boolean; onClose: 
             title={<p className="ah-display text-[18px]"><span className="st-marker">댕자랑 공유카드</span></p>}>
             {/* 미리보기 카드 */}
             <div className="sp-paper mt-1 flex items-center gap-3 rounded-[14px] p-3" style={{ rotate: "-0.5deg" }}>
-                {target.img ? <span className="relative block h-16 w-16 shrink-0 overflow-hidden rounded-[8px] bg-[#fff3e8]"><PostPhoto src={target.img} sizes="64px" /></span>
+                {target.img ? <span className="relative block h-16 w-16 shrink-0 overflow-hidden rounded-[8px] bg-[#fff3e8]"><PostPhoto src={target.img} sizes="64px" thumbnail /></span>
                     : <span className="grid h-16 w-16 shrink-0 place-items-center rounded-[8px] bg-[#ffe1ea] text-[22px] text-[#e0557f]"><i aria-hidden="true" className="fa-solid fa-paw" /></span>}
                 <p className="ah-light line-clamp-3 text-[12.5px] leading-snug">{target.text}</p>
             </div>
