@@ -418,8 +418,11 @@ function browserFallbackLocale(): Locale {
     if (typeof navigator === "undefined") return "ko";
     const languages = navigator.languages?.length ? navigator.languages : [navigator.language];
     const primary = languages.find(Boolean)?.toLowerCase() || "";
+    // Korean already decides the result; avoid initializing ICU/time-zone data
+    // on the first native frame just to arrive at the same language.
+    if (primary.startsWith("ko")) return "ko";
     const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
-    if (primary.startsWith("ko") || timeZone === "Asia/Seoul") return "ko";
+    if (timeZone === "Asia/Seoul") return "ko";
     return "en";
 }
 

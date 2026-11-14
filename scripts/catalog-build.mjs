@@ -8,7 +8,7 @@ const root = fileURLToPath(new URL("../", import.meta.url));
 const nativeRequire = createRequire(import.meta.url);
 
 /** Execute the existing publication gates at build time, with no browser bundle. */
-export function loadBuildCatalog() {
+export function createCatalogLoader() {
     const cache = new Map();
     // Match next.config.mjs in both GitHub Actions and Cloudflare Pages.
     // Build scripts execute before Next injects its `env` values, so the
@@ -34,8 +34,8 @@ export function loadBuildCatalog() {
             compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, esModuleInterop: true },
         }).outputText;
         const requireLocal = (id) => {
-            if (!id.startsWith(".")) return nativeRequire(id);
-            const base = resolve(dirname(file), id);
+            if (!id.startsWith(".") && !id.startsWith("@/")) return nativeRequire(id);
+            const base = id.startsWith("@/") ? resolve(root, id.slice(2)) : resolve(dirname(file), id);
             const target = [base, `${base}.ts`, `${base}.mjs`, `${base}.json`, resolve(base, "index.ts")]
                 .find(path => existsSync(path) && statSync(path).isFile());
             if (!target) throw new Error(`Unresolved catalog dependency: ${id}`);
@@ -44,7 +44,11 @@ export function loadBuildCatalog() {
         new Function("require", "module", "exports", "process", compiled)(requireLocal, loadedModule, loadedModule.exports, buildProcess);
         return loadedModule.exports;
     }
-    return load(resolve(root, "lib/catalog/data.ts"));
+    return entry => load(resolve(root, entry));
+}
+
+export function loadBuildCatalog() {
+    return createCatalogLoader()("lib/catalog/data.ts");
 }
 
 export function runtimeCatalogSnapshot() {

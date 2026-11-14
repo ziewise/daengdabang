@@ -1,6 +1,6 @@
 "use client";
 import { useMemo, useState } from "react";
-import { getNewProducts } from "@/lib/catalog";
+import { getNewProducts } from "@/lib/catalog/native-shop-data";
 import { haptic } from "../gestures";
 import { TEXT_SOFT } from "../kit";
 import { DiaryBody, DiaryTabs } from "../sticker-parts";

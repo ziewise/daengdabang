@@ -77,7 +77,7 @@ test("engine, full page, preferences, and analytics have independent fail-closed
         source("hooks/useRecommendationPreferences.ts"),
         source("hooks/useRecommendationAnalytics.ts"),
         source("app/mypage/recommendations/page.tsx"),
-        source("lib/recommendation/member.ts"),
+        source("lib/recommendation/member-core.ts"),
         source("lib/daengdabang-llm.ts"),
         source("lib/mypage-data.ts"),
     ]);

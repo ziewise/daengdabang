@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { RecommendationItem, RecommendationMode } from "@/lib/recommendation";
-import { RECOMMENDATION_FEATURE_FLAGS } from "@/lib/recommendation";
+import { RECOMMENDATION_FEATURE_FLAGS } from "@/lib/recommendation/feature-flags";
 import {
     createRecommendationRunId,
     trackStorefrontEvent,

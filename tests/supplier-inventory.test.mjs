@@ -4,6 +4,7 @@ import { createRequire } from 'node:module';
 import vm from 'node:vm';
 import test from 'node:test';
 import * as inventory from '../lib/catalog/inventory.ts';
+import * as productUrl from '../lib/product-url.ts';
 import { isLegacyRecommendationOperationallyEligible, recommendationProductPolicyIssues } from '../lib/recommendation/engine.ts';
 
 const require = createRequire(import.meta.url);
@@ -28,6 +29,7 @@ function loadModule(path, mocks = {}, append = '') {
     const loadedModule={exports:{}};
     vm.runInNewContext(compiled+append,{module:loadedModule,exports:loadedModule.exports,console,require:(id)=>{
         if(id.includes('catalog/inventory'))return inventory;
+        if(id === './product-url')return productUrl;
         if(id.includes('catalog/live-inventory'))return {useLiveInventoryProduct:p=>p,liveInventoryProduct:p=>p};
         if(Object.hasOwn(mocks,id))return mocks[id];
         if(id==='react'||id==='react/jsx-runtime')return require(id);

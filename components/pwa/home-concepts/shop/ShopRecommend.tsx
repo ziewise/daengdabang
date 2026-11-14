@@ -6,8 +6,10 @@ import { productCardImage } from "@/lib/catalog/card-image";
 import { hasVerifiedPetPhoto, useAuth } from "@/lib/store";
 import { useRecommendationAnalytics } from "@/hooks/useRecommendationAnalytics";
 import { useRecommendationPreferences } from "@/hooks/useRecommendationPreferences";
-import { editorialRecommendationItems, RECOMMENDATION_FEATURE_FLAGS, recommendationPersonalizationEnabled,
-    resolveSelectedRecommendationPet, runMemberRecommendation, type RecommendationSourceGroup } from "@/lib/recommendation";
+import { editorialRecommendationItems, runMemberRecommendation } from "@/lib/catalog/native-shop-data";
+import { RECOMMENDATION_FEATURE_FLAGS, recommendationPersonalizationEnabled } from "@/lib/recommendation/feature-flags";
+import { resolveSelectedRecommendationPet } from "@/lib/recommendation/member-core";
+import type { RecommendationSourceGroup } from "@/lib/recommendation/types";
 import { haptic } from "../gestures";
 import { TEXT_SOFT } from "../kit";
 import { SectionLabel } from "../sticker-parts";

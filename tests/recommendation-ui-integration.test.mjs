@@ -106,7 +106,7 @@ test("home and full recommendations share server-selected pet and one recommenda
         source("components/main/RecommendSection.tsx"),
         source("app/recommendations/page.tsx"),
         source("app/recommendations/RecommendationsClient.tsx"),
-        source("lib/recommendation/member.ts"),
+        Promise.all([source("lib/recommendation/member.ts"), source("lib/recommendation/member-core.ts")]).then(parts => parts.join("\n")),
         source("hooks/useRecommendationPreferences.ts"),
     ]);
 

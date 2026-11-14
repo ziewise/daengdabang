@@ -5,6 +5,7 @@ import test from "node:test";
 import vm from "node:vm";
 import { optionPurchaseState } from "../lib/catalog/inventory.ts";
 import { applyLiveInventory, parseLiveInventory } from "../lib/catalog/live-inventory-state.ts";
+import * as productUrl from "../lib/product-url.ts";
 
 const root = new URL("../", import.meta.url);
 const ts = createRequire(import.meta.url)("typescript");
@@ -56,6 +57,7 @@ async function shop(catalog) {
         "@/lib/catalog": { CATALOG: catalog, CATEGORY_LABEL: {}, findById: id => catalog.find(p => p.id === id) },
         "./catalog/inventory": { optionPurchaseState },
         "./catalog/live-inventory-state": { applyLiveInventory },
+        "./product-url": productUrl,
     });
 }
 

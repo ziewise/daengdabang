@@ -23,3 +23,9 @@ html[data-ddb-native-app="true"] :is(.st-box, .ah-wait, .st-slot.is-today) {
 html[data-ddb-native-app="true"] :is(.ah-wait, .st-slot.is-today)::after {
     animation: none;
 }
+/* The home used to stagger actionable cards for up to 1.5 seconds. Retain
+   their entrance motion, but make every action visible together on launch. */
+html[data-ddb-native-app="true"] .st-place {
+    animation-delay: 0ms;
+    animation-duration: 180ms;
+}

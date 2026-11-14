@@ -7,7 +7,7 @@ import {
     updateRecommendationPreferences,
     type RecommendationPreferences,
 } from "@/lib/customer-api";
-import { RECOMMENDATION_FEATURE_FLAGS } from "@/lib/recommendation";
+import { RECOMMENDATION_FEATURE_FLAGS } from "@/lib/recommendation/feature-flags";
 import { useAuth } from "@/lib/store";
 
 export type RecommendationPreferenceStatus = "idle" | "loading" | "ready" | "saving" | "error";

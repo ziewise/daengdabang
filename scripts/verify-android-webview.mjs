@@ -33,6 +33,8 @@ function evaluateDocument(socket, expression = `(() => ({
     title: document.title,
     readyState: document.readyState,
     text: document.body?.innerText || "",
+    nativeInteractiveMs: performance.getEntriesByName("ddb-native-interactive")[0]?.startTime ?? null,
+    tabInteractive: typeof document.querySelector('.app-tabbar a[href="/app/sticker/shop/"]')?.onclick === "function",
 }))()`) {
     return new Promise((resolve, reject) => {
         const requestId = ++nextRequestId;
@@ -140,6 +142,8 @@ for (let attempt = 1; attempt <= maximumAttempts; attempt += 1) {
             && new URL(lastState.url).pathname.replace(/index\.html$/, "") === expectedPath
             && lastState.title.includes("댕다방")
             && lastState.text.includes(expectedText)
+            && lastState.tabInteractive
+            && Number.isFinite(lastState.nativeInteractiveMs)
         ) {
             lastState.companion = await verifyPetCompanion(socket);
             socket.close();

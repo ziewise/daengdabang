@@ -15,12 +15,12 @@
 
 import Link from "@/components/app-shell/AppLink";
 import type { CatalogProduct } from "@/lib/catalog";
-import { getBestRank, isNewProduct } from "@/lib/catalog";
+import { getBestRank, isNewProduct } from "@/lib/catalog/native-shop-data";
 import { catalogPriceBadgeLabel } from "@/lib/catalog/price-badge";
 import { hoverVideoFraming, hoverVideoStyle } from "@/lib/catalog/hover-video-framing";
 import { productPurchaseState, purchaseStateLabel } from "@/lib/catalog/inventory";
 import { useLiveInventoryProduct } from "@/lib/catalog/live-inventory";
-import { productHref } from "@/lib/shop";
+import { productHref } from "@/lib/product-url";
 import { productCardImage } from "@/lib/catalog/card-image";
 import { useStore } from "@/lib/store";
 import { useI18n } from "@/lib/i18n";

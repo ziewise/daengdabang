@@ -7,6 +7,7 @@ import { Browser } from "@capacitor/browser";
 import { Capacitor } from "@capacitor/core";
 import { Haptics, ImpactStyle } from "@capacitor/haptics";
 import { Network } from "@capacitor/network";
+import { SplashScreen } from "@capacitor/splash-screen";
 
 const WEB_ORIGIN = "https://www.daengdabang.com";
 const NATIVE_ROUTE_PREFIXES = [
@@ -61,6 +62,17 @@ export default function NativeAppBridge() {
         // StatusBar is configured natively in capacitor.config.ts. Reapplying
         // its window/layout settings here competes with the first WebView draw.
 
+        // Reveal the hydrated app after it has painted, rather than always
+        // waiting out the launch timer. Native auto-hide remains the fallback
+        // if JavaScript cannot start; network/account requests are not a gate.
+        let paintedFrame = 0;
+        const firstFrame = requestAnimationFrame(() => {
+            paintedFrame = requestAnimationFrame(() => {
+                performance.mark("ddb-native-interactive");
+                void SplashScreen.hide({ fadeOutDuration: 120 }).catch(() => undefined);
+            });
+        });
+
         const onDocumentClick = (event: MouseEvent) => {
             if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
             const target = event.target;
@@ -81,13 +93,13 @@ export default function NativeAppBridge() {
             if (product && anchor.dataset.nativeExternal === undefined) {
                 event.preventDefault();
                 event.stopPropagation();
-                router.push(`/app/sticker/item/?p=${encodeURIComponent(decodeURIComponent(product[1]))}${url.hash}`);
+                router.push(`/app/sticker/item/?p=${encodeURIComponent(decodeURIComponent(product[1]))}${url.hash}`, { scroll: false });
                 return;
             }
             if (!isLocal && isStorefront && isBundledNativeRoute(url.pathname) && anchor.dataset.nativeExternal === undefined) {
                 event.preventDefault();
                 event.stopPropagation();
-                router.push(`${url.pathname}${url.search}${url.hash}`);
+                router.push(`${url.pathname}${url.search}${url.hash}`, { scroll: false });
                 return;
             }
             const staysInApp = isLocal
@@ -140,6 +152,8 @@ export default function NativeAppBridge() {
         void Network.getStatus().then(({ connected }) => setIsOffline(!connected));
 
         return () => {
+            cancelAnimationFrame(firstFrame);
+            cancelAnimationFrame(paintedFrame);
             document.removeEventListener("click", onDocumentClick, true);
             delete document.documentElement.dataset.ddbNativeApp;
             void Promise.all(listenerHandles).then((handles) => handles.forEach((handle) => void handle.remove()));

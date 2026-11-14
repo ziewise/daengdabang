@@ -14,13 +14,7 @@ export function versionProductImage(src: string | null | undefined): string {
     return `${src}${src.includes("?") ? "&" : "?"}v=${PRODUCT_IMAGE_VERSION}`;
 }
 
-export function productSlug(product: CatalogProduct): string {
-    return product.folder || product.id;
-}
-
-export function productHref(product: CatalogProduct): string {
-    return `/product/${productSlug(product)}`;
-}
+export { productSlug, productHref } from "./product-url";
 
 export function findProduct(slugOrId: string): CatalogProduct | undefined {
     return findById(slugOrId);
