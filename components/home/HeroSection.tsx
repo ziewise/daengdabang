@@ -24,6 +24,7 @@ import { pickHeroBreed, pickHeroBreedVideo, pickHeroVideoCandidates } from "@/li
 // 달별 시간대 표(해 뜨고 지는 시각 기준) · R2 후보 주소를 앞에서부터 재생(2026-10-28)
 import { getHeroDaylightBucket } from "@/lib/hero-daylight";
 import { useHeroVideoSource } from "./useHeroVideoSource";
+import { useHeroMedia } from "./useHeroMedia";
 // media-admin 사이트 미리보기 · 확인용 주소: ?heroSeason · heroTime 고정, ?heroSrc 교체 전 영상 먼저(2026-10-29)
 import { readHeroPreview } from "@/lib/site-preview";
 // 워터마크(✦)를 브라우저 크기와 무관하게 동적 추적해 덮는 견종 얼굴 배지
@@ -131,6 +132,7 @@ function localizedSceneLabel(key: string, fallback: string, locale: "ko" | "en")
 }
 
 export default function HeroSection({ featuredProducts: _featuredProducts }: Props) {
+    const { ref: heroRef, active: mediaActive } = useHeroMedia();
     // 펫렌즈 모달 열기 — 히어로 배지 클릭 시 실행
     const { open: openPetLens } = usePetLensModal();
     const { locale } = useI18n();
@@ -203,12 +205,12 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
     const sceneLabel = localizedSceneLabel(scene.key, scene.label, locale);
 
     return (
-        <section data-hero-breed={heroBreed} className="hero-shell relative isolate overflow-hidden bg-neutral-950 text-white">
+        <section ref={heroRef} data-hero-breed={heroBreed} className="hero-shell relative isolate overflow-hidden bg-neutral-950 text-white">
             <div className="absolute inset-0">
                 <div className="hero-video-scene" aria-hidden="true">
                     {/* 가을 영상 16종(맑음·비 × 시간 4 × PC/모바일, 흐림은 맑음 영상) 중 선택.
                         key={heroVideo} 로 날씨/시간/기기 바뀌면 영상 자동 교체.
-                        poster 는 협업자 HeroScene 에 없어 생략(preload="auto" 로 첫 프레임 빠르게).
+                        첫 장면은 작은 공용 포스터. 인트로가 끝나고 화면에 보일 때 영상 주소를 붙인다.
                         모바일(9:16): scale 확대 없이 object-position "center bottom" 으로 영상 전체를 노출.
                         (예전엔 scale 1.1 + top 정렬로 워터마크 ✦ 를 화면 밖으로 잘라냈으나, 강아지·인물의
                         발 아래까지 함께 잘려 "아래가 잘린다"는 피드백 → scale 제거. 영상 맨 하단 워터마크는
@@ -216,12 +218,13 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
                         PC(16:9)는 협업자 기본 유지(워터마크는 배지가 동적 추적해 가림). */}
                     <video
                         key={heroVideo}
-                        src={heroVideo}
+                        src={mediaActive ? heroVideo : undefined}
+                        poster="/images/ui/shop-hero-poster.webp"
                         autoPlay
                         muted
                         loop
                         playsInline
-                        preload="auto"
+                        preload="none"
                         className="hero-scene-media"
                         style={isMobile ? { objectPosition: "center bottom" } : undefined}
                         onError={heroVideoSource.onError}
@@ -241,6 +244,7 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
                     모바일(9:16): 위 video 에서 영상 하단을 잘라내 워터마크가 안 보이므로, 배지는
                     "가림"이 아니라 "재미 요소"다. 잘 보이고 화면 하단에 안 잘리는 우측 중하단(78%)에 둔다. */}
                 <WatermarkBadge
+                    playbackActive={mediaActive}
                     src={heroBreedVideo}
                     xRatio={isMobile ? 0.82 : 0.88}
                     yRatio={isMobile ? 0.58 : 0.78}

@@ -17,7 +17,7 @@ export default function ProductsPage() {
     return (
         <Suspense fallback={(
             // data-list-fallback — 웹은 글 대신 쿠션 뼈대(app/shop-list-web.css), 앱은 기존 한 줄 글 그대로
-            <div className="mx-auto max-w-[1280px] px-4 py-10 text-sm font-black" data-list-fallback>
+            <div className="mx-auto min-h-screen w-full max-w-[1280px] px-4 py-10 text-sm font-black" data-list-fallback>
                 <p className="list-fallback-text">상품을 불러오는 중입니다.</p>
                 <div className="hidden list-fallback-sk" aria-hidden="true">
                     <span className="is-hero" />

@@ -7,12 +7,11 @@ import RecommendationProductCard from "@/components/recommendation/Recommendatio
 import { useRecommendationAnalytics } from "@/hooks/useRecommendationAnalytics";
 import { useRecommendationPreferences } from "@/hooks/useRecommendationPreferences";
 import {
-    editorialRecommendationItems,
     RECOMMENDATION_FEATURE_FLAGS,
     recommendationPersonalizationEnabled,
-    resolveSelectedRecommendationPet,
-    runMemberRecommendation,
-} from "@/lib/recommendation";
+} from "@/lib/recommendation/feature-flags";
+import { resolveSelectedRecommendationPet } from "@/lib/recommendation/member-core";
+import { editorialRecommendationItems, runMemberRecommendation } from "@/lib/catalog/native-shop-data";
 import { useAuth } from "@/lib/store";
 
 export default function RecommendSection() {

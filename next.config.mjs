@@ -26,6 +26,8 @@ try {
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    // Bound local builds on the host that also serves the API; CI keeps its default.
+    ...(process.env.DDB_BUILD_CPUS ? { experimental: { cpus: Math.max(1, Math.min(8, Number(process.env.DDB_BUILD_CPUS) || 4)) } } : {}),
     output: "export",
     trailingSlash: true,
     // Next 16/Turbopack did not inline this value from client-side catalog code

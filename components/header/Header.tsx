@@ -11,7 +11,7 @@
 "use client";
 
 import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
-import Link from "next/link";
+import Link from "@/components/site/IntentLink";
 import { openChatWidget } from "@/lib/chat-widget-events";
 import Image from "next/image";
 import { usePathname } from "next/navigation";

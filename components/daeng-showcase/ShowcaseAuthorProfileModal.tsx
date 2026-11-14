@@ -1,4 +1,5 @@
 "use client";
+import ShowcaseThumbnail from "./ShowcaseThumbnail";
 
 /**
  * ShowcaseAuthorProfileModal — 댕자랑 작성자 프로필 창
@@ -169,8 +170,7 @@ export default function ShowcaseAuthorProfileModal({
                         <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
                             {profile.posts.map((post) => (
                                 <button key={post.postId} type="button" onClick={() => onShowPost(post)} className="group overflow-hidden rounded-[18px] border border-white bg-white text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-card motion-reduce:transform-none">
-                                    {/* eslint-disable-next-line @next/next/no-img-element -- public API returns canonical media dimensions and URLs. */}
-                                    <img src={post.imageUrl} alt={`${post.author.displayName}의 댕자랑`} width={post.imageWidth} height={post.imageHeight} loading="lazy" className="aspect-square w-full bg-[#f6f3ee] object-cover" />
+                                    <ShowcaseThumbnail src={post.imageUrl} alt={`${post.author.displayName}의 댕자랑`} width={post.imageWidth} height={post.imageHeight} className="aspect-square w-full bg-[#f6f3ee] object-cover" />
                                     <span className="block truncate px-3 py-2 text-[10px] font-black text-neutral-700" data-showcase-profile-small><i className="fa-solid fa-bone mr-1 text-amber-700" aria-hidden="true" />응원 {post.boneCount.toLocaleString("ko-KR")}</span>
                                 </button>
                             ))}

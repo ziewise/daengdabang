@@ -72,7 +72,7 @@ export default function ConditionalChrome({ children }: { children: React.ReactN
             <ToyWallpaper />
             <Header />
             <main data-home-page={pathname === "/" || pathname === "/main" || pathname === "/main/" ? "true" : undefined} className={`flex-1 flex flex-col ${pathname.startsWith("/product/") ? "pt-[env(safe-area-inset-top,0px)] md:pt-[var(--header-height)]" : "pt-[var(--header-height)]"}`}>{children}</main>
-            <Footer />
+            <Footer web />
             <FloatingDock />
             <PetCompanionGate />
         </>

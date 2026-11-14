@@ -15,8 +15,8 @@
 "use client";
 
 import { useCallback, useEffect, useRef } from "react";
-import Link from "next/link";
-import { getNewProducts } from "@/lib/catalog";
+import Link from "@/components/site/IntentLink";
+import { getNewProducts } from "@/lib/catalog/native-shop-data";
 import ProductCard from "@/components/products/ProductCard";
 import { useI18n } from "@/lib/i18n";
 

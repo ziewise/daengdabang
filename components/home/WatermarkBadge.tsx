@@ -40,6 +40,7 @@ interface WatermarkBadgeProps {
     posY: number;
     /** 있으면 배지를 클릭 가능한 버튼으로 만든다(예: 펫렌즈 실행). 없으면 순수 장식(클릭 통과). */
     onClick?: () => void;
+    playbackActive?: boolean;
 }
 
 // 견종 얼굴 배지 — 원본(/images/breeds/<견종>.mp4) 대신 배지용 480px 영상 · 첫 장면 그림(2026-10-26, public/images/breeds/badge)
@@ -56,6 +57,7 @@ export default function WatermarkBadge({
     posX,
     posY,
     onClick,
+    playbackActive = true,
 }: WatermarkBadgeProps) {
     // 영상 컨테이너 전체를 덮는 좌표 기준 래퍼 ref — 이 크기가 곧 영상 컨테이너 크기
     const wrapRef = useRef<HTMLDivElement>(null);
@@ -221,7 +223,7 @@ export default function WatermarkBadge({
                             1280×720 원본(장당 약 2MB)이 오기 전까지 동그라미가 비어 있었음 → 가운데를 자른 480px 배지 영상(약 220KB)과
                             첫 장면 그림(poster, 약 10KB)을 써서 바로 보이게. 원본은 그대로(다른 곳에서 쓰면 그대로), 견종 영상이 아니면 원래 주소 */}
                         <video
-                            src={badgeVideoSrc(src)}
+                            src={playbackActive ? badgeVideoSrc(src) : undefined}
                             poster={badgePosterSrc(src)}
                             autoPlay
                             muted

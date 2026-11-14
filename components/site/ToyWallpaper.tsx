@@ -12,7 +12,7 @@
  *  - 안드로이드 강제 다크에서는 globals.css 가 숨김(기존 어두운 바탕 · 암막 그대로)
  * 클릭 · 읽기 프로그램에는 없는 것(pointer-events: none · aria-hidden). 화면 높이가 바뀌면(상품 더 보기 등) 칸을 이어 붙인다.
  */
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 const BAND = 1600;            // 세로 칸 높이(px)
 const DENSITY = 8.7e-6;       // 1px² 당 스티커 수(1440×900 한 화면에 약 11개 — 사용자 확정 60% 시안보다 20% 많게, 2026-10-18)
@@ -80,9 +80,14 @@ export default function ToyWallpaper() {
         };
     }, []);
 
+    const width = box?.width ?? 0;
+    const bands = Math.ceil((box?.height ?? 0) / BAND);
+    const stickers = useMemo(() => {
+        const placed: Sticker[] = [];
+        for (let i = 0; i < bands; i++) placed.push(...layoutBand(i, width, placed));
+        return placed;
+    }, [width, bands]);
     if (!box) return null;
-    const stickers: Sticker[] = [];
-    for (let i = 0; i * BAND < box.height; i++) stickers.push(...layoutBand(i, box.width, stickers));
 
     return (
         // 위치 · 크기 규칙은 부품에 직접 — CSS 가 늦게 적용돼도 벽지가 본문 흐름에 끼어 페이지를 늘리지 않게(높이를 다시 재는 반복 방지)

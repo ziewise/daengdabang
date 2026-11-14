@@ -11,7 +11,7 @@
  *   4. 사업자 정보 (한국 쇼핑몰 법적 필수)
  *   5. 법적 링크 + 카피라이트
  */
-import Link from "next/link";
+import Link from "@/components/site/IntentLink";
 import BrandLogo from "@/components/header/BrandLogo";
 import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
 import LocalizedText from "@/components/i18n/LocalizedText";
@@ -32,9 +32,9 @@ const SOCIAL_TONES: Record<string, string> = {
     tiktok: "from-cyan-500 via-neutral-950 to-rose-500",
 };
 
-export default function Footer() {
+export default function Footer({ web = false }: { web?: boolean }) {
     const webScreen = useWebScreen();
-    if (webScreen) return <FooterWeb />;
+    if (web || webScreen) return <FooterWeb />;
     return (
         <footer className="mt-16 bg-white/60 backdrop-blur-xl border-t border-white/60">
             <div className="max-w-[1400px] mx-auto px-6 py-7 md:py-8 space-y-5 md:space-y-6">

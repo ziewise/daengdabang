@@ -15,11 +15,11 @@
 import { reviewSellerLabel } from "@/lib/catalog/review-groups";
 
 import { useState } from "react";
-import Link from "next/link";
+import Link from "@/components/site/IntentLink";
 import type { CatalogProduct } from "@/lib/catalog";
-import { getBestRank, isNewProduct } from "@/lib/catalog";
+import { getBestRank, isNewProduct } from "@/lib/catalog/card-badges";
 import { catalogPriceBadgeClass, catalogPriceBadgeLabel } from "@/lib/catalog/price-badge";
-import { productHref } from "@/lib/shop";          // 운영 사이트 라우트 호환
+import { productHref } from "@/lib/product-url";
 import { productCardImage } from "@/lib/catalog/card-image";
 import { useStore } from "@/lib/store";            // 운영 사이트 위시리스트 기능
 import { useI18n } from "@/lib/i18n";

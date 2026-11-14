@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Keep content and decorative placement stable while lists finish loading. */
+html:not(.ddb-app-mode) { scrollbar-gutter: stable; }
+
 @theme {
     --color-background: #f7f8fb;
     --color-foreground: #111827;

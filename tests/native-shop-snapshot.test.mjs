@@ -8,6 +8,7 @@ const full = load("lib/catalog/runtime-data.ts");
 const native = load("lib/catalog/native-shop-data.ts");
 const hot = load("lib/catalog/hot-picks.ts");
 const curated = load("lib/catalog/curations.ts");
+const badges = load("lib/catalog/card-badges.ts");
 const member = load("lib/recommendation/member.ts");
 const snapshot = JSON.parse(readFileSync(new URL("../lib/catalog/native-shop.generated.json", import.meta.url), "utf8"));
 const serializable = value => JSON.parse(JSON.stringify(value));
@@ -19,6 +20,8 @@ test("first shop snapshot retains exact products, publication receipts, inventor
     for (const p of full.CATALOG) {
         assert.equal(native.isNewProduct(p), curated.isNewProduct(p), p.id);
         assert.equal(native.getBestRank(p), curated.getBestRank(p), p.id);
+        assert.equal(badges.isNewProduct(p), curated.isNewProduct(p), p.id);
+        assert.equal(badges.getBestRank(p), curated.getBestRank(p), p.id);
     }
     assert.ok(snapshot.products.length < full.CATALOG.length, "first shelf must not embed the full detail catalog");
 });

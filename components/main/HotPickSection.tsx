@@ -15,13 +15,13 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/site/IntentLink";
 import type { CatalogProduct } from "@/lib/catalog";
-import { HOT_PICK_GROUPS, HOT_PICK_RANKS, pickHotPickTopThree } from "@/lib/catalog/hot-picks";
+import { HOT_PICK_GROUPS, pickHotPickTopThree } from "@/lib/catalog/native-shop-data";
 import { catalogPriceBadgeClass, catalogPriceBadgeLabel } from "@/lib/catalog/price-badge";
 import { productPurchaseState, purchaseStateLabel } from "@/lib/catalog/inventory";
 import ProductColorImage from "@/components/products/ProductColorImage";
-import { productHref } from "@/lib/shop";
+import { productHref } from "@/lib/product-url";
 import { productCardImage } from "@/lib/catalog/card-image";
 import { useI18n } from "@/lib/i18n";
 // 상품 카드(ProductCard)와 같은 마우스 올리면 영상 재생 — 같은 훅 · 같은 영상 맞춤(2026-10-28)
@@ -31,7 +31,6 @@ import { hoverVideoFraming, hoverVideoStyle } from "@/lib/catalog/hover-video-fr
 
 // 제품군 5개 · 1~3위 고르기(임시 순서)는 lib/catalog/hot-picks.ts — /best/ 핫픽 페이지와 같은 자료
 const GROUPS = HOT_PICK_GROUPS;
-const RANKS = HOT_PICK_RANKS; // 제품군마다 1~3위
 const FLIP_EVERY = 3800;    // 한 바퀴(다섯 장이 한 번씩 뒤집히는) 간격(ms)
 const WAVE_DELAY = 220;     // 왼쪽 카드부터 이만큼씩 늦게 뒤집힘(ms)
 

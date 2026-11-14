@@ -16,8 +16,8 @@
  *
  * 2026-10-25 속도: 상담 창(ChatWidget)은 AI 상담이 상품 자료 전체(압축 후 약 1MB, 휴대폰 해석 2~3초)를 함께 끌고 와서,
  *   예전처럼 바로 import 하면 모든 페이지가 첫 화면 전에 그 자료를 받고 해석했다. 이제는
- *   ① 페이지가 다 열리고 브라우저가 한가해지면(늦어도 몇 초 안) 붙이고, ② 그 전에 "상담 열기"(openChatWidget) ·
- *   산책 친구 안내(상담 단추 보여 주기)가 오면 그 즉시 붙인다. 열기 요청은 chat-widget-events 가 들고 있다가
+ *   가벼운 상담 단추를 먼저 보여 주고, "상담 열기"(openChatWidget)가 오면 창을 붙인다.
+ *   열기 요청은 chat-widget-events 가 들고 있다가
  *   상담 창이 붙는 순간 그대로 열림(앱 AppShell 과 같은 방식). 상담 창 안의 대화 로직 · 모양은 그대로.
  *
  * 2026-10-26 결제(/checkout) 휴대폰: 56px 상담 단추가 화면 폭 전체 아래 단추(결제하기 등)의 오른쪽 끝을 덮어서
@@ -31,7 +31,8 @@ import { usePathname } from "next/navigation";
 import dynamic from "next/dynamic";
 import CareTalkWelcome from "@/components/site/CareTalkWelcome";
 import { useMobileFloatingVisibility } from "@/hooks/useMobileFloatingVisibility";
-import { CHAT_WIDGET_NAVIGATOR_REVEAL_EVENT, CHAT_WIDGET_OPEN_EVENT } from "@/lib/chat-widget-events";
+import { CHAT_WIDGET_NAVIGATOR_REVEAL_EVENT, CHAT_WIDGET_OPEN_EVENT, openChatWidget } from "@/lib/chat-widget-events";
+import chatStyles from "./ChatWidget.module.css";
 
 const ChatWidget = dynamic(() => import("@/components/site/ChatWidget"), { ssr: false });
 
@@ -46,26 +47,13 @@ export default function FloatingDock() {
     const [navigatorReveal, setNavigatorReveal] = useState(false);
     const [chatOpen, setChatOpen] = useState(false);
     const [chatMounted, setChatMounted] = useState(false);
-    // 상담 창 붙이기 — 한가할 때 · 열기 요청 · 상담 단추 안내 중 먼저 오는 때(한 번 붙이면 계속)
+    // Keep the launcher light. The conversation/catalog loads only on opening.
     useEffect(() => {
         if (chatMounted) return;
         const mount = () => setChatMounted(true);
         window.addEventListener(CHAT_WIDGET_OPEN_EVENT, mount);
-        window.addEventListener(CHAT_WIDGET_NAVIGATOR_REVEAL_EVENT, mount);
-        let idleId: number | undefined;
-        let timerId: number | undefined;
-        const schedule = () => {
-            if (typeof window.requestIdleCallback === "function") idleId = window.requestIdleCallback(mount, { timeout: 4000 });
-            else timerId = window.setTimeout(mount, 2500);
-        };
-        if (document.readyState === "complete") schedule();
-        else window.addEventListener("load", schedule, { once: true });
         return () => {
             window.removeEventListener(CHAT_WIDGET_OPEN_EVENT, mount);
-            window.removeEventListener(CHAT_WIDGET_NAVIGATOR_REVEAL_EVENT, mount);
-            window.removeEventListener("load", schedule);
-            if (idleId !== undefined) window.cancelIdleCallback(idleId);
-            if (timerId !== undefined) window.clearTimeout(timerId);
         };
     }, [chatMounted]);
     const dockRef = useRef<HTMLDivElement>(null);
@@ -160,6 +148,16 @@ export default function FloatingDock() {
         >
             {/* 챗봇 — 위치는 dock 이 관리, 내부 토글/대화 로직은 협업자 ChatWidget 그대로 */}
             <div className={interactive}>
+                {!chatMounted && !hideLauncherOnCheckout && (
+                    <div className={`${chatStyles.root} relative z-50`} data-chat-widget-open="false">
+                        <button type="button" onClick={() => openChatWidget()}
+                            className={`${chatStyles.trigger} ddb-header-tip ddb-tip-left flex h-14 w-14 items-center justify-center rounded-full text-white`}
+                            data-chat-open="false" data-pet-guide-target="chatbot" data-mobile-chat-trigger
+                            aria-expanded={false} aria-label="채팅 열기" data-header-tip="케어톡">
+                            <i className="fa-solid fa-comments text-lg" aria-hidden="true" />
+                        </button>
+                    </div>
+                )}
                 {chatMounted && <ChatWidget
                     isMobile={mobileFloating.isMobile}
                     launcherHidden={!dockVisible || hideLauncherOnCheckout}

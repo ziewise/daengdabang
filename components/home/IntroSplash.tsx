@@ -17,6 +17,7 @@ import { pickIntroVideo } from "@/lib/intro-videos";
 import { loadIntroList, pickFromIntroList } from "@/lib/intro-r2";
 // media-admin 사이트 미리보기: ?introSrc=intro/파일 — 켜기 전 영상도 사이트 화면으로(우리 intro 폴더만, 2026-10-29)
 import { readIntroPreviewSrc } from "@/lib/site-preview";
+import { setIntroActive } from "@/lib/intro-state";
 
 const INTRO_SEEN_KEY = "ddb.intro.seen.v2";
 const MIN_INTRO_MS = 2200;
@@ -43,6 +44,7 @@ export default function IntroSplash() {
         introMobileRef.current = mobile;
 
         const show = () => {
+            setIntroActive(true);
             const requested = new URLSearchParams(window.location.search).get("introVideo");
             requestedIdRef.current = requested;
             shownAtRef.current = Date.now();
@@ -63,9 +65,9 @@ export default function IntroSplash() {
 
         try {
             const introMode = new URLSearchParams(window.location.search).get("intro");
-            if (introMode === "0") return;
+            if (introMode === "0") { setIntroActive(false); return; }
             // 앱(앱 틀)에서 쇼핑 탭으로 들어올 때는 인트로 영상 없이 바로 쇼핑 화면 (로컬 시안)
-            if (introMode !== "1" && isAppModeNow()) return;
+            if (introMode !== "1" && isAppModeNow()) { setIntroActive(false); return; }
             if (introMode === "1") {
                 show();
                 return;
@@ -73,7 +75,7 @@ export default function IntroSplash() {
             const viewportKey = mobile
                 ? `${INTRO_SEEN_KEY}.mobile`
                 : `${INTRO_SEEN_KEY}.desktop`;
-            if (window.sessionStorage.getItem(viewportKey)) return;
+            if (window.sessionStorage.getItem(viewportKey)) { setIntroActive(false); return; }
             show();
         } catch {
             show();
@@ -169,6 +171,7 @@ export default function IntroSplash() {
             // Non-critical; the splash can still close for this render.
         }
         setVisible(false);
+        setIntroActive(false);
     };
 
     const closeAfterMinimum = () => {

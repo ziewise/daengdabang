@@ -9,7 +9,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import Link from "next/link";
+import Link from "@/components/site/IntentLink";
 import Image from "next/image";
 import styles from "./brand-slider.module.css";
 

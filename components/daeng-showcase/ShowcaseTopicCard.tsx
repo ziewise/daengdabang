@@ -1,4 +1,5 @@
 "use client";
+import ShowcaseThumbnail from "./ShowcaseThumbnail";
 
 /**
  * ShowcaseTopicCard — 댕자랑 "오늘의 댕주제" 무대(2026-10-22 사용자 선택 S2+사각 사진 · 웹 기록 결)
@@ -54,7 +55,11 @@ export default function ShowcaseTopicCard({
     if (loading) {
         return (
             <section id="showcase-topic" className="dw-sc-wrap scroll-mt-28" aria-label="오늘의 댕주제 불러오는 중" aria-busy="true">
-                <div className="dw-csheet h-56 animate-pulse motion-reduce:animate-none" />
+                <TopicHead />
+                <div className="dw-csheet is-yellow dw-sc-topic-note" aria-hidden="true">
+                    <p className="dw-tlogin-body animate-pulse motion-reduce:animate-none">오늘의 댕주제를 불러오고 있어요.</p>
+                    <span className="dw-pill dw-pill-main dw-pill-sm mt-3 invisible">자유 주제로 올리기</span>
+                </div>
             </section>
         );
     }
@@ -117,8 +122,7 @@ export default function ShowcaseTopicCard({
                         <div className="dw-sc-stage-photo">
                             <span className="dw-sc-crown">오늘의 대표 댕자랑</span>
                             <button type="button" onClick={() => onViewFeatured(featured)} className="dw-sc-frame is-rainbow" aria-label="대표 댕자랑 정확히 보기">
-                                {/* eslint-disable-next-line @next/next/no-img-element -- the API returns a deletion-aware public media URL and canonical dimensions. */}
-                                <img
+                                <ShowcaseThumbnail
                                     src={featured.imageUrl}
                                     alt={`${featured.author.displayName}의 대표 댕자랑 사진`}
                                     width={featured.imageWidth}

@@ -3,11 +3,11 @@
 import Link from "next/link";
 import type { MouseEvent } from "react";
 import ProductCard from "@/components/products/ProductCard";
-import {
-    RECOMMENDATION_FEATURE_FLAGS,
-    type RecommendationItem,
-    type RecommendationSourceGroup,
-} from "@/lib/recommendation";
+import { RECOMMENDATION_FEATURE_FLAGS } from "@/lib/recommendation/feature-flags";
+import type {
+    RecommendationItem,
+    RecommendationSourceGroup,
+} from "@/lib/recommendation/types";
 
 const SOURCE_LABEL: Record<RecommendationSourceGroup, string> = {
     profile: "등록한 반려견 프로필",

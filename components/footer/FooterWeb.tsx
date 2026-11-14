@@ -14,7 +14,7 @@
  */
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/site/IntentLink";
 import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
 import LocalizedText from "@/components/i18n/LocalizedText";
 import { FOOTER_LEGAL_LINKS, FOOTER_META_LINKS } from "@/lib/menu-data";

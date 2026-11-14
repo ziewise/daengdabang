@@ -10,6 +10,7 @@ console.log(`Validated runtime catalog: ${Buffer.byteLength(output)} bytes`);
 const load = createCatalogLoader();
 const { nativeShopSnapshot } = load("lib/catalog/native-shop-snapshot.ts");
 const snapshot = nativeShopSnapshot();
+writeFileSync(new URL("../lib/catalog/new-badge-ids.generated.json", import.meta.url), JSON.stringify(snapshot.newBadgeIds) + "\n");
 const shop = JSON.stringify(snapshot);
 writeFileSync(new URL("../lib/catalog/native-shop.generated.json", import.meta.url), shop + "\n");
 console.log(`Validated first shop shelf: ${Buffer.byteLength(shop)} bytes`);

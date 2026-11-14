@@ -25,7 +25,7 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
 import Image from "next/image";
 import { promoCardForSeason, seasonOf, type SeasonKey } from "@/lib/promo-season";
-import Link from "next/link";
+import Link from "@/components/site/IntentLink";
 import { WEB_PROMO_CARDS, type PromoCard } from "@/lib/menu-data";
 
 // color → 배경 class (Tailwind JIT 가 잡도록 명시 매핑, 헤더 드롭다운과 동일 팔레트)

@@ -17,8 +17,8 @@ import Link from "next/link";
 import {
     getBestRank,
     isNewProduct,
-    type CatalogProduct,
-} from "@/lib/catalog";
+} from "@/lib/catalog/card-badges";
+import type { CatalogProduct } from "@/lib/catalog/types";
 import { catalogPriceBadgeClass, catalogPriceBadgeLabel } from "@/lib/catalog/price-badge";
 import { useAuth, useStore } from "@/lib/store";
 import { usePets } from "@/hooks/usePets";
