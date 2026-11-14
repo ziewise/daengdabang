@@ -101,6 +101,15 @@ jobs:
           "$build_tools/apksigner" verify --verbose --print-certs android/app/build/outputs/apk/debug/app-debug.apk
           "$build_tools/zipalign" -c -P 16 -v 4 android/app/build/outputs/apk/debug/app-debug.apk
           "$build_tools/aapt" dump badging android/app/build/outputs/apk/debug/app-debug.apk | tee android/app/build/outputs/apk/debug/app-debug-badging.txt
+          for variant in debug release; do
+            apk="android/app/build/outputs/apk/$variant/app-$variant.apk"
+            manifest="android/app/build/outputs/apk/$variant/app-$variant-manifest.txt"
+            "$build_tools/aapt" dump xmltree "$apk" AndroidManifest.xml > "$manifest"
+            if grep -Fq 'ai.onnxruntime.TelemetryInitializer' "$manifest"; then
+              echo "The $variant APK must not initialize ONNX before the UI" >&2
+              exit 1
+            fi
+          done
 
       - name: Enable KVM for the Android emulator
         run: |
@@ -134,6 +143,9 @@ jobs:
             android/app/build/outputs/apk/debug/app-debug-badging.txt
             android/app/build/outputs/apk/debug/app-debug-launch.txt
             android/app/build/outputs/apk/debug/app-debug-logcat.txt
+            android/app/build/outputs/apk/debug/app-debug-before-feature-logcat.txt
+            android/app/build/outputs/apk/debug/app-debug-on-demand-runtime.txt
+            android/app/build/outputs/apk/debug/app-debug-manifest.txt
             android/app/build/outputs/apk/debug/app-debug-launch.png
             android/app/build/outputs/apk/debug/app-debug-*-media.png
             android/app/build/outputs/apk/debug/app-debug-webview.json

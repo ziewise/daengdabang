@@ -38,12 +38,13 @@ function evaluateDocument(socket, expression = `(() => ({
     text: document.body?.innerText || "",
     nativeInteractiveMs: performance.getEntriesByName("ddb-native-interactive")[0]?.startTime ?? null,
     tabInteractive: typeof document.querySelector('.app-tabbar a[href="/app/sticker/shop/"]')?.onclick === "function",
-}))()`) {
+}))()`, timeoutMs = 5_000) {
     return new Promise((resolve, reject) => {
         const requestId = ++nextRequestId;
         const timer = setTimeout(() => {
+            socket.removeEventListener("message", onMessage);
             reject(new Error("Timed out while reading the Android WebView document."));
-        }, 5_000);
+        }, timeoutMs);
 
         const onMessage = (event) => {
             const message = JSON.parse(String(event.data));
@@ -52,7 +53,9 @@ function evaluateDocument(socket, expression = `(() => ({
             clearTimeout(timer);
             socket.removeEventListener("message", onMessage);
             if (message.error || message.result?.exceptionDetails) {
-                reject(new Error("Android WebView document evaluation failed."));
+                const detail = message.error?.message || message.result?.exceptionDetails?.exception?.description
+                    || message.result?.exceptionDetails?.text || "unknown error";
+                reject(new Error(`Android WebView document evaluation failed: ${detail}`));
                 return;
             }
             resolve(message.result?.result?.value);
@@ -129,7 +132,7 @@ async function verifyShoppingMedia(socket) {
         execFileSync("adb", ["exec-out", "screencap", "-p"]),
     );
     const posterLoaded = await evaluateDocument(socket, `new Promise(resolve => {
-        window.scrollTo(0, 0);
+        window.scrollTo({top: 0, behavior: 'instant'});
         const image = new Image();
         image.onload = () => resolve(image.naturalWidth >= 600);
         image.onerror = () => resolve(false);
@@ -137,6 +140,7 @@ async function verifyShoppingMedia(socket) {
         image.src = '/images/ui/shop-hero-poster.webp';
     })`);
     if (!posterLoaded) throw new Error("The native shopping hero offline poster is missing.");
+    await evaluateDocument(socket, `new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))`);
     screenshot("shop-media");
     await evaluateDocument(socket, `document.querySelector('nav[aria-label="상품군"] a').click()`);
     let products;
@@ -194,6 +198,39 @@ async function verifyShoppingMedia(socket) {
     return {posterLoaded, products, maxPlaying, community};
 }
 
+async function verifyOnDemandInference(socket) {
+    // Synthetic images remain on the emulator. Loading the runtime only here
+    // proves that removing its startup provider preserves the optional feature.
+    const result = await evaluateDocument(socket, `(async () => {
+        const started = performance.now();
+        const capabilities = await window.Capacitor.nativePromise('OnDeviceTryOn', 'getCapabilities', {});
+        if (!capabilities.available || !capabilities.modelAvailable) throw new Error('Bundled on-device model unavailable');
+        const image = (color) => {
+            const canvas = document.createElement('canvas');
+            canvas.width = canvas.height = 32;
+            const context = canvas.getContext('2d');
+            context.fillStyle = color;
+            context.fillRect(0, 0, 32, 32);
+            return canvas.toDataURL('image/png');
+        };
+        const output = await window.Capacitor.nativePromise('OnDeviceTryOn', 'run', {
+            petDataUrl: image('#d8b48a'), productDataUrl: image('#3258a8'), layout: 'torso',
+            modelSha256: capabilities.modelSha256,
+        });
+        const decoded = new Image();
+        decoded.src = output.imageDataUrl;
+        await decoded.decode();
+        return {width: decoded.naturalWidth, height: decoded.naturalHeight,
+            runtimeVersion: output.runtimeVersion, provider: output.provider,
+            modelMatches: output.modelSha256 === capabilities.modelSha256,
+            inferenceMs: output.durationMs, totalMs: performance.now() - started};
+    })()`, 30_000);
+    if (result.width !== 256 || result.height !== 256 || !result.modelMatches || !result.runtimeVersion) {
+        throw new Error(`On-demand Android inference failed: ${JSON.stringify(result)}`);
+    }
+    return result;
+}
+
 let lastState;
 let lastError;
 
@@ -221,6 +258,7 @@ for (let attempt = 1; attempt <= maximumAttempts; attempt += 1) {
         ) {
             lastState.companion = await verifyPetCompanion(socket);
             lastState.media = await verifyShoppingMedia(socket);
+            lastState.onDeviceTryOn = await verifyOnDemandInference(socket);
             socket.close();
             process.stdout.write(`${JSON.stringify(lastState, null, 2)}\n`);
             process.exit(0);

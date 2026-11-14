@@ -59,6 +59,10 @@ app_pid="$(adb shell pidof "$package_name" | tr -d '\r')"
 test -n "$app_pid"
 adb logcat -d -v threadtime --pid="$app_pid" > "$artifact_dir/logcat.txt"
 if grep -q 'FATAL EXCEPTION' "$artifact_dir/logcat.txt"; then exit 1; fi
+if grep -F 'libonnxruntime' "$artifact_dir/logcat.txt"; then
+    echo 'Signed app must not load the optional inference runtime during startup.' >&2
+    exit 1
+fi
 adb exec-out screencap -p > "$artifact_dir/launch.png"
 sh scripts/assert-android-responsive.sh "$artifact_dir/startup-health.txt"
 python3 scripts/verify-android-interactions.py "$artifact_dir"

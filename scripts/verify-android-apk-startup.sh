@@ -56,6 +56,13 @@ if grep -F "FATAL EXCEPTION" "$app_log"; then
   exit 1
 fi
 
+# This log is captured before any explicit on-device feature request.
+cp "$app_log" "$artifact_dir/app-debug-before-feature-logcat.txt"
+if grep -F 'libonnxruntime' "$app_log"; then
+  echo 'The optional inference runtime must not load during app startup.' >&2
+  exit 1
+fi
+
 # 2026-10-18: 우리 앱(app_pid)의 WebView 디버그 통로만 고른다. 예전에는 처음 보이는 통로를 골라
 # 에뮬레이터의 다른 앱(구글 앱 등) 통로에 붙으면 "No debuggable Android WebView page" 로 실패했다.
 # 통로가 늦게 생길 수 있어 최대 30초 기다린다. adb 출력의 \r 은 비교 전에 지운다.
@@ -84,6 +91,10 @@ if grep -F "FATAL EXCEPTION" "$app_log"; then
   cat "$app_log"
   exit 1
 fi
+
+# The WebView check explicitly exercises inference after the media checks.
+grep -F 'libonnxruntime' "$app_log" > "$artifact_dir/app-debug-on-demand-runtime.txt"
+echo 'Verified inference runtime loads on demand, not during app startup.'
 
 sh scripts/assert-android-responsive.sh "$artifact_dir/startup-health.txt"
 
