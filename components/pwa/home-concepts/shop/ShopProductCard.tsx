@@ -73,12 +73,12 @@ export default function ShopProductCard({ product, index = 0, showBest = false, 
                 <Link href={href} aria-label={`${name} 상세 보기`} className="absolute inset-0 flex items-center justify-center">
                     {thumb ? (
                         <ProductColorImage src={thumb} alt={name} sizes="170px"
-                            className={`object-contain transition-opacity duration-300 ${videoActive ? "opacity-0" : "opacity-100"}`} />
+                            className="object-contain" />
                     ) : media ? (
                         <i aria-hidden="true" className={`fa-solid ${p.icon} text-4xl text-[#e8c9b8]`} />
                     ) : null}
                     {hasVideo ? (
-                        <video ref={videoRef} src={video}style={hoverVideoStyle(p.video)} data-hover-video-fit="cover" muted loop={false} playsInline preload="none"
+                        <video ref={videoRef} src={video} poster={thumb} style={{ ...hoverVideoStyle(p.video), visibility: videoActive ? "visible" : "hidden" }} data-hover-video-fit="cover" muted loop={false} playsInline preload="none"
                             {...videoEvents}
                             className={`pointer-events-none absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${videoActive ? "opacity-100" : "opacity-0"}`} />
                     ) : null}

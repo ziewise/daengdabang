@@ -188,7 +188,7 @@ test("hover video plays for every selected color and leaving restores that color
     media(tree).props.onMouseEnter();
     assert.equal(fixture.video.plays, 2);
     tree = fixture.render();
-    assert.match(thumbnail(tree).props.className, /opacity-0/);
+    assert.match(thumbnail(tree).props.className, /opacity-100/, "photo remains painted under the video surface");
     assert.equal(thumbnail(tree).props.src, "/blue.jpg");
     assert.equal(tree.find(n => n.type === "video").props.src, "/reviewed.mp4");
     media(tree).props.onMouseLeave();
@@ -201,7 +201,7 @@ test("hover video plays for every selected color and leaving restores that color
     media(tree).props.onMouseEnter();
     assert.equal(fixture.video.plays, 3);
     tree = fixture.render();
-    assert.match(thumbnail(tree).props.className, /opacity-0/);
+    assert.match(thumbnail(tree).props.className, /opacity-100/, "selected photo remains painted under the video surface");
     media(tree).props.onMouseLeave();
     tree = fixture.render();
     assert.equal(thumbnail(tree).props.src, "/red.jpg");

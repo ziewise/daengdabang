@@ -78,7 +78,7 @@ test("the product detail UI renders an image-led official product story", async 
 
 test("product previews consistently contain complete images without selection-dependent padding", async () => {
     const source = await readFile(new URL("../components/products/ProductCard.tsx", import.meta.url), "utf8");
-    assert.match(source, /className=\{`object-contain transition-opacity/);
+    assert.match(source, /className="object-contain opacity-100"/);
     assert.doesNotMatch(source, /p-\[7%\]/);
 
     const gallerySource = await readFile(new URL("../components/products/detail/ProductGallery.tsx", import.meta.url), "utf8");

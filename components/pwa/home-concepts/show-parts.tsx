@@ -56,11 +56,23 @@ function shareCopyOf(target: ShareTarget) {
     return { title: target.topicTitle ? `${target.topicTitle} | 오늘의 댕자랑` : "오늘의 댕자랑", text: "댕다방에서 이 댕자랑을 함께 봐요." };
 }
 
-/** 게시물 사진 — 방금 올린 사진(blob 주소)은 img, 나머지는 next/image */
-export function PostPhoto({ src, sizes, className = "" }: { src: string; sizes: string; className?: string }) {
-    // eslint-disable-next-line @next/next/no-img-element -- 사용자가 방금 고른 사진 미리보기(blob 주소)
-    if (src.startsWith("blob:")) return <img src={src} alt="" className={`absolute inset-0 h-full w-full object-cover ${className}`} draggable={false} />;
-    return <Image src={src} alt="" fill sizes={sizes} className={`object-cover ${className}`} draggable={false} />;
+/** 게시물 사진 — 로딩/실패 상태를 표시하고 실패한 사진만 다시 요청한다. */
+export function PostPhoto({ src, sizes, className = "", eager = false }: { src: string; sizes: string; className?: string; eager?: boolean }) {
+    const [loaded, setLoaded] = useState("");
+    const [failed, setFailed] = useState("");
+    const [attempt, setAttempt] = useState(0);
+    const key = `${src}:${attempt}`;
+    return <>
+        <Image key={key} src={src} alt="" fill sizes={sizes} loading={eager || src.startsWith("blob:") ? "eager" : "lazy"}
+            onLoad={() => setLoaded(key)} onError={() => setFailed(key)}
+            className={`object-cover ${className}`} draggable={false} />
+        {loaded !== key ? <span className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 bg-[#fff3e8] text-[#9b7467]" role="status">
+            <Image src="/images/ui/stickers/caretalk-photo.webp" alt="" width={40} height={40} className="h-10 w-10" />
+            {failed === key ? <button type="button" className="ah-light rounded-full bg-white px-2.5 py-1.5 text-[11px]"
+                onClick={event => { event.stopPropagation(); setAttempt(value => value + 1); }}>사진 다시 불러오기</button>
+                : <span className="ah-light text-[11px]">사진을 불러오고 있어요</span>}
+        </span> : null}
+    </>;
 }
 
 /** 작성자 동그라미(이름 첫 글자) — 모두 같은 크림(웹 댕자랑에는 공식 배지가 없음) */

@@ -27,7 +27,7 @@ test("native media observer settles, including mixed bundled/remote srcset", () 
 });
 
 test("native media preserves offline, absolute and inline resources", () => {
-    for (const value of ["/images/ui/icon.webp", "/fonts/app.woff2", "//cdn.example/image.webp", "https://cdn.example/image.webp", "data:image/png;base64,AA==", "blob:https://localhost/abc"]) {
+    for (const value of ["/images/ui/icon.webp", "/images/products/card/rw_rogue_longline_26fw.webp", "/images/ui/shop-hero-poster.webp", "/fonts/app.woff2", "//cdn.example/image.webp", "https://cdn.example/image.webp", "data:image/png;base64,AA==", "blob:https://localhost/abc"]) {
         assert.equal(nativeMediaUrl(value), value);
     }
 });

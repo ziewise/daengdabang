@@ -15,7 +15,7 @@ import { Capacitor } from "@capacitor/core";
 
 const WEB_ORIGIN = "https://www.daengdabang.com";
 // 앱 안에 함께 들어가는 폴더(협업자 묶음 목록과 같게) — 이 폴더 파일은 앱 안 파일 그대로 쓴다
-const BUNDLED_PREFIXES = ["/images/ui/", "/images/brand/", "/images/breeds/", "/images/pwa/", "/fonts/"];
+const BUNDLED_PREFIXES = ["/images/ui/", "/images/brand/", "/images/breeds/", "/images/pwa/", "/fonts/", "/images/products/card/"];
 
 const noopSubscribe = () => () => {};
 

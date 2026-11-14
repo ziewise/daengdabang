@@ -1,5 +1,6 @@
 const ORIGIN = "https://www.daengdabang.com";
 const BUNDLED = ["/images/ui/", "/images/brand/", "/images/breeds/", "/images/pwa/", "/fonts/", "/_next/", "/ai/",
+    "/images/products/card/",
     "/images/pet-companion/cute-v4-breeds/posters/",
     "/images/logo-black-poodle-v2.png", "/images/wordmark.png", "/images/og-ai-platform-"];
 

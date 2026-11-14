@@ -67,6 +67,7 @@ export default function ProductCard({
     const selectedColor = colorIdx === null ? undefined : colors[colorIdx];
     // 카드 사진: 고른 색상 사진 → 카드용 크림 사진(productCardImage — 없으면 대표 사진)
     const thumbnail = selectedColor?.image || productCardImage(p);
+    const nativeApp = typeof navigator !== "undefined" && /\bDDBNative\//.test(navigator.userAgent);
 
     // ===== 영상 호버 로직 =====
     const { videoRef, videoActive, activate, deactivate, previewColor, ...videoEvents } = useProductVideo(p.video);
@@ -97,6 +98,8 @@ export default function ProductCard({
             >
                 <Link
                     href={detailHref}
+                    prefetch={nativeApp ? false : undefined}
+                    scroll={nativeApp ? false : undefined}
                     aria-label={`${displayName} ${t("detailInfo")}`}
                     className="absolute inset-0 flex cursor-pointer items-center justify-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-indigo-600"
                 >
@@ -106,7 +109,7 @@ export default function ProductCard({
                             color={selectedColor}
                             alt={selectedColor ? `${displayName} · ${selectedColor.name}` : displayName}
                             sizes="(max-width: 640px) 160px, (max-width: 768px) 200px, 230px"
-                            className={`object-contain transition-opacity duration-300 ${videoActive ? "opacity-0" : "opacity-100"}`}
+                            className="object-contain opacity-100"
                         />
                     ) : (
                         <i className={`fa-solid ${p.icon} text-4xl md:text-5xl text-white/95 drop-shadow-md`} />
@@ -118,7 +121,8 @@ export default function ProductCard({
                         <video
                             ref={videoRef}
                             src={p.video}
-                            style={hoverVideoStyle(p.video)}
+                            poster={thumbnail}
+                            style={{ ...hoverVideoStyle(p.video), visibility: videoActive ? "visible" : "hidden" }}
                             data-hover-video-fit="cover"
                             muted
                             loop={false}
@@ -203,7 +207,7 @@ export default function ProductCard({
             )}
 
             {/* 정보 영역 — 상세 페이지로 이동 */}
-            <Link href={detailHref} className="block hover:bg-neutral-50/40 transition-colors">
+            <Link href={detailHref} prefetch={nativeApp ? false : undefined} scroll={nativeApp ? false : undefined} className="block hover:bg-neutral-50/40 transition-colors">
                 <div className="p-3 md:p-4">
                     <p className="text-[10px] font-extrabold tracking-wider text-aurora-indigo mb-1 uppercase">
                         {p.brandEn || p.brandKo}

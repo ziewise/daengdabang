@@ -50,7 +50,7 @@ test("a replaced file or unrelated host cannot inherit an old crop", () => {
 test("shared card, detail and bundle hover surfaces use full-box framing and restore cropped shop branding", () => {
     for (const file of ["components/products/ProductCard.tsx", "components/products/detail/ProductGallery.tsx", "components/bundles/BundleCard.tsx"]) {
         const source = readFileSync(new URL(`../${file}`, import.meta.url), "utf8");
-        assert.match(source, /style=\{hoverVideoStyle\((?:p|bundle)\.video\)\}/, file);
+        assert.match(source, /style=\{(?:\{ \.\.\.)?hoverVideoStyle\((?:p|bundle)\.video\)/, file);
         assert.match(source, /data-hover-video-fit="cover"/, file);
         assert.match(source, /forceOverlay=\{hoverVideoFraming\((?:p|bundle)\.video\)\?\.restoreBrandOverlay\}/, file);
     }

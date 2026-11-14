@@ -29,7 +29,6 @@ import { Sheet } from "../show-parts";
 import InViewVideo from "../InViewVideo";
 
 /* ── 협업자 히어로와 같은 지역 저장(같은 키 · 같은 이벤트) ── */
-const DEFAULT_CONTEXT: HeroContext = { weather: "clear", season: "summer", timeBucket: "day" };
 const REGION_KEY = "ddb.hero.weather.region.v1";
 const REGION_EVENT = "ddb:hero-weather-region-change";
 const KR_REGIONS = HERO_WEATHER_REGION_OPTIONS.filter((r) => r.countryCode === "KR");
@@ -73,7 +72,9 @@ export default function ShopHero() {
     const stored = useSyncExternalStore(subscribeRegion, readRegion, () => null);
     const ready = stored !== null;
     const region = stored ?? HERO_AUTO_REGION_ID;
-    const [context, setContext] = useState<HeroContext>(DEFAULT_CONTEXT);
+    // Do not request a summer movie before the actual local season is known.
+    // The bundled poster renders immediately, independently of weather/video.
+    const [context, setContext] = useState<HeroContext | null>(null);
     const [report, setReport] = useState<HeroWeatherReport | null>(null);
     const [regionOpen, setRegionOpen] = useState(false);
     const [cue, setCue] = useState(false); // "저를 콕 눌러 분석하기!" 말풍선 — 잠깐씩 떠오름
@@ -126,11 +127,11 @@ export default function ShopHero() {
     // 영상 주소 — 네이티브 앱은 운영 사이트 파일, 화면 준비 전엔 빈 사진 자리(useShopMedia)
     const media = useShopMedia();
     // 앱 = 세로(모바일) 영상 · R2 후보를 앞에서부터(파일이 없으면 onError 로 다음) — 전체 주소라 media() 는 그대로 돌려줌
-    const heroVideoSource = useHeroVideoSource(pickHeroVideoCandidates(context, true));
+    const heroVideoSource = useHeroVideoSource(context ? pickHeroVideoCandidates(context, true) : []);
     const video = media?.(heroVideoSource.src);
     // 견종 얼굴 배지(지름 약 70px) — 1280×720 원본(장당 1.9MB) 대신 가운데를 자른 240px 배지 영상(장당 약 100KB, 2026-10-26 앱 묶음 줄이기).
     // 원본은 웹 홈(HeroSection)이 그대로 씀. 새 파일: public/images/breeds/badge/<견종>-240.mp4
-    const breedVideo = media?.(pickHeroBreedVideo(context.weather, context.timeBucket).replace(/^\/images\/breeds\/([\w-]+)\.mp4$/, "/images/breeds/badge/$1-240.mp4"));
+    const breedVideo = context ? media?.(pickHeroBreedVideo(context.weather, context.timeBucket).replace(/^\/images\/breeds\/([\w-]+)\.mp4$/, "/images/breeds/badge/$1-240.mp4")) : undefined;
     const summary = heroWeatherSummary(report, "ko");
     const regionName = region === HERO_AUTO_REGION_ID ? "현재 위치" : KR_REGIONS.find((r) => r.id === region)?.name ?? "현재 위치";
 
@@ -146,8 +147,9 @@ export default function ShopHero() {
             <div className="shp-pol relative mt-4 bg-white p-2 pb-3">
                 <Tape className="-top-2 left-1/2 z-10 h-4 w-16 -translate-x-1/2" color="rgba(255,200,215,.9)" style={{ rotate: "-3deg" }} />
                 <div className="relative aspect-square overflow-hidden rounded-[3px] bg-[#f3ede6]">
-                    {video ? <InViewVideo key={video} src={video} onError={heroVideoSource.onError} muted loop playsInline preload="auto" aria-hidden="true"
-                        className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: "center 70%" }} /> : null}
+                    {video ? <InViewVideo key={video} src={video} poster="/images/ui/shop-hero-poster.webp" onError={heroVideoSource.onError} muted loop playsInline preload="auto" aria-hidden="true"
+                        className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: "center 70%" }} />
+                        : <img src="/images/ui/shop-hero-poster.webp" alt="산책하는 강아지" className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: "center 70%" }} />}
                 </div>
                 {/* 사진 설명 자리 — 왼쪽 끝: 지역 고르기 / 오른쪽 끝: 지역 · 온도 + 계절 시간 */}
                 <div className="mt-2.5 flex items-center justify-between gap-1.5">
@@ -155,14 +157,14 @@ export default function ShopHero() {
                         className="shp-chip is-btn ah-light inline-flex shrink-0 items-center gap-1"><i aria-hidden="true" className="fa-solid fa-location-dot text-[9px]" />{regionName}<i aria-hidden="true" className="fa-solid fa-chevron-down text-[8px]" /></button>
                     <span className="flex min-w-0 items-center justify-end gap-1.5">
                         {summary ? <span className="shp-chip ah-light truncate">{summary}</span> : null}
-                        <span className="shp-chip ah-light shrink-0">{`${seasonLabel(context.season, "ko")} ${timeBucketLabel(context.timeBucket, "ko")}`}</span>
+                        <span className="shp-chip ah-light shrink-0">{context ? `${seasonLabel(context.season, "ko")} ${timeBucketLabel(context.timeBucket, "ko")}` : "오늘의 산책"}</span>
                     </span>
                 </div>
 
                 {/* 견종 얼굴 배지 — 모서리 스티커 · 말풍선 */}
                 <Link href="/app/sticker/lab/" aria-label="저를 콕 눌러 분석하기 — 연구소로" onClick={() => haptic("light")}
                     className="shp-badge absolute -right-2.5 bottom-[4.2rem] z-10 block h-[4.4rem] w-[4.4rem] rounded-full">
-                    {breedVideo ? <InViewVideo key={breedVideo} src={breedVideo} muted loop playsInline preload="metadata" aria-hidden="true" className="h-full w-full rounded-full object-cover" /> : null}
+                    {breedVideo ? <InViewVideo key={breedVideo} src={breedVideo} poster="/images/breeds/badge/poodle-480.webp" muted loop playsInline preload="metadata" aria-hidden="true" className="h-full w-full rounded-full object-cover" /> : null}
                     <span aria-hidden="true" className={`shp-cue ah-light ${cue ? "is-on" : ""}`}>저를 <b className="font-normal text-[#ef5f8f]">콕</b> 눌러 분석하기!</span>
                 </Link>
             </div>

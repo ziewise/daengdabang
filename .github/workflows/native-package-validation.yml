@@ -135,6 +135,7 @@ jobs:
             android/app/build/outputs/apk/debug/app-debug-launch.txt
             android/app/build/outputs/apk/debug/app-debug-logcat.txt
             android/app/build/outputs/apk/debug/app-debug-launch.png
+            android/app/build/outputs/apk/debug/app-debug-*-media.png
             android/app/build/outputs/apk/debug/app-debug-webview.json
             android/app/build/outputs/apk/debug/startup-health.txt
             android/app/build/outputs/apk/debug/emulator-boot-*

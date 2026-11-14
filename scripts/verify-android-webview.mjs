@@ -1,3 +1,6 @@
+import { execFileSync } from "node:child_process";
+import { writeFileSync } from "node:fs";
+
 const devtoolsEndpoint = "http://127.0.0.1:9222/json";
 // 2026-10-18: 앱은 /app/index.html 로 시작한 뒤 앱 틀(AppShell)이 새 앱 홈(/app/home-1/)으로 보낸다.
 // 예전 "댕다방 앱 홈"(/app/) 화면은 브라우저 설치 안내 페이지가 되어, 확인 기준을 새 앱 홈(비회원 인사 문구)으로 바꿈.
@@ -120,6 +123,74 @@ async function verifyPetCompanion(socket) {
     return companion;
 }
 
+async function verifyShoppingMedia(socket) {
+    const screenshot = (name) => writeFileSync(
+        `android/app/build/outputs/apk/debug/app-debug-${name}.png`,
+        execFileSync("adb", ["exec-out", "screencap", "-p"]),
+    );
+    const posterLoaded = await evaluateDocument(socket, `new Promise(resolve => {
+        window.scrollTo(0, 0);
+        const image = new Image();
+        image.onload = () => resolve(image.naturalWidth >= 600);
+        image.onerror = () => resolve(false);
+        setTimeout(() => resolve(false), 3000);
+        image.src = '/images/ui/shop-hero-poster.webp';
+    })`);
+    if (!posterLoaded) throw new Error("The native shopping hero offline poster is missing.");
+    screenshot("shop-media");
+    await evaluateDocument(socket, `document.querySelector('nav[aria-label="상품군"] a').click()`);
+    let products;
+    for (let attempt = 0; attempt < maximumAttempts; attempt++) {
+        products = await evaluateDocument(socket, `(() => {
+            const cards = [...document.querySelectorAll('article[data-pet-product]')];
+            if (cards.length && window.scrollY < 100) cards[0].scrollIntoView({block:'center'});
+            return {
+                photos: cards.slice(0, 2).map(card => {
+                    const image = card.querySelector('a img');
+                    return {src:image?.currentSrc, width:image?.naturalWidth, opacity:image && getComputedStyle(image).opacity};
+                }),
+                playing: cards.flatMap(card => [...card.querySelectorAll('video')]).filter(video => !video.paused && video.readyState >= 2).length,
+                hiddenVideos: cards.flatMap(card => [...card.querySelectorAll('video')]).every(video => getComputedStyle(video).opacity !== '0' || getComputedStyle(video).visibility === 'hidden'),
+            };
+        })()`);
+        if (products.photos.length === 2 && products.photos.every(photo => photo.width > 0)) break;
+        await delay(1_000);
+    }
+    if (products.photos.length !== 2 || products.photos.some(photo => !photo.width || photo.opacity !== "1"
+        || !new URL(photo.src).pathname.startsWith("/images/products/card/") || new URL(photo.src).hostname !== "localhost")) {
+        throw new Error(`Native product photographs are not local and visible: ${JSON.stringify(products)}`);
+    }
+    let maxPlaying = 0;
+    for (let sample = 0; sample < 12; sample++) {
+        const state = await evaluateDocument(socket, `(() => {
+            const videos = [...document.querySelectorAll('article[data-pet-product] video')];
+            return {playing: videos.filter(video => !video.paused && video.readyState >= 2).length,
+                hiddenVideos: videos.every(video => getComputedStyle(video).opacity !== '0' || getComputedStyle(video).visibility === 'hidden')};
+        })()`);
+        maxPlaying = Math.max(maxPlaying, state.playing);
+        if (state.playing > 1 || !state.hiddenVideos) throw new Error(`Native preview surface regression: ${JSON.stringify(state)}`);
+        await delay(500);
+    }
+    screenshot("product-media");
+    await evaluateDocument(socket, `document.querySelector('.app-tabbar a[href="/app/sticker/show/"]').click()`);
+    let community;
+    for (let attempt = 0; attempt < maximumAttempts; attempt++) {
+        community = await evaluateDocument(socket, `(() => {
+            const photos = [...document.querySelectorAll('.sh-photo > img')].slice(0, 4);
+            if (photos.length && window.scrollY < 100) photos[0].scrollIntoView({block:'center'});
+            return {photos:photos.map(image => ({width:image.naturalWidth, height:image.naturalHeight})),
+                retry:document.body.innerText.includes('사진 다시 불러오기')};
+        })()`);
+        if (community.photos.length >= 2 && community.photos.every(photo => photo.width > 0)) break;
+        await delay(1_000);
+    }
+    screenshot("community-media");
+    if (community.photos.length < 2 || community.photos.some(photo => !photo.width)) {
+        throw new Error(`Native community photographs did not load: ${JSON.stringify(community)}`);
+    }
+    return {posterLoaded, products, maxPlaying, community};
+}
+
 let lastState;
 let lastError;
 
@@ -146,6 +217,7 @@ for (let attempt = 1; attempt <= maximumAttempts; attempt += 1) {
             && Number.isFinite(lastState.nativeInteractiveMs)
         ) {
             lastState.companion = await verifyPetCompanion(socket);
+            lastState.media = await verifyShoppingMedia(socket);
             socket.close();
             process.stdout.write(`${JSON.stringify(lastState, null, 2)}\n`);
             process.exit(0);

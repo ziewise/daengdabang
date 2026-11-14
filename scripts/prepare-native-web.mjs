@@ -43,6 +43,9 @@ const bundledDirectories = [
     "images/breeds",
     "images/pwa",
     "images/ui",
+    // 220 optimized card photos total only 3.8 MB. Local photos must not wait
+    // behind remote hero/preview videos on the first shopping visit.
+    "images/products/card",
     "ai/tryon",
 ];
 
@@ -245,8 +248,9 @@ await verifyReferencedAssets();
 
 const bytes = await directorySize(nativeRoot);
 const megabytes = bytes / 1024 / 1024;
-// Includes the brand/list documents (about 25 MB), without product photographs.
-const maximumMegabytes = 72;
+// Includes brand/list documents and 3.6 MiB of optimized card photographs.
+// Original product media and videos remain remote.
+const maximumMegabytes = 76;
 if (megabytes > maximumMegabytes) {
     throw new Error(`Native web bundle is ${megabytes.toFixed(2)} MB; maximum is ${maximumMegabytes} MB.`);
 }

@@ -2,11 +2,11 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { createProductVideoViewport } from "../lib/product-video-viewport.ts";
 
-function setup(t, touch = true) {
+function setup(t, touch = true, native = false) {
     t.mock.timers.enable({ apis: ["setTimeout"] });
     const media = Object.assign(new EventTarget(), { matches: touch });
     const win = Object.assign(new EventTarget(), { innerWidth: 390, innerHeight: 844, matchMedia: () => media });
-    const doc = Object.assign(new EventTarget(), { hidden: false, querySelector: () => ({ getBoundingClientRect: () => ({ bottom: 80 }) }) });
+    const doc = Object.assign(new EventTarget(), { hidden: false, documentElement: { dataset: { ddbNativeApp: String(native) } }, querySelector: () => ({ getBoundingClientRect: () => ({ bottom: 80 }) }) });
     let observed;
     const oldObserver = globalThis.IntersectionObserver;
     globalThis.IntersectionObserver = class {
@@ -116,4 +116,34 @@ test("restoring a mobile browser page retries a decoder paused by the back-forwa
     const s = setup(t), a = s.card(100);
     s.settle(); s.win.dispatchEvent(new Event("pageshow"));
     assert.deepEqual(a.events, ["play", "play"]);
+});
+
+test("native grids play only one visible preview, including after touch and page restoration", t => {
+    const s = setup(t, true, true), a = s.card(100), b = s.card(350), c = s.card(550);
+    s.settle(); s.doc.dispatchEvent(new Event("pointerup")); s.win.dispatchEvent(new Event("pageshow"));
+    assert.deepEqual(a.events, ["play", "play", "play"]);
+    assert.deepEqual(b.events, []); assert.deepEqual(c.events, []);
+    a.rect.top = -300; a.rect.bottom = -120; s.observe();
+    assert.equal(a.events.at(-1), "reset"); assert.deepEqual(b.events, ["play"]);
+    assert.deepEqual(c.events, []);
+});
+
+test("native scrolling pauses previews without measuring each product on every event", t => {
+    const s = setup(t, true, true), a = s.card(100);
+    s.settle();
+    let reads = 0;
+    const offscreen = { getBoundingClientRect: () => { reads++; return { top:900,bottom:1080,left:0,right:180,width:180,height:180 }; } };
+    const entry = createProductVideoViewport(s.win, s.doc).register(offscreen, () => {});
+    s.settle(); reads = 0;
+    for (let i=0;i<30;i++) s.scroll();
+    assert.equal(reads, 0);
+    assert.deepEqual(a.events, ["play", "pause"]);
+    entry.unregister();
+});
+
+test("native previews covered by the tabbar remain stopped", t => {
+    const s = setup(t, true, true);
+    s.doc.querySelector = selector => ({ getBoundingClientRect: () => selector === '.app-tabbar' ? {top:700} : {bottom:80} });
+    const covered = s.card(680); s.settle();
+    assert.deepEqual(covered.events, []);
 });

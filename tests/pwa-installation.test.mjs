@@ -182,8 +182,9 @@ test("native store package removes install prompts while the web PWA keeps them"
     assert.match(capacitorConfig, /appStartPath: "\/app\/home-1\/index\.html"/);
     assert.match(nativeBuilder, /location\.replace\('\/app\/home-1\/index\.html'\)/);
     assert.doesNotMatch(nativeBuilder, /location\.replace\('\/app\/'\)/);
-    assert.match(nativeBuilder, /maximumMegabytes = 72/);
-    assert.doesNotMatch(nativeBuilder, /images\/products|images\/hero/);
+    assert.match(nativeBuilder, /maximumMegabytes = 76/);
+    assert.match(nativeBuilder, /"images\/products\/card"/);
+    assert.doesNotMatch(nativeBuilder, /"images\/products(?:\/catalog)?"|"images\/hero/);
     // Small offline posters are required; the large animation directory must
     // not be copied wholesale into the install package.
     const bundledDirectories = nativeBuilder.slice(

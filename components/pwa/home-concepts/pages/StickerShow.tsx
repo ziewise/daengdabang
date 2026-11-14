@@ -758,7 +758,7 @@ export default function StickerShow() {
                                             <Tape className="-top-2 left-1/2 z-10 h-3.5 w-12 -translate-x-1/2" color={["rgba(255,200,218,.85)", "rgba(190,224,255,.85)", "rgba(255,232,170,.9)"][i % 3]} style={{ rotate: `${i % 2 ? 6 : -6}deg` }} />
                                             <div role="button" tabIndex={0} aria-label={`${p.author}의 댕자랑 — 톡하면 자세히, 두 번 톡하면 응원`} onClick={(e) => onPhotoTap(p, e)}
                                                 className="sh-photo relative block aspect-square overflow-hidden bg-[#fff3e8]">
-                                                <PostPhoto src={p.img} sizes="45vw" />
+                                                <PostPhoto src={p.img} sizes="45vw" eager={i < 4} />
                                                 {p.topic ? <span className="ah-display absolute left-1.5 top-1.5 rounded-full bg-white/90 px-2 py-0.5 text-[10px] text-[#e0557f]">댕주제</span> : null}
                                                 {p.mine ? <span className="ah-display absolute right-1.5 top-1.5 rounded-full bg-[#e0557f] px-2 py-0.5 text-[10px] text-white">나</span> : null}
                                                 {burst?.id === p.id ? <BoneBurst key={burst.k} x={burst.x} y={burst.y} /> : null}
