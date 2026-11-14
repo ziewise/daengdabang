@@ -150,7 +150,7 @@ async function verifyShoppingMedia(socket) {
                     return {src:image?.currentSrc, width:image?.naturalWidth, opacity:image && getComputedStyle(image).opacity};
                 }),
                 playing: cards.flatMap(card => [...card.querySelectorAll('video')]).filter(video => !video.paused && video.readyState >= 2).length,
-                hiddenVideos: cards.flatMap(card => [...card.querySelectorAll('video')]).every(video => getComputedStyle(video).opacity !== '0' || getComputedStyle(video).visibility === 'hidden'),
+                hiddenVideos: cards.flatMap(card => [...card.querySelectorAll('video')]).every(video => !video.classList.contains('opacity-0') || getComputedStyle(video).visibility === 'hidden'),
             };
         })()`);
         if (products.photos.length === 2 && products.photos.every(photo => photo.width > 0)) break;
@@ -160,12 +160,15 @@ async function verifyShoppingMedia(socket) {
         || !new URL(photo.src).pathname.startsWith("/images/products/card/") || new URL(photo.src).hostname !== "localhost")) {
         throw new Error(`Native product photographs are not local and visible: ${JSON.stringify(products)}`);
     }
+    screenshot("product-media");
     let maxPlaying = 0;
     for (let sample = 0; sample < 12; sample++) {
         const state = await evaluateDocument(socket, `(() => {
             const videos = [...document.querySelectorAll('article[data-pet-product] video')];
             return {playing: videos.filter(video => !video.paused && video.readyState >= 2).length,
-                hiddenVideos: videos.every(video => getComputedStyle(video).opacity !== '0' || getComputedStyle(video).visibility === 'hidden')};
+                // A decoded video starts its fade at computed opacity 0 while
+                // already active. Only inactive surfaces must be hidden.
+                hiddenVideos: videos.every(video => !video.classList.contains('opacity-0') || getComputedStyle(video).visibility === 'hidden')};
         })()`);
         maxPlaying = Math.max(maxPlaying, state.playing);
         if (state.playing > 1 || !state.hiddenVideos) throw new Error(`Native preview surface regression: ${JSON.stringify(state)}`);
