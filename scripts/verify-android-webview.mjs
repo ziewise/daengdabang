@@ -185,14 +185,16 @@ async function verifyShoppingMedia(socket) {
         community = await evaluateDocument(socket, `(() => {
             const photos = [...document.querySelectorAll('.sh-photo > img')].slice(0, 4);
             if (photos.length && window.scrollY < 100) photos[0].scrollIntoView({block:'center'});
-            return {photos:photos.map(image => ({width:image.naturalWidth, height:image.naturalHeight})),
+            return {photos:photos.map(image => ({width:image.naturalWidth, height:image.naturalHeight,
+                ready:image.complete && image.naturalWidth > 0 && !image.parentElement.querySelector('[role="status"]')})),
                 retry:document.body.innerText.includes('사진 다시 불러오기')};
         })()`);
-        if (community.photos.length >= 2 && community.photos.every(photo => photo.width > 0)) break;
+        if (community.photos.length >= 2 && community.photos.every(photo => photo.ready)) break;
         await delay(1_000);
     }
+    await evaluateDocument(socket, `new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))`);
     screenshot("community-media");
-    if (community.photos.length < 2 || community.photos.some(photo => !photo.width)) {
+    if (community.photos.length < 2 || community.photos.some(photo => !photo.ready)) {
         throw new Error(`Native community photographs did not load: ${JSON.stringify(community)}`);
     }
     return {posterLoaded, products, maxPlaying, community};
