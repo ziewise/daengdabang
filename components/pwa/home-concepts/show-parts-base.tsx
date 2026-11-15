@@ -19,7 +19,12 @@ export function MountOnFirstOpen({ open, children }: { open: boolean; children: 
 
 /** 게시물 사진 — 로딩/실패 상태를 표시하고 실패한 사진만 다시 요청한다. */
 export const PostPhoto = memo(function PostPhoto({ src, sizes, className = "", eager = false, thumbnail = false, preparedImage }: { src: string; sizes: string; className?: string; eager?: boolean; thumbnail?: boolean; preparedImage?: HTMLImageElement }) {
-    const [loaded, setLoaded] = useState("");
+    const imageSrc = thumbnail ? showcaseThumbnailUrl(src) : src;
+    // A handed-off node can already be ready, especially on a return visit.
+    // Do not mount four loading covers and synchronously remove them from
+    // layout effects before the browser can paint those same four photos.
+    const [loaded, setLoaded] = useState(() => preparedImage?.src === imageSrc
+        && preparedImage.complete && preparedImage.naturalWidth > 0 ? `${imageSrc}:0` : "");
     const [failed, setFailed] = useState("");
     const [attempt, setAttempt] = useState(0);
     const [nearby, setNearby] = useState(false);
@@ -27,7 +32,6 @@ export const PostPhoto = memo(function PostPhoto({ src, sizes, className = "", e
     const normalImage = useRef<HTMLImageElement>(null);
     const automaticallyRetried = useRef<string | null>(null);
     const requested = eager || nearby || src.startsWith("blob:");
-    const imageSrc = thumbnail ? showcaseThumbnailUrl(src) : src;
     const key = `${imageSrc}:${attempt}`;
     const onLoaded = useCallback(() => setLoaded(key), [key]);
     const onFailed = useCallback(() => setFailed(key), [key]);
