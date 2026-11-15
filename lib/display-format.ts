@@ -3,7 +3,6 @@
 let wonKorean: Intl.NumberFormat | undefined;
 let wonEnglish: Intl.NumberFormat | undefined;
 let dollars: Intl.NumberFormat | undefined;
-let showcaseDate: Intl.DateTimeFormat | undefined;
 
 export function formatPriceAmount(value: number, locale: "ko" | "en", currency: "KRW" | "USD") {
     if (currency === "USD") {
@@ -21,8 +20,12 @@ export function formatPriceAmount(value: number, locale: "ko" | "en", currency: 
 export function formatShowcaseDate(value: string) {
     const date = new Date(value);
     if (!Number.isFinite(date.getTime())) return "방금 전";
-    showcaseDate ??= new Intl.DateTimeFormat("ko-KR", {
-        month: "short", day: "numeric", hour: "2-digit", minute: "2-digit",
-    });
-    return showcaseDate.format(date);
+    // This feed has a fixed Korean label. Starting ICU's date formatter here
+    // blocks the first photo cards, even when their images have already arrived.
+    // Local Date getters retain the viewer's time zone and daylight-saving rules.
+    const hour = date.getHours();
+    const period = hour < 12 ? "오전" : "오후";
+    const clockHour = String(hour % 12 || 12).padStart(2, "0");
+    const minute = String(date.getMinutes()).padStart(2, "0");
+    return `${date.getMonth() + 1}월 ${date.getDate()}일 ${period} ${clockHour}:${minute}`;
 }

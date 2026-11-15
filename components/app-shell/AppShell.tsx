@@ -37,6 +37,7 @@ import { Capacitor } from "@capacitor/core";
 import { fixNativeMediaElement } from "@/lib/native-media";
 import { useAuth, useCart } from "@/lib/store";
 import { clearPreparedShowcaseFeed, prepareShowcaseFeed } from "@/lib/showcase-navigation";
+import { warmAppTabs } from "@/lib/app-tab-warmup";
 import {
     APP_FORGOT, APP_ITEM, APP_PETS, isWebPetProfilesUrl, APP_LOGIN, APP_SIGNUP, APP_TABS, DANG_SECTIONS, MEMBER_ONLY_PATHS, appLoginHref, appSignupHref, conceptIsTabRoot, isWebForgotPath, isWebLoginPath, isWebSignupPath, conceptOf, conceptSubTitle, conceptTabForPath, conceptTabs,
     hidesTabBar, isCareTalkPath, isTabRoot, tabForPath, type AppTab, type AppTabKey, type Concept,
@@ -286,6 +287,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     preload("/fonts/app-subsets/NanumSquareRoundB-startup.woff2", { as: "font", type: "font/woff2", crossOrigin: "anonymous" });
     const pathname = usePathname();
     const router = useRouter();
+    useEffect(() => warmAppTabs(href => router.prefetch(href), pathname), [pathname, router]);
     const { count: cartCount, hydrated: cartHydrated } = useCart();
     const [searchOpen, setSearchOpen] = useState(false);
     // 검색창 · 케어톡 창은 처음 열 때부터 붙여 둠(닫힘 애니메이션 · 대화 내용 유지를 위해 한 번 붙이면 계속)

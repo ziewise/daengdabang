@@ -5,7 +5,12 @@ import test from "node:test";
 const root = new URL("../", import.meta.url);
 
 async function source(path) {
-    return readFile(new URL(path, root), "utf8");
+    const text = await readFile(new URL(path, root), "utf8");
+    if (["components/growth/LocalCareFinder.tsx", "components/growth/GrowthPolicySummary.tsx"].includes(path)) {
+        assert.match(text, /from "@\/lib\/growth-display-data"/);
+        return text + await readFile(new URL("lib/growth-display-data.ts", root), "utf8");
+    }
+    return text;
 }
 
 test("Treasure Mine exposes all four current-location pet-care categories without routing through chat", async () => {

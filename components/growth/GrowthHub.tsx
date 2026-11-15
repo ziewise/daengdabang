@@ -19,29 +19,8 @@ import {
     type GrowthHubPublishedContent,
 } from "@/lib/growth-content";
 
-export const GUEST_STEPS = [
-    {
-        label: "01",
-        title: "출근도장",
-        body: "한국 시간 기준 하루 한 번, 계정에 안전하게 기록해요.",
-        icon: "fa-calendar-check",
-        tone: "orange",
-    },
-    {
-        label: "02",
-        title: "작은 돌봄",
-        body: "산책과 눈 상태 확인처럼 오늘 할 수 있는 한 가지를 완료해요.",
-        icon: "fa-paw",
-        tone: "teal",
-    },
-    {
-        label: "03",
-        title: "변화 기록",
-        body: "AI 분석과 지난 기록을 모아 평소와 달라진 점을 살펴봐요.",
-        icon: "fa-chart-line",
-        tone: "coral",
-    },
-] as const;
+import { GUEST_STEPS } from "@/lib/growth-display-data";
+export { GUEST_STEPS } from "@/lib/growth-display-data";
 
 export function hasShareableAiRecord(pet: PetProfile): boolean {
     if (pet.lastAnalyzedAt) return true;

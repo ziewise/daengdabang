@@ -2,10 +2,13 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-const source = await readFile(
+const component = await readFile(
     new URL("../components/growth/CommerceCommunityExpansion.tsx", import.meta.url),
     "utf8",
 );
+
+assert.match(component, /import \{ EXPANSION_CARDS \} from "@\/lib\/growth-display-data"/);
+const source = component + await readFile(new URL("../lib/growth-display-data.ts", import.meta.url), "utf8");
 
 test("community expansion links to the live member-backed daeng showcase", () => {
     assert.match(source, /title: "댕자랑"/);

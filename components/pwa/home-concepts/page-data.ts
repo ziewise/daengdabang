@@ -7,12 +7,7 @@
  *    (쓰지 않던 예시 데이터 — 게시물 · 굿즈 참여 수 · 반려견 · 지갑 · 주문 · 리포트 · 동네 돌봄 예시 — 는 버튼 대조 정리 때 삭제, 2026-10-17)
  */
 
-import { EXPANSION_CARDS } from "@/components/growth/CommerceCommunityExpansion";
-import { GUEST_STEPS } from "@/components/growth/GrowthHub";
-import { POLICIES } from "@/components/growth/GrowthPolicySummary";
-import { CATEGORIES, buildNaverMapUrl } from "@/components/growth/LocalCareFinder";
-
-export { CATEGORIES, EXPANSION_CARDS, GUEST_STEPS, POLICIES, buildNaverMapUrl };
+export { CATEGORIES, EXPANSION_CARDS, GUEST_STEPS, POLICIES, buildNaverMapUrl } from "@/lib/growth-display-data";
 
 /* ── 주소 ── */
 export type Concept = "sticker";

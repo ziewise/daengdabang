@@ -5,19 +5,9 @@ import Image from "next/image";
 import { ddbApiBase } from "@/lib/customer-api";
 import { trackStorefrontEvent } from "@/lib/storefront-analytics";
 import PlaceMapLinks, { PlaceAddressLink } from "@/components/site/PlaceMapLinks";
+import { CATEGORIES, buildNaverMapUrl, type CategoryOption, type LocalCareCategory } from "@/lib/growth-display-data";
+export { CATEGORIES, buildNaverMapUrl, type CategoryOption, type LocalCareCategory } from "@/lib/growth-display-data";
 import { placeMapLinks } from "@/lib/place-map-links";
-
-export type LocalCareCategory = "veterinary" | "grooming" | "hotel" | "daycare";
-
-export type CategoryOption = {
-    id: LocalCareCategory;
-    label: string;
-    shortLabel: string;
-    query: string;
-    helper: string;
-    icon: string;
-    tone: "coral" | "teal" | "orange";
-};
 
 export type LocalCarePlace = {
     id: string;
@@ -38,45 +28,6 @@ export type SearchState =
     | { status: "done"; category: LocalCareCategory; places: LocalCarePlace[]; fallbackUrl: string }
     | { status: "error"; category: LocalCareCategory; message: string; fallbackUrl: string };
 
-export const CATEGORIES: readonly CategoryOption[] = [
-    {
-        id: "veterinary",
-        label: "동물병원",
-        shortLabel: "병원",
-        query: "동물병원",
-        helper: "진료·응급 여부 확인",
-        icon: "fa-stethoscope",
-        tone: "coral",
-    },
-    {
-        id: "grooming",
-        label: "반려견 미용",
-        shortLabel: "미용",
-        query: "애견미용",
-        helper: "견종·서비스 범위 확인",
-        icon: "fa-scissors",
-        tone: "teal",
-    },
-    {
-        id: "hotel",
-        label: "반려견 호텔",
-        shortLabel: "호텔",
-        query: "애견호텔",
-        helper: "숙박·야간 돌봄 확인",
-        icon: "fa-bed",
-        tone: "orange",
-    },
-    {
-        id: "daycare",
-        label: "반려견 데이케어",
-        shortLabel: "데이케어",
-        query: "애견유치원",
-        helper: "등원·놀이 프로그램 확인",
-        icon: "fa-school",
-        tone: "teal",
-    },
-] as const;
-
 // 돌봄 종류 그림(2026-10-22 사용자 그림 웹돌봄병원 · 미용 · 호텔 · 케어 → webp). 물방울 핀 대신 동그라미 안에 그림만
 const CATEGORY_ART: Record<string, string> = {
     veterinary: "/images/ui/care-vet-256.webp",
@@ -84,15 +35,6 @@ const CATEGORY_ART: Record<string, string> = {
     hotel: "/images/ui/care-hotel-256.webp",
     daycare: "/images/ui/care-daycare-256.webp",
 };
-
-export function buildNaverMapUrl(...parts: Array<string | undefined>) {
-    const searchText = parts
-        .map((part) => String(part || "").trim())
-        .filter(Boolean)
-        .join(" ")
-        .slice(0, 240) || "반려동물 돌봄";
-    return `https://map.naver.com/p/search/${encodeURIComponent(searchText)}`;
-}
 
 export function formatDistance(value?: number | null) {
     if (typeof value !== "number" || !Number.isFinite(value) || value < 0) return "거리 확인";

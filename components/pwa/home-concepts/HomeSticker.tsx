@@ -24,11 +24,15 @@ import { useRef, useState } from "react";
 import { Peek, haptic, useExpandNav, usePressable } from "./gestures";
 import { LoginInvite, PostIt, STICKER_CSS, Tape } from "./sticker-kit";
 import { COVERS, CoinChip, CoverArt, CoverWindow, KIT_CSS, TEXT, TEXT_SOFT, TriTitle, recentDays, type Cover } from "./kit";
-import SectionNow from "./SectionNow";
+import dynamic from "next/dynamic";
+
 import { coverHref } from "./page-data";
 import { ConceptBar, HC_CSS, WEATHER_KO, WEEK, flyCoin, greeting, todayIndex, useDemoSession, useGrowthVisibility, useLiveWeather, useMember, useNow, useTodayDemo, walkAdvice } from "./shared";
 import { hasVerifiedPetPhoto } from "@/lib/store";
 
+const SectionNow = dynamic(() => import("./SectionNow"), {
+    loading: () => <p role="status" className="ah-light p-4 text-center">미리보기를 불러오는 중…</p>,
+});
 const toneBg = (c: Cover) => `linear-gradient(180deg, ${c.tone.from} 0%, ${c.tone.to} 100%)`;
 const NOTE_COLORS = ["#fff3a6", "#ffd6e2", "#d9ecff"];
 const TAPE_COLORS = ["rgba(190,224,255,.85)", "rgba(255,200,218,.85)", "rgba(255,232,170,.9)"];

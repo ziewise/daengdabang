@@ -156,7 +156,7 @@ test("interest cancellation accepts a 204 response without trying to parse JSON"
 
 test("reward ads have no simulated completion or reward action", async () => {
     const [policy, share, programs] = await Promise.all([
-        source("components/growth/GrowthPolicySummary.tsx"),
+        Promise.all([source("components/growth/GrowthPolicySummary.tsx"), source("lib/growth-display-data.ts")]).then(parts => parts.join("\n")),
         source("components/growth/GrowthShareCard.tsx"),
         source("components/growth/GrowthPrograms.tsx"),
     ]);

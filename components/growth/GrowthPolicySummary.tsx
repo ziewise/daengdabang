@@ -5,26 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { trackStorefrontEvent } from "@/lib/storefront-analytics";
 
-export const POLICIES = [
-    {
-        icon: "fa-circle-play",
-        tone: "orange",
-        title: "광고 없이도 오늘의 돌봄은 그대로",
-        body: "광고형 리워드는 준비가 끝난 뒤 선택 기능으로만 열어요. 지금의 출근도장·돌봄 기록·AI 기능은 광고를 보지 않아도 이용할 수 있습니다.",
-    },
-    {
-        icon: "fa-coins",
-        tone: "coral",
-        title: "완료한 활동만 보상에 반영",
-        body: "출근도장처럼 실제로 완료한 활동만 서버에서 확인해 반영해요. 준비 중인 기능은 보상처럼 보이게 표시하지 않습니다.",
-    },
-    {
-        icon: "fa-shield-heart",
-        tone: "teal",
-        title: "AI 기록은 의료 진단이 아닌 참고 정보",
-        body: "평소와 달라진 점을 기록하고 돌봄 결정을 돕는 참고 정보이며 의료 진단을 대신하지 않아요. 걱정되는 변화가 계속되거나 심해지면 동물병원에 확인해 주세요.",
-    },
-] as const;
+import { POLICIES } from "@/lib/growth-display-data";
+export { POLICIES } from "@/lib/growth-display-data";
 
 // 운영 기준 세 칸 그림(2026-10-22 사용자 그림 웹노광고 · 웹보상 · 웹정보 → webp) — POLICIES 순서대로
 const POLICY_ART = [
