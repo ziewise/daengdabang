@@ -126,9 +126,7 @@ def main():
                 assert check["hmtx"][check_cmap[code]] == original["hmtx"][cmap[code]]
                 assert outline(glyphs, check_cmap[code]) == outline(original_glyphs, cmap[code]), hex(code)
             covered.update(codes)
-            # Secondary name glyphs must not schedule a whole-feed font swap
-            # after photos arrive. The first-screen brand/UI face still swaps.
-            css.append(f'@font-face {{ font-family: "{family}"; font-weight: {weight}; font-display: {"swap" if label == "startup" else "optional"}; '
+            css.append(f'@font-face {{ font-family: "{family}"; font-weight: {weight}; font-display: swap; '
                        f'src: url("/fonts/app-subsets/{target.name}") format("woff2"); unicode-range: {ranges(codes)}; }}')
             slices.append({"file": str(target.relative_to(ROOT)).replace("\\", "/"),
                            "sha256": digest(target), "bytes": target.stat().st_size, "characters": len(codes)})

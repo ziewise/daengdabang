@@ -28,14 +28,33 @@ function runtime(fontResponse = () => Promise.resolve([{}])) {
 }
 const posts = () => Array.from({ length: 12 }, (_, i) => ({ imageUrl: `https://api.example/post-${i}/image` }));
 
-test("first-feed fonts are bounded and re-entry never touches the font set", () => {
-    const r = runtime();
-    r.prepareShowcasePhotos([{ imageUrl: "https://api.example/image", author: { displayName: "승현" } }]);
-    r.prepareShowcasePhotos([{ imageUrl: "https://api.example/new-image", author: { displayName: "새 이름" } }]);
-    assert.equal(r.fonts.length, 1);
-    assert.equal(r.fontReads, 1, "reading the font set can force layout even without loading");
-    assert.equal(r.fonts[0].names, "승현");
+test("photos start without waiting for fonts; known names never flush layout on return", async () => {
+    const r = runtime(), feed = Array.from({ length: 20 }, (_, i) => ({
+        imageUrl: `https://api.example/post-${i}/image`, author: { displayName: (i < 12 ? "승" : "뒷").repeat(64) + "끝" },
+    }));
+    r.prepareShowcasePhotos(feed);
     assert.equal(r.images[0].decodingStarted, true);
+    assert.equal(r.fontReads, 1);
+    await Promise.resolve();
+    assert.equal(r.fonts.length, 1);
+    assert.equal(r.fonts[0].names, "승");
+    r.prepareShowcasePhotos(feed);
+    await Promise.resolve();
+    assert.equal(r.fonts.length, 1, "return visits reuse the already-requested glyphs");
+    assert.equal(r.fontReads, 1, "no font-set access when glyphs are already requested");
+    const controller = new AbortController(); controller.abort();
+    r.prepareShowcasePhotos(feed, controller.signal);
+    assert.equal(r.fonts.length, 1);
+});
+
+test("a failed font load can be retried on the next navigation", async () => {
+    const r = runtime(() => Promise.reject(new Error("offline")));
+    const feed = [{ imageUrl: "https://api.example/image", author: { displayName: "승" } }];
+    r.prepareShowcasePhotos(feed);
+    await new Promise(resolve => setImmediate(resolve));
+    r.prepareShowcasePhotos(feed);
+    await Promise.resolve();
+    assert.equal(r.fonts.length, 2);
 });
 
 test("only four photos start and the exact requested node is handed off once", () => {

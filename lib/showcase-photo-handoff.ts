@@ -3,23 +3,28 @@ import { showcaseThumbnailUrl } from "./showcase-image";
 type PhotoPost = { imageUrl: string; author?: { displayName: string } };
 type PendingPhoto = { image: HTMLImageElement; discard: () => void; detach: () => void };
 const pending = new WeakMap<PhotoPost, PendingPhoto>();
-let initialFontsRequested = false;
+const requestedGlyphs = new Set<string>();
 
 /** Only the first visible rows of an explicitly requested feed. Transfer the
  * actual image node: a second img/src would re-download private/no-store media
  * in Chromium. Unused nodes expire or abort; no response/blob/storage cache. */
 export function prepareShowcasePhotos(posts: PhotoPost[], signal?: AbortSignal) {
     if (typeof Image === "undefined" || signal?.aborted) return;
-    // Prime the first feed's name glyphs while its photos are in flight. Even
-    // reading document.fonts can flush layout, so never touch it on re-entry.
-    // Later names use the normal optional font faces; no author data is kept.
-    if (!initialFontsRequested && typeof document !== "undefined") {
+    // A font-set lookup can force layout. On return visits, inspect plain
+    // glyph keys first so already prepared names never trigger that work.
+    if (typeof document !== "undefined") {
         const names = posts.slice(0, 12).map(post => post.author?.displayName.slice(0, 64) || "").join("");
-        const fonts = names ? document.fonts : undefined;
-        if (fonts) {
-            initialFontsRequested = true;
-            void fonts.load('400 12.5px "Cafe24Ssurround"', [...new Set(names)].join(""))
-                .catch(() => undefined);
+        const missing = [...new Set(names)].filter(glyph => !requestedGlyphs.has(glyph));
+        if (missing.length) {
+            const fonts = document.fonts;
+            if (fonts) {
+                missing.forEach(glyph => requestedGlyphs.add(glyph));
+                const retryLater = () => missing.forEach(glyph => requestedGlyphs.delete(glyph));
+                // Start first-visit type preparation before the feed mounts,
+                // without waiting for it or storing names/feed content.
+                void fonts.load('400 12.5px "Cafe24Ssurround"', missing.join(""))
+                    .then(faces => { if (!faces.length) retryLater(); }).catch(retryLater);
+            }
         }
     }
     for (const post of posts.slice(0, 4)) {
