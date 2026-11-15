@@ -25,6 +25,7 @@ assert parsed.path.startswith('/_launch-test/') and len(parsed.path.split('/'))=
 assert not parsed.query and not parsed.fragment
 PROFILE=json.loads(Path('scripts/launch-load-profile.json').read_text())
 assert 1<=PROFILE['users']<=1500 and 10<=PROFILE['holdSeconds']<=360
+assert 0<=PROFILE.get('userOffset',0)<=2000-PROFILE['users']
 RUN=os.environ.get('GITHUB_RUN_ID',str(time.time_ns()))
 samples=collections.defaultdict(list)
 statuses=collections.Counter()
@@ -98,7 +99,7 @@ async def visitor(session,ident):
     if stop.is_set():return
     active+=1;peak=max(peak,active);visitors.add(ident)
     try:
-        auth=await request(session,'session',f'/lab/session/{ident}',ident)
+        auth=await request(session,'session',f'/lab/session/{ident+PROFILE.get("userOffset",0)}',ident)
         if not auth:return
         if not auth.get('lab') or auth.get('provider')!='local-http-simulator':
             raise RuntimeError('Not the isolated mixed-write lab')
