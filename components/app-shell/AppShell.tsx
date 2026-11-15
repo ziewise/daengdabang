@@ -599,6 +599,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
     return (
         <>
+            <link rel="preload" href="/fonts/app-subsets/fa-solid-used.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
             <style dangerouslySetInnerHTML={{ __html: CSS }} />
             {/* 쇼핑 탭 웹 화면(상세 · 장바구니 · 결제 · 목록) · 검색 창 — 앱에서만 스티커북 겉모양(appShopSkin.ts).
                 화면 파일마다 복사되지 않게 정적 파일 /app/skin.css 하나로(app/app/skin.css/route.ts) — <head> 로 올라가 첫 그림 전에 적용(React 19).

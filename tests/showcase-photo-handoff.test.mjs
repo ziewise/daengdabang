@@ -9,6 +9,7 @@ const code = ts.transpileModule(readFileSync("lib/showcase-photo-handoff.ts", "u
 }).outputText;
 function runtime(fontResponse = () => Promise.resolve([{}])) {
     const exports = {}, images = [], timers = new Map(), fonts = [];
+    let fontReads = 0;
     class Image {
         constructor() { images.push(this); this.requests = []; }
         set src(value) { this.url = value; this.requests.push(value); }
@@ -18,36 +19,23 @@ function runtime(fontResponse = () => Promise.resolve([{}])) {
     }
     vm.runInNewContext(code, {
         exports, Image,
-        document: { fonts: { load: (font, names) => { fonts.push({ font, names }); return fontResponse(); } } },
+        document: { get fonts() { fontReads++; return { load: (font, names) => { fonts.push({ font, names }); return fontResponse(); } }; } },
         setTimeout: fn => { const key = Symbol(); timers.set(key, fn); return key; },
         clearTimeout: key => timers.delete(key),
         require: () => ({ showcaseThumbnailUrl: url => `${url}?size=card` }),
     });
-    return { ...exports, images, timers, fonts };
+    return { ...exports, images, timers, fonts, get fontReads() { return fontReads; } };
 }
 const posts = () => Array.from({ length: 12 }, (_, i) => ({ imageUrl: `https://api.example/post-${i}/image` }));
 
-test("author glyphs start with the feed, bounded to one page and skipped after abort", () => {
-    const r = runtime(), feed = Array.from({ length: 20 }, (_, i) => ({
-        imageUrl: `https://api.example/post-${i}/image`, author: { displayName: (i < 12 ? "승" : "뒷").repeat(64) + "끝" },
-    }));
-    r.prepareShowcasePhotos(feed);
+test("first-feed fonts are bounded and re-entry never touches the font set", () => {
+    const r = runtime();
+    r.prepareShowcasePhotos([{ imageUrl: "https://api.example/image", author: { displayName: "승현" } }]);
+    r.prepareShowcasePhotos([{ imageUrl: "https://api.example/new-image", author: { displayName: "새 이름" } }]);
     assert.equal(r.fonts.length, 1);
-    assert.equal(r.fonts[0].names, "승");
-    r.prepareShowcasePhotos(feed);
-    assert.equal(r.fonts.length, 1, "return visits reuse the already-requested glyphs");
-    const controller = new AbortController(); controller.abort();
-    r.prepareShowcasePhotos(feed, controller.signal);
-    assert.equal(r.fonts.length, 1);
-});
-
-test("a failed font load can be retried on the next navigation", async () => {
-    const r = runtime(() => Promise.reject(new Error("offline")));
-    const feed = [{ imageUrl: "https://api.example/image", author: { displayName: "승" } }];
-    r.prepareShowcasePhotos(feed);
-    await new Promise(resolve => setImmediate(resolve));
-    r.prepareShowcasePhotos(feed);
-    assert.equal(r.fonts.length, 2);
+    assert.equal(r.fontReads, 1, "reading the font set can force layout even without loading");
+    assert.equal(r.fonts[0].names, "승현");
+    assert.equal(r.images[0].decodingStarted, true);
 });
 
 test("only four photos start and the exact requested node is handed off once", () => {

@@ -27,7 +27,7 @@ export default function NotFound() {
         <main className="mx-auto max-w-[720px] px-4 py-16 text-center" data-notfound-web>
             {/* 웹 전용 3D 그림 · 꼬리표 */}
             {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
-            <img src="/images/ui/stickers/search-empty.webp" alt="" aria-hidden="true" className="hidden nf-art" />
+            <img src="/images/ui/stickers/search-empty.webp" loading="lazy" alt="" aria-hidden="true" className="hidden nf-art" />
             <p className="hidden nf-kicker">PAGE NOT FOUND</p>
             <i className="fa-regular fa-compass text-5xl text-neutral-300" />
             <h1 className="mt-4 text-3xl font-black text-neutral-950">
@@ -45,7 +45,7 @@ export default function NotFound() {
                 {QUICK.map((item) => (
                     <Link key={item.href} href={item.href}>
                         {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
-                        <img src={item.art} alt="" aria-hidden="true" />
+                        <img src={item.art} loading="lazy" alt="" aria-hidden="true" />
                         <b>{item.title}</b>
                         <small>{item.text}</small>
                     </Link>

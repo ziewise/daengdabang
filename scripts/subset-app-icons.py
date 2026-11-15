@@ -22,6 +22,7 @@ for folder in ["app", "components", "lib"]:
             names.update(re.findall(r"\bfa-([a-z0-9-]+)", path.read_text(encoding="utf-8")))
 metadata = json.loads((PACKAGE / "metadata/icon-families.json").read_text(encoding="utf-8"))
 codes = set()
+covered_names = set()
 for name, item in metadata.items():
     aliases = item.get("aliases", {})
     if not names.intersection([name, *aliases.get("names", [])]):
@@ -29,6 +30,7 @@ for name, item in metadata.items():
     if {"family": "classic", "style": "solid"} not in item["familyStylesByLicense"]["free"]:
         continue
     codes.add(int(item["unicode"], 16))
+    covered_names.update(names.intersection([name, *aliases.get("names", [])]))
 
 original = TTFont(source, recalcTimestamp=False)
 codes.intersection_update(original.getBestCmap())
@@ -69,6 +71,7 @@ for table, fields in [("head", ["unitsPerEm"]), ("hhea", ["ascent", "descent", "
 license_text = (PACKAGE / "LICENSE.txt").read_text(encoding="utf-8")
 (output.parent / "fontawesome-LICENSE.txt").write_text(license_text, encoding="utf-8")
 unicode_range = ",".join(f"U+{code:X}" for code in sorted(codes))
+selectors = ",".join(".fa-" + name for name in sorted(covered_names))
 (ROOT / "app/app-icons.generated.css").write_text(
     '/*! Font Awesome Free 7.2.0, Copyright 2026 Fonticons, Inc.\n'
     ' * Fonts: SIL OFL 1.1. Full license: /fonts/app-subsets/fontawesome-LICENSE.txt\n'
@@ -76,7 +79,11 @@ unicode_range = ",".join(f"U+{code:X}" for code in sorted(codes))
     '@font-face { font-family: "DDB UI Icons"; font-style: normal; font-weight: 900; font-display: block; '
     'src: url("/fonts/app-subsets/fa-solid-used.woff2") format("woff2"); '
     f'unicode-range: {unicode_range}; }}\n'
-    '.fa-solid,.fas { --fa-family: "DDB UI Icons", "Font Awesome 7 Free"; }\n', encoding="utf-8")
+    # Giving every icon the full face as a secondary family downloads that
+    # face for fallback metrics even when all visible glyphs use the subset.
+    # Select only proven subset classes; unlisted/dynamic icons keep the
+    # original Font Awesome family from the upstream stylesheet.
+    f':is(.fa-solid,.fas):is({selectors}) {{ --fa-family: "DDB UI Icons"; }}\n', encoding="utf-8")
 receipt = {
     "source": source.relative_to(ROOT).as_posix(), "file": output.relative_to(ROOT).as_posix(),
     "sourceSha256": hashlib.sha256(source.read_bytes()).hexdigest(),
