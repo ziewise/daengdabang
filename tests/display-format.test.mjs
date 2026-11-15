@@ -17,7 +17,11 @@ test("showcase labels retain the existing Korean format in each viewer time zone
                 "2026-11-01T05:59:00Z", "2026-11-01T06:01:00Z",
                 "2026-11-15T09:04:00", "2026-12-31T23:59:59-08:00",
             ]) {
-                assert.equal(formatShowcaseDate(value), reference.format(new Date(value)), `${zone}: ${value}`);
+                // ICU/CLDR releases differ between AM/PM and 오전/오후 for
+                // ko-KR. The app deliberately keeps its Korean labels stable;
+                // still compare every date/time field against Intl in each TZ.
+                const expected = reference.format(new Date(value)).replace(/\bAM\b/g, "오전").replace(/\bPM\b/g, "오후");
+                assert.equal(formatShowcaseDate(value), expected, `${zone}: ${value}`);
             }
         }
     } finally {

@@ -17,7 +17,9 @@ test("showcase dates retain local time and invalid-date fallback across a feed",
     const original = new Intl.DateTimeFormat("ko-KR", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
     for (let index = 0; index < 32; index++) {
         const date = new Date(Date.UTC(2026, 10, 14, 15, index));
-        assert.equal(formatShowcaseDate(date.toISOString()), original.format(date));
+        // Keep Korean day-period labels even on ICU versions that return AM/PM.
+        const expected = original.format(date).replace(/\bAM\b/g, "오전").replace(/\bPM\b/g, "오후");
+        assert.equal(formatShowcaseDate(date.toISOString()), expected);
     }
     assert.equal(formatShowcaseDate("invalid"), "방금 전");
 });
