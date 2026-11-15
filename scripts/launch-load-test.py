@@ -25,7 +25,7 @@ assert parsed.path.startswith('/_launch-test/') and len(parsed.path.split('/'))=
 assert not parsed.query and not parsed.fragment
 PROFILE=json.loads(Path('scripts/launch-load-profile.json').read_text())
 assert 1<=PROFILE['users']<=1500 and 10<=PROFILE['holdSeconds']<=360
-assert 0<=PROFILE.get('userOffset',0)<=2000-PROFILE['users']
+assert 0<=PROFILE.get('userOffset',0)<=4000-PROFILE['users']
 RUN=os.environ.get('GITHUB_RUN_ID',str(time.time_ns()))
 samples=collections.defaultdict(list)
 statuses=collections.Counter()
