@@ -2,6 +2,7 @@
 
 import { FormEvent, type ComponentType, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import Image from "next/image";
+import WebFonts from "@/components/site/WebFonts";
 import ChatPendingRecovery from "@/components/site/ChatPendingRecovery";
 import { CHAT_VIEW_DETACHED } from "@/lib/shop-chat-jobs";
 import { useChatBotProtection } from "@/components/site/ChatBotProtection";
@@ -468,6 +469,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
 
     return (
         <div className={`${styles.root} relative z-50`} data-chat-widget-open={open ? "true" : "false"}>
+            {open && <WebFonts />}
             {open && (
                 <section
                     ref={panelRef}

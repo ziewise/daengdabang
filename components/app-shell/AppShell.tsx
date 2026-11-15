@@ -282,8 +282,8 @@ function appScreenFor(pathname: string, search: string, hash = ""): string | nul
 export default function AppShell({ children }: { children: React.ReactNode }) {
     // 앱 글꼴 미리 받기(2026-10-21 앱 속도) — 제목 카페24 · 본문 나눔스퀘어라운드 굵게. 미리 만든 HTML 의 <head> 에 들어가
     // 첫 그림 전에 글꼴이 준비되면, 임시 글꼴(폰 기본 한글 글꼴)로 한 번 그렸다가 글꼴이 오면 글자 전체를 다시 배치하는 일이 줄어든다
-    preload("/fonts/app-subsets/Cafe24Ssurround-ui.woff2", { as: "font", type: "font/woff2", crossOrigin: "anonymous" });
-    preload("/fonts/app-subsets/NanumSquareRoundB-ui.woff2", { as: "font", type: "font/woff2", crossOrigin: "anonymous" });
+    preload("/fonts/app-subsets/Cafe24Ssurround-startup.woff2", { as: "font", type: "font/woff2", crossOrigin: "anonymous" });
+    preload("/fonts/app-subsets/NanumSquareRoundB-startup.woff2", { as: "font", type: "font/woff2", crossOrigin: "anonymous" });
     const pathname = usePathname();
     const router = useRouter();
     const { count: cartCount, hydrated: cartHydrated } = useCart();

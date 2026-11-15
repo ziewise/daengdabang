@@ -202,10 +202,10 @@ async function verifyShoppingMedia(socket) {
     let community;
     for (let attempt = 0; attempt < maximumAttempts; attempt++) {
         community = await evaluateDocument(socket, `(() => {
-            const photos = [...document.querySelectorAll('.sh-photo > img')].slice(0, 4);
+            const photos = [...document.querySelectorAll('.sh-photo img[data-showcase-image]')].slice(0, 4);
             if (photos.length && window.scrollY < 100) photos[0].scrollIntoView({block:'center'});
             return {photos:photos.map(image => ({src:image.currentSrc, width:image.naturalWidth, height:image.naturalHeight,
-                ready:image.complete && image.naturalWidth > 0 && !image.parentElement.querySelector('[role="status"]')})),
+                ready:image.complete && image.naturalWidth > 0 && !image.closest('.sh-photo')?.querySelector('[role="status"]')})),
                 retry:document.body.innerText.includes('사진 다시 불러오기')};
         })()`);
         if (community.photos.length >= 2 && community.photos.every(photo => photo.ready)) break;

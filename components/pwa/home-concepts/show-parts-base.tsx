@@ -1,10 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import { memo, useEffect, useRef, useState, type ReactNode } from "react";
+import { memo, useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
-import { showcaseThumbnailUrl } from "@/lib/showcase-image";
+import { showcasePhotoRetryUrl, showcaseThumbnailUrl } from "@/lib/showcase-image";
 import { TEXT } from "./kit";
+import PreparedShowcaseImage from "@/components/daeng-showcase/PreparedShowcaseImage";
+
+/* eslint-disable @next/next/no-img-element -- Already-sized API thumbnails; preserve private/no-store responses and the in-flight image node. */
 
 /** Retain a dialog after its first opening, without loading or mounting it on
  * the feed's critical path. Closing still preserves the existing draft state. */
@@ -15,15 +18,49 @@ export function MountOnFirstOpen({ open, children }: { open: boolean; children: 
 }
 
 /** 게시물 사진 — 로딩/실패 상태를 표시하고 실패한 사진만 다시 요청한다. */
-export const PostPhoto = memo(function PostPhoto({ src, sizes, className = "", eager = false, thumbnail = false }: { src: string; sizes: string; className?: string; eager?: boolean; thumbnail?: boolean }) {
+export const PostPhoto = memo(function PostPhoto({ src, sizes, className = "", eager = false, thumbnail = false, preparedImage }: { src: string; sizes: string; className?: string; eager?: boolean; thumbnail?: boolean; preparedImage?: HTMLImageElement }) {
     const [loaded, setLoaded] = useState("");
     const [failed, setFailed] = useState("");
     const [attempt, setAttempt] = useState(0);
     const [nearby, setNearby] = useState(false);
     const sentinel = useRef<HTMLSpanElement>(null);
+    const normalImage = useRef<HTMLImageElement>(null);
+    const automaticallyRetried = useRef<string | null>(null);
     const requested = eager || nearby || src.startsWith("blob:");
     const imageSrc = thumbnail ? showcaseThumbnailUrl(src) : src;
     const key = `${imageSrc}:${attempt}`;
+    const onLoaded = useCallback(() => setLoaded(key), [key]);
+    const onFailed = useCallback(() => setFailed(key), [key]);
+    const prepared = attempt === 0 && preparedImage?.src === imageSrc ? preparedImage : undefined;
+    useEffect(() => {
+        if (!requested || loaded === key || failed === key) return;
+        // A stalled request otherwise leaves a card loading indefinitely. Give
+        // it one fresh connection, then expose the existing manual retry. Never
+        // retry missing/deleted photos or keep retrying an offline background app.
+        let timer: ReturnType<typeof setTimeout>;
+        const check = () => {
+            if (document.hidden || !navigator.onLine) return;
+            const image = prepared ?? normalImage.current;
+            if (image?.complete && image.naturalWidth > 0) { setLoaded(key); return; }
+            image?.removeAttribute("src");
+            if (automaticallyRetried.current !== imageSrc) {
+                automaticallyRetried.current = imageSrc;
+                setAttempt(value => value + 1);
+            } else setFailed(key);
+        };
+        const arm = () => {
+            clearTimeout(timer);
+            if (!document.hidden && navigator.onLine) timer = setTimeout(check, 8_000);
+        };
+        arm();
+        document.addEventListener("visibilitychange", arm);
+        window.addEventListener("online", arm);
+        return () => {
+            clearTimeout(timer);
+            document.removeEventListener("visibilitychange", arm);
+            window.removeEventListener("online", arm);
+        };
+    }, [requested, loaded, failed, key, imageSrc, prepared]);
     useEffect(() => {
         if (requested || !sentinel.current) return;
         // Browser lazy loading can fetch several screens at once on Android.
@@ -39,10 +76,11 @@ export const PostPhoto = memo(function PostPhoto({ src, sizes, className = "", e
     }, [requested]);
     return <>
         <span ref={sentinel} className="pointer-events-none absolute inset-0" aria-hidden="true" />
-        {/* eslint-disable-next-line @next/next/no-img-element -- Already-sized API thumbnails; preserve private/no-store responses. */}
-        {requested ? <img key={key} src={imageSrc} alt="" sizes={sizes} loading="eager" decoding="async" fetchPriority={eager ? "high" : "auto"}
-            onLoad={() => setLoaded(key)} onError={() => setFailed(key)}
-            className={`absolute inset-0 h-full w-full object-cover ${className}`} draggable={false} /> : null}
+        {requested ? prepared
+            ? <PreparedShowcaseImage image={prepared} className={`absolute inset-0 h-full w-full object-cover ${className}`} onLoad={onLoaded} onError={onFailed} />
+            : <img key={key} ref={normalImage} data-showcase-image src={showcasePhotoRetryUrl(imageSrc, attempt)} alt="" sizes={sizes} loading="eager" decoding="async" fetchPriority={eager ? "high" : "auto"}
+                onLoad={onLoaded} onError={onFailed}
+                className={`absolute inset-0 h-full w-full object-cover ${className}`} draggable={false} /> : null}
         {loaded !== key ? <span className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 bg-[#fff3e8] text-[#9b7467]" role="status">
             <Image src="/images/ui/stickers/caretalk-photo.webp" alt="" width={40} height={40} className="h-10 w-10" />
             {failed === key ? <button type="button" className="ah-light rounded-full bg-white px-2.5 py-1.5 text-[11px]"

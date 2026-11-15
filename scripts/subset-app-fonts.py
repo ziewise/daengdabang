@@ -30,6 +30,16 @@ UI_SOURCES = [
 ]
 
 
+def source_codes(names):
+    codes = set(range(0x20, 0x7f))
+    for name in names:
+        source_text = (ROOT / name).read_text(encoding="utf-8")
+        source_text = re.sub(r"/\*.*?\*/", "", source_text, flags=re.S)
+        source_text = re.sub(r"//[^\n]*", "", source_text)
+        codes.update(ord(character) for character in source_text)
+    return codes
+
+
 def common(code):
     # Conjoining Jamo belong together in the extra slice: placing them in the
     # common slice pulls every composed Hangul glyph back through GSUB closure.
@@ -65,12 +75,7 @@ def outline(glyphs, glyph):
 
 def main():
     OUTPUT.mkdir(exist_ok=True)
-    ui_codes = set(range(0x20, 0x7f))
-    for name in UI_SOURCES:
-        source_text = (ROOT / name).read_text(encoding="utf-8")
-        source_text = re.sub(r"/\*.*?\*/", "", source_text, flags=re.S)
-        source_text = re.sub(r"//[^\n]*", "", source_text)
-        ui_codes.update(ord(character) for character in source_text)
+    ui_codes = source_codes(UI_SOURCES)
     # The small native catalog is already bundled. Cover its first shelf names
     # too, so scrolling to products does not trigger another font/layout pass.
     catalog = json.loads((ROOT / "lib/catalog/native-shop.generated.json").read_text(encoding="utf-8"))
@@ -86,9 +91,16 @@ def main():
         original_glyphs = original.getGlyphSet()
         covered = set()
         slices = []
-        for label, codes in [("ui", set(cmap).intersection(ui_codes)),
-                             ("common", {code for code in cmap if code not in ui_codes and common(code)}),
-                             ("extra", {code for code in cmap if code not in ui_codes and not common(code)})]:
+        common_codes = sorted(code for code in cmap if code not in ui_codes and common(code))
+        # A single uncommon author/pet name used to activate a 126–172 KB
+        # face. Bound those on-demand slices without changing any glyph.
+        # Keep the home/shop/show UI together: splitting those three screens
+        # causes a second font/layout pass during the first tab transition.
+        groups = [("startup", set(cmap).intersection(ui_codes))]
+        groups.extend((f"common-{index // 192:02}", set(common_codes[index:index + 192]))
+                      for index in range(0, len(common_codes), 192))
+        groups.append(("extra", {code for code in cmap if code not in ui_codes and not common(code)}))
+        for label, codes in groups:
             font = TTFont(source, recalcTimestamp=False)
             options = subset.Options()
             options.layout_features = ["*"]

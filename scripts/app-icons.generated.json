@@ -1,0 +1,10 @@
+{
+  "source": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff2",
+  "file": "public/fonts/app-subsets/fa-solid-used.woff2",
+  "sourceSha256": "ff58a6b0a01dbce082458f6e5a58719df4e80e0c2b50f744bb5871e21eca6878",
+  "sha256": "67ee51ec48bdb1b77a559db5dd24e555db09913c77aed02691fa020ef54f8643",
+  "sourceBytes": 114740,
+  "bytes": 21244,
+  "characters": 239,
+  "allOutlinesAndMetricsMatch": true
+}

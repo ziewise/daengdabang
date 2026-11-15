@@ -1,5 +1,6 @@
 import { getCustomerToken } from "./customer-api";
 import { loadShowcaseFeed, type ShowcaseFeed } from "./daeng-showcase";
+import { prepareShowcasePhotos } from "./showcase-photo-handoff";
 
 // Start the first page on an explicit navigation intent, alongside route code.
 // This is a single-use handoff, never a persistent feed/photo cache.
@@ -30,7 +31,10 @@ export function prepareShowcaseFeed(token = "") {
         token: key,
         expires: Date.now() + LIFETIME_MS,
         controller,
-        result: loadShowcaseFeed("all", { limit: 12, token: key || undefined, signal: controller.signal }).catch(() => null),
+        result: loadShowcaseFeed("all", { limit: 12, token: key || undefined, signal: controller.signal }).then(feed => {
+            prepareShowcasePhotos(feed.items, controller.signal);
+            return feed;
+        }).catch(() => null),
         timer: setTimeout(() => { if (prepared === entry) clearPreparedShowcaseFeed(); }, LIFETIME_MS),
     };
     prepared = entry;

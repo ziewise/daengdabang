@@ -18,7 +18,7 @@ function runtime() {
         exports, AbortController, Date: { now: () => now },
         setTimeout: fn => { const key = Symbol(); timers.set(key, fn); return key; },
         clearTimeout: key => timers.delete(key),
-        require: name => name === "./customer-api"
+        require: name => name === "./showcase-photo-handoff" ? { prepareShowcasePhotos: () => {} } : name === "./customer-api"
             ? { getCustomerToken: () => savedToken }
             : { loadShowcaseFeed: (scope, options) => new Promise((resolve, reject) => {
                 requests.push({ scope, ...options, resolve, reject });

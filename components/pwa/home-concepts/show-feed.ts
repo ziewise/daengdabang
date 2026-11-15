@@ -12,6 +12,7 @@ import { loadShowcaseAuthorProfile, loadShowcaseFeed, type ShowcaseFeedScope, ty
 import type { Post } from "./page-data";
 import { formatShowcaseDate } from "@/lib/display-format";
 import { takePreparedShowcaseFeed } from "@/lib/showcase-navigation";
+import { prepareShowcasePhotos, takePreparedShowcasePhoto } from "@/lib/showcase-photo-handoff";
 
 /** 작성 시각 — 협업자 댕자랑 카드(ShowcaseCard)와 같은 표기 */
 function formatCreatedAt(value: string) {
@@ -20,7 +21,7 @@ function formatCreatedAt(value: string) {
 
 /** 시안 폴라로이드(Post) + 주제 id · 이름 — page-data 의 Post 는 그대로 두고 여기서만 넓힘
  *  (웹 ShowcaseShareModal 의 post.topic?.topicId · post.topic.title 과 같은 값) */
-export type ShowPost = Post & { topicId?: string; topicTitle?: string };
+export type ShowPost = Post & { topicId?: string; topicTitle?: string; preparedImage?: HTMLImageElement };
 
 /** 서버 게시물 → 시안 폴라로이드(Post) */
 export function toPost(p: ShowcasePost): ShowPost {
@@ -33,6 +34,7 @@ export function toPost(p: ShowcasePost): ShowPost {
         pet: p.pet?.name || undefined,
         breed: p.pet?.breed || undefined,
         img: p.imageUrl,
+        preparedImage: takePreparedShowcasePhoto(p),
         text: p.caption,
         bones: p.boneCount,
         followed: p.author.followedByMe,
@@ -50,6 +52,7 @@ export async function loadLiveFeed(scope: ShowcaseFeedScope, cursor: string | un
     const prepared = scope === "all" && !cursor && limit === 12 ? await takePreparedShowcaseFeed(token, signal) : null;
     signal?.throwIfAborted();
     const feed = prepared ?? await loadShowcaseFeed(scope, { cursor, limit, token: token || undefined, signal });
+    if (!prepared) prepareShowcasePhotos(feed.items, signal);
     return { posts: feed.items.map(toPost), next: feed.nextCursor };
 }
 

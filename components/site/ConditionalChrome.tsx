@@ -18,6 +18,7 @@ import AppShell from "@/components/app-shell/AppShell";
 // 예전에는 앱 화면에서도 코드가 함께 내려와(헤더 검색창 · 상담 창이 상품 데이터 6MB 를 끌고 옴) 앱을 열 때 폰이 멈췄다.
 // next/dynamic 기본값(ssr: true)이라 웹 화면은 미리 만든 HTML 에 그대로 그려지고 모양 · 동작은 같다.
 const Header = dynamic(() => import("@/components/header/Header"));
+const WebFonts = dynamic(() => import("@/components/site/WebFonts"));
 const Footer = dynamic(() => import("@/components/footer/Footer"));
 const FloatingDock = dynamic(() => import("@/components/site/FloatingDock"));
 const PetCompanionGate = dynamic(() => import("@/components/site/WebPetCompanionGate"));
@@ -47,7 +48,7 @@ export default function ConditionalChrome({ children }: { children: React.ReactN
 
     // 풀스크린 — 크롬(헤더/푸터/도크) 없이 페이지만
     if (bare) {
-        return <>{children}</>;
+        return <><WebFonts />{children}</>;
     }
 
     // 앱 — 상단바 + 탭바 앱 틀 (사이트 헤더 · 푸터 · 챗봇 버튼 · 산책 강아지 없이). 앱 전용 화면은 앱 모드 판별 전(미리 만든 HTML)부터 앱 틀
@@ -59,6 +60,7 @@ export default function ConditionalChrome({ children }: { children: React.ReactN
     if (appShell) {
         return (
             <>
+                <WebFonts />
                 <ToyWallpaper />
                 <Header />
                 <main className="flex-1 pt-[var(--header-height)] flex flex-col">{children}</main>
@@ -69,6 +71,7 @@ export default function ConditionalChrome({ children }: { children: React.ReactN
     // 일반 — 헤더(fixed) + 본문 여백 + 푸터 + 도크
     return (
         <>
+            <WebFonts />
             <ToyWallpaper />
             <Header />
             <main data-home-page={pathname === "/" || pathname === "/main" || pathname === "/main/" ? "true" : undefined} className={`flex-1 flex flex-col ${pathname.startsWith("/product/") ? "pt-[env(safe-area-inset-top,0px)] md:pt-[var(--header-height)]" : "pt-[var(--header-height)]"}`}>{children}</main>
