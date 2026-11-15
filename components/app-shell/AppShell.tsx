@@ -36,6 +36,7 @@ const PetCompanionGate = dynamic(() => import("@/components/pet-companion/PetCom
 import { Capacitor } from "@capacitor/core";
 import { fixNativeMediaElement } from "@/lib/native-media";
 import { useAuth, useCart } from "@/lib/store";
+import { clearPreparedShowcaseFeed, prepareShowcaseFeed } from "@/lib/showcase-navigation";
 import {
     APP_FORGOT, APP_ITEM, APP_PETS, isWebPetProfilesUrl, APP_LOGIN, APP_SIGNUP, APP_TABS, DANG_SECTIONS, MEMBER_ONLY_PATHS, appLoginHref, appSignupHref, conceptIsTabRoot, isWebForgotPath, isWebLoginPath, isWebSignupPath, conceptOf, conceptSubTitle, conceptTabForPath, conceptTabs,
     hidesTabBar, isCareTalkPath, isTabRoot, tabForPath, type AppTab, type AppTabKey, type Concept,
@@ -281,8 +282,8 @@ function appScreenFor(pathname: string, search: string, hash = ""): string | nul
 export default function AppShell({ children }: { children: React.ReactNode }) {
     // 앱 글꼴 미리 받기(2026-10-21 앱 속도) — 제목 카페24 · 본문 나눔스퀘어라운드 굵게. 미리 만든 HTML 의 <head> 에 들어가
     // 첫 그림 전에 글꼴이 준비되면, 임시 글꼴(폰 기본 한글 글꼴)로 한 번 그렸다가 글꼴이 오면 글자 전체를 다시 배치하는 일이 줄어든다
-    preload("/fonts/Cafe24Ssurround.woff2", { as: "font", type: "font/woff2", crossOrigin: "anonymous" });
-    preload("/fonts/NanumSquareRoundB.woff2", { as: "font", type: "font/woff2", crossOrigin: "anonymous" });
+    preload("/fonts/app-subsets/Cafe24Ssurround-ui.woff2", { as: "font", type: "font/woff2", crossOrigin: "anonymous" });
+    preload("/fonts/app-subsets/NanumSquareRoundB-ui.woff2", { as: "font", type: "font/woff2", crossOrigin: "anonymous" });
     const pathname = usePathname();
     const router = useRouter();
     const { count: cartCount, hydrated: cartHydrated } = useCart();
@@ -351,6 +352,26 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
     // 로그인 통일 — ① 코드로 웹 로그인 주소로 넘어온 경우(장바구니 → 주문 등) ② 로그인 전에 회원 전용 화면에 들어온 경우 → 앱 로그인
     const { user, hydrated: authHydrated } = useAuth();
+    const showcaseToken = user?.apiAccessToken || "";
+    useEffect(() => {
+        if (!authHydrated) return;
+        const prepareDestination = (event: PointerEvent | MouseEvent) => {
+            if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+            const anchor = (event.target as Element | null)?.closest?.("a[href]") as HTMLAnchorElement | null;
+            if (!anchor || anchor.target === "_blank" || anchor.hasAttribute("download")) return;
+            const url = new URL(anchor.href, window.location.href);
+            if (url.origin !== window.location.origin || !/^\/app\/sticker\/show\/?$/.test(url.pathname)) return;
+            if (/^\/app\/sticker\/show\/?$/.test(window.location.pathname) || url.searchParams.get("tab") === "1") return;
+            prepareShowcaseFeed(showcaseToken);
+        };
+        document.addEventListener("pointerdown", prepareDestination, true);
+        document.addEventListener("click", prepareDestination, true);
+        return () => {
+            document.removeEventListener("pointerdown", prepareDestination, true);
+            document.removeEventListener("click", prepareDestination, true);
+            clearPreparedShowcaseFeed();
+        };
+    }, [authHydrated, showcaseToken]);
     useEffect(() => {
         if (isWebLoginPath(pathname) || isWebSignupPath(pathname)) {
             const to = new URLSearchParams(window.location.search).get("redirect");
@@ -750,7 +771,6 @@ html.ddb-app-mode #pet-companion-quick-actions button[aria-label="빠른 메뉴 
 html.ddb-app-mode main[class*="app-topbar-h"] > .mx-auto { width: 100%; width: -webkit-fill-available; width: stretch; min-width: 0; }
 /* 카페24 써라운드 — 앱 홈 시안과 같은 글씨. 앱에서 늘 붙어 있는 앱 틀 CSS 한 곳에만 선언(2026-10-22 속도: 화면마다 선언이 다시 들어와 글자 전체를 다시 배치하던 것).
    웹 화면은 이 선언이 없어 웹 모양 그대로 */
-@font-face { font-family: "Cafe24Ssurround"; src: url("/fonts/Cafe24Ssurround.woff2") format("woff2"); font-display: swap; }
 .app-font { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; letter-spacing: -0.02em; }
 
 /* 앱 모드 높이 — 상단바 56px · 탭바 68px + 아래 띄움 8px + 여유 12px (+ 휴대폰 안전 영역). 페이지들이 쓰는 --header-height 도 상단바 높이로 */

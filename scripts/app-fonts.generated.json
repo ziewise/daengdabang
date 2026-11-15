@@ -1,0 +1,83 @@
+[
+  {
+    "source": "public/fonts/Cafe24Ssurround.woff2",
+    "sourceSha256": "ec03fe295ccc514c0fc010bb86604f15fd3640f321dd2f9b897a2219d7eea732",
+    "sourceBytes": 201400,
+    "characters": 17481,
+    "allOutlinesAndMetricsMatch": true,
+    "slices": [
+      {
+        "file": "public/fonts/app-subsets/Cafe24Ssurround-ui.woff2",
+        "sha256": "95fb6f24faa30f343595ecc891cce445eb9940def3287abc48e404a690f176d4",
+        "bytes": 48448,
+        "characters": 556
+      },
+      {
+        "file": "public/fonts/app-subsets/Cafe24Ssurround-common.woff2",
+        "sha256": "66a231cac891816313ba8c6ceac8d909363d18aa9fb31631617b40973cd94fcb",
+        "bytes": 125708,
+        "characters": 2436
+      },
+      {
+        "file": "public/fonts/app-subsets/Cafe24Ssurround-extra.woff2",
+        "sha256": "395174f6433ce8279c11ab74157b946e73dc50e083f3b7c9eff8dd7f0f66dddd",
+        "bytes": 76552,
+        "characters": 14489
+      }
+    ]
+  },
+  {
+    "source": "public/fonts/NanumSquareRoundB.woff2",
+    "sourceSha256": "4e8692a08d6c323f1bffb3641c7276d9c4bc8fa2891d78b02acc972776228600",
+    "sourceBytes": 232072,
+    "characters": 12304,
+    "allOutlinesAndMetricsMatch": true,
+    "slices": [
+      {
+        "file": "public/fonts/app-subsets/NanumSquareRoundB-ui.woff2",
+        "sha256": "6f2fabcccd085becc3cf9abdcb17ae96a8c0f97e45305a4ca259f108722b7497",
+        "bytes": 66456,
+        "characters": 558
+      },
+      {
+        "file": "public/fonts/app-subsets/NanumSquareRoundB-common.woff2",
+        "sha256": "056560f170d41bb88031399d0c7d2665212c79e86e61321e6d287fe705d9108d",
+        "bytes": 159100,
+        "characters": 2367
+      },
+      {
+        "file": "public/fonts/app-subsets/NanumSquareRoundB-extra.woff2",
+        "sha256": "4ee0abba20ed7728bf0aadad6e3a50f3f67f828f90580e96c573f995d084c84e",
+        "bytes": 80896,
+        "characters": 9379
+      }
+    ]
+  },
+  {
+    "source": "public/fonts/NanumSquareRoundR.woff2",
+    "sourceSha256": "3127eb6b4cf10a0a840d204d613f610bbbd7f8a7ce82c0f81d04713760f81758",
+    "sourceBytes": 247228,
+    "characters": 12304,
+    "allOutlinesAndMetricsMatch": true,
+    "slices": [
+      {
+        "file": "public/fonts/app-subsets/NanumSquareRoundR-ui.woff2",
+        "sha256": "3836510dbbde053af65348a405bce51191e2c0b5a64b5f60b71e76fa85aa6952",
+        "bytes": 69260,
+        "characters": 558
+      },
+      {
+        "file": "public/fonts/app-subsets/NanumSquareRoundR-common.woff2",
+        "sha256": "2f95a0efb906f5dbf25892d409c66cfecd917f17930594ee3a7ecf5d7aec13c6",
+        "bytes": 172444,
+        "characters": 2367
+      },
+      {
+        "file": "public/fonts/app-subsets/NanumSquareRoundR-extra.woff2",
+        "sha256": "1cb467c23fede1633ea3b0aae84b9b6f85d8a15bf353795c0b57393a07754234",
+        "bytes": 81068,
+        "characters": 9379
+      }
+    ]
+  }
+]

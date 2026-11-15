@@ -44,7 +44,7 @@ import { DiaryBody, PARTS_CSS, SectionLabel } from "../sticker-parts";
 import { Patch, STICKER_CSS, Tape } from "../sticker-kit";
 import ShopHero, { SHOP_HERO_CSS } from "../shop/ShopHero";
 import { useShopMedia } from "../shop/useShopMedia";
-import { SHOW_PARTS_CSS } from "../show-parts";
+import { SHOW_PARTS_CSS } from "../show-parts-base";
 // 화면에 보일 때만 재생하는 영상(앱 속도, 2026-10-18)
 import InViewVideo from "../InViewVideo";
 import { useVisibleCarousel } from "../shop/useVisibleCarousel";
@@ -113,6 +113,7 @@ export default function StickerShop() {
                 <DeferredShopContent minHeight={900}><ShopShelf /></DeferredShopContent>
 
                 {/* 속지 3 — ⑤ 기획전 · 대표 브랜드 · ⑥ 인스타 */}
+                <DeferredShopContent minHeight={1100}>
                 <DiaryBody pageKey="shop-3" dir={1} className="mt-7 !pl-8 !pr-3">
                     <section aria-label="기획전">
                         <SectionLabel icon="fa-scissors">기획전</SectionLabel>
@@ -128,7 +129,7 @@ export default function StickerShop() {
                         <SectionLabel className="mt-9" icon="fa-tag">대표 브랜드</SectionLabel>
                         <p className="ah-light mt-1 text-[12px]" style={{ color: TEXT_SOFT }}>댕다방이 자신있게 큐레이션하는 정식 수입 브랜드</p>
                         <div className="mt-3.5 grid grid-cols-2 gap-3">
-                            {BRANDS.map((b, i) => <BrandSticker key={b.name} brand={b} i={i} />)}
+                        {BRANDS.map((b, i) => <BrandSticker key={b.name} brand={b} i={i} />)}
                         </div>
                         {/* 브랜드 전체 보기 — 웹 상단바 메뉴 · 푸터의 "브랜드"와 같은 기존 브랜드 목록(/brands/)으로 (앱엔 그 메뉴가 없어서) */}
                         <div className="mx-auto mt-4 w-[190px]">
@@ -143,6 +144,7 @@ export default function StickerShop() {
                         <span className="ah-display text-[12.5px]">{INSTA_HANDLE} · 팔로우 하러가기</span>
                     </a>
                 </DiaryBody>
+                </DeferredShopContent>
             </div>
         </div>
     );

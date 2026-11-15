@@ -11,6 +11,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 // 카드를 누르면 크게 보기 창(2026-10-25 웹)
 import ShowcasePostDialog from "./ShowcasePostDialog";
 import ShowcaseThumbnail from "./ShowcaseThumbnail";
+import { formatShowcaseDate } from "@/lib/display-format";
 import { useWebConfirm } from "@/components/site/useWebConfirm";
 // 웹/앱 문구 갈림(웹은 해요체, 2026-10-26)
 import { useWebScreen } from "@/hooks/useWebScreen";
@@ -51,14 +52,7 @@ type ShowcaseCardProps = {
 };
 
 function formatCreatedAt(value: string) {
-    const date = new Date(value);
-    if (!Number.isFinite(date.getTime())) return "방금 전";
-    return new Intl.DateTimeFormat("ko-KR", {
-        month: "short",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-    }).format(date);
+    return formatShowcaseDate(value);
 }
 
 export default function ShowcaseCard({

@@ -4,6 +4,8 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import type { CatalogProduct, CategorySlug, SubcategorySlug } from "@/lib/catalog";
 // 통화(원/달러) — 국가 선택(RegionProvider)이 세팅, formatPrice 가 전 사이트 가격 환산
 import { useCurrency, convertFromKRW } from "@/lib/currency-store";
+import { formatPriceAmount } from "@/lib/display-format";
+import { isNativeAppRuntime } from "@/lib/native-runtime";
 
 export type Locale = "ko" | "en";
 
@@ -427,6 +429,9 @@ function browserFallbackLocale(): Locale {
 }
 
 async function detectLocaleByEdge(): Promise<Locale | null> {
+    // The bundled localhost/capacitor origin has no Cloudflare trace endpoint.
+    // Keep the device-language fallback without fetching the HTML fallback.
+    if (isNativeAppRuntime()) return null;
     try {
         const response = await fetch("/cdn-cgi/trace", { cache: "no-store" });
         if (!response.ok) return null;
@@ -486,9 +491,9 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
             // 달러: 고정환율 환산 후 $x.xx / 원: 기존 로케일별 표기(₩ / 원) 유지
             if (currency === "USD") {
                 const usd = convertFromKRW(value, "USD");
-                return `$${usd.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                return formatPriceAmount(usd, locale, "USD");
             }
-            return locale === "en" ? `₩${value.toLocaleString("en-US")}` : `${value.toLocaleString("ko-KR")}원`;
+            return formatPriceAmount(value, locale, "KRW");
         },
         productName: (product) => translateProductName(product, locale),
         categoryLabel: (slug, fallback) => locale === "en" ? CATEGORY_EN[slug] : fallback || CATEGORY_KO[slug],

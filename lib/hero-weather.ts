@@ -624,7 +624,22 @@ function setCachedReport(location: HeroWeatherLocation, report: HeroWeatherRepor
     }
 }
 
-export async function fetchHeroWeatherReport(options: { regionId?: string | null } = {}): Promise<HeroWeatherReport | null> {
+const pendingReports = new Map<string, Promise<HeroWeatherReport | null>>();
+
+export function fetchHeroWeatherReport(options: { regionId?: string | null } = {}): Promise<HeroWeatherReport | null> {
+    // Home widgets and the shop hero can mount together. Share only a running
+    // request, with explicit/manual locations isolated; retain the existing TTL.
+    const key = JSON.stringify([options.regionId || HERO_AUTO_REGION_ID, readManualLocation()]);
+    const pending = pendingReports.get(key);
+    if (pending) return pending;
+    const request = requestHeroWeatherReport(options).finally(() => {
+        if (pendingReports.get(key) === request) pendingReports.delete(key);
+    });
+    pendingReports.set(key, request);
+    return request;
+}
+
+async function requestHeroWeatherReport(options: { regionId?: string | null }): Promise<HeroWeatherReport | null> {
     const manualLocation = readManualLocation();
     const selectedLocation = manualLocation ? null : selectedRegionLocation(options.regionId);
     const preciseLocation = manualLocation || selectedLocation ? null : await browserGeoLocation();

@@ -1,36 +1,12 @@
 "use client";
 
-/**
- * 앱 쇼핑 화면 사진 · 영상 주소 (스티커북 쇼핑 · 상품 카드 · 히어로 공용)
- * ---------------------------------------------------------------------
- * 네이티브 앱은 첫 상품 선반·브랜드 사진의 경량 사본과 카드 사진을 앱 안에서 읽는다.
- * 나머지 미디어는 운영 사이트를 쓰고, 웹·PWA 및 상품 상세의 원본 주소는 유지한다.
- * 화면이 브라우저에서 시작된 뒤에만 주소를 넘긴다 — 미리 만든 HTML 에 앱 밖 사진 주소가 들어가면
- * 앱 묶음 검사(native:sync)가 "없는 파일"로 막기 때문(2026-10-18 운영 CI 실패 수정).
- */
-
-import { useCallback, useSyncExternalStore } from "react";
-import { Capacitor } from "@capacitor/core";
 import shopMedia from "@/lib/catalog/native-shop-media.generated.json";
+import { shopMediaUrl } from "@/lib/shop-media-url";
 
-const WEB_ORIGIN = "https://www.daengdabang.com";
-// 앱 안에 함께 들어가는 폴더(협업자 묶음 목록과 같게) — 이 폴더 파일은 앱 안 파일 그대로 쓴다
-const BUNDLED_PREFIXES = ["/images/ui/", "/images/brand/", "/images/breeds/", "/images/pwa/", "/fonts/", "/images/products/card/"];
+const resolve = (src: string | null | undefined) => shopMediaUrl(src, shopMedia as Record<string, string>);
 
-const noopSubscribe = () => () => {};
-
-/** 화면이 브라우저에서 시작되기 전에는 null(사진 자리만), 시작된 뒤에는 주소 바꾸개를 돌려준다 */
-export function useShopMedia() {
-    // 미리 만든 HTML · 첫 hydration 은 false, 그 뒤(브라우저)는 true
-    const ready = useSyncExternalStore(noopSubscribe, () => true, () => false);
-    const resolve = useCallback((src: string | null | undefined) => {
-        if (!src) return undefined;
-        if (!src.startsWith("/") || src.startsWith("//")) return src; // CDN 등 이미 전체 주소
-        if (!Capacitor.isNativePlatform()) return src; // 웹 · PWA 는 그대로
-        const thumbnail = (shopMedia as Record<string, string>)[src];
-        if (thumbnail) return thumbnail;
-        if (BUNDLED_PREFIXES.some((prefix) => src.startsWith(prefix))) return src; // 앱 안에 있는 파일
-        return `${WEB_ORIGIN}${src}`;
-    }, []);
-    return ready ? resolve : null;
+/** Resolve portable app URLs during rendering, including the exported first
+ * frame. Images no longer wait for a separate hydration/readiness update. */
+export function useShopMedia(): typeof resolve | null {
+    return resolve;
 }

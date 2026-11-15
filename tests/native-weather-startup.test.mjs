@@ -12,6 +12,7 @@ function weatherRuntime(native) {
     const exports = {};
     const cache = new Map();
     let gpsRequests = 0;
+    const requests = [];
     const context = {
         exports, URLSearchParams, AbortController, Intl, process: { env: {} },
         require: name => {
@@ -24,12 +25,12 @@ function weatherRuntime(native) {
             gpsRequests++;
             resolve({ coords: { latitude: 37.5665, longitude: 126.978 } });
         } } },
-        fetch: async url => ({ ok: true, json: async () => url.includes('/forecast?')
+        fetch: async url => { requests.push(url); return ({ ok: true, json: async () => url.includes('/forecast?')
             ? { current: { temperature_2m: 15, weather_code: 0, is_day: 1, cloud_cover: 0 }, timezone: "Asia/Seoul" }
-            : { latitude: 37.5665, longitude: 126.978, cityName: "Seoul", timeZones: ["Asia/Seoul"] } }),
+            : { latitude: 37.5665, longitude: 126.978, cityName: "Seoul", timeZones: ["Asia/Seoul"] } }); },
     };
     vm.runInNewContext(compiled, context);
-    return { fetch: exports.fetchHeroWeatherReport, gpsRequests: () => gpsRequests };
+    return { fetch: exports.fetchHeroWeatherReport, gpsRequests: () => gpsRequests, requests };
 }
 
 test("native weather skips unsupported GPS requests and still returns weather", async () => {
@@ -47,4 +48,14 @@ test("browser weather retains GPS and explicit city selection avoids GPS", async
     const native = weatherRuntime(true);
     assert.equal((await native.fetch({ regionId: "seoul" })).locationSource, "selected");
     assert.equal(native.gpsRequests(), 0);
+});
+
+test("simultaneous home widgets share location and weather without mixing selected cities", async () => {
+    const runtime = weatherRuntime(true);
+    const reports = await Promise.all([runtime.fetch(), runtime.fetch(), runtime.fetch({ regionId: "seoul" })]);
+    assert.equal(reports[0], reports[1]);
+    assert.equal(reports[0].locationSource, "ip");
+    assert.equal(reports[2].locationSource, "selected");
+    assert.equal(runtime.requests.filter(url => url.includes("freeipapi")).length, 1);
+    assert.equal(runtime.requests.filter(url => url.includes("/forecast?")).length, 2);
 });

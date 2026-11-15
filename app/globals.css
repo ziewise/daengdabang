@@ -118,12 +118,6 @@ body {
    본문: 원티드 산스(헤더가 이미 쓰는 파일, 기기마다 맑은 고딕 · 애플 고딕으로 달라 보이던 것 통일).
    제목: 앱 제목 글꼴 Cafe24 써라운드 — 큰 섹션 제목(h2 text-xl 이상)과 헤더 메뉴만.
    상품 이름(상세 h1 · 카드 이름)과 작은 제목에는 쓰지 않는다. 앱 화면(.ddb-app-mode)은 앱 꾸밈 글꼴 그대로. */
-@font-face {
-    font-family: "Cafe24Ssurround";
-    src: url("/fonts/Cafe24Ssurround.woff2") format("woff2");
-    font-display: swap;
-}
-
 /* 원티드 산스(본문) — 2026-10-25 속도: 한 파일(1.26MB)을 세 조각으로 나눔(글자 모양 그대로, fontTools 로 글자만 골라 담음).
    기본(영문 · 숫자 · 기호 75KB) · 자주 쓰는 한글 2,350자(KS X 1001, 288KB) · 나머지 한글(925KB).
    브라우저는 페이지에 실제로 나온 글자가 든 조각만 받으므로 보통 페이지는 약 360KB 만 받음.
@@ -167,19 +161,6 @@ html:not(.ddb-app-mode) main h2:is([class*="text-xl"], [class*="text-2xl"], [cla
 /* 앱 본문 글꼴 나눔스퀘어라운드(보통 · 굵게) — 2026-10-22 앱 속도: 예전에는 앱 화면마다 넣는 CSS(KIT_CSS · 앱 겉모양 · 설치 말풍선)에
    글꼴 선언이 들어 있어, 탭을 옮길 때마다 선언이 빠졌다 다시 들어오며 브라우저가 화면 글자 전체를 다시 계산 · 배치했다.
    글꼴 선언은 늘 있는 이 파일 한 곳에(쓰는 화면에서만 파일을 받으므로 웹은 받지 않음). 카페24 써라운드는 앱 틀(AppShell) CSS 에 */
-@font-face {
-    font-family: "NanumSquareRound";
-    font-weight: 400;
-    src: url("/fonts/NanumSquareRoundR.woff2") format("woff2");
-    font-display: swap;
-}
-@font-face {
-    font-family: "NanumSquareRound";
-    font-weight: 700;
-    src: url("/fonts/NanumSquareRoundB.woff2") format("woff2");
-    font-display: swap;
-}
-
 body[data-petlens-capture-active="true"] [data-site-header] {
     opacity: 0;
     pointer-events: none;

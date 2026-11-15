@@ -1,12 +1,19 @@
 "use client";
 import { useMemo, useState } from "react";
+import dynamic from "next/dynamic";
 import { getNewProducts } from "@/lib/catalog/native-shop-data";
 import { haptic } from "../gestures";
 import { TEXT_SOFT } from "../kit";
 import { DiaryBody, DiaryTabs } from "../sticker-parts";
 import { Patch } from "../sticker-kit";
-import ShopProductCard, { SHOP_CARD_CSS } from "./ShopProductCard";
+import { SHOP_CARD_CSS } from "./shop-card-css";
 import ShopHotPick, { SHOP_HOTPICK_CSS } from "./ShopHotPick";
+
+// Product-video framing/review data is needed only after selecting New Arrivals.
+const ShopProductCard = dynamic(() => import("./ShopProductCard"), {
+    ssr: false,
+    loading: () => <div className="min-h-[240px] rounded-xl bg-white/70" aria-hidden="true" />,
+});
 
 const SHELF_TABS = [
     { label: "댕다방 핫픽", color: "#ffe7c2" },

@@ -1,8 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
-import { Geist, Geist_Mono, Gaegu, Jua } from "next/font/google";
+import { Gaegu, Jua } from "next/font/google";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "./globals.css";
+import "./app-fonts.generated.css";
 import "./native-performance.css";
 // 헤더·푸터·도크는 경로별 토글(ConditionalChrome) — 로그인 등 풀스크린 페이지에서 숨김
 import ConditionalChrome from "@/components/site/ConditionalChrome";
@@ -21,8 +22,6 @@ import NativeAppBridge from "@/components/native/NativeAppBridge";
 import PrivacyNoticeModal from "@/components/site/PrivacyNoticeModal";
 
 // 우리 글로벌 폰트 — 헤더/로고/본문이 의존하는 --font-* 변수 제공
-const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"], display: "swap" });
-const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"], display: "swap" });
 // 원티드 산스(본문)는 app/globals.css 의 @font-face 세 조각("Wanted Sans DDB")으로 — 2026-10-25 속도(1.26MB → 보통 약 360KB)
 const gaegu = Gaegu({ variable: "--font-crayon", subsets: ["latin"], weight: ["400", "700"], display: "swap", preload: false });
 // Jua (배민 주아) — 웹 제목 글꼴(2026-10-22 사용자: 로고와 가장 닮은 동글동글한 글꼴, 큰 글씨 · 작은 제목 모두). 앱은 쓰지 않음
@@ -173,7 +172,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     return (
         <html
             lang="ko"
-            className={`${geistSans.variable} ${geistMono.variable} ${gaegu.variable} ${jua.variable} h-full antialiased`}
+            className={`${gaegu.variable} ${jua.variable} h-full antialiased`}
             suppressHydrationWarning
         >
             <head>

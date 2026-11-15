@@ -24,7 +24,7 @@ import { useHeroVideoSource } from "@/components/home/useHeroVideoSource";
 import { haptic } from "../gestures";
 import { Tape } from "../sticker-kit";
 import { useShopMedia } from "./useShopMedia";
-import { Sheet } from "../show-parts";
+import { Sheet } from "../show-parts-base";
 // 화면에 보일 때만 재생하는 영상(앱 속도, 2026-10-18)
 import InViewVideo from "../InViewVideo";
 

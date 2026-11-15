@@ -45,7 +45,15 @@ import { SHOWCASE_AUTHOR_ID_PATTERN, SHOWCASE_POST_ID_PATTERN, SHOWCASE_TOPIC_ID
 import { DEFAULT_GROWTH_GOODS_CONTENT, loadPublishedGrowthContent } from "@/lib/growth-content";
 import { BoneBurst, DiaryBody, DiaryTabs, InkStamp, NoteToast, PARTS_CSS, SectionLabel } from "../sticker-parts";
 import { PostIt, STICKER_CSS, Tape, Patch } from "../sticker-kit";
-import { GuestPickSheet, PostDetail, PostPhoto, ProfileSheet, ReportSheet, SHOW_PARTS_CSS, ShareSheet, ShowComposer, AuthorDot, type ComposerResult, type ReportReason, type ShareTarget } from "../show-parts";
+import dynamic from "next/dynamic";
+import { PostPhoto, AuthorDot, MountOnFirstOpen, SHOW_PARTS_CSS } from "../show-parts-base";
+import type { ComposerResult, ReportReason, ShareTarget } from "../show-parts";
+const GuestPickSheet = dynamic(() => import("../show-parts").then(module => module.GuestPickSheet), { ssr: false });
+const PostDetail = dynamic(() => import("../show-parts").then(module => module.PostDetail), { ssr: false });
+const ProfileSheet = dynamic(() => import("../show-parts").then(module => module.ProfileSheet), { ssr: false });
+const ReportSheet = dynamic(() => import("../show-parts").then(module => module.ReportSheet), { ssr: false });
+const ShareSheet = dynamic(() => import("../show-parts").then(module => module.ShareSheet), { ssr: false });
+const ShowComposer = dynamic(() => import("../show-parts").then(module => module.ShowComposer), { ssr: false });
 import { loadLiveFeed, loadProfile, toPost, type ProfileView, type ShowPost } from "../show-feed";
 import { useShopMedia } from "../shop/useShopMedia";
 // 화면에 보일 때만 재생하는 영상(앱 속도, 2026-10-18)
@@ -965,8 +973,8 @@ export default function StickerShow() {
                     <Image src="/images/ui/stickers/caretalk-photo.webp" alt="" width={38} height={38} className="h-[34px] w-[34px]" />
                 </button>
             ) : null}
-            <ShowComposer open={composer.open} onClose={() => setComposer((c) => ({ ...c, open: false }))} onPublish={publish}
-                topicTitle={topicOn && topic ? topic.title : null} defaultTopic={composer.topic} defaultName={memberDisplayName(user?.name || "")} pets={serverPets} />
+            <MountOnFirstOpen open={composer.open}><ShowComposer open={composer.open} onClose={() => setComposer((c) => ({ ...c, open: false }))} onPublish={publish}
+                topicTitle={topicOn && topic ? topic.title : null} defaultTopic={composer.topic} defaultName={memberDisplayName(user?.name || "")} pets={serverPets} /></MountOnFirstOpen>
             {/* 게시물 상세 — 누른 사진 자리에서 펼쳐짐 */}
             {open && detail ? (
                 <Peek from={detail.rect} bg="#fffdf8" onClose={() => { setDetail(null); setConfirmDelete(false); }}>
@@ -979,15 +987,15 @@ export default function StickerShow() {
                         onDelete={() => remove(open.id)} onConfirmDelete={setConfirmDelete} />
                 </Peek>
             ) : null}
-            <ProfileSheet open={Boolean(profileHead)} onClose={closeProfile} head={profileHead} profile={profile} error={profileError}
+            <MountOnFirstOpen open={Boolean(profileHead)}><ProfileSheet open={Boolean(profileHead)} onClose={closeProfile} head={profileHead} profile={profile} error={profileError}
                 onRetry={() => profileHead && fetchProfile(profileHead.authorId)}
                 onFollow={() => profileHead && (member ? toggleFollow(profileHead.authorId) : goLogin())}
-                onOpenPost={(p, el) => { setProfileHead(null); setConfirmDelete(false); setDetail({ id: p.id, rect: el.getBoundingClientRect() }); }} />
-            <ShareSheet open={Boolean(shareOf)} onClose={() => setShareOf(null)} target={shareOf} />
-            <GuestPickSheet open={guestPickFor !== null} onClose={() => setGuestPickFor(null)} loginHref={login(here, 1)}
+                onOpenPost={(p, el) => { setProfileHead(null); setConfirmDelete(false); setDetail({ id: p.id, rect: el.getBoundingClientRect() }); }} /></MountOnFirstOpen>
+            <MountOnFirstOpen open={Boolean(shareOf)}><ShareSheet open={Boolean(shareOf)} onClose={() => setShareOf(null)} target={shareOf} /></MountOnFirstOpen>
+            <MountOnFirstOpen open={guestPickFor !== null}><GuestPickSheet open={guestPickFor !== null} onClose={() => setGuestPickFor(null)} loginHref={login(here, 1)}
                 goodsName={guestPickFor ? goodsContent.items[guestPickFor].name : "내 선택 다시 확인하기"} withGoods={Boolean(guestPickFor)}
-                onSendCode={sendGuestCode} onConfirm={confirmGuestCode} />
-            <ReportSheet open={Boolean(reportOf)} onClose={() => setReportOf(null)} onSubmit={(reason, text) => (reportOf ? submitReport(reportOf, reason, text) : Promise.resolve())} />
+                onSendCode={sendGuestCode} onConfirm={confirmGuestCode} /></MountOnFirstOpen>
+            <MountOnFirstOpen open={Boolean(reportOf)}><ReportSheet open={Boolean(reportOf)} onClose={() => setReportOf(null)} onSubmit={(reason, text) => (reportOf ? submitReport(reportOf, reason, text) : Promise.resolve())} /></MountOnFirstOpen>
             {toast ? <NoteToast text={toast} onDone={clearToast} /> : null}
         </div>
     );

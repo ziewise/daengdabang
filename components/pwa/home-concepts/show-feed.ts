@@ -10,12 +10,12 @@
 
 import { loadShowcaseAuthorProfile, loadShowcaseFeed, type ShowcaseFeedScope, type ShowcasePost } from "@/lib/daeng-showcase";
 import type { Post } from "./page-data";
+import { formatShowcaseDate } from "@/lib/display-format";
+import { takePreparedShowcaseFeed } from "@/lib/showcase-navigation";
 
 /** 작성 시각 — 협업자 댕자랑 카드(ShowcaseCard)와 같은 표기 */
 function formatCreatedAt(value: string) {
-    const date = new Date(value);
-    if (!Number.isFinite(date.getTime())) return "방금 전";
-    return new Intl.DateTimeFormat("ko-KR", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }).format(date);
+    return formatShowcaseDate(value);
 }
 
 /** 시안 폴라로이드(Post) + 주제 id · 이름 — page-data 의 Post 는 그대로 두고 여기서만 넓힘
@@ -47,7 +47,9 @@ export function toPost(p: ShowcasePost): ShowPost {
 
 /** 피드 한 쪽(limit 개, 서버 최대 30) — next 가 있으면 다음 쪽이 더 있음 */
 export async function loadLiveFeed(scope: ShowcaseFeedScope, cursor: string | undefined, token: string, signal?: AbortSignal, limit = 12): Promise<{ posts: ShowPost[]; next?: string }> {
-    const feed = await loadShowcaseFeed(scope, { cursor, limit, token: token || undefined, signal });
+    const prepared = scope === "all" && !cursor && limit === 12 ? await takePreparedShowcaseFeed(token, signal) : null;
+    signal?.throwIfAborted();
+    const feed = prepared ?? await loadShowcaseFeed(scope, { cursor, limit, token: token || undefined, signal });
     return { posts: feed.items.map(toPost), next: feed.nextCursor };
 }
 

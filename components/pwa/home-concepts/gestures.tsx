@@ -13,6 +13,7 @@
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
+import { prepareShowcaseFeed } from "@/lib/showcase-navigation";
 
 const EASE = "cubic-bezier(.2,.9,.2,1)";
 const reduced = () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -93,7 +94,7 @@ const insetOf = (r: DOMRect, round = 22) =>
     `inset(${r.top}px ${window.innerWidth - r.right}px ${window.innerHeight - r.bottom}px ${r.left}px round ${round}px)`;
 
 /**
- * 누른 카드가 화면 가득 커진 뒤 이동
+ * 카드 확대 효과와 화면 이동을 함께 시작
  *  go(카드 요소, 이동할 주소, 덮을 색, 위에 얹을 내용)
  */
 export function useExpandNav() {
@@ -101,18 +102,19 @@ export function useExpandNav() {
     const [state, setState] = useState<{ rect: DOMRect; href: string; bg: string; face?: ReactNode } | null>(null);
     const ref = useRef<HTMLDivElement>(null);
     const go = useCallback((el: HTMLElement, href: string, bg: string, face?: ReactNode) => {
-        if (reduced()) return router.push(href);
-        // 누르는 순간 다음 화면을 미리 받기 시작 — 0.43초 펼침이 끝나 이동할 때 이미 준비돼 바로 넘어감(2026-10-18 앱 속도).
-        // 이동 자체는 펼침이 끝난 뒤 그대로(도중에 이동하면 덮개가 갑자기 사라짐)
-        router.prefetch(href);
+        if (/^\/app\/sticker\/show\/?$/.test(href)) prepareShowcaseFeed();
+        if (reduced()) return router.push(href, { scroll: false });
+        // Start navigation with the tap. The outgoing card can animate while
+        // the route loads; a fixed animation timer must not gate navigation.
         setState({ rect: el.getBoundingClientRect(), href, bg, face });
+        router.push(href, { scroll: false });
     }, [router]);
     useLayoutEffect(() => {
         const el = ref.current;
         if (!state || !el) return;
-        const anim = el.animate([{ clipPath: insetOf(state.rect) }, { clipPath: "inset(0px 0px 0px 0px round 0px)" }], { duration: 430, easing: EASE, fill: "both" });
-        anim.onfinish = () => router.push(state.href);
-    }, [state, router]);
+        const anim = el.animate([{ clipPath: insetOf(state.rect) }, { clipPath: "inset(0px 0px 0px 0px round 0px)" }], { duration: 180, easing: EASE, fill: "both" });
+        return () => anim.cancel();
+    }, [state]);
     const overlay = state
         ? createPortal(
             <div ref={ref} aria-hidden="true" className="pointer-events-none fixed inset-0 z-[2400] overflow-hidden" style={{ background: state.bg }}>
