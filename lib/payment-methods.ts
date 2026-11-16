@@ -11,7 +11,7 @@ export const CHECKOUT_PAYMENT_METHODS = [
 export type CheckoutPaymentMethod = (typeof CHECKOUT_PAYMENT_METHODS)[number];
 export type QuickPaymentMethod = Exclude<CheckoutPaymentMethod, "card" | "transfer" | "virtual_account">;
 export type TossSdkPaymentMethod = "CARD" | "TRANSFER" | "MOBILE_PHONE";
-export type TossEasyPayCode = "TOSSPAY" | "NAVERPAY";
+export type TossEasyPayCode = "TOSSPAY" | "NAVERPAY" | "KAKAOPAY";
 export type TossCardOptions =
     | { flowMode: "DEFAULT" }
     | { flowMode: "DIRECT"; easyPay: TossEasyPayCode };
@@ -21,7 +21,7 @@ export function isCheckoutPaymentMethod(value: string | null): value is Checkout
 }
 
 export function isCheckoutPaymentMethodEnabled(method: CheckoutPaymentMethod) {
-    return method !== "virtual_account" && method !== "kakao_pay";
+    return method !== "virtual_account";
 }
 
 export function checkoutPaymentMethodFromQuery(value: string | null): CheckoutPaymentMethod {
@@ -48,5 +48,6 @@ export function tossCardOptions(method: CheckoutPaymentMethod): TossCardOptions 
     }
     if (method === "toss_pay") return { flowMode: "DIRECT", easyPay: "TOSSPAY" };
     if (method === "naver_pay") return { flowMode: "DIRECT", easyPay: "NAVERPAY" };
+    if (method === "kakao_pay") return { flowMode: "DIRECT", easyPay: "KAKAOPAY" };
     return { flowMode: "DEFAULT" };
 }

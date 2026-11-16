@@ -306,16 +306,24 @@ test("only uncertain confirmation responses remain in the same-payment retry sta
     assert.equal(isTossConfirmationPendingError({ status: 409, apiCode: "PAYMENT_ABORTED" }), false);
 });
 
-test("Kakao Pay is review-gated while all supported test methods remain available", () => {
-    for (const method of ["card", "transfer", "toss_pay", "phone", "naver_pay"]) {
+test("approved payment methods preserve selection and direct-wallet routing", () => {
+    for (const method of ["card", "transfer", "toss_pay", "phone", "naver_pay", "kakao_pay"]) {
         assert.equal(isCheckoutPaymentMethodEnabled(method), true);
         assert.equal(checkoutPaymentMethodFromQuery(method), method);
+        assert.equal(checkoutHref(method), `/checkout?payment=${method}`);
     }
-    assert.equal(isCheckoutPaymentMethodEnabled("kakao_pay"), false);
-    assert.equal(checkoutPaymentMethodFromQuery("kakao_pay"), "card");
-    assert.equal(checkoutHref("kakao_pay"), "/checkout?payment=card");
-    assert.throws(() => tossSdkPaymentMethod("kakao_pay"), /merchant review/);
-    assert.throws(() => tossCardOptions("kakao_pay"), /merchant review/);
+    for (const [method, easyPay] of [["toss_pay", "TOSSPAY"], ["naver_pay", "NAVERPAY"], ["kakao_pay", "KAKAOPAY"]]) {
+        assert.equal(tossSdkPaymentMethod(method), "CARD");
+        assert.deepEqual(tossCardOptions(method), { flowMode: "DIRECT", easyPay });
+    }
+    assert.equal(tossSdkPaymentMethod("transfer"), "TRANSFER");
+    assert.equal(tossSdkPaymentMethod("phone"), "MOBILE_PHONE");
+    assert.deepEqual(tossCardOptions("card"), { flowMode: "DEFAULT" });
+    assert.equal(isCheckoutPaymentMethodEnabled("virtual_account"), false);
+    assert.equal(checkoutPaymentMethodFromQuery("virtual_account"), "card");
+    assert.equal(checkoutHref("virtual_account"), "/checkout?payment=card");
+    assert.throws(() => tossSdkPaymentMethod("virtual_account"), /merchant review/);
+    assert.throws(() => tossCardOptions("virtual_account"), /merchant review/);
 });
 
 test("paid quantities are subtracted while newer quantities and other options remain", () => {

@@ -9,7 +9,7 @@
  * 2026-11-11 사용자 A안: 네 버튼 모두 같은 둥근 알약. 토스 파랑 · 네이버 초록 · 카카오 노랑은 브랜드 색 그대로,
  *   휴대폰 결제는 흰 알약 + 연보라 동그라미 휴대폰 표시(예전 네모 테두리 칸이 촌스럽다는 의견).
  *   data-quick-pay 표시 — 웹 구매 창의 "분홍 알약" 규칙(product-detail-web.css)이 이 버튼을 덮지 않게 빼는 데 씀.
- *   누르면 하는 일(onSelect → 주문서로 결제수단 넘김) · 카카오페이 비활성은 그대로.
+ *   누르면 onSelect로 선택한 결제수단을 주문서에 전달한다.
  */
 
 import { useI18n } from "@/lib/i18n";
@@ -77,17 +77,16 @@ export default function SimplePayButtons({ disabled = false, onSelect }: Props) 
                     <span aria-hidden="true" className="flex h-[18px] w-[18px] items-center justify-center rounded-full bg-white text-[10px] font-black leading-none text-[#03C75A]">N</span>
                     <span className="whitespace-nowrap">{locale === "en" ? "Pay" : "네이버페이"}</span>
                 </button>
-                {/* 카카오페이 — 카카오 노랑, 심사 전이라 흐리게 · 누를 수 없음 */}
+                {/* 카카오페이 — 카카오 노랑 */}
                 <button
                     type="button"
-                    disabled
-                    aria-disabled="true"
-                    aria-label={locale === "en" ? "Kakao Pay activates after merchant review" : "카카오페이 심사 후 활성화"}
+                    onClick={() => onSelect("kakao_pay")}
+                    disabled={disabled}
+                    aria-label={locale === "en" ? "Continue with Kakao Pay" : "카카오페이로 주문서 이동"}
                     data-quick-pay="kakao_pay"
-                    className={`${PILL} flex-col !gap-0 bg-[#FFEB00] text-[#191919] opacity-50`}
+                    className={`${PILL} bg-[#FFEB00] text-[#191919] hover:brightness-95`}
                 >
                     <span className="whitespace-nowrap text-sm font-black leading-tight">{locale === "en" ? "Kakao Pay" : "카카오페이"}</span>
-                    <span className="break-keep text-[9.5px] font-black leading-tight">{locale === "en" ? "After review" : "심사 후 열려요"}</span>
                 </button>
             </div>
             <p className="mt-2 text-[10px] font-bold leading-4 text-neutral-400">

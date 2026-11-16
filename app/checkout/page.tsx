@@ -108,7 +108,7 @@ const PAYMENT_OPTION_COPY: Record<CheckoutPaymentMethod, {
     toss_pay: { ko: "토스페이", en: "Toss Pay", detailKo: "토스페이 결제창 바로 열기", detailEn: "Opens Toss Pay directly", icon: "fa-bolt" },
     phone: { ko: "휴대폰 결제", en: "Mobile", detailKo: "통신사 휴대폰 결제", detailEn: "Carrier billing", icon: "fa-mobile-screen-button" },
     naver_pay: { ko: "네이버페이", en: "Naver Pay", detailKo: "네이버페이 결제창 바로 열기", detailEn: "Opens Naver Pay directly", icon: "fa-n" },
-    kakao_pay: { ko: "카카오페이", en: "Kakao Pay", detailKo: "심사 후 활성화", detailEn: "Available after review", icon: "fa-comment" },
+    kakao_pay: { ko: "카카오페이", en: "Kakao Pay", detailKo: "카카오페이 결제창 바로 열기", detailEn: "Opens Kakao Pay directly", icon: "fa-comment" },
 };
 
 const PAYMENT_BUTTON_COPY: Record<CheckoutPaymentMethod, { ko: string; en: string }> = {
@@ -118,7 +118,7 @@ const PAYMENT_BUTTON_COPY: Record<CheckoutPaymentMethod, { ko: string; en: strin
     toss_pay: { ko: "토스페이로 결제하기", en: "Pay with Toss Pay" },
     phone: { ko: "휴대폰으로 결제하기", en: "Pay by mobile" },
     naver_pay: { ko: "네이버페이로 결제하기", en: "Pay with Naver Pay" },
-    kakao_pay: { ko: "카카오페이 심사 중", en: "Kakao Pay under review" },
+    kakao_pay: { ko: "카카오페이로 결제하기", en: "Pay with Kakao Pay" },
 };
 
 // 배송 견적의 모드와 서버가 만든 주문의 모드가 다를 때 — 결제창을 열지 않고 견적을 다시 받음
@@ -237,7 +237,7 @@ export default function CheckoutPage() {
     const signupHref = `/auth/signup?redirect=${encodeURIComponent(checkoutHref(paymentMethod))}`;
     // 비회원 결제 — 로그인 안 했고 · 비회원을 골랐고 · 서버가 연결됐을 때만
     const guestCheckout = !signedInForPayment && guestMode && guestFeature;
-    const directEasyPay = paymentMethod === "toss_pay" || paymentMethod === "naver_pay";
+    const directEasyPay = tossCardOptions(paymentMethod).flowMode === "DIRECT";
     const quoteRequestKey = accessToken
         ? `${accessToken}:${total}:${deliveryDraft.deliveryZone}:${quoteRefresh}`
         : "";
