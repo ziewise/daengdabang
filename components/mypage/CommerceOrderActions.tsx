@@ -36,8 +36,13 @@ export default function CommerceOrderActions({ orderId, guestToken }: { orderId:
     const [request, setRequest] = useState<{ lineId?: string }>();
     const [review, setReview] = useState<{ line: CommerceLine; existing?: Review }>();
     const [confirmOpen, setConfirmOpen] = useState(false);
-    const load = useCallback(async () => { try { setOrder(await commerceApi<CommerceOrder>(`/api/v1/commerce/orders/${encodeURIComponent(orderId)}`, {}, guestToken)); } catch (e) { setMessage((e as Error).message); } }, [orderId, guestToken]);
-    useEffect(() => { void load(); }, [load]);
+    const requestOrder = useCallback(() => commerceApi<CommerceOrder>(`/api/v1/commerce/orders/${encodeURIComponent(orderId)}`, {}, guestToken), [orderId, guestToken]);
+    const load = useCallback(async () => { try { setOrder(await requestOrder()); } catch (e) { setMessage((e as Error).message); } }, [requestOrder]);
+    useEffect(() => {
+        let active = true;
+        requestOrder().then(value => { if (active) setOrder(value); }).catch(error => { if (active) setMessage((error as Error).message); });
+        return () => { active = false; };
+    }, [requestOrder]);
     const editReview = async (line: CommerceLine) => {
         if (busy) return; setBusy(true);
         try {
@@ -53,10 +58,11 @@ export default function CommerceOrderActions({ orderId, guestToken }: { orderId:
     return <section className="mt-3 w-full space-y-3 text-sm" aria-label="주문 신청 및 구매 후기" data-live-fulfillment-actions="true">
         <div className="flex flex-wrap gap-2">
             {order?.cancelable && <button className="btn btn-secondary" onClick={() => setRequest({})}>주문 취소 요청</button>}
-            {order?.purchaseConfirmable && <button className="btn btn-primary" onClick={() => setConfirmOpen(true)}>구매 확정</button>}
+            {order?.purchaseConfirmable && <button className="btn btn-primary" onClick={() => setConfirmOpen(true)}>{order.useEscrow ? "에스크로 구매확정 확인" : "구매 확정"}</button>}
             {order?.purchaseConfirmedAt && <span className="rounded-full bg-emerald-50 px-3 py-2 text-emerald-700">구매 확정 완료</span>}
             <Link href="/inquiry?category=order#inquiry-form" className="btn btn-secondary">주문 문의</Link>
         </div>
+        {order?.useEscrow && order.purchaseConfirmable && <p className="rounded-lg bg-sky-50 p-3">에스크로 주문은 토스페이먼츠 안내 메일에서 구매확정한 뒤, 이 화면에서 확인해 주세요. 메일을 받지 못했다면 주문 문의를 이용해 주세요.</p>}
         {order?.cancel && <p>취소 처리: {requestStatus[order.cancel.status] || order.cancel.status}</p>}
         {order?.lines.map(line => <div key={line.lineId} className="rounded-xl border border-neutral-100 bg-neutral-50 p-3">
             <b>{line.name}</b><span className="ml-2 text-xs text-neutral-500">{[line.color, line.size].filter(Boolean).join(" · ")}</span>
@@ -72,6 +78,6 @@ export default function CommerceOrderActions({ orderId, guestToken }: { orderId:
         {!order && <button onClick={() => void load()} className="text-xs underline">주문 상태 다시 확인</button>}
         {request && <OrderRequestForm orderId={orderId} lineId={request.lineId} guestToken={guestToken} onClose={() => setRequest(undefined)} onDone={() => void load()} />}
         {review && <PurchaseReviewForm lineId={review.line.lineId} name={review.line.name} guestToken={guestToken} existing={review.existing} onClose={() => setReview(undefined)} onDone={message => { setMessage(message); setReview(undefined); void load(); }} />}
-        {confirmOpen && <div role="dialog" aria-modal="true" aria-label="구매 확정" className="fixed inset-0 z-[120] flex items-center justify-center bg-black/40 p-4"><div className="w-full max-w-md rounded-3xl bg-white p-6"><h2 className="text-xl font-bold">상품을 잘 받으셨나요?</h2><p className="my-4 leading-6">구매 확정 후에는 화면에서 반품을 신청할 수 없어요. 상품에 문제가 있으면 먼저 반품 신청이나 고객센터 문의를 이용해 주세요.</p><div className="flex gap-2"><button disabled={busy} onClick={() => setConfirmOpen(false)} className="btn btn-secondary flex-1">돌아가기</button><button disabled={busy} onClick={() => void confirm()} className="btn btn-primary flex-1">{busy ? "확인 중…" : "구매 확정"}</button></div></div></div>}
+        {confirmOpen && <div role="dialog" aria-modal="true" aria-label="구매 확정" className="fixed inset-0 z-[120] flex items-center justify-center bg-black/40 p-4"><div className="w-full max-w-md rounded-3xl bg-white p-6"><h2 className="text-xl font-bold">{order?.useEscrow ? "토스 구매확정을 확인할까요?" : "상품을 잘 받으셨나요?"}</h2><p className="my-4 leading-6">{order?.useEscrow ? "토스페이먼츠 안내 메일에서 진행한 구매확정 상태를 확인해요. 아직 확정하지 않았다면 메일에서 먼저 진행해 주세요." : "구매 확정 후에는 화면에서 반품을 신청할 수 없어요. 상품에 문제가 있으면 먼저 반품 신청이나 고객센터 문의를 이용해 주세요."}</p><div className="flex gap-2"><button disabled={busy} onClick={() => setConfirmOpen(false)} className="btn btn-secondary flex-1">돌아가기</button><button disabled={busy} onClick={() => void confirm()} className="btn btn-primary flex-1">{busy ? "확인 중…" : order?.useEscrow ? "구매확정 상태 확인" : "구매 확정"}</button></div></div></div>}
     </section>;
 }

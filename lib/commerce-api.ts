@@ -24,6 +24,6 @@ export type Review = {
 };
 export type CommerceLine = { lineId: string; productId: string; name: string; color?: string; size?: string; qty: number;
     returnable: boolean; return?: { status: string; adminNote?: string }; review: { status: string; reviewId?: string; deadline?: string } };
-export type CommerceOrder = { orderId: string; fulfillmentStatus: string; deliveredAt?: string; purchaseConfirmedAt?: string;
+export type CommerceOrder = { orderId: string; fulfillmentStatus: string; deliveredAt?: string; purchaseConfirmedAt?: string; useEscrow?: boolean;
     purchaseConfirmable: boolean; cancelable: boolean; cancel?: { status: string }; lines: CommerceLine[] };
 export const requestStatus: Record<string, string> = { requested: "신청 접수", approved: "승인", pickup: "수거 중", inspected: "검수 완료", rejected: "신청 반려", refunded: "환불 완료" };
