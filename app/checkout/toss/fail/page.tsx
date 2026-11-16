@@ -56,7 +56,7 @@ export default function TossTestFailPage() {
                 {detail.orderId && <p className="mt-1 break-all text-xs font-bold text-red-700">주문번호: {detail.orderId}</p>}
             </div>
             <p className="mt-4 text-sm font-bold leading-6 text-neutral-600">
-                결제가 승인되지 않아 출금되지 않았으며 장바구니 상품은 그대로 유지됩니다.
+                장바구니 상품은 그대로 유지됩니다. 결제 알림을 받았다면 주문 내역에서 승인 상태를 확인한 뒤 다시 시도해 주세요.
             </p>
             <div className="mt-6 flex flex-wrap justify-center gap-2">
                 <Link href="/checkout" className="btn btn-primary">결제 다시 시도</Link>

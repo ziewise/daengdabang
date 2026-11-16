@@ -344,7 +344,7 @@ export function PaymentFailWeb({ code, message, orderId }: { code: string; messa
                 <img src={`${UI}goods-pay-none-256.webp`} alt="" aria-hidden="true" />
                 <span className="gw-kicker">PAYMENT NOT COMPLETED</span>
                 <h1 id="pw-fail-title">결제가 <span className="gw-hl">완료되지 않았어요</span></h1>
-                <p>걱정 마세요. 돈은 빠져나가지 않았고, 장바구니 상품도 그대로예요.</p>
+                <p>장바구니 상품은 그대로예요. 결제 알림을 받았다면 주문 내역에서 승인 상태를 먼저 확인해 주세요.</p>
 
                 {/* 까닭 — 아는 코드는 쉬운 말, 모르는 코드는 받은 메시지 */}
                 <div className="pw-why">
@@ -361,7 +361,7 @@ export function PaymentFailWeb({ code, message, orderId }: { code: string; messa
                 </dl>
 
                 <ul>
-                    <li><i className="fa-solid fa-arrows-rotate" aria-hidden="true" /><span>장바구니에서 고른 상품 그대로 바로 다시 결제할 수 있어요.</span></li>
+                    <li><i className="fa-solid fa-arrows-rotate" aria-hidden="true" /><span>주문 내역에 결제된 주문이 없다면 장바구니 상품으로 다시 시도해 주세요.</span></li>
                 </ul>
                 <div className="gw-done-go">
                     <Link href="/checkout" className="gw-go"><i className="fa-solid fa-credit-card" aria-hidden="true" />다시 결제하기</Link>

@@ -40,6 +40,9 @@ import {
     type GuestBuyerErrors,
 } from "@/lib/guest-order";
 import { loadTossPayments } from "@tosspayments/tosspayments-sdk";
+import { Browser } from "@capacitor/browser";
+import { isNativeAppRuntime } from "@/lib/native-runtime";
+import { nativePaymentLaunchUrl } from "@/lib/toss-native-payment";
 import ShippingDetailsSection from "@/components/checkout/ShippingDetailsSection";
 // 2026-11-11 배송지 칸 버튼 — 주소 검색(마이페이지 배송지 창과 같은 카카오 우편번호 검색 창) · 저장된 배송지 고르기 창
 import { AddressSearchModal, type PickedAddress } from "@/components/mypage/AddressModal";
@@ -191,6 +194,7 @@ export default function CheckoutPage() {
     const [quoteRefresh, setQuoteRefresh] = useState(0);
     const [paymentMethod, setPaymentMethod] = useState<CheckoutPaymentMethod>("card");
     const [submitting, setSubmitting] = useState(false);
+    const [nativePaymentUrl, setNativePaymentUrl] = useState("");
     const [paymentError, setPaymentError] = useState("");
     // 마지막 결제 시도에서 받은 서버 원문 오류 — paymentError 와 같을 때만 웹이 쉬운 문장으로 바꿔 보여 줌(보이는 글만, 동작 무관)
     const [rawServerError, setRawServerError] = useState("");
@@ -495,6 +499,17 @@ export default function CheckoutPage() {
                 paymentMethod,
             });
 
+            if (isNativeAppRuntime()) {
+                const url = nativePaymentLaunchUrl({
+                    clientKey: order.clientKey, customerKey: order.customerKey,
+                    orderId: order.orderId, orderName: order.orderName, amount: order.amount, paymentMethod,
+                });
+                await Browser.open({ url });
+                setNativePaymentUrl(url);
+                setSubmitting(false);
+                return;
+            }
+
             const tossPayments = await loadTossPayments(order.clientKey);
             const payment = tossPayments.payment({ customerKey: order.customerKey });
             const commonRequest = {
@@ -550,6 +565,22 @@ export default function CheckoutPage() {
             setSubmitting(false);
         }
     };
+
+    if (nativePaymentUrl) {
+        return <main className="mx-auto max-w-md px-6 py-16 text-center" data-checkout-web="notice">
+            <h1 className="text-2xl font-black">{locale === "en" ? "Continue your payment" : "결제를 진행하고 있어요"}</h1>
+            <p className="mt-5 text-sm leading-6 text-neutral-600">{locale === "en"
+                ? "After authentication, return to the app to check your order. You can reopen the same payment if you closed its window."
+                : "인증을 마친 뒤 앱으로 돌아오면 주문 결과를 확인할 수 있어요. 창을 닫았다면 같은 결제창을 다시 열어 주세요."}</p>
+            <button type="button" disabled={submitting} className="btn btn-primary mt-7" onClick={async () => {
+                setSubmitting(true);
+                try { await Browser.open({ url: nativePaymentUrl }); }
+                catch { setPaymentError(locale === "en" ? "Could not reopen payment. Please try again." : "결제창을 다시 열지 못했어요. 다시 시도해 주세요."); }
+                finally { setSubmitting(false); }
+            }}>{locale === "en" ? "Reopen payment window" : "결제창 다시 열기"}</button>
+            {paymentError && <p role="alert" className="mt-4 text-sm text-red-700">{paymentError}</p>}
+        </main>;
+    }
 
     if (inventoryBlocked) {
         return (

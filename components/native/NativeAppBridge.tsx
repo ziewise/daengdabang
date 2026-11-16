@@ -116,10 +116,12 @@ export default function NativeAppBridge() {
 
         document.addEventListener("click", onDocumentClick, true);
 
-        const listenerHandles = [
-            Network.addListener("networkStatusChange", ({ connected }) => setIsOffline(!connected)),
-            App.addListener("appUrlOpen", ({ url }) => {
-                const incoming = new URL(url);
+        let disposed = false;
+        let receivedOpenEvent = false;
+        const handleAppUrl = (url: string) => {
+                if (disposed) return;
+                let incoming: URL;
+                try { incoming = new URL(url); } catch { return; }
                 if (incoming.protocol === "daengdabang:") {
                     void Browser.close().catch(() => {});
                     if (incoming.searchParams.has("phone_result")) window.dispatchEvent(new CustomEvent("ddb-phone-link-result", { detail: incoming.searchParams.get("phone_result") }));
@@ -142,7 +144,19 @@ export default function NativeAppBridge() {
                     return;
                 }
                 void openBrowser(incoming.toString());
-            }),
+        };
+        const urlListener = App.addListener("appUrlOpen", ({ url }) => {
+            receivedOpenEvent = true;
+            handleAppUrl(url);
+        });
+        // Authentication can finish after the OS has stopped the app. Subscribe
+        // first, then consume the cold-start URL without overriding a newer event.
+        void urlListener.then(() => App.getLaunchUrl()).then((launch) => {
+            if (launch?.url && !receivedOpenEvent) handleAppUrl(launch.url);
+        }).catch(() => undefined);
+        const listenerHandles = [
+            Network.addListener("networkStatusChange", ({ connected }) => setIsOffline(!connected)),
+            urlListener,
             App.addListener("backButton", ({ canGoBack }) => {
                 if (canGoBack) window.history.back();
                 else void App.minimizeApp();
@@ -152,6 +166,7 @@ export default function NativeAppBridge() {
         void Network.getStatus().then(({ connected }) => setIsOffline(!connected));
 
         return () => {
+            disposed = true;
             cancelAnimationFrame(firstFrame);
             cancelAnimationFrame(paintedFrame);
             document.removeEventListener("click", onDocumentClick, true);
