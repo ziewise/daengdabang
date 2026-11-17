@@ -455,15 +455,17 @@ function OrderListView({
 
             {orders.length > 0 && (
                 <div className="mt-6 rounded-2xl border border-neutral-200 bg-white p-3 shadow-sm sm:p-4">
-                    <label className="relative block">
+                    <label className="relative block" data-order-search>
                         <span className="sr-only">주문 상품 또는 주문번호 검색</span>
-                        <i className="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400" aria-hidden="true" />
+                        <i className="fa-solid fa-magnifying-glass pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400" aria-hidden="true" />
                         <input
                             type="search"
+                            enterKeyHint="search"
+                            autoComplete="off"
                             value={query}
                             onChange={(event) => setQuery(event.target.value)}
                             placeholder="주문 상품 또는 주문번호 검색"
-                            className="input h-12 w-full pl-11"
+                            className="input h-12 w-full"
                         />
                     </label>
                     <p className="mt-2 px-1 text-xs font-bold text-neutral-500" aria-live="polite">

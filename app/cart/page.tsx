@@ -79,6 +79,7 @@ export default function CartPage() {
 
     // 선택된 라인만 합계·결제 대상
     const selectedLines = lines.filter((l) => l.selected);
+    const selectedQuantity = selectedLines.reduce((sum, line) => sum + line.qty, 0);
     // 구매할 수 없게 바뀐 상품(품절 · 재고 확인 필요 · 판매 중지) — 2026-11-11 사용자: 이 상품 때문에 다른 상품까지 결제가 막히면 안 됨.
     //   결제 대상에서는 자동으로 빠지고(아래 안내로 보여 줌), "구매할 수 없는 상품 삭제"로 한 번에 지울 수 있음. 장바구니에는 남아 있음
     const unavailableLines = lines.filter(line => !line.purchaseState.purchasable);
@@ -354,7 +355,7 @@ export default function CartPage() {
                     <h2 className="cart-sum-title text-lg font-black text-neutral-950">{t("orderSummary")}</h2>
                     <div className="mt-4 flex items-center justify-between text-sm font-bold text-neutral-600">
                         <span>
-                            {t("productAmount")} <span className="text-indigo-600">{countText(selectedLines.length)}</span>
+                            {t("productAmount")} <span className="text-indigo-600">{countText(selectedQuantity)}</span>
                         </span>
                         <b className="text-neutral-950">{formatPrice(selectedTotal)}</b>
                     </div>
@@ -422,7 +423,7 @@ export default function CartPage() {
                     >
                         {selectedLines.length === 0
                             ? t("selectProducts")
-                            : `${locale === "en" ? "Checkout" : "주문서 작성"} (${countText(selectedLines.length)})`}
+                            : `${locale === "en" ? "Checkout" : "주문서 작성"} (${countText(selectedQuantity)})`}
                     </button>
                     {/* 빠른 결제수단 — 선택값을 주문서까지 보존 */}
                     <SimplePayButtons disabled={selectedLines.length === 0} onSelect={goCheckout} />

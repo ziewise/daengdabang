@@ -5,6 +5,8 @@ html body input[type="search"], html body [data-products-search] input {
 }
 [data-products-search] { display: flex; align-items: center; gap: 8px; min-width: 0; }
 [data-products-search] input { flex: 1; min-width: 0; }
+/* The unlayered .input padding overrides Tailwind spacing utilities in the app. */
+html body [data-order-search] input { padding-left: 46px; }
 [data-search-submit] { min-height: 44px; flex-shrink: 0; border-radius: 999px; padding: 0 14px; background: #fce7ef; color: #9d3157; font-weight: 700; }
 html .sm-panel .sm-input { padding-right: 112px; }
 html .sm-panel .sm-submit { position: absolute; right: 42px; top: 50%; transform: translateY(-50%); min-height: 40px; padding: 0 10px; border-radius: 999px; background: #fce7ef; color: #9d3157; font-size: 14px; font-weight: 700; }
