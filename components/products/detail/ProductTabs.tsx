@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
 import ProductReviewPanel from "./ProductReviewPanel";
 import Image from "next/image";
@@ -9,7 +9,8 @@ import { useI18n } from "@/lib/i18n";
 import { openChatWidget } from "@/lib/chat-widget-events";
 import ProductDeliveryReturnPolicy from "@/components/products/detail/ProductDeliveryReturnPolicy";
 import { getProductDetailContent } from "@/lib/catalog/product-detail-content";
-// 자사몰 구매 후기 시안(개발 서버 + ?rvpreview=1 + 웹 화면에서만 — 배포 빌드에는 안 보임)
+// 후기 탭(2026-11-17 사용자 "하나의 후기 탭에서 나눠지게") — 댕다방 구매 후기(PurchaseReviews) | 네이버 스토어 후기(ReviewContent)
+// 10-25 크레파스 시안(ProductOwnReviews)은 개발 서버 + ?rvpreview=1 + 웹 화면에서만 — 배포 빌드에는 안 보임
 import PurchaseReviews from "@/components/reviews/PurchaseReviews";
 import ProductOwnReviews from "@/components/reviews/ProductOwnReviews";
 import { useReviewPreview, PREVIEW_SUMMARY } from "@/lib/reviews-preview";
@@ -27,13 +28,37 @@ export default function ProductTabs({ product: p }: Props) {
     const previewMode = useReviewPreview();
     const webScreen = useWebScreen();
     const ownPreview = previewMode !== "off" && webScreen && locale !== "en";
+    // 후기 탭 안 두 갈래 — 처음엔 댕다방 구매 후기, 댕다방 후기가 0개이고 네이버 후기가 있으면 네이버 쪽을 먼저 보여 줌(손님이 고르기 전까지만)
     const [reviewView, setReviewView] = useState<"own" | "external">("own");
-    const reviewBadge = p.externalReviewCount
-        ? p.externalReviewCount.toLocaleString(locale === "en" ? "en-US" : "ko-KR")
-        : undefined;
+    const viewTouched = useRef(false);
+    const pickReviewView = (view: "own" | "external") => { viewTouched.current = true; setReviewView(view); };
+    const [serverOwnCount, setServerOwnCount] = useState<number | undefined>(undefined);
+    const onOwnSummary = useCallback((summary: { count: number }) => setServerOwnCount(summary.count), []);
+    // 댕다방 후기 수 — 시안 미리보기면 예시 수, 아니면 서버에서 불러온 뒤에 채워짐(그 전엔 숫자 없음)
+    const ownCount = ownPreview ? (previewMode === "empty" ? 0 : PREVIEW_SUMMARY.count) : serverOwnCount;
+    const externalCount = p.externalReviewCount ?? 0;
+    const hasStoreReviews = externalCount > 0 || !!p.relatedExternalReviewProducts?.length;
+    useEffect(() => {
+        if (!viewTouched.current && ownCount === 0 && hasStoreReviews) setReviewView("external");
+    }, [ownCount, hasStoreReviews]);
+    // 후기 구역이 화면 가까이 오면(200px 앞) 댕다방 후기를 불러옴 — 네이버 쪽을 보고 있어도 숫자는 채워지게 구역 전체를 지켜봄
+    const reviewSectionRef = useRef<HTMLElement>(null);
+    const [reviewsNear, setReviewsNear] = useState(false);
+    useEffect(() => {
+        const node = reviewSectionRef.current;
+        if (!node) return;
+        const observer = new IntersectionObserver(entries => { if (entries.some(e => e.isIntersecting)) { setReviewsNear(true); observer.disconnect(); } }, { rootMargin: "200px" });
+        observer.observe(node);
+        return () => observer.disconnect();
+    }, []);
+    const numberLocale = locale === "en" ? "en-US" : "ko-KR";
+    // 탭 숫자 = 두 출처 후기 수를 더한 것(별점은 섞지 않음 — 각자 구역에서 따로)
+    const totalReviews = externalCount + (ownCount ?? 0);
+    const reviewBadge = p.externalReviewCount ? p.externalReviewCount.toLocaleString(numberLocale) : undefined;
+    const tabBadge = totalReviews ? totalReviews.toLocaleString(numberLocale) : undefined;
     const sections: { key: SectionKey; label: string }[] = [
         { key: "detail", label: t("detailInfo") },
-        { key: "review", label: ownPreview ? "구매 후기" : locale === "en" ? "Store reviews" : "스토어 후기" /* 탭은 짧게(휴대폰 탭 줄 넘침) — 구역 제목은 "네이버 댕다방 스토어 후기" */ },
+        { key: "review", label: locale === "en" ? "Reviews" : "후기" /* 탭은 짧게(휴대폰 탭 줄 넘침) — 안에서 댕다방 | 네이버 로 나눔 */ },
         { key: "qna", label: t("qna") },
     ];
 
@@ -66,9 +91,9 @@ export default function ProductTabs({ product: p }: Props) {
                             }`}
                         >
                             {section.label}
-                            {section.key === "review" && reviewBadge && (
+                            {section.key === "review" && tabBadge && (
                                 <span className="ml-1 rounded-full bg-neutral-100 px-1.5 py-0.5 text-[10px] text-neutral-600">
-                                    {reviewBadge}
+                                    {tabBadge}
                                 </span>
                             )}
                             {active === section.key && (
@@ -85,36 +110,32 @@ export default function ProductTabs({ product: p }: Props) {
                 <ProductDeliveryReturnPolicy />
             </section>
 
-            <section id="tab-review" className="scroll-mt-32 pt-14">
-                {!ownPreview && <PurchaseReviews productId={p.id} />}
+            <section id="tab-review" ref={reviewSectionRef} className="scroll-mt-32 pt-14">
+                <SectionTitle title={locale === "en" ? "Reviews" : "구매 후기"} badge={tabBadge} tone="yellow" art="review" kicker="REVIEW" />
+                {/* 출처 고르기 — 댕다방 구매 후기 | 네이버 댕다방 스토어 후기(출처를 섞지 않고 두 갈래로) */}
+                <div className="rvw-switch" role="tablist" aria-label={locale === "en" ? "Review source" : "후기 출처"} data-review-switch="">
+                    <button type="button" role="tab" aria-selected={reviewView === "own"} onClick={() => pickReviewView("own")}>
+                        {locale === "en" ? "Daengdabang reviews" : "댕다방 구매 후기"} {ownCount !== undefined && <b>{ownCount.toLocaleString(numberLocale)}</b>}
+                    </button>
+                    <button type="button" role="tab" aria-selected={reviewView === "external"} onClick={() => pickReviewView("external")}>
+                        {locale === "en" ? "Naver store reviews" : "네이버 스토어 후기"} {reviewBadge && <b>{reviewBadge}</b>}
+                    </button>
+                </div>
+                {/* 댕다방 구매 후기 — 네이버 쪽을 보는 동안에도 숨겨 둔 채 불러온 내용 · 정렬을 지킴 */}
                 {ownPreview ? (
-                    <>
-                        {/* 시안: 댕다방 구매 후기 | 외부 판매처 후기 — 출처를 섞지 않고 두 갈래로 */}
-                        <SectionTitle title="구매 후기" tone="yellow" art="review" kicker="REVIEW" />
-                        <div className="rvw-switch" role="tablist" aria-label="후기 출처">
-                            <button type="button" role="tab" aria-selected={reviewView === "own"} onClick={() => setReviewView("own")}>
-                                댕다방 구매 후기 <b>{previewMode === "empty" ? 0 : PREVIEW_SUMMARY.count}</b>
-                            </button>
-                            <button type="button" role="tab" aria-selected={reviewView === "external"} onClick={() => setReviewView("external")}>
-                                네이버 댕다방 스토어 후기 {reviewBadge && <b>{reviewBadge}</b>}
-                            </button>
-                        </div>
-                    </>
+                    reviewView === "own" && <ProductOwnReviews product={p} empty={previewMode === "empty"} />
                 ) : (
-                    <SectionTitle title={locale === "en" ? "Naver Daengdabang store reviews" : "네이버 댕다방 스토어 후기"} badge={reviewBadge} tone="yellow" art="review" kicker="REVIEW" />
+                    <PurchaseReviews productId={p.id} active={reviewsNear} hidden={reviewView !== "own"} onSummary={onOwnSummary} />
                 )}
-                {ownPreview && reviewView === "own" ? (
-                    <ProductOwnReviews product={p} empty={previewMode === "empty"} />
-                ) : (
-                    <>
-                        <ReviewContent product={p} />
-                        {!!p.relatedExternalReviewProducts?.length && <aside className="mx-auto mt-6 max-w-3xl rounded-xl border border-neutral-200 p-5" aria-label={locale === "en" ? "Other seasons' store reviews" : "다른 시즌 상품의 네이버 댕다방 스토어 후기"}>
-                            <h3 className="text-sm font-bold">{locale === "en" ? "Other seasons' store reviews" : "다른 시즌 상품의 네이버 댕다방 스토어 후기"}</h3>
-                            <p className="mt-2 text-xs leading-5 text-neutral-500">{locale === "en" ? "These source products may differ in design or specifications. Their reviews are kept separate from this product's ratings and summary." : "디자인·사양이 다를 수 있는 다른 시즌 상품의 후기입니다. 이 상품의 평점·리뷰 수·요약에는 합산하지 않습니다."}</p>
-                            <div className="mt-3 space-y-2">{p.relatedExternalReviewProducts.map(source => <Link key={source.folder} href={`/product/${source.folder}/#tab-review`} className="block rounded-lg border border-neutral-200 px-3 py-2 text-xs leading-5 hover:border-indigo-400">{source.name} · {locale === "en" ? "View source reviews" : "원래 상품의 스토어 후기 보기"} →</Link>)}</div>
-                        </aside>}
-                    </>
-                )}
+                {/* 네이버 스토어 후기 — 늘 그려 두고(검색 · 다른 시즌 후기 링크 유지) 댕다방 쪽을 보는 동안만 숨김 */}
+                <div data-store-reviews="" hidden={reviewView !== "external"}>
+                    <ReviewContent product={p} />
+                    {!!p.relatedExternalReviewProducts?.length && <aside className="mx-auto mt-6 max-w-3xl rounded-xl border border-neutral-200 p-5" aria-label={locale === "en" ? "Other seasons' store reviews" : "다른 시즌 상품의 네이버 댕다방 스토어 후기"}>
+                        <h3 className="text-sm font-bold">{locale === "en" ? "Other seasons' store reviews" : "다른 시즌 상품의 네이버 댕다방 스토어 후기"}</h3>
+                        <p className="mt-2 text-xs leading-5 text-neutral-500">{locale === "en" ? "These source products may differ in design or specifications. Their reviews are kept separate from this product's ratings and summary." : "디자인·사양이 다를 수 있는 다른 시즌 상품의 후기입니다. 이 상품의 평점·리뷰 수·요약에는 합산하지 않습니다."}</p>
+                        <div className="mt-3 space-y-2">{p.relatedExternalReviewProducts.map(source => <Link key={source.folder} href={`/product/${source.folder}/#tab-review`} className="block rounded-lg border border-neutral-200 px-3 py-2 text-xs leading-5 hover:border-indigo-400">{source.name} · {locale === "en" ? "View source reviews" : "원래 상품의 스토어 후기 보기"} →</Link>)}</div>
+                    </aside>}
+                </div>
             </section>
 
             <section id="tab-qna" className="scroll-mt-32 pt-14">

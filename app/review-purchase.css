@@ -1,0 +1,177 @@
+/*
+ * review-purchase.css — 상품 상세 "댕다방 구매 후기"(PurchaseReviews) 보탬 꾸밈 · 2026-11-17
+ * ---------------------------------------------------------------------
+ * 웹: 바탕 꾸밈은 app/review-web.css(10-25 크레파스 후기 시안) 그대로 쓰고, 실제 서버 후기에만 있는 칸을 보탬
+ *     (메달 옆 숫자 두 칸 · 불러오는 중/오류 줄 · 적립 안내 줄 · 링크로 된 후기 쓰기 · 사진 링크).
+ * 앱(html.ddb-app-mode): review-web.css 가 그려지지 않으니 같은 구조를 앱 결(크림 종이 · 분홍 와펜 단추)로 간단히 그림.
+ *     앱은 누르기 모션만(hover 없음).
+ * 후기 탭 "댕다방 구매 후기 | 네이버 스토어 후기" 스위치(.rvw-switch)의 앱 모양도 여기.
+ */
+
+/* 네이버 후기를 보는 동안 숨김(.rvw 의 display:grid 가 hidden 을 이기지 않게) */
+.rvw[hidden] { display: none !important; }
+
+/* ═════════ 웹 ═════════ */
+html:not(.ddb-app-mode) .rvw {
+    /* 메달 | 숫자 두 칸 */
+    & .rvb .rvb-grid[data-pr-grid] { grid-template-columns: 210px minmax(0, 1fr); }
+    & .pr-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-content: center; gap: 12px; }
+    & .pr-facts li { display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-rows: auto auto; align-items: center; column-gap: 12px; padding: 16px 18px; border-radius: 22px; background: #fffaf2; box-shadow: inset 0 2px 0 #fff, 0 0 0 1px #f4ead9; }
+    & .pr-facts li:nth-child(2) { background: #fff3f6; box-shadow: inset 0 2px 0 #fff, 0 0 0 1px #f7dce5; }
+    & .pr-facts img { grid-row: span 2; width: 44px; height: 44px; object-fit: contain; filter: drop-shadow(0 6px 8px rgb(15 23 42 / 14%)); }
+    & .pr-facts span { color: var(--rv-sub); font-size: 13px; font-weight: 700; }
+    & .pr-facts b { font-family: var(--rv-jua); font-size: 30px; font-weight: 400; line-height: 1.1; font-variant-numeric: tabular-nums; }
+    & .pr-facts li:nth-child(2) b { color: var(--rv-pink-d); }
+
+    /* 후기 쓰기 — 링크(주문 내역으로) */
+    & .rvb-write-btn { text-decoration: none; }
+    & .rvc-thumb { display: block; }
+
+    /* 불러오는 중 · 오류 · 알림 줄 */
+    & .pr-state { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px; padding: 18px; border-radius: 24px; background: #fff; color: var(--rv-sub); font-size: 14px; font-weight: 600; box-shadow: var(--rv-cushion); }
+    & .pr-state[data-note] { justify-self: center; padding: 10px 20px; border-radius: 999px; background: var(--rv-mint-l); color: var(--rv-mint); box-shadow: none; }
+
+    /* 적립금 받은 후기 표시 */
+    & .pr-disclosure { display: inline-flex; align-items: center; gap: 6px; justify-self: start; padding: 4px 12px; border-radius: 999px; background: var(--rv-yellow-l); color: #a86a0c; font-size: 12px; font-weight: 700; }
+    & .pr-disclosure i { color: var(--rv-yellow); font-size: 11px; }
+
+    /* 더 보기 화살표 */
+    & .rvw-more i { color: var(--rv-pink); font-size: 13px; }
+}
+
+@media (max-width: 960px) {
+    html:not(.ddb-app-mode) .rvw .rvb .rvb-grid[data-pr-grid] { grid-template-columns: 200px minmax(0, 1fr); }
+    html:not(.ddb-app-mode) .rvw .pr-facts { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 640px) {
+    html:not(.ddb-app-mode) .rvw .rvb .rvb-grid[data-pr-grid] { grid-template-columns: minmax(0, 1fr); }
+    html:not(.ddb-app-mode) .rvw .pr-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    html:not(.ddb-app-mode) .rvw .pr-facts li { padding: 12px; column-gap: 8px; }
+    html:not(.ddb-app-mode) .rvw .pr-facts img { width: 34px; height: 34px; }
+    html:not(.ddb-app-mode) .rvw .pr-facts b { font-size: 24px; }
+}
+
+/* ═════════ 앱 ═════════ */
+html.ddb-app-mode .rvw-switch {
+    display: flex;
+    gap: 4px;
+    margin: 0 0 16px;
+    padding: 4px;
+    border-radius: 999px;
+    background: #fff;
+    box-shadow: 0 0 0 1.5px #f3e3d3, 0 6px 10px -8px rgb(110 80 40 / 45%);
+    & button { flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 42px; padding: 0 6px; border: 0; border-radius: 999px; background: transparent; color: #7a6a5c; font-size: 13.5px; font-weight: 800; white-space: nowrap; transition: transform 0.12s; }
+    & button:active { transform: scale(0.96); }
+    & button[aria-selected="true"] { background: #f2789d; color: #fff; box-shadow: inset 0 2px 0 rgb(255 255 255 / 30%); }
+    & button b { padding: 0 7px; border-radius: 999px; background: #fff0f4; color: #c4456f; font-size: 11.5px; }
+    & button[aria-selected="true"] b { background: rgb(255 255 255 / 30%); color: #fff; }
+}
+
+html.ddb-app-mode .rvw {
+    display: grid;
+    gap: 14px;
+    color: #3b2f27;
+
+    & .rvw-stars { display: inline-flex; gap: 2px; vertical-align: middle; }
+    & .rvw-stars svg { display: block; }
+    & .rvw-star-empty { fill: #efe5d3; }
+    & .rvw-star-fill { fill: #f9bf3b; stroke: #eea21d; stroke-width: 0.8; }
+    & .rvw-link { display: inline-flex; align-items: center; gap: 5px; padding: 4px; border: 0; background: none; color: #c4456f; font-size: 13px; font-weight: 800; }
+
+    /* 후기 보드 — 크림 종이 */
+    & .rvb { display: grid; gap: 14px; padding: 18px 16px 16px; border-radius: 6px 6px 22px 6px; background: #fffdf6; box-shadow: 0 0 0 1.5px #f3e6d6, 0 10px 16px -12px rgb(110 80 40 / 45%); }
+    & .rvw-kicker { color: #e0809c; font-size: 11px; font-weight: 900; letter-spacing: 0.12em; }
+    & .rvb-head { display: grid; gap: 8px; }
+    & .rvb-head h3 { margin-top: 2px; font-size: 19px; font-weight: 900; line-height: 1.35; word-break: keep-all; }
+    & .rvb-head h3 em { color: #c4456f; font-style: normal; }
+    & .rvb-verified { display: inline-flex; align-items: center; gap: 5px; width: fit-content; padding: 4px 10px; border-radius: 999px; background: #e9f8f1; color: #12a17a; font-size: 11.5px; font-weight: 800; }
+    & .rvb-grid { display: grid; gap: 10px; }
+    & .rvb-medal { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; column-gap: 14px; padding: 14px; border-radius: 18px; background: #fff; box-shadow: 0 0 0 1.5px #f6e9da; }
+    & .rvb-medal-ring { grid-row: span 2; display: grid; width: 84px; height: 84px; padding: 5px; place-items: center; border-radius: 50%; background: conic-gradient(from 200deg, #f7a8bf, #ffd48a, #b8e6a6, #9cc9f0, #c9b8f5, #f7a8bf); }
+    & .rvb-medal-face { display: grid; width: 100%; height: 100%; place-content: center; justify-items: center; border-radius: 50%; background: #fff; }
+    & .rvb-medal-face b { font-size: 28px; font-weight: 900; line-height: 1; }
+    & .rvb-medal-face span { color: #a3968a; font-size: 11px; font-weight: 700; }
+    & .rvb-medal > p { color: #d98a12; font-size: 14px; font-weight: 900; }
+    & .pr-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    & .pr-facts li { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; column-gap: 8px; padding: 10px 12px; border-radius: 16px; background: #fff; box-shadow: 0 0 0 1.5px #f6e9da; }
+    & .pr-facts img { grid-row: span 2; width: 32px; height: 32px; object-fit: contain; }
+    & .pr-facts span { color: #8a7b6e; font-size: 12px; font-weight: 700; }
+    & .pr-facts b { font-size: 20px; font-weight: 900; }
+    & .rvb-first { display: grid; justify-items: center; gap: 8px; padding: 6px 4px; text-align: center; }
+    & .rvb-first img { width: 92px; height: 92px; object-fit: contain; }
+    & .rvb-first p { color: #7a6a5c; font-size: 13.5px; font-weight: 600; line-height: 1.7; word-break: keep-all; }
+    & .rvb-first b { color: #c4456f; }
+    & .rvb-write { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 10px 12px; padding: 14px; border-radius: 18px; background: #fff0f4; }
+    & .rvb-write-art { width: 52px; height: 52px; object-fit: contain; }
+    & .rvb-write-text { display: contents; }
+    & .rvb-write-title { font-size: 15.5px; font-weight: 900; word-break: keep-all; }
+    & .rvb-write-meta { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 5px; }
+    & .rvb-write-meta li { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 999px; background: #fff; color: #7a6a5c; font-size: 11.5px; font-weight: 700; }
+    & .rvb-write-meta li > i { color: #f2789d; font-size: 10px; }
+    & .rvb-write-meta li img { width: 14px; height: 14px; }
+    & .rvb-write-btn { grid-column: 1 / -1; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; border-radius: 999px; background: #f2789d; color: #fff; font-size: 15px; font-weight: 900; text-decoration: none; box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px #ea6d93, 0 8px 12px -8px rgb(200 80 120 / 70%); transition: transform 0.12s; }
+    & .rvb-write-btn:active { transform: scale(0.97); }
+
+    /* 고르기 · 정렬 */
+    & .rvw-tools { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    & .rvw-seg { position: relative; display: grid; grid-template-columns: repeat(var(--seg-n), minmax(0, 1fr)); padding: 4px; border-radius: 999px; background: #fff; box-shadow: 0 0 0 1.5px #f3e3d3; }
+    & .rvw-seg-pill { position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc((100% - 8px) / var(--seg-n)); border-radius: 999px; background: #3b2f27; transform: translateX(calc(var(--seg-i) * 100%)); transition: transform 0.3s cubic-bezier(0.3, 1.2, 0.4, 1); }
+    & .rvw-seg button { position: relative; z-index: 1; display: inline-flex; align-items: center; justify-content: center; gap: 5px; min-height: 38px; padding: 0 12px; border: 0; background: none; color: #7a6a5c; font-size: 12.5px; font-weight: 800; white-space: nowrap; }
+    & .rvw-seg button b { color: #a3968a; font-size: 11px; }
+    & .rvw-seg button[aria-selected="true"] { color: #fff; }
+    & .rvw-seg button[aria-selected="true"] b { color: rgb(255 255 255 / 70%); }
+    & .rvw-sort { position: relative; }
+    & .rvw-sort-btn { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 12px; border: 0; border-radius: 999px; background: #fff; color: #3b2f27; font-size: 12.5px; font-weight: 800; box-shadow: 0 0 0 1.5px #f3e3d3; }
+    & .rvw-sort-btn > i:first-child { color: #f2789d; }
+    & .rvw-sort-caret { font-size: 9px; color: #a3968a; }
+    & .rvw-sort-menu { position: absolute; top: calc(100% + 6px); right: 0; z-index: 20; display: grid; min-width: 150px; padding: 5px; border-radius: 16px; background: #fff; box-shadow: 0 0 0 1.5px #f3e3d3, 0 16px 24px -14px rgb(110 80 40 / 55%); }
+    & .rvw-sort-menu button { display: flex; align-items: center; justify-content: space-between; width: 100%; min-height: 40px; padding: 0 12px; border: 0; border-radius: 12px; background: none; color: #7a6a5c; font-size: 13px; font-weight: 700; text-align: left; }
+    & .rvw-sort-menu button[aria-selected="true"] { background: #fff0f4; color: #c4456f; font-weight: 900; }
+
+    /* 후기 카드 — 종이 한 장 */
+    & .rvw-list { display: grid; gap: 12px; }
+    & .rvc { display: grid; overflow: hidden; border-radius: 6px 6px 18px 6px; background: #fffefb; box-shadow: 0 0 0 1.5px #f3e6d6, 0 8px 14px -12px rgb(110 80 40 / 45%); }
+    & .rvc-who { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 10px; padding: 12px 14px; background: #fff6ee; }
+    & .rvc[data-tone="1"] .rvc-who { background: #eef9f3; }
+    & .rvc[data-tone="2"] .rvc-who { background: #f4f1fe; }
+    & .rvc-avatar { position: relative; display: grid; width: 40px; height: 40px; place-items: center; border-radius: 50%; background: #fff; color: #c4456f; font-size: 17px; font-weight: 900; box-shadow: 0 0 0 1.5px #f6c9d6; }
+    & .rvc-avatar i { position: absolute; right: -3px; bottom: -2px; display: grid; width: 17px; height: 17px; place-items: center; border-radius: 50%; background: #f2789d; color: #fff; font-size: 8px; box-shadow: 0 0 0 2px #fff; }
+    & .rvc-who-text { display: grid; gap: 2px; }
+    & .rvc-name b { font-size: 14px; font-weight: 900; }
+    & .rvc-verified { display: inline-flex; align-items: center; gap: 4px; color: #12a17a; font-size: 11px; font-weight: 800; }
+    & .rvc-main { display: grid; gap: 9px; min-width: 0; padding: 12px 14px 14px; }
+    & .rvc-head { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
+    & .rvc-word { color: #d98a12; font-size: 13px; font-weight: 900; }
+    & .rvc-date { margin-left: auto; color: #a3968a; font-size: 11.5px; font-weight: 600; }
+    & .rvc-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+    & .rvc-tags li { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px 3px 3px; border-radius: 999px; background: #faf5ee; font-size: 11.5px; font-weight: 800; }
+    & .rvc-tags li > span { padding: 1px 7px; border-radius: 999px; background: #fff; color: #a3968a; font-size: 10.5px; font-weight: 700; }
+    & .rvc-tags [data-fit="good"] { background: #e9f8f1; color: #12a17a; }
+    & .rvc-tags [data-fit="small"] { background: #e9f4fb; color: #0e7490; }
+    & .rvc-tags [data-fit="big"] { background: #fff0f4; color: #c4456f; }
+    & .rvc-body { color: #4a3d33; font-size: 14px; line-height: 1.75; white-space: pre-wrap; word-break: keep-all; overflow-wrap: anywhere; }
+    & .rvc-body[data-clamp] { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
+    & .rvc-body-more { justify-self: start; margin-top: -6px; color: #8a7b6e; }
+    & .rvc-media { display: flex; gap: 8px; overflow-x: auto; padding: 2px; }
+    & .rvc-thumb { flex: none; display: block; width: 88px; height: 88px; overflow: hidden; border-radius: 14px; box-shadow: 0 0 0 1.5px #f3e6d6; }
+    & .rvc-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    & .pr-disclosure { justify-self: start; padding: 3px 10px; border-radius: 999px; background: #fff6e3; color: #a86a0c; font-size: 11px; font-weight: 700; }
+    & .rvc-foot { display: flex; align-items: center; gap: 10px; padding-top: 10px; border-top: 1.5px solid #f6efe5; }
+    & .rvc-helpful { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 14px; border: 0; border-radius: 999px; background: #fff; color: #7a6a5c; font-size: 12.5px; font-weight: 800; box-shadow: 0 0 0 1.5px #f3e3d3; transition: transform 0.12s; }
+    & .rvc-helpful:active { transform: scale(0.95); }
+    & .rvc-helpful[aria-pressed="true"] { background: #f2789d; color: #fff; box-shadow: none; }
+    & .rvc-helpful-note { display: none; }
+    & .rvc-report { margin-left: auto; padding: 4px; border: 0; background: none; color: #a3968a; font-size: 12px; font-weight: 600; }
+    & .rvc-reply { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 10px; padding: 12px; border-radius: 16px; background: #eef9f3; }
+    & .rvc-reply img { width: 34px; height: 34px; padding: 2px; border-radius: 50%; background: #fff; object-fit: contain; }
+    & .rvc-reply p { color: #335a4c; font-size: 13px; line-height: 1.65; word-break: keep-all; }
+    & .rvc-reply-head { color: #12a17a; font-weight: 900; }
+
+    & .rvw-none, & .pr-state { display: grid; justify-items: center; gap: 6px; padding: 20px; border-radius: 18px; background: #fff; color: #7a6a5c; font-size: 13px; font-weight: 600; text-align: center; box-shadow: 0 0 0 1.5px #f3e6d6; }
+    & .rvw-none img { width: 64px; height: 64px; object-fit: contain; }
+    & .pr-state[data-note] { background: #e9f8f1; color: #12a17a; box-shadow: none; }
+    & .rvw-more { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 46px; border: 0; border-radius: 999px; background: #fff; color: #3b2f27; font-size: 14px; font-weight: 900; box-shadow: 0 0 0 1.5px #f3e3d3; transition: transform 0.12s; }
+    & .rvw-more:active { transform: scale(0.97); }
+    & .rvw-more i { color: #f2789d; font-size: 12px; }
+    & .rvw-foot { color: #a3968a; font-size: 11.5px; line-height: 1.6; text-align: center; word-break: keep-all; }
+}
