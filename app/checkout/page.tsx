@@ -193,6 +193,7 @@ export default function CheckoutPage() {
     // 결제 모드가 바뀐 것을 알았을 때 배송 견적(= 화면 안내 모드)을 다시 받는 순번
     const [quoteRefresh, setQuoteRefresh] = useState(0);
     const [paymentMethod, setPaymentMethod] = useState<CheckoutPaymentMethod>("card");
+    const [cashReceiptType, setCashReceiptType] = useState<"소득공제" | "지출증빙">("소득공제");
     const [submitting, setSubmitting] = useState(false);
     const [nativePaymentUrl, setNativePaymentUrl] = useState("");
     const [paymentError, setPaymentError] = useState("");
@@ -502,7 +503,7 @@ export default function CheckoutPage() {
             if (isNativeAppRuntime()) {
                 const url = nativePaymentLaunchUrl({
                     clientKey: order.clientKey, customerKey: order.customerKey,
-                    orderId: order.orderId, orderName: order.orderName, amount: order.amount, paymentMethod,
+                    orderId: order.orderId, orderName: order.orderName, amount: order.amount, paymentMethod, cashReceiptType,
                 });
                 await Browser.open({ url });
                 setNativePaymentUrl(url);
@@ -528,7 +529,7 @@ export default function CheckoutPage() {
                 await payment.requestPayment({
                     ...commonRequest,
                     method: "TRANSFER",
-                    transfer: { useEscrow: false },
+                    transfer: { useEscrow: false, cashReceipt: { type: cashReceiptType } },
                 });
             } else if (sdkMethod === "MOBILE_PHONE") {
                 await payment.requestPayment({ ...commonRequest, method: "MOBILE_PHONE" });
@@ -792,6 +793,14 @@ export default function CheckoutPage() {
                                 );
                             })}
                         </div>
+                        {paymentMethod === "transfer" && <div className="mt-3 rounded-xl bg-pink-50 p-4">
+                            <label className="block font-bold">현금영수증 용도
+                                <select className="input mt-2 text-base" value={cashReceiptType} onChange={(event) => setCashReceiptType(event.target.value as "소득공제" | "지출증빙")}>
+                                    <option value="소득공제">개인 소득공제</option><option value="지출증빙">사업자 지출증빙</option>
+                                </select>
+                            </label>
+                            <p className="mt-2 text-sm">휴대폰번호 또는 사업자등록번호는 토스 결제창에서 입력해 주세요. 발급된 영수증은 주문 내역에서 확인할 수 있어요.</p>
+                        </div>}
                         {paymentMethod === "card" && (
                             <div className="mt-3 rounded-xl border border-sky-200 bg-sky-50 px-3 py-3 text-xs font-bold leading-5 text-sky-900">
                                 <p className="font-black">

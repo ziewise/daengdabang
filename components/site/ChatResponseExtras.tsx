@@ -6,6 +6,8 @@ import PlaceMapLinks, { PlaceAddressLink } from "@/components/site/PlaceMapLinks
 import { placeMapLinks } from "@/lib/place-map-links";
 import { localVetQuery, needsVetHoursCheck } from "@/lib/local-vet-query";
 import { ddbApiBase } from "@/lib/customer-api";
+import { locationFailureMessage } from "@/lib/location-feedback";
+import { isNativeAppRuntime } from "@/lib/native-runtime";
 import type {
     ShopChatCta,
     ShopChatGeneration,
@@ -942,8 +944,8 @@ export default function ChatResponseExtras({
         try {
             const position = await new Promise<GeolocationPosition>((resolve, reject) => {
                 navigator.geolocation.getCurrentPosition(resolve, reject, {
-                    enableHighAccuracy: true,
-                    timeout: 7000,
+                    enableHighAccuracy: false,
+                    timeout: 20000,
                     maximumAge: 60000,
                 });
             });
@@ -966,9 +968,7 @@ export default function ChatResponseExtras({
             const geolocationCode = typeof error === "object" && error !== null && "code" in error
                 ? Number((error as { code?: unknown }).code)
                 : undefined;
-            const message = geolocationCode === 1
-                ? "위치 권한이 거절됐어요. 브라우저의 사이트 설정에서 위치를 허용하거나 네이버지도에서 직접 확인해 주세요."
-                : `${label} 후보 검색이 잠시 불안정해요. 네이버지도에서 직접 확인해 주세요.`;
+            const message = locationFailureMessage(geolocationCode ?? 0, isNativeAppRuntime());
             setLocalCareSearch({
                 status: "error",
                 category,

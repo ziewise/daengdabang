@@ -39,22 +39,30 @@ export default function SearchModal({ open, onClose, placeholder }: Props) {
     const [recent, setRecent] = useState<string[]>([]);
     const [term, setTerm] = useState("");
     const inputRef = useRef<HTMLInputElement>(null);
+    const composing = useRef(false);
+    const closeRef = useRef(onClose);
+    useEffect(() => { closeRef.current = onClose; }, [onClose]);
     const { t, locale, formatPrice, productName, menuLabel } = useI18n();
 
     // 열림 → body 스크롤 잠금 + Escape 닫기 + autofocus + 최근 검색어 reload
     useEffect(() => {
         if (!open) return;
+        const previousOverflow = document.body.style.overflow;
+        const input = inputRef.current;
         document.body.style.overflow = "hidden";
         // eslint-disable-next-line react-hooks/set-state-in-effect
         setRecent(searchRecent.list());
-        setTimeout(() => inputRef.current?.focus(), 50);
-        const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+        const timer = window.setTimeout(() => input?.focus(), 50);
+        const onKey = (e: KeyboardEvent) => e.key === "Escape" && !e.isComposing && closeRef.current();
         document.addEventListener("keydown", onKey);
         return () => {
-            document.body.style.overflow = "";
+            window.clearTimeout(timer);
+            input?.blur();
+            document.body.style.overflow = previousOverflow;
             document.removeEventListener("keydown", onKey);
+            window.dispatchEvent(new Event("ddb-keyboard-refresh"));
         };
-    }, [open, onClose]);
+    }, [open]);
 
     /** 실시간 검색 — term 변화에 따라 매칭 결과 */
     const results = useMemo(() => {
@@ -79,6 +87,7 @@ export default function SearchModal({ open, onClose, placeholder }: Props) {
     const goSearch = (q: string) => {
         const t = q.trim();
         if (!t) return;
+        inputRef.current?.blur();
         searchRecent.add(t);
         onClose();
         // 웹은 검색 결과 페이지(/search, 2026-10-23 사용자 결정), 앱은 지금처럼 상품 목록에서
@@ -91,6 +100,7 @@ export default function SearchModal({ open, onClose, placeholder }: Props) {
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
+        if (composing.current) return;
         goSearch(term);
     };
 
@@ -132,9 +142,17 @@ export default function SearchModal({ open, onClose, placeholder }: Props) {
                             type="search"
                             value={term}
                             onChange={(e) => setTerm(e.target.value)}
+                            enterKeyHint="search"
+                            aria-label={t("search")}
+                            onCompositionStart={() => { composing.current = true; }}
+                            onCompositionEnd={() => { composing.current = false; }}
+                            onKeyDown={(event) => {
+                                if (event.key === "Enter" && (composing.current || event.nativeEvent.isComposing || event.keyCode === 229)) event.preventDefault();
+                            }}
                             placeholder={placeholder ?? (locale === "en" ? "Search products (e.g. harness, food, Ruffwear)" : "어떤 상품을 찾으세요? (예: 하네스, 사료, 러프웨어)")}
                             className="sm-input w-full pl-12 pr-12 h-12 bg-neutral-50 border-2 border-transparent rounded-xl text-sm font-medium focus:outline-none focus:border-aurora-indigo focus:bg-white transition"
                         />
+                        <button type="submit" className="sm-submit" disabled={!hasQuery}>{t("search")}</button>
                         <button
                             type="button"
                             onClick={onClose}

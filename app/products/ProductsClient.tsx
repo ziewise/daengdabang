@@ -38,6 +38,7 @@ import { CrayonGrainFilter, PawTrail } from "@/components/daily/CrayonArt";
 import ShopListHero from "@/components/products/ShopListHero";
 // 웹 화면인가(앱 ddb-app-mode 가 아닌가) — 웹 전용 빈 결과 안내를 앱에 그리지 않으려고(2026-10-26)
 import { useWebScreen } from "@/hooks/useWebScreen";
+import ProductSearchForm from "@/components/search/ProductSearchForm";
 import "../shop-list-web.css";
 
 type Props = {
@@ -456,15 +457,7 @@ export default function ProductsClient({ initialCategory, title, variant }: Prop
             </header>
 
             <section className="surface mb-6 grid gap-3 p-4 md:grid-cols-[1.3fr_0.9fr_0.9fr_0.9fr]" data-products-filter>
-                <label className="block">
-                    <span className="mb-1 block text-xs font-black text-neutral-500">{t("search")}</span>
-                    <input
-                        value={query}
-                        onChange={(event) => setQuery(event.target.value)}
-                        className="input"
-                        placeholder={t("searchFieldPlaceholder")}
-                    />
-                </label>
+                <ProductSearchForm value={query} onSearch={setQuery} label={t("search")} placeholder={t("searchFieldPlaceholder")} />
                 <label className="block">
                     <span className="mb-1 block text-xs font-black text-neutral-500">{t("categoryFilter")}</span>
                     <select

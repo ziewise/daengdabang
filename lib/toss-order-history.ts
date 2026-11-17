@@ -1,3 +1,5 @@
+import type { CashReceipt } from "./toss-cash-receipt";
+
 export type TossOrderHistoryLine = {
     productId: string;
     name: string;
@@ -36,6 +38,7 @@ export type TossOrderCancel = {
 };
 
 export type TossOrderHistoryItem = {
+    cashReceipt?: CashReceipt;
     orderId: string;
     orderName: string;
     amount: number;
@@ -265,6 +268,10 @@ export function normalizeTossOrderHistoryItem(value: unknown): TossOrderHistoryI
         estimatedDeliveryEnd: estimatedDeliveryEnd ?? estimatedDeliveryStart,
         delivery,
         ...(cancel ? { cancel } : {}),
+        ...(isRecord(value.cashReceipt) && ["소득공제", "지출증빙"].includes(String(value.cashReceipt.type))
+            && ["requested", "issued", "failed", "cancelled", "partially_cancelled"].includes(String(value.cashReceipt.status))
+            && typeof value.cashReceipt.amount === "number" && Number.isSafeInteger(value.cashReceipt.amount) && value.cashReceipt.amount > 0
+            ? { cashReceipt: value.cashReceipt as CashReceipt } : {}),
     };
 }
 

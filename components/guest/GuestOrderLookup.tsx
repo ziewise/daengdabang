@@ -14,6 +14,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import CashReceiptCard from "@/components/checkout/CashReceiptCard";
 import { useState, useSyncExternalStore, type FormEvent } from "react";
 import "@/app/guest-web.css";
 import "@/app/mypage-web.css";
@@ -248,6 +249,7 @@ function OrderResult({ order, token, onBack }: { order: GuestOrder; token: strin
                             <div><dt>결제 수단</dt><dd>{order.paymentMethod}</dd></div>
                             <div className="is-total"><dt>총 결제</dt><dd>{won(order.totalPaid)}</dd></div>
                         </dl>
+                        <CashReceiptCard receipt={order.cashReceipt} />
                     </div>
                     <div className="gw-box" data-tone="mint">
                         <h3><i className="fa-solid fa-location-dot" aria-hidden="true" />배송 정보</h3>

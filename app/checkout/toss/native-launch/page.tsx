@@ -38,7 +38,7 @@ export default function NativePaymentLaunchPage() {
                 windowTarget: "self" as const,
             };
             const method = tossSdkPaymentMethod(request.paymentMethod);
-            if (method === "TRANSFER") await payment.requestPayment({ ...common, method, transfer: { useEscrow: false } });
+            if (method === "TRANSFER") await payment.requestPayment({ ...common, method, transfer: { useEscrow: false, cashReceipt: { type: request.cashReceiptType ?? "소득공제" } } });
             else if (method === "MOBILE_PHONE") await payment.requestPayment({ ...common, method });
             else await payment.requestPayment({ ...common, method: "CARD", card: tossCardOptions(request.paymentMethod) });
         } catch {

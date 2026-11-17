@@ -19,6 +19,7 @@ import ProductColorImage from "@/components/products/ProductColorImage";
 import { useRouter } from "next/navigation";
 import type { CatalogProduct } from "@/lib/catalog";
 import { optionPurchaseState, productPurchaseState, purchaseStateLabel } from "@/lib/catalog/inventory";
+import RestockButton from "./RestockButton";
 import { useLiveInventoryProduct } from "@/lib/catalog/live-inventory";
 import { useAuth, useCart } from "@/lib/store";
 import { useI18n } from "@/lib/i18n";
@@ -285,7 +286,7 @@ export default function OptionSheet({ product, open, mode, initialColorIdx = nul
                                         key={`${c.name}-${i}`}
                                         type="button"
                                         onClick={() => setColorIdx(i)}
-                                        disabled={!colorState.purchasable}
+                                        disabled={!colorState.purchasable && colorState.state !== "sold_out"}
                                         aria-label={[c.name, colorStatus].filter(Boolean).join(" · ")}
                                         aria-current={i === colorIdx}
                                         title={[c.name, colorStatus].filter(Boolean).join(" · ")}
@@ -356,7 +357,7 @@ export default function OptionSheet({ product, open, mode, initialColorIdx = nul
                                                 type="button"
                                                 role="option"
                                                 aria-selected={sizeIdx === i}
-                                                disabled={!sizeState.purchasable}
+                                                disabled={!sizeState.purchasable && sizeState.state !== "sold_out"}
                                                 data-size-option={i}
                                                 onClick={() => {
                                                     setSizeIdx(i);
@@ -383,6 +384,7 @@ export default function OptionSheet({ product, open, mode, initialColorIdx = nul
                         </div>
                     )}
 
+                    {selectionComplete && selectedState.state === "sold_out" && <RestockButton product={p} color={colorIdx != null ? colors[colorIdx]?.name : ""} size={sizeIdx != null ? sizes[sizeIdx]?.name : ""} className="mt-3 w-full" />}
                     {selectionComplete && purchaseStateLabel(selectedState, locale) && (
                         <p role="status" data-inventory-state={selectedState.state} className="mt-3 rounded-lg bg-amber-50 p-3 text-sm font-bold text-amber-900">
                             {purchaseStateLabel(selectedState, locale)}
@@ -454,7 +456,7 @@ export default function OptionSheet({ product, open, mode, initialColorIdx = nul
                             className="mt-3 h-12 w-full rounded-md bg-indigo-600 text-base font-black text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-neutral-300 disabled:hover:bg-neutral-300"
                         >
                             {!canConfirm
-                                ? blockedState ? purchaseStateLabel(blockedState, locale) : !summaryState.purchasable ? purchaseStateLabel(summaryState, locale) : t("chooseOption")
+                                ? blockedState ? purchaseStateLabel(blockedState, locale) || (locale === "en" ? "Unavailable" : "일시 구매 불가") : !summaryState.purchasable ? purchaseStateLabel(summaryState, locale) || (locale === "en" ? "Unavailable" : "일시 구매 불가") : t("chooseOption")
                                 : (locale === "en" ? "Buy now" : "구매하기")}
                         </button>
                     )}
@@ -485,7 +487,7 @@ export default function OptionSheet({ product, open, mode, initialColorIdx = nul
                             className="mt-3 h-12 w-full rounded-md bg-indigo-600 text-base font-black text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-neutral-300 disabled:hover:bg-neutral-300"
                         >
                             {!canConfirm
-                                ? blockedState ? purchaseStateLabel(blockedState, locale) : !summaryState.purchasable ? purchaseStateLabel(summaryState, locale) : t("chooseOption")
+                                ? blockedState ? purchaseStateLabel(blockedState, locale) || (locale === "en" ? "Unavailable" : "일시 구매 불가") : !summaryState.purchasable ? purchaseStateLabel(summaryState, locale) || (locale === "en" ? "Unavailable" : "일시 구매 불가") : t("chooseOption")
                                 : mode === "buy"
                                   ? (locale === "en" ? "Pay by credit / debit card" : "신용·체크카드로 구매하기")
                                   : t("addToCart")}

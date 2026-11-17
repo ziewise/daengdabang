@@ -24,6 +24,8 @@ import { formatOrderAmount, loadTossOrderHistory, orderDateLabel, orderStatusLab
 import { memberAccountDisplay } from "@/lib/member-account-display";
 import { GRADES } from "@/lib/grades";
 import { haptic } from "../gestures";
+import HapticsSetting from "@/components/mypage/HapticsSetting";
+import RestockAlerts from "@/components/mypage/RestockAlerts";
 import { CoinChip, KIT_CSS, TEXT, TEXT_SOFT } from "../kit";
 import { CS_MENUS, MY_MENUS } from "../page-data";
 import { HC_CSS, flyCoin } from "../shared";
@@ -344,6 +346,8 @@ export default function StickerMy() {
                             <LinedMenu items={CS_MENUS} />
                         </>
                     )}
+                    {member && <RestockAlerts />}
+                    <HapticsSetting />
                 </DiaryBody>
             </div>
             {toast ? <NoteToast text={toast} onDone={clearToast} /> : null}

@@ -49,7 +49,7 @@ function optionSheet(p, draft = [0,0,3,[]], mode='cart') {
         const current=draft[index++];return [current,next=>changes.push(typeof next==='function'?next(current):next)];
     }};
     const mod=loadModule('components/products/detail/OptionSheet.tsx',{
-        react:React,'@/components/products/ProductColorImage':'color-image','next/navigation':{useRouter:()=>({push:url=>routes.push(url)})},
+        react:React,'./RestockButton':'restock-button','@/components/products/ProductColorImage':'color-image','next/navigation':{useRouter:()=>({push:url=>routes.push(url)})},
         '@/lib/store':{useAuth:()=>({user:{}}),useCart:()=>({addToCart:(...args)=>added.push(args)})},
         '@/lib/i18n':{useI18n:()=>({locale:'ko',t:x=>x,formatPrice:String,productName:p=>p.name})},
         '@/lib/daenglab-rewards':{daengLabCoinsForLine:()=>0,daengLabCoinsForLines:()=>0},
@@ -84,7 +84,8 @@ test('textual sold out, undefined combinations and unknown options remain distin
     assert.equal(inventory.optionPurchaseState(p,'Red','M').state,'unknown');
     assert.equal(inventory.optionPurchaseState(p,'Blue','L/XL').state,'unknown');
     assert.equal(inventory.optionPurchaseState(p,undefined,'S').purchasable,false);
-    assert.equal(inventory.purchaseStateLabel(inventory.optionPurchaseState(p,'Red','M')),'재고 확인 필요');
+    assert.equal(inventory.purchaseStateLabel(inventory.optionPurchaseState(p,'Red','M')),'');
+    assert.equal(inventory.purchaseStateLabel(inventory.optionPurchaseState(p,'Blue','M')),'일시품절');
 });
 test('global product pause and held model override an available supplier option',()=>{
     for(const availability of ['sold_out','discontinued','paused','suspended','sale_stopped','OUT_OF_STOCK','판매 중지','단종','품절'])assert.equal(inventory.optionPurchaseState(product({availability}),'Blue','S').purchasable,false);
@@ -156,12 +157,15 @@ test('OptionSheet prevents sold-out current selections and mixed accumulated pic
         assert.equal(result.added.length,0);assert.equal(result.routes.length,0);assert.equal(result.commits.length,0);
     }
 });
-test('OptionSheet disables exact sold-out and unknown sizes while retaining zero-stock size',()=>{
+test('OptionSheet permits sold-out option selection for alerts but still prevents purchase',()=>{
     const result=optionSheet(product(),[0,null,1,[]]);
-    // 2026-11-11 사이즈 고르기 = 꾸민 드롭다운(기본 select 대신) — 줄마다 data-size-option, 품절 · 확인 필요 줄은 못 누름
+    // A sold-out choice can be selected for its restock alert, never added to a cart.
     const optionRows=result.elements.filter(n=>n.props?.['data-size-option']!==undefined);
     assert.equal(optionRows.find(n=>n.props['data-size-option']===0).props.disabled,false);
-    assert.equal(optionRows.find(n=>n.props['data-size-option']===1).props.disabled,true);
+    assert.equal(optionRows.find(n=>n.props['data-size-option']===1).props.disabled,false);
+    const soldOut=optionSheet(product(),[0,1,1,[]]);
+    assert.ok(soldOut.elements.some(n=>n.type==='restock-button' && n.props.color==='Blue' && n.props.size==='M'));
+    assert.equal(soldOut.elements.find(n=>n.props?.['data-add-option']).props.disabled,true);
     const add=result.elements.find(n=>n.props?.['data-add-option']);assert.equal(add.props.disabled,true);add.props.onClick();assert.equal(result.changes.length,0);
 });
 

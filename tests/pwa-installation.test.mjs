@@ -173,7 +173,8 @@ test("native store package removes install prompts while the web PWA keeps them"
     assert.match(installButton, /!isReady \|\| isNativeApp \|\| isStandalone/);
     assert.match(nativeBridge, /NATIVE_ROUTE_PREFIXES/);
     assert.match(nativeBridge, /Browser\.open/);
-    assert.match(nativeBridge, /Haptics\.impact/);
+    assert.match(nativeBridge, /import \{ haptic \} from "@\/lib\/haptics"/);
+    assert.match(read("../lib/haptics.ts"), /Haptics\.impact/);
     assert.match(nativeBridge, /networkStatusChange/);
     assert.match(read("../components/header/MobilePanel.tsx"), /www\.daengdabang\.com\/products\//);
     assert.match(capacitorConfig, /appId: "com\.daengdabang\.app"/);

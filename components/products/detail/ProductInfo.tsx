@@ -30,6 +30,7 @@ import { daengLabCoinsForUnitPrice } from "@/lib/daenglab-rewards";
 import DaengLabCoinMark from "@/components/petlens/DaengLabCoinMark";
 import ProductShareActions from "./ProductShareActions";
 import OptionSheet from "./OptionSheet";
+import RestockButton from "./RestockButton";
 import ColorSelect from "./ColorSelect";
 import PurchaseEvidenceCard from "./PurchaseEvidenceCard";
 import ReturnPolicyDialogLink from "@/components/policy/ReturnPolicyDialogLink";
@@ -267,7 +268,7 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
                 </ul>
 
                 <PurchaseEvidenceCard product={p} />
-                {!purchaseState.purchasable && (
+                {!purchaseState.purchasable && purchaseState.state !== "unknown" && (
                     <div data-inventory-state={purchaseState.state} className="pd-stock rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm">
                         <p className="font-bold text-amber-950">{purchaseStateLabel(purchaseState, locale) || (locale === "en" ? "Availability varies by option." : "옵션별 판매 상태를 선택창에서 확인해 주세요.")}</p>
                         {!purchaseState.purchasable && <button type="button" onClick={() => setSheetMode("cart")} className="mt-2 text-xs font-black underline">{locale === "en" ? "View option status" : "옵션별 재고 보기"}</button>}
@@ -327,7 +328,7 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
                     >
                         <i className={`${wished ? "fa-solid" : "fa-regular"} fa-heart text-lg`} />
                     </button>
-                    <button
+                    {purchaseState.state === "sold_out" ? <RestockButton product={p} /> : <button
                         type="button"
                         onClick={() => setSheetMode("cart")}
                         disabled={!purchaseState.purchasable}
@@ -335,7 +336,7 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
                     >
                         <i className="fa-solid fa-bag-shopping shrink-0 text-sm" />
                         <span className="break-keep whitespace-normal text-center leading-tight">{t("addToCart")}</span>
-                    </button>
+                    </button>}
                     <button
                         type="button"
                         onClick={() => setSheetMode("buy")}
@@ -343,7 +344,7 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
                         className="pd-buy flex h-14 min-w-0 items-center justify-center gap-1.5 rounded-md bg-indigo-600 px-1 text-base font-black text-white transition hover:bg-indigo-700"
                     >
                         <i className="fa-solid fa-credit-card shrink-0 text-sm" />
-                        <span className="break-keep whitespace-normal text-center leading-tight">{locale === "en" ? "Buy now" : "바로 구매"}</span>
+                        <span className="break-keep whitespace-normal text-center leading-tight">{!purchaseState.purchasable ? purchaseStateLabel(purchaseState, locale) || (locale === "en" ? "Unavailable" : "일시 구매 불가") : locale === "en" ? "Buy now" : "바로 구매"}</span>
                     </button>
                 </div>
             </div>
@@ -371,7 +372,7 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
                             <p className="ddb-crayon-price max-w-full whitespace-nowrap text-xl">{formatPrice(p.price)}</p>
                         </div>
                     </div>
-                    <button
+                    {purchaseState.state === "sold_out" ? <RestockButton product={p} /> : <button
                         type="button"
                         onClick={() => setSheetMode("cart")}
                         disabled={!purchaseState.purchasable}
@@ -379,7 +380,7 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
                     >
                         <i className="fa-solid fa-bag-shopping text-sm sm:mr-1.5" />
                         <span className="hidden sm:inline">{t("cart")}</span>
-                    </button>
+                    </button>}
                     <button
                         type="button"
                         onClick={() => setSheetMode("buy")}
@@ -387,7 +388,7 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
                         data-pet-guide-target="product-actions"
                         className="pd-bar-buy h-11 shrink-0 rounded-md bg-indigo-600 px-4 text-sm font-black text-white transition hover:bg-indigo-700 sm:px-6"
                     >
-                        {locale === "en" ? "Buy now" : "바로 구매"}
+                        {!purchaseState.purchasable ? purchaseStateLabel(purchaseState, locale) || (locale === "en" ? "Unavailable" : "일시 구매 불가") : locale === "en" ? "Buy now" : "바로 구매"}
                     </button>
                 </div>
             </div>

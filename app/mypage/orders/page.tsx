@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import MypageSidebar from "@/components/mypage/MypageSidebar";
+import CashReceiptCard from "@/components/checkout/CashReceiptCard";
 // 웹: 배송 문의 · 교환·반품 안내를 마이페이지 안 창으로(2026-10-24)
 import OrderHelpModal from "@/components/mypage/OrderHelpModal";
 // 구매 확정 창(2026-10-26) — 서버 기능 전까지 개발 서버 미리보기(?ocpreview=1)에서만 보임
@@ -647,6 +648,7 @@ function OrderDetailView({ order }: { order: TossOrderHistoryItem }) {
                             </>
                         )}
                     </dl>
+                    <CashReceiptCard receipt={order.cashReceipt} />
                     {hasMixedTossMode(order) ? (
                         <p className="mt-5 rounded-xl bg-amber-50 px-4 py-3 text-xs font-bold leading-5 text-amber-800">
                             결제 모드 기록이 서로 맞지 않아 확인이 필요합니다. 1:1 문의에 주문번호를 남겨 주시면 확인해 드립니다.

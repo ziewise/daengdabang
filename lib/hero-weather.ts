@@ -352,10 +352,8 @@ function nearestGlobalLocationName(latitude: number, longitude: number): { name:
 
 async function browserGeoLocation(): Promise<HeroWeatherLocation | null> {
     if (typeof navigator === "undefined" || !("geolocation" in navigator)) return null;
-    // The native shell declares no location permissions. WebView nevertheless
-    // opens Android's permission activity, which immediately rejects the request
-    // and steals/restores focus during the first draw (also on every tab visit).
-    // Weather already supports selected cities, cached IP location and timezone.
+    // Keep first launch quiet: native location is requested only when the user
+    // taps a nearby-search action. Weather uses selected cities, IP or timezone.
     if (isNativeAppRuntime()) return null;
 
     try {

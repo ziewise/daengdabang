@@ -617,11 +617,12 @@ ${LIST} main main > section.surface .input:focus { box-shadow: 0 0 0 2px #f283a3
    카테고리 · 세부 · 정렬 칸은 숨김(정렬 · 전체 상품의 카테고리는 필터 속지에서 같은 함수로) · 목록을 내려도 상단바 아래 붙어 있음 */
 ${LIST} main main > section[data-products-filter] { position: sticky; top: calc(var(--header-height, 56px) + 8px); z-index: 30; display: flex; align-items: center; gap: 8px; padding: 10px 10px 10px 12px; }
 ${LIST} main main > section[data-products-filter] > label { display: none; }
-${LIST} main main > section[data-products-filter] > label:first-of-type { display: block; flex: 1; min-width: 0; }
-${LIST} main main > section[data-products-filter] > label:first-of-type > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
-${LIST} main main > section[data-products-filter] > label:first-of-type > .input { height: 44px; padding-left: 38px;
+${LIST} main main > section[data-products-filter] > [data-products-search] { display: flex; flex: 1; min-width: 0; gap: 8px; }
+${LIST} main main > section[data-products-filter] > [data-products-search] > .input { height: 44px; min-width: 0; width: 100%; padding-left: 32px;
     background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c9a493' stroke-width='2.6' stroke-linecap='round'%3E%3Ccircle cx='10.5' cy='10.5' r='6.5'/%3E%3Cpath d='M15.5 15.5 20 20'/%3E%3C/svg%3E") 13px center / 17px no-repeat; }
 ${LIST} main main > section[data-products-filter] > [data-app-product-filter] { display: block; flex-shrink: 0; }
+${LIST} [data-products-search] > [data-search-submit] { ${PATCH_PINK} min-height: 44px; padding: 0 12px; flex-shrink: 0; font-size: 14px; }
+@media (max-width: 390px) { ${LIST} main main > section[data-products-filter] { flex-wrap: wrap; } ${LIST} main main > section[data-products-filter] > [data-products-search] { flex-basis: 100%; } }
 html.ddb-app-mode .apf-btn { ${PATCH_CREAM} display: inline-flex; align-items: center; gap: 6px; height: 44px; padding: 0 14px; font-size: 13px; }
 html.ddb-app-mode .apf-btn:active { transform: scale(.95); }
 /* 상품 카드(웹 공용 ProductCard) — 앱 쇼핑 카드와 같게: 색상 미리보기 칩 · "n가지 색상" 숨김, 살짝 기울기(±1도), 흰 테두리 사진 */

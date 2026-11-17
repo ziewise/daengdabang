@@ -11,6 +11,7 @@ export type NativePaymentRequest = {
     orderName: string;
     amount: number;
     paymentMethod: CheckoutPaymentMethod;
+    cashReceiptType?: "소득공제" | "지출증빙";
 };
 
 function boundedText(value: unknown, min: number, max: number): value is string {
@@ -38,6 +39,7 @@ function cleanRequest(value: unknown): NativePaymentRequest | null {
         clientKey: request.clientKey, customerKey: request.customerKey,
         orderId: request.orderId, orderName: request.orderName, amount: request.amount,
         paymentMethod: request.paymentMethod as CheckoutPaymentMethod,
+        ...(request.paymentMethod === "transfer" && ["소득공제", "지출증빙"].includes(String(request.cashReceiptType)) ? { cashReceiptType: request.cashReceiptType as "소득공제" | "지출증빙" } : {}),
     };
 }
 

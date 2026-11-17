@@ -15,6 +15,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import type { TossTestPaymentConfirmation } from "@/lib/customer-api";
+import CashReceiptCard from "./CashReceiptCard";
 import { findProduct } from "@/lib/shop";
 import { CHECKOUT_DELIVERY_REQUEST_PRESETS } from "@/lib/checkout-shipping";
 import type { CheckoutPaymentMethod } from "@/lib/payment-methods";
@@ -178,6 +179,7 @@ export function PaymentDoneWeb({ confirmation, orderId, amount, userName }: {
                             <div><dt>결제 수단</dt><dd>{method.label}</dd></div>
                             <div className="is-total"><dt>총 결제</dt><dd>{won(confirmation.totalAmount)}</dd></div>
                         </dl>
+                        <CashReceiptCard receipt={confirmation.cashReceipt} />
                     </div>
                     <div className="gw-box" data-tone="mint">
                         <h3><i className="fa-solid fa-location-dot" aria-hidden="true" />배송 정보</h3>

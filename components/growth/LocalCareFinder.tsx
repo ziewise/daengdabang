@@ -8,6 +8,8 @@ import PlaceMapLinks, { PlaceAddressLink } from "@/components/site/PlaceMapLinks
 import { CATEGORIES, buildNaverMapUrl, type CategoryOption, type LocalCareCategory } from "@/lib/growth-display-data";
 export { CATEGORIES, buildNaverMapUrl, type CategoryOption, type LocalCareCategory } from "@/lib/growth-display-data";
 import { placeMapLinks } from "@/lib/place-map-links";
+import { locationFailureMessage } from "@/lib/location-feedback";
+import { isNativeAppRuntime } from "@/lib/native-runtime";
 
 export type LocalCarePlace = {
     id: string;
@@ -53,7 +55,7 @@ export function currentPosition(): Promise<Coordinates> {
                 longitude: position.coords.longitude,
             }),
             reject,
-            { enableHighAccuracy: false, timeout: 9000, maximumAge: 120000 },
+            { enableHighAccuracy: false, timeout: 20000, maximumAge: 120000 },
         );
     });
 }
@@ -128,9 +130,7 @@ export default function LocalCareFinder() {
             const code = typeof caught === "object" && caught !== null && "code" in caught
                 ? Number((caught as { code?: unknown }).code)
                 : 0;
-            const message = code === 1
-                ? "위치 권한이 꺼져 있어요. 권한을 허용한 뒤 다시 찾거나 네이버지도에서 바로 확인해 주세요."
-                : "주변 후보를 바로 불러오지 못했어요. 잠시 후 다시 찾거나 네이버지도에서 확인할 수 있어요.";
+            const message = locationFailureMessage(code, isNativeAppRuntime());
             setSearchState({ status: "error", category: category.id, message, fallbackUrl });
             trackStorefrontEvent("local_care_search_failed", {
                 surface: "treasure_mine",

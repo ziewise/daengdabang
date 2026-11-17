@@ -36,6 +36,7 @@ const ChatWidget = dynamic(() => import("@/components/site/ChatWidget"), { ssr: 
 // 앱(APK · iOS)에서 앱 묶음에 없는 사진 · 영상을 받을 운영 사이트 주소
 const PetCompanionGate = dynamic(() => import("@/components/pet-companion/PetCompanionGate"), { ssr: false });
 import { Capacitor } from "@capacitor/core";
+import { trackKeyboardVisibility } from "@/lib/keyboard-visibility";
 import { fixNativeMediaElement } from "@/lib/native-media";
 import { useAuth, useCart } from "@/lib/store";
 import { clearPreparedShowcaseFeed, prepareShowcaseFeed } from "@/lib/showcase-navigation";
@@ -471,25 +472,11 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
     /* 글자 입력 중 표시(html.ddb-app-typing) — 휴대폰 키보드가 올라오면 화면 높이가 줄어 아래에 붙은 탭바까지 키보드 위로 따라 올라왔다(2026-10-20).
        입력칸에 초점이 있는 동안은 탭바를 숨기고, 케어톡 창은 탭바 자리까지 내려 키보드가 창만 밀어 올리게(CSS 는 아래 CSS · appShopSkin) */
+    useEffect(trackKeyboardVisibility, []);
     useEffect(() => {
-        const html = document.documentElement;
-        const isTextField = (el: Element | null) => {
-            if (!el) return false;
-            if (el instanceof HTMLTextAreaElement) return true;
-            if (el instanceof HTMLElement && el.isContentEditable) return true;
-            return el instanceof HTMLInputElement && ["text", "search", "email", "tel", "url", "password", "number", ""].includes(el.type);
-        };
-        const sync = () => html.classList.toggle("ddb-app-typing", isTextField(document.activeElement));
-        // 초점이 다른 입력칸으로 옮겨 가는 사이(잠깐 body)에 깜빡이지 않게 한 장면 뒤에 확인
-        const onFocusOut = () => window.requestAnimationFrame(sync);
-        document.addEventListener("focusin", sync);
-        document.addEventListener("focusout", onFocusOut);
-        return () => {
-            document.removeEventListener("focusin", sync);
-            document.removeEventListener("focusout", onFocusOut);
-            html.classList.remove("ddb-app-typing");
-        };
-    }, []);
+        // Removing a focused input does not always dispatch focusout in WebView.
+        window.dispatchEvent(new Event("ddb-keyboard-refresh"));
+    }, [pathname, searchOpen]);
 
     /* 화면 이동은 맨 위부터(2026-10-20 사용자 — 버튼으로 들어간 화면이 중간부터 보였음). Next 는 새 화면의 본문 첫 줄만 화면 안으로 옮겨
        상단바 아래 제목 줄 · 뒤로 가기 줄 · 화면 위쪽이 112px 가량 가려졌다. 앞으로 이동이면 맨 위로(스르륵 없이 바로).
@@ -693,11 +680,11 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             {/* ── 아래 탭바 — 크림 종이 판. 아이콘은 헤더와 같은 젤리 그림, 고른 탭은 파스텔 젤리 판 위로 통 + 카페24 이름 ── */}
             {showTabBar && (
                 <nav
-                    className="fixed inset-x-0 bottom-0 z-[2150] px-3 pb-[calc(8px+env(safe-area-inset-bottom,0px))]"
+                    className="fixed inset-x-0 bottom-0 z-[2150] px-3"
                     aria-label="앱 메뉴"
                     data-pet-companion-avoid="true"
                 >
-                    <ul className="app-tabbar mx-auto grid h-[68px] w-full max-w-[440px] grid-cols-5 px-1.5">
+                    <ul className="app-tabbar mx-auto grid h-[calc(68px+env(safe-area-inset-bottom,0px))] w-full max-w-[440px] grid-cols-5 px-1.5 pb-[env(safe-area-inset-bottom,0px)]">
                         {tabs.map((t) => {
                             const on = t.key === activeKey;
                             return (

@@ -11,6 +11,7 @@ import MemberPetProfileEditor from "@/components/mypage/MemberPetProfileEditor";
 import MemberPetProfileCreateForm from "@/components/mypage/MemberPetProfileCreateForm";
 import DaengLabWalletCard from "@/components/mypage/DaengLabWalletCard";
 import MypageSidebar from "@/components/mypage/MypageSidebar";
+import RestockAlerts from "@/components/mypage/RestockAlerts";
 // 2026-10-26 웹 — 하위 화면과 같은 로그인 안내 · 해요체 빈 화면 문구(앱은 원래 안내 · 문구 그대로)
 import { MypageLoginGate } from "@/components/mypage/MypageSectionLayout";
 import { useWebScreen } from "@/hooks/useWebScreen";
@@ -140,6 +141,7 @@ export default function MyPage() {
             <div className="grid min-w-0 gap-6 lg:grid-cols-[260px_minmax(0,1fr)]">
                 <MypageSidebar />
                 <div className="min-w-0">
+            <RestockAlerts />
             {/* 2026-10-24 웹 K5 결: 인사 머리 = 분홍 띠 판 + 3D 그림(data-mp-hello · 꾸밈은 app/mypage-web.css, 앱 그대로) */}
             <div className="flex flex-wrap items-start justify-between gap-3" data-mp-hello data-mp-art="me">
                 <div>

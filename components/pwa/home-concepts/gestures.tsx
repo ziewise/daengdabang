@@ -14,25 +14,11 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { prepareShowcaseFeed } from "@/lib/showcase-navigation";
+import { haptic } from "@/lib/haptics";
+export { haptic } from "@/lib/haptics";
 
 const EASE = "cubic-bezier(.2,.9,.2,1)";
 const reduced = () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-/** 짧은 진동 */
-export function haptic(strength: "light" | "medium" = "light") {
-    try {
-        const cap = (window as unknown as { Capacitor?: { isNativePlatform?: () => boolean } }).Capacitor;
-        if (cap?.isNativePlatform?.()) {
-            import("@capacitor/haptics")
-                .then(({ Haptics, ImpactStyle }) => Haptics.impact({ style: strength === "medium" ? ImpactStyle.Medium : ImpactStyle.Light }))
-                .catch(() => undefined);
-            return;
-        }
-        navigator.vibrate?.(strength === "medium" ? 18 : 8);
-    } catch {
-        /* 진동을 못 쓰는 기기는 조용히 넘어감 */
-    }
-}
 
 /**
  * 누름 · 톡 · 꾹 누르기

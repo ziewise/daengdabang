@@ -15,6 +15,7 @@ import { clearGuestPending, confirmGuestTossPayment, guestOrderEnabled, loadGues
 import Link from "next/link";
 // 2026-10-25 웹 결제 결과 화면(회원) — 웹에서만 새 겉모양, 확인 · 장바구니 정리 · 주문 저장은 이 파일 그대로
 import { PaymentDoneWeb, PaymentStateWeb } from "@/components/checkout/PaymentResultWeb";
+import CashReceiptCard from "@/components/checkout/CashReceiptCard";
 import { useWebScreen } from "@/hooks/useWebScreen";
 import {
     confirmTossTestPayment,
@@ -220,6 +221,7 @@ export default function TossTestSuccessPage() {
                 <i className="fa-solid fa-circle-check text-5xl text-emerald-600" />
                 <h1 className="mt-4 text-3xl font-black text-neutral-950">결제가 완료되었습니다.</h1>
                 <p className="mt-2 text-sm font-bold text-neutral-600">주문번호 {view.orderId}</p>
+                <CashReceiptCard receipt={view.confirmation.cashReceipt} />
                 <div className="mx-auto mt-5 max-w-md rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-4 text-left">
                     <p className="text-sm font-black text-emerald-950">결제 승인 · {view.amount.toLocaleString("ko-KR")}원</p>
                     <p className="mt-2 text-xs font-bold leading-5 text-emerald-800">
