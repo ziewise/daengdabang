@@ -46,6 +46,7 @@ import {
     hidesTabBar, isCareTalkPath, isTabRoot, tabForPath, type AppTab, type AppTabKey, type Concept,
 } from "./appTabs";
 import AppSkin from "./AppSkin";
+import NativeAppUpdateBanner from "@/components/native/NativeAppUpdateBanner";
 
 /**
  * 탭 아이콘(40×40 그림을 28px로) — 헤더 검색 · 장바구니와 같은 말랑한 젤리 그림(탭 색 그라데이션 면 + 흰 무늬 + 윗쪽 광택).
@@ -624,6 +625,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 // 아래 여백 — 탭바 높이, 상품 상세는 탭바 대신 아래 고정 구매 바 높이 + 여유(마지막 상품이 구매 바에 가리지 않게)
                 style={{ paddingBottom: showTabBar ? "var(--app-tabbar-h)" : productDetail ? "calc(104px + env(safe-area-inset-bottom, 0px))" : undefined }}
             >
+                <NativeAppUpdateBanner />
                 {/* 하위 화면 — 제목 테이프가 없으면 뒤로 가기는 상단바 바로 아래 줄에, 자수 와펜 동그라미 스티커(같은 goBack) */}
                 {backBelow && !pageTitle ? (
                     <div className="app-backrow relative z-10 mx-auto flex w-full max-w-[1280px] items-center px-3 pb-1 pt-2 md:px-6">

@@ -162,6 +162,10 @@ test("Android declares every WebView media permission and registers the first-us
     const activity = readFileSync("android/app/src/main/java/com/daengdabang/app/MainActivity.java", "utf8");
     const plugin = readFileSync("android/app/src/main/java/com/daengdabang/app/MediaPermissionsPlugin.java", "utf8");
     assert.match(activity, /registerPlugin\(MediaPermissionsPlugin.class\)/);
+    for (const pluginName of ["MediaPermissions", "LocationSettings"]) {
+        assert.ok(activity.indexOf(`registerPlugin(${pluginName}Plugin.class)`) < activity.indexOf("super.onCreate(savedInstanceState)"),
+            `${pluginName} must be included in Capacitor's initial WebView plugin headers`);
+    }
     assert.match(plugin, /alias = "camera"/);
     assert.match(plugin, /alias = "microphone"/);
 });

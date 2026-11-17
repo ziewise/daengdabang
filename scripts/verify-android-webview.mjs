@@ -222,6 +222,27 @@ async function verifyShoppingMedia(socket) {
     return {posterLoaded, shelf, products, maxPlaying, community};
 }
 
+async function verifyPermissionBridges(socket) {
+    // Read state only: no camera, microphone or location is activated here.
+    // A Java class in the APK is insufficient if its JS header was exported
+    // before the plugin was registered.
+    const result = await evaluateDocument(socket, `(async () => {
+        const headers = window.Capacitor.PluginHeaders || [];
+        const methods = name => headers.find(plugin => plugin.name === name)?.methods.map(method => method.name) || [];
+        const media = methods('MediaPermissions');
+        const settings = methods('LocationSettings');
+        if (!media.includes('checkPermissions') || !media.includes('requestPermissions') || !settings.includes('open')) {
+            throw new Error('Permission bridges are missing from WebView plugin headers');
+        }
+        const permissions = await window.Capacitor.nativePromise('MediaPermissions', 'checkPermissions', {});
+        return { media, settings, permissions };
+    })()`);
+    if (result.permissions.camera !== 'prompt' || result.permissions.microphone !== 'prompt') {
+        throw new Error(`Fresh app must not request media permission on startup: ${JSON.stringify(result)}`);
+    }
+    return result;
+}
+
 async function verifyOnDemandInference(socket) {
     // Synthetic images remain on the emulator. Loading the runtime only here
     // proves that removing its startup provider preserves the optional feature.
@@ -281,6 +302,7 @@ for (let attempt = 1; attempt <= maximumAttempts; attempt += 1) {
             && Number.isFinite(lastState.nativeInteractiveMs)
         ) {
             lastState.companion = await verifyPetCompanion(socket);
+            lastState.permissionBridges = await verifyPermissionBridges(socket);
             lastState.media = await verifyShoppingMedia(socket);
             lastState.onDeviceTryOn = await verifyOnDemandInference(socket);
             socket.close();
