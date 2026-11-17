@@ -58,7 +58,7 @@ export default function RestockButton({ product, color = "", size = "", classNam
                 }
                 setOpen(true); setMessage("");
             }}>{done ? "재입고 알림 신청됨" : "재입고 알림"}</button>
-        {open && createPortal(<div className="fixed inset-0 z-[2100] flex items-center justify-center bg-black/35 p-5" onClick={() => { if (!busy) setOpen(false); }}>
+        {open && createPortal(<div className="fixed inset-0 z-[2300] flex items-center justify-center bg-black/35 p-5" onClick={() => { if (!busy) setOpen(false); }}>
             <section ref={dialog} tabIndex={-1} role="dialog" aria-modal="true" aria-label="재입고 알림 신청" className="max-h-[90dvh] w-full max-w-sm overflow-y-auto rounded-2xl bg-white p-5 shadow-xl" onClick={(event) => event.stopPropagation()}>
                 <h2 className="text-lg font-bold">재입고 알림</h2>
                 <p className="mt-3 text-base font-bold">{product.name}</p>

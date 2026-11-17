@@ -47,6 +47,7 @@ export default function SearchModal({ open, onClose, placeholder }: Props) {
     // 열림 → body 스크롤 잠금 + Escape 닫기 + autofocus + 최근 검색어 reload
     useEffect(() => {
         if (!open) return;
+        composing.current = false;
         const previousOverflow = document.body.style.overflow;
         const input = inputRef.current;
         document.body.style.overflow = "hidden";
@@ -56,6 +57,7 @@ export default function SearchModal({ open, onClose, placeholder }: Props) {
         const onKey = (e: KeyboardEvent) => e.key === "Escape" && !e.isComposing && closeRef.current();
         document.addEventListener("keydown", onKey);
         return () => {
+            composing.current = false;
             window.clearTimeout(timer);
             input?.blur();
             document.body.style.overflow = previousOverflow;
