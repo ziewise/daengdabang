@@ -20,6 +20,7 @@ import {
 import { DdbApiError, loadDaengLabWallet, type DaengLabWallet } from "@/lib/customer-api";
 import { useAuth, type PetProfile } from "@/lib/store";
 import { currentPetLensOrientation, usePetLensMediaCapture } from "@/hooks/usePetLensMediaCapture";
+import MediaPermissionActions from "@/components/media/MediaPermissionActions";
 import PetLensObservationResult from "@/components/petlens/PetLensObservationResult";
 import PetLensObservationFollowUp from "@/components/petlens/PetLensObservationFollowUp";
 import PetLensObservationHistory from "@/components/petlens/PetLensObservationHistory";
@@ -211,6 +212,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
         clipUrl,
         durationSeconds,
         error: captureError,
+        permissionDenied,
         videoDevices,
         audioDevices,
         selectedVideoDeviceId,
@@ -1093,7 +1095,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
             return;
         }
         clearTargetSelection();
-        void startCamera({ orientation: previewOrientation });
+        return startCamera({ orientation: previewOrientation });
     };
 
     const handleSelectRecordedVideo = () => {
@@ -1887,6 +1889,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                             {captureError}
                         </p>
                     )}
+                    {captureError && permissionDenied && <MediaPermissionActions permissions={["camera", "microphone"]} onRetry={handleConnectCamera} />}
                     {analysisError && (
                         <p className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-xs font-bold leading-5 text-rose-700" role="alert">
                             {analysisError}

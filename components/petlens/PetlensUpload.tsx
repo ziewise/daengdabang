@@ -16,6 +16,8 @@ import { prepareUploadImage } from "@/lib/upload-image";
 import { useRef, useState, useEffect } from "react";
 import type { PetlensInputMode, PetlensSlot } from "@/lib/types";
 import { compressDataUrl } from "@/lib/image-compress";
+import { mediaAccessFailure, requestMediaStream, type MediaAccessFailure } from "@/lib/media-permissions";
+import MediaPermissionActions from "@/components/media/MediaPermissionActions";
 import { SLOT_CONFIG } from "./petlens-data";
 import styles from "./petlens.module.css";
 
@@ -39,10 +41,11 @@ export default function PetlensUpload({
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [step, setStep] = useState<PetlensSlot>(0);   // 현재 단계 (0=얼굴, 1=측면, 2=정면)
     const [cameraOpen, setCameraOpen] = useState(false);
-    const [cameraError, setCameraError] = useState(false);
+    const [cameraError, setCameraError] = useState<MediaAccessFailure | null>(null);
 
     const videoRef = useRef<HTMLVideoElement>(null);
     const streamRef = useRef<MediaStream | null>(null);
+    const cameraRequestRef = useRef(0);
     const guideRef = useRef<HTMLDivElement>(null);
 
     /** 파일 업로드 후 조정(crop) 모드 — null 이면 미진입.
@@ -56,29 +59,33 @@ export default function PetlensUpload({
 
     /** 카메라 정지 — 리소스 해제 */
     const stopCamera = () => {
+        cameraRequestRef.current += 1;
         streamRef.current?.getTracks().forEach((t) => t.stop());
         streamRef.current = null;
+        if (videoRef.current) videoRef.current.srcObject = null;
         setCameraOpen(false);
     };
 
     /** 카메라 시작 — 현재 단계 슬롯에 대해 */
     const startCamera = async () => {
-        setCameraError(false);
+        stopCamera();
+        const requestId = cameraRequestRef.current;
+        setCameraError(null);
         setCameraOpen(true);
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({
+            const stream = await requestMediaStream({
                 video: {
                     facingMode: { ideal: "environment" },
                     width: { ideal: 1280 },
                     height: { ideal: 720 },
                 },
                 audio: false,
-            });
+            }, () => cameraRequestRef.current === requestId);
             streamRef.current = stream;
             if (videoRef.current) videoRef.current.srcObject = stream;
         } catch (err) {
-            console.warn("Camera access failed:", err);
-            setCameraError(true);
+            if (cameraRequestRef.current !== requestId) return;
+            setCameraError(mediaAccessFailure(err, ["camera"]));
             setCameraOpen(false);
         }
     };
@@ -345,7 +352,10 @@ export default function PetlensUpload({
     };
 
     // 언마운트 시 카메라 끄기
-    useEffect(() => () => stopCamera(), []);
+    useEffect(() => () => {
+        cameraRequestRef.current += 1;
+        streamRef.current?.getTracks().forEach(track => track.stop());
+    }, []);
 
     const cfg = SLOT_CONFIG[step];
     const photoForStep = photos[step];
@@ -386,10 +396,10 @@ export default function PetlensUpload({
             <p className="text-xs text-neutral-500 mb-4">{cfg.hint} · {cfg.cameraHint}</p>
 
             {cameraError && (
-                <div className="mb-4 p-3.5 rounded-xl border border-amber-300 bg-amber-50 text-amber-900 text-xs leading-relaxed">
+                <div role="alert" className="mb-4 p-3.5 rounded-xl border border-amber-300 bg-amber-50 text-amber-900 text-xs leading-relaxed">
                     <strong className="font-extrabold block mb-1">📷 카메라 사용 불가</strong>
-                    카메라 권한이 거부됐거나 HTTPS 환경이 아니에요.<br />
-                    <span className="text-neutral-500">모바일에서 LAN IP 로 접속하면 카메라가 차단돼요. &ldquo;불러오기&rdquo;로 진행해주세요.</span>
+                    {cameraError.message}
+                    {cameraError.permission && <MediaPermissionActions permissions={["camera"]} onRetry={startCamera} />}
                 </div>
             )}
 

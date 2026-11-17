@@ -12,6 +12,8 @@ import {
     type PetLensPhotoViewId,
 } from "@/lib/petlens-multiview";
 import { useAuth, type PetProfile } from "@/lib/store";
+import { mediaAccessFailure, requestMediaStream, type MediaAccessFailure } from "@/lib/media-permissions";
+import MediaPermissionActions from "@/components/media/MediaPermissionActions";
 import {
     createWeeklyPhotoAnalysis,
     type WeeklyPhotoAnalysisRecord,
@@ -58,8 +60,10 @@ export default function WeeklyPhotoComparison({ pet, history = [], onCompleted }
     const [phase, setPhase] = useState<FlowPhase>("capture");
     const [uploadProgress, setUploadProgress] = useState(0);
     const [error, setError] = useState("");
+    const [cameraFailure, setCameraFailure] = useState<MediaAccessFailure | null>(null);
     const [savedRecord, setSavedRecord] = useState<WeeklyPhotoAnalysisRecord | null>(null);
     const streamRef = useRef<MediaStream | null>(null);
+    const cameraRequestRef = useRef(0);
     const videoRef = useRef<HTMLVideoElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const launcherRef = useRef<HTMLButtonElement>(null);
@@ -74,6 +78,7 @@ export default function WeeklyPhotoComparison({ pet, history = [], onCompleted }
         : history[0];
 
     const stopCamera = () => {
+        cameraRequestRef.current += 1;
         streamRef.current?.getTracks().forEach((track) => track.stop());
         streamRef.current = null;
         if (videoRef.current) videoRef.current.srcObject = null;
@@ -81,6 +86,7 @@ export default function WeeklyPhotoComparison({ pet, history = [], onCompleted }
     };
 
     useEffect(() => () => {
+        cameraRequestRef.current += 1;
         streamRef.current?.getTracks().forEach((track) => track.stop());
     }, []);
 
@@ -152,25 +158,30 @@ export default function WeeklyPhotoComparison({ pet, history = [], onCompleted }
 
     const startCamera = async () => {
         setError("");
+        setCameraFailure(null);
+        stopCamera();
+        const requestId = cameraRequestRef.current;
         if (!navigator.mediaDevices?.getUserMedia) {
             setError("이 브라우저에서는 화면 카메라를 열 수 없어 촬영 버튼으로 연결합니다.");
             fileInputRef.current?.click();
             return;
         }
         try {
-            stopCamera();
-            const stream = await navigator.mediaDevices.getUserMedia({
+            const stream = await requestMediaStream({
                 audio: false,
                 video: {
                     facingMode: { ideal: "environment" },
                     width: { ideal: 1280 },
                     height: { ideal: 960 },
                 },
-            });
+            }, () => cameraRequestRef.current === requestId);
             streamRef.current = stream;
             setCameraActive(true);
-        } catch {
-            setError("카메라 권한을 허용해 주세요. 어려우면 아래 사진 촬영·선택 버튼을 이용할 수 있어요.");
+        } catch (reason) {
+            if (cameraRequestRef.current !== requestId) return;
+            const failure = mediaAccessFailure(reason, ["camera"]);
+            setCameraFailure(failure);
+            setError(failure.message);
         }
     };
 
@@ -432,6 +443,7 @@ export default function WeeklyPhotoComparison({ pet, history = [], onCompleted }
                                         )}
 
                                         {error && <p className="mt-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-xs font-black leading-5 text-red-700" role="alert" data-web-notice="error">{error}</p>}
+                                        {cameraFailure?.permission && error === cameraFailure.message && <MediaPermissionActions permissions={["camera"]} onRetry={startCamera} />}
                                         <button type="button" disabled={capturedCount === 0 || busy} onClick={() => void analyzeWeeklyPhotos()} className="ddb-crayon-link mt-3 flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-5 text-sm font-black disabled:cursor-not-allowed disabled:opacity-40"><i className="fa-solid fa-cloud-arrow-up" />{busy ? "업로드·분석 중" : `${capturedCount}장 자동 업로드하고 비교 분석`}</button>
                                         <p className="mt-2 text-center text-[10px] font-bold leading-4 text-neutral-500">비교 품질을 위해 네 방향을 권장하지만, 한 장부터 분석할 수 있어요.</p>
                                     </aside>

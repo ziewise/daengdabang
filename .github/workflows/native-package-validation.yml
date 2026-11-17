@@ -112,7 +112,7 @@ jobs:
             apk="android/app/build/outputs/apk/$variant/app-$variant.apk"
             manifest="android/app/build/outputs/apk/$variant/app-$variant-manifest.txt"
             "$build_tools/aapt" dump xmltree "$apk" AndroidManifest.xml > "$manifest"
-              for permission in ACCESS_COARSE_LOCATION ACCESS_FINE_LOCATION; do
+              for permission in ACCESS_COARSE_LOCATION ACCESS_FINE_LOCATION CAMERA RECORD_AUDIO MODIFY_AUDIO_SETTINGS; do
                 grep -Fq "android.permission.$permission" "$manifest"
               done
               if grep -Fq 'android.permission.ACCESS_BACKGROUND_LOCATION' "$manifest"; then

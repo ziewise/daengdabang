@@ -108,7 +108,7 @@ test("live capture uses the 15-second contract, adapts camera orientation, and c
         source("app/globals.css"),
         source("lib/petlens-on-device-scan.ts"),
     ]);
-    assert.match(hook, /navigator\.mediaDevices\.getUserMedia/);
+    assert.match(hook, /requestMediaStream\(\{/);
     assert.match(hook, /video:\s*\{/);
     assert.match(hook, /audio:\s*\{/);
     assert.match(hook, /MediaRecorder\.isTypeSupported/);

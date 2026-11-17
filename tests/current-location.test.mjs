@@ -33,6 +33,7 @@ function runtime({ initial = status("prompt"), requested = status("granted"), na
     vm.runInNewContext(compiled, {
         exports,
         require(name) {
+            if (name === "@/lib/native-settings") return { NativeSettings: settings };
             if (name === "@capacitor/geolocation") return { Geolocation: geo };
             if (name === "@capacitor/core") return {
                 Capacitor: { isNativePlatform: () => native, getPlatform: () => platform, isPluginAvailable: () => pluginAvailable },

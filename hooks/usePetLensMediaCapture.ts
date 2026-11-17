@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { mediaAccessFailure, requestMediaStream } from "@/lib/media-permissions";
 import {
     PET_OBSERVATION_MAX_DURATION_SECONDS,
     PET_OBSERVATION_MAX_FILE_BYTES,
@@ -164,6 +165,7 @@ export function usePetLensMediaCapture() {
     const [clipUrl, setClipUrl] = useState("");
     const [durationSeconds, setDurationSeconds] = useState(0);
     const [error, setError] = useState("");
+    const [permissionDenied, setPermissionDenied] = useState(false);
     const [videoDevices, setVideoDevices] = useState<PetLensMediaDeviceOption[]>([]);
     const [audioDevices, setAudioDevices] = useState<PetLensMediaDeviceOption[]>([]);
     const [selectedVideoDeviceId, setSelectedVideoDeviceId] = useState("");
@@ -353,6 +355,7 @@ export function usePetLensMediaCapture() {
     }, [clearTimers, stopTracks]);
 
     const reset = useCallback(() => {
+        setPermissionDenied(false);
         cancelCapture();
         revokeClipUrl();
         setClip(null);
@@ -387,6 +390,7 @@ export function usePetLensMediaCapture() {
         const requestedFacingMode = options.facingMode || facingMode;
         const requestedOrientation = options.orientation || currentPetLensOrientation();
         setError("");
+        setPermissionDenied(false);
         setClip(null);
         setDurationSeconds(0);
         revokeClipUrl();
@@ -401,7 +405,7 @@ export function usePetLensMediaCapture() {
         setPhase("requesting");
         try {
             const requestStream = (videoDeviceId: string, audioDeviceId: string) => {
-                return navigator.mediaDevices.getUserMedia({
+                return requestMediaStream({
                     video: {
                         ...(videoDeviceId
                             ? { deviceId: { exact: videoDeviceId } }
@@ -414,7 +418,7 @@ export function usePetLensMediaCapture() {
                         noiseSuppression: false,
                         autoGainControl: false,
                     },
-                });
+                }, () => mountedRef.current && cameraRequestRef.current === requestId);
             };
             let stream: MediaStream;
             let effectiveVideoDeviceId = requestedVideoDeviceId;
@@ -467,17 +471,13 @@ export function usePetLensMediaCapture() {
             setPhase("preview");
         } catch (reason) {
             if (!mountedRef.current || cameraRequestRef.current !== requestId) return;
-            const name = reason instanceof DOMException ? reason.name : "";
-            const message = name === "NotAllowedError" || name === "SecurityError"
-                ? "카메라와 마이크 권한이 필요합니다. 브라우저 주소창의 권한 설정을 확인해 주세요."
-                : name === "NotFoundError" || name === "DevicesNotFoundError"
-                    ? "사용할 수 있는 카메라 또는 마이크를 찾지 못했습니다."
-                    : reason instanceof Error ? reason.message : "카메라와 마이크를 연결하지 못했습니다.";
+            const failure = mediaAccessFailure(reason, ["camera", "microphone"]);
             stopTracks();
             resetOnDeviceScan();
             setCaptureSource(null);
             setPhase("error");
-            setError(message);
+            setError(failure.message);
+            setPermissionDenied(failure.permission);
         }
     }, [
         facingMode,
@@ -602,6 +602,7 @@ export function usePetLensMediaCapture() {
 
     const selectFile = useCallback(async (file?: File) => {
         if (!file) return;
+        setPermissionDenied(false);
         setError("");
         cancelCapture();
         const requestId = cameraRequestRef.current + 1;
@@ -723,6 +724,7 @@ export function usePetLensMediaCapture() {
         clipUrl,
         durationSeconds,
         error,
+        permissionDenied,
         videoDevices,
         audioDevices,
         selectedVideoDeviceId,

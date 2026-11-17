@@ -1,5 +1,6 @@
-import { Capacitor, registerPlugin } from "@capacitor/core";
+import { Capacitor } from "@capacitor/core";
 import type { PermissionStatus } from "@capacitor/geolocation";
+import { NativeSettings as LocationSettings } from "@/lib/native-settings";
 
 export type Coordinates = { latitude: number; longitude: number };
 export type LocationRecovery = "permission" | "settings" | "services" | "retry";
@@ -79,8 +80,6 @@ export async function currentPosition(): Promise<Coordinates> {
         );
     });
 }
-
-const LocationSettings = registerPlugin<{ open(options: { target: "app" | "location" }): Promise<void> }>("LocationSettings");
 
 export function canOpenLocationSettings() {
     return Capacitor.getPlatform() === "android" && Capacitor.isPluginAvailable("LocationSettings");
