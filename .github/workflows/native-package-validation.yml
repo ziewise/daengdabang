@@ -118,6 +118,10 @@ jobs:
             fi
           done
 
+      - name: Prepare byte-verified startup comparison APKs
+        if: ${{ inputs.startup_comparison }}
+        run: python3 scripts/prepare-startup-comparison.py android/app/build/outputs/apk/debug/app-debug.apk "$DDB_PREVIOUS_ANDROID_APK" "$RUNNER_TEMP/startup-comparison"
+
       - name: Enable KVM for the Android emulator
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules

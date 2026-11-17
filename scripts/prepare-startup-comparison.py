@@ -8,6 +8,9 @@ import zipfile
 assert os.environ.get('GITHUB_ACTIONS') == 'true', 'Disposable CI emulator only'
 template, previous, destination = map(Path, sys.argv[1:])
 destination.mkdir(parents=True, exist_ok=True)
+key = destination / 'comparison.p12'
+if not key.exists():
+    subprocess.run(['keytool', '-genkeypair', '-noprompt', '-keystore', str(key), '-storepass', 'android', '-keypass', 'android', '-dname', 'CN=DDB Startup CI', '-keyalg', 'RSA', '-keysize', '2048', '-validity', '2'], check=True)
 tools = sorted((Path(os.environ['ANDROID_HOME']) / 'build-tools').iterdir(), key=lambda p: tuple(int(n) for n in p.name.split('.') if n.isdigit()))[-1]
 for label, payload in [('baseline', previous), ('candidate', template)]:
     unsigned = destination / f'{label}-unsigned.apk'
@@ -25,7 +28,7 @@ for label, payload in [('baseline', previous), ('candidate', template)]:
             info.compress_type = zipfile.ZIP_DEFLATED
             out.writestr(info, assets.read(original))
     subprocess.run([str(tools / 'zipalign'), '-f', '-P', '16', '4', str(unsigned), str(aligned)], check=True)
-    subprocess.run([str(tools / 'apksigner'), 'sign', '--ks', str(Path.home() / '.android/debug.keystore'), '--ks-pass', 'pass:android', '--key-pass', 'pass:android', str(aligned)], check=True)
+    subprocess.run([str(tools / 'apksigner'), 'sign', '--ks', str(key), '--ks-pass', 'pass:android', '--key-pass', 'pass:android', str(aligned)], check=True)
     subprocess.run([str(tools / 'apksigner'), 'verify', str(aligned)], check=True)
     # Assert payload bytes stayed exactly equal to the source APK.
     with zipfile.ZipFile(payload) as source, zipfile.ZipFile(aligned) as result:

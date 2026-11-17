@@ -1,6 +1,6 @@
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
 // Software performance test for the disposable GitHub emulator. Never run on
@@ -14,7 +14,9 @@ const debug = "android/app/build/outputs/apk/debug/app-debug.apk";
 const out = "android/app/build/outputs/startup-comparison";
 const temp = path.join(process.env.RUNNER_TEMP, "startup-comparison");
 mkdirSync(out, {recursive:true});
-execFileSync("python3", ["scripts/prepare-startup-comparison.py", debug, previous, temp], {stdio:"inherit"});
+if (!["baseline", "candidate"].every(label => existsSync(path.join(temp, `${label}.apk`)))) {
+    throw new Error("Prepare comparison APKs before booting the emulator");
+}
 const packageName = "com.daengdabang.app";
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 let requestId = 0;
@@ -107,5 +109,6 @@ for(const metric of ["firstContentfulPaintMs","interactiveMs","launchToHomeMs","
 }
 writeFileSync(`${out}/comparison.json`,JSON.stringify(report,null,2)+"\n");
 console.log(JSON.stringify(report.medians,null,2));
-adb("install","-r",debug);
+adb("uninstall",packageName);
+adb("install",debug);
 adb("shell","pm","clear",packageName);
