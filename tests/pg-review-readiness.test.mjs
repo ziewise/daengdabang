@@ -64,7 +64,8 @@ test("card checkout explains that sensitive card data stays in the Toss window",
     assert.match(login, /비회원 주문서 미리보기/);
     assert.match(login, /결제창은 로그인한 뒤 열 수 있습니다/);
     assert.doesNotMatch(login, /심사용 테스트 계정/);
-    assert.match(optionSheet, /신용·체크카드로 구매하기/);
+    // 2026-11-17 상품 구매 창은 "구매하기" 하나로 주문서로 이동 — 신용·체크카드 안내 · 선택은 주문서(위 checkout 확인)에서
+    assert.match(optionSheet, /buyNowCheckoutHref\(preferredPayment\)/);
     assert.match(privacy, /카드번호·유효기간·CVC는 PG사 보안창에서 처리/);
     assert.match(privacy, /댕다방이 직접 수집하거나 저장하지 않음/);
     assert.doesNotMatch(faq, /비회원도 주문 가능/);

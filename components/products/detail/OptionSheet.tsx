@@ -12,6 +12,8 @@
  * - open=false 면 화면 밖으로 슬라이드 아웃(언마운트하지 않음) → 열기·닫기 모두 애니메이션.
  * - 2026-10-26 웹 꾸밈 고리: 적립 줄 · 휴대폰 결제 아이콘의 인디고 글자를 웹에서만 연보라 · 분홍으로
  *   ([html:not(.ddb-app-mode)_&] 변형 클래스 — 앱 표시가 있으면 적용 안 됨, 앱 그대로).
+ * - 2026-11-17 바로 구매: 옵션 고르고 "구매하기" 하나 → 주문서로 바로 이동(결제수단은 주문서에서 고름).
+ *   이 창 안에서 카드 · 빠른 결제를 고르던 단계는 없앰(사용자 "구매하기 페이지로 넘어가게").
  */
 
 import { useEffect, useRef, useState } from "react";
@@ -24,7 +26,6 @@ import { useAuth, useCart } from "@/lib/store";
 import { useI18n } from "@/lib/i18n";
 import { daengLabCoinsForLine, daengLabCoinsForLines } from "@/lib/daenglab-rewards";
 import DaengLabCoinMark from "@/components/petlens/DaengLabCoinMark";
-import SimplePayButtons from "@/components/shop/SimplePayButtons";
 import { type CheckoutPaymentMethod, type QuickPaymentMethod } from "@/lib/payment-methods";
 // 바로 구매 전용 목록(2026-11-11) — 바로 구매는 장바구니에 넣지 않고 이 목록만 주문서로
 import { buyNowCheckoutHref, saveBuyNow, type BuyNowLine } from "@/lib/buy-now";
@@ -66,7 +67,6 @@ export default function OptionSheet({ product, open, mode, initialColorIdx = nul
     const [sizeListOpen, setSizeListOpen] = useState(false);
     const sizeListOpenRef = useRef(false);
     // 바로 구매 2단계(2026-11-17 사용자 "옵션 선택이 어려워") — 처음엔 합계 + 구매하기 하나, 누르면 결제수단 펼침
-    const [payStep, setPayStep] = useState(false);
     const dialogRef = useRef<HTMLDivElement>(null);
     const closeButtonRef = useRef<HTMLButtonElement>(null);
     const openerRef = useRef<HTMLElement | null>(null);
@@ -86,7 +86,6 @@ export default function OptionSheet({ product, open, mode, initialColorIdx = nul
         setQty(1);
         setPicks([]);
         setSizeListOpen(false);
-        setPayStep(false);
     }, [open, initialColorIdx]);
 
     // Esc 는 펼친 사이즈 목록부터 닫음(창 닫기는 그다음) — 키 처리 안에서 읽을 수 있게 ref 로도 둠
@@ -188,8 +187,6 @@ export default function OptionSheet({ product, open, mode, initialColorIdx = nul
     const effectiveStates = effective.map(x => optionPurchaseState(p, hasColors ? colors[x.colorIdx]?.name : undefined, hasSizes ? sizes[x.sizeIdx]?.name : undefined));
     const blockedState = effectiveStates.find(value => !value.purchasable);
     const canConfirm = effective.length > 0 && effectiveStates.every(value => value.purchasable);
-    // 결제수단 펼침 — 바로 구매에서 구매하기를 눌렀고 지금도 살 수 있을 때만(장바구니 담기는 늘 한 단계)
-    const showPayMethods = mode !== "buy" || (payStep && canConfirm);
 
     const confirm = (preferredPayment: Extract<CheckoutPaymentMethod, "card"> | QuickPaymentMethod = "card") => {
         if (!canConfirm) return;
@@ -443,22 +440,8 @@ export default function OptionSheet({ product, open, mode, initialColorIdx = nul
                         </span>
                         <b className="text-2xl font-black text-indigo-700">{formatPrice(totalPrice)}</b>
                     </div>
-                    {/* 바로 구매 ① — 옵션 고르는 동안은 합계 + 구매하기 하나만(옵션 칸을 넓게). 누르면 ②로 */}
-                    {!showPayMethods && (
-                        <button
-                            type="button"
-                            onClick={() => { if (canConfirm) setPayStep(true); }}
-                            data-confirm-options="true"
-                            data-buy-step="choose"
-                            disabled={!canConfirm}
-                            className="mt-3 h-12 w-full rounded-md bg-indigo-600 text-base font-black text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-neutral-300 disabled:hover:bg-neutral-300"
-                        >
-                            {!canConfirm
-                                ? blockedState ? purchaseStateLabel(blockedState, locale) : !summaryState.purchasable ? purchaseStateLabel(summaryState, locale) : t("chooseOption")
-                                : (locale === "en" ? "Buy now" : "구매하기")}
-                        </button>
-                    )}
-                    {showPayMethods && canConfirm && (
+                    {/* 적립 안내 — 살 수 있게 옵션을 다 골랐을 때만 */}
+                    {canConfirm && (
                         <div
                             className="mt-2 flex flex-col items-start gap-1 rounded-lg bg-indigo-50 px-3 py-2 text-xs sm:flex-row sm:items-center sm:justify-between sm:gap-3"
                             data-daenglab-coin-estimate={expectedDaengLabCoins}
@@ -476,30 +459,21 @@ export default function OptionSheet({ product, open, mode, initialColorIdx = nul
                             </b>
                         </div>
                     )}
-                    {showPayMethods && (
-                        <button
-                            type="button"
-                            onClick={() => confirm("card")}
-                            data-confirm-options="true"
-                            disabled={!canConfirm}
-                            className="mt-3 h-12 w-full rounded-md bg-indigo-600 text-base font-black text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-neutral-300 disabled:hover:bg-neutral-300"
-                        >
-                            {!canConfirm
-                                ? blockedState ? purchaseStateLabel(blockedState, locale) : !summaryState.purchasable ? purchaseStateLabel(summaryState, locale) : t("chooseOption")
-                                : mode === "buy"
-                                  ? (locale === "en" ? "Pay by credit / debit card" : "신용·체크카드로 구매하기")
-                                  : t("addToCart")}
-                        </button>
-                    )}
-
-                    {/* 구매 모드 — 선택한 결제수단을 주문서로 전달. 실제 승인은 PG 단계에서만 완료된다. */}
-                    {mode === "buy" && showPayMethods && <SimplePayButtons disabled={!canConfirm} onSelect={confirm} />}
-                    {/* ② 에서 옵션을 다시 고르고 싶을 때 — 결제수단을 접어 옵션 칸을 다시 넓게 */}
-                    {mode === "buy" && showPayMethods && (
-                        <button type="button" onClick={() => setPayStep(false)} data-buy-step="back" className="mt-2 w-full text-center text-xs font-black text-neutral-500 underline underline-offset-4">
-                            {locale === "en" ? "Change options" : "옵션 다시 고르기"}
-                        </button>
-                    )}
+                    {/* 단추 하나(2026-11-17 사용자 "구매하기 페이지로 넘어가게") — 바로 구매는 주문서로 바로 이동(결제수단은 주문서에서 고름),
+                        장바구니 담기는 담기만. 이 창 안의 결제수단 고르기(카드 · 빠른 결제) 단계는 없앰 */}
+                    <button
+                        type="button"
+                        onClick={() => confirm("card")}
+                        data-confirm-options="true"
+                        disabled={!canConfirm}
+                        className="mt-3 h-12 w-full rounded-md bg-indigo-600 text-base font-black text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-neutral-300 disabled:hover:bg-neutral-300"
+                    >
+                        {!canConfirm
+                            ? blockedState ? purchaseStateLabel(blockedState, locale) : !summaryState.purchasable ? purchaseStateLabel(summaryState, locale) : t("chooseOption")
+                            : mode === "buy"
+                              ? (locale === "en" ? "Buy now" : "구매하기")
+                              : t("addToCart")}
+                    </button>
                 </div>
             </div>
         </>

@@ -46,8 +46,9 @@ test("product and cart purchase actions preserve the selected method through log
     // 2026-11-11 바로 구매는 바로 구매 전용 주문서(buy=now)로 — 결제수단은 그대로 넘김
     assert.match(optionSheet, /buyNowCheckoutHref\(preferredPayment\)/);
     assert.match(optionSheet, /encodeURIComponent\(nextCheckoutHref\)/);
-    assert.match(optionSheet, /Pay by credit \/ debit card/);
-    assert.match(optionSheet, /<SimplePayButtons disabled=\{!canConfirm\} onSelect=\{confirm\}/);
+    // 2026-11-17 사용자 "구매하기 페이지로 넘어가게" — 상품 구매 창은 구매하기 하나로 주문서 이동, 결제수단은 주문서에서 고름
+    assert.match(optionSheet, /onClick=\{\(\) => confirm\("card"\)\}/);
+    assert.doesNotMatch(optionSheet, /<SimplePayButtons/);
     assert.match(cart, /checkoutHref\(preferredPayment\)/);
     assert.match(cart, /encodeURIComponent\(nextCheckoutHref\)/);
     assert.match(cart, /onSelect=\{goCheckout\}/);
