@@ -207,3 +207,39 @@ html:not(.ddb-app-mode) .sm-panel {
         & .sm-pop { height: 40px; font-size: 13.5px; }
     }
 }
+
+/* ── 검색 단추(2026-11-17 사용자 "검색 버튼이 없어") — 입력칸 오른쪽, 닫기 단추 왼쪽에 분홍 알약 ──
+ * 넓은 화면: 돋보기 + "검색" 글자 알약 / 휴대폰(480px 이하): 돋보기 동그라미(글자는 읽기 프로그램용으로만 남김)
+ * 빈 칸이면 크림색으로 꺼짐. 입력칸 오른쪽 안쪽 여백을 단추만큼 늘려 글자가 단추 밑으로 들어가지 않게 */
+html:not(.ddb-app-mode) .sm-panel {
+    & .sm-input { padding-right: 140px; }
+    & .sm-submit {
+        right: 54px;
+        height: 40px;
+        padding: 0 16px;
+        gap: 7px;
+        border-radius: 999px;
+        background: #e9789a;
+        color: #fff;
+        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
+        font-size: 15.5px;
+        font-weight: 400;
+        white-space: nowrap;
+        box-shadow: inset 0 2px 0 rgb(255 255 255 / 28%), 0 10px 16px -12px rgb(200 80 120 / 85%);
+        transition: background 0.2s, scale 0.15s;
+        & i { font-size: 13px; }
+    }
+    & .sm-submit:hover:not(:disabled) { background: #e26690; }
+    & .sm-submit:active:not(:disabled) { scale: 0.95; } /* 위치(-translate-y-1/2)는 translate 속성이라 scale 만 */
+    & .sm-submit:focus-visible { outline: 3px solid #f7c3d2; outline-offset: 2px; }
+    & .sm-submit:disabled { background: #f6eadb; color: #c4ad8f; box-shadow: none; opacity: 1; cursor: default; }
+}
+
+@media (max-width: 480px) {
+    html:not(.ddb-app-mode) .sm-panel {
+        & .sm-input { padding-right: 98px; }
+        & .sm-submit { right: 52px; width: 38px; height: 38px; padding: 0; }
+        & .sm-submit i { font-size: 15px; }
+        & .sm-submit-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    }
+}

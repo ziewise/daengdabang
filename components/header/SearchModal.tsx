@@ -134,7 +134,8 @@ export default function SearchModal({ open, onClose, placeholder }: Props) {
             >
                 {/* 검색 input — 모달 헤더 역할 */}
                 <div className="sm-head px-5 pt-5 pb-3 border-b border-neutral-100 sticky top-0 bg-white z-10">
-                    <form onSubmit={submit} className="relative">
+                    {/* 검색 칸 — Enter · 휴대폰 키보드 "검색" 키 · 분홍 "검색" 단추(2026-11-17 사용자 "검색 버튼이 없어") 모두 같은 submit(기존 goSearch) */}
+                    <form onSubmit={submit} className="relative" role="search">
                         <i className="sm-search-icon fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-aurora-indigo" />
                         <input
                             ref={inputRef}
@@ -144,8 +145,21 @@ export default function SearchModal({ open, onClose, placeholder }: Props) {
                             placeholder={placeholder ?? (narrow
                                 ? (locale === "en" ? "Search products" : "어떤 상품을 찾으세요?")
                                 : (locale === "en" ? "Search products (e.g. harness, food, Ruffwear)" : "어떤 상품을 찾으세요? (예: 하네스, 사료, 러프웨어)"))}
-                            className="sm-input w-full pl-12 pr-12 h-12 bg-neutral-50 border-2 border-transparent rounded-xl text-sm font-medium focus:outline-none focus:border-aurora-indigo focus:bg-white transition"
+                            enterKeyHint="search"
+                            aria-label={t("search")}
+                            className="sm-input w-full pl-12 pr-28 h-12 bg-neutral-50 border-2 border-transparent rounded-xl text-sm font-medium focus:outline-none focus:border-aurora-indigo focus:bg-white transition"
                         />
+                        {/* 검색 단추 — 빈 칸이면 꺼짐(goSearch 도 빈 칸은 무시). 휴대폰은 돋보기 동그라미, 넓은 화면은 "검색" 글자 알약
+                            aria-label 대신 숨김 글자(앱 꾸밈의 form > button[aria-label] = 닫기 단추 규칙에 안 걸리게) */}
+                        <button
+                            type="submit"
+                            disabled={!term.trim()}
+                            data-search-submit=""
+                            className="sm-submit absolute right-11 top-1/2 -translate-y-1/2 h-8 px-3 rounded-full flex items-center justify-center gap-1.5 bg-aurora-indigo text-white text-xs font-bold disabled:opacity-40"
+                        >
+                            <i className="fa-solid fa-magnifying-glass" aria-hidden="true" />
+                            <span className="sm-submit-label">{t("search")}</span>
+                        </button>
                         <button
                             type="button"
                             onClick={onClose}

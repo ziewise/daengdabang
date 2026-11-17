@@ -440,6 +440,15 @@ ${SEARCH} form button[aria-label] { background: #fff; color: #b39b90; box-shadow
 ${SEARCH} form input { width: calc(100% - 50px); padding-right: 16px; }
 ${SEARCH} form > button[aria-label] { right: 0; width: 42px; height: 42px; }
 ${SEARCH} form > button[aria-label] > i { font-size: 18px; }
+/* 검색 단추(2026-11-17 사용자 "검색 버튼이 없어") — 입력칸 안 오른쪽 끝에 분홍 와펜 동그라미(돋보기), 빈 칸이면 크림으로 꺼짐.
+   입력칸 오른쪽 여백을 단추만큼 늘림 · 누르면 살짝 눌림(hover 없음) · "검색" 글자는 읽기 프로그램용으로만 */
+${SEARCH} form input { padding-right: 52px; }
+${SEARCH} form > button[data-search-submit] { ${PATCH_PINK} right: 54px; width: 40px; height: 40px; padding: 0; gap: 0; opacity: 1; }
+${SEARCH} form > button[data-search-submit] > i.fa-magnifying-glass { color: #fff; font-size: 15px; }
+${SEARCH} form > button[data-search-submit] > .sm-submit-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+${SEARCH} form > button[data-search-submit]:active:not(:disabled) { scale: .92; transition: scale .12s; }
+${SEARCH} form > button[data-search-submit]:disabled { ${PATCH_CREAM} right: 54px; width: 40px; height: 40px; padding: 0; opacity: .75; }
+${SEARCH} form > button[data-search-submit]:disabled > i.fa-magnifying-glass { color: #e8a3b8; }
 /* 칸 제목(검색 결과 · 인기 검색어 · 최근 검색어) — 마스킹테이프 이름표 */
 ${SEARCH} h3 { display: inline-block; width: fit-content; padding: 3px 11px 2px; rotate: -1deg; letter-spacing: 0; font-size: 12px; color: #5c3f36;
   font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400;
