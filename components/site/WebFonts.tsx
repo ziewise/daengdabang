@@ -1,6 +1,7 @@
 "use client";
 
 import { Gaegu, Jua } from "next/font/google";
+import "@/app/web-decoration.css";
 
 const gaegu = Gaegu({ variable: "--font-crayon", subsets: ["latin"], weight: ["400", "700"], display: "swap", preload: false });
 const jua = Jua({ variable: "--font-jua", subsets: ["latin"], weight: "400", display: "swap", preload: false });

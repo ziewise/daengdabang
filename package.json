@@ -6,9 +6,9 @@
     "node": ">=24.14.0 <25"
   },
   "scripts": {
-    "predev": "node scripts/gen-runtime-catalog.mjs && node scripts/gen-hero-manifest.mjs && node scripts/verify-tryon-model.mjs && node scripts/sync-tryon-runtime.mjs",
+    "predev": "node scripts/gen-home-styles.mjs && node scripts/gen-runtime-catalog.mjs && node scripts/gen-hero-manifest.mjs && node scripts/verify-tryon-model.mjs && node scripts/sync-tryon-runtime.mjs",
     "dev": "next dev -p 4000",
-    "prebuild": "node scripts/gen-runtime-catalog.mjs && node scripts/gen-hero-manifest.mjs && node scripts/verify-pet-companion-assets.mjs && node scripts/verify-tryon-model.mjs && node scripts/sync-tryon-runtime.mjs",
+    "prebuild": "node scripts/gen-home-styles.mjs && node scripts/gen-runtime-catalog.mjs && node scripts/gen-hero-manifest.mjs && node scripts/verify-pet-companion-assets.mjs && node scripts/verify-tryon-model.mjs && node scripts/sync-tryon-runtime.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",

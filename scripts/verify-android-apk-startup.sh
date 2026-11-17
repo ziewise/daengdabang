@@ -33,6 +33,9 @@ if grep -E "isn.t responding|응답하지" "$artifact_dir/emulator-boot-window.x
 fi
 trap 'test -f "$artifact_dir/startup-health.txt" || adb logcat -d -v threadtime > "$artifact_dir/startup-health.txt"' EXIT
 adb logcat -c
+if [ "${DDB_COMPARE_STARTUP:-false}" = "true" ]; then
+  node scripts/compare-android-startup.mjs
+fi
 adb install -r "$apk_path"
 adb shell am force-stop "$package_name"
 adb shell am start -W -n "$package_name/.MainActivity" | tee "$launch_log"

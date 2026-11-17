@@ -1,5 +1,7 @@
 "use client";
 
+import "./app-shell.css";
+
 /**
  * AppShell — 댕다방 앱 틀: 위 상단바 + (오늘 탭) 작은 버튼 줄 + 본문 + 아래 탭바 5칸 (로컬 시안, 배포 X)
  * ---------------------------------------------------------------------
@@ -600,7 +602,6 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     return (
         <>
             <link rel="preload" href="/fonts/app-subsets/fa-solid-used.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
-            <style dangerouslySetInnerHTML={{ __html: CSS }} />
             {/* 쇼핑 탭 웹 화면(상세 · 장바구니 · 결제 · 목록) · 검색 창 — 앱에서만 스티커북 겉모양(appShopSkin.ts).
                 화면 파일마다 복사되지 않게 정적 파일 /app/skin.css 하나로(app/app/skin.css/route.ts) — <head> 로 올라가 첫 그림 전에 적용(React 19).
                 ?v= 는 내용이 바뀌면 바뀌는 값(예전 파일을 붙잡지 않게) */}
@@ -710,7 +711,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                                         {/* 고른 탭 — 아이콘 뒤 파스텔 젤리 판(탭 색)이 통 튀어나옴 */}
                                         <span className="app-tab-icon" style={{ ["--pad" as string]: t.bubble, ["--rim" as string]: t.rim }}>
                                             {concept && TAB_IMAGES[t.key] ? (
-                                                <Image src={TAB_IMAGES[t.key]!} alt="" width={64} height={64} className="app-tab-svg app-tab-img h-[30px] w-[30px] shrink-0 object-contain" />
+                                                <Image src={TAB_IMAGES[t.key]!} alt="" width={64} height={64} loading="eager" className="app-tab-svg app-tab-img h-[30px] w-[30px] shrink-0 object-contain" />
                                             ) : (
                                                 <TabIcon tab={t} />
                                             )}
@@ -741,7 +742,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                     aria-expanded={chatOpen}
                     data-pet-companion-avoid="true"
                 >
-                    <Image src="/images/ui/stickers/caretalk-fab.webp" alt="" width={176} height={176} className="app-care-img h-12 w-12" />
+                    <Image src="/images/ui/stickers/caretalk-fab.webp" alt="" width={176} height={176} loading="eager" className="app-care-img h-12 w-12" />
                     <span className="app-care-dot" aria-hidden="true" />
                 </button>
             )}
@@ -761,229 +762,3 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         </>
     );
 }
-
-const CSS = `
-/* Base app layout stays active when the optional shopping/dialog skin sleeps. */
-html.ddb-app-mode, html.ddb-app-mode * { scrollbar-width: none; }
-html.ddb-app-mode::-webkit-scrollbar, html.ddb-app-mode *::-webkit-scrollbar { display: none; width: 0; height: 0; }
-html.ddb-app-mode body { word-break: keep-all; overflow-wrap: break-word; }
-html.ddb-app-mode button[aria-label*="산책 친구. 드래그"] span,
-html.ddb-app-mode #pet-companion-quick-actions button[aria-label="빠른 메뉴 닫기"] {
-  font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400;
-}
-html.ddb-app-mode main[class*="app-topbar-h"] > .mx-auto { width: 100%; width: -webkit-fill-available; width: stretch; min-width: 0; }
-/* 카페24 써라운드 — 앱 홈 시안과 같은 글씨. 앱에서 늘 붙어 있는 앱 틀 CSS 한 곳에만 선언(2026-10-22 속도: 화면마다 선언이 다시 들어와 글자 전체를 다시 배치하던 것).
-   웹 화면은 이 선언이 없어 웹 모양 그대로 */
-.app-font { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-weight: 400; letter-spacing: -0.02em; }
-
-/* 앱 모드 높이 — 상단바 56px · 탭바 68px + 아래 띄움 8px + 여유 12px (+ 휴대폰 안전 영역). 페이지들이 쓰는 --header-height 도 상단바 높이로 */
-html.ddb-app-mode {
-    --app-topbar-h: calc(56px + env(safe-area-inset-top, 0px));
-    --app-tabbar-h: calc(88px + env(safe-area-inset-bottom, 0px));
-    --app-subbar-h: 0px; /* 상단바 아래 버튼 줄 높이 — 그 밑에 붙는 페이지 안 탭 위치 계산용 */
-}
-html.ddb-app-mode.ddb-app-subrow { --app-subbar-h: 50px; }
-/* 앱에서는 모든 화면이 앱 상단바 — 페이지들이 쓰는 --header-height 도 앱 상단바 높이 */
-html.ddb-app-mode { --header-height: var(--app-topbar-h); }
-
-/* 상단바 · 버튼 줄 — 흰 반투명 + 흐림, 아래는 머리카락 같은 선 */
-/* 2026-10-18 앱 속도: 뒤를 흐리게 비치는 효과(blur) 대신 같은 색 불투명 바탕 — 원래도 86% 불투명이라 보기엔 거의 같고, 스크롤 · 화면 변화 때마다 다시 흐리게 그리던 일이 없어짐 */
-.app-bar { background: #faf7f4; box-shadow: inset 0 -1px 0 rgba(31, 26, 24, 0.06); }
-.app-subbar { box-shadow: inset 0 -1px 0 rgba(31, 26, 24, 0.06); }
-/* 상단바 버튼 — 옅은 무채색 동그라미 */
-.app-icon-btn { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 999px; color: #3b322f; background: rgba(31, 26, 24, 0.05); transition: background .2s ease; }
-.app-icon-btn:active { background: rgba(31, 26, 24, 0.1); }
-.app-badge { position: absolute; top: -3px; right: -3px; min-width: 17px; height: 17px; padding: 0 4px; border-radius: 999px;
-  background: #1f1a18; color: #fff; font-size: 10px; font-weight: 800; display: grid; place-items: center; box-shadow: 0 0 0 2px #faf7f4; }
-/* 케어톡 버튼 — 말풍선 그림(배경 없이) + 초록 점(바로 상담 가능) · 누르면 그림이 통 */
-.app-care-btn { background: transparent; }
-/* 검색 · 장바구니 — 젤리 아이콘(배경 없이) · 누르면 통 */
-.app-jelly-btn, .app-jelly-btn:active { background: transparent; }
-.app-jelly { filter: drop-shadow(0 3px 3px rgba(120,80,60,.22)); transition: transform .35s cubic-bezier(.3,1.8,.5,1); }
-.app-jelly-btn:active .app-jelly { transform: scale(.88); transition-duration: .1s; }
-.app-care-btn:active { background: transparent; }
-.app-care-img { filter: drop-shadow(0 3px 4px rgba(110,80,200,.25)); transition: transform .35s cubic-bezier(.3,1.8,.5,1); }
-.app-care-btn:active .app-care-img { transform: scale(.88); transition-duration: .1s; }
-/* 케어톡 초록 점 퍼지는 고리 — 그림자 크기를 매 장면 다시 그리던 것 대신 고리 조각의 크기 · 투명도만 바꿈(같은 모양, 다시 그리기 없음, 2026-10-18 앱 속도) */
-@keyframes app-care-ping { 0% { transform: scale(1); opacity: .5; } 100% { transform: scale(2.6); opacity: 0; } }
-.app-care-dot { position: absolute; top: 5px; right: 4px; border: 1.5px solid #fff; width: 7px; height: 7px; border-radius: 999px; background: #34c778; }
-.app-care-dot::after { content: ""; position: absolute; inset: -1.5px; border-radius: inherit; background: #34c778; animation: app-care-ping 1.8s ease-out infinite; pointer-events: none; }
-
-/* 케어톡 떠 있는 버튼(52px · 그림 48px, 2026-10-20 사용자 "조금 더 작게" · 처음 64px) — 동그란 그림(배경 없이) + 그림자 + 오른쪽 위 초록 점(바로 상담 가능) · 누르면 통 */
-.app-care-fab { display: grid; place-items: center; width: 52px; height: 52px; padding: 0; border: 0; border-radius: 999px; background: transparent; }
-.app-care-fab .app-care-img { filter: drop-shadow(0 6px 10px rgba(110, 80, 200, .35)); }
-.app-care-fab:active .app-care-img { transform: scale(.88); transition-duration: .1s; }
-.app-care-fab .app-care-dot { top: 4px; right: 4px; width: 9px; height: 9px; border-width: 2px; }
-/* 화면에 자기 떠 있는 버튼(data-app-fab, 예: 댕자랑 "오늘의 한 장 올리기")이 있을 때 — 케어톡은 맨 아래(탭바 위 4px) 그대로,
-   화면 버튼이 케어톡 바로 위로(52px + 12px 간격) 올라감(2026-11-05 사용자 "케어톡이 아래로", 예전 10-20 에는 반대).
-   케어톡 버튼이 없을 때(창 · 검색이 열림 등)는 화면 버튼이 맨 아래 제자리. 새 화면 버튼도 data-app-fab 만 붙이면 같은 규칙 */
-html.ddb-app-mode body:has(.app-care-fab) [data-app-fab] { bottom: calc(var(--app-tabbar-h) + 4px + 52px + 12px) !important; }
-/* 스크롤하는 동안(html[data-app-scrolling], 위 효과) 떠 있는 버튼 모두 살짝 내려앉으며 사라졌다가, 멈추면 다시 통 올라옴(2026-11-05 사용자) */
-.app-care-fab, html.ddb-app-mode [data-app-fab] { transition: opacity .22s ease, transform .3s cubic-bezier(.22,1,.36,1), visibility 0s; }
-html.ddb-app-mode[data-app-scrolling="true"] :is(.app-care-fab, [data-app-fab], button[data-pet-companion-home]) {
-  opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; transform: translateY(12px) scale(.8) !important;
-  transition: opacity .15s ease, transform .2s ease, visibility 0s .2s; }
-@media (prefers-reduced-motion: reduce) { .app-care-fab, html.ddb-app-mode [data-app-fab] { transition: none; } }
-/* 글자 입력 중(키보드가 올라와 있을 때) — 탭바 · 떠 있는 케어톡 버튼 숨김(키보드 위로 따라 올라오지 않게) */
-html.ddb-app-typing nav[aria-label="앱 메뉴"], html.ddb-app-typing .app-care-fab { display: none; }
-
-/* 화면 제목 줄 — 다꾸 이름표 */
-/* 마스킹테이프 이름표: 탭 색 줄무늬 반투명 띠 · 양 끝 지그재그로 찢김 · 아주 살짝 기울기 */
-.app-pt-tape { color: var(--ink); rotate: -1deg;
-  background: repeating-linear-gradient(90deg, color-mix(in srgb, var(--tape) 85%, white) 0 9px, color-mix(in srgb, var(--tape) 55%, white) 9px 18px);
-  clip-path: polygon(0 0, 100% 0, 97% 20%, 100% 40%, 97% 60%, 100% 80%, 97% 100%, 0 100%, 3% 80%, 0 60%, 3% 40%, 0 20%);
-  box-shadow: 0 6px 10px -8px rgba(110,60,50,.35); animation: app-pt-tape .45s cubic-bezier(.25,1.2,.45,1) both; transform-origin: 0 50%; }
-@keyframes app-pt-tape { from { opacity: 0; transform: scaleX(.6); } }
-@media (prefers-reduced-motion: reduce) { .app-pt-tape { animation: none; } }
-
-/* 탭바 — 떠 있는 크림 종이 판(살짝 반투명 + 흐림) + 흰 테두리 + 부드러운 그림자 */
-.app-tabbar { background: #fffdf8; border-radius: 28px;
-  box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.9), 0 0 0 2.5px rgba(200, 160, 140, 0.14), 0 16px 30px -18px rgba(120, 70, 50, 0.45); }
-.app-tab { position: relative; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; color: #a8998f; -webkit-tap-highlight-color: transparent; }
-/* 아이콘 칸: 고른 탭만 뒤에 젤리 판(탭 색 그라데이션 + 아랫면 두께) */
-.app-tab-icon { position: relative; display: grid; place-items: center; width: 44px; height: 34px; transition: transform .5s cubic-bezier(.22, 1.5, .36, 1); }
-.app-tab-icon::before { content: ""; position: absolute; inset: 0; border-radius: 14px; background: var(--pad); box-shadow: inset 0 -3px 0 var(--rim), 0 4px 8px -5px rgba(120,70,50,.35);
-  transform: scale(.4); opacity: 0; transition: transform .45s cubic-bezier(.22, 1.6, .36, 1), opacity .25s; }
-.app-tab.is-on .app-tab-icon { transform: translateY(-3px); }
-.app-tab.is-on .app-tab-icon::before { transform: scale(1); opacity: 1; }
-/* 젤리 그림: 고르지 않은 탭은 제 색을 옅게, 고른 탭은 또렷한 제 색 + 그림자 + 통 */
-.app-tab-svg { position: relative; filter: saturate(.8) opacity(.62); transition: filter .3s, transform .45s cubic-bezier(.22, 1.6, .36, 1); }
-.app-tab.is-on .app-tab-svg { filter: drop-shadow(0 2px 2px rgba(120,70,50,.22)); animation: app-tab-pop .5s cubic-bezier(.22, 1.6, .36, 1); }
-@keyframes app-tab-pop { 0% { transform: scale(.7) rotate(-8deg); } 60% { transform: scale(1.12) rotate(3deg); } 100% { transform: scale(1); } }
-.app-tab:active .app-tab-svg { transform: scale(.88); transition-duration: .1s; }
-/* 이름: 카페24 · 고른 탭은 탭 색 */
-.app-tab-label { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; font-size: 11px; font-weight: 400; letter-spacing: -0.02em; line-height: 1; transition: color .3s ease; }
-/* 쇼핑 강조 탭(가운데) — 늘 떠 있는 큰 동그라미 젤리 판 · 또렷한 그림 · 주황 이름. 고르면 살짝 더 솟고 빛남 */
-/* 가운데 쇼핑 — 56px(2026-10-18 사용자: 이름이 가려지지 않는 한도까지). 아래 끝은 그대로 두고 위로만 키워 둥근 테두리(약 5px)가 '쇼핑' 이름을 가리지 않음 */
-.app-tab.is-hero { gap: 6px; }
-.app-tab.is-hero .app-tab-icon { width: 56px; height: 56px; margin-top: -30px; }
-.app-tab.is-hero .app-tab-icon::before { border-radius: 999px; transform: scale(1); opacity: 1;
-  box-shadow: 0 0 0 4px #fffdf8, 0 0 0 5.5px var(--rim), inset 0 -4px 0 var(--rim), 0 12px 18px -10px rgba(236,106,28,.55); }
-.app-tab.is-hero .app-tab-svg { width: 37px; height: 37px; filter: drop-shadow(0 2px 2px rgba(150,70,20,.25)); }
-/* 3D 그림 아이콘: 고르지 않은 탭은 살짝 옅게(색은 유지), 고른 탭은 또렷하게 */
-.app-tab-img { filter: saturate(.85) opacity(.72); }
-.app-tab.is-hero .app-tab-label { color: #cf5f19; transform: translateY(3px); } /* 다른 탭 이름과 같은 높이로 */
-.app-tab.is-hero.is-on .app-tab-icon { transform: translateY(-4px); }
-.app-tab.is-hero.is-on .app-tab-icon::before { box-shadow: 0 0 0 4px #fffdf8, 0 0 0 5.5px #f3a56a, inset 0 -4px 0 var(--rim), 0 14px 22px -10px rgba(236,106,28,.7); }
-@media (prefers-reduced-motion: reduce) { .app-tab-icon, .app-tab-icon::before, .app-tab-svg { transition: none; animation: none; } }
-
-/* 케어톡 상담 창(협업자 ChatWidget) — 앱에서만 겉모양을 스티커북으로(기능 · 문구 · 글꼴 전환은 협업자 것 그대로)
- * 다이어리 속지(점 무늬 · 줄 없음) · 케어톡 캐릭터 이름표 · 메모지 말풍선 · 둥근 스티커 버튼. 영문 꼬리표(CRAYON CARE NOTE)는 숨김 */
-html.ddb-app-mode section[role="dialog"][aria-label="댕다방 케어톡"] { border: 0 !important; outline: 0 !important; border-radius: 24px !important;
-  background-color: #fffdf8 !important; background-image: radial-gradient(circle, rgba(196,160,140,.26) 1px, transparent 1.3px) !important; background-size: 15px 15px !important;
-  box-shadow: 0 0 0 1.5px #f1e3da, 0 24px 48px -22px rgba(110,70,55,.55) !important; }
-html.ddb-app-mode section[aria-label="댕다방 케어톡"]::before { display: none !important; }
-/* 크기 · 자리(고정): 상단바 바로 아래부터 탭바 바로 위까지 내용 영역을 꽉 채움 — 상단바 · 탭바는 보임, 크기 변화 없음 */
-html.ddb-app-mode section[aria-label="댕다방 케어톡"][data-chat-desktop="false"] { position: fixed !important; top: calc(var(--app-topbar-h) + 6px) !important; right: 10px !important; left: 10px !important;
-  bottom: calc(var(--app-tabbar-h) + 6px) !important; width: auto !important; height: auto !important; max-height: none !important;
-  transform-origin: 85% 100%; animation: app-care-pop .35s cubic-bezier(.3,1.4,.5,1); }
-@keyframes app-care-pop { from { opacity: 0; transform: translateY(14px) scale(.96); } to { opacity: 1; transform: none; } }
-@media (prefers-reduced-motion: reduce) { html.ddb-app-mode section[aria-label="댕다방 케어톡"] { animation: none !important; } }
-/* 글자 입력 중(키보드가 올라와 있을 때 · html.ddb-app-typing) — 탭바가 숨으니 케어톡 창 아래를 탭바 자리까지 내림.
-   키보드가 화면 높이를 줄이면 창 아래만 키보드 위로 올라옴(탭바는 따라 올라오지 않음, 2026-10-20) */
-html.ddb-app-mode.ddb-app-typing section[aria-label="댕다방 케어톡"][data-chat-desktop="false"] { bottom: calc(6px + env(safe-area-inset-bottom, 0px)) !important; }
-html.ddb-app-mode section[aria-label="댕다방 케어톡"] > header { min-height: 64px !important; border-bottom: 2px dashed #f0d9cf !important; background: rgba(255,250,244,.92) !important; }
-html.ddb-app-mode section[aria-label="댕다방 케어톡"] > header::before { display: none !important; }
-html.ddb-app-mode section[aria-label="댕다방 케어톡"] > header::after { top: -6px !important; left: 50% !important; width: 64px !important; height: 15px !important; background: rgba(255,200,215,.9) !important; opacity: 1 !important; }
-html.ddb-app-mode section[aria-label="댕다방 케어톡"] > header > div:first-child { padding-left: 48px; min-height: 42px; align-content: center; }
-html.ddb-app-mode section[aria-label="댕다방 케어톡"] > header > div:first-child::before { content: ""; position: absolute; left: 0; top: 50%; width: 40px; height: 40px; margin-top: -20px; border-radius: 999px;
-  background: #fff3e2 url("/images/ui/stickers/caretalk-avatar.webp") center / 112% no-repeat; box-shadow: 0 0 0 2.5px #fff, 0 4px 8px -4px rgba(110,70,55,.5); }
-html.ddb-app-mode section[aria-label="댕다방 케어톡"] > header > div:first-child > span:first-child { display: none !important; }
-html.ddb-app-mode section[aria-label="댕다방 케어톡"] > header b { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif !important; font-weight: 400 !important; font-size: 1.3rem !important; color: #3d2f2a !important; transform: none !important; }
-html.ddb-app-mode section[aria-label="댕다방 케어톡"] > header b::after { right: -3px !important; bottom: 1px !important; left: -3px !important; height: 9px !important; border-radius: 3px !important; background: rgba(255,182,206,.6) !important; z-index: -1; transform: rotate(-1deg) !important; }
-html.ddb-app-mode section[aria-label="댕다방 케어톡"] > header button { border: 0 !important; border-radius: 999px !important; background: #fff !important; color: #8f7a70 !important;
-  box-shadow: 0 0 0 1.5px #f1e3da, 0 3px 6px -3px rgba(110,70,55,.4) !important; transform: none !important; }
-html.ddb-app-mode section[aria-label="댕다방 케어톡"] > header button[data-active="true"] { background: #ffe1ea !important; color: #c23d6c !important; box-shadow: 0 0 0 1.5px #f6a9bf !important; }
-html.ddb-app-mode section[aria-label="댕다방 케어톡"] > header button:active { transform: scale(.9) !important; }
-/* 대화 영역: 노트 줄 · 여백선 없이 점 무늬 속지 */
-html.ddb-app-mode section[aria-label="댕다방 케어톡"] [role="log"] { background: transparent !important; padding-left: 12px !important; }
-/* 말풍선: 케어톡 = 흰 메모지(왼쪽 꼬리), 나 = 분홍 스티커(오른쪽 꼬리) */
-html.ddb-app-mode section[aria-label="댕다방 케어톡"] [data-chat-role="assistant"] > div:first-child,
-html.ddb-app-mode section[aria-label="댕다방 케어톡"] [role="log"] > .text-left > div:first-child { border: 0 !important; outline: 0 !important; border-radius: 16px 16px 16px 5px !important;
-  background: #fff !important; color: #3d2f2a !important; box-shadow: 0 0 0 1.5px #f3e6dc, 0 6px 12px -8px rgba(110,70,55,.45) !important; }
-html.ddb-app-mode section[aria-label="댕다방 케어톡"] [data-chat-role="user"] > div:first-child { border: 0 !important; outline: 0 !important; border-radius: 16px 16px 5px 16px !important;
-  background: #ffe1ea !important; color: #8a2f52 !important; box-shadow: 0 0 0 1.5px #ffc9d9, 0 6px 12px -8px rgba(200,80,120,.45) !important; }
-/* 입력줄: 테이프 붙은 종이 띠 · 둥근 입력칸 · 분홍 보내기 스티커 */
-html.ddb-app-mode section[aria-label="댕다방 케어톡"] > form { border-top: 2px dashed #f0d9cf !important; background: rgba(255,250,244,.95) !important; }
-html.ddb-app-mode section[aria-label="댕다방 케어톡"] > form input[aria-label="채팅 질문"] { border: 0 !important; border-radius: 999px !important; background: #fff !important; padding-left: 16px !important;
-  box-shadow: 0 0 0 1.5px #f1dccf !important; }
-html.ddb-app-mode section[aria-label="댕다방 케어톡"] > form input[aria-label="채팅 질문"]:focus { box-shadow: 0 0 0 2px #f6a9bf !important; }
-html.ddb-app-mode section[aria-label="댕다방 케어톡"] > form button[type="submit"],
-html.ddb-app-mode section[aria-label="댕다방 케어톡"] > form button[aria-label="답변 생성 멈추기"] { border: 0 !important; border-radius: 999px !important; background: radial-gradient(circle at 35% 30%, #ffb3c8, #f06a96 75%) !important;
-  box-shadow: 0 0 0 2.5px #fff, 0 6px 10px -5px rgba(200,70,110,.55) !important; color: #fff !important; transform: none !important; }
-html.ddb-app-mode section[aria-label="댕다방 케어톡"] > form button[type="submit"]:active { transform: scale(.9) !important; }
-
-/* 케어톡 고도화 — 링 구멍(다이어리 속지) · 제목 마스킹테이프 · 캐릭터 기울임 · 답변 옆 작은 캐릭터 · 안내 상자 메모지 · 사진 첨부 스티커 */
-html.ddb-app-mode section[aria-label="댕다방 케어톡"]::after { content: ""; position: absolute; z-index: 2; left: 7px; top: 78px; bottom: 82px; width: 11px; pointer-events: none;
-  background: radial-gradient(circle at 50% 50%, #f1e4da 0 4.5px, transparent 5px) 0 0 / 11px 46px repeat-y; filter: drop-shadow(0 1px 0 rgba(255,255,255,.9)); }
-html.ddb-app-mode section[aria-label="댕다방 케어톡"] [role="log"] { padding-left: 26px !important; padding-right: 12px !important; }
-html.ddb-app-mode section[aria-label="댕다방 케어톡"] > header b { padding: 3px 12px 2px !important; background: rgba(255,214,228,.85) !important; border-radius: 3px !important; rotate: -1.5deg;
-  clip-path: polygon(0 8%, 4% 0, 96% 4%, 100% 0, 99% 92%, 94% 100%, 5% 96%, 1% 100%); }
-html.ddb-app-mode section[aria-label="댕다방 케어톡"] > header b::after { display: none !important; }
-/* 제목 칸이 줄(grid) 폭만큼 늘어나 분홍 테이프 바탕이 글자 뒤로 길게 이어지던 것 — 글자 폭만큼만(2026-10-20) */
-html.ddb-app-mode section[aria-label="댕다방 케어톡"] > header b { display: inline-block !important; width: fit-content !important; justify-self: start; }
-html.ddb-app-mode section[aria-label="댕다방 케어톡"] > header > div:first-child::before { rotate: -7deg; }
-/* 답변 줄: 왼쪽에 작은 캐릭터 동그라미 */
-html.ddb-app-mode section[aria-label="댕다방 케어톡"] [data-chat-role="assistant"] { position: relative; padding-left: 34px; }
-html.ddb-app-mode section[aria-label="댕다방 케어톡"] [data-chat-role="assistant"]::before { content: ""; position: absolute; left: 0; top: 2px; width: 28px; height: 28px; border-radius: 999px;
-  background: #fff3e2 url("/images/ui/stickers/caretalk-avatar.webp") center / 115% no-repeat; box-shadow: 0 0 0 2px #fff, 0 3px 6px -3px rgba(110,70,55,.45); }
-/* 답변 아래 안내 상자(출처 · 근거 · 병원 · 다시 확인) — 파란 상자 대신 메모지 */
-html.ddb-app-mode section[aria-label="댕다방 케어톡"] [data-chat-role="assistant"] [class*="border"][class*="rounded"]:not(button) { border-color: #f1e3da !important; background-color: #fffaf3 !important; }
-html.ddb-app-mode section[aria-label="댕다방 케어톡"] [data-chat-role="assistant"] button { border-radius: 999px !important; }
-/* 사진 첨부 버튼 — 둥근 스티커 · 첨부 안내는 작은 메모 글씨 */
-html.ddb-app-mode section[aria-label="댕다방 케어톡"] [data-generation-reference-button] { border: 0 !important; border-radius: 999px !important; background: #fff !important; color: #c4567a !important;
-  box-shadow: 0 0 0 1.5px #f1dccf, 0 3px 6px -3px rgba(110,70,55,.35) !important; }
-/* 사진 첨부 · 전송 — 사용자가 만든 3D 그림 버튼(caretalk-photo / caretalk-send.webp). 글자 아이콘만 숨기고 버튼 · 동작 · 비활성 표시는 그대로 */
-html.ddb-app-mode section[aria-label="댕다방 케어톡"] [data-generation-reference-button],
-html.ddb-app-mode section[aria-label="댕다방 케어톡"] > form button[type="submit"] { background: transparent center / 112% no-repeat !important; box-shadow: none !important;
-  filter: drop-shadow(0 4px 4px rgba(200, 80, 120, .28)); transition: transform .3s cubic-bezier(.3, 1.6, .5, 1) !important; }
-html.ddb-app-mode section[aria-label="댕다방 케어톡"] [data-generation-reference-button] { background-image: url("/images/ui/stickers/caretalk-photo.webp") !important; }
-html.ddb-app-mode section[aria-label="댕다방 케어톡"] > form button[type="submit"] { background-image: url("/images/ui/stickers/caretalk-send.webp") !important; }
-html.ddb-app-mode section[aria-label="댕다방 케어톡"] :is([data-generation-reference-button], form > button[type="submit"]) > i { visibility: hidden; }
-html.ddb-app-mode section[aria-label="댕다방 케어톡"] [data-generation-reference-button]:not(:disabled):active { transform: scale(.9) !important; }
-html.ddb-app-mode section[aria-label="댕다방 케어톡"] [data-generation-reference-privacy-notice] { font-size: 11px !important; line-height: 1.5 !important; color: #9c8a80 !important; font-weight: 600 !important; }
-/* 첫 화면(대화 없음) — 인사 · 예시 질문 메모지 */
-.ct-mark { background: linear-gradient(transparent 58%, rgba(255,214,228,.95) 58%, rgba(255,214,228,.95) 92%, transparent 92%); padding: 0 .1em; }
-.ct-sub { color: #8f7a70; font-family: "NanumSquareRound", var(--font-wanted-sans), sans-serif; font-weight: 700; }
-.ct-say { animation: ct-say .5s cubic-bezier(.25,1.4,.45,1) both; animation-delay: var(--d, 0ms); }
-@keyframes ct-say { from { opacity: 0; transform: translateY(8px) scale(.96); } }
-.ct-quick { font-family: "Cafe24Ssurround", var(--font-wanted-sans), sans-serif; border-radius: 10px 10px 16px 10px; rotate: var(--qr);
-  box-shadow: 0 7px 11px -8px rgba(110,70,55,.42), inset 0 0 0 1px rgba(255,255,255,.6); animation: ct-say .5s cubic-bezier(.25,1.4,.45,1) both; animation-delay: var(--d, 0ms);
-  transition: transform .35s cubic-bezier(.3,1.6,.5,1), box-shadow .35s; -webkit-tap-highlight-color: transparent; }
-.ct-quick:active { transform: translateY(-4px) scale(1.04); box-shadow: 0 14px 16px -10px rgba(110,70,55,.45), inset 0 0 0 1px rgba(255,255,255,.6); transition-duration: .12s; }
-.ct-tape { border-radius: 2px; box-shadow: 0 1px 2px rgba(90,60,50,.12); }
-@media (prefers-reduced-motion: reduce) { .ct-say, .ct-quick { animation: none; } }
-
-/* 산책 친구 버튼(협업자 PetCompanionGate) — 앱에서만 덮어씀(웹은 그대로)
- * 발바닥(설정) 버튼은 숨김 — 설정은 강아지를 누르면 나오는 빠른 메뉴 "설정하기"로.
- * 강아지 집은 화면 가장자리에 반쯤 걸친 탭 대신, 탭바 바로 위 오른쪽 아래의 오려 붙인 3D 집 스티커
- * (사용자가 만든 그림 companion-house.webp · 흰 테두리 · 살짝 기울임). 집에 들어가 있으면 문 앞이 살짝 빛남 */
-html.ddb-app-mode button[data-pet-companion-settings] { display: none !important; }
-/* 쇼핑 히어로가 화면에 크게 보이는 동안 산책 친구(걷는 강아지)는 숨김 — 내려가면 다시 나타남 */
-html.ddb-app-mode[data-shop-hero="on"] [data-pet-motion-source] { opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; transition: opacity .25s, visibility 0s .25s; }
-html.ddb-app-mode button[data-pet-companion-home] { right: 12px !important; bottom: calc(var(--app-tabbar-h) + 4px) !important; width: 52px !important; height: 52px !important;
-  border: 0 !important; border-radius: 0 !important; background: none !important; box-shadow: none !important; rotate: -5deg; }
-html.ddb-app-mode button[data-pet-companion-home]::before { content: ""; position: absolute; inset: 0; background: url("/images/ui/stickers/companion-house.webp") center / contain no-repeat;
-  filter: drop-shadow(1.6px 0 0 #fff) drop-shadow(-1.6px 0 0 #fff) drop-shadow(0 1.6px 0 #fff) drop-shadow(0 -1.6px 0 #fff) drop-shadow(0 7px 7px rgba(110,60,30,.38)); }
-html.ddb-app-mode button[data-pet-companion-home] > span[aria-hidden="true"]:last-child { display: none !important; }
-html.ddb-app-mode button[data-pet-companion-home][data-home-occupied="true"]::after { content: ""; position: absolute; left: 34%; right: 34%; bottom: 14%; height: 26%; border-radius: 999px;
-  background: radial-gradient(closest-side, rgba(255,226,140,.75), transparent); animation: app-house-glow 2.8s ease-in-out infinite; pointer-events: none; }
-@keyframes app-house-glow { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
-html.ddb-app-mode button[data-pet-companion-home][data-buybar="true"] { bottom: calc(112px + env(safe-area-inset-bottom, 0px)) !important; }
-/* 강아지 집과 케어톡 버튼이 겹치지 않게 — 케어톡은 맨 아래(오른쪽 아래) 그대로, 집이 그 바로 위로(12px 간격).
-   2026-11-05 사용자 "케어톡이 아래로"(예전 10-21 에는 집이 아래 · 케어톡이 위). 케어톡 버튼이 없으면 집은 맨 아래 제자리 */
-html.ddb-app-mode body:has(.app-care-fab) button[data-pet-companion-home] { bottom: calc(var(--app-tabbar-h) + 4px + 52px + 12px) !important; }
-html.ddb-app-mode body:has(.app-care-fab) button[data-pet-companion-home][data-buybar="true"] { bottom: calc(112px + 52px + 12px + env(safe-area-inset-bottom, 0px)) !important; }
-html.ddb-app-mode button[data-pet-companion-home]:active { transform: scale(.88) !important; }
-html.ddb-app-mode button[data-pet-companion-home][data-mobile-hidden="true"] { transform: translateY(12px) scale(.8) !important; }
-
-/* 누를 때 살짝 눌림 */
-.app-press { transition: transform 0.4s cubic-bezier(.22, 1, .36, 1); -webkit-tap-highlight-color: transparent; }
-.app-press:active { transform: scale(0.94); transition-duration: .12s; }
-
-/* 안드로이드 다크 모드 — 판만 어둡게 */
-html[data-ddb-android-dark="true"] .app-bar { background: rgba(28, 26, 31, 0.9); box-shadow: 0 10px 22px -18px rgba(0, 0, 0, 0.7); }
-html[data-ddb-android-dark="true"] .app-tabbar { background: rgba(36, 33, 38, 0.88); box-shadow: 0 14px 28px -14px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.08); }
-html[data-ddb-android-dark="true"] .app-tab { color: #9d918c; }
-html[data-ddb-android-dark="true"] .app-icon-btn { background: rgba(255, 255, 255, 0.08); color: #f3ebe6; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1); }
-`;

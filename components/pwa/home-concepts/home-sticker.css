@@ -1,0 +1,20 @@
+
+/* 카드 · 그림을 한 장으로 둘러싼 흰 칼선 + 종이에 붙은 그림자 */
+.hm-short { filter: drop-shadow(2.5px 0 0 #fff) drop-shadow(-2.5px 0 0 #fff) drop-shadow(0 2.5px 0 #fff) drop-shadow(0 -2.5px 0 #fff)
+  drop-shadow(0 0 .6px rgba(170,120,115,.5)) drop-shadow(0 8px 7px rgba(90,60,50,.2));
+  transition: transform .5s cubic-bezier(.3,1.7,.45,1); -webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; }
+/* 동네 돌봄: 오른쪽 아래 모서리가 접힌 지도 */
+.hm-fold { clip-path: polygon(0 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%); }
+.hm-fold::after { content: ""; position: absolute; right: 0; bottom: 0; width: 22px; height: 22px; border-radius: 0 0 0 6px;
+  background: linear-gradient(135deg, #b6e3cb 50%, transparent 50%); }
+.hm-fold .hm-go { margin-right: 14px; }
+/* 그림 스티커: 살짝 기울어 카드 위로 튀어나옴 */
+.hm-icon { rotate: var(--ir); transition: transform .45s cubic-bezier(.3,1.8,.5,1); }
+/* 누르면 카드가 종이에서 들리고 그림은 한 번 더 통통 */
+.hm-short:active { transform: translateY(-4px) scale(1.03); transition-duration: .12s; }
+.hm-short:active .hm-icon { transform: scale(1.12) translateY(-3px); transition-duration: .12s; }
+.hm-go { transition: transform .3s; }
+.hm-short:active .hm-go { transform: translateX(3px); }
+@media (prefers-reduced-motion: reduce) { .hm-short, .hm-icon { transition: none; } }
+/* 로그인 후 "오늘 출근은 매일 댕생활에서" — 노란 포스트잇 */
+.hm-note { background: #fff3a6; color: #6b4708; box-shadow: 0 8px 12px -9px rgba(110,80,40,.5); -webkit-tap-highlight-color: transparent; transition: transform .3s cubic-bezier(.3,1.6,.5,1); }

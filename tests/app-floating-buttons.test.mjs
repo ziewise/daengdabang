@@ -7,7 +7,10 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-const shell = () => readFile(new URL("../components/app-shell/AppShell.tsx", import.meta.url), "utf8");
+const shell = async () => (await Promise.all([
+    readFile(new URL("../components/app-shell/AppShell.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/app-shell/app-shell.css", import.meta.url), "utf8"),
+])).join("\n");
 
 test("케어톡은 아래, 사진 올리기 · 강아지 집은 그 위", async () => {
     const src = await shell();

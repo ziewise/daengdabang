@@ -1,7 +1,6 @@
 @import "tailwindcss";
 
 /* Keep content and decorative placement stable while lists finish loading. */
-html:not(.ddb-app-mode) { scrollbar-gutter: stable; }
 
 @theme {
     --color-background: #f7f8fb;
@@ -147,16 +146,7 @@ body {
     --font-wanted-sans: "Wanted Sans DDB";
 }
 
-html:not(.ddb-app-mode) body {
-    font-family: var(--font-wanted-sans), "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
-}
-
 /* 한 굵기뿐인 글꼴이라 400으로 고정(가짜 굵게 방지) */
-html:not(.ddb-app-mode) main h2:is([class*="text-xl"], [class*="text-2xl"], [class*="text-3xl"], [class*="text-4xl"]) {
-    font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
-    font-weight: 400;
-    letter-spacing: -0.02em;
-}
 
 /* 앱 본문 글꼴 나눔스퀘어라운드(보통 · 굵게) — 2026-10-22 앱 속도: 예전에는 앱 화면마다 넣는 CSS(KIT_CSS · 앱 겉모양 · 설치 말풍선)에
    글꼴 선언이 들어 있어, 탭을 옮길 때마다 선언이 빠졌다 다시 들어오며 브라우저가 화면 글자 전체를 다시 계산 · 배치했다.
@@ -401,14 +391,6 @@ body[data-petlens-capture-active="true"] [data-site-header] {
 }
 
 /* 웹 — 코인 표시 · "댕다방 연구소" 이름 한글은 사이트 글꼴(주아)로. 손글씨 글꼴은 영문 꼬리표에만 씀. 앱은 그대로(2026-10-24) */
-html:not(.ddb-app-mode) .ddb-daenglab-coin-mark,
-html:not(.ddb-app-mode) .ddb-daenglab-coin-disc,
-html:not(.ddb-app-mode) .ddb-daenglab-wordmark {
-    font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
-    font-weight: 400;
-}
-
-html:not(.ddb-app-mode) :is(.ddb-daenglab-coin-brand, .ddb-daenglab-coin-copy) { letter-spacing: 0; }
 
 .ddb-daenglab-new-service {
     display: inline-flex;
@@ -1776,31 +1758,9 @@ header + main .hero-shell {
 
 /* 2026-10-26 웹 — 휴대폰 홈 히어로 펫렌즈 안내 말풍선(WatermarkBadge): 점선 테 → 같은 보라 실선 2px(꼬리 테도 실선), 글자 10px → 12px.
    움직임 · 문구는 그대로. 앱은 그대로 */
-html:not(.ddb-app-mode) .petlens-hero-cue-bubble {
-    border-style: solid;
-    border-color: rgb(123 97 255 / 70%);
-    font-size: 12px;
-}
-html:not(.ddb-app-mode) .petlens-hero-cue-bubble .petlens-hero-cue-crayon { font-size: 13px; }
 /* 꼬리(말풍선 안 마지막 absolute 조각) — 오른쪽 · 아래 테만 실선 */
-html:not(.ddb-app-mode) .petlens-hero-cue-bubble > span.absolute {
-    border-style: solid;
-    border-top-width: 0;
-    border-left-width: 0;
-}
 /* 자리 — 배지(폭 약 91px)가 화면 오른쪽 끝에 걸쳐 있어 가운데 맞춤이면 말풍선 오른쪽이 화면 밖으로 잘렸음(320~430px 모두).
    웹은 말풍선 오른쪽 끝을 배지 오른쪽에서 28px 안쪽에 맞추고(왼쪽으로 펼침), 꼬리는 배지 가운데 아래로 옮김 */
-html:not(.ddb-app-mode) div:has(> .petlens-hero-cue-bubble) {
-    right: 28px;
-    left: auto;
-    translate: 0 -112%;
-}
-html:not(.ddb-app-mode) .petlens-hero-cue-bubble { transform-origin: calc(100% - 17px) 100%; }
-html:not(.ddb-app-mode) .petlens-hero-cue-bubble > span.absolute {
-    right: 12px;
-    left: auto;
-    translate: none;
-}
 
 @media (min-width: 768px) {
     .hero-shell {
@@ -2388,12 +2348,6 @@ html:not(.ddb-app-mode) .petlens-hero-cue-bubble > span.absolute {
 }
 
 /* 2026-10-26 하위 메뉴의 지금 보고 있는 페이지(aria-current="page", Header.tsx) — 분홍 글자 + 분홍 테(올렸을 때와 같은 결, 웹만) */
-html:not(.ddb-app-mode) :is(.ddb-menu-pill, .ddb-menu-row)[aria-current="page"] {
-    background: #fff4f7;
-    color: #d0436d;
-    box-shadow: 0 0 0 2px #f4b8cb, 0 10px 18px -12px rgb(200 80 120 / 45%);
-}
-html:not(.ddb-app-mode) .ddb-menu-card-title[aria-current="page"] { color: #d0436d; }
 
 /* 2026-10-26 ☰ 단추 장바구니 수량 배지(Header.tsx, xl 미만) — 분홍 알약 · 흰 테. 헤더 장바구니 배지와 같은 값 */
 .ddb-menu-cart-badge {
@@ -2448,354 +2402,47 @@ html:not(.ddb-app-mode) .ddb-menu-card-title[aria-current="page"] { color: #d043
 /* 헤더 아이콘 이름 말풍선(2026-10-20 사용자 요청) — 펫렌즈 · 검색 · 장바구니 · 로그인/마이페이지 · 언어 변경.
    웹에서만(html:not(.ddb-app-mode) — 앱의 강아지 집 그림(::before)을 가리지 않게, 2026-10-21). 마우스를 올리거나(키보드로 고르면) 아이콘 바로 아래에 흰 알약 말풍선(연분홍 테두리 · 부드러운 그림자, 사이트 흰 카드 · 파스텔 알약과 같은 결 —
    처음 검정 바탕은 사이트와 안 어울려 바꿈) + 작은 꼬리. 터치 화면(hover 없음)에서는 띄우지 않음 */
-html:not(.ddb-app-mode) .ddb-header-tip::before,
-html:not(.ddb-app-mode) .ddb-header-tip::after {
-    position: absolute;
-    left: 50%;
-    z-index: 60;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.15s ease, transform 0.15s ease;
-}
 
 /* 이름 알약 */
-html:not(.ddb-app-mode) .ddb-header-tip::after {
-    content: attr(data-header-tip);
-    top: calc(100% + 10px);
-    padding: 5px 11px 6px;
-    border: 1px solid #f4cfdb;
-    border-radius: 999px;
-    background: #fff;
-    color: #4a3a40;
-    /* 글씨는 헤더 메뉴와 같은 Cafe24 써라운드(한 굵기라 400) */
-    font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
-    font-size: 13px;
-    font-weight: 400;
-    line-height: 1.2;
-    letter-spacing: -0.01em;
-    white-space: nowrap;
-    box-shadow: 0 8px 18px -10px rgba(170, 90, 120, 0.45);
-    transform: translate(-50%, -4px);
-}
 
 /* 위쪽 작은 꼬리(아이콘을 가리킴) */
-html:not(.ddb-app-mode) .ddb-header-tip::before {
-    content: "";
-    top: calc(100% + 6px);
-    z-index: 61; /* 알약 테두리 위로 겹쳐 꼬리와 알약이 이어져 보이게 */
-    width: 8px;
-    height: 8px;
-    border-top: 1px solid #f4cfdb;
-    border-left: 1px solid #f4cfdb;
-    border-radius: 2px 0 0 0;
-    background: #fff;
-    transform: translate(-50%, -4px) rotate(45deg);
-}
-
-@media (hover: hover) {
-    html:not(.ddb-app-mode) .ddb-header-tip:hover::after,
-    html:not(.ddb-app-mode) .ddb-header-tip:focus-visible::after {
-        opacity: 1;
-        transform: translate(-50%, 0);
-    }
-
-    html:not(.ddb-app-mode) .ddb-header-tip:hover::before,
-    html:not(.ddb-app-mode) .ddb-header-tip:focus-visible::before {
-        opacity: 1;
-        transform: translate(-50%, 0) rotate(45deg);
-    }
-}
 
 /* 화면 오른쪽 가장자리 버튼(케어톡 · 산책 친구 집 · 설정)은 이름 말풍선을 버튼 왼쪽에(아래로 띄우면 화면 밖 · 버튼에 가림). 꼬리는 오른쪽 */
-html:not(.ddb-app-mode) .ddb-header-tip.ddb-tip-left::after {
-    top: 50%;
-    right: calc(100% + 10px);
-    left: auto;
-    transform: translate(4px, -50%);
-}
-
-html:not(.ddb-app-mode) .ddb-header-tip.ddb-tip-left::before {
-    top: 50%;
-    right: calc(100% + 6px);
-    left: auto;
-    border: 0;
-    border-top: 1px solid #f4cfdb;
-    border-right: 1px solid #f4cfdb;
-    border-radius: 0 2px 0 0;
-    transform: translate(4px, -50%) rotate(45deg);
-}
-
-@media (hover: hover) {
-    html:not(.ddb-app-mode) .ddb-header-tip.ddb-tip-left:hover::after,
-    html:not(.ddb-app-mode) .ddb-header-tip.ddb-tip-left:focus-visible::after {
-        transform: translate(0, -50%);
-    }
-
-    html:not(.ddb-app-mode) .ddb-header-tip.ddb-tip-left:hover::before,
-    html:not(.ddb-app-mode) .ddb-header-tip.ddb-tip-left:focus-visible::before {
-        transform: translate(0, -50%) rotate(45deg);
-    }
-}
 
 /* 웹 케어톡 떠 있는 버튼(협업자 ChatWidget) — 닫혀 있을 때 크레파스 동그라미 대신 사용자 케어톡 그림(2026-10-20, 원본 originals/caretalk-web.png).
    열려 있을 때(닫기 X)는 기존 모양 그대로 */
-html:not(.ddb-app-mode) button[data-mobile-chat-trigger][data-chat-open="false"] {
-    border: 0 !important;
-    outline: 0 !important;
-    background: url("/images/ui/caretalk-web-128.webp") center / contain no-repeat !important;
-    box-shadow: none !important;
-    filter: drop-shadow(0 8px 12px rgb(110 80 200 / 30%));
-}
-
-html:not(.ddb-app-mode) button[data-mobile-chat-trigger][data-chat-open="false"] > i {
-    display: none;
-}
 
 /* 산책 친구 안내 · 추천 말풍선(협업자 PetCompanionLayer .speech) — 웹 크레파스 언어로 귀엽게(2026-10-20 사용자 "웹 컨셉은 크레파스 · 귀엽게").
    웹에 이미 있는 크레파스 표현만 씀(앱 스티커 요소 X): 바탕 = .ddb-crayon-paper(점선 테두리 · 크림 종이 결 · 청록/분홍 엇갈린 그림자),
    제목 = .ddb-crayon-title 손글씨(개구) + .ddb-crayon-underline 세 색 크레파스 밑줄, 바로 가기 = .ddb-crayon-link(청록 점선 알약 · 손글씨, 올리면 분홍 · 살짝 기울기).
    문구 · 위치 · 동작은 그대로 */
-html:not(.ddb-app-mode) div[data-pet-companion-speech] {
-    width: min(250px, calc(100vw - 32px));
-    gap: 3px;
-    padding: 13px 36px 14px 16px;
-    border: 1.5px solid #f1e6d6; /* 2026-10-24 점선 금지 — 실선 크림 테두리 */
-    background-color: rgb(255 253 248 / 98%);
-    background-image:
-        linear-gradient(112deg, rgb(8 145 178 / 4.5%), transparent 30%, rgb(239 71 111 / 4%) 64%, rgb(245 158 11 / 5.5%));
-    color: #475569;
-    box-shadow:
-        3px 4px 0 rgb(8 145 178 / 12%),
-        -2px -2px 0 rgb(239 71 111 / 7%),
-        0 16px 34px rgb(15 23 42 / 10%);
-    font-family: var(--font-wanted-sans), "Apple SD Gothic Neo", sans-serif;
-    font-size: 13px;
-    line-height: 1.55;
-}
 
 /* 제목(첫 줄) — 크레파스 손글씨 + 세 색 크레파스 밑줄 */
 /* 긴 제목(상품명)은 말풍선 안에서 두 줄까지 줄바꿈, 더 길면 끝을 … 로(2026-10-22 사용자 "말풍선을 벗어나는 제품명").
    예전엔 밑줄을 보이려고 overflow: visible 로 두어, 협업자의 한 줄 고정(nowrap)과 겹쳐 글자가 말풍선 밖으로 나갔음.
    밑줄은 줄 높이 안 글자 아래쪽에 그려(여백을 두면 셋째 줄 윗부분이 비침) 잘리지 않게 */
-html:not(.ddb-app-mode) div[data-pet-companion-speech] > span:first-child {
-    position: relative;
-    isolation: isolate;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    width: fit-content;
-    min-width: 0;
-    max-width: 100%;
-    margin-bottom: 4px;
-    overflow: hidden;
-    white-space: normal;
-    word-break: keep-all;
-    overflow-wrap: anywhere;
-    color: #172033;
-    font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; /* 한글 제목은 주아(손글씨체는 영문만) */
-    font-size: 18px;
-    font-weight: 400;
-    line-height: 1.25;
-    letter-spacing: -0.02em;
-    filter: drop-shadow(0.6px 0.8px 0 rgb(15 23 42 / 14%));
-}
-
-html:not(.ddb-app-mode) div[data-pet-companion-speech] > span:first-child::after {
-    position: absolute;
-    right: 1%;
-    bottom: 0;
-    left: 0;
-    z-index: -1;
-    height: 0.2em;
-    border-radius: 999px 70% 999px 60%;
-    background: repeating-linear-gradient(94deg, rgb(8 145 178 / 62%) 0 14px, rgb(239 71 111 / 58%) 14px 28px, rgb(245 158 11 / 62%) 28px 42px);
-    content: "";
-    opacity: 0.6;
-    transform: rotate(-0.8deg) skewX(-7deg);
-}
 
 /* 바로 가기(링크 · 버튼) — 분홍 알약(2026-10-20 사용자 "웹 스타일에 어울리는 이쁜 버튼": 메인 "매일 댕생활"의 오늘 둘러보기 버튼과 같은 결 —
    채운 분홍 · 흰 굵은 글씨 · 분홍 그림자, 올리면 살짝 떠오름. 처음 크레파스 점선 알약은 안 어울려 바꿈) */
-html:not(.ddb-app-mode) div[data-pet-companion-speech] > a,
-html:not(.ddb-app-mode) div[data-pet-companion-speech] > button:not([aria-label$="닫기"]) {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    margin-top: 10px;
-    padding: 7px 15px 8px;
-    border: 0;
-    border-radius: 999px;
-    background: #e9789a;
-    color: #fff;
-    font-family: var(--font-wanted-sans), sans-serif;
-    font-size: 12.5px;
-    font-weight: 800;
-    letter-spacing: -0.01em;
-    text-decoration: none;
-    box-shadow: 0 8px 16px -9px rgb(200 80 120 / 60%);
-    transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
-}
-
-html:not(.ddb-app-mode) div[data-pet-companion-speech] > a::after,
-html:not(.ddb-app-mode) div[data-pet-companion-speech] > button:not([aria-label$="닫기"])::after {
-    content: "→";
-    font-size: 12px;
-}
-
-html:not(.ddb-app-mode) div[data-pet-companion-speech] > a:hover,
-html:not(.ddb-app-mode) div[data-pet-companion-speech] > button:not([aria-label$="닫기"]):hover {
-    background: #e26690;
-    box-shadow: 0 10px 18px -9px rgb(200 80 120 / 70%);
-    transform: translateY(-1px);
-}
 
 /* 닫기 — 옅은 회색 × , 올리면 분홍 */
-html:not(.ddb-app-mode) div[data-pet-companion-speech] > button[aria-label$="닫기"] {
-    top: 8px;
-    right: 8px;
-    width: 24px;
-    height: 24px;
-    color: #94a3b8;
-    font-size: 19px;
-    transition: color 0.15s ease, transform 0.15s ease;
-}
-
-html:not(.ddb-app-mode) div[data-pet-companion-speech] > button[aria-label$="닫기"]:hover {
-    color: #ef476f;
-    transform: rotate(8deg);
-}
 
 /* 산책 친구 빠른 메뉴(협업자 PetCompanionLayer quickActions — 강아지를 누르면 "○○에게 무엇을 할까요?") — 웹 크레파스 결로(2026-10-20 사용자).
    창 = 말풍선과 같은 크레파스 종이(점선 테두리 · 크림 종이 결 · 청록/분홍 엇갈린 그림자), 제목 = 손글씨 + 세 색 크레파스 밑줄,
    두 버튼 = 흰 종이 칸 + 사용자 그림(집 = pet-home, 설정 = pet-settings — 오른쪽 가장자리 탭과 같은 그림), 올리면 분홍 테두리 · 살짝 떠오름. 동작은 그대로 */
-html:not(.ddb-app-mode) #pet-companion-quick-actions {
-    width: min(264px, calc(100vw - 24px));
-    padding: 16px 14px 14px;
-    border: 1.5px solid #f1e6d6; /* 2026-10-24 점선 금지 — 실선 크림 테두리 */
-    border-radius: 20px;
-    background-color: rgb(255 253 248 / 99%);
-    background-image:
-        linear-gradient(112deg, rgb(8 145 178 / 4.5%), transparent 30%, rgb(239 71 111 / 4%) 64%, rgb(245 158 11 / 5.5%));
-    color: #475569;
-    box-shadow:
-        3px 4px 0 rgb(8 145 178 / 12%),
-        -2px -2px 0 rgb(239 71 111 / 7%),
-        0 20px 44px rgb(15 23 42 / 18%);
-}
 
 /* 제목 — 크레파스 손글씨 + 세 색 크레파스 밑줄 */
-html:not(.ddb-app-mode) #pet-companion-quick-actions > h2 {
-    position: relative;
-    isolation: isolate;
-    width: fit-content;
-    max-width: calc(100% - 34px);
-    margin: 0 0 14px 2px;
-    color: #172033;
-    font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; /* 한글 제목은 주아(손글씨체는 영문만) */
-    font-size: 19px;
-    font-weight: 400;
-    letter-spacing: -0.02em;
-    filter: drop-shadow(0.6px 0.8px 0 rgb(15 23 42 / 14%));
-}
-
-html:not(.ddb-app-mode) #pet-companion-quick-actions > h2::after {
-    position: absolute;
-    right: 1%;
-    bottom: -0.1em;
-    left: 0;
-    z-index: -1;
-    height: 0.24em;
-    border-radius: 999px 70% 999px 60%;
-    background: repeating-linear-gradient(94deg, rgb(8 145 178 / 62%) 0 14px, rgb(239 71 111 / 58%) 14px 28px, rgb(245 158 11 / 62%) 28px 42px);
-    content: "";
-    opacity: 0.6;
-    transform: rotate(-0.8deg) skewX(-7deg);
-}
 
 /* 닫기 — 옅은 회색 × , 올리면 분홍 */
-html:not(.ddb-app-mode) #pet-companion-quick-actions > button[aria-label="빠른 메뉴 닫기"] {
-    top: 8px;
-    right: 8px;
-    width: 32px;
-    height: 32px;
-    color: #94a3b8;
-    font-size: 20px;
-    transition: color 0.15s ease, transform 0.15s ease;
-}
-
-html:not(.ddb-app-mode) #pet-companion-quick-actions > button[aria-label="빠른 메뉴 닫기"]:hover {
-    color: #ef476f;
-    transform: rotate(8deg);
-}
 
 /* 두 버튼 — 흰 종이 칸, 그림 위 · 이름 아래 */
-html:not(.ddb-app-mode) #pet-companion-quick-actions [data-pet-quick-action] {
-    min-height: 92px;
-    gap: 6px;
-    padding: 12px 6px 10px;
-    border: 1.5px solid #f1e6dc;
-    border-radius: 16px;
-    background: #fff;
-    color: #334155;
-    font-family: var(--font-wanted-sans), sans-serif;
-    font-size: 13px;
-    font-weight: 800;
-    box-shadow: 0 6px 14px -10px rgb(120 70 50 / 40%);
-    transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
-}
-
-html:not(.ddb-app-mode) #pet-companion-quick-actions [data-pet-quick-action]:hover {
-    border-color: #f4b8cb;
-    box-shadow: 0 10px 18px -10px rgb(200 80 120 / 45%);
-    transform: translateY(-2px);
-}
 
 /* 그림 — 이모지 대신 사용자 집 · 설정 그림 */
-html:not(.ddb-app-mode) #pet-companion-quick-actions [data-pet-quick-action] > span:first-child {
-    display: block;
-    width: 44px;
-    height: 44px;
-    font-size: 0;
-    background: center / contain no-repeat;
-    filter: drop-shadow(0 3px 3px rgb(150 80 40 / 18%));
-}
-
-html:not(.ddb-app-mode) #pet-companion-quick-actions [data-pet-quick-action="home"] > span:first-child {
-    background-image: url("/images/ui/pet-home-96.webp");
-}
-
-html:not(.ddb-app-mode) #pet-companion-quick-actions [data-pet-quick-action="settings"] > span:first-child {
-    background-image: url("/images/ui/pet-settings-96.webp");
-}
 
 /* 산책 친구 집 · 설정 버튼(오른쪽 가장자리 탭, 협업자 PetCompanionGate) — 안의 그림만 사용자 그림으로(2026-10-20).
    집: CSS 로 그린 지붕 · 몸 · 문 대신 pet-home-96.webp, 설정: 🐾 글자 대신 pet-settings-96.webp. 탭 모양 · 위치 · 동작 · 집에 있을 때 말풍선은 그대로 */
-html:not(.ddb-app-mode) button[data-pet-companion-home] > span[aria-hidden="true"] {
-    width: 30px;
-    height: 30px;
-    background: url("/images/ui/pet-home-96.webp") center / contain no-repeat;
-    filter: drop-shadow(0 2px 2px rgb(150 80 40 / 22%));
-    transform: none !important;
-    transition: transform 0.2s ease;
-}
-
-html:not(.ddb-app-mode) button[data-pet-companion-home]:hover > span[aria-hidden="true"] {
-    transform: scale(1.08) !important;
-}
 
 /* 그림 파일로 바꿨으니 CSS 로 그린 지붕 · 몸 · 문은 숨김 */
-html:not(.ddb-app-mode) button[data-pet-companion-home] > span[aria-hidden="true"] > span {
-    display: none;
-}
-
-html:not(.ddb-app-mode) button[data-pet-companion-settings] > span[aria-hidden="true"] {
-    display: block;
-    width: 27px;
-    height: 27px;
-    font-size: 0;
-    background: url("/images/ui/pet-settings-96.webp") center / contain no-repeat;
-    filter: drop-shadow(0 2px 2px rgb(200 90 60 / 20%));
-}
 
 /* 상품 카드(공용 ProductCard) — 웹에서도 카드 속 색상 미리보기 칩 · "n가지 색상" 줄 숨김(2026-10-19 사용자 요청).
    색상은 상품 상세에서 고른다. 앱(appShopSkin)은 이미 같은 방식으로 숨기고 있음 */
@@ -2850,705 +2497,77 @@ article[data-pet-product="true"] > div:has(> [role="group"]) {
 /* ═════════ 가격 숫자 · 가격 알약 — 웹 전체(2026-10-24 사용자 확정) ═════════
    가격 숫자: 지금 크레파스 색(청록 → 분홍 → 주황) 그대로, 글꼴만 주아(손글씨 숫자는 흩어져 보여 읽기 어려웠음).
    가격 알약(댕다방 셀렉트 · 혜택): 점선 테두리 · 기울기 · 한글 손글씨를 없애고 실선 없는 수평 알약 + 주아. 앱은 그대로 */
-html:not(.ddb-app-mode) :is(.ddb-crayon-price, .ddb-sale-price) {
-    font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
-    font-weight: 400;
-    letter-spacing: -0.01em;
-    filter: none;
-    -webkit-text-stroke: 0;
-}
-
-html:not(.ddb-app-mode) :is(.ddb-price-badge, .ddb-sale-label) {
-    min-height: 0;
-    padding: 3px 10px;
-    border: 0;
-    font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
-    font-size: 12px;
-    font-weight: 400;
-    transform: none;
-    box-shadow: none;
-}
-
-html:not(.ddb-app-mode) :is(.ddb-price-badge, .ddb-sale-label)::after { display: none; }
-html:not(.ddb-app-mode) .ddb-price-badge--select { background: #eef2ff; color: #4f46e5; }
-html:not(.ddb-app-mode) .ddb-price-badge--benefit { background: #ffeef3; color: #d0436d; }
-html:not(.ddb-app-mode) :is(.ddb-price-badge--compact, .ddb-sale-label--compact) { padding: 2px 8px; font-size: 11px; }
 
 /* ═════════ 상품 카드(공용 ProductCard) — C1 쿠션 액자(2026-10-24 사용자 확정) ═════════
    흰 입체 쿠션 카드(위쪽 흰 빛 · 아래쪽 옅은 그늘 · 부드러운 바닥 그림자 — 매일댕생활 판과 같은 결) 안에 크림 액자 사진.
    정보는 왼쪽 정렬: 브랜드 · 이름(두 줄 자리) · 재고 알약(오른쪽) · 맨 아래 줄 = 셀렉트 알약(왼쪽) + 주아 가격(오른쪽).
    가격 줄은 카드 바닥에 붙어 한 줄의 카드 높이가 가지런함. 문구 · 링크 · 찜 · 동작은 그대로, 앱은 그대로 */
-html:not(.ddb-app-mode) article[data-pet-product="true"] {
-    display: flex;
-    flex-direction: column;
-    /* 줄(그리드 · 가로 밀기 줄)의 칸 높이를 끝까지 채움 — 재고 알약 유무와 상관없이 한 줄의 카드 높이 · 가격 줄 위치가 같게 */
-    height: 100%;
-    padding: 10px;
-    border-radius: 28px;
-    background: #fff;
-    box-shadow:
-        inset 0 4px 0 rgb(255 255 255 / 95%),
-        inset 0 -10px 18px rgb(0 0 0 / 4%),
-        0 20px 30px -22px rgb(15 23 42 / 36%),
-        0 0 0 1px #f4ece1;
-    transition: transform 0.18s ease, box-shadow 0.18s ease;
-
-    &:hover {
-        box-shadow:
-            inset 0 4px 0 rgb(255 255 255 / 95%),
-            inset 0 -10px 18px rgb(0 0 0 / 4%),
-            0 26px 36px -24px rgb(200 80 120 / 45%),
-            0 0 0 1.5px #f7c5d4;
-    }
-
-    /* 사진 — 안쪽 크림 액자 */
-    & > div:first-child { border-radius: 20px; background: #fffaf1; }
-
-    /* NEW 표시 — 흰 알약 분홍 글씨 */
-    & > div:first-child span[class*="from-aurora-indigo"] {
-        background: #fff;
-        color: #e2557a;
-        font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
-        letter-spacing: 0.1em;
-        box-shadow: 0 0 0 1.5px #f7a8bf;
-    }
-
-    /* 정보 칸 — 남는 높이를 채워 가격 줄을 바닥에 */
-    & > a { display: flex; flex: 1; min-width: 0; background: none; }
-    & > a > div { display: flex; flex: 1; min-width: 0; flex-direction: column; padding: 12px 6px 4px; }
-    & > a > div > p:first-child { color: #0e8aa0; font-size: 10.5px; letter-spacing: 0.14em; }
-    & > a > div > p:nth-child(2) { min-height: 2.7em; color: #1e293b; font-size: 14px; line-height: 1.35; }
-
-    /* 재고 확인 필요 · 품절 — 오른쪽 작은 알약 */
-    & > a p[data-inventory-state] {
-        align-self: flex-end;
-        width: fit-content;
-        margin-top: 0;
-        padding: 2px 9px;
-        border-radius: 999px;
-        background: #fff1f2;
-        color: #e11d48;
-        font-size: 11px;
-    }
-
-    /* 가격 묶음 — 바닥 줄(옅은 실선 위) */
-    & > a > div > div.text-right { margin-top: auto; padding-top: 10px; border-top: 1.5px solid #f6efe5; text-align: left; }
-    & > a > div > div.text-right > div:first-child:empty { display: none; }
-    & > a > div > div.text-right > div:first-child { justify-content: flex-start; height: auto; }
-
-    & > a > div > div.text-right > div:last-child {
-        flex-flow: row wrap;
-        align-items: center;
-        justify-content: space-between;
-        gap: 4px 8px;
-        min-height: 0;
-    }
-
-    & > a .ddb-crayon-price { margin-left: auto; font-size: 21px; }
-
-    /* 외부 판매점 후기 줄 — 왼쪽 작게 */
-    & > a > div > div:last-child { justify-content: flex-start; min-height: 0; margin-top: 6px; text-align: left; }
-    & > a > div > div:last-child span.basis-full { text-align: left; }
-}
-
-@media (max-width: 640px) {
-    html:not(.ddb-app-mode) article[data-pet-product="true"] {
-        padding: 8px;
-        border-radius: 22px;
-
-        & > div:first-child { border-radius: 16px; }
-        & > a > div { padding: 10px 4px 2px; }
-        & > a > div > p:nth-child(2) { font-size: 13px; }
-        & > a .ddb-crayon-price { font-size: 18px; }
-        & .ddb-price-badge { padding: 2px 8px; font-size: 10.5px; }
-        & > a p[data-inventory-state] { font-size: 10.5px; }
-    }
-}
 
 /* 상품 카드 크기 맞추기(2026-10-25 사용자 "카드 사이즈가 다른 것들도 있고") — 웹만
    ① 외부 판매점 후기 줄은 후기가 없어도 같은 높이(두 줄)를 차지 → 어느 카드든 가격 줄이 같은 자리
    ② 카드 목록 그리드의 모든 줄을 가장 높은 줄에 맞춤(재고 알약 · 이름 길이와 상관없이 카드 크기 같음) */
-html:not(.ddb-app-mode) article[data-pet-product="true"] > a > div > div:last-child { min-height: 36px; align-content: flex-start; }
-html:not(.ddb-app-mode) .grid:has(> article[data-pet-product="true"]) { grid-auto-rows: 1fr; }
-@media (max-width: 640px) {
-    html:not(.ddb-app-mode) article[data-pet-product="true"] > a > div > div:last-child { min-height: 32px; }
-}
 
 /* 상품 카드가 든 가로 밀기 줄(메인 신상품 등) — 카드 입체 그림자가 줄 아래에서 잘리지 않게 여백 */
-html:not(.ddb-app-mode) .overflow-x-auto:has(> div > article[data-pet-product="true"]) { padding: 6px 4px 28px; margin-bottom: -20px; }
 
 /* 메인 댕다방 핫픽 카드(HotPickSection Face) — 공용 상품 카드 C1 과 같은 결(2026-10-24 사용자 "메인 카드도 입체감")
    흰 입체 쿠션 · 크림 액자 사진 · 정보 왼쪽 정렬 · 재고 알약 오른쪽 · 바닥 줄 = 셀렉트 알약(왼쪽) + 주아 가격(오른쪽).
    뒤집기 · 순위 · 링크 동작은 그대로(키 맞춤용 보이지 않는 카드도 같은 모양이라 높이 그대로 맞음), 앱은 그대로 */
-html:not(.ddb-app-mode) .ddb-hotpick-face {
-    padding: 10px;
-    border-radius: 28px;
-    background: #fff;
-    box-shadow:
-        inset 0 4px 0 rgb(255 255 255 / 95%),
-        inset 0 -10px 18px rgb(0 0 0 / 4%),
-        0 20px 30px -22px rgb(15 23 42 / 36%),
-        0 0 0 1px #f4ece1;
-
-    /* 사진 — 크림 액자 */
-    & > span:first-child { overflow: hidden; border-radius: 20px; background: #fffaf1; }
-
-    /* 정보 — 남는 높이를 채워 가격 줄을 바닥에 */
-    & > span:last-child { display: flex; flex: 1; flex-direction: column; padding: 12px 6px 4px; border-top: 0; }
-    & > span:last-child > span:first-child > span:last-child { color: #0e8aa0; font-size: 10.5px; letter-spacing: 0.14em; }
-    & > span:last-child > span:nth-child(2) { color: #1e293b; font-size: 14px; line-height: 1.35; }
-
-    /* 재고 확인 필요 · 품절 — 오른쪽 작은 알약 */
-    & > span:last-child > span.text-rose-700 {
-        align-self: flex-end;
-        width: fit-content;
-        padding: 2px 9px;
-        border-radius: 999px;
-        background: #fff1f2;
-        color: #e11d48;
-        font-size: 11px;
-    }
-
-    /* 가격 줄 — 바닥 · 옅은 실선 위 · 셀렉트 왼쪽 / 가격 오른쪽 */
-    & > span:last-child > span:last-child {
-        align-items: center;
-        justify-content: space-between;
-        gap: 4px 8px;
-        margin-top: auto;
-        padding-top: 10px;
-        border-top: 1.5px solid #f6efe5;
-    }
-
-    & .ddb-crayon-price { margin-left: auto; font-size: 21px; }
-}
 
 /* 휴대폰 핫픽 줄(작은 사진 목록) — 같은 입체 쿠션 */
-html:not(.ddb-app-mode) li.shadow-card:has(> .ddb-hp-swap, > a[href^="/product/"]) {
-    box-shadow: inset 0 3px 0 rgb(255 255 255 / 95%), inset 0 -8px 14px rgb(0 0 0 / 4%), 0 16px 24px -18px rgb(15 23 42 / 34%), 0 0 0 1px #f4ece1;
-}
-
-@media (max-width: 640px) {
-    html:not(.ddb-app-mode) .ddb-hotpick-face {
-        padding: 8px;
-        border-radius: 22px;
-
-        & > span:first-child { border-radius: 16px; }
-        & > span:last-child { padding: 10px 4px 2px; }
-        & .ddb-crayon-price { font-size: 18px; }
-    }
-}
 
 /* 제품군 페이지 검색 · 고르기 알약 · 펼친 목록 — 점선 없이 흰 입체 쿠션(2026-10-24 사용자 "점선 버튼 쓰지 말자").
    위쪽 흰 빛 · 아래 옅은 그늘 · 옅은 크림 테두리, 누르거나 입력 중이면 분홍 테. 동작은 그대로, 앱은 그대로 */
-html:not(.ddb-app-mode) :is(.ddb-pl-search, .ddb-pl-pill, .ddb-pl-menu) {
-    border: 1.5px solid #f1e6d6;
-    box-shadow:
-        inset 0 3px 0 rgb(255 255 255 / 95%),
-        inset 0 -6px 12px rgb(0 0 0 / 3%),
-        0 12px 22px -16px rgb(15 23 42 / 30%);
-}
-
-html:not(.ddb-app-mode) .ddb-pl-menu { box-shadow: 0 22px 44px -18px rgb(15 23 42 / 30%); }
-
-html:not(.ddb-app-mode) :is(.ddb-pl-search:focus-within, .ddb-pl-pill[aria-expanded="true"]) {
-    border-color: #f7a8bf;
-    box-shadow: 0 0 0 4px rgb(247 168 191 / 22%), 0 12px 22px -16px rgb(15 23 42 / 30%);
-}
-
-html:not(.ddb-app-mode) .ddb-pl-pill:hover { border-color: #f7c5d4; }
 
 /* 메인 구역 "더 보기" 글자 링크(추천 전체 보기 · 신상품 보기 — ddb-more-pill, 2026-10-24 사용자 "버튼이 아니라 배경에 박힌 글자 느낌 · 그냥 주아체").
    판 · 테두리 · 그림자 · 밑줄 없이 바탕 위 주아 글씨 + 분홍 화살표. 올리면 글씨가 분홍으로, 화살표가 살짝 앞으로. 링크 · 동작은 그대로, 앱은 그대로 */
-html:not(.ddb-app-mode) .ddb-more-pill {
-    min-height: 40px;
-    padding: 0 2px;
-    border: 0;
-    border-radius: 0;
-    background: none;
-    color: #334155;
-    font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
-    font-size: 16px;
-    font-weight: 400;
-    box-shadow: none;
-    transition: color 0.15s ease;
-}
-
-html:not(.ddb-app-mode) .ddb-more-pill > i { color: #e2557a; transition: transform 0.15s ease; }
-html:not(.ddb-app-mode) .ddb-more-pill:hover { border: 0; color: #d0436d; box-shadow: none; }
-html:not(.ddb-app-mode) .ddb-more-pill:hover > i { transform: translateX(3px); }
-html:not(.ddb-app-mode) .ddb-more-pill:focus-visible { outline: 3px solid #f7a8bf; outline-offset: 4px; border-radius: 8px; }
 
 /* 메인 신상품 구역 순서(2026-10-24 사용자) — "신상품 보기"는 제목 줄 오른쪽 위, 좌우 화살표는 카드 줄 아래 오른쪽.
    화살표는 흰 입체 쿠션 동그라미. 웹 꾸밈으로 자리만 바꿈(코드 · 동작 그대로), 앱은 그대로 */
-html:not(.ddb-app-mode) section#new > div {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-
-    & > div:first-child { display: contents; }
-    & > div:first-child > div:first-child { grid-column: 1; grid-row: 1; margin-bottom: 24px; }
-    & > div:first-child > div:last-child { grid-column: 1 / -1; grid-row: 3; justify-self: end; margin-top: 16px; }
-    & > div.overflow-x-auto { grid-column: 1 / -1; grid-row: 2; }
-    & > div:has(> a.ddb-more-pill) { grid-column: 2; grid-row: 1; align-self: end; margin: 0 0 24px; }
-
-    & > div:first-child > div:last-child > button {
-        width: 44px;
-        height: 44px;
-        border: 0;
-        background: #fff;
-        color: #e2557a;
-        box-shadow:
-            inset 0 3px 0 rgb(255 255 255 / 95%),
-            inset 0 -6px 12px rgb(0 0 0 / 3%),
-            0 12px 20px -14px rgb(15 23 42 / 35%),
-            0 0 0 1px #f4ece1;
-        transition: transform 0.15s ease, box-shadow 0.15s ease;
-    }
-
-    & > div:first-child > div:last-child > button:hover { color: #d0436d; transform: translateY(-2px); box-shadow: 0 14px 22px -14px rgb(200 80 120 / 50%), 0 0 0 1.5px #f7c5d4; }
-}
 
 /* ═════════ 메인 대표 브랜드 · 기획전 — 흰 액자 · 주아체 · 입체감(2026-10-24 사용자 확정 D1) ═════════
    사진은 가리지 않고 글자는 사진 위 그대로. 둘레 = 흰 입체 쿠션 액자, 그늘 = 글자 쪽만 옅게,
    제목 = 주아 흰 글씨 + 부드러운 그림자, 작은 영문 꼬리표 = 연분홍 손글씨, 버튼 = 흰 알약 분홍 주아 글씨, 작은 칸 화살표 = 흰 동그라미.
    브랜드 액자 · 그늘은 components/main/brand-slider.module.css. 링크 · 동작은 그대로, 앱은 그대로 */
-html:not(.ddb-app-mode) section#brand {
-    & h3.drop-shadow-md {
-        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
-        font-weight: 400;
-        letter-spacing: -0.01em;
-        text-shadow: 0 2px 12px rgb(15 23 42 / 35%);
-        filter: none;
-    }
-
-    & div.absolute.z-10:has(> h3) > p:first-child {
-        color: #ffd3e0;
-        font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
-        font-weight: 700;
-        letter-spacing: 0.16em;
-        text-shadow: 0 1px 6px rgb(15 23 42 / 40%);
-    }
-
-    & div.absolute.z-10:has(> h3) > p:not(:first-child) { font-weight: 600; text-shadow: 0 1px 8px rgb(15 23 42 / 45%); filter: none; }
-
-    & a[data-brand-cta] {
-        gap: 8px;
-        background: #fff;
-        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
-        font-weight: 400;
-        box-shadow: inset 0 3px 0 rgb(255 255 255 / 95%), 0 12px 22px -12px rgb(15 23 42 / 55%);
-        transition: transform 0.15s ease;
-    }
-
-    & a[data-brand-cta]:hover { background: #fff; transform: translateY(-2px); }
-}
 
 /* 브랜드 버튼 글자색 — 원래 코드의 고정 색(!)보다 앞서도록 바탕 층에서 분홍으로 */
 @layer base {
     html:not(.ddb-app-mode) section#brand a[data-brand-cta] { color: #d0436d !important; }
 }
 
-@media (min-width: 768px) {
-    html:not(.ddb-app-mode) section#brand h3.drop-shadow-md { font-size: 44px; }
-    html:not(.ddb-app-mode) section#brand a[data-brand-cta] { padding: 12px 22px; font-size: 15px; }
-}
-
-html:not(.ddb-app-mode) section#promo {
-    /* 칸 — 흰 입체 쿠션 액자 */
-    & a.group {
-        border: 7px solid #fff;
-        border-radius: 28px;
-        box-shadow:
-            inset 0 4px 0 rgb(255 255 255 / 95%),
-            0 22px 34px -24px rgb(15 23 42 / 38%),
-            0 0 0 1px #f4ece1;
-    }
-
-    & a.group:hover {
-        box-shadow:
-            inset 0 4px 0 #fff,
-            0 26px 38px -24px rgb(200 80 120 / 45%),
-            0 0 0 1.5px #f7c5d4;
-    }
-
-    /* 그늘 — 글자 쪽만 옅게 */
-    & a.group:not([class*="row-span-2"]) > div.absolute.inset-0[class*="bg-gradient"] {
-        background-image: linear-gradient(to top, rgb(15 23 42 / 55%) 0%, rgb(15 23 42 / 18%) 30%, transparent 48%);
-    }
-
-    & a.group[class*="row-span-2"] > div.absolute.inset-0[class*="bg-gradient"] {
-        background-image: linear-gradient(115deg, rgb(15 23 42 / 48%) 0%, rgb(15 23 42 / 16%) 34%, transparent 56%);
-    }
-
-    /* 제목 · 꼬리표 · 설명 */
-    & a.group h3 {
-        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
-        font-weight: 400;
-        letter-spacing: -0.01em;
-        text-shadow: 0 2px 12px rgb(15 23 42 / 35%);
-        filter: none;
-    }
-
-    & a.group > div.absolute.z-10 > p:first-child:not(:last-child) {
-        color: #ffd3e0;
-        font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
-        font-weight: 700;
-        letter-spacing: 0.16em;
-        text-shadow: 0 1px 6px rgb(15 23 42 / 40%);
-    }
-
-    & a.group > div.absolute.z-10 > p:last-child { font-weight: 600; text-shadow: 0 1px 8px rgb(15 23 42 / 45%); filter: none; }
-
-    /* 큰 칸 버튼 — 흰 알약 분홍 주아 / 작은 칸 화살표 — 흰 동그라미 분홍 */
-    & a.group[class*="row-span-2"] > span.absolute.z-10 {
-        gap: 8px;
-        background: #fff;
-        color: #d0436d;
-        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
-        font-weight: 400;
-        box-shadow: inset 0 3px 0 #fff, 0 12px 22px -12px rgb(15 23 42 / 55%);
-    }
-
-    & a.group:not([class*="row-span-2"]) > span.absolute.z-10 {
-        background: #fff;
-        color: #e2557a;
-        box-shadow: 0 10px 18px -10px rgb(15 23 42 / 55%);
-    }
-}
-
-@media (min-width: 768px) {
-    html:not(.ddb-app-mode) section#promo {
-        & a.group[class*="row-span-2"] h3 { font-size: 40px; }
-        & a.group:not([class*="row-span-2"]) h3 { font-size: 22px; }
-        & a.group[class*="row-span-2"] > span.absolute.z-10 { padding: 11px 20px; font-size: 15px; }
-        & a.group:not([class*="row-span-2"]) > span.absolute.z-10 { width: 38px; height: 38px; }
-    }
-}
-
-@media (max-width: 767px) {
-    html:not(.ddb-app-mode) section#promo a.group { border-width: 5px; border-radius: 22px; }
-}
-
 /* ═════════ 메인 사진 카드 E2(2026-10-24 사용자 확정) — 기획전 · 인스타그램 피드 ═════════
    두꺼운 흰 액자 + 사진 가장자리 얇은 안쪽 그늘 + 두 겹 깊은 바닥 그림자(아이보리 두께 면은 사용자 요청으로 뺌). 올리면 살짝 떠오르며 분홍 빛 그림자.
    대표 브랜드는 components/main/brand-slider.module.css 같은 결. 사진은 가리지 않음, 링크 · 동작 그대로, 앱은 그대로 */
-html:not(.ddb-app-mode) :is(section#promo, section#insta) a.group {
-    border: 12px solid #fff;
-    border-radius: 34px;
-    box-shadow:
-        0 2px 0 #fff,
-        0 32px 46px -26px rgb(15 23 42 / 50%),
-        0 12px 20px -12px rgb(15 23 42 / 22%),
-        0 0 0 1px #efe6da;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-html:not(.ddb-app-mode) :is(section#promo, section#insta) a.group::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: 9;
-    border-radius: 22px;
-    pointer-events: none;
-    box-shadow: inset 0 3px 8px rgb(15 23 42 / 28%), inset 0 0 0 1px rgb(15 23 42 / 8%);
-}
-
-html:not(.ddb-app-mode) :is(section#promo, section#insta) a.group:hover {
-    transform: translateY(-4px);
-    box-shadow:
-        0 40px 56px -26px rgb(200 80 120 / 48%),
-        0 16px 26px -14px rgb(15 23 42 / 20%),
-        0 0 0 1.5px #f7c5d4;
-}
 
 /* 인스타그램 피드 — 조금 얇은 액자(칸이 작음) · 제목 주아 */
-html:not(.ddb-app-mode) section#insta a.group { border-width: 10px; border-radius: 30px; }
-html:not(.ddb-app-mode) section#insta a.group::after { border-radius: 20px; }
-
-html:not(.ddb-app-mode) section#insta h2 {
-    font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
-    font-weight: 400;
-    letter-spacing: -0.01em;
-}
-
-@media (max-width: 767px) {
-    html:not(.ddb-app-mode) :is(section#promo, section#insta) a.group {
-        border-width: 6px;
-        border-radius: 24px;
-        box-shadow: 0 22px 32px -20px rgb(15 23 42 / 46%), 0 8px 14px -8px rgb(15 23 42 / 18%), 0 0 0 1px #efe6da;
-    }
-
-    html:not(.ddb-app-mode) :is(section#promo, section#insta) a.group::after { border-radius: 18px; }
-}
 
 /* ═════════ 메인 기획전 J5(2026-10-24 사용자 확정) — 사진이 주인공 ═════════
    PC = 왼쪽 큰 사진(활동견 셀렉션 영상) + 오른쪽 가로 사진 4장(2×2), 태블릿 · 모바일 = 큰 사진 아래 2×2.
    사진 위 글자 · 그늘은 숨기고, 흰 액자(E2 깊이) 아래 여백에만 글: 번호(칸 색) · 주아 제목 · 설명 · 보러 가기.
    누르면 해당 기획전 페이지로 이동(링크 그대로), 올리면 액자가 살짝 뜨고 사진이 조금 커짐. 앱은 그대로 */
-html:not(.ddb-app-mode) section#promo {
-    --promo-cap: 58px;
-
-    & div.grid { gap: 20px; grid-auto-rows: 262px; }
-
-    /* 칸 색(번호 · 보러 가기 글자) — 민트 · 하늘 · 보라 · 노랑 · 분홍 */
-    & a.group:nth-child(1) { --promo-ink: #12a17a; --promo-pos: 45% 50%; }
-    & a.group:nth-child(2) { --promo-ink: #0e8aa0; --promo-pos: 74% 50%; }
-    & a.group:nth-child(3) { --promo-ink: #6b51c9; --promo-pos: 50% 50%; }
-    & a.group:nth-child(4) { --promo-ink: #d98a12; --promo-pos: 42% 50%; }
-    & a.group:nth-child(5) { --promo-ink: #e2557a; --promo-pos: 56% 50%; }
-
-    /* 흰 액자 바탕 — 사진 아래 글 칸도 흰색 */
-    & a.group { background: #fff; }
-    & a.group[class*="row-span-2"] { --promo-cap: 76px; }
-
-    /* 떨림 막기(2026-10-26 사용자: "카드 경계선에 마우스가 닿으면 심하게 떨린다")
-       - 화면 틀의 hover:-translate-y-1 과 위 E2 의 translateY(-4px)가 겹쳐 8px 뜨던 것 → 웹은 E2 4px 하나만
-       - 카드가 뜨면 아래 가장자리가 마우스 밑에서 빠져 올림 · 내림이 반복 → 올라가 있는 동안만 투명한 잡는 자리를
-         아래로 늘려 원래 자리까지 덮음(사진은 사진 틀이 스스로 자르므로 카드 밖으로 넘치지 않게 잘라 둘 필요 없음) */
-    & a.group { translate: none; overflow: visible; }
-    & a.group::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-    }
-    & a.group:hover::before { bottom: -20px; }
-
-    /* 사진 자리 — 아래 글 칸만큼 비우고 둥글게 · 주인공이 가운데 오게 */
-    & a.group > [data-promo-photo] {
-        bottom: var(--promo-cap);
-        overflow: hidden;
-        border-radius: 22px;
-        background: #f1ece4;
-    }
-
-    & a.group > [data-promo-photo] :is(img, video) {
-        object-position: var(--promo-pos, 50% 50%);
-        transition: transform 0.5s ease, opacity 0.7s ease;
-    }
-
-    & a.group:hover > [data-promo-photo] :is(img, video) { transform: scale(1.04); }
-
-    /* 사진 안쪽 그늘(E2)도 사진 자리에만 */
-    & a.group::after { bottom: var(--promo-cap); }
-
-    /* 사진 위 글자 · 그늘 · 버튼은 웹에서 숨김(아래 글 칸으로 옮김) */
-    & a.group > div.absolute.inset-0[class*="bg-gradient"],
-    & a.group > div.absolute.z-10,
-    & a.group > span.absolute.z-10 { display: none; }
-
-    /* 액자 아래 글 칸 */
-    & a.group > [data-promo-cap] {
-        position: absolute;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        display: flex;
-        height: var(--promo-cap);
-        align-items: center;
-        gap: 10px;
-        padding: 4px 6px 0;
-    }
-
-    & [data-promo-no] {
-        flex: none;
-        color: var(--promo-ink);
-        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
-        font-size: 16px;
-    }
-
-    & [data-promo-title] {
-        flex: none;
-        color: #1e293b;
-        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
-        font-size: 19px;
-        white-space: nowrap;
-    }
-
-    & [data-promo-desc] {
-        min-width: 0;
-        overflow: hidden;
-        color: #64748b;
-        font-size: 14px;
-        font-weight: 600;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-
-    /* 작은 칸은 설명 없이 번호 · 제목 · 보러 가기만 */
-    & a.group:not([class*="row-span-2"]) [data-promo-desc] { display: none; }
-
-    & [data-promo-go] {
-        display: inline-flex;
-        flex: none;
-        align-items: center;
-        gap: 6px;
-        margin-left: auto;
-        color: var(--promo-ink);
-        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
-        font-size: 14px;
-        white-space: nowrap;
-    }
-
-    & [data-promo-go] i { font-size: 11px; transition: transform 0.2s ease; }
-    & a.group:hover [data-promo-go] i { transform: translateX(3px); }
-
-    /* 큰 칸 글 — 번호 · 제목 크게, 설명 한 줄, 분홍 알약 버튼 */
-    & a.group[class*="row-span-2"] > [data-promo-cap] { gap: 14px; padding: 6px 4px 0 10px; }
-    & a.group[class*="row-span-2"] [data-promo-no] { font-size: 21px; }
-    & a.group[class*="row-span-2"] [data-promo-title] { font-size: 25px; }
-    & a.group[class*="row-span-2"] [data-promo-desc] { font-size: 14.5px; }
-
-    & a.group[class*="row-span-2"] [data-promo-go] {
-        padding: 12px 22px;
-        border-radius: 999px;
-        background: #e9789a;
-        color: #fff;
-        font-size: 16px;
-        box-shadow: 0 14px 22px -14px rgb(200 80 120 / 75%), inset 0 2px 0 rgb(255 255 255 / 30%);
-    }
-}
 
 /* PC — 왼쪽 큰 사진(두 줄 높이 · 폭 3/5) + 오른쪽 2×2 */
-@media (min-width: 1024px) {
-    html:not(.ddb-app-mode) section#promo {
-        & div.grid { grid-template-columns: minmax(0, 3fr) repeat(2, minmax(0, 1fr)); }
-        & a.group[class*="row-span-2"] { grid-column: 1; grid-row: 1 / span 2; }
-    }
-}
 
 /* 태블릿 — 큰 사진 한 줄 가득(두 줄 높이) 아래 2×2 */
-@media (min-width: 768px) and (max-width: 1023px) {
-    html:not(.ddb-app-mode) section#promo div.grid { gap: 18px; grid-auto-rows: 230px; }
-}
 
 /* 모바일 — 액자 얇게 · 글 칸 낮게, 큰 칸은 제목 + 알약, 작은 칸은 번호 + 제목만 */
-@media (max-width: 767px) {
-    html:not(.ddb-app-mode) section#promo {
-        --promo-cap: 44px;
-
-        & div.grid { gap: 12px; grid-auto-rows: 168px; }
-        & a.group[class*="row-span-2"] { --promo-cap: 54px; grid-row: span 2; }
-        & a.group > [data-promo-photo] { border-radius: 18px; }
-        & a.group > [data-promo-cap] { gap: 6px; padding: 2px 4px 0; }
-        & [data-promo-no] { font-size: 13px; }
-        & [data-promo-title] { font-size: 15px; }
-        & a.group:not([class*="row-span-2"]) [data-promo-go] { display: none; }
-        & a.group[class*="row-span-2"] [data-promo-desc] { display: none; }
-        & a.group[class*="row-span-2"] > [data-promo-cap] { gap: 8px; padding: 4px 2px 0 6px; }
-        & a.group[class*="row-span-2"] [data-promo-no] { font-size: 16px; }
-        & a.group[class*="row-span-2"] [data-promo-title] { font-size: 19px; }
-        & a.group[class*="row-span-2"] [data-promo-go] { padding: 9px 15px; font-size: 13.5px; }
-    }
-}
 
 /* 모바일 웹 메인 "댕다방을 앱처럼 바로 열기" 띠 — 이제 보일 필요 없음(2026-10-24 사용자). 설치는 모바일 메뉴 "댕다방 앱 설치"로 그대로 */
-html:not(.ddb-app-mode) [data-home-install-strip] { display: none; }
 
 /* 메인 구역 보이는 순서(2026-10-24 사용자) — 대표 브랜드 → 매일 댕생활 → 기획전 → 신상품 → 인스타.
    큰 사진 구역(브랜드 · 기획전)이 연달아 붙지 않게 사이에 파스텔 판(매일 댕생활)을 두고, 기획전에서 신상품으로 쇼핑 흐름을 잇는다.
    코드 순서(app/page.tsx · 테스트가 지키는 순서)는 그대로 두고 웹 화면에서 보이는 순서만 바꿈. 앱은 그대로 */
 /* Explicit route marker: the former :has() + general sibling selector made
    Chromium invalidate the entire body when unrelated app carousels/pets changed. */
-html:not(.ddb-app-mode) main[data-home-page] {
-    & > section[data-daily-mine-teaser] { order: 1; }
-    & > section#promo { order: 2; }
-    & > section#new { order: 3; }
-    & > section#insta { order: 4; }
-    & > :is(section#new, section#insta) ~ :not(section) { order: 5; }
-}
 
 /* ═════════ 메인 인스타그램 — I3 흐르는 사진 띠(2026-10-24 사용자 확정) ═════════
    보라 파스텔 판 하나: 왼쪽 = 3D 카메라 없이 짧은 소개(영문 꼬리표 INSTAGRAM · 주아 @daengdabang · 설명 · 분홍 알약 팔로우),
    오른쪽 = 작은 사진 8장이 한 줄로 높낮이를 주며 천천히 왼쪽 끝까지 흘렀다 돌아옴(올리면 멈춤). 띠 양 끝은 부드럽게 사라짐.
    이동 거리는 띠 폭(container 단위)에 맞춰 자동 — 사진 · 링크 8개 그대로(코드 변경 없음). 움직임 줄이기 설정이면 멈추고 옆으로 밀어 보기. 앱은 그대로 */
-html:not(.ddb-app-mode) section#insta {
-    --ig-tile: 190px;
-    --ig-gap: 14px;
-
-    & > div {
-        position: relative;
-        display: grid;
-        width: calc(100% - 48px);
-        max-width: 1352px;
-        grid-template-columns: 300px minmax(0, 1fr);
-        align-items: center;
-        gap: 28px;
-        margin-inline: auto;
-        padding: 26px 0 26px 40px;
-        overflow: hidden;
-        border-radius: 40px;
-        background: #f3f0fe;
-        box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%), 0 26px 40px -30px rgb(15 23 42 / 30%);
-    }
-
-    /* 소개 */
-    & > div > div:first-child { flex-direction: column; align-items: flex-start; margin: 0; }
-    & > div > div:first-child h2 { flex-direction: column; align-items: flex-start; gap: 4px; font-size: 28px; }
-    & > div > div:first-child h2 > i { display: none; }
-
-    & > div > div:first-child h2::before {
-        content: "INSTAGRAM";
-        color: #6b51c9;
-        font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
-        font-size: 13px;
-        font-weight: 700;
-        letter-spacing: 0.16em;
-    }
-
-    & > div > div:first-child p { margin-top: 6px; color: #64748b; font-size: 15px; font-weight: 600; line-height: 1.7; }
-
-    & > div > div:first-child a {
-        margin-top: 18px;
-        width: fit-content;
-        padding: 12px 22px;
-        background: #e9789a;
-        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
-        font-size: 15px;
-        font-weight: 400;
-        box-shadow: 0 12px 20px -12px rgb(200 80 120 / 70%);
-    }
-
-    /* 사진 띠 — 한 줄 · 양 끝 흐려짐 · 띠 폭을 기준으로 이동 거리 계산 */
-    & > div > div.grid {
-        display: flex;
-        gap: var(--ig-gap);
-        overflow: hidden;
-        padding: 6px 0 22px;
-        container-type: inline-size;
-        -webkit-mask: linear-gradient(to right, transparent, #000 6%, #000 88%, transparent);
-        mask: linear-gradient(to right, transparent, #000 6%, #000 88%, transparent);
-    }
-
-    /* 사진만(2026-10-24 사용자 "액자 없이 사진만") — 흰 액자 · 안쪽 그늘 없이 둥근 사진 + 옅은 그림자 */
-    & > div > div.grid > a.group {
-        flex: none;
-        width: var(--ig-tile);
-        border: 0;
-        border-radius: 24px;
-        box-shadow: 0 18px 26px -18px rgb(15 23 42 / 40%);
-        animation: ddb-insta-flow 34s ease-in-out infinite alternate;
-    }
-
-    & > div > div.grid > a.group:hover { box-shadow: 0 22px 30px -18px rgb(200 80 120 / 45%); }
-    & > div > div.grid > a.group:nth-child(even) { margin-top: 18px; }
-    & > div > div.grid > a.group::after { display: none; }
-    & > div > div.grid:hover > a.group, & > div > div.grid:focus-within > a.group { animation-play-state: paused; }
-}
 
 /* 띠 폭(100cqw)보다 넘치는 만큼만 왼쪽으로 흘렀다 돌아옴 */
 @keyframes ddb-insta-flow {
     0%, 6% { transform: translateX(0); }
     94%, 100% { transform: translateX(min(0px, calc(100cqw - (var(--ig-tile) + var(--ig-gap)) * 8 + var(--ig-gap) - 24px))); }
-}
-
-@media (max-width: 767px) {
-    html:not(.ddb-app-mode) section#insta {
-        --ig-tile: 140px;
-        --ig-gap: 10px;
-
-        & > div { grid-template-columns: minmax(0, 1fr); gap: 16px; padding: 22px 0 18px 22px; border-radius: 30px; }
-        & > div > div:first-child { padding-right: 22px; }
-        & > div > div:first-child h2 { font-size: 24px; }
-    }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -3595,11 +2614,6 @@ html:not(.ddb-app-mode) section#insta {
    같은 줄 오른쪽 흰 알약 세 개(검색 · 카테고리/세부 · 정렬). 알약 · 펼친 목록 = 흰 크레파스 종이(옅은 회색 점선 · 청록/분홍 엇갈린 그림자).
    웹 크레파스 컨셉(스티커 요소 없음). 앱은 기존 머리글 · 필터를 그대로 쓰므로 이 줄은 앱에서 숨기고, 웹에서는 기존 것을 숨김 */
 html.ddb-app-mode [data-products-web-toolbar] {
-    display: none !important;
-}
-
-html:not(.ddb-app-mode) [data-products-head],
-html:not(.ddb-app-mode) [data-products-filter] {
     display: none !important;
 }
 
@@ -3871,118 +2885,13 @@ html:not(.ddb-app-mode) [data-products-filter] {
    모양: 흰 쿠션 카드 + 위쪽 분홍 띠에 3D 자물쇠 그림 · 주아 제목 + 세 색 밑줄 · 회색 설명 · 분홍 알약(주) / 흰 알약(보조) 버튼.
    원래 아이콘(자물쇠 동그라미 · 연구소 무지개 고리)은 숨김. 문구 · 링크 · 동작은 그대로, 앱은 닿지 않음.
    연구소 꾸밈(app/lab-web.css)이 !important 로 칠해 둔 값을 이기려고 이름표를 세 번 겹쳐 씀. */
-html:not(.ddb-app-mode) :is(main[data-mypage-web="gate"], [data-login-gate][data-login-gate][data-login-gate]) {
-    position: relative;
-    width: calc(100% - 32px);
-    max-width: 560px !important;
-    padding: 0 28px 34px !important;
-    overflow: hidden;
-    border: 0 !important;
-    border-radius: 34px !important;
-    background: #fff !important;
-    box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), inset 0 -10px 18px rgb(0 0 0 / 3%), 0 22px 36px -24px rgb(15 23 42 / 32%) !important;
-    text-align: center;
-
-    /* 분홍 띠 + 3D 자물쇠 */
-    &::before {
-        content: "";
-        display: block;
-        height: 156px;
-        margin: 0 -28px;
-        background: url("/images/ui/stickers/login-lock.webp") center 24px / 108px no-repeat, #ffeef3;
-        box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%);
-    }
-
-    & > :is(i, span:first-child), & .lab-gate-ring, & .lab-gate-icon { display: none !important; }
-
-    /* 제목 — 주아 + 세 색 밑줄 */
-    & :is(h1, h2) {
-        position: relative;
-        width: fit-content;
-        margin: 28px auto 0 !important;
-        color: #1e293b;
-        font-family: var(--font-jua), var(--font-wanted-sans), sans-serif;
-        font-size: 28px !important;
-        font-weight: 400 !important;
-        line-height: 1.35;
-        isolation: isolate;
-    }
-
-    & :is(h1, h2)::after {
-        content: "";
-        position: absolute;
-        right: 1%;
-        bottom: -0.1em;
-        left: 0;
-        z-index: -1;
-        height: 0.22em;
-        border-radius: 999px 70% 999px 60%;
-        background: repeating-linear-gradient(94deg, rgb(8 145 178 / 62%) 0 14px, rgb(239 71 111 / 58%) 14px 28px, rgb(245 158 11 / 62%) 28px 42px);
-    }
-
-    /* 연구소 이름 표시가 있으면 제목 위에 */
-    & > [class*="justify-center"]:not(:last-child) { margin-top: 24px; }
-
-    & :is(h1, h2) + p {
-        max-width: 400px;
-        margin: 16px auto 0 !important;
-        color: #64748b;
-        font-size: 14px;
-        font-weight: 600;
-        line-height: 1.7;
-        word-break: keep-all;
-    }
-
-    /* 버튼 줄 · 버튼 하나 */
-    & > div:last-child { display: flex !important; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 26px !important; }
-    & > a:last-child { margin-top: 26px !important; }
-
-    & :is(.btn, a[class*="min-h-12"]) {
-        display: inline-flex;
-        min-height: 50px;
-        align-items: center;
-        justify-content: center;
-        padding: 0 28px !important;
-        border: 0 !important;
-        border-radius: 999px !important;
-        font-size: 14.5px;
-        font-weight: 800;
-    }
-
-    /* 주 버튼 — 분홍 알약 */
-    & :is(.btn-primary, a[class*="bg-indigo-6"]) { background: #e9789a !important; color: #fff !important; box-shadow: 0 10px 18px -12px rgb(200 80 120 / 70%) !important; }
-    & :is(.btn-primary, a[class*="bg-indigo-6"]):hover { background: #e26690 !important; }
-
-    /* 보조 버튼 — 흰 알약 */
-    & :is(.btn-secondary, a[class*="border-indigo-2"]) { background: #fff !important; color: #334155 !important; box-shadow: 0 0 0 1.5px #efe7dc, 0 8px 14px -12px rgb(15 23 42 / 30%) !important; }
-}
 
 /* 화면 전체 안내(main)는 위아래 여백, 펫렌즈 · 연구소 안 카드는 제자리 가운데 */
-html:not(.ddb-app-mode) :is(main[data-mypage-web="gate"], main[data-login-gate]) { margin: 56px auto 80px; }
-html:not(.ddb-app-mode) div[data-login-gate][data-login-gate][data-login-gate] { margin: 0 auto; }
-
-@media (max-width: 640px) {
-    html:not(.ddb-app-mode) :is(main[data-mypage-web="gate"], [data-login-gate][data-login-gate][data-login-gate]) {
-        padding: 0 20px 28px !important;
-        border-radius: 28px !important;
-
-        &::before { height: 132px; margin: 0 -20px; background-size: 92px, auto; }
-        & :is(h1, h2) { font-size: 24px !important; }
-    }
-}
 
 /* ═════════ 개인정보 처리 안내 창(components/site/PrivacyNoticeModal.tsx · 2026-10-24) ═════════
    웹 크레파스 K5 결: 흐린 뒤 화면 + 흰 쿠션 창 · 보라 띠 머리(영문 손글씨 PRIVACY · 주아 제목 · 설명 · 3D 안내 그림) ·
    본문 = 크림 목차 알약 · 조항마다 주아 제목 + 옅은 실선 · 조항 번호 분홍 · 표는 크림 머리 둥근 표 · 아래 버튼 줄(흰 알약 · 분홍 알약).
    모바일은 아래에서 올라오는 시트. 점선 · 기울기 · 스티커 없음 */
-html:not(.ddb-app-mode) .ddb-privacy-modal {
-    position: fixed;
-    inset: 0;
-    z-index: 2147483000;
-    display: grid;
-    place-items: center;
-    padding: 24px;
-}
 
 .ddb-privacy-modal .ddb-pm-backdrop {
     position: absolute;
@@ -4629,301 +3538,58 @@ html:not(.ddb-app-mode) .ddb-privacy-modal {
 [data-desktop-app-qr-wrap] .ddb-aib-hide:hover { background: #fff0f4; color: #d0436d; }
 
 /* 창으로 열리는 개인정보처리방침 링크 — 작은 "창" 표시(푸터 · 창 안 링크 제외) */
-html:not(.ddb-app-mode) a[href^="/privacy"]:not([data-privacy-page]):not(footer a):not(.ddb-privacy-modal a)::after {
-    content: "";
-    display: inline-block;
-    width: 0.85em;
-    height: 0.85em;
-    margin-left: 0.3em;
-    vertical-align: -0.08em;
-    background: currentColor;
-    opacity: 0.75;
-    -webkit-mask: url("data:image/svg+xml;utf8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22%3E%3Crect x=%221.5%22 y=%223%22 width=%2213%22 height=%2211%22 rx=%222.5%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.8%22/%3E%3Cpath d=%22M1.5 6.5h13%22 stroke=%22black%22 stroke-width=%221.8%22/%3E%3C/svg%3E") center / contain no-repeat;
-    mask: url("data:image/svg+xml;utf8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22%3E%3Crect x=%221.5%22 y=%223%22 width=%2213%22 height=%2211%22 rx=%222.5%22 fill=%22none%22 stroke=%22black%22 stroke-width=%221.8%22/%3E%3Cpath d=%22M1.5 6.5h13%22 stroke=%22black%22 stroke-width=%221.8%22/%3E%3C/svg%3E") center / contain no-repeat;
-}
 
 /* 웹 추천 카드(RecommendationProductCard · 2026-10-25) — 상품 카드가 칸 높이를 다 차지해 아래 "추천 이유" 칸이 밀려나지 않게
    위아래로 쌓고 상품 카드가 남는 높이를 채움(메인 추천 칸 · 추천 페이지 공통, 앱은 그대로) */
-html:not(.ddb-app-mode) [data-recommendation-product] { display: flex; flex-direction: column; }
-html:not(.ddb-app-mode) [data-recommendation-product] > article { flex: 1; height: auto !important; }
 
 /* ═════════ 추천할 반려견 고르기(components/recommendation/RecommendationPetSelector.tsx · 2026-10-24 사용자) ═════════
    웹: 드롭다운 대신 아이 사진 동그라미 + 주아 이름 + 견종 칩(고른 아이는 분홍 테 · 체크), 메인 추천 · 추천 전체 화면 같이.
    메인 추천의 파란 안내 줄(펫렌즈 반영 상태 · 추천 상품 없음)은 아래 빈 상태 카드와 겹쳐 웹에서 숨김. 앱은 그대로 */
-html:not(.ddb-app-mode) [data-pet-select-legacy] { display: none; }
-html:not(.ddb-app-mode) [data-rec-notice] { display: none; }
-
-html:not(.ddb-app-mode) [data-pet-chooser] {
-    display: grid;
-    justify-items: end;
-    gap: 8px;
-
-    & .pc-label { color: #8391a3; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 13.5px; }
-    & .pc-list { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
-
-    & button {
-        display: inline-flex;
-        align-items: center;
-        gap: 9px;
-        min-height: 54px;
-        padding: 5px 14px 5px 5px;
-        border: 0;
-        border-radius: 999px;
-        background: #fff;
-        cursor: pointer;
-        box-shadow: inset 0 0 0 1.5px #efe5d8, 0 10px 16px -14px rgb(15 23 42 / 45%);
-        transition: transform 0.15s ease, box-shadow 0.15s ease;
-    }
-
-    & button:hover:not(:disabled) { transform: translateY(-2px); }
-    & button:disabled { cursor: wait; opacity: 0.65; }
-    & button.is-on { background: #fff5f8; box-shadow: inset 0 0 0 2.5px #f7a8bf, 0 12px 18px -12px rgb(200 80 120 / 60%); }
-    & .pc-face { display: grid; width: 44px; height: 44px; place-items: center; overflow: hidden; border: 3px solid #fff; border-radius: 50%; background: #fffaf1; box-shadow: 0 4px 8px -4px rgb(15 23 42 / 30%); }
-    & .pc-face img { width: 80%; height: 80%; object-fit: contain; }
-    & .pc-face.is-photo img { width: 100%; height: 100%; object-fit: cover; }
-    & .pc-text { display: grid; gap: 1px; text-align: left; }
-    & .pc-text b { color: #1e293b; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 16px; font-weight: 400; line-height: 1.2; }
-    & .pc-text small { color: #94a3b8; font-size: 11px; font-weight: 800; }
-    & button.is-on .pc-text small { color: #e2557a; }
-    & button > i { display: grid; width: 20px; height: 20px; place-items: center; border-radius: 50%; background: #e9789a; color: #fff; font-size: 10px; }
-}
-
-@media (max-width: 767px) {
-    html:not(.ddb-app-mode) [data-pet-chooser] { justify-items: start; }
-    html:not(.ddb-app-mode) [data-pet-chooser] .pc-list { justify-content: flex-start; }
-}
 
 /* ── 웹 손글씨 꼬리표 → 주아체 (2026-10-25 사용자 "같은 방식으로 표현된 곳 모두 주아체로") ──
    웹(html:not(.ddb-app-mode))에서만 --font-crayon 을 주아체로 바꿔, 영어 꼬리표 · 작은 손글씨 이름표가 한꺼번에 주아체가 됨.
    진짜 손글씨가 필요한 곳(케어톡 · 댕다방 연구소 글자 · 손편지 메모 · 출석 도장)은 --font-gaegu 로 원래 손글씨 유지.
    앱은 그대로(--font-gaegu 가 없으면 각 모듈이 --font-crayon 으로 되돌아감). */
-html:not(.ddb-app-mode) { --font-gaegu: var(--font-crayon); }
-html:not(.ddb-app-mode) body { --font-crayon: var(--font-jua); }
 /* 케어톡(떠 있는 창 · 전체 화면)은 손글씨 글꼴 선택을 그대로 — 안에서 --font-crayon 을 다시 손글씨로 */
-html:not(.ddb-app-mode) :is([data-chat-widget-open], [data-chat-shell]) { --font-crayon: var(--font-gaegu); }
 
 /* ── 웹 스크롤바 정리 (2026-10-25 사용자 "모달은 스크롤바 없이 스크롤만, 모바일은 전체적으로 스크롤바 없이") ──
    스크롤 자체(휠 · 터치 · 키보드)는 그대로, 막대만 숨김. 앱(ddb-app-mode)은 그대로.
    !important — 몇몇 칸(약관 목차 · 케어톡 대화 목록 등)이 얇은 막대를 따로 정해 둔 것보다 앞서게. */
 /* ① 웹 창(모달) — 창과 그 안 스크롤 칸 모두 */
-html:not(.ddb-app-mode) :is([role="dialog"], [role="dialog"] *) { scrollbar-width: none !important; -ms-overflow-style: none; }
-html:not(.ddb-app-mode) :is([role="dialog"], [role="dialog"] *)::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
 /* ② 휴대폰 폭(767px 이하) — 페이지와 안쪽 스크롤 칸 전체(PC 폭은 스크롤바 그대로) */
-@media (max-width: 767px) {
-    html:not(.ddb-app-mode), html:not(.ddb-app-mode) * { scrollbar-width: none !important; -ms-overflow-style: none; }
-    html:not(.ddb-app-mode)::-webkit-scrollbar, html:not(.ddb-app-mode) *::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
-}
 
 /* ═════════ 세트 카드(BundleCard) — 상품 카드(C1 쿠션 액자)와 같은 결(2026-10-25 사용자 "카드 모양이 다른 상품 카드와 다름") ═════════
    흰 입체 쿠션 카드 · 안쪽 크림 액자 사진(묶음 네 칸도 크림) · 왼쪽 정렬 정보 · 바닥 가격 줄(옅은 실선 위). 앱은 그대로 */
-html:not(.ddb-app-mode) article[data-bundle-card] {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    padding: 10px;
-    border: 0;
-    border-radius: 28px;
-    background: #fff;
-    box-shadow:
-        inset 0 4px 0 rgb(255 255 255 / 95%),
-        inset 0 -10px 18px rgb(0 0 0 / 4%),
-        0 20px 30px -22px rgb(15 23 42 / 36%),
-        0 0 0 1px #f4ece1;
-    transition: transform 0.18s ease, box-shadow 0.18s ease;
-
-    &:hover {
-        box-shadow:
-            inset 0 4px 0 rgb(255 255 255 / 95%),
-            inset 0 -10px 18px rgb(0 0 0 / 4%),
-            0 26px 36px -24px rgb(200 80 120 / 45%),
-            0 0 0 1.5px #f7c5d4;
-    }
-
-    /* 사진 — 안쪽 크림 액자(묶음 네 칸 바탕도 크림) · 아래 어두운 띠 대신 옅은 띠 */
-    & > a:first-child { border-radius: 20px; background: #fffaf1; }
-    & > a:first-child > div.grid { background: #fffaf1; }
-    & > a:first-child > div.grid > div { border-radius: 12px; }
-    & > a:first-child > div.absolute.inset-x-0.bottom-0 { background: linear-gradient(to top, rgb(15 23 42 / 45%), transparent); }
-
-    /* 정보 칸 — 남는 높이를 채워 가격 줄을 바닥에 */
-    & > div:last-child { display: flex; flex: 1; min-width: 0; flex-direction: column; padding: 12px 6px 4px; }
-    & > div:last-child > a > p:first-child { color: #0e8aa0; font-size: 10.5px; letter-spacing: 0.14em; }
-    & > div:last-child h3 { min-height: 2.7em; margin-top: 4px; color: #1e293b; font-size: 14px; font-weight: 800; line-height: 1.35; }
-    & > div:last-child > a > p:last-child { min-height: 0; margin-top: 4px; color: #64748b; font-size: 12px; font-weight: 600; line-height: 1.5; -webkit-line-clamp: 1; }
-    & > div:last-child > div:last-child { margin-top: auto; padding-top: 10px; border-top: 1.5px solid #f6efe5; align-items: center; }
-    & .ddb-crayon-price { font-size: 21px; }
-}
-@media (max-width: 640px) {
-    html:not(.ddb-app-mode) article[data-bundle-card] {
-        padding: 8px;
-        border-radius: 22px;
-
-        & > a:first-child { border-radius: 16px; }
-        & > div:last-child { padding: 10px 4px 2px; }
-        & > div:last-child h3 { font-size: 13px; }
-        & > div:last-child > a > p:last-child { display: none; }
-        & > div:last-child > div:last-child { flex-wrap: wrap; gap: 4px; }
-        & .ddb-crayon-price { font-size: 17px; }
-        & > a:first-child > div.absolute.inset-x-0.bottom-0 { padding: 8px; }
-    }
-}
 /* 세트 상품 페이지 — 휴대폰 · 작은 태블릿도 한 줄 두 장(md 768 부터는 원래 2 → 4) */
-@media (max-width: 767px) {
-    html:not(.ddb-app-mode) main[data-shop-web="bundles"] > div.grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-}
 
 
 /* ═════════ 오프라인 안내(/offline) — 웹 크레파스 결(2026-10-25 점검: 점선 · 낱말 중간 줄바꿈 정리). 앱은 그대로 ═════════
    2026-10-26: 기본 .ddb-crayon-icon · .ddb-crayon-link 가 점선 · 크림 바탕을 !important 로 걸어 웹 규칙을 이기던 것 →
    웹 규칙에도 !important(앱 규칙은 그대로). 올렸을 때 기울기 없이 분홍 진하게. 웹은 "메인으로"(/main) · 앱은 "앱 홈 다시 열기" */
-html:not(.ddb-app-mode) [data-offline-web] {
-    & .ddb-crayon-paper { border: 0; border-style: none !important; border-radius: 34px; background: #fff !important; box-shadow: inset 0 3px 0 rgb(255 255 255 / 90%), inset 0 -10px 18px rgb(0 0 0 / 3%), 0 22px 36px -24px rgb(15 23 42 / 32%); }
-    & .ddb-crayon-icon { border: 0 !important; border-radius: 50%; background: #e9f4fb !important; color: #0e8aa0 !important; box-shadow: 0 0 0 6px #f3f9fd !important; filter: none; }
-    & .ddb-crayon-kicker { color: #0e8aa0; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; }
-    & .ddb-crayon-title { font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-weight: 400; word-break: keep-all; }
-    & p { word-break: keep-all; }
-    & .ddb-crayon-link { border: 0 !important; border-radius: 999px; background: #e9789a !important; color: #fff !important; font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-weight: 400; box-shadow: inset 0 2px 0 rgb(255 255 255 / 28%), 0 14px 22px -14px rgb(200 80 120 / 80%) !important; transition: background 0.18s, transform 0.15s; }
-    & .ddb-crayon-link:hover { background: #e26690 !important; color: #fff !important; transform: translateY(-1px); }
-    & .ddb-crayon-link:active { background: #d0436d !important; transform: scale(0.98); }
-    & .ddb-crayon-link:focus-visible { outline: 3px solid #f7c3d2; outline-offset: 3px; }
-    /* 웹은 앱 홈 단추 대신 "메인으로"(마크업은 hidden — 웹에서만 보임) */
-    & [data-offline-app-link] { display: none !important; }
-    & [data-offline-main-link] { display: inline-flex !important; }
-}
 
 
 /* ═════════ 한국어 줄바꿈(웹 전체 · 2026-10-25 휴대폰 점검) ═════════
    기본값은 한 글자 단위로 줄을 바꿔 "불러오지 못했습 / 니다"처럼 낱말 중간이 끊겼다(휴대폰 66개 화면 · 532곳).
    웹은 띄어쓰기 단위로만 줄을 바꾸고, 칸보다 긴 낱말(주소 · 긴 영문 · 숫자)만 쪼개 화면 밖으로 나가지 않게. 앱은 그대로 */
-html:not(.ddb-app-mode) body {
-    word-break: keep-all;
-    overflow-wrap: anywhere;
-}
 
 
 /* ═════════ 상품 상세 따라오는 구매 바(.pd-bar, ProductInfo) — 아이폰 아래 홈 막대 자리(2026-10-26, 웹만) ═════════
    바가 화면 맨 아래에 붙어 있어 홈 막대가 단추를 가렸음 → 아래 안전 여백만큼 띠를 늘림. 겉모양은 app/product-detail-web.css 그대로 */
-html:not(.ddb-app-mode) .pd-bar {
-    padding-bottom: env(safe-area-inset-bottom, 0px);
-}
 
 /* ═════════ 페이지 첫 소개 카드 띠(2026-10-26 사용자: 보물광산 표지처럼 소개 카드에 카드 색 띠) ═════════
    .ddb-hero-band 를 붙인 소개 카드 가장자리 안쪽에 크레파스 결 색 띠 + 흰 안쪽 선을 겹쳐 그림. 카드 바탕 · 크기 · 배치는 그대로(띠는 바탕 위,
    글은 띠보다 안쪽). 띠 색은 카드 색(is-* · data-tone)에 맞춤: 분홍 · 노랑 · 연보라 · 민트 · 하늘. 웹만(앱은 그대로) */
-html:not(.ddb-app-mode) .ddb-hero-band.ddb-hero-band {
-    --ddb-band: #f6bfd0;
-    --ddb-band-w: 14px;
-    position: relative;
-    /* 흰 안쪽 선(띠 바로 안 5px) + 표지와 같은 바닥 그림자 */
-    box-shadow: inset 0 0 0 calc(var(--ddb-band-w) + 5px) rgb(255 255 255 / 70%), 0 30px 50px -30px rgb(120 80 60 / 40%) !important;
-}
 
 /* 띠 — 카드 둥근 모서리를 따라 가장자리만(가운데는 가림 없음), 크레파스 알갱이 결 */
-html:not(.ddb-app-mode) .ddb-hero-band.ddb-hero-band::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    padding: var(--ddb-band-w);
-    border-radius: inherit;
-    background-color: var(--ddb-band);
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .55 -.12'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
-    box-shadow: inset 0 3px 0 rgb(255 255 255 / 55%), inset 0 -8px 14px rgb(120 60 20 / 8%);
-    pointer-events: none;
-    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-    mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
-}
 
 /* 띠 색 — 카드 색에 맞춤(기본 분홍). 후기 · 안내 판은 각자 기본 색 */
-html:not(.ddb-app-mode) :is(.ddb-hero-band.is-yellow, .ddb-hero-band[data-tone="yellow"], .rv-hero.ddb-hero-band) { --ddb-band: #f7d48a; }
-html:not(.ddb-app-mode) :is(.ddb-hero-band.is-lav, .ddb-hero-band[data-tone="lav"]) { --ddb-band: #d9cdf6; }
-html:not(.ddb-app-mode) :is(.ddb-hero-band.is-mint, .ddb-hero-band[data-tone="mint"]) { --ddb-band: #b8e4cf; }
-html:not(.ddb-app-mode) :is(.ddb-hero-band.is-sky, .ddb-hero-band[data-tone="sky"], .lw-hero.ddb-hero-band:not([data-tone])) { --ddb-band: #bfe0f1; }
 
 /* 휴대폰 — 띠를 조금 가늘게 */
-@media (max-width: 640px) {
-    html:not(.ddb-app-mode) .ddb-hero-band.ddb-hero-band { --ddb-band-w: 10px; }
-}
 
 /* ═════════ 입혀보기 진행 창 · 알림 단추(2026-10-26 사용자: 작게 줄어든 창 · 검정 알림 단추도 웹 결로) ═════════
    lib/pet-tryon-background.tsx 의 data-tryon-dock — panel(작은 진행 창) · alert(다시 로그인 안내) · pill(오른쪽 아래 알림 단추).
    흰 종이 쿠션 + 연보라 머리 띠 · 주아 제목 · 분홍/흰 알약 단추 · 파스텔 진행 막대, 검정 알약 → 흰 쿠션 알약. 기능 · 문구 그대로, 웹만 */
-html:not(.ddb-app-mode) :is(section[data-tryon-dock="panel"], section[data-tryon-dock="alert"]) {
-    --dock-jua: var(--font-jua), var(--font-wanted-sans), sans-serif;
-    border: 0;
-    border-radius: 28px;
-    background: #fffdf8;
-    box-shadow: 0 0 0 6px rgb(255 255 255 / 60%), 0 28px 50px -24px rgb(60 40 120 / 45%);
-
-    /* 머리 — 연보라 띠(다시 로그인 안내는 크림 노랑) · 꼬리표 손글씨 · 주아 제목 */
-    & > div:first-child { border: 0; background: linear-gradient(120deg, #f3f0fe, #f8f5ff 55%, #fdf7ff); box-shadow: inset 0 3px 0 rgb(255 255 255 / 85%); }
-    & > div:first-child p:first-child {
-        width: fit-content;
-        background: repeating-linear-gradient(172deg, #07849e 0 5px, #ef476f 5px 10px, #e98708 10px 15px);
-        -webkit-background-clip: text;
-        background-clip: text;
-        font-family: var(--font-crayon), var(--font-wanted-sans), sans-serif;
-        letter-spacing: 0.08em;
-        -webkit-text-fill-color: transparent;
-    }
-    & h2 { color: #1e293b; font-family: var(--dock-jua); font-size: 16px; font-weight: 400; }
-    & > div:first-child button { background: #fff; color: #64748b; box-shadow: 0 6px 12px -8px rgb(15 23 42 / 40%); }
-
-    /* 여러 작업 목록 · 사진 두 칸 — 회색 → 크림 */
-    & [class*="bg-neutral-50"] { border-color: transparent; background-color: #faf6ef; }
-    & .grid > div[class*="rounded-xl"] { border-radius: 18px; box-shadow: inset 0 0 0 1.5px #efe5d8; }
-    & button[class*="rounded-xl"][class*="border-indigo-300"] { border-color: #f7c5d4; }
-
-    /* 글 · 칸 — 인디고 → 연보라, 칸은 테두리 없는 쿠션 */
-    & [class*="text-indigo-"] { color: #6b51c9; }
-    & [class*="text-indigo-9"] { color: #4c3d8f; }
-    & [class*="bg-indigo-50"], & [class*="bg-indigo-100"] { background-color: #f3f0fe; }
-    & :is(div, p)[class*="rounded-"]:is([class*="bg-indigo-50"], [class*="bg-amber-50"], [class*="bg-neutral-50"]):not([class*="rounded-full"]) { border: 0; border-radius: 18px; }
-    & [class*="bg-amber-50"] { background-color: #fff6e3; }
-
-    /* 진행 막대 — 크림 길 · 분홍→연보라 */
-    & div[role="progressbar"] { background: #f1ece4; }
-    & div[role="progressbar"] > div { background-image: linear-gradient(90deg, #f7a8bf, #cfc3f5); }
-
-    /* 단추 — 주요 분홍 알약 · 보조 흰 알약 */
-    & :is(button, a)[class*="bg-indigo-6"] {
-        border: 0;
-        border-radius: 999px;
-        background: #e9789a;
-        color: #fff;
-        font-family: var(--dock-jua);
-        font-size: 13.5px;
-        font-weight: 400;
-        box-shadow: inset 0 2px 0 rgb(255 255 255 / 28%), 0 12px 18px -12px rgb(200 80 120 / 80%);
-    }
-    & :is(button, a)[class*="bg-indigo-6"]:hover { background: #e26690; }
-    & button[class*="border-neutral-200"] {
-        border: 0;
-        border-radius: 999px;
-        background: #fff;
-        color: #334155;
-        font-family: var(--dock-jua);
-        font-size: 13.5px;
-        font-weight: 400;
-        box-shadow: inset 0 0 0 2px #e6dccf;
-    }
-    & button[class*="border-neutral-200"]:hover { background: #fff8f2; }
-    & input { border-radius: 14px; border-color: #efe5d8; }
-}
 
 /* 다시 로그인 안내 — 머리 띠 크림 노랑 */
-html:not(.ddb-app-mode) section[data-tryon-dock="alert"] > div:first-child { background: linear-gradient(120deg, #fff6e3, #fffaf0); }
 
 /* 오른쪽 아래 알림 단추 — 검정 알약 → 흰 쿠션 알약(분홍 테 · 발바닥 동그라미), 완성이면 민트 */
-html:not(.ddb-app-mode) button[data-tryon-dock="pill"] {
-    background: #fff;
-    color: #1e293b;
-    box-shadow: inset 0 0 0 2px #f7c5d4, 0 16px 28px -16px rgb(200 80 120 / 60%);
-}
-
-html:not(.ddb-app-mode) button[data-tryon-dock="pill"] > span:first-child { background: #ffeef3; color: #e2557a; }
-html:not(.ddb-app-mode) button[data-tryon-dock="pill"] > span:first-child > span { border-color: rgb(233 120 154 / 45%); }
-html:not(.ddb-app-mode) button[data-tryon-dock="pill"] > span:last-child > span:first-child { font-family: var(--font-jua), var(--font-wanted-sans), sans-serif; font-size: 13.5px; font-weight: 400; }
-html:not(.ddb-app-mode) button[data-tryon-dock="pill"] > span:last-child > span:last-child { color: #8391a3; }
-html:not(.ddb-app-mode) button[data-tryon-dock="pill"][data-ready] { background: #e9f8f1; color: #0f6e56; box-shadow: inset 0 0 0 2px #a8e0c6, 0 16px 28px -16px rgb(18 161 122 / 55%); }
-html:not(.ddb-app-mode) button[data-tryon-dock="pill"][data-ready] > span:first-child { background: #fff; color: #12a17a; }

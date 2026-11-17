@@ -1,5 +1,8 @@
 "use client";
 
+import "./home-shared.generated.css";
+import "./home-sticker.css";
+
 /**
  * 앱 홈 새 시안 1 — "스티커북"(다꾸 속지) · 로컬 시안 전용, 배포 X
  * ---------------------------------------------------------------------
@@ -22,12 +25,12 @@ import Image from "next/image";
 import Link from "@/components/app-shell/AppLink";
 import { useRef, useState } from "react";
 import { Peek, haptic, useExpandNav, usePressable } from "./gestures";
-import { LoginInvite, PostIt, STICKER_CSS, Tape } from "./sticker-kit";
-import { COVERS, CoinChip, CoverArt, CoverWindow, KIT_CSS, TEXT, TEXT_SOFT, TriTitle, recentDays, type Cover } from "./kit";
+import { LoginInvite, PostIt, Tape } from "./sticker-kit";
+import { COVERS, CoinChip, CoverArt, CoverWindow, TEXT, TEXT_SOFT, TriTitle, recentDays, type Cover } from "./kit";
 import dynamic from "next/dynamic";
 
 import { coverHref } from "./page-data";
-import { ConceptBar, HC_CSS, WEATHER_KO, WEEK, flyCoin, greeting, todayIndex, useDemoSession, useGrowthVisibility, useLiveWeather, useMember, useNow, useTodayDemo, walkAdvice } from "./shared";
+import { ConceptBar, WEATHER_KO, WEEK, flyCoin, greeting, todayIndex, useDemoSession, useGrowthVisibility, useLiveWeather, useMember, useNow, useTodayDemo, walkAdvice } from "./shared";
 import { hasVerifiedPetPhoto } from "@/lib/store";
 
 const SectionNow = dynamic(() => import("./SectionNow"), {
@@ -89,7 +92,6 @@ export default function HomeSticker() {
 
     return (
         <div className="relative isolate flex-1 overflow-x-hidden break-keep px-3.5 pb-12 pt-4" style={{ color: TEXT }}>
-            <style>{KIT_CSS + HC_CSS + STICKER_CSS + HOME_CSS}</style>
             <div aria-hidden="true" className="ah-bg pointer-events-none fixed inset-0 -z-10" />
             <div className="mx-auto w-full max-w-md">
                 <ConceptBar session={session} onSession={setSession} />
@@ -124,7 +126,7 @@ export default function HomeSticker() {
                                     // 실제 우리 아이 사진(서버가 확인한 사진만 — 웹 마이페이지와 같은 기준)
                                     // eslint-disable-next-line @next/next/no-img-element
                                     ? <img src={pet.photoDataUrl} alt={`${petName} 사진`} className="absolute inset-0 h-full w-full object-cover" />
-                                    : <Image src="/images/ui/logo-poodle-384.webp" alt="댕다방 검정 푸들" fill sizes="120px" className="object-cover" />}
+                                    : <Image src="/images/ui/logo-poodle-384.webp" alt="댕다방 검정 푸들" fill sizes="120px" loading="eager" className="object-cover" />}
                             </span>
                             <span className="ah-display absolute inset-x-0 bottom-1 text-center text-[13px]" style={{ color: "#ea4c7c" }}>{member ? petName : "댕다방"}</span>
                         </span>
@@ -222,24 +224,3 @@ export default function HomeSticker() {
 }
 
 /* 홈(스티커북) 바로 가기 스티커 CSS */
-const HOME_CSS = `
-/* 카드 · 그림을 한 장으로 둘러싼 흰 칼선 + 종이에 붙은 그림자 */
-.hm-short { filter: drop-shadow(2.5px 0 0 #fff) drop-shadow(-2.5px 0 0 #fff) drop-shadow(0 2.5px 0 #fff) drop-shadow(0 -2.5px 0 #fff)
-  drop-shadow(0 0 .6px rgba(170,120,115,.5)) drop-shadow(0 8px 7px rgba(90,60,50,.2));
-  transition: transform .5s cubic-bezier(.3,1.7,.45,1); -webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; }
-/* 동네 돌봄: 오른쪽 아래 모서리가 접힌 지도 */
-.hm-fold { clip-path: polygon(0 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%); }
-.hm-fold::after { content: ""; position: absolute; right: 0; bottom: 0; width: 22px; height: 22px; border-radius: 0 0 0 6px;
-  background: linear-gradient(135deg, #b6e3cb 50%, transparent 50%); }
-.hm-fold .hm-go { margin-right: 14px; }
-/* 그림 스티커: 살짝 기울어 카드 위로 튀어나옴 */
-.hm-icon { rotate: var(--ir); transition: transform .45s cubic-bezier(.3,1.8,.5,1); }
-/* 누르면 카드가 종이에서 들리고 그림은 한 번 더 통통 */
-.hm-short:active { transform: translateY(-4px) scale(1.03); transition-duration: .12s; }
-.hm-short:active .hm-icon { transform: scale(1.12) translateY(-3px); transition-duration: .12s; }
-.hm-go { transition: transform .3s; }
-.hm-short:active .hm-go { transform: translateX(3px); }
-@media (prefers-reduced-motion: reduce) { .hm-short, .hm-icon { transition: none; } }
-/* 로그인 후 "오늘 출근은 매일 댕생활에서" — 노란 포스트잇 */
-.hm-note { background: #fff3a6; color: #6b4708; box-shadow: 0 8px 12px -9px rgba(110,80,40,.5); -webkit-tap-highlight-color: transparent; transition: transform .3s cubic-bezier(.3,1.6,.5,1); }
-`;

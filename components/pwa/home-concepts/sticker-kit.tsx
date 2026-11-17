@@ -73,14 +73,14 @@ export function LoginInvite({ redirect = "/app/home-1/", title = ["로그인하�
         <div className="st-place st-invite relative mt-4 rounded-[1.2rem] pb-4 pl-6 pr-4 pt-6" style={{ ["--r" as string]: "-1deg", ["--d" as string]: "380ms", rotate: "-1deg" }}>
             <Tape className="-top-2 left-1/2 h-5 w-20 -translate-x-1/2" color="repeating-linear-gradient(90deg, rgba(255,200,215,.85) 0 8px, rgba(255,226,234,.85) 8px 16px)" style={{ rotate: "2deg" }} />
             {/* 귀퉁이에 붙여 둔 스티커 두 장(장식) */}
-            <Image src="/images/ui/stickers/sticker-mon.webp" alt="" width={48} height={48} aria-hidden="true" className="st-diecut-img absolute -left-4 -top-4 h-12 w-12" style={{ rotate: "-14deg" }} />
+            <Image src="/images/ui/stickers/sticker-mon.webp" alt="" width={48} height={48} loading="eager" aria-hidden="true" className="st-diecut-img absolute -left-4 -top-4 h-12 w-12" style={{ rotate: "-14deg" }} />
             {/* 제목 + 오른쪽 우리 아이 기록 보관함(출근 · 돌봄 · 기록, 둥실) — 작게, 제목보다 살짝 아래에. 체크리스트는 그 아래 */}
             <div className="flex items-start justify-between gap-2">
                 <p className="ah-display text-[17px] leading-snug">
                     <span className="st-marker">{title[0]}</span><br />{title[1]}
                 </p>
                 <span aria-hidden="true" className="st-box relative -mr-1 mt-4 block h-[4.2rem] w-[4.2rem] shrink-0">
-                    <Image src="/images/ui/stickers/record-box.webp" alt="" fill sizes="90px" className="object-contain drop-shadow-[0_10px_10px_rgba(120,80,140,.28)]" />
+                    <Image src="/images/ui/stickers/record-box.webp" alt="" fill sizes="90px" loading="eager" className="object-contain drop-shadow-[0_10px_10px_rgba(120,80,140,.28)]" />
                 </span>
             </div>
             <ul className="mt-3 space-y-1.5">
