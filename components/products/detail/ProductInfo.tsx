@@ -9,6 +9,8 @@ import { reviewSellerLabel } from "@/lib/catalog/review-groups";
  * - [장바구니 담기]/[구매하기]는 위쪽·하단 바 어디서 누르든 OptionSheet(옵션 선택 시트)를 연다.
  *   → 수량·색상·누적은 시트에서 확정(위/아래 동작 통일, 스크롤 위치와 무관하게 옵션 선택 가능).
  * - 메인 액션 버튼이 스크롤로 화면을 벗어나면 하단 고정 바를 띄운다(상세/리뷰까지 내려가도 구매 가능).
+ * - 2026-11-17 품절(모든 옵션 품절 · 상품 품절): 장바구니 · 바로 구매 대신 [일시품절](누를 수 없음) + [재입고 알림].
+ *   재입고 알림 신청 · 발송은 서버(협업자)가 만들 예정 — 지금은 버튼만(data-restock-alert, 누르면 "곧 열려요" 안내).
  */
 
 import { useEffect, useRef, useState } from "react";
@@ -68,6 +70,11 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
 
     // 옵션 선택 시트 모드(null=닫힘) + 담기 완료 토스트
     const [sheetMode, setSheetMode] = useState<null | "cart" | "buy">(null);
+    // 품절 — 담기 · 구매 대신 일시품절 + 재입고 알림(판매 중지 · 재고 확인 필요는 지금처럼 누를 수 없는 담기 · 구매)
+    const soldOut = purchaseState.state === "sold_out";
+    // 재입고 알림 — 서버 기능 전까지는 안내만(사용자 11-17 "우선 버튼만")
+    const [restockNote, setRestockNote] = useState(false);
+    const askRestock = () => setRestockNote(true);
     const [toast, setToast] = useState(false);
     const [twinStat, setTwinStat] = useState<TwinProductStat | null>(null);
 
@@ -327,25 +334,58 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
                     >
                         <i className={`${wished ? "fa-solid" : "fa-regular"} fa-heart text-lg`} />
                     </button>
-                    <button
-                        type="button"
-                        onClick={() => setSheetMode("cart")}
-                        disabled={!purchaseState.purchasable}
-                        className="pd-cart flex h-14 min-w-0 items-center justify-center gap-1.5 rounded-md border-2 border-neutral-200 bg-white px-1 text-base font-black transition hover:border-indigo-500 hover:text-indigo-700"
-                    >
-                        <i className="fa-solid fa-bag-shopping shrink-0 text-sm" />
-                        <span className="break-keep whitespace-normal text-center leading-tight">{t("addToCart")}</span>
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => setSheetMode("buy")}
-                        disabled={!purchaseState.purchasable}
-                        className="pd-buy flex h-14 min-w-0 items-center justify-center gap-1.5 rounded-md bg-indigo-600 px-1 text-base font-black text-white transition hover:bg-indigo-700"
-                    >
-                        <i className="fa-solid fa-credit-card shrink-0 text-sm" />
-                        <span className="break-keep whitespace-normal text-center leading-tight">{locale === "en" ? "Buy now" : "바로 구매"}</span>
-                    </button>
+                    {soldOut ? (
+                        <>
+                            {/* 품절 ① 일시품절 — 누를 수 없음(담기 단추 자리 · 모양) */}
+                            <button
+                                type="button"
+                                disabled
+                                data-sold-out-badge=""
+                                className="pd-cart flex h-14 min-w-0 items-center justify-center gap-1.5 rounded-md border-2 border-neutral-200 bg-white px-1 text-base font-black transition"
+                            >
+                                <i className="fa-solid fa-box-open shrink-0 text-sm" aria-hidden="true" />
+                                <span className="break-keep whitespace-normal text-center leading-tight">{locale === "en" ? "Sold out" : "일시품절"}</span>
+                            </button>
+                            {/* 품절 ② 재입고 알림 — 구매 단추 자리 · 모양 */}
+                            <button
+                                type="button"
+                                onClick={askRestock}
+                                data-restock-alert=""
+                                className="pd-buy flex h-14 min-w-0 items-center justify-center gap-1.5 rounded-md bg-indigo-600 px-1 text-base font-black text-white transition hover:bg-indigo-700"
+                            >
+                                <i className="fa-solid fa-bell shrink-0 text-sm" aria-hidden="true" />
+                                <span className="break-keep whitespace-normal text-center leading-tight">{locale === "en" ? "Notify me" : "재입고 알림"}</span>
+                            </button>
+                        </>
+                    ) : (
+                        <>
+                        <button
+                            type="button"
+                            onClick={() => setSheetMode("cart")}
+                            disabled={!purchaseState.purchasable}
+                            className="pd-cart flex h-14 min-w-0 items-center justify-center gap-1.5 rounded-md border-2 border-neutral-200 bg-white px-1 text-base font-black transition hover:border-indigo-500 hover:text-indigo-700"
+                        >
+                            <i className="fa-solid fa-bag-shopping shrink-0 text-sm" />
+                            <span className="break-keep whitespace-normal text-center leading-tight">{t("addToCart")}</span>
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setSheetMode("buy")}
+                            disabled={!purchaseState.purchasable}
+                            className="pd-buy flex h-14 min-w-0 items-center justify-center gap-1.5 rounded-md bg-indigo-600 px-1 text-base font-black text-white transition hover:bg-indigo-700"
+                        >
+                            <i className="fa-solid fa-credit-card shrink-0 text-sm" />
+                            <span className="break-keep whitespace-normal text-center leading-tight">{locale === "en" ? "Buy now" : "바로 구매"}</span>
+                        </button>
+                        </>
+                    )}
                 </div>
+                {/* 재입고 알림 안내 — 서버 기능이 열리기 전까지 */}
+                {soldOut && restockNote && (
+                    <p role="status" data-restock-note="" className="pd-restock-note -mt-1 rounded-lg bg-indigo-50 px-3 py-2 text-xs font-bold text-indigo-700">
+                        {locale === "en" ? "Restock alerts are coming soon." : "재입고 알림은 곧 열려요. 조금만 기다려 주세요."}
+                    </p>
+                )}
             </div>
 
             {/* 스크롤 추적 하단 고정 바 — 버튼을 누르면 옵션 시트가 열린다 */}
@@ -371,24 +411,49 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
                             <p className="ddb-crayon-price max-w-full whitespace-nowrap text-xl">{formatPrice(p.price)}</p>
                         </div>
                     </div>
-                    <button
-                        type="button"
-                        onClick={() => setSheetMode("cart")}
-                        disabled={!purchaseState.purchasable}
-                        className="pd-bar-cart h-11 shrink-0 rounded-md border-2 border-neutral-200 bg-white px-3 text-sm font-black text-neutral-800 transition hover:border-indigo-500 hover:text-indigo-700 sm:px-4"
-                    >
-                        <i className="fa-solid fa-bag-shopping text-sm sm:mr-1.5" />
-                        <span className="hidden sm:inline">{t("cart")}</span>
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => setSheetMode("buy")}
-                        disabled={!purchaseState.purchasable}
-                        data-pet-guide-target="product-actions"
-                        className="pd-bar-buy h-11 shrink-0 rounded-md bg-indigo-600 px-4 text-sm font-black text-white transition hover:bg-indigo-700 sm:px-6"
-                    >
-                        {locale === "en" ? "Buy now" : "바로 구매"}
-                    </button>
+                    {soldOut ? (
+                        <>
+                            {/* 품절 — 일시품절(누를 수 없음) + 재입고 알림 */}
+                            <button
+                                type="button"
+                                disabled
+                                data-sold-out-badge=""
+                                className="pd-bar-cart h-11 shrink-0 rounded-md border-2 border-neutral-200 bg-white px-3 text-sm font-black text-neutral-800 transition sm:px-4"
+                            >
+                                {locale === "en" ? "Sold out" : "일시품절"}
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => { askRestock(); actionRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }); }}
+                                data-restock-alert=""
+                                className="pd-bar-buy h-11 shrink-0 rounded-md bg-indigo-600 px-4 text-sm font-black text-white transition hover:bg-indigo-700 sm:px-6"
+                            >
+                                <i className="fa-solid fa-bell text-xs sm:mr-1.5" aria-hidden="true" />
+                                <span className="ml-1 sm:ml-0">{locale === "en" ? "Notify me" : "재입고 알림"}</span>
+                            </button>
+                        </>
+                    ) : (
+                        <>
+                        <button
+                            type="button"
+                            onClick={() => setSheetMode("cart")}
+                            disabled={!purchaseState.purchasable}
+                            className="pd-bar-cart h-11 shrink-0 rounded-md border-2 border-neutral-200 bg-white px-3 text-sm font-black text-neutral-800 transition hover:border-indigo-500 hover:text-indigo-700 sm:px-4"
+                        >
+                            <i className="fa-solid fa-bag-shopping text-sm sm:mr-1.5" />
+                            <span className="hidden sm:inline">{t("cart")}</span>
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setSheetMode("buy")}
+                            disabled={!purchaseState.purchasable}
+                            data-pet-guide-target="product-actions"
+                            className="pd-bar-buy h-11 shrink-0 rounded-md bg-indigo-600 px-4 text-sm font-black text-white transition hover:bg-indigo-700 sm:px-6"
+                        >
+                            {locale === "en" ? "Buy now" : "바로 구매"}
+                        </button>
+                        </>
+                    )}
                 </div>
             </div>
 
