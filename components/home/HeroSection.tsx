@@ -268,6 +268,17 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
                             {sceneLabel}
                         </span>
                         {/* 계절 · 시간 배지(예: 가을 아침)는 PC · 모바일 모두 뺌(2026-11-10 사용자) — 영상 고르기는 계절 · 시간 그대로 씀 */}
+                        {/* 날씨 지역 알약 — 터치 기기는 12px 글자 알약(hero-region-pick-text)을 보여 주고 그 위에 16px 투명 선택칸을 덮음
+                            (아이폰이 16px 보다 작은 선택칸을 누르면 화면을 확대하고 안 돌아옴 · 2026-11-17). PC 는 예전 선택칸 그대로 */}
+                        <span className="hero-region-pick">
+                        <span className="hero-region-pick-text" aria-hidden="true">
+                            {weatherRegion === HERO_AUTO_REGION_ID
+                                ? (locale === "en" ? "Current location" : "현재 위치")
+                                : (() => {
+                                      const picked = KOREAN_HERO_WEATHER_REGIONS.find((region) => region.id === weatherRegion);
+                                      return picked ? (locale === "en" ? picked.nameEn || picked.name : picked.name) : (locale === "en" ? "Current location" : "현재 위치");
+                                  })()}
+                        </span>
                         <select
                             className="hero-region-select"
                             value={weatherRegion}
@@ -284,6 +295,7 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
                                 </option>
                             ))}
                         </select>
+                        </span>
                         {weatherSummary && (
                             <span className="rounded-full bg-neutral-900/40 px-3 py-1 text-xs font-black text-white ring-1 ring-white/20 backdrop-blur">
                                 {weatherSummary}

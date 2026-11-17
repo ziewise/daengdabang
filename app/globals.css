@@ -3593,3 +3593,78 @@ html.ddb-app-mode [data-products-web-toolbar] {
 /* 다시 로그인 안내 — 머리 띠 크림 노랑 */
 
 /* 오른쪽 아래 알림 단추 — 검정 알약 → 흰 쿠션 알약(분홍 테 · 발바닥 동그라미), 완성이면 민트 */
+
+/* ═════════ 터치 기기 입력칸 글자 16px — 아이폰 자동 확대 막기(2026-11-17 사용자) ═════════
+ * 아이폰(사파리 · 앱 화면)은 글자가 16px보다 작은 입력칸을 누르면 화면을 저절로 확대하고, 닫아도 원래 크기로 돌아오지 않음
+ * (검색창이 열리자마자 입력칸에 커서가 가서 바로 확대되던 문제). 사용자 결정: 확대 자체를 막지 않고(손가락 확대는 그대로)
+ * 입력칸 글자만 16px 로. 마우스 쓰는 PC(pointer: fine)는 그대로.
+ *  - 대상: 글자를 쓰는 input · textarea · select(체크 · 라디오 · 슬라이더 · 파일 · 색 · 단추 모양 input 은 뺌)
+ *  - 원래 16px 보다 큰 칸(text-lg 이상 — 인증번호 칸 등)은 줄이지 않음, 따로 지킬 칸은 data-font-keep
+ *  - 앱 화면을 390 폭으로 맞춰 조금 줄여 보여 주는 작은 폰(html[data-ddb-viewport-fit="base"], 375 폰이면 0.96배)은 17px
+ *    — 줄어든 뒤에도 16px 이상이어야 확대가 안 됨
+ */
+@media (pointer: coarse) {
+    :is(input:not([type="checkbox"], [type="radio"], [type="range"], [type="file"], [type="color"], [type="button"], [type="submit"], [type="reset"], [type="image"], [type="hidden"]), textarea, select):not([class*="text-lg"], [class*="text-xl"], [class*="text-2xl"], [class*="text-3xl"], [class*="text-4xl"], [class*="text-5xl"], [data-font-keep]) {
+        font-size: 16px !important;
+    }
+    html[data-ddb-viewport-fit="base"] :is(input:not([type="checkbox"], [type="radio"], [type="range"], [type="file"], [type="color"], [type="button"], [type="submit"], [type="reset"], [type="image"], [type="hidden"]), textarea, select):not([class*="text-lg"], [class*="text-xl"], [class*="text-2xl"], [class*="text-3xl"], [class*="text-4xl"], [class*="text-5xl"], [data-font-keep]) {
+        font-size: 17px !important;
+    }
+    /* 글자가 커져도 칸 높이는 그대로 — 줄 수(rows)로 높이가 정해지는 글 칸은 줄 간격을 예전 값(15px × 1.7)으로 고정 */
+    .scm-textarea { line-height: 25.5px !important; } /* 댕자랑 글쓰기 "오늘의 이야기" */
+}
+
+/* 홈 날씨 지역 알약(HeroSection) — PC 는 선택칸 그대로(글자 알약은 숨김) · 2026-11-17 */
+.hero-region-pick { position: relative; display: inline-flex; max-width: min(160px, 100%); }
+.hero-region-pick-text { display: none; }
+/* 터치 기기: 12px 글자 알약을 보여 주고(모양 · 크기 예전 그대로), 그 위에 16px 투명 선택칸을 덮어 누르면 고르기 창이 뜸 */
+@media (pointer: coarse) {
+    .hero-region-pick-text {
+        position: relative;
+        display: block;
+        min-height: 26px;
+        max-width: 100%;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 999px;
+        background: rgba(23, 23, 23, 0.4);
+        color: #ffffff;
+        padding: 4px 28px 4px 10px;
+        font-size: 12px;
+        font-weight: 900;
+        line-height: 16px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04);
+    }
+    /* 펼침 화살표(선택칸 기본 화살표 대신) */
+    .hero-region-pick-text::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        right: 11px;
+        width: 6px;
+        height: 6px;
+        border-right: 1.5px solid currentColor;
+        border-bottom: 1.5px solid currentColor;
+        opacity: 0.85;
+        transform: translateY(-70%) rotate(45deg);
+    }
+    .hero-region-pick .hero-region-select {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        max-width: none;
+        height: 100%;
+        min-height: 0;
+        opacity: 0;
+        cursor: pointer;
+    }
+    .hero-region-pick:has(.hero-region-select:focus-visible) .hero-region-pick-text {
+        border-color: rgba(255, 255, 255, 0.72);
+        box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2), 0 0 0 4px rgba(244, 114, 182, 0.24);
+    }
+    .hero-region-pick:has(.hero-region-select:disabled) .hero-region-pick-text { opacity: 0.72; }
+}
