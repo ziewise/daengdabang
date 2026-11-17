@@ -8,6 +8,8 @@ import { localVetQuery, needsVetHoursCheck } from "@/lib/local-vet-query";
 import { ddbApiBase } from "@/lib/customer-api";
 import { locationFailureMessage } from "@/lib/location-feedback";
 import { isNativeAppRuntime } from "@/lib/native-runtime";
+import { currentPosition, locationError, type LocationRecovery } from "@/lib/current-location";
+import LocationRecoveryActions from "@/components/location/LocationRecoveryActions";
 import type {
     ShopChatCta,
     ShopChatGeneration,
@@ -155,7 +157,7 @@ type LocalCareSearchState =
     | { status: "idle" }
     | { status: "loading"; category: LocalCareCategory; label: string; message: string; fallbackUrl: string }
     | { status: "done"; category: LocalCareCategory; label: string; places: LocalCarePlace[]; fallbackUrl: string; requiresOpeningHoursVerification: boolean }
-    | { status: "error"; category: LocalCareCategory; label: string; message: string; fallbackUrl: string };
+    | { status: "error"; category: LocalCareCategory; label: string; query: string; message: string; fallbackUrl: string; recovery: LocationRecovery };
 
 function buildNaverMapUrl(...parts: Array<string | undefined>) {
     const searchText = parts
@@ -783,7 +785,7 @@ function LocalCareQuickActions({
     );
 }
 
-function LocalCareSearchResults({ state }: { state: LocalCareSearchState }) {
+function LocalCareSearchResults({ state, onRetry }: { state: LocalCareSearchState; onRetry: () => void }) {
     if (state.status === "idle") return null;
     if (state.status === "loading") {
         return (
@@ -798,6 +800,7 @@ function LocalCareSearchResults({ state }: { state: LocalCareSearchState }) {
         return (
             <div className="mt-2 rounded-lg border border-amber-200 bg-amber-50 p-3 text-left">
                 <p className="text-xs font-black leading-5 text-amber-900">{state.message}</p>
+                <LocationRecoveryActions recovery={state.recovery} onRetry={onRetry} />
                 <button
                     type="button"
                     onClick={() => openExternal(state.fallbackUrl)}
@@ -923,35 +926,18 @@ export default function ChatResponseExtras({
         query: string;
     }) => {
         const fallbackUrl = buildNaverMapUrl(query);
-        if (!("geolocation" in navigator)) {
-            setLocalCareSearch({
-                status: "error",
-                category,
-                label,
-                message: "이 브라우저에서는 현재 위치를 읽을 수 없어요. 네이버지도에서 직접 확인해 주세요.",
-                fallbackUrl,
-            });
-            return;
-        }
-
         setLocalCareSearch({
             status: "loading",
             category,
             label,
-            message: `현재 위치 기준으로 가까운 ${label} 후보를 찾고 있어요.`,
+            message: `위치 허용 창이 뜨면 허용해 주세요. 이어서 가까운 ${label} 후보를 찾아드려요.`,
             fallbackUrl,
         });
         try {
-            const position = await new Promise<GeolocationPosition>((resolve, reject) => {
-                navigator.geolocation.getCurrentPosition(resolve, reject, {
-                    enableHighAccuracy: false,
-                    timeout: 20000,
-                    maximumAge: 60000,
-                });
-            });
+            const position = await currentPosition();
             const result = await fetchNearbyLocalCarePlaces(
-                position.coords.latitude,
-                position.coords.longitude,
+                position.latitude,
+                position.longitude,
                 category,
                 label,
                 query,
@@ -965,16 +951,16 @@ export default function ChatResponseExtras({
                 fallbackUrl: result.fallbackUrl,
             });
         } catch (error) {
-            const geolocationCode = typeof error === "object" && error !== null && "code" in error
-                ? Number((error as { code?: unknown }).code)
-                : undefined;
-            const message = locationFailureMessage(geolocationCode ?? 0, isNativeAppRuntime());
+            const failure = locationError(error);
+            const message = locationFailureMessage(failure.code, isNativeAppRuntime(), failure.recovery);
             setLocalCareSearch({
                 status: "error",
                 category,
                 label,
+                query,
                 message,
                 fallbackUrl,
+                recovery: failure.recovery,
             });
         }
     };
@@ -1050,7 +1036,9 @@ export default function ChatResponseExtras({
                         loadingCategory={localCareSearch.status === "loading" ? localCareSearch.category : undefined}
                         onFindLocalCare={(item) => void runLocalCareSearch(item)}
                     />
-                    <LocalCareSearchResults state={localCareSearch} />
+                    <LocalCareSearchResults state={localCareSearch} onRetry={() => {
+                        if (localCareSearch.status === "error") void runLocalCareSearch(localCareSearch);
+                    }} />
                 </div>
             ) : null}
 

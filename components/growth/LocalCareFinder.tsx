@@ -10,6 +10,9 @@ export { CATEGORIES, buildNaverMapUrl, type CategoryOption, type LocalCareCatego
 import { placeMapLinks } from "@/lib/place-map-links";
 import { locationFailureMessage } from "@/lib/location-feedback";
 import { isNativeAppRuntime } from "@/lib/native-runtime";
+import { currentPosition, locationError, type Coordinates, type LocationRecovery } from "@/lib/current-location";
+import LocationRecoveryActions from "@/components/location/LocationRecoveryActions";
+export { currentPosition, type Coordinates } from "@/lib/current-location";
 
 export type LocalCarePlace = {
     id: string;
@@ -22,13 +25,11 @@ export type LocalCarePlace = {
     lon?: number;
 };
 
-export type Coordinates = { latitude: number; longitude: number };
-
 export type SearchState =
     | { status: "idle" }
     | { status: "loading"; category: LocalCareCategory }
     | { status: "done"; category: LocalCareCategory; places: LocalCarePlace[]; fallbackUrl: string }
-    | { status: "error"; category: LocalCareCategory; message: string; fallbackUrl: string };
+    | { status: "error"; category: LocalCareCategory; message: string; fallbackUrl: string; recovery?: LocationRecovery };
 
 // 돌봄 종류 그림(2026-10-22 사용자 그림 웹돌봄병원 · 미용 · 호텔 · 케어 → webp). 물방울 핀 대신 동그라미 안에 그림만
 const CATEGORY_ART: Record<string, string> = {
@@ -42,22 +43,6 @@ export function formatDistance(value?: number | null) {
     if (typeof value !== "number" || !Number.isFinite(value) || value < 0) return "거리 확인";
     if (value < 1000) return `${Math.round(value)}m`;
     return `${(value / 1000).toFixed(value < 10000 ? 1 : 0)}km`;
-}
-
-export function currentPosition(): Promise<Coordinates> {
-    if (!("geolocation" in navigator)) {
-        return Promise.reject(new Error("location-unavailable"));
-    }
-    return new Promise((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(
-            (position) => resolve({
-                latitude: position.coords.latitude,
-                longitude: position.coords.longitude,
-            }),
-            reject,
-            { enableHighAccuracy: false, timeout: 20000, maximumAge: 120000 },
-        );
-    });
 }
 
 export function safePlaces(value: unknown, category: CategoryOption): LocalCarePlace[] {
@@ -127,11 +112,10 @@ export default function LocalCareFinder() {
             });
         } catch (caught) {
             if (controller.signal.aborted) return;
-            const code = typeof caught === "object" && caught !== null && "code" in caught
-                ? Number((caught as { code?: unknown }).code)
-                : 0;
-            const message = locationFailureMessage(code, isNativeAppRuntime());
-            setSearchState({ status: "error", category: category.id, message, fallbackUrl });
+            const failure = locationError(caught);
+            const code = failure.code;
+            const message = locationFailureMessage(code, isNativeAppRuntime(), failure.recovery);
+            setSearchState({ status: "error", category: category.id, message, fallbackUrl, recovery: failure.recovery });
             trackStorefrontEvent("local_care_search_failed", {
                 surface: "treasure_mine",
                 category: category.id,
@@ -243,6 +227,7 @@ export default function LocalCareFinder() {
                                     <div>
                                         <i className="fa-solid fa-location-dot text-3xl text-amber-600" aria-hidden="true" />
                                         <p className="mt-3 text-sm font-black leading-6 text-neutral-800">{stateForSelection.message}</p>
+                                        <LocationRecoveryActions recovery={stateForSelection.recovery} onRetry={() => void search(selected.id, null)} />
                                         <a href={stateForSelection.fallbackUrl} target="_blank" rel="noopener noreferrer" className="ddb-motion-lift mt-4 inline-flex min-h-11 items-center rounded-full border border-amber-300 bg-white px-5 text-xs font-black text-amber-900">네이버지도에서 {selected.shortLabel} 보기</a>
                                     </div>
                                 </div>

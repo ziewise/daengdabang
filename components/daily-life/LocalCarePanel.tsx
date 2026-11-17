@@ -24,6 +24,10 @@ import {
 import { ddbApiBase } from "@/lib/customer-api";
 import { trackStorefrontEvent } from "@/lib/storefront-analytics";
 import { IconDot, Pill, Reveal, SectionHead, TEXT, TONES } from "./ui";
+import { locationError } from "@/lib/current-location";
+import { locationFailureMessage } from "@/lib/location-feedback";
+import { isNativeAppRuntime } from "@/lib/native-runtime";
+import LocationRecoveryActions from "@/components/location/LocationRecoveryActions";
 
 const TONE = TONES.green;
 
@@ -63,11 +67,10 @@ export default function LocalCarePanel() {
             trackStorefrontEvent("local_care_search_completed", { surface: "treasure_mine", category: category.id, resultCount: places.length });
         } catch (caught) {
             if (controller.signal.aborted) return;
-            const code = typeof caught === "object" && caught !== null && "code" in caught ? Number((caught as { code?: unknown }).code) : 0;
-            const message = code === 1
-                ? "위치 권한이 꺼져 있어요. 권한을 허용한 뒤 다시 찾거나 네이버지도에서 바로 확인해 주세요."
-                : "주변 후보를 바로 불러오지 못했어요. 잠시 후 다시 찾거나 네이버지도에서 확인할 수 있어요.";
-            setSearchState({ status: "error", category: category.id, message, fallbackUrl });
+            const failure = locationError(caught);
+            const code = failure.code;
+            const message = locationFailureMessage(code, isNativeAppRuntime(), failure.recovery);
+            setSearchState({ status: "error", category: category.id, message, fallbackUrl, recovery: failure.recovery });
             trackStorefrontEvent("local_care_search_failed", { surface: "treasure_mine", category: category.id, reason: code === 1 ? "permission_denied" : "provider_unavailable" });
         }
     };
@@ -142,6 +145,7 @@ export default function LocalCarePanel() {
                 )}
                 {stateForSelection.status === "error" && (
                     <Notice title={stateForSelection.message} tone={TONES.rose}>
+                        <LocationRecoveryActions recovery={stateForSelection.recovery} onRetry={() => void search(selected.id, null)} />
                         <a href={stateForSelection.fallbackUrl} target="_blank" rel="noopener noreferrer" className="pv-btn-ghost mt-3 min-h-[40px] text-[13px]">네이버지도에서 {selected.shortLabel} 보기</a>
                     </Notice>
                 )}

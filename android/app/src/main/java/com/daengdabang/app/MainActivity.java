@@ -24,6 +24,7 @@ public class MainActivity extends BridgeActivity {
 
         // The optional ONNX runtime must not be part of the critical app-start path.
         // If a device cannot load it, shopping and the rest of the app still open.
+        getBridge().registerPlugin(LocationSettingsPlugin.class);
         try {
             getBridge().registerPlugin(OnDeviceTryOnPlugin.class);
         } catch (RuntimeException | LinkageError pluginError) {

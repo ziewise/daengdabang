@@ -41,6 +41,8 @@
 	<false/>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>현재 위치를 기준으로 가까운 동물병원, 미용실, 호텔, 데이케어를 찾는 데 사용합니다.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>현재 위치를 기준으로 가까운 동물병원, 미용실, 호텔, 데이케어를 찾는 데 사용합니다.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>우리 아이의 사진과 움직임을 촬영해 AI 돌봄 분석에 사용합니다.</string>
 	<key>NSMicrophoneUsageDescription</key>

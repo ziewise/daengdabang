@@ -26,6 +26,10 @@ import { placeAddress, placeMapLinks } from "@/lib/place-map-links";
 import { ConceptBar, HC_CSS, useDemoSession } from "../shared";
 import { DiaryBody, PARTS_CSS } from "../sticker-parts";
 import { PostIt, STICKER_CSS, Tape, Patch } from "../sticker-kit";
+import { locationError } from "@/lib/current-location";
+import { locationFailureMessage } from "@/lib/location-feedback";
+import { isNativeAppRuntime } from "@/lib/native-runtime";
+import LocationRecoveryActions from "@/components/location/LocationRecoveryActions";
 
 /* 분류 그림 — 사용자가 만든 3D 배지(public/images/병원 · 미용 · 호텔 · 데이케어.png → ui/stickers/care-*.webp) */
 const CARE_ICONS: Record<LocalCareCategory, string> = {
@@ -74,11 +78,10 @@ export default function StickerCare() {
             haptic("medium");
         } catch (caught) {
             if (controller.signal.aborted) return;
-            const code = typeof caught === "object" && caught !== null && "code" in caught ? Number((caught as { code?: unknown }).code) : 0;
-            const message = code === 1
-                ? "위치 권한이 꺼져 있어요. 권한을 허용한 뒤 다시 찾거나 네이버지도에서 바로 확인해 주세요."
-                : "주변 후보를 바로 불러오지 못했어요. 잠시 후 다시 찾거나 네이버지도에서 확인할 수 있어요.";
-            setSearchState({ status: "error", category: category.id, message, fallbackUrl });
+            const failure = locationError(caught);
+            const code = failure.code;
+            const message = locationFailureMessage(code, isNativeAppRuntime(), failure.recovery);
+            setSearchState({ status: "error", category: category.id, message, fallbackUrl, recovery: failure.recovery });
             // 찾기 실패 기록 — 협업자 LocalCareFinder 와 같음(위치 권한 거부 · 그 밖은 제공처 문제)
             trackStorefrontEvent("local_care_search_failed", {
                 surface: "treasure_mine",
@@ -137,6 +140,7 @@ export default function StickerCare() {
                             <div className="st-postit relative mt-5 px-4 pb-3.5 pt-3.5 text-center" style={{ background: "#fff3c9", rotate: "-0.6deg" }}>
                                 <Tape className="-top-2 left-1/2 h-3.5 w-14 -translate-x-1/2" color="rgba(255,214,140,.95)" />
                                 <p className="ah-light text-[12.5px] leading-relaxed text-[#6b5420]"><i aria-hidden="true" className="fa-solid fa-location-dot mr-1 text-[#d9822b]" />{state.message}</p>
+                                <LocationRecoveryActions recovery={state.recovery} onRetry={find} />
                                 <a href={state.fallbackUrl} target="_blank" rel="noopener noreferrer" className="ah-display mt-2.5 inline-flex items-center gap-1 rounded-full bg-white px-3 py-1 text-[12px] text-[#a8560f]">네이버지도에서 {catOpt.shortLabel} 보기</a>
                             </div>
                         ) : null}

@@ -26,7 +26,8 @@ test("Treasure Mine exposes all four current-location pet-care categories withou
     for (const category of ["veterinary", "grooming", "hotel", "daycare"]) {
         assert.match(finder, new RegExp(`id: "${category}"`));
     }
-    assert.match(finder, /navigator\.geolocation\.getCurrentPosition/);
+    assert.match(finder, /await currentPosition\(\)/);
+    assert.match(await source("lib/current-location.ts"), /navigator\.geolocation\.getCurrentPosition/);
     assert.match(finder, /onClick=\{\(\) => void search\(selected\.id, null\)\}/);
     assert.match(finder, /if \(coordinates\) void search\(categoryId, coordinates\)/);
     assert.match(finder, /\/api\/v1\/local\/pet-care/);
