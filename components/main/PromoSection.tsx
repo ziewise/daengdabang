@@ -22,6 +22,7 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import Image from "next/image";
 import { promoCardForSeason, seasonOf, type SeasonKey } from "@/lib/promo-season";
@@ -45,14 +46,15 @@ const noopSubscribe = () => () => {};
 const withSeason = (card: PromoCard, season: SeasonKey): PromoCard => promoCardForSeason(card, season); // 앱 쇼핑과 같은 함수(lib/promo-season.ts)
 
 export default function PromoSection({ season: builtSeason = "autumn" }: { season?: SeasonKey } = {}) {
+    const { menuLabel: labelText } = useI18n();
     // 미리 만든 페이지 = 만든 날의 계절, 화면에 붙은 뒤 = 오늘 날짜의 계절
     const season = useSyncExternalStore(noopSubscribe, () => seasonOf(), () => builtSeason);
     return (
         <section id="promo" className="py-8 md:py-12">
             <div className="max-w-[1400px] mx-auto px-6">
                 <div className="mb-6 md:mb-8">
-                    <h2 className="text-2xl md:text-3xl font-black tracking-tight mb-1.5">기획전</h2>
-                    <p className="text-sm text-neutral-500">우리 댕댕이에게 딱 맞는 큐레이션</p>
+                    <h2 className="text-2xl md:text-3xl font-black tracking-tight mb-1.5">{labelText("기획전")}</h2>
+                    <p className="text-sm text-neutral-500">{labelText("우리 댕댕이에게 딱 맞는 큐레이션")}</p>
                 </div>
 
                 {/* 1 featured + 4 small 그리드 — 헤더 드롭다운과 동일한 PROMO_CARDS 사용 */}
@@ -67,6 +69,7 @@ export default function PromoSection({ season: builtSeason = "autumn" }: { seaso
 }
 
 function PromoTileCard({ tile, priority, index }: { tile: PromoCard; priority: boolean; index: number }) {
+    const { menuLabel: labelText } = useI18n();
     const isFeatured = !!tile.featured;
     // 섹션은 긴 제목(titleFull) 우선, 없으면 공용 title
     const title = tile.titleFull ?? tile.title;
@@ -86,10 +89,10 @@ function PromoTileCard({ tile, priority, index }: { tile: PromoCard; priority: b
             {/* 웹 전용 액자 아래 글(앱은 hidden) — 번호 · 제목 · 설명 · 보러 가기. 웹은 사진 위 글자 없이 여기만 보임 */}
             <span data-promo-cap className="hidden">
                 <span data-promo-no>{String(index + 1).padStart(2, "0")}</span>
-                <span data-promo-title>{tile.title}</span>
-                <span data-promo-desc>{tile.desc}</span>
+                <span data-promo-title>{labelText(tile.title)}</span>
+                <span data-promo-desc>{labelText(tile.desc)}</span>
                 <span data-promo-go>
-                    {isFeatured ? "기획전 보러 가기" : "보러 가기"} <i className="fa-solid fa-arrow-right" aria-hidden="true" />
+                    {labelText(isFeatured ? "기획전 보러 가기" : "보러 가기")} <i className="fa-solid fa-arrow-right" aria-hidden="true" />
                 </span>
             </span>
 
@@ -129,14 +132,14 @@ function PromoTileCard({ tile, priority, index }: { tile: PromoCard; priority: b
                             : "text-[10px] md:text-xs line-clamp-1 md:line-clamp-none"
                     }`}
                 >
-                    {tile.desc}
+                    {labelText(tile.desc)}
                 </p>
             </div>
 
             {/* featured 우하단 CTA */}
             {isFeatured && (
                 <span className="absolute z-10 bottom-3 md:bottom-8 left-3.5 md:left-5 inline-flex items-center gap-1.5 md:gap-2 px-2.5 md:px-4 py-1.5 md:py-2 rounded-full bg-white/95 text-foreground text-[10px] md:text-sm font-extrabold group-hover:bg-white">
-                    컬렉션 보기 <i className="fa-solid fa-arrow-right text-[9px] md:text-xs" />
+                    {labelText("컬렉션 보기")} <i className="fa-solid fa-arrow-right text-[9px] md:text-xs" />
                 </span>
             )}
 

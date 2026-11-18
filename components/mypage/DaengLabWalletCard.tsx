@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import {
     convertRewardPointsToDaengLabCoins,
@@ -37,6 +38,7 @@ function transactionLabel(eventType: string) {
 }
 
 export default function DaengLabWalletCard({ accessToken, accountEmail = "" }: Props) {
+    const { menuLabel: labelText } = useI18n();
     const { updateMemberEmail } = useAuth();
     const [wallet, setWallet] = useState<DaengLabWallet | null>(null);
     const [loading, setLoading] = useState(true);
@@ -135,13 +137,13 @@ export default function DaengLabWalletCard({ accessToken, accountEmail = "" }: P
             <div className="bg-gradient-to-r from-cyan-50 via-rose-50 to-amber-50 px-5 py-4" data-mp-band="yellow" data-mp-art="coin">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
-                        <p className="text-[11px] font-black tracking-[0.16em] text-indigo-600">댕다방 연구소 지갑</p>
+                        <p className="text-[11px] font-black tracking-[0.16em] text-indigo-600">{labelText("댕다방 연구소 지갑")}</p>
                         <h2 className="mt-1 inline-flex flex-wrap items-center gap-1.5 text-lg font-black text-neutral-950">
                             <DaengLabCoinMark />
-                            <span>· 적립금</span>
+                            <span>{labelText("· 적립금")}</span>
                         </h2>
                         <p className="mt-1 text-xs font-bold leading-5 text-neutral-600">
-                            행동·소리 분석 1회 {wallet?.analysisCoinCost ?? 10}C · 적립금 {(wallet?.pointConversionUnit ?? 1_000).toLocaleString("ko-KR")}P를 {wallet?.coinConversionUnit ?? 10}C로 전환
+                            {labelText("행동·소리 분석 1회")} {wallet?.analysisCoinCost ?? 10}{labelText("C · 적립금")} {(wallet?.pointConversionUnit ?? 1_000).toLocaleString("ko-KR")}{labelText("P를")} {wallet?.coinConversionUnit ?? 10}{labelText("C로 전환")}
                         </p>
                     </div>
                     <button
@@ -151,7 +153,7 @@ export default function DaengLabWalletCard({ accessToken, accountEmail = "" }: P
                         className="rounded-full border border-white/80 bg-white px-3 py-1.5 text-xs font-black text-indigo-700 shadow-sm disabled:opacity-50"
                     >
                         <i className={`fa-solid fa-rotate-right mr-1.5 text-[10px] ${loading ? "fa-spin" : ""}`} />
-                        새로고침
+                        {labelText("새로고침")}
                     </button>
                 </div>
             </div>
@@ -172,13 +174,13 @@ export default function DaengLabWalletCard({ accessToken, accountEmail = "" }: P
                 />
                 {loading && !wallet ? (
                     <div className="grid min-h-28 place-items-center text-sm font-bold text-neutral-500">
-                        <span><i className="fa-solid fa-circle-notch fa-spin mr-2" />지갑을 불러오는 중입니다.</span>
+                        <span><i className="fa-solid fa-circle-notch fa-spin mr-2" />{labelText("지갑을 불러오는 중입니다.")}</span>
                     </div>
                 ) : wallet ? (
                     <>
                         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
                             <div className="min-w-0 rounded-xl bg-amber-50 p-3 text-center">
-                                <span className="text-[10px] font-black text-amber-700">적립금</span>
+                                <span className="text-[10px] font-black text-amber-700">{labelText("적립금")}</span>
                                 <strong className="mt-1 block break-words text-base font-black text-neutral-950 sm:text-lg">{wallet.rewardPoints.toLocaleString("ko-KR")}P</strong>
                             </div>
                             <div className="min-w-0 rounded-xl bg-indigo-50 p-3 text-center">
@@ -186,14 +188,14 @@ export default function DaengLabWalletCard({ accessToken, accountEmail = "" }: P
                                 <strong className="mt-1 block break-words text-base font-black text-indigo-800 sm:text-lg">{wallet.daengLabCoins.toLocaleString("ko-KR")}C</strong>
                             </div>
                             <div className="col-span-2 min-w-0 rounded-xl bg-emerald-50 p-3 text-center sm:col-span-1">
-                                <span className="text-[10px] font-black text-emerald-700">분석 가능</span>
-                                <strong className="mt-1 block text-lg font-black text-emerald-800">{wallet.analysesAvailable}회</strong>
+                                <span className="text-[10px] font-black text-emerald-700">{labelText("분석 가능")}</span>
+                                <strong className="mt-1 block text-lg font-black text-emerald-800">{wallet.analysesAvailable}{labelText("회")}</strong>
                             </div>
                         </div>
 
                         {(wallet.rewardPointsDebt > 0 || wallet.daengLabCoinsDebt > 0) && (
                             <p className="mt-3 rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-xs font-bold leading-5 text-rose-800">
-                                취소·환불된 주문의 사용 완료 혜택이 있어 다음 적립분에서 먼저 정산됩니다.
+                                {labelText("취소·환불된 주문의 사용 완료 혜택이 있어 다음 적립분에서 먼저 정산됩니다.")}
                                 {wallet.rewardPointsDebt > 0 && ` 적립금 ${wallet.rewardPointsDebt.toLocaleString("ko-KR")}P`}
                                 {wallet.daengLabCoinsDebt > 0 && ` · 코인 ${wallet.daengLabCoinsDebt}C`}
                             </p>
@@ -201,7 +203,7 @@ export default function DaengLabWalletCard({ accessToken, accountEmail = "" }: P
 
                         <form onSubmit={submitConversion} className="mt-4 rounded-xl border border-neutral-200 bg-neutral-50 p-3">
                             <label className="text-xs font-black text-neutral-700" htmlFor="daenglab-conversion-points">
-                                적립금을 댕다방 연구소 코인으로 전환
+                                {labelText("적립금을 댕다방 연구소 코인으로 전환")}
                             </label>
                             <div className="mt-2 grid grid-cols-[minmax(0,1fr)_auto] gap-2">
                                 <div className="relative">
@@ -225,24 +227,23 @@ export default function DaengLabWalletCard({ accessToken, accountEmail = "" }: P
                                 </button>
                             </div>
                             <p className="mt-2 text-[10px] font-bold leading-4 text-neutral-500">
-                                {wallet.pointConversionUnit.toLocaleString("ko-KR")}P 단위로 전환할 수 있으며, 전환한 댕다방 연구소 코인은 적립금으로 되돌릴 수 없습니다.
+                                {wallet.pointConversionUnit.toLocaleString("ko-KR")}{labelText("P 단위로 전환할 수 있으며, 전환한 댕다방 연구소 코인은 적립금으로 되돌릴 수 없습니다.")}
                             </p>
                         </form>
 
                         <details className="mt-3 rounded-xl border border-indigo-100 bg-indigo-50/50 px-3 py-2.5 text-xs text-neutral-600">
-                            <summary className="cursor-pointer font-black text-indigo-700">상품별 댕다방 연구소 코인 지급 기준</summary>
+                            <summary className="cursor-pointer font-black text-indigo-700">{labelText("상품별 댕다방 연구소 코인 지급 기준")}</summary>
                             <p className="mt-2 font-bold leading-5">
-                                최종 판매 단가 기준 · 3만원 미만 1C · 3만~6만원 미만 3C · 6만~10만원 미만 6C ·
-                                10만~15만원 미만 10C · 15만~25만원 미만 15C · 25만원 이상 20C
+                                {labelText("최종 판매 단가 기준 · 3만원 미만 1C · 3만~6만원 미만 3C · 6만~10만원 미만 6C ·\n                                10만~15만원 미만 10C · 15만~25만원 미만 15C · 25만원 이상 20C")}
                             </p>
                             <p className="mt-1 text-[10px] font-bold leading-4 text-neutral-500">
-                                수량과 옵션 추가금은 실제 결제 품목에 반영되며, 결제 확인과 구매확정 뒤 지급됩니다.
+                                {labelText("수량과 옵션 추가금은 실제 결제 품목에 반영되며, 결제 확인과 구매확정 뒤 지급됩니다.")}
                             </p>
                         </details>
 
                         {wallet.transactions.length > 0 && (
                             <div className="mt-4 border-t border-neutral-100 pt-3">
-                                <p className="text-xs font-black text-neutral-700">최근 지갑 내역</p>
+                                <p className="text-xs font-black text-neutral-700">{labelText("최근 지갑 내역")}</p>
                                 <ul className="mt-2 grid gap-2">
                                     {wallet.transactions.slice(0, 5).map((entry) => (
                                         <li key={entry.id} className="flex items-center justify-between gap-3 text-xs font-bold text-neutral-600">
@@ -264,7 +265,7 @@ export default function DaengLabWalletCard({ accessToken, accountEmail = "" }: P
                 {notice && <p role="status" className="mt-3 rounded-xl bg-emerald-50 px-3 py-2 text-xs font-black text-emerald-800">{notice}</p>}
                 {error && <p role="alert" className="mt-3 rounded-xl bg-rose-50 px-3 py-2 text-xs font-bold leading-5 text-rose-800">{error}</p>}
                 <p className="mt-3 text-[10px] font-bold leading-4 text-neutral-400">
-                    상품 코인과 적립금은 최종 결제금액 확인 및 구매확정 뒤 지급됩니다. 취소·환불 시 지급 혜택은 회수될 수 있습니다.
+                    {labelText("상품 코인과 적립금은 최종 결제금액 확인 및 구매확정 뒤 지급됩니다. 취소·환불 시 지급 혜택은 회수될 수 있습니다.")}
                 </p>
             </div>
         </div>

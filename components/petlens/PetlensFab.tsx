@@ -6,20 +6,22 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { usePetlens } from "./PetlensProvider";
 import styles from "./petlens.module.css";
 
 export default function PetlensFab() {
+    const { menuLabel: labelText } = useI18n();
     const { open } = usePetlens();
     return (
         <button
             type="button"
             onClick={open}
             className={styles.fab}
-            aria-label="펫렌즈 분석 시작"
+            aria-label={labelText("펫렌즈 분석 시작")}
         >
             <i className="fa-solid fa-paw" />
-            <span>펫렌즈</span>
+            <span>{labelText("펫렌즈")}</span>
         </button>
     );
 }

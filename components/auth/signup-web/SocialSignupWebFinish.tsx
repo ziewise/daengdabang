@@ -13,6 +13,7 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import Link from "next/link";
 import { useState } from "react";
 import MemberPetProfileCreateForm from "@/components/mypage/MemberPetProfileCreateForm";
@@ -53,6 +54,7 @@ import {
 type Screen = "check" | "pet" | "done";
 
 export default function SocialSignupWebFinish({ member, provider, onFinish }: { member: User; provider: string; onFinish: () => void }) {
+    const { menuLabel: labelText } = useI18n();
     const { user } = useAuth();
     const [features] = useState(readSignupFlowFeatures);
     const [screen, setScreen] = useState<Screen>("check");
@@ -92,7 +94,7 @@ export default function SocialSignupWebFinish({ member, provider, onFinish }: { 
     /* ───────── 가입 완료 ───────── */
     if (screen === "done") {
         return withDev(
-            <SxShell steps={steps} now={5} route={provider} lead="가입이 모두 끝났어요.">
+            <SxShell steps={steps} now={5} route={provider} lead={labelText("가입이 모두 끝났어요.")}>
                 <SignupWebDone
                     name={current.name}
                     pet={firstPet}
@@ -110,17 +112,17 @@ export default function SocialSignupWebFinish({ member, provider, onFinish }: { 
     /* ───────── 우리 아이 ───────── */
     if (screen === "pet") {
         return withDev(
-            <SxShell steps={steps} now={4} route={provider} lead="우리 아이를 함께 등록하면 꼭 맞는 상품을 먼저 보여 드려요.">
+            <SxShell steps={steps} now={4} route={provider} lead={labelText("우리 아이를 함께 등록하면 꼭 맞는 상품을 먼저 보여 드려요.")}>
                 <SxCard labelledBy="sxw-spet-title" screen="social-pet">
                     <SxHead
                         id="sxw-spet-title"
                         art="lab-dog-256.webp"
                         kicker="STEP 5 · MY DOG"
-                        title={<><Hl>우리 아이</Hl>도 함께 등록할까요?</>}
+                        title={<><Hl>{labelText("우리 아이")}</Hl>{labelText("도 함께 등록할까요?")}</>}
                         sub="이름 · 견종만 있어도 등록할 수 있어요. 지금 안 해도 돼요."
                     />
                     {current.pets.length > 0 && (
-                        <SxBlock icon="fa-paw" title="등록한 아이" tone="mint">
+                        <SxBlock icon="fa-paw" title={labelText("등록한 아이")} tone="mint">
                             <ul className="sxw-petlist">
                                 {current.pets.map((pet) => (
                                     <li key={pet.apiProfileId || pet.name}>
@@ -139,12 +141,12 @@ export default function SocialSignupWebFinish({ member, provider, onFinish }: { 
                                 <img key={view} src={`/images/ui/mypet-view-${view}-160.webp`} alt="" />
                             ))}
                         </div>
-                        <p>사진 네 방향 · 이름 · 견종 · 크기 · 체중을 등록 창에서 넣어요. 마이페이지와 같은 창이에요.</p>
+                        <p>{labelText("사진 네 방향 · 이름 · 견종 · 크기 · 체중을 등록 창에서 넣어요. 마이페이지와 같은 창이에요.")}</p>
                         <MemberPetProfileCreateForm />
                     </div>
                     <SxFoot onPrev={() => setScreen("check")}>
                         <button type="button" className={firstPet ? "sxw-next" : "sxw-next is-soft"} onClick={() => setScreen("done")} data-signup-next="social-pet">
-                            {firstPet ? "다음 · 가입 완료" : "나중에 할게요"}
+                            {labelText(firstPet ? "다음 · 가입 완료" : "나중에 할게요")}
                             <i className="fa-solid fa-arrow-right" aria-hidden="true" />
                         </button>
                     </SxFoot>
@@ -161,7 +163,7 @@ export default function SocialSignupWebFinish({ member, provider, onFinish }: { 
                     id="sxw-check-title"
                     art="policy-info-192.webp"
                     kicker="STEP 4 · CHECK"
-                    title={<>거의 <Hl>다 됐어요</Hl>!</>}
+                    title={<>{labelText("거의")} <Hl>{labelText("다 됐어요")}</Hl>!</>}
                     sub={`${providerLabel} 계정이 연결됐어요. 받은 정보가 맞는지 확인해 주세요.`}
                 />
                 <div className="sxw-got" data-provider={provider}>
@@ -170,26 +172,26 @@ export default function SocialSignupWebFinish({ member, provider, onFinish }: { 
                         <b>{member.name}</b>
                         <small>{noEmail ? `${providerLabel}에서 이메일을 받지 못했어요` : maskEmail(member.email)}</small>
                     </span>
-                    <em><ProviderMark provider={provider} />{providerLabel} 연결됨</em>
+                    <em><ProviderMark provider={provider} />{providerLabel} {labelText("연결됨")}</em>
                 </div>
 
-                <SxBlock icon="fa-list-check" title="동의한 항목" tone="mint">
+                <SxBlock icon="fa-list-check" title={labelText("동의한 항목")} tone="mint">
                     <span className="sxw-agreed">
-                        <span><i className="fa-solid fa-check" aria-hidden="true" />만 14세 이상</span>
-                        <span><i className="fa-solid fa-check" aria-hidden="true" />이용약관</span>
-                        <span><i className="fa-solid fa-check" aria-hidden="true" />개인정보 수집·이용</span>
-                        <span><i className="fa-solid fa-check" aria-hidden="true" />가입 보안 확인</span>
+                        <span><i className="fa-solid fa-check" aria-hidden="true" />{labelText("만 14세 이상")}</span>
+                        <span><i className="fa-solid fa-check" aria-hidden="true" />{labelText("이용약관")}</span>
+                        <span><i className="fa-solid fa-check" aria-hidden="true" />{labelText("개인정보 수집·이용")}</span>
+                        <span><i className="fa-solid fa-check" aria-hidden="true" />{labelText("가입 보안 확인")}</span>
                     </span>
                 </SxBlock>
 
                 {noEmail && (
-                    <SxNotice tone="lav" icon="fa-envelope-open-text" title="이메일은 마이페이지에서 등록해 주세요">
-                        주문 · 배송 안내를 받으려면 실제로 쓰는 이메일이 필요해요. 가입 뒤 마이페이지 코인 탭에서 이메일을 등록 · 인증하면 20C도 받아요.
+                    <SxNotice tone="lav" icon="fa-envelope-open-text" title={labelText("이메일은 마이페이지에서 등록해 주세요")}>
+                        {labelText("주문 · 배송 안내를 받으려면 실제로 쓰는 이메일이 필요해요. 가입 뒤 마이페이지 코인 탭에서 이메일을 등록 · 인증하면 20C도 받아요.")}
                     </SxNotice>
                 )}
 
                 {features.marketing && (
-                    <SxBlock icon="fa-bullhorn" title="선택 동의" tone="pink">
+                    <SxBlock icon="fa-bullhorn" title={labelText("선택 동의")} tone="pink">
                         <div className="sxw-terms">
                             <ul className="is-flat">
                                 <MarketingRow value={marketing} onChange={setMarketing} onOpenDoc={() => setDoc("marketing")} />
@@ -199,7 +201,7 @@ export default function SocialSignupWebFinish({ member, provider, onFinish }: { 
                 )}
 
                 {features.identity && (
-                    <SxBlock icon="fa-mobile-screen-button" title="휴대폰 본인인증" tone="sky">
+                    <SxBlock icon="fa-mobile-screen-button" title={labelText("휴대폰 본인인증")} tone="sky">
                         <IdentityPanel
                             state={identity}
                             onStart={() => {
@@ -269,6 +271,7 @@ function socialLoginSteps(providerLabel: string): SxStep[] {
 
 /** 간편가입에서 돌아왔는데 새 가입이 아닌 경우 — 같은 틀(안내판 + 카드). mode="login" 이면 간편 로그인 실패 · 취소 말로 */
 export function SocialReturnWebNotice({ kind, provider, message, onContinue, mode = "signup" }: { kind: SocialReturnKind; provider: string; message?: string; onContinue?: () => void; mode?: "login" | "signup" }) {
+    const { menuLabel: labelText } = useI18n();
     const providerLabel = PROVIDER_NAME[provider] || "간편";
     // 간편 로그인에서 돌아온 실패 · 취소(이미 가입된 계정 · 같은 이메일 안내는 갈래와 상관없이 같은 말)
     const loginReturn = mode === "login" && (kind === "failed" || kind === "new" || kind === "cancelled");
@@ -307,10 +310,10 @@ export function SocialReturnWebNotice({ kind, provider, message, onContinue, mod
                 steps={socialLoginSteps(providerLabel)}
                 now={kind === "cancelled" ? 0 : 1}
                 kicker="SIGN IN"
-                title="간편 로그인"
-                lead="간편 로그인 결과를 알려 드려요."
+                title={labelText("간편 로그인")}
+                lead={labelText("간편 로그인 결과를 알려 드려요.")}
                 stepsLabel="간편 로그인 단계"
-                footer={<p className="sxw-login">아직 회원이 아니신가요?<Link href="/auth/signup">회원가입</Link></p>}
+                footer={<p className="sxw-login">{labelText("아직 회원이 아니신가요?")}<Link href="/auth/signup">{labelText("회원가입")}</Link></p>}
             >
                 <SxCard labelledBy="sxw-return-title" className={`sxw-return is-${content.tone}`} screen={`social-login-${kind}`}>
                     <span className="sxw-return-art" aria-hidden="true">
@@ -322,8 +325,8 @@ export function SocialReturnWebNotice({ kind, provider, message, onContinue, mod
                     <p>{content.text}</p>
                     {/* 홈으로(흰 알약) · 로그인 다시 하기(분홍 알약) — 기존 주소로만 이동 */}
                     <div className="sxw-return-go">
-                        <Link href="/" className="sxw-prev">홈으로</Link>
-                        <Link href="/auth/login" className="sxw-next">로그인 다시 하기<i className="fa-solid fa-arrow-right" aria-hidden="true" /></Link>
+                        <Link href="/" className="sxw-prev">{labelText("홈으로")}</Link>
+                        <Link href="/auth/login" className="sxw-next">{labelText("로그인 다시 하기")}<i className="fa-solid fa-arrow-right" aria-hidden="true" /></Link>
                     </div>
                 </SxCard>
             </SxShell>
@@ -339,24 +342,24 @@ export function SocialReturnWebNotice({ kind, provider, message, onContinue, mod
                 <p>{content.text}</p>
                 <div className="sxw-return-go">
                     {kind === "existing" && (
-                        <button type="button" className="sxw-next" onClick={onContinue}>계속하기<i className="fa-solid fa-arrow-right" aria-hidden="true" /></button>
+                        <button type="button" className="sxw-next" onClick={onContinue}>{labelText("계속하기")}<i className="fa-solid fa-arrow-right" aria-hidden="true" /></button>
                     )}
                     {kind === "cancelled" && (
                         <>
-                            <Link href="/" className="sxw-prev">홈으로</Link>
-                            <Link href="/auth/signup" className="sxw-next">다시 가입하기<i className="fa-solid fa-arrow-right" aria-hidden="true" /></Link>
+                            <Link href="/" className="sxw-prev">{labelText("홈으로")}</Link>
+                            <Link href="/auth/signup" className="sxw-next">{labelText("다시 가입하기")}<i className="fa-solid fa-arrow-right" aria-hidden="true" /></Link>
                         </>
                     )}
                     {kind === "email_exists" && (
                         <>
-                            <Link href="/forgot-password" className="sxw-prev">비밀번호 찾기</Link>
-                            <Link href="/auth/login" className="sxw-next">그 계정으로 로그인<i className="fa-solid fa-arrow-right" aria-hidden="true" /></Link>
+                            <Link href="/forgot-password" className="sxw-prev">{labelText("비밀번호 찾기")}</Link>
+                            <Link href="/auth/login" className="sxw-next">{labelText("그 계정으로 로그인")}<i className="fa-solid fa-arrow-right" aria-hidden="true" /></Link>
                         </>
                     )}
                     {(kind === "failed" || kind === "new") && (
                         <>
-                            <Link href="/auth/login" className="sxw-prev">로그인</Link>
-                            <Link href="/auth/signup" className="sxw-next">가입 다시 하기<i className="fa-solid fa-arrow-right" aria-hidden="true" /></Link>
+                            <Link href="/auth/login" className="sxw-prev">{labelText("로그인")}</Link>
+                            <Link href="/auth/signup" className="sxw-next">{labelText("가입 다시 하기")}<i className="fa-solid fa-arrow-right" aria-hidden="true" /></Link>
                         </>
                     )}
                 </div>

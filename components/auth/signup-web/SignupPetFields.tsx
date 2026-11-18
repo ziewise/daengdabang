@@ -12,6 +12,7 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { PET_BREEDS } from "@/lib/pet-companion-breeds";
 import type { PetProfile } from "@/lib/store";
 import { SxBlock, SxCheck, UI } from "@/components/auth/signup-web/SignupWebParts";
@@ -69,6 +70,7 @@ export default function SignupPetFields({ pet, options, agreePetLens, setAgreePe
     /** 가입 처리 중(사진 고르기 막음) */
     busy: boolean;
 }) {
+    const { menuLabel: labelText } = useI18n();
     const views = options.photoViews;
     const photoCount = views.filter((view) => pet.photos[view.id]).length;
     const frontPhoto = pet.photos.front?.dataUrl || views.map((view) => pet.photos[view.id]?.dataUrl).find(Boolean);
@@ -103,7 +105,7 @@ export default function SignupPetFields({ pet, options, agreePetLens, setAgreePe
                     </span>
                 </span>
                 <span className="sxw-petcard-meter" aria-label={`프로필 ${filledCount}/6 채움`}>
-                    <small>프로필</small>
+                    <small>{labelText("프로필")}</small>
                     <b>{filledCount}<span>/6</span></b>
                     <span className="sxw-petcard-dots" aria-hidden="true">
                         {filled.map((on, index) => <i key={index} className={on ? "is-on" : ""} />)}
@@ -112,11 +114,11 @@ export default function SignupPetFields({ pet, options, agreePetLens, setAgreePe
             </div>
 
             {/* 2) 사진 */}
-            <SxBlock icon="fa-camera" tone="yellow" title="사진" extra={<em className="sxw-count">{photoCount}/4</em>}>
-                <ul className="sxw-phototips" aria-label="잘 나오는 사진">
-                    <li><i className="fa-solid fa-sun" aria-hidden="true" />밝은 곳에서</li>
-                    <li><i className="fa-solid fa-expand" aria-hidden="true" />몸 전체가 보이게</li>
-                    <li><i className="fa-solid fa-dog" aria-hidden="true" />한 마리만</li>
+            <SxBlock icon="fa-camera" tone="yellow" title={labelText("사진")} extra={<em className="sxw-count">{photoCount}/4</em>}>
+                <ul className="sxw-phototips" aria-label={labelText("잘 나오는 사진")}>
+                    <li><i className="fa-solid fa-sun" aria-hidden="true" />{labelText("밝은 곳에서")}</li>
+                    <li><i className="fa-solid fa-expand" aria-hidden="true" />{labelText("몸 전체가 보이게")}</li>
+                    <li><i className="fa-solid fa-dog" aria-hidden="true" />{labelText("한 마리만")}</li>
                 </ul>
                 <div className={pet.photoLoading ? "sxw-shots is-busy" : "sxw-shots"} data-petlens-multiview-upload>
                     {views.map((view) => {
@@ -148,12 +150,12 @@ export default function SignupPetFields({ pet, options, agreePetLens, setAgreePe
                     })}
                     {pet.photoLoading && (
                         <span className="sxw-shots-busy" role="status">
-                            <i className="fa-solid fa-wand-magic-sparkles" aria-hidden="true" />사진을 살펴보는 중이에요
+                            <i className="fa-solid fa-wand-magic-sparkles" aria-hidden="true" />{labelText("사진을 살펴보는 중이에요")}
                         </span>
                     )}
                 </div>
                 {pet.photoError && <span className="sxw-err">{pet.photoError}</span>}
-                <span className="sxw-hint">정면 한 장이면 충분해요. 모바일에서는 카메라가 바로 열리고, 네 방향을 다 찍으면 견종 · 체형 · 털색 후보를 더 꼼꼼히 찾아요.</span>
+                <span className="sxw-hint">{labelText("정면 한 장이면 충분해요. 모바일에서는 카메라가 바로 열리고, 네 방향을 다 찍으면 견종 · 체형 · 털색 후보를 더 꼼꼼히 찾아요.")}</span>
             </SxBlock>
 
             {/* 3) 사진으로 찾은 후보 */}
@@ -161,32 +163,32 @@ export default function SignupPetFields({ pet, options, agreePetLens, setAgreePe
                 <div className="sxw-aicard" data-petlens-signup-draft-restored aria-live="polite">
                     <p className="sxw-aicard-h">
                         <span aria-hidden="true"><i className="fa-solid fa-wand-magic-sparkles" /></span>
-                        사진으로 찾은 후보
-                        <small>후보예요 · 아래에서 직접 확인해 주세요</small>
+                        {labelText("사진으로 찾은 후보")}
+                        <small>{labelText("후보예요 · 아래에서 직접 확인해 주세요")}</small>
                     </p>
                     {pet.analysisMessage && <p className="sxw-aicard-t">{pet.analysisMessage}</p>}
                     <span className="sxw-aicard-chips">
-                        {breedLabel && <span><i className="fa-solid fa-dog" aria-hidden="true" />견종 · {breedLabel}</span>}
-                        {pet.weightEstimate && <span><i className="fa-solid fa-weight-scale" aria-hidden="true" />예상 {pet.weightEstimate.minKg}~{pet.weightEstimate.maxKg}kg</span>}
-                        {pet.coatColorFromAi && pet.coatColor && <span><i className="fa-solid fa-palette" aria-hidden="true" />털 색 · {pet.coatColor}</span>}
+                        {breedLabel && <span><i className="fa-solid fa-dog" aria-hidden="true" />{labelText("견종 ·")} {breedLabel}</span>}
+                        {pet.weightEstimate && <span><i className="fa-solid fa-weight-scale" aria-hidden="true" />{labelText("예상")} {pet.weightEstimate.minKg}~{pet.weightEstimate.maxKg}kg</span>}
+                        {pet.coatColorFromAi && pet.coatColor && <span><i className="fa-solid fa-palette" aria-hidden="true" />{labelText("털 색 ·")} {pet.coatColor}</span>}
                     </span>
                 </div>
             )}
 
             {/* 4) 기본 정보 */}
-            <SxBlock icon="fa-paw" title="기본 정보" tone="sky">
+            <SxBlock icon="fa-paw" title={labelText("기본 정보")} tone="sky">
                 <div className="sxw-form">
                     <label className="sxw-f">
-                        <span className="sxw-label">이름</span>
-                        <input className="sxw-in" value={pet.name} onChange={(event) => pet.setName(event.target.value)} maxLength={80} placeholder="예: 몽이" />
+                        <span className="sxw-label">{labelText("이름")}</span>
+                        <input className="sxw-in" value={pet.name} onChange={(event) => pet.setName(event.target.value)} maxLength={80} placeholder={labelText("예: 몽이")} />
                     </label>
                     <label className="sxw-f">
-                        <span className="sxw-label">나이 <small>사진으로 정하지 않아요</small></span>
-                        <input className="sxw-in" value={pet.age} onChange={(event) => pet.setAge(event.target.value)} maxLength={80} placeholder="예: 3살, 8개월" />
+                        <span className="sxw-label">{labelText("나이")} <small>{labelText("사진으로 정하지 않아요")}</small></span>
+                        <input className="sxw-in" value={pet.age} onChange={(event) => pet.setAge(event.target.value)} maxLength={80} placeholder={labelText("예: 3살, 8개월")} />
                     </label>
 
                     <div className="sxw-f is-wide">
-                        <span className="sxw-label" id="sxw-breed-label">견종 <small>자주 고르는 견종</small></span>
+                        <span className="sxw-label" id="sxw-breed-label">{labelText("견종")} <small>{labelText("자주 고르는 견종")}</small></span>
                         <span className="sxw-breeds" role="group" aria-labelledby="sxw-breed-label">
                             {POPULAR_BREEDS.map((id) => {
                                 const item = PET_BREEDS.find((entry) => entry.id === id);
@@ -199,24 +201,24 @@ export default function SignupPetFields({ pet, options, agreePetLens, setAgreePe
                                 );
                             })}
                             <button type="button" className={pet.breedId === options.customBreed ? "is-on is-mix" : "is-mix"} aria-pressed={pet.breedId === options.customBreed} onClick={() => pet.onBreedId(options.customBreed)}>
-                                <i className="fa-solid fa-pen" aria-hidden="true" />믹스 · 직접 입력
+                                <i className="fa-solid fa-pen" aria-hidden="true" />{labelText("믹스 · 직접 입력")}
                             </button>
                         </span>
-                        <select className="sxw-in" value={pet.breedId} onChange={(event) => pet.onBreedId(event.target.value)} aria-label="전체 견종에서 고르기">
-                            <option value="">전체 견종에서 고르기(120종)</option>
-                            <option value={options.customBreed}>목록 외 견종 · 믹스견 직접 입력</option>
+                        <select className="sxw-in" value={pet.breedId} onChange={(event) => pet.onBreedId(event.target.value)} aria-label={labelText("전체 견종에서 고르기")}>
+                            <option value="">{labelText("전체 견종에서 고르기(120종)")}</option>
+                            <option value={options.customBreed}>{labelText("목록 외 견종 · 믹스견 직접 입력")}</option>
                             {PET_BREEDS.map((item) => (
                                 <option key={item.id} value={item.id}>{item.ko} · {item.en}</option>
                             ))}
                         </select>
                         {pet.breedId === options.customBreed && (
-                            <input className="sxw-in" value={pet.breedCustom} onChange={(event) => pet.onBreedCustom(event.target.value)} maxLength={100} placeholder="예: 시바견, 골든두들, 믹스견" aria-label="실제 견종 또는 믹스견" data-petlens-custom-breed />
+                            <input className="sxw-in" value={pet.breedCustom} onChange={(event) => pet.onBreedCustom(event.target.value)} maxLength={100} placeholder={labelText("예: 시바견, 골든두들, 믹스견")} aria-label={labelText("실제 견종 또는 믹스견")} data-petlens-custom-breed />
                         )}
                         <span className="sxw-hint">{pet.breedMessage || "사진 분석 결과는 후보예요. 실제 견종으로 확인해 주세요."}</span>
                     </div>
 
                     <IconPills
-                        label="크기"
+                        label={labelText("크기")}
                         name="sxw-size"
                         value={pet.size}
                         onChange={pet.setSize}
@@ -227,9 +229,9 @@ export default function SignupPetFields({ pet, options, agreePetLens, setAgreePe
                         ]}
                     />
                     <label className="sxw-f">
-                        <span className="sxw-label">현재 체중</span>
+                        <span className="sxw-label">{labelText("현재 체중")}</span>
                         <span className="sxw-inwrap has-unit">
-                            <input className="sxw-in" type="number" min="0.1" max="120" step="0.1" inputMode="decimal" value={pet.weightKg} onChange={(event) => pet.setWeightKg(event.target.value)} placeholder="직접 잰 체중" />
+                            <input className="sxw-in" type="number" min="0.1" max="120" step="0.1" inputMode="decimal" value={pet.weightKg} onChange={(event) => pet.setWeightKg(event.target.value)} placeholder={labelText("직접 잰 체중")} />
                             <span className="sxw-unit" aria-hidden="true">kg</span>
                         </span>
                         <span className="sxw-hint">{pet.weightEstimate ? `사진으로 본 예상은 ${pet.weightEstimate.minKg}~${pet.weightEstimate.maxKg}kg이에요. 실제 체중을 넣어 주세요.` : "사진으로 체중을 재지 않아요."}</span>
@@ -238,10 +240,10 @@ export default function SignupPetFields({ pet, options, agreePetLens, setAgreePe
             </SxBlock>
 
             {/* 5) 몸과 성격 */}
-            <SxBlock icon="fa-heart" title="몸과 성격" tone="pink">
+            <SxBlock icon="fa-heart" title={labelText("몸과 성격")} tone="pink">
                 <div className="sxw-form">
                     <IconPills
-                        label="털 길이"
+                        label={labelText("털 길이")}
                         name="sxw-coat"
                         value={pet.coat}
                         onChange={pet.setCoat}
@@ -252,8 +254,8 @@ export default function SignupPetFields({ pet, options, agreePetLens, setAgreePe
                         ]}
                     />
                     <div className="sxw-f">
-                        <span className="sxw-label">털 색 {pet.coatColorFromAi && <small className="is-ai">사진 후보</small>}</span>
-                        <span className="sxw-swatches" role="group" aria-label="털 색 바로 고르기">
+                        <span className="sxw-label">{labelText("털 색")} {pet.coatColorFromAi && <small className="is-ai">{labelText("사진 후보")}</small>}</span>
+                        <span className="sxw-swatches" role="group" aria-label={labelText("털 색 바로 고르기")}>
                             {COAT_COLORS.map((color) => {
                                 const on = pet.coatColor.trim() === color.label;
                                 return (
@@ -263,10 +265,10 @@ export default function SignupPetFields({ pet, options, agreePetLens, setAgreePe
                                 );
                             })}
                         </span>
-                        <input className="sxw-in" value={pet.coatColor} onChange={(event) => pet.onCoatColor(event.target.value)} maxLength={80} placeholder="예: 크림, 검정·갈색" aria-label="털 색" />
+                        <input className="sxw-in" value={pet.coatColor} onChange={(event) => pet.onCoatColor(event.target.value)} maxLength={80} placeholder={labelText("예: 크림, 검정·갈색")} aria-label={labelText("털 색")} />
                     </div>
                     <IconPills
-                        label="성별"
+                        label={labelText("성별")}
                         name="sxw-sex"
                         value={pet.sex}
                         onChange={pet.setSex}
@@ -277,7 +279,7 @@ export default function SignupPetFields({ pet, options, agreePetLens, setAgreePe
                         ]}
                     />
                     <IconPills
-                        label="활동량"
+                        label={labelText("활동량")}
                         name="sxw-activity"
                         value={pet.activity}
                         onChange={pet.setActivity}
@@ -288,7 +290,7 @@ export default function SignupPetFields({ pet, options, agreePetLens, setAgreePe
                         ]}
                     />
                     <div className="sxw-f is-wide">
-                        <span className="sxw-label">관심 케어 <small>여러 개 골라도 돼요</small></span>
+                        <span className="sxw-label">{labelText("관심 케어")} <small>{labelText("여러 개 골라도 돼요")}</small></span>
                         <span className="sxw-concerns">
                             {options.concerns.map((concern) => {
                                 const on = pet.concerns.includes(concern);
@@ -311,11 +313,11 @@ export default function SignupPetFields({ pet, options, agreePetLens, setAgreePe
                 <label>
                     <SxCheck checked={agreePetLens} onChange={setAgreePetLens} />
                     <span>
-                        <span className="sxw-opt">선택</span> 반려동물 정보 수집·이용에 동의해요
-                        <small>사진 · 견종 · 체중 등을 맞춤 추천과 서비스 개선에만 써요. 동의하지 않으면 우리 아이 정보는 저장하지 않아요.</small>
+                        <span className="sxw-opt">{labelText("선택")}</span> {labelText("반려동물 정보 수집·이용에 동의해요")}
+                        <small>{labelText("사진 · 견종 · 체중 등을 맞춤 추천과 서비스 개선에만 써요. 동의하지 않으면 우리 아이 정보는 저장하지 않아요.")}</small>
                     </span>
                 </label>
-                <button type="button" className="sxw-view" onClick={onOpenPetDoc}>내용 <i className="fa-solid fa-chevron-right" aria-hidden="true" /></button>
+                <button type="button" className="sxw-view" onClick={onOpenPetDoc}>{labelText("내용")} <i className="fa-solid fa-chevron-right" aria-hidden="true" /></button>
             </div>
         </div>
     );

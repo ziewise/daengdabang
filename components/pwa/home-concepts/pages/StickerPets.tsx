@@ -14,6 +14,7 @@
  * 로그인 전: 앱 로그인 초대.
  */
 
+import { useI18n } from "@/lib/i18n";
 import Link from "next/link";
 import { useEffect, useRef, useSyncExternalStore } from "react";
 import MemberPetProfileCreateForm from "@/components/mypage/MemberPetProfileCreateForm";
@@ -45,6 +46,7 @@ const readParam = (key: string, value: string) => () => new URLSearchParams(wind
 const TAPES = ["rgba(255,200,215,.88)", "rgba(190,230,210,.9)", "rgba(255,226,150,.9)", "rgba(210,200,255,.9)"];
 
 export default function StickerPets() {
+    const { menuLabel: labelText } = useI18n();
     const [session] = useDemoSession();
     const member = session === "member";
     const { user } = useAuth();
@@ -79,11 +81,11 @@ export default function StickerPets() {
                             {/* 머리 — 웹 "반려견 프로필" 칸 제목 · 자동 피팅 준비 꼬리표 */}
                             <p className="ah-light text-[10.5px] tracking-[.16em] text-[#c4567a]">MY DOG</p>
                             <div className="mt-0.5 flex items-center justify-between gap-2">
-                                <h2 className="ah-display text-[20px] leading-snug"><span className="st-marker">반려견 프로필</span></h2>
-                                {pets.some(hasVerifiedPetPhoto) ? <InkStamp rot={-6} color="#1f9e75" className="shrink-0 whitespace-nowrap !px-2 !py-0.5 text-[10.5px]">자동 피팅 준비</InkStamp> : null}
+                                <h2 className="ah-display text-[20px] leading-snug"><span className="st-marker">{labelText("반려견 프로필")}</span></h2>
+                                {pets.some(hasVerifiedPetPhoto) ? <InkStamp rot={-6} color="#1f9e75" className="shrink-0 whitespace-nowrap !px-2 !py-0.5 text-[10.5px]">{labelText("자동 피팅 준비")}</InkStamp> : null}
                             </div>
                             <p className="ah-light mt-1 text-[12.5px] leading-relaxed" style={{ color: TEXT_SOFT }}>
-                                직접 확인한 정보로 고치면 추천 · 펫렌즈 · 연구소가 같은 아이를 기준으로 분석해요.
+                                {labelText("직접 확인한 정보로 고치면 추천 · 펫렌즈 · 연구소가 같은 아이를 기준으로 분석해요.")}
                             </p>
 
                             {pets.length > 0 ? (
@@ -118,9 +120,9 @@ export default function StickerPets() {
                                                 </div>
                                                 {/* 자동 피팅 — 사진이 있으면 초록 도장, 없으면 웹과 같은 안내 */}
                                                 {photo ? (
-                                                    <p className="ah-display mt-3 flex items-center gap-1.5 text-[11.5px] text-[#1f9e75]"><i aria-hidden="true" className="fa-solid fa-shirt text-[10px]" />착용 상품 자동 피팅 가능</p>
+                                                    <p className="ah-display mt-3 flex items-center gap-1.5 text-[11.5px] text-[#1f9e75]"><i aria-hidden="true" className="fa-solid fa-shirt text-[10px]" />{labelText("착용 상품 자동 피팅 가능")}</p>
                                                 ) : (
-                                                    <p className="ah-light mt-3 text-[11.5px]" style={{ color: TEXT_SOFT }}><i aria-hidden="true" className="fa-solid fa-camera mr-1 text-[10px] text-[#f08eae]" />사진을 올리면 자동 피팅이 켜져요</p>
+                                                    <p className="ah-light mt-3 text-[11.5px]" style={{ color: TEXT_SOFT }}><i aria-hidden="true" className="fa-solid fa-camera mr-1 text-[10px] text-[#f08eae]" />{labelText("사진을 올리면 자동 피팅이 켜져요")}</p>
                                                 )}
                                                 {pet.concerns.length > 0 ? (
                                                     <p className="mt-2 flex flex-wrap gap-1.5">
@@ -131,7 +133,7 @@ export default function StickerPets() {
                                                 <div className="pp-actions mt-3 flex items-center justify-end gap-2 border-t border-dashed border-[#efdcd2] pt-3">
                                                     {pet.apiProfileId ? (
                                                         <Link href={`${APP_REPORT}?profile=${pet.apiProfileId}`} className="pp-link ah-display">
-                                                            <i aria-hidden="true" className="fa-solid fa-chart-line text-[10px]" />주간 리포트
+                                                            <i aria-hidden="true" className="fa-solid fa-chart-line text-[10px]" />{labelText("주간 리포트")}
                                                         </Link>
                                                     ) : null}
                                                     <MemberPetProfileEditor
@@ -148,7 +150,7 @@ export default function StickerPets() {
                                 // 아직 아이가 없을 때 — 웹과 같은 안내(앱은 노란 메모)
                                 <p className="st-postit ah-light relative mt-5 px-3.5 pb-3 pt-4 text-[12.5px] leading-relaxed" style={{ background: "#fff3a6", rotate: "-0.6deg" }}>
                                     <Tape className="-top-2 left-6 h-3.5 w-11" color="rgba(255,200,215,.88)" style={{ rotate: "-4deg" }} />
-                                    먼저 우리 아이 이름과 실제 견종을 등록해 주세요. 저장이 끝나면 펫렌즈 사진 분석과 댕다방 연구소 행동·소리 분석을 바로 시작할 수 있어요.
+                                    {labelText("먼저 우리 아이 이름과 실제 견종을 등록해 주세요. 저장이 끝나면 펫렌즈 사진 분석과 댕다방 연구소 행동·소리 분석을 바로 시작할 수 있어요.")}
                                 </p>
                             )}
 
@@ -158,18 +160,18 @@ export default function StickerPets() {
                             </div>
 
                             {/* 다음 할 일 — 펫렌즈(준비된 아이가 있을 때) 또는 웹과 같은 안내 */}
-                            <SectionLabel className="mt-7" icon="fa-wand-magic-sparkles">이어서 하기</SectionLabel>
+                            <SectionLabel className="mt-7" icon="fa-wand-magic-sparkles">{labelText("이어서 하기")}</SectionLabel>
                             {petLensReady ? (
                                 <div className="mt-3.5 grid grid-cols-2 gap-2.5">
-                                    <Patch href={PETLENS_PAGE_HREF} small><i aria-hidden="true" className="fa-solid fa-camera text-[11px]" />펫렌즈 분석</Patch>
-                                    <Patch href={APP_REPORT} small tone="cream"><i aria-hidden="true" className="fa-solid fa-chart-line text-[11px]" />주간 리포트</Patch>
+                                    <Patch href={PETLENS_PAGE_HREF} small><i aria-hidden="true" className="fa-solid fa-camera text-[11px]" />{labelText("펫렌즈 분석")}</Patch>
+                                    <Patch href={APP_REPORT} small tone="cream"><i aria-hidden="true" className="fa-solid fa-chart-line text-[11px]" />{labelText("주간 리포트")}</Patch>
                                 </div>
                             ) : pets.length > 0 ? (
                                 <p className="ah-light mt-3 rounded-[4px_4px_14px_4px] bg-[#fff3e0] px-3.5 py-2.5 text-[12px] leading-relaxed text-[#9a5b12]">
-                                    위 프로필의 ‘정보 수정’에서 서버 등록과 실제 견종 확인을 마치면 펫렌즈 버튼이 열려요.
+                                    {labelText("위 프로필의 ‘정보 수정’에서 서버 등록과 실제 견종 확인을 마치면 펫렌즈 버튼이 열려요.")}
                                 </p>
                             ) : (
-                                <p className="ah-light mt-3 text-[12px]" style={{ color: TEXT_SOFT }}>아이를 등록하면 펫렌즈 사진 분석과 주간 리포트를 시작할 수 있어요.</p>
+                                <p className="ah-light mt-3 text-[12px]" style={{ color: TEXT_SOFT }}>{labelText("아이를 등록하면 펫렌즈 사진 분석과 주간 리포트를 시작할 수 있어요.")}</p>
                             )}
                         </PetAppSheet>
                     )}

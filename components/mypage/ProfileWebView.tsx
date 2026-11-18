@@ -16,6 +16,7 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
@@ -180,6 +181,7 @@ function ReauthGate({ user, token, provider, providerLabel, accountDisplay, isEm
     isEmailAccount: boolean;
     expired: boolean;
 }) {
+    const { menuLabel: labelText } = useI18n();
     const [password, setPassword] = useState("");
     const [show, setShow] = useState(false);
     const [checking, setChecking] = useState(false);
@@ -221,10 +223,10 @@ function ReauthGate({ user, token, provider, providerLabel, accountDisplay, isEm
                 <img src={`${UI}stickers/login-lock.webp`} alt="" aria-hidden="true" />
                 <span>
                     <span className="pf-kicker">SECURITY CHECK</span>
-                    <h2 id="pf-gate-title">한 번 더 <span className="pf-hl">확인</span>할게요</h2>
+                    <h2 id="pf-gate-title">{labelText("한 번 더")} <span className="pf-hl">{labelText("확인")}</span>{labelText("할게요")}</h2>
                     <p>
                         {expired ? "확인한 지 10분이 지나 다시 잠겼어요. " : ""}
-                        내 정보를 지키기 위해 {isEmailAccount ? "비밀번호를" : `${providerLabel} 로그인을`} 다시 확인해요.
+                        {labelText("내 정보를 지키기 위해")} {isEmailAccount ? "비밀번호를" : `${providerLabel} 로그인을`} {labelText("다시 확인해요.")}
                     </p>
                 </span>
             </div>
@@ -240,7 +242,7 @@ function ReauthGate({ user, token, provider, providerLabel, accountDisplay, isEm
 
             {isEmailAccount ? (
                 <form className="pf-gate-form" onSubmit={submit} noValidate>
-                    <label className="pf-label" htmlFor="pf-reauth-password">비밀번호</label>
+                    <label className="pf-label" htmlFor="pf-reauth-password">{labelText("비밀번호")}</label>
                     <span className="pf-inwrap">
                         <input
                             id="pf-reauth-password"
@@ -252,7 +254,7 @@ function ReauthGate({ user, token, provider, providerLabel, accountDisplay, isEm
                                 setError("");
                             }}
                             autoComplete="current-password"
-                            placeholder="지금 쓰는 비밀번호"
+                            placeholder={labelText("지금 쓰는 비밀번호")}
                             aria-invalid={Boolean(error)}
                         />
                         <button type="button" className="pf-eye" onClick={() => setShow((value) => !value)} aria-label={show ? "비밀번호 숨기기" : "비밀번호 보기"} aria-pressed={show}>
@@ -261,24 +263,24 @@ function ReauthGate({ user, token, provider, providerLabel, accountDisplay, isEm
                     </span>
                     {error && <p className="pf-msg is-error" role="alert"><i className="fa-solid fa-circle-exclamation" aria-hidden="true" />{error}</p>}
                     <button type="submit" className="pf-go" disabled={checking || !password}>
-                        {checking ? <><i className="fa-solid fa-circle-notch fa-spin" aria-hidden="true" />확인하는 중</> : <>확인하고 내 정보 보기<i className="fa-solid fa-arrow-right" aria-hidden="true" /></>}
+                        {checking ? <><i className="fa-solid fa-circle-notch fa-spin" aria-hidden="true" />{labelText("확인하는 중")}</> : <>{labelText("확인하고 내 정보 보기")}<i className="fa-solid fa-arrow-right" aria-hidden="true" /></>}
                     </button>
-                    <Link href="/forgot-password" className="pf-link">비밀번호를 잊으셨나요?</Link>
+                    <Link href="/forgot-password" className="pf-link">{labelText("비밀번호를 잊으셨나요?")}</Link>
                 </form>
             ) : (
                 <div className="pf-gate-form">
                     <button type="button" className={`pf-social is-${provider}`} onClick={socialAgain}>
-                        <ProviderMark provider={provider} />{providerLabel}로 다시 확인
+                        <ProviderMark provider={provider} />{providerLabel}{labelText("로 다시 확인")}
                     </button>
-                    <p className="pf-hint is-center">{providerLabel} 화면에서 로그인하면 이 화면으로 돌아와요.</p>
+                    <p className="pf-hint is-center">{providerLabel} {labelText("화면에서 로그인하면 이 화면으로 돌아와요.")}</p>
                     {error && <p className="pf-msg is-error" role="alert"><i className="fa-solid fa-circle-exclamation" aria-hidden="true" />{error}</p>}
                 </div>
             )}
 
             <p className="pf-gate-tips">
-                <span><i className="fa-solid fa-clock" aria-hidden="true" />10분 동안 유지</span>
-                <span><i className="fa-solid fa-window-restore" aria-hidden="true" />창을 닫으면 다시 확인</span>
-                <span><i className="fa-solid fa-shield-halved" aria-hidden="true" />비밀번호는 저장하지 않아요</span>
+                <span><i className="fa-solid fa-clock" aria-hidden="true" />{labelText("10분 동안 유지")}</span>
+                <span><i className="fa-solid fa-window-restore" aria-hidden="true" />{labelText("창을 닫으면 다시 확인")}</span>
+                <span><i className="fa-solid fa-shield-halved" aria-hidden="true" />{labelText("비밀번호는 저장하지 않아요")}</span>
             </p>
         </section>
     );
@@ -297,6 +299,7 @@ function VerifiedView({ user, token, provider, providerLabel, accountDisplay, is
     onSavedName: (name: string) => void;
     onPasswordChanged: () => void;
 }) {
+    const { menuLabel: labelText } = useI18n();
     const [tab, setTab] = useState<Tab>("info");
     const minutesLeft = Math.max(1, Math.ceil((until - now) / 60_000));
     const internalEmail = isInternalSocialEmail(user.email);
@@ -321,33 +324,33 @@ function VerifiedView({ user, token, provider, providerLabel, accountDisplay, is
     return (
         <>
             {/* 내 카드 */}
-            <section className="pf-me" aria-label="내 계정">
+            <section className="pf-me" aria-label={labelText("내 계정")}>
                 <span className="pf-me-av" aria-hidden="true">{(user.name || "댕").slice(0, 1)}</span>
                 <span className="pf-me-text">
-                    <b>{user.name}<small>님</small></b>
+                    <b>{user.name}<small>{labelText("님")}</small></b>
                     <span>{internalEmail ? `${providerLabel} 간편가입 회원` : accountDisplay}</span>
                     <span className="pf-me-chips">
                         <span className="pf-provider" data-provider={provider}><ProviderMark provider={provider} />{isEmailAccount ? "이메일 로그인" : `${providerLabel} 로그인`}</span>
                         {internalEmail ? (
-                            <Chip tone="warn" icon="fa-at">이메일 없음</Chip>
+                            <Chip tone="warn" icon="fa-at">{labelText("이메일 없음")}</Chip>
                         ) : verifiedAt === undefined ? (
-                            <Chip>이메일 확인 중</Chip>
+                            <Chip>{labelText("이메일 확인 중")}</Chip>
                         ) : verifiedAt ? (
-                            <Chip tone="ok" icon="fa-check">이메일 인증됨</Chip>
+                            <Chip tone="ok" icon="fa-check">{labelText("이메일 인증됨")}</Chip>
                         ) : (
-                            <Chip tone="warn" icon="fa-envelope">이메일 인증 전</Chip>
+                            <Chip tone="warn" icon="fa-envelope">{labelText("이메일 인증 전")}</Chip>
                         )}
                     </span>
                 </span>
                 <span className="pf-me-timer" role="status">
-                    <span><i className="fa-solid fa-shield-heart" aria-hidden="true" />본인 확인됨</span>
-                    <small>{minutesLeft}분 동안 수정할 수 있어요</small>
-                    <button type="button" onClick={clearReauth}><i className="fa-solid fa-lock" aria-hidden="true" />지금 잠그기</button>
+                    <span><i className="fa-solid fa-shield-heart" aria-hidden="true" />{labelText("본인 확인됨")}</span>
+                    <small>{minutesLeft}{labelText("분 동안 수정할 수 있어요")}</small>
+                    <button type="button" onClick={clearReauth}><i className="fa-solid fa-lock" aria-hidden="true" />{labelText("지금 잠그기")}</button>
                 </span>
             </section>
 
             {/* 탭 */}
-            <div className="pf-tabs" role="tablist" aria-label="개인정보 항목">
+            <div className="pf-tabs" role="tablist" aria-label={labelText("개인정보 항목")}>
                 {tabs.map((item) => (
                     <button
                         key={item.id}
@@ -377,8 +380,8 @@ function VerifiedView({ user, token, provider, providerLabel, accountDisplay, is
             </section>
 
             {/* 다른 정보 */}
-            <nav className="pf-more" aria-label="다른 정보 관리">
-                <span>다른 정보도 관리해요</span>
+            <nav className="pf-more" aria-label={labelText("다른 정보 관리")}>
+                <span>{labelText("다른 정보도 관리해요")}</span>
                 {[
                     { href: "/mypage/#pet-profiles", art: "stickers/my-pets.webp", title: "우리 아이 정보" },
                     { href: "/mypage/address/", art: "stickers/my-address.webp", title: "배송지 관리" },
@@ -416,6 +419,7 @@ function InfoPanel({ user, token, accountDisplay, internalEmail, verifiedAt, onS
     verifiedAt: string | null | undefined;
     onSavedName: (name: string) => void;
 }) {
+    const { menuLabel: labelText } = useI18n();
     const [editing, setEditing] = useState(false);
     const [name, setName] = useState(user.name);
     const [saving, setSaving] = useState(false);
@@ -452,21 +456,21 @@ function InfoPanel({ user, token, accountDisplay, internalEmail, verifiedAt, onS
 
     return (
         <>
-            <PanelHead title="내 정보" sub="주문서 · 배송 안내에 쓰이는 기본 정보예요." />
+            <PanelHead title={labelText("내 정보")} sub="주문서 · 배송 안내에 쓰이는 기본 정보예요." />
             <ul className="pf-list">
                 <SettingRow
                     icon="fa-signature"
-                    label="이름"
+                    label={labelText("이름")}
                     open={editing}
                     value={<><b>{user.name}</b>{message?.ok && !editing && <Chip tone="ok" icon="fa-check">{message.text}</Chip>}</>}
                     action={!editing && (
                         <button type="button" className="pf-act" onClick={() => { setEditing(true); setName(user.name); setMessage(null); }}>
-                            <i className="fa-solid fa-pen" aria-hidden="true" />수정
+                            <i className="fa-solid fa-pen" aria-hidden="true" />{labelText("수정")}
                         </button>
                     )}
                 >
                     <form className="pf-edit" onSubmit={saveName} noValidate>
-                        <label className="pf-label" htmlFor="pf-name">새 이름</label>
+                        <label className="pf-label" htmlFor="pf-name">{labelText("새 이름")}</label>
                         <input
                             id="pf-name"
                             className="pf-in"
@@ -477,44 +481,44 @@ function InfoPanel({ user, token, accountDisplay, internalEmail, verifiedAt, onS
                             autoFocus
                             aria-invalid={Boolean(message && !message.ok)}
                         />
-                        <span className="pf-hint">2~50자 · 주문서와 배송 안내에 이 이름이 쓰여요.</span>
+                        <span className="pf-hint">{labelText("2~50자 · 주문서와 배송 안내에 이 이름이 쓰여요.")}</span>
                         {message && !message.ok && <p className="pf-msg is-error" role="alert"><i className="fa-solid fa-circle-exclamation" aria-hidden="true" />{message.text}</p>}
                         <span className="pf-edit-foot">
-                            <button type="button" className="pf-cancel" onClick={() => { setEditing(false); setName(user.name); setMessage(null); }}>취소</button>
-                            <button type="submit" className="pf-go" disabled={saving || !changed}>{saving ? "저장하는 중" : "이름 저장"}</button>
+                            <button type="button" className="pf-cancel" onClick={() => { setEditing(false); setName(user.name); setMessage(null); }}>{labelText("취소")}</button>
+                            <button type="submit" className="pf-go" disabled={saving || !changed}>{labelText(saving ? "저장하는 중" : "이름 저장")}</button>
                         </span>
                     </form>
                 </SettingRow>
 
                 <SettingRow
                     icon="fa-at"
-                    label="이메일 · 로그인 계정"
+                    label={labelText("이메일 · 로그인 계정")}
                     value={(
                         <>
                             <b>{internalEmail ? "등록된 이메일이 없어요" : accountDisplay}</b>
-                            {internalEmail ? <Chip tone="warn">이메일 없음</Chip>
-                                : verifiedAt === undefined ? <Chip>확인 중</Chip>
-                                    : verifiedAt ? <Chip tone="ok" icon="fa-check">인증됨{formatDate(verifiedAt) ? ` · ${formatDate(verifiedAt)}` : ""}</Chip>
-                                        : <Chip tone="warn">인증 전</Chip>}
+                            {internalEmail ? <Chip tone="warn">{labelText("이메일 없음")}</Chip>
+                                : verifiedAt === undefined ? <Chip>{labelText("확인 중")}</Chip>
+                                    : verifiedAt ? <Chip tone="ok" icon="fa-check">{labelText("인증됨")}{formatDate(verifiedAt) ? ` · ${formatDate(verifiedAt)}` : ""}</Chip>
+                                        : <Chip tone="warn">{labelText("인증 전")}</Chip>}
                         </>
                     )}
                     action={(
                         <MypageInquiryLink href="/inquiry?category=other#inquiry-form" className="pf-act" preset={ACCOUNT_INQUIRY}>
-                            <i className="fa-solid fa-headset" aria-hidden="true" />변경 문의
+                            <i className="fa-solid fa-headset" aria-hidden="true" />{labelText("변경 문의")}
                         </MypageInquiryLink>
                     )}
                 />
                 {(internalEmail || verifiedAt === null) && (
                     <li className="pf-tip">
                         <i className="fa-solid fa-coins" aria-hidden="true" />
-                        <span>{internalEmail ? "이메일을 등록 · 인증하면 주문 안내를 받고 20C도 받아요." : "이메일을 인증하면 가입 혜택 20C가 들어와요."}</span>
-                        <Link href="/mypage/#daenglab-wallet">{internalEmail ? "이메일 등록" : "인증하러 가기"}<i className="fa-solid fa-chevron-right" aria-hidden="true" /></Link>
+                        <span>{labelText(internalEmail ? "이메일을 등록 · 인증하면 주문 안내를 받고 20C도 받아요." : "이메일을 인증하면 가입 혜택 20C가 들어와요.")}</span>
+                        <Link href="/mypage/#daenglab-wallet">{labelText(internalEmail ? "이메일 등록" : "인증하러 가기")}<i className="fa-solid fa-chevron-right" aria-hidden="true" /></Link>
                     </li>
                 )}
 
                 <SocialPhoneRegistration />
             </ul>
-            <p className="pf-foot-note"><i className="fa-solid fa-circle-info" aria-hidden="true" />이메일은 로그인 아이디라 직접 바꿀 수 없어요. 휴대폰 번호는 카카오·네이버 계정에서 제공하는 번호로 등록·변경할 수 있어요.</p>
+            <p className="pf-foot-note"><i className="fa-solid fa-circle-info" aria-hidden="true" />{labelText("이메일은 로그인 아이디라 직접 바꿀 수 없어요. 휴대폰 번호는 카카오·네이버 계정에서 제공하는 번호로 등록·변경할 수 있어요.")}</p>
         </>
     );
 }
@@ -529,6 +533,7 @@ function SecurityPanel({ user, token, provider, providerLabel, accountDisplay, i
     isEmailAccount: boolean;
     onPasswordChanged: () => void;
 }) {
+    const { menuLabel: labelText } = useI18n();
     const [open, setOpen] = useState(false);
     const [current, setCurrent] = useState("");
     const [next, setNext] = useState("");
@@ -580,69 +585,69 @@ function SecurityPanel({ user, token, provider, providerLabel, accountDisplay, i
 
     return (
         <>
-            <PanelHead title="로그인 · 보안" sub={isEmailAccount ? "로그인 방식과 비밀번호를 관리해요." : `${providerLabel} 계정으로 로그인하고 있어요.`} />
+            <PanelHead title={labelText("로그인 · 보안")} sub={isEmailAccount ? "로그인 방식과 비밀번호를 관리해요." : `${providerLabel} 계정으로 로그인하고 있어요.`} />
             <ul className="pf-list">
                 <SettingRow
                     icon="fa-right-to-bracket"
-                    label="로그인 방식"
+                    label={labelText("로그인 방식")}
                     value={<><span className="pf-provider" data-provider={provider}><ProviderMark provider={provider} />{isEmailAccount ? "이메일" : providerLabel}</span><b className="is-sub">{isEmailAccount ? accountDisplay : `${providerLabel} 계정으로 로그인`}</b></>}
                 />
                 {isEmailAccount ? (
                     <SettingRow
                         icon="fa-lock"
-                        label="비밀번호"
+                        label={labelText("비밀번호")}
                         open={open || done}
                         value={<b className="pf-dots">••••••••</b>}
                         action={!open && !done && (
-                            <button type="button" className="pf-act" onClick={() => setOpen(true)}><i className="fa-solid fa-pen" aria-hidden="true" />변경</button>
+                            <button type="button" className="pf-act" onClick={() => setOpen(true)}><i className="fa-solid fa-pen" aria-hidden="true" />{labelText("변경")}</button>
                         )}
                     >
                         {done ? (
                             <p className="pf-done" role="status">
                                 <span aria-hidden="true"><i className="fa-solid fa-check" /></span>
-                                <b>비밀번호를 바꿨어요</b>
-                                <small>보안을 위해 모든 기기에서 로그아웃하고 로그인 화면으로 이동해요.</small>
+                                <b>{labelText("비밀번호를 바꿨어요")}</b>
+                                <small>{labelText("보안을 위해 모든 기기에서 로그아웃하고 로그인 화면으로 이동해요.")}</small>
                             </p>
                         ) : (
                             <form className="pf-edit" onSubmit={submit} noValidate>
-                                <label className="pf-label" htmlFor="pf-pw-current">현재 비밀번호</label>
+                                <label className="pf-label" htmlFor="pf-pw-current">{labelText("현재 비밀번호")}</label>
                                 <input id="pf-pw-current" className="pf-in" type={show ? "text" : "password"} value={current} onChange={(event) => { setCurrent(event.target.value); setError(""); }} autoComplete="current-password" autoFocus />
-                                <label className="pf-label" htmlFor="pf-pw-next">새 비밀번호</label>
+                                <label className="pf-label" htmlFor="pf-pw-next">{labelText("새 비밀번호")}</label>
                                 <span className="pf-inwrap">
-                                    <input id="pf-pw-next" className="pf-in" type={show ? "text" : "password"} value={next} onChange={(event) => { setNext(event.target.value); setError(""); }} autoComplete="new-password" maxLength={72} placeholder="8자 이상" aria-describedby="pf-pw-rules" />
+                                    <input id="pf-pw-next" className="pf-in" type={show ? "text" : "password"} value={next} onChange={(event) => { setNext(event.target.value); setError(""); }} autoComplete="new-password" maxLength={72} placeholder={labelText("8자 이상")} aria-describedby="pf-pw-rules" />
                                     <button type="button" className="pf-eye" onClick={() => setShow((value) => !value)} aria-label={show ? "비밀번호 숨기기" : "비밀번호 보기"} aria-pressed={show}>
                                         <i className={show ? "fa-solid fa-eye-slash" : "fa-solid fa-eye"} aria-hidden="true" />
                                     </button>
                                 </span>
                                 <span className="pf-meter" data-score={score} aria-hidden="true"><i /><i /><i />{next && <b>{score >= 3 ? "튼튼해요" : score === 2 ? "괜찮아요" : "약해요"}</b>}</span>
                                 <span className="pf-rules" id="pf-pw-rules">
-                                    <span className={lengthOk ? "is-ok" : ""}><i className={lengthOk ? "fa-solid fa-check" : "fa-regular fa-circle"} aria-hidden="true" />8자 이상</span>
-                                    <span className={mixOk ? "is-ok" : ""}><i className={mixOk ? "fa-solid fa-check" : "fa-regular fa-circle"} aria-hidden="true" />영문 · 숫자 섞기</span>
-                                    <span className={!next ? "" : bytesOk ? "is-ok" : "is-bad"}><i className={bytesOk && next ? "fa-solid fa-check" : bytesOk ? "fa-regular fa-circle" : "fa-solid fa-xmark"} aria-hidden="true" />72바이트 이하</span>
-                                    <span className={!next ? "" : differentOk ? "is-ok" : "is-bad"}><i className={differentOk ? "fa-solid fa-check" : next ? "fa-solid fa-xmark" : "fa-regular fa-circle"} aria-hidden="true" />지금과 다르게</span>
+                                    <span className={lengthOk ? "is-ok" : ""}><i className={lengthOk ? "fa-solid fa-check" : "fa-regular fa-circle"} aria-hidden="true" />{labelText("8자 이상")}</span>
+                                    <span className={mixOk ? "is-ok" : ""}><i className={mixOk ? "fa-solid fa-check" : "fa-regular fa-circle"} aria-hidden="true" />{labelText("영문 · 숫자 섞기")}</span>
+                                    <span className={!next ? "" : bytesOk ? "is-ok" : "is-bad"}><i className={bytesOk && next ? "fa-solid fa-check" : bytesOk ? "fa-regular fa-circle" : "fa-solid fa-xmark"} aria-hidden="true" />{labelText("72바이트 이하")}</span>
+                                    <span className={!next ? "" : differentOk ? "is-ok" : "is-bad"}><i className={differentOk ? "fa-solid fa-check" : next ? "fa-solid fa-xmark" : "fa-regular fa-circle"} aria-hidden="true" />{labelText("지금과 다르게")}</span>
                                 </span>
-                                <label className="pf-label" htmlFor="pf-pw-confirm">새 비밀번호 확인</label>
+                                <label className="pf-label" htmlFor="pf-pw-confirm">{labelText("새 비밀번호 확인")}</label>
                                 <span className={`pf-inwrap${matchOk ? " is-ok" : confirm ? " is-bad" : ""}`}>
-                                    <input id="pf-pw-confirm" className="pf-in" type={show ? "text" : "password"} value={confirm} onChange={(event) => { setConfirm(event.target.value); setError(""); }} autoComplete="new-password" maxLength={72} placeholder="한 번 더 넣어 주세요" />
-                                    {matchOk && <em className="is-ok">같아요</em>}
-                                    {confirm && !matchOk && <em className="is-bad">달라요</em>}
+                                    <input id="pf-pw-confirm" className="pf-in" type={show ? "text" : "password"} value={confirm} onChange={(event) => { setConfirm(event.target.value); setError(""); }} autoComplete="new-password" maxLength={72} placeholder={labelText("한 번 더 넣어 주세요")} />
+                                    {matchOk && <em className="is-ok">{labelText("같아요")}</em>}
+                                    {confirm && !matchOk && <em className="is-bad">{labelText("달라요")}</em>}
                                 </span>
                                 {error && <p className="pf-msg is-error" role="alert"><i className="fa-solid fa-circle-exclamation" aria-hidden="true" />{error}</p>}
                                 <span className="pf-edit-foot">
-                                    <button type="button" className="pf-cancel" onClick={reset}>취소</button>
+                                    <button type="button" className="pf-cancel" onClick={reset}>{labelText("취소")}</button>
                                     <button type="submit" className="pf-go" disabled={!ready || saving}>
-                                        {saving ? <><i className="fa-solid fa-circle-notch fa-spin" aria-hidden="true" />바꾸는 중</> : "비밀번호 바꾸기"}
+                                        {saving ? <><i className="fa-solid fa-circle-notch fa-spin" aria-hidden="true" />{labelText("바꾸는 중")}</> : "비밀번호 바꾸기"}
                                     </button>
                                 </span>
-                                <Link href="/forgot-password" className="pf-link">현재 비밀번호가 기억나지 않나요?</Link>
+                                <Link href="/forgot-password" className="pf-link">{labelText("현재 비밀번호가 기억나지 않나요?")}</Link>
                             </form>
                         )}
                     </SettingRow>
                 ) : (
                     <SettingRow
                         icon="fa-lock"
-                        label="비밀번호"
-                        value={<b className="is-sub">{providerLabel}에서 관리해요</b>}
+                        label={labelText("비밀번호")}
+                        value={<b className="is-sub">{providerLabel}{labelText("에서 관리해요")}</b>}
                     />
                 )}
             </ul>
@@ -658,6 +663,7 @@ function SecurityPanel({ user, token, provider, providerLabel, accountDisplay, i
 
 /* ═════════ 알림 수신 ═════════ */
 function NoticePanel({ token, internalEmail }: { token?: string; internalEmail: boolean }) {
+    const { menuLabel: labelText } = useI18n();
     const [state, setState] = useState<"loading" | "on" | "off" | "unknown">(internalEmail || !token ? "unknown" : "loading");
     const [consented, setConsented] = useState(false);
     const [editing, setEditing] = useState(false);
@@ -713,36 +719,36 @@ function NoticePanel({ token, internalEmail }: { token?: string; internalEmail: 
 
     return (
         <>
-            <PanelHead title="알림 수신" sub="새 상품 · 할인 · 이벤트 소식을 받을지 정해요. 선택 사항이에요." />
+            <PanelHead title={labelText("알림 수신")} sub="새 상품 · 할인 · 이벤트 소식을 받을지 정해요. 선택 사항이에요." />
             <ul className="pf-list">
                 <SettingRow
                     icon="fa-envelope-open-text"
-                    label="이메일 소식"
+                    label={labelText("이메일 소식")}
                     open={editing}
                     value={(
                         <>
                             <b>{state === "on" ? "받고 있어요" : state === "off" ? "받지 않아요" : state === "loading" ? "확인하는 중" : internalEmail ? "등록된 이메일이 없어요" : "상태를 확인하지 못했어요"}</b>
-                            {state === "on" && <Chip tone="ok" icon="fa-check">수신 동의</Chip>}
+                            {state === "on" && <Chip tone="ok" icon="fa-check">{labelText("수신 동의")}</Chip>}
                         </>
                     )}
                     action={state === "off" && !consented && !editing ? (
-                        <button type="button" className="pf-act" onClick={() => { setEditing(true); setMessage(null); }}><i className="fa-solid fa-bell" aria-hidden="true" />받기</button>
+                        <button type="button" className="pf-act" onClick={() => { setEditing(true); setMessage(null); }}><i className="fa-solid fa-bell" aria-hidden="true" />{labelText("받기")}</button>
                     ) : consented || state === "on" ? (
                         <button type="button" className="pf-act" disabled={saving} onClick={unsubscribe}>
-                            <i className="fa-solid fa-bell-slash" aria-hidden="true" />{saving ? "저장하는 중" : "그만 받기"}
+                            <i className="fa-solid fa-bell-slash" aria-hidden="true" />{labelText(saving ? "저장하는 중" : "그만 받기")}
                         </button>
                     ) : internalEmail ? (
-                        <Link href="/mypage/#daenglab-wallet" className="pf-act"><i className="fa-solid fa-at" aria-hidden="true" />이메일 등록</Link>
+                        <Link href="/mypage/#daenglab-wallet" className="pf-act"><i className="fa-solid fa-at" aria-hidden="true" />{labelText("이메일 등록")}</Link>
                     ) : undefined}
                 >
                     <form className="pf-edit" onSubmit={subscribe} noValidate>
                         <label className="pf-check">
                             <input type="checkbox" checked={agree} onChange={(event) => setAgree(event.target.checked)} />
-                            <span><b>[선택] 광고성 정보 이메일 수신에 동의해요</b><small>새 상품 · 할인 · 이벤트 소식 · 동의 철회 시까지</small></span>
+                            <span><b>{labelText("[선택] 광고성 정보 이메일 수신에 동의해요")}</b><small>{labelText("새 상품 · 할인 · 이벤트 소식 · 동의 철회 시까지")}</small></span>
                         </label>
                         <span className="pf-edit-foot">
-                            <button type="button" className="pf-cancel" onClick={() => { setEditing(false); setAgree(false); }}>취소</button>
-                            <button type="submit" className="pf-go" disabled={!agree || saving}>{saving ? "저장하는 중" : "동의하고 받기"}</button>
+                            <button type="button" className="pf-cancel" onClick={() => { setEditing(false); setAgree(false); }}>{labelText("취소")}</button>
+                            <button type="submit" className="pf-go" disabled={!agree || saving}>{labelText(saving ? "저장하는 중" : "동의하고 받기")}</button>
                         </span>
                     </form>
                 </SettingRow>
@@ -754,12 +760,12 @@ function NoticePanel({ token, internalEmail }: { token?: string; internalEmail: 
                 )}
                 <SettingRow
                     icon="fa-comment-sms"
-                    label="문자(SMS) 소식"
+                    label={labelText("문자(SMS) 소식")}
                     soon
-                    value={<><b className="is-muted">아직 받을 수 없어요</b><Chip tone="warn">준비 중</Chip></>}
+                    value={<><b className="is-muted">{labelText("아직 받을 수 없어요")}</b><Chip tone="warn">{labelText("준비 중")}</Chip></>}
                 />
             </ul>
-            <p className="pf-foot-note"><i className="fa-solid fa-circle-info" aria-hidden="true" />주문 · 배송 · 환불 안내처럼 꼭 필요한 알림은 수신 동의와 관계없이 보내 드려요.</p>
+            <p className="pf-foot-note"><i className="fa-solid fa-circle-info" aria-hidden="true" />{labelText("주문 · 배송 · 환불 안내처럼 꼭 필요한 알림은 수신 동의와 관계없이 보내 드려요.")}</p>
         </>
     );
 }

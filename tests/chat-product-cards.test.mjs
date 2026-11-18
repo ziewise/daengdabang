@@ -14,6 +14,8 @@ function load(path) {
     }).outputText;
     const moduleRecord = { exports: {} };
     const localRequire = (name) => {
+        if (name === "@/lib/i18n") return { useI18n: () => ({ locale: "ko", productName: product => product.name }) };
+        if (name === "@/hooks/useCareTalkCopy") return { useCareTalkCopy: () => text => text };
         if (name === "next/link") return { default: (props) => require("react").createElement("a", props) };
         if (name === "@/lib/shop") return { productHref: (p) => `/products/${p.id}/` };
         if (name.startsWith("@/")) return load(`${name.slice(2)}.ts`);

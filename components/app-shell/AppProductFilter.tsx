@@ -10,6 +10,7 @@
  * 웹: 뿌리 요소가 hidden 이라 보이지도, 칸을 차지하지도 않음(앱 CSS 에서만 보임).
  */
 
+import { useI18n } from "@/lib/i18n";
 import { useState } from "react";
 import { haptic } from "@/components/pwa/home-concepts/gestures";
 import { SHOW_PARTS_CSS, Sheet } from "@/components/pwa/home-concepts/show-parts";
@@ -25,6 +26,7 @@ export default function AppProductFilter({ sort, sortOptions, onSort, category, 
     categoryOptions?: Option[];
     onCategory?: (value: string) => void;
 }) {
+    const { menuLabel: labelText } = useI18n();
     const [open, setOpen] = useState(false);
     const sortLabel = sortOptions.find((o) => o.value === sort)?.label ?? "";
     const pick = (fn: () => void) => { fn(); haptic("light"); setOpen(false); };
@@ -33,27 +35,27 @@ export default function AppProductFilter({ sort, sortOptions, onSort, category, 
         <div className="hidden" data-app-product-filter>
             <button type="button" onClick={() => { haptic("light"); setOpen(true); }} aria-haspopup="dialog" aria-label={`필터 · 지금 ${sortLabel}`} className="apf-btn">
                 <i aria-hidden="true" className="fa-solid fa-sliders text-[12px]" />
-                <span className="apf-d">{sortLabel}</span>
+                <span className="apf-d">{labelText(sortLabel)}</span>
             </button>
             {open ? <style>{SHOW_PARTS_CSS + APF_CSS}</style> : null}
-            <Sheet open={open} onClose={() => setOpen(false)} label="필터"
-                title={<p className="apf-d text-[18px]"><span className="apf-marker">필터</span></p>}>
+            <Sheet open={open} onClose={() => setOpen(false)} label={labelText("필터")}
+                title={<p className="apf-d text-[18px]"><span className="apf-marker">{labelText("필터")}</span></p>}>
                 {categoryOptions && onCategory ? (
                     <>
-                        <p className="apf-d mt-1 text-[13px] text-[#b07a8a]">카테고리</p>
+                        <p className="apf-d mt-1 text-[13px] text-[#b07a8a]">{labelText("카테고리")}</p>
                         <div className="mt-2 flex flex-wrap gap-2">
                             {categoryOptions.map((o) => (
                                 <button key={o.value} type="button" aria-pressed={category === o.value} onClick={() => pick(() => onCategory(o.value))}
-                                    className={`sp-pet apf-d rounded-full px-3.5 py-1.5 text-[13px] ${category === o.value ? "is-on" : ""}`}>{o.label}</button>
+                                    className={`sp-pet apf-d rounded-full px-3.5 py-1.5 text-[13px] ${category === o.value ? "is-on" : ""}`}>{labelText(o.label)}</button>
                             ))}
                         </div>
                     </>
                 ) : null}
-                <p className={`apf-d text-[13px] text-[#b07a8a] ${categoryOptions ? "mt-5" : "mt-1"}`}>정렬</p>
+                <p className={`apf-d text-[13px] text-[#b07a8a] ${categoryOptions ? "mt-5" : "mt-1"}`}>{labelText("정렬")}</p>
                 <div className="mt-2 flex flex-wrap gap-2 pb-2">
                     {sortOptions.map((o) => (
                         <button key={o.value} type="button" aria-pressed={sort === o.value} onClick={() => pick(() => onSort(o.value))}
-                            className={`sp-pet apf-d rounded-full px-3.5 py-1.5 text-[13px] ${sort === o.value ? "is-on" : ""}`}>{o.label}</button>
+                            className={`sp-pet apf-d rounded-full px-3.5 py-1.5 text-[13px] ${sort === o.value ? "is-on" : ""}`}>{labelText(o.label)}</button>
                     ))}
                 </div>
             </Sheet>

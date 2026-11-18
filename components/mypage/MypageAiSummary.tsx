@@ -11,6 +11,7 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
@@ -56,9 +57,10 @@ function serverPets(pets: PetProfile[]) {
 
 // 반려견 고르기 — 두 마리 이상일 때만 보이는 알약 줄
 function PetPicker({ pets, value, onChange }: { pets: PetProfile[]; value?: number; onChange: (id: number) => void }) {
+    const { menuLabel: labelText } = useI18n();
     if (pets.length < 2) return null;
     return (
-        <div className="mp-sum-pets mb-4 flex flex-wrap gap-2" role="radiogroup" aria-label="반려견 고르기">
+        <div className="mp-sum-pets mb-4 flex flex-wrap gap-2" role="radiogroup" aria-label={labelText("반려견 고르기")}>
             {pets.map((pet) => (
                 <button
                     key={pet.apiProfileId}
@@ -93,10 +95,11 @@ function SumEmpty({ art, title, text, action }: { art: string; title: string; te
 
 // 서버 로그인 정보(토큰)가 없을 때 — 계속 "불러오는 중"에 머물지 않고 다시 로그인 안내
 function NeedLogin({ redirect }: { redirect: string }) {
+    const { menuLabel: labelText } = useI18n();
     return (
         <SumEmpty
             art="lock"
-            title="로그인 정보를 다시 확인해 주세요"
+            title={labelText("로그인 정보를 다시 확인해 주세요")}
             text="서버에 연결할 로그인 정보가 없어 기록을 불러올 수 없어요. 다시 로그인하면 바로 보여요."
             action={{ href: `/auth/login?redirect=${encodeURIComponent(redirect)}`, label: "다시 로그인" }}
         />
@@ -105,11 +108,12 @@ function NeedLogin({ redirect }: { redirect: string }) {
 
 // 불러오는 중 — 카드 자리 두 개(높이 고정이라 화면이 덜컹거리지 않음)
 function SumLoading() {
+    const { menuLabel: labelText } = useI18n();
     return (
         <div className="mp-sum-loading grid gap-4 md:grid-cols-2" aria-busy="true" aria-live="polite">
             <div className="surface h-56 animate-pulse" />
             <div className="surface h-56 animate-pulse" />
-            <span className="sr-only">기록을 불러오는 중입니다.</span>
+            <span className="sr-only">{labelText("기록을 불러오는 중입니다.")}</span>
         </div>
     );
 }
@@ -138,6 +142,7 @@ function usePetChoice() {
 /* ───────── 건강 기록 요약 ───────── */
 
 export function HealthSummary() {
+    const { menuLabel: labelText } = useI18n();
     const { user, pets, petId, setPetId } = usePetChoice();
     // 회원 정보 안 토큰이 없으면 따로 저장된 토큰(주문 내역 화면과 같은 방식)
     const token = user ? user.apiAccessToken || getCustomerToken() : "";
@@ -159,10 +164,10 @@ export function HealthSummary() {
     if (!user) return null;
     if (!token) return <NeedLogin redirect="/mypage/health/" />;
     if (user.pets.length === 0) {
-        return <SumEmpty art="dog" title="먼저 우리 아이를 등록해 주세요" text="반려견 프로필을 만들면 주간 사진 건강 체크 결과가 여기에 정리돼요." action={{ href: "/mypage/#pet-profiles", label: "반려견 등록하기" }} />;
+        return <SumEmpty art="dog" title={labelText("먼저 우리 아이를 등록해 주세요")} text="반려견 프로필을 만들면 주간 사진 건강 체크 결과가 여기에 정리돼요." action={{ href: "/mypage/#pet-profiles", label: "반려견 등록하기" }} />;
     }
     if (pets.length === 0) {
-        return <SumEmpty art="dog" title="서버 등록을 마친 프로필이 없어요" text="대시보드의 ‘정보 수정’에서 서버 등록을 마치면 건강 기록을 불러올 수 있어요." action={{ href: "/mypage/#pet-profiles", label: "반려견 프로필 보기" }} />;
+        return <SumEmpty art="dog" title={labelText("서버 등록을 마친 프로필이 없어요")} text="대시보드의 ‘정보 수정’에서 서버 등록을 마치면 건강 기록을 불러올 수 있어요." action={{ href: "/mypage/#pet-profiles", label: "반려견 프로필 보기" }} />;
     }
 
     const pet = pets.find((item) => item.apiProfileId === petId);
@@ -174,7 +179,7 @@ export function HealthSummary() {
         <>
             <PetPicker pets={pets} value={petId} onChange={setPetId} />
             {!ready ? <SumLoading /> : loaded.error ? (
-                <SumEmpty art="info" title="건강 기록을 불러오지 못했어요" text={loaded.error} action={{ onClick: () => setRetry((n) => n + 1), label: "다시 불러오기" }} />
+                <SumEmpty art="info" title={labelText("건강 기록을 불러오지 못했어요")} text={loaded.error} action={{ onClick: () => setRetry((n) => n + 1), label: "다시 불러오기" }} />
             ) : !latest ? (
                 <SumEmpty art="health" title={`${pet?.name ?? "우리 아이"}의 건강 기록이 아직 없어요`} text="정면 · 옆 · 뒤 사진을 올리면 털 · 눈가 · 체형을 살펴 주간 기록으로 쌓아 드려요." action={{ href: "/my-pet", label: "첫 사진 올리러 가기" }} />
             ) : (
@@ -183,8 +188,8 @@ export function HealthSummary() {
                         {/* 이번 주 건강 체크 */}
                         <section className="surface p-5" data-mp-card>
                             <div data-mp-band="mint" data-mp-art="health">
-                                <h2 className="text-lg font-black text-neutral-950" data-mp-kicker="THIS WEEK">이번 주 건강 체크</h2>
-                                <p className="mt-1 text-xs font-bold text-neutral-500">{dateLabel(latest.analyzedAt, true)} · 사진 {latest.viewCount}장</p>
+                                <h2 className="text-lg font-black text-neutral-950" data-mp-kicker="THIS WEEK">{labelText("이번 주 건강 체크")}</h2>
+                                <p className="mt-1 text-xs font-bold text-neutral-500">{dateLabel(latest.analyzedAt, true)} {labelText("· 사진")} {latest.viewCount}{labelText("장")}</p>
                             </div>
                             <div className="mp-sum-chips flex flex-wrap gap-2">
                                 {latest.statusLabel && <span className="mp-sum-chip rounded-full bg-emerald-50 px-3 py-1 text-xs font-black text-emerald-700" data-tone="mint">{latest.statusLabel}</span>}
@@ -202,8 +207,8 @@ export function HealthSummary() {
                         {/* 지난주와 비교 */}
                         <section className="surface p-5" data-mp-card>
                             <div data-mp-band="sky" data-mp-art="info">
-                                <h2 className="text-lg font-black text-neutral-950" data-mp-kicker="WEEKLY CHANGE">지난주와 비교</h2>
-                                {latest.comparison.previousAnalyzedAt && <p className="mt-1 text-xs font-bold text-neutral-500">{dateLabel(latest.comparison.previousAnalyzedAt)} 기록과 비교</p>}
+                                <h2 className="text-lg font-black text-neutral-950" data-mp-kicker="WEEKLY CHANGE">{labelText("지난주와 비교")}</h2>
+                                {latest.comparison.previousAnalyzedAt && <p className="mt-1 text-xs font-bold text-neutral-500">{dateLabel(latest.comparison.previousAnalyzedAt)} {labelText("기록과 비교")}</p>}
                             </div>
                             {latest.comparison.status === "ready" ? (
                                 <>
@@ -223,7 +228,7 @@ export function HealthSummary() {
                                 </>
                             ) : (
                                 <div className="mp-sum-note rounded-xl bg-neutral-50 p-4 text-sm font-bold leading-6 text-neutral-600">
-                                    비교할 지난주 기록이 아직 없어요. 다음 주에도 같은 각도로 찍으면 달라진 점을 정리해 드려요.
+                                    {labelText("비교할 지난주 기록이 아직 없어요. 다음 주에도 같은 각도로 찍으면 달라진 점을 정리해 드려요.")}
                                 </div>
                             )}
                         </section>
@@ -233,7 +238,7 @@ export function HealthSummary() {
                     {latest.careActions.length > 0 && (
                         <section className="surface p-5" data-mp-card>
                             <div data-mp-band="yellow" data-mp-art="memo">
-                                <h2 className="text-lg font-black text-neutral-950" data-mp-kicker="CARE TODO">이번 주 돌봄 할 일</h2>
+                                <h2 className="text-lg font-black text-neutral-950" data-mp-kicker="CARE TODO">{labelText("이번 주 돌봄 할 일")}</h2>
                             </div>
                             <ol className="mp-sum-steps grid gap-3 md:grid-cols-3">
                                 {latest.careActions.slice(0, 3).map((action, index) => (
@@ -248,7 +253,7 @@ export function HealthSummary() {
                     {/* 주간 기록 */}
                     <section className="surface p-5" data-mp-card>
                         <div data-mp-band="lav" data-mp-art="star">
-                            <h2 className="text-lg font-black text-neutral-950" data-mp-kicker="HISTORY">주간 기록 {records.length}회</h2>
+                            <h2 className="text-lg font-black text-neutral-950" data-mp-kicker="HISTORY">{labelText("주간 기록")} {records.length}{labelText("회")}</h2>
                         </div>
                         <ol className="mp-sum-timeline grid gap-2">
                             {records.map((record, index) => (
@@ -288,6 +293,7 @@ const URGENCY = {
 const CONFIDENCE = { high: "높음", medium: "보통", low: "낮음" } as const;
 
 export function AiSummary() {
+    const { menuLabel: labelText } = useI18n();
     const { user, pets, petId, setPetId } = usePetChoice();
     // 회원 정보 안 토큰이 없으면 따로 저장된 토큰(주문 내역 화면과 같은 방식)
     const token = user ? user.apiAccessToken || getCustomerToken() : "";
@@ -316,10 +322,10 @@ export function AiSummary() {
     if (!user) return null;
     if (!token) return <NeedLogin redirect="/mypage/ai/" />;
     if (user.pets.length === 0) {
-        return <SumEmpty art="dog" title="먼저 우리 아이를 등록해 주세요" text="반려견 프로필을 만들면 행동 · 소리 분석 결과가 여기에 정리돼요." action={{ href: "/mypage/#pet-profiles", label: "반려견 등록하기" }} />;
+        return <SumEmpty art="dog" title={labelText("먼저 우리 아이를 등록해 주세요")} text="반려견 프로필을 만들면 행동 · 소리 분석 결과가 여기에 정리돼요." action={{ href: "/mypage/#pet-profiles", label: "반려견 등록하기" }} />;
     }
     if (pets.length === 0) {
-        return <SumEmpty art="dog" title="서버 등록을 마친 프로필이 없어요" text="대시보드의 ‘정보 수정’에서 서버 등록을 마치면 AI 분석 기록을 불러올 수 있어요." action={{ href: "/mypage/#pet-profiles", label: "반려견 프로필 보기" }} />;
+        return <SumEmpty art="dog" title={labelText("서버 등록을 마친 프로필이 없어요")} text="대시보드의 ‘정보 수정’에서 서버 등록을 마치면 AI 분석 기록을 불러올 수 있어요." action={{ href: "/mypage/#pet-profiles", label: "반려견 프로필 보기" }} />;
     }
 
     const pet = pets.find((item) => item.apiProfileId === petId);
@@ -335,7 +341,7 @@ export function AiSummary() {
         <>
             <PetPicker pets={pets} value={petId} onChange={setPetId} />
             {!ready ? <SumLoading /> : loaded.error ? (
-                <SumEmpty art="info" title="분석 기록을 불러오지 못했어요" text={loaded.error} action={{ onClick: () => setRetry((n) => n + 1), label: "다시 불러오기" }} />
+                <SumEmpty art="info" title={labelText("분석 기록을 불러오지 못했어요")} text={loaded.error} action={{ onClick: () => setRetry((n) => n + 1), label: "다시 불러오기" }} />
             ) : !latest ? (
                 <SumEmpty art="lens" title={`${pet?.name ?? "우리 아이"}의 AI 분석이 아직 없어요`} text="짧은 영상으로 행동과 소리를 분석하면 결과와 주의 단계를 여기에 모아 드려요." action={{ href: "/pet-lens", label: "첫 분석 하러 가기" }} />
             ) : (
@@ -344,7 +350,7 @@ export function AiSummary() {
                         {/* 최근 분석 결과 */}
                         <section className="surface p-5" data-mp-card>
                             <div data-mp-band="lav" data-mp-art="lens">
-                                <h2 className="text-lg font-black text-neutral-950" data-mp-kicker="LATEST">최근 행동 · 소리 분석</h2>
+                                <h2 className="text-lg font-black text-neutral-950" data-mp-kicker="LATEST">{labelText("최근 행동 · 소리 분석")}</h2>
                                 <p className="mt-1 text-xs font-bold text-neutral-500">{dateLabel(latest.completedAt ?? latest.createdAt, true)}</p>
                             </div>
                             <p className="mp-sum-title text-xl font-black leading-8 text-neutral-950">{latest.result.summary}</p>
@@ -357,7 +363,7 @@ export function AiSummary() {
                             )}
                             {candidates.length > 0 && (
                                 <div className="mt-4">
-                                    <p className="text-xs font-black text-neutral-500">보인 행동 · 소리</p>
+                                    <p className="text-xs font-black text-neutral-500">{labelText("보인 행동 · 소리")}</p>
                                     <ul className="mp-sum-chips mt-2 flex flex-wrap gap-2">
                                         {candidates.map((candidate) => (
                                             <li key={`${candidate.label}-${candidate.otherPossibility}`} className="mp-sum-chip rounded-full bg-indigo-50 px-3 py-1 text-xs font-black text-indigo-700">
@@ -372,19 +378,19 @@ export function AiSummary() {
                         {/* 분석 지갑 */}
                         <section className="surface p-5" data-mp-card>
                             <div data-mp-band="yellow" data-mp-art="coin">
-                                <h2 className="text-lg font-black text-neutral-950" data-mp-kicker="WALLET">남은 분석</h2>
+                                <h2 className="text-lg font-black text-neutral-950" data-mp-kicker="WALLET">{labelText("남은 분석")}</h2>
                             </div>
                             <div className="mp-sum-wallet grid gap-3 text-center">
                                 <div className="rounded-xl bg-emerald-50 p-4" data-tone="mint">
-                                    <p className="text-xs font-black text-emerald-700">분석 가능</p>
+                                    <p className="text-xs font-black text-emerald-700">{labelText("분석 가능")}</p>
                                     <p className="mp-sum-big text-3xl font-black text-emerald-800">{wallet ? `${wallet.analysesAvailable}회` : "–"}</p>
                                 </div>
                                 <div className="rounded-xl bg-indigo-50 p-4" data-tone="lav">
-                                    <p className="text-xs font-black text-indigo-700">연구소 코인</p>
+                                    <p className="text-xs font-black text-indigo-700">{labelText("연구소 코인")}</p>
                                     <p className="mp-sum-big text-3xl font-black text-indigo-800">{wallet ? `${wallet.daengLabCoins}C` : "–"}</p>
                                 </div>
-                                <p className="text-xs font-bold text-neutral-500">분석 1회 {wallet?.analysisCoinCost ?? 10}C · 최근 {items.length}회 기록</p>
-                                <Link href="/mypage/#daenglab-wallet" className="btn btn-secondary">코인 · 적립금 보기</Link>
+                                <p className="text-xs font-bold text-neutral-500">{labelText("분석 1회")} {wallet?.analysisCoinCost ?? 10}{labelText("C · 최근")} {items.length}{labelText("회 기록")}</p>
+                                <Link href="/mypage/#daenglab-wallet" className="btn btn-secondary">{labelText("코인 · 적립금 보기")}</Link>
                             </div>
                         </section>
                     </div>
@@ -392,7 +398,7 @@ export function AiSummary() {
                     {/* 지난 분석 */}
                     <section className="surface p-5" data-mp-card>
                         <div data-mp-band="sky" data-mp-art="memo">
-                            <h2 className="text-lg font-black text-neutral-950" data-mp-kicker="HISTORY">지난 분석 {items.length}회</h2>
+                            <h2 className="text-lg font-black text-neutral-950" data-mp-kicker="HISTORY">{labelText("지난 분석")} {items.length}{labelText("회")}</h2>
                         </div>
                         <ol className="mp-sum-timeline grid gap-2">
                             {items.map((item, index) => {
@@ -451,6 +457,7 @@ function Meter({ label, value, max, tone }: { label: string; value: number; max:
 }
 
 export function DailySummary() {
+    const { menuLabel: labelText } = useI18n();
     const { user } = useAuth();
     const webScreen = useWebScreen();
     // 회원 정보 안 토큰이 없으면 따로 저장된 토큰(주문 내역 화면과 같은 방식)
@@ -479,7 +486,7 @@ export function DailySummary() {
     if (loaded.error || !loaded.data) {
         return (
             <>
-                <SumEmpty art="info" title="매일댕생활 기록을 불러오지 못했어요" text={loaded.error ?? "잠시 후 다시 시도해 주세요."} action={{ onClick: () => setRetry((n) => n + 1), label: "다시 불러오기" }} />
+                <SumEmpty art="info" title={labelText("매일댕생활 기록을 불러오지 못했어요")} text={loaded.error ?? "잠시 후 다시 시도해 주세요."} action={{ onClick: () => setRetry((n) => n + 1), label: "다시 불러오기" }} />
                 <SumActions primary={{ href: "/treasure-mine/", label: "매일댕생활 열기" }} />
             </>
         );
@@ -522,15 +529,15 @@ export function DailySummary() {
                         <div className="dw-dial-week-head">
                             <div>
                                 <p className="ddb-crayon-kicker dw-kicker">THIS WEEK</p>
-                                <h2 className="dw-tlogin-title">이번 주 출석 {engagement?.weeklyAttendanceProgress ?? weekClaimed}/{engagement?.weeklyAttendanceTarget ?? 7}</h2>
+                                <h2 className="dw-tlogin-title">{labelText("이번 주 출석")} {engagement?.weeklyAttendanceProgress ?? weekClaimed}/{engagement?.weeklyAttendanceTarget ?? 7}</h2>
                             </div>
                             <div className="dw-dial-chips">
-                                <span className="dw-chip">{attendance.currentStreak}일 연속 출근</span>
-                                <span className="dw-chip">{attendance.wallet.daengLabCoins.toLocaleString("ko-KR")}C 보유</span>
-                                <span className="dw-chip">하루 도장 코인 {attendance.dailyRewardDaengLabCoins}개</span>
+                                <span className="dw-chip">{attendance.currentStreak}{labelText("일 연속 출근")}</span>
+                                <span className="dw-chip">{attendance.wallet.daengLabCoins.toLocaleString("ko-KR")}{labelText("C 보유")}</span>
+                                <span className="dw-chip">{labelText("하루 도장 코인")} {attendance.dailyRewardDaengLabCoins}{labelText("개")}</span>
                             </div>
                         </div>
-                        <ol className="dw-dsteps" aria-label="최근 7일 출근도장">
+                        <ol className="dw-dsteps" aria-label={labelText("최근 7일 출근도장")}>
                             {days.map((day, index) => {
                                 const isToday = day.businessDate === attendance.businessDate;
                                 const { weekday } = dayParts(day.businessDate);
@@ -545,19 +552,19 @@ export function DailySummary() {
                                             </span>
                                         ) : isToday && !attendance.claimedToday ? (
                                             <button type="button" onClick={() => void onStamp()} disabled={claiming} className="dw-dstep-art dw-dial-slot" aria-label={`오늘 출근 도장 찍고 코인 ${attendance.dailyRewardDaengLabCoins}개 받기`}>
-                                                <span>{claiming ? "꾹…" : "붙이기"}</span>
+                                                <span>{labelText(claiming ? "꾹…" : "붙이기")}</span>
                                             </button>
                                         ) : (
                                             <span className="dw-dstep-art dw-dial-empty" aria-hidden="true" />
                                         )}
                                         <span className="dw-dstep-title">{isToday ? "오늘" : weekday}</span>
-                                        <span className="sr-only">{day.claimed ? "도장 찍음" : "도장 없음"}</span>
+                                        <span className="sr-only">{labelText(day.claimed ? "도장 찍음" : "도장 없음")}</span>
                                     </li>
                                 );
                             })}
                         </ol>
                         {notice ? <p className="dw-dial-notice" role="status">{notice}</p> : null}
-                        <p className="dw-dial-rule"><i className="fa-solid fa-shield-heart" aria-hidden="true" /> {webScreen ? "도장 날짜와 보상은 한국 시간 기준으로 서버가 확인해요. 같은 날 여러 번 눌러도 한 번만 지급돼요." : "도장 날짜와 보상은 한국 시간 기준으로 서버가 확인하며, 같은 날 여러 번 눌러도 한 번만 지급됩니다."}</p>
+                        <p className="dw-dial-rule"><i className="fa-solid fa-shield-heart" aria-hidden="true" /> {labelText(webScreen ? "도장 날짜와 보상은 한국 시간 기준으로 서버가 확인해요. 같은 날 여러 번 눌러도 한 번만 지급돼요." : "도장 날짜와 보상은 한국 시간 기준으로 서버가 확인하며, 같은 날 여러 번 눌러도 한 번만 지급됩니다.")}</p>
                     </div>
                 </div>
 
@@ -569,19 +576,19 @@ export function DailySummary() {
                         </div>
                         {engagement ? (
                             <div className="mp-sum-meters grid gap-4">
-                                <Meter label="다음 레벨까지 경험치" value={engagement.xp} max={engagement.nextLevelXp} tone="lav" />
-                                <Meter label="이번 주 출근" value={engagement.weeklyAttendanceProgress} max={engagement.weeklyAttendanceTarget} tone="yellow" />
-                                <Meter label="이번 달 AI 분석" value={engagement.monthlyAnalysisProgress} max={engagement.monthlyAnalysisTarget} tone="mint" />
+                                <Meter label={labelText("다음 레벨까지 경험치")} value={engagement.xp} max={engagement.nextLevelXp} tone="lav" />
+                                <Meter label={labelText("이번 주 출근")} value={engagement.weeklyAttendanceProgress} max={engagement.weeklyAttendanceTarget} tone="yellow" />
+                                <Meter label={labelText("이번 달 AI 분석")} value={engagement.monthlyAnalysisProgress} max={engagement.monthlyAnalysisTarget} tone="mint" />
                             </div>
                         ) : (
-                            <p className="mp-sum-note rounded-xl bg-neutral-50 p-4 text-sm font-bold text-neutral-600">레벨 정보를 아직 불러오지 못했어요.</p>
+                            <p className="mp-sum-note rounded-xl bg-neutral-50 p-4 text-sm font-bold text-neutral-600">{labelText("레벨 정보를 아직 불러오지 못했어요.")}</p>
                         )}
                     </section>
 
                     {/* 오늘 할 일 + 코인 */}
                     <section className="surface p-5" data-mp-card>
                         <div data-mp-band="mint" data-mp-art="dog">
-                            <h2 className="text-lg font-black text-neutral-950" data-mp-kicker="TODAY">오늘 돌봄 할 일</h2>
+                            <h2 className="text-lg font-black text-neutral-950" data-mp-kicker="TODAY">{labelText("오늘 돌봄 할 일")}</h2>
                         </div>
                         {engagement && engagement.todayTasks.length > 0 ? (
                             <ul className="mp-sum-tasks grid gap-2">
@@ -597,15 +604,15 @@ export function DailySummary() {
                                 ))}
                             </ul>
                         ) : (
-                            <p className="mp-sum-note rounded-xl bg-neutral-50 p-4 text-sm font-bold text-neutral-600">오늘 할 일이 아직 없어요.</p>
+                            <p className="mp-sum-note rounded-xl bg-neutral-50 p-4 text-sm font-bold text-neutral-600">{labelText("오늘 할 일이 아직 없어요.")}</p>
                         )}
                         <div className="mp-sum-coins mt-4 grid grid-cols-2 gap-2 text-center">
                             <div className="rounded-xl bg-amber-50 p-3" data-tone="yellow">
-                                <p className="text-xs font-black text-amber-700">적립금</p>
+                                <p className="text-xs font-black text-amber-700">{labelText("적립금")}</p>
                                 <p className="mp-sum-big text-xl font-black text-neutral-950">{attendance.wallet.rewardPoints.toLocaleString("ko-KR")}P</p>
                             </div>
                             <div className="rounded-xl bg-indigo-50 p-3" data-tone="lav">
-                                <p className="text-xs font-black text-indigo-700">연구소 코인</p>
+                                <p className="text-xs font-black text-indigo-700">{labelText("연구소 코인")}</p>
                                 <p className="mp-sum-big text-xl font-black text-indigo-800">{attendance.wallet.daengLabCoins}C</p>
                             </div>
                         </div>

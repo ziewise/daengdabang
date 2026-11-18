@@ -41,5 +41,5 @@ test("web CareTalk shows its welcome and AI 상담 cards open it with a starter 
     const dock = await source("components/site/FloatingDock.tsx");
     const launch = await source("app/chat/ChatLaunchClient.tsx");
     assert.match(dock, /empty=\{CareTalkWelcome\}/);
-    assert.match(launch, /openChatWidget\(\{ initialQuestion: topic\.question \}\)/);
+    assert.match(launch, /openChatWidget\(\{ initialQuestion: copy\(topic\.question\) \}\)/);
 });

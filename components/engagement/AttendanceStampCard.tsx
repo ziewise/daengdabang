@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { useEffect, useState } from "react";
 import DaengLabCoinMark from "@/components/petlens/DaengLabCoinMark";
 import styles from "./AttendanceStamp.module.css";
@@ -34,6 +35,7 @@ export default function AttendanceStampCard({
     disabled = false,
     onClaim,
 }: Props) {
+    const { menuLabel: labelText } = useI18n();
     const [claiming, setClaiming] = useState(false);
     const [celebrating, setCelebrating] = useState(false);
     const [notice, setNotice] = useState("");
@@ -91,12 +93,12 @@ export default function AttendanceStampCard({
 
                 <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
-                        <span className="ddb-crayon-chip rounded-full px-2.5 py-1 text-[11px]">매일 출근</span>
-                        <span className="ddb-crayon-kicker text-xs">{currentStreak}일 연속</span>
+                        <span className="ddb-crayon-chip rounded-full px-2.5 py-1 text-[11px]">{labelText("매일 출근")}</span>
+                        <span className="ddb-crayon-kicker text-xs">{currentStreak}{labelText("일 연속")}</span>
                     </div>
-                    <h3 className="ddb-crayon-title mt-2 text-2xl">오늘도 우리 아이 돌봄 출근!</h3>
+                    <h3 className="ddb-crayon-title mt-2 text-2xl">{labelText("오늘도 우리 아이 돌봄 출근!")}</h3>
                     <p className="mt-1 text-xs font-bold leading-5 text-neutral-600">
-                        하루 한 번 도장을 찍으면 <strong className="text-amber-700">코인 {dailyReward}개</strong>가 서버 지갑에 바로 지급돼요.
+                        {labelText("하루 한 번 도장을 찍으면")} <strong className="text-amber-700">{labelText("코인")} {dailyReward}{labelText("개")}</strong>{labelText("가 서버 지갑에 바로 지급돼요.")}
                     </p>
                     <div className="mt-3 flex flex-wrap items-center gap-2 text-xs font-black text-neutral-700">
                         <DaengLabCoinMark compact />
@@ -105,7 +107,7 @@ export default function AttendanceStampCard({
                 </div>
             </div>
 
-            <div className="mt-5 grid grid-cols-7 gap-1.5" aria-label="최근 7일 출근도장">
+            <div className="mt-5 grid grid-cols-7 gap-1.5" aria-label={labelText("최근 7일 출근도장")}>
                 {recentDays.map((day) => (
                     <div key={day.date} className="text-center">
                         <span className="block text-[9px] font-black text-neutral-400">{weekday(day.date)}</span>

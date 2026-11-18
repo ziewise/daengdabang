@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import Image from "next/image";
 import Link from "next/link";
 import { formatKRW } from "@/lib/catalog";
@@ -14,6 +15,7 @@ type Props = {
 };
 
 export default function BundleCard({ bundle, priority }: Props) {
+    const { menuLabel: labelText } = useI18n();
     const candidates = bundleImageCandidates(bundle).slice(0, 4);
     const videoReady = bundle.assetStatus === "ready" && Boolean(bundle.video);
     const { videoRef, videoActive, activate, deactivate, onPlaying, onSeeked, onEnded, onCanPlay, onLoadedData, onPause, onError } = useProductVideo(videoReady ? bundle.video : undefined);
@@ -87,7 +89,7 @@ export default function BundleCard({ bundle, priority }: Props) {
                     <div className="flex flex-wrap gap-1.5">
                         <span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-black text-neutral-950">{bundleCustomerBadge(bundle)}</span>
                         <span className="rounded-full bg-neutral-950/45 px-2 py-0.5 text-[10px] font-black text-white ring-1 ring-white/20">
-                            {bundle.products.length}종 세트
+                            {bundle.products.length}{labelText("종 세트")}
                         </span>
                     </div>
                 </div>
@@ -101,10 +103,10 @@ export default function BundleCard({ bundle, priority }: Props) {
                     <p className="mt-2 min-h-[2.5rem] text-xs font-bold leading-5 text-neutral-500 line-clamp-2">{bundle.subtitle}</p>
                 </Link>
                 <div className="mt-3 flex items-end justify-between gap-2">
-                    <div className="ddb-sale-label ddb-sale-label--compact">{bundle.discountRate}% 세트가</div>
+                    <div className="ddb-sale-label ddb-sale-label--compact">{bundle.discountRate}{labelText("% 세트가")}</div>
                     <div className="text-right">
-                        <p className="text-[11px] text-neutral-400 line-through">{formatKRW(bundle.basePrice)}원</p>
-                        <p className="ddb-crayon-price text-lg">{formatKRW(bundle.salePrice)}원</p>
+                        <p className="text-[11px] text-neutral-400 line-through">{formatKRW(bundle.basePrice)}{labelText("원")}</p>
+                        <p className="ddb-crayon-price text-lg">{formatKRW(bundle.salePrice)}{labelText("원")}</p>
                     </div>
                 </div>
             </div>

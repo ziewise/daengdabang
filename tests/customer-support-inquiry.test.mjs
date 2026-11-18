@@ -1,3 +1,4 @@
+import { koreanMarkup } from "./helpers/korean-markup.mjs";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
@@ -9,7 +10,7 @@ import {
 } from "../lib/customer-support.ts";
 
 const root = new URL("../", import.meta.url);
-const source = (path) => readFile(new URL(path, root), "utf8");
+const source = (path) => readFile(new URL(path, root), "utf8").then(koreanMarkup);
 
 test("strong post-purchase questions route to customer support before shopping", () => {
     const cases = [

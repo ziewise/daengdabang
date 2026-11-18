@@ -20,6 +20,7 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
@@ -59,6 +60,7 @@ export default function WatermarkBadge({
     onClick,
     playbackActive = true,
 }: WatermarkBadgeProps) {
+    const { menuLabel: labelText } = useI18n();
     // 영상 컨테이너 전체를 덮는 좌표 기준 래퍼 ref — 이 크기가 곧 영상 컨테이너 크기
     const wrapRef = useRef<HTMLDivElement>(null);
     const mobileCueTimerRef = useRef<number | null>(null);
@@ -273,7 +275,7 @@ export default function WatermarkBadge({
                             >
                                 <span className="petlens-hero-cue-crayon text-[11px]" aria-hidden="true">🖍️</span>
                                 <span className="petlens-hero-cue-text">
-                                    저를 <span className="petlens-hero-cue-kok">콕</span> 눌러 분석하기!
+                                    {labelText("저를")} <span className="petlens-hero-cue-kok">{labelText("콕")}</span> {labelText("눌러 분석하기!")}
                                 </span>
                                 <span className="absolute bottom-[-5px] left-1/2 h-2.5 w-2.5 -translate-x-1/2 rotate-45 border-b-2 border-r-2 border-dashed border-[#7b61ff]/70 bg-[#fff8d9]" />
                             </span>

@@ -39,10 +39,11 @@ const TAPES = ["rgba(255,200,215,.9)", "rgba(190,224,255,.88)", "rgba(255,232,17
 const TILTS = [-0.6, 0.7, -0.8, 0.6, -0.7];
 
 export default function ShopHotPick() {
+    const { menuLabel: labelText } = useI18n();
     // 제품군 5개 · 1~3위 — 웹 메인 핫픽과 같은 함수
     const picks = useMemo(() => HOT_PICK_GROUPS.map((g) => ({ group: g, items: pickHotPickTopThree(g.slug) })), []);
     return (
-        <ol className="mt-4 grid gap-4" aria-label="제품군별 핫픽 1~3위">
+        <ol className="mt-4 grid gap-4" aria-label={labelText("제품군별 핫픽 1~3위")}>
             {picks.map(({ group, items }, i) => items.length ? <HotPickRow key={group.slug} group={group} items={items} i={i} /> : null)}
         </ol>
     );

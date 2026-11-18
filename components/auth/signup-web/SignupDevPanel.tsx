@@ -7,6 +7,7 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { useEffect, useState } from "react";
 
 /** 개발 서버인가(배포 빌드에서는 false 로 굳어 아래 코드가 모두 빠짐) */
@@ -33,32 +34,33 @@ export type DevJump = { label: string; onClick: () => void; active?: boolean };
 export type DevJumpGroup = { title: string; items: DevJump[] };
 
 export function SignupDevPanel({ groups }: { groups: DevJumpGroup[] }) {
+    const { menuLabel: labelText } = useI18n();
     // 넓은 화면은 펼친 채, 좁은 화면(내용을 가림)은 접힌 채 시작 — 가입 화면은 브라우저에서만 그려져 window 를 바로 읽어도 됨
     const [open, setOpen] = useState(() => typeof window !== "undefined" && window.innerWidth >= 1100);
     if (!SIGNUP_DEV) return null;
     return (
-        <aside className="sxw-dev" aria-label="단계 바로 보기(개발 전용)">
+        <aside className="sxw-dev" aria-label={labelText("단계 바로 보기(개발 전용)")}>
             <button type="button" className="sxw-dev-toggle" onClick={() => setOpen((value) => !value)} aria-expanded={open}>
                 <i className="fa-solid fa-layer-group" aria-hidden="true" />
-                단계 바로 보기
-                <em>개발 전용</em>
+                {labelText("단계 바로 보기")}
+                <em>{labelText("개발 전용")}</em>
                 <i className={open ? "fa-solid fa-chevron-down" : "fa-solid fa-chevron-up"} aria-hidden="true" />
             </button>
             {open && (
                 <div className="sxw-dev-body">
                     {groups.map((group) => (
                         <div key={group.title} className="sxw-dev-group">
-                            <p>{group.title}</p>
+                            <p>{labelText(group.title)}</p>
                             <span>
                                 {group.items.map((item) => (
                                     <button key={item.label} type="button" className={item.active ? "is-on" : ""} onClick={item.onClick}>
-                                        {item.label}
+                                        {labelText(item.label)}
                                     </button>
                                 ))}
                             </span>
                         </div>
                     ))}
-                    <p className="sxw-dev-note">가짜 서버 · 테스트 보안 키로 동작해요. 실제 가입 · 서버 저장은 없어요.</p>
+                    <p className="sxw-dev-note">{labelText("가짜 서버 · 테스트 보안 키로 동작해요. 실제 가입 · 서버 저장은 없어요.")}</p>
                 </div>
             )}
         </aside>

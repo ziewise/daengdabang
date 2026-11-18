@@ -1,5 +1,8 @@
 "use client";
 
+import LanguageSwitcher from "@/components/header/LanguageSwitcher";
+import { useI18n } from "@/lib/i18n";
+import { useCareTalkCopy } from "@/hooks/useCareTalkCopy";
 import "./app-shell.css";
 
 /**
@@ -61,26 +64,29 @@ const CARE_QUICK = [
     { color: "#e1f4ea", tape: "rgba(255,200,215,.85)", text: "가까운 동물병원 찾고 싶어요" },
 ];
 function CareEmpty({ ask }: { ask: (question: string) => void }) {
+    const { menuLabel: labelText } = useI18n();
+    const copy = useCareTalkCopy();
+    const { locale } = useI18n();
     return (
         <div className="ct-empty pt-2">
             {/* 첫 인사(캐릭터 그림은 빼기로 — 사용자 결정 2026-10-16) */}
             <div className="flex flex-col items-center text-center">
                 <p className="ct-say app-font mt-4 text-[17px] leading-snug text-[#3d2f2a]" style={{ ["--d" as string]: "120ms" }}>
-                    안녕하세요! <span className="ct-mark">우리 아이 이야기</span>를<br />편하게 들려주세요
+                    {locale === "en" ? <>Hi there! <span className="ct-mark">Tell me about your dog.</span></> : <>{labelText("안녕하세요!")} <span className="ct-mark">{labelText("우리 아이 이야기")}</span>{labelText("를")}<br />{labelText("편하게 들려주세요")}</>}
                 </p>
                 <p className="ct-say ct-sub mt-1.5 text-[12.5px] leading-relaxed" style={{ ["--d" as string]: "380ms" }}>
-                    건강·생활 고민부터 사료와 용품 비교까지,<br />필요한 내용만 차근차근 정리해 드릴게요.
+                    {locale === "en" ? <>Ask about daily care, food or supplies.<br />We’ll take it one step at a time.</> : <>{labelText("건강·생활 고민부터 사료와 용품 비교까지,")}<br />{labelText("필요한 내용만 차근차근 정리해 드릴게요.")}</>}
                 </p>
             </div>
             {/* 예시 질문 — 테이프 붙인 파스텔 메모지 2×2, 누르면 바로 질문 */}
-            <p className="ct-say app-font mb-3 mt-6 text-center text-[12.5px] text-[#c4567a]" style={{ ["--d" as string]: "600ms" }}>이렇게 물어봐도 돼요</p>
+            <p className="ct-say app-font mb-3 mt-6 text-center text-[12.5px] text-[#c4567a]" style={{ ["--d" as string]: "600ms" }}>{copy("이렇게 물어봐도 돼요")}</p>
             <div className="grid grid-cols-2 gap-x-2.5 gap-y-3.5 px-1">
                 {CARE_QUICK.map((q, i) => (
-                    <button key={q.text} type="button" onClick={() => ask(q.text)}
+                    <button key={q.text} type="button" onClick={() => ask(copy(q.text))}
                         className="ct-quick relative flex min-h-[3.6rem] items-center break-keep px-3.5 pb-2.5 pt-3 text-left text-[13px] leading-snug text-[#5a4038]"
                         style={{ background: q.color, ["--d" as string]: `${760 + i * 90}ms`, ["--qr" as string]: `${[-1, 0.8, 0.7, -0.9][i]}deg` }}>
                         <span aria-hidden="true" className="ct-tape absolute -top-1.5 left-1/2 h-3 w-9 -translate-x-1/2" style={{ background: q.tape, rotate: `${[-4, 3, 5, -3][i]}deg` }} />
-                        {q.text}
+                        {copy(q.text)}
                     </button>
                 ))}
             </div>
@@ -285,6 +291,9 @@ function appScreenFor(pathname: string, search: string, hash = ""): string | nul
 }
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
+    const { menuLabel: labelText } = useI18n();
+    const { menuLabel } = useI18n();
+    const copy = useCareTalkCopy();
     // 앱 글꼴 미리 받기(2026-10-21 앱 속도) — 제목 카페24 · 본문 나눔스퀘어라운드 굵게. 미리 만든 HTML 의 <head> 에 들어가
     // 첫 그림 전에 글꼴이 준비되면, 임시 글꼴(폰 기본 한글 글꼴)로 한 번 그렸다가 글꼴이 오면 글자 전체를 다시 배치하는 일이 줄어든다
     preload("/fonts/app-subsets/Cafe24Ssurround-startup.woff2", { as: "font", type: "font/woff2", crossOrigin: "anonymous" });
@@ -600,15 +609,16 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                     <div className="mx-auto flex h-14 w-full max-w-3xl items-center gap-2.5 px-3.5">
                         {/* 왼쪽: 언제나 로고 — 사용자가 만든 3D 앱 로고(검정 푸들 + 젤리 삼색 댕다방, 아이콘들과 같은 결 · 2026-10-16).
                             원본 public/images/앱로고.png → 투명 여백 정리 · 높이 132px webp. 뒤로 가기는 상단바 아래(제목 줄 왼쪽 또는 뒤로 가기 줄) */}
-                        <Link href={tabs[0].href} className="relative flex items-center" aria-label="댕다방 홈">
+                        <Link href={tabs[0].href} className="relative flex items-center" aria-label={menuLabel("댕다방 홈")}>
                             <Image src="/images/ui/stickers/app-logo.webp" alt="" width={512} height={132} className="h-[30px] w-auto" priority />
                         </Link>
 
                         <div className="ml-auto flex items-center gap-2">
-                            <button type="button" onClick={() => { setSearchMounted(true); setSearchOpen(true); }} className="app-icon-btn app-jelly-btn app-press" aria-label="검색">
+                            <LanguageSwitcher compact />
+                            <button type="button" onClick={() => { setSearchMounted(true); setSearchOpen(true); }} className="app-icon-btn app-jelly-btn app-press" aria-label={menuLabel("검색")}>
                                 <JellyIcon k="search" />
                             </button>
-                            <Link href="/cart/" prefetch={false} className="app-icon-btn app-jelly-btn app-press relative" aria-label="장바구니">
+                            <Link href="/cart/" prefetch={false} className="app-icon-btn app-jelly-btn app-press relative" aria-label={menuLabel("장바구니")}>
                                 <JellyIcon k="bag" />
                                 {/* 담긴 수량 — 0이면 숨김, 99 초과는 99+ */}
                                 {cartHydrated && cartCount > 0 && (
@@ -629,7 +639,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 {/* 하위 화면 — 제목 테이프가 없으면 뒤로 가기는 상단바 바로 아래 줄에, 자수 와펜 동그라미 스티커(같은 goBack) */}
                 {backBelow && !pageTitle ? (
                     <div className="app-backrow relative z-10 mx-auto flex w-full max-w-[1280px] items-center px-3 pb-1 pt-2 md:px-6">
-                        <button type="button" onClick={goBack} className="app-back-patch" aria-label="뒤로 가기">
+                        <button type="button" onClick={goBack} className="app-back-patch" aria-label={menuLabel("뒤로 가기")}>
                             <StitchBackIcon />
                         </button>
                     </div>
@@ -640,18 +650,18 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                     <div key={pageTitle} className="app-pagetitle relative z-10 mx-auto flex w-full max-w-md items-center gap-3 px-4 pb-1 pt-4">
                         {/* 하위 화면이면 제목 테이프 왼쪽에 뒤로 가기(같은 goBack) */}
                         {backBelow ? (
-                            <button type="button" onClick={goBack} className="app-back-patch shrink-0" aria-label="뒤로 가기">
+                            <button type="button" onClick={goBack} className="app-back-patch shrink-0" aria-label={menuLabel("뒤로 가기")}>
                                 <StitchBackIcon />
                             </button>
                         ) : null}
                         <span className="app-pt-tape py-1.5 pl-4 pr-5" style={{ ["--tape" as string]: active.rim, ["--ink" as string]: active.ink }}>
-                            <h1 className="app-font text-[1.3rem] leading-none">{pageTitle}</h1>
+                            <h1 className="app-font text-[1.3rem] leading-none">{labelText(pageTitle)}</h1>
                         </span>
                     </div>
                 ) : null}
                 {/* 댕다방 탭: 댕자랑 · 연구소 버튼 줄 — 상단바 바로 아래에 붙어 따라온다 */}
                 {showDangRow && (
-                    <nav className="app-bar app-subbar sticky top-[var(--app-topbar-h)] z-[990]" aria-label="댕다방 메뉴">
+                    <nav className="app-bar app-subbar sticky top-[var(--app-topbar-h)] z-[990]" aria-label={menuLabel("댕다방 메뉴")}>
                         <div className="mx-auto grid w-full max-w-3xl grid-cols-2 gap-2 px-3 pb-2.5 pt-1">
                             {DANG_SECTIONS.map((s) => {
                                 const on = pathname.startsWith(s.href.slice(0, -1));
@@ -665,7 +675,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                                             : { background: "rgba(31,26,24,0.05)", color: "#6f625c" }}
                                         aria-current={on ? "page" : undefined}
                                     >
-                                        {s.label}
+                                        {menuLabel(s.label)}
                                     </Link>
                                 );
                             })}
@@ -683,7 +693,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             {showTabBar && (
                 <nav
                     className="fixed inset-x-0 bottom-0 z-[2150] px-3"
-                    aria-label="앱 메뉴"
+                    aria-label={labelText("앱 메뉴")}
                     data-pet-companion-avoid="true"
                 >
                     <ul className="app-tabbar mx-auto grid h-[calc(68px+env(safe-area-inset-bottom,0px))] w-full max-w-[440px] grid-cols-5 px-1.5 pb-[env(safe-area-inset-bottom,0px)]">
@@ -706,7 +716,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                                             )}
                                         </span>
                                         <span className="app-tab-label" style={{ color: on ? t.ink : undefined }}>
-                                            {t.label}
+                                            {menuLabel(t.label)}
                                         </span>
                                     </Link>
                                 </li>
@@ -717,7 +727,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             )}
 
             {/* 검색창 — 앱은 안내 문구를 "어떤 상품을 찾으세요?" 만(웹 문구는 좁은 칸에서 괄호 뒤가 잘려 보였음 · 2026-10-20 사용자 결정) */}
-            {searchMounted ? <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} placeholder="어떤 상품을 찾으세요?" /> : null}
+            {searchMounted ? <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} placeholder={labelText("어떤 상품을 찾으세요?")} /> : null}
             {/* 케어톡 버튼 — 오른쪽 아래 떠 있는 동그라미(사용자 그림 tools/sticker-assets/originals/caretalk-fab.png). 탭바 · 구매 바 위에 놓이고,
                 창이 열려 있을 때 · 케어톡 화면 · 로그인 화면 · 검색창이 열려 있을 때는 숨김. 누르면 웹과 같은 openChatWidget() */}
             {!chatHidden && !careTalk && !chatOpen && !searchOpen && (
@@ -726,7 +736,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                     onClick={() => openChatWidget()}
                     className="app-care-fab app-press fixed right-3 z-[2190]"
                     style={{ bottom: showTabBar ? "calc(var(--app-tabbar-h) + 4px)" : productDetail ? "calc(112px + env(safe-area-inset-bottom, 0px))" : "calc(16px + env(safe-area-inset-bottom, 0px))" }}
-                    aria-label="케어톡 AI 상담 열기"
+                    aria-label={copy("케어톡 AI 상담 열기")}
                     aria-haspopup="dialog"
                     aria-expanded={chatOpen}
                     data-pet-companion-avoid="true"

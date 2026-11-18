@@ -1,3 +1,4 @@
+import { koreanMarkup } from "./helpers/korean-markup.mjs";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
@@ -5,7 +6,7 @@ import test from "node:test";
 const root = new URL("../", import.meta.url);
 
 async function source(path) {
-    return readFile(new URL(path, root), "utf8");
+    return readFile(new URL(path, root), "utf8").then(koreanMarkup);
 }
 
 test("the published terms restore every clause and item marker from the Word source", async () => {

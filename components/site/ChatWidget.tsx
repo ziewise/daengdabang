@@ -1,5 +1,7 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
+import { useCareTalkCopy } from "@/hooks/useCareTalkCopy";
 import { FormEvent, type ComponentType, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import Image from "next/image";
 import WebFonts from "@/components/site/WebFonts";
@@ -96,6 +98,8 @@ const subscribeChatFontMode = (callback: () => void) => subscribeStorage("CHAT_F
 const getServerChatFontMode = () => "readable" as const;
 
 export default function ChatWidget({ isMobile = false, launcherHidden = false, onOpenChange, empty: Empty, fixedFontMode, focusInputOnOpen = true }: Props = {}) {
+    const copy = useCareTalkCopy();
+    const { locale } = useI18n();
     const { user, hydrated } = useAuth();
     const [open, setOpen] = useState(false);
     const botProtection = useChatBotProtection(open && hydrated, user?.apiAccessToken);
@@ -147,8 +151,8 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
     const chatFontMode = fixedFontMode ?? (storedChatFontMode === "crayon" ? "crayon" : "readable");
     const readableFontEnabled = chatFontMode === "readable";
     const fontToggleLabel = readableFontEnabled
-        ? "기존 손글씨체로 보기"
-        : "또박또박한 정자체로 보기";
+        ? copy("기존 손글씨체로 보기")
+        : copy("또박또박한 정자체로 보기");
 
     useLayoutEffect(() => {
         if (!open) return;
@@ -342,6 +346,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
         let streamed = false;
         try {
             const result = await answerShopQuestionSmart(questionForAnswer, {
+                locale,
                 pet: user?.pets?.[0] ?? null,
                 history,
                 references: readyReferences,
@@ -481,13 +486,13 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                     style={chatWindow.style}
                     className={`${styles.panel} absolute bottom-[calc(100%+12px)] z-[2201] flex h-[min(520px,calc(100dvh-112px))] w-[min(360px,calc(100vw-32px))] flex-col overflow-hidden`}
                 >
-                    <header {...chatWindow.dragHandlers} className={`${styles.header} flex items-center justify-between px-4`} title={chatWindow.desktop ? "제목을 잡고 끌어 창 이동" : undefined}>
+                    <header {...chatWindow.dragHandlers} className={`${styles.header} flex items-center justify-between px-4`} title={chatWindow.desktop ? copy("제목을 잡고 끌어 창 이동") : undefined}>
                         {/* 웹 쿠션 창 전용(아래 둘은 앱에서 숨김 · ChatWidget.module.css 웹 구역): 케어톡 그림 고리 · "AI 상담" 작은 글 */}
                         <span className={styles.headerAvatar} aria-hidden="true"><span><Image src="/images/ui/caretalk-web-128.webp" alt="" width={30} height={30} /></span></span>
                         <div className={styles.titleGroup}>
                             <span className={styles.noteEyebrow}>CRAYON CARE NOTE</span>
                             <b className={styles.title}>댕다방 케어톡</b>
-                            <span className={styles.headerSub}>AI 상담</span>
+                            <span className={styles.headerSub}>{copy("AI 상담")}</span>
                         </div>
                         <div className="flex shrink-0 items-center gap-1">
                             {/* 글꼴 전환(손글씨체 ↔ 정자체) — 글꼴을 고정한 앱에서는 뺌 */}
@@ -503,9 +508,9 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                                     title={fontToggleLabel}
                                 >
                                     <span className={styles.fontModeGlyph} aria-hidden="true">
-                                        <span className={styles.fontModeCrayonSample}>가</span>
+                                        <span className={styles.fontModeCrayonSample}>{copy("가")}</span>
                                         <span className={styles.fontModeDivider} />
-                                        <span className={styles.fontModeReadableSample}>가</span>
+                                        <span className={styles.fontModeReadableSample}>{copy("가")}</span>
                                     </span>
                                 </button>
                             )}
@@ -514,18 +519,18 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                                 onClick={clearChat}
                                 disabled={loading}
                                 className={`${styles.headerIconButton} flex h-10 items-center justify-center gap-1 rounded-full ${user ? "px-2 text-[10px] font-black" : "w-10"}`}
-                                aria-label="채팅 비우기"
-                                title={user ? "새 대화" : "채팅 비우기"}
+                                aria-label={copy("채팅 비우기")}
+                                title={user ? copy("새 대화") : copy("채팅 비우기")}
                             >
                                 <i className={`fa-solid ${user ? "fa-pen-to-square" : "fa-trash-can"} text-xs`} />
-                                {user ? <span>새 대화</span> : null}
+                                {user ? <span>{copy("새 대화")}</span> : null}
                             </button>
                             <button
                                 type="button"
                                 onClick={() => setOpen(false)}
                                 className={`${styles.headerIconButton} flex h-10 w-10 items-center justify-center rounded-full`}
-                                aria-label="채팅 닫기"
-                                title="채팅 닫기"
+                                aria-label={copy("채팅 닫기")}
+                                title={copy("채팅 닫기")}
                             >
                                 <i className="fa-solid fa-xmark" />
                             </button>
@@ -533,19 +538,19 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                     </header>
                     {chatWindow.desktop ? (
                         <div className={styles.windowHint}>
-                            제목을 끌어 이동 · 가장자리나 모서리를 끌어 크기 조절
+                            {copy("제목을 끌어 이동 · 가장자리나 모서리를 끌어 크기 조절")}
                         </div>
                     ) : null}
                     {productContext ? (
                         <div className={`${styles.contextBar} flex shrink-0 items-center gap-2 px-3 py-2 text-[11px] font-bold`}>
-                            <span className={`${styles.contextTag} shrink-0 px-2 py-0.5 text-[11px] font-black`}>상품 문의</span>
+                            <span className={`${styles.contextTag} shrink-0 px-2 py-0.5 text-[11px] font-black`}>{copy("상품 문의")}</span>
                             <span className="min-w-0 flex-1 truncate" title={productContext}>{productContext}</span>
                             <button
                                 type="button"
                                 onClick={() => setProductContext("")}
                                 // styles.contextClear — 웹 꾸밈 이름표(ChatWidget.module.css 웹 구역: 흰 동그라미 · 분홍). 앱은 아래 남색 그대로
                                 className={`${styles.contextClear} flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-indigo-500 hover:bg-indigo-100 hover:text-indigo-900`}
-                                aria-label="상품 문의 대상 지우기"
+                                aria-label={copy("상품 문의 대상 지우기")}
                             >
                                 <i className="fa-solid fa-xmark text-[10px]" />
                             </button>
@@ -565,7 +570,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                                 .reverse()
                                 .find((item) => item.role === "user")?.text;
                             const visibleAnswer = message.role === "assistant"
-                                ? customerFriendlyLocalCareAnswer(
+                                ? locale === "en" ? copy(customerVisibleChatAnswer(message.text, Boolean(message.sources?.length))) : customerFriendlyLocalCareAnswer(
                                     questionContext,
                                     customerVisibleChatAnswer(message.text, Boolean(message.sources?.length)),
                                     message.medical?.triage,
@@ -632,7 +637,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                                 {message.role === "assistant" && message.conversation?.continued && (
                                     <div className={`${styles.continuationBadge} mt-2 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-black`}>
                                         <span aria-hidden="true">↳</span>
-                                        앞 대화와 연결한 답변
+                                        {copy("앞 대화와 연결한 답변")}
                                     </div>
                                 )}
                                 <ChatProductCards products={message.products} externalProducts={message.externalProducts} />
@@ -654,7 +659,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                                         className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-neutral-200 bg-white px-2.5 py-1.5 text-[11px] font-black text-neutral-600 hover:border-neutral-400 hover:text-neutral-950"
                                     >
                                         <i className="fa-solid fa-stop text-[8px]" aria-hidden="true" />
-                                        멈추기
+                                        {copy("멈추기")}
                                     </button>
                                 </div>
                             </div>
@@ -662,7 +667,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                         {hydrated ? <ChatPendingRecovery key={recoveryScope} scope={recoveryScope} accessToken={user?.apiAccessToken} busy={loading} onPendingChange={setRecovering} /> : null}
                         {!loading && requestNotice ? (
                             <div className="rounded-lg border border-neutral-200 bg-white px-3 py-2 text-[11px] font-bold leading-4 text-neutral-600" role="status">
-                                {requestNotice}
+                                {copy(requestNotice)}
                             </div>
                         ) : null}
                         <div aria-hidden="true" className="h-px" />
@@ -671,11 +676,11 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                         {!loading && !sessionComplete ? botProtection.challenge : null}
                         {sessionComplete ? (
                             <div role="status" className="mb-2 rounded-xl border border-amber-300 bg-amber-50 p-3 text-sm leading-6 text-neutral-900">
-                                <p className="font-bold">이번 상담의 답변 5회를 마쳤어요.</p>
-                                <p>답변을 확인한 뒤 새 상담을 시작해 주세요. 현재 화면의 대화가 비워지고, 이전 대화는 다음 답변에 이어지지 않아요.</p>
-                                <button type="button" onClick={clearChat} className="mt-2 rounded-lg bg-neutral-900 px-4 py-2 font-bold text-white">새 상담 시작</button>
+                                <p className="font-bold">{copy("이번 상담의 답변 5회를 마쳤어요.")}</p>
+                                <p>{copy("답변을 확인한 뒤 새 상담을 시작해 주세요. 현재 화면의 대화가 비워지고, 이전 대화는 다음 답변에 이어지지 않아요.")}</p>
+                                <button type="button" onClick={clearChat} className="mt-2 rounded-lg bg-neutral-900 px-4 py-2 font-bold text-white">{copy("새 상담 시작")}</button>
                             </div>
-                        ) : <p className={`${styles.countLine} mb-2 text-xs text-neutral-600`}>답변 {completedExchanges}/5 · 5회 후 안내에 따라 새 상담을 시작해요.</p>}
+                        ) : <p className={`${styles.countLine} mb-2 text-xs text-neutral-600`}>{locale === "en" ? <>Replies {completedExchanges}/5 · Start a new chat after five replies.</> : <>답변 {completedExchanges}/5 · 5회 후 안내에 따라 새 상담을 시작해요.</>}</p>}
                         <GenerationReferenceTray controller={generationReferences} compact />
                         <div className="flex gap-2">
                             <GenerationReferencePhotoButton controller={generationReferences} disabled={loading || sessionComplete} compact />
@@ -684,8 +689,8 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                                 value={input}
                                 onChange={(event) => setInput(event.target.value)}
                                 className={`${styles.input} h-10 flex-1 px-3`}
-                                placeholder={productContext ? "이 상품에 대해 궁금한 내용을 입력" : "메시지를 입력하세요"}
-                                aria-label="채팅 질문"
+                                placeholder={productContext ? copy("이 상품에 대해 궁금한 내용을 입력") : copy("메시지를 입력하세요")}
+                                aria-label={copy("채팅 질문")}
                                 disabled={sessionComplete}
                             />
                             {loading ? (
@@ -693,8 +698,8 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                                     type="button"
                                     onClick={cancelActiveRequest}
                                     className={`${styles.sendButton} flex h-10 w-10 shrink-0 items-center justify-center`}
-                                    aria-label="답변 생성 멈추기"
-                                    title="답변 멈추기"
+                                    aria-label={copy("답변 생성 멈추기")}
+                                    title={copy("답변 멈추기")}
                                 >
                                     <i className="fa-solid fa-stop text-xs" />
                                 </button>
@@ -703,7 +708,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                                     type="submit"
                                     disabled={loading || sessionComplete || generationReferences.isUploading || generationReferences.hasUploadErrors}
                                     className={`${styles.sendButton} flex h-10 w-10 shrink-0 items-center justify-center disabled:opacity-50`}
-                                    aria-label="전송"
+                                    aria-label={copy("전송")}
                                 >
                                     <i className="fa-solid fa-paper-plane text-xs" />
                                 </button>
@@ -713,7 +718,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                     {chatWindow.desktop ? CHAT_RESIZE_EDGES.map(edge => (
                         <div key={edge} {...chatWindow.resizeHandlers(edge)} className={styles.resizeHandle}
                             data-resize-edge={edge} role="group" tabIndex={edge === "se" ? 0 : -1}
-                            aria-label="채팅 창 크기 조절" title="가장자리를 끌어 크기 조절 · 방향키 사용 가능">
+                            aria-label={copy("채팅 창 크기 조절")} title={copy("가장자리를 끌어 크기 조절 · 방향키 사용 가능")}>
                             {edge === "se" ? <span aria-hidden="true">◢</span> : null}
                         </div>
                     )) : null}
@@ -733,9 +738,9 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                 aria-expanded={open}
                 aria-hidden={hideTrigger ? "true" : undefined}
                 tabIndex={hideTrigger ? -1 : undefined}
-                aria-label={open ? "채팅 닫기" : "채팅 열기"}
+                aria-label={open ? copy("채팅 닫기") : copy("채팅 열기")}
                 // 마우스를 올리면 왼쪽에 이름 말풍선(globals.css .ddb-header-tip.ddb-tip-left, 2026-10-20 사용자 — 예전 기본 title "채팅 열기" 대신 "케어톡")
-                data-header-tip={open ? "닫기" : "케어톡"}
+                data-header-tip={open ? copy("닫기") : "케어톡"}
             >
                 <i className={`fa-solid ${open ? "fa-xmark" : "fa-comments"} text-lg`} />
             </button>

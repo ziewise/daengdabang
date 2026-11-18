@@ -1,3 +1,4 @@
+import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
 /**
  * SupportTop — 웹 고객센터(공지사항 · 자주 묻는 질문 · 1:1 문의 · 교환·반품 안내) 공용 머리 · 2026-10-23
  * ---------------------------------------------------------------------
@@ -36,9 +37,9 @@ export default function SupportTop({ current, kicker, title, lead, children }: {
                 <div className="min-w-0">
                     {/* 빈 표시 — 앱 규칙("div 의 첫 p + h1 = 영문 꼬리표 숨김")에 걸려 원래 보이던 앱 꼬리표가 사라지지 않게 */}
                     <span className="hidden" aria-hidden="true" />
-                    <p className="text-sm font-black text-aurora-indigo cs-kicker">{kicker}</p>
-                    <h1 id={`cs-${current}-title`} className="mt-2 text-3xl font-black tracking-tight text-foreground cs-title">{title}</h1>
-                    <p className="mt-3 text-sm font-bold leading-6 text-neutral-500 cs-lead">{lead}</p>
+                    <p className="text-sm font-black text-aurora-indigo cs-kicker"><LocalizedMenuLabel label={kicker} /></p>
+                    <h1 id={`cs-${current}-title`} className="mt-2 text-3xl font-black tracking-tight text-foreground cs-title"><LocalizedMenuLabel label={title} /></h1>
+                    <p className="mt-3 text-sm font-bold leading-6 text-neutral-500 cs-lead"><LocalizedMenuLabel label={lead} /></p>
                     {children}
                 </div>
                 {/* 무지개 크레파스 고리 + 고객센터 크레파스 그림(웹 전용, web-cs-*) */}

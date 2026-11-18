@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import type { ReactNode } from "react";
 import Link from "next/link";
 import MypageSidebar from "@/components/mypage/MypageSidebar";
@@ -9,6 +10,7 @@ import { useWebScreen } from "@/hooks/useWebScreen";
 import "../../app/mypage-web.css";
 
 export function MypageLoginGate({ redirect }: { redirect: string }) {
+    const { menuLabel: labelText } = useI18n();
     const loginHref = `/auth/login?redirect=${encodeURIComponent(redirect)}`;
     // 웹: /mypage 도 로그인 안내라 "마이페이지로"는 같은 안내로 돌아옴 → 회원가입(기존 주소)으로 바꿈
     const webScreen = useWebScreen();
@@ -17,22 +19,22 @@ export function MypageLoginGate({ redirect }: { redirect: string }) {
             <span className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-amber-50 text-2xl text-amber-600" aria-hidden="true">
                 <i className="fa-solid fa-lock" />
             </span>
-            <h1 className="mt-4 text-2xl font-black text-neutral-950">{webScreen ? "로그인이 필요해요" : "로그인이 필요합니다."}</h1>
+            <h1 className="mt-4 text-2xl font-black text-neutral-950">{labelText(webScreen ? "로그인이 필요해요" : "로그인이 필요합니다.")}</h1>
             <p className="mt-2 text-sm font-bold leading-6 text-neutral-600">
-                {webScreen ? "회원 정보는 본인 확인 후에 볼 수 있어요." : "회원 정보는 본인 확인 후에만 볼 수 있습니다."}
+                {labelText(webScreen ? "회원 정보는 본인 확인 후에 볼 수 있어요." : "회원 정보는 본인 확인 후에만 볼 수 있습니다.")}
             </p>
             <div className="mt-6 flex flex-wrap justify-center gap-2">
-                <Link href={loginHref} className="btn btn-primary">로그인</Link>
+                <Link href={loginHref} className="btn btn-primary">{labelText("로그인")}</Link>
                 {webScreen ? (
-                    <Link href="/auth/signup" className="btn btn-secondary">회원가입</Link>
+                    <Link href="/auth/signup" className="btn btn-secondary">{labelText("회원가입")}</Link>
                 ) : (
-                    <Link href="/mypage" className="btn btn-secondary">마이페이지로</Link>
+                    <Link href="/mypage" className="btn btn-secondary">{labelText("마이페이지로")}</Link>
                 )}
             </div>
             {/* 웹 전용(2026-10-25) — 가입 없이 주문한 분은 비회원 주문 조회로(앱은 hidden 그대로) */}
             <p className="hidden mp-gate-guest">
-                비회원으로 주문하셨나요?
-                <Link href="/order-lookup">비회원 주문 조회<i className="fa-solid fa-chevron-right" aria-hidden="true" /></Link>
+                {labelText("비회원으로 주문하셨나요?")}
+                <Link href="/order-lookup">{labelText("비회원 주문 조회")}<i className="fa-solid fa-chevron-right" aria-hidden="true" /></Link>
             </p>
         </main>
     );

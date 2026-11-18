@@ -5,6 +5,7 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { useAuth } from "@/hooks/useAuth";
 import { usePets } from "@/hooks/usePets";
 import { computeGrade } from "@/lib/grades";
@@ -19,6 +20,7 @@ const PROVIDER_LABEL: Record<string, string> = {
 };
 
 export default function MypageHello() {
+    const { menuLabel: labelText } = useI18n();
     const { state } = useAuth();
     const { pets: realPets } = usePets();
     const pets = petsOrMock(realPets);
@@ -47,7 +49,7 @@ export default function MypageHello() {
                 <div className="min-w-0">
                     <h1 className="text-base md:text-xl font-black tracking-tight flex items-center gap-2 flex-wrap">
                         <span className="truncate">
-                            <span className="text-aurora-indigo">댕댕이 가족</span>님
+                            <span className="text-aurora-indigo">{labelText("댕댕이 가족")}</span>{labelText("님")}
                         </span>
                         {/* 등급 배지 — 데스크탑만 (모바일은 아바타 위로) */}
                         <span
@@ -59,17 +61,17 @@ export default function MypageHello() {
                         </span>
                     </h1>
                     <p className="text-[10px] md:text-xs text-neutral-500 mt-0.5 md:mt-1 truncate">
-                        {providerLabel} · 가입일 {getJoinDate(state?.ts)}
+                        {providerLabel} {labelText("· 가입일")} {getJoinDate(state?.ts)}
                     </p>
                 </div>
 
                 {/* 통계 — 모바일은 다음 row 로 떨어지며 균등 분할, 데스크탑은 우측 인라인 */}
                 <div className="col-span-2 md:col-span-1 grid grid-cols-3 md:flex md:items-center gap-2 md:gap-5 mt-3 md:mt-0 pt-3 md:pt-0 border-t md:border-t-0 border-neutral-200/60">
-                    <Stat value={pets.length} label="댕댕이" />
+                    <Stat value={pets.length} label={labelText("댕댕이")} />
                     <Divider />
-                    <Stat value={MOCK_ORDERS.length} label="주문" />
+                    <Stat value={MOCK_ORDERS.length} label={labelText("주문")} />
                     <Divider />
-                    <Stat value={MOCK_USER_STATS.points.toLocaleString("ko-KR")} label="포인트" />
+                    <Stat value={MOCK_USER_STATS.points.toLocaleString("ko-KR")} label={labelText("포인트")} />
                 </div>
             </div>
         </section>

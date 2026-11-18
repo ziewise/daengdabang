@@ -165,6 +165,7 @@ function safePaymentError(error: unknown, locale: "ko" | "en") {
 }
 
 export default function CheckoutPage() {
+    const { menuLabel: labelText } = useI18n();
     const cart = useCart();
     const { user } = useAuth();
     const { t, locale, formatPrice, productName } = useI18n();
@@ -794,12 +795,12 @@ export default function CheckoutPage() {
                             })}
                         </div>
                         {paymentMethod === "transfer" && <div className="mt-3 rounded-xl bg-pink-50 p-4">
-                            <label className="block font-bold">현금영수증 용도
+                            <label className="block font-bold">{labelText("현금영수증 용도")}
                                 <select className="input mt-2 text-base" value={cashReceiptType} onChange={(event) => setCashReceiptType(event.target.value as "소득공제" | "지출증빙")}>
-                                    <option value="소득공제">개인 소득공제</option><option value="지출증빙">사업자 지출증빙</option>
+                                    <option value="소득공제">{labelText("개인 소득공제")}</option><option value="지출증빙">{labelText("사업자 지출증빙")}</option>
                                 </select>
                             </label>
-                            <p className="mt-2 text-sm">휴대폰번호 또는 사업자등록번호는 토스 결제창에서 입력해 주세요. 발급된 영수증은 주문 내역에서 확인할 수 있어요.</p>
+                            <p className="mt-2 text-sm">{labelText("휴대폰번호 또는 사업자등록번호는 토스 결제창에서 입력해 주세요. 발급된 영수증은 주문 내역에서 확인할 수 있어요.")}</p>
                         </div>}
                         {paymentMethod === "card" && (
                             <div className="mt-3 rounded-xl border border-sky-200 bg-sky-50 px-3 py-3 text-xs font-bold leading-5 text-sky-900">
@@ -825,11 +826,11 @@ export default function CheckoutPage() {
                                 />
                                 <span className="text-[11px] font-bold leading-5 text-neutral-700">
                                     {locale === "en" ? "I agree to the required Toss Payments terms for direct wallet payment: " : "간편결제에 필요한 토스페이먼츠 약관에 동의합니다: "}
-                                    <a href="https://pages.tosspayments.com/terms/user" target="_blank" rel="noreferrer" className="co-terms-link font-black text-indigo-700 underline">전자금융거래 약관</a>
+                                    <a href="https://pages.tosspayments.com/terms/user" target="_blank" rel="noreferrer" className="co-terms-link font-black text-indigo-700 underline">{labelText("전자금융거래 약관")}</a>
                                     {" · "}
-                                    <a href="https://pages.tosspayments.com/terms/privacy/consent1" target="_blank" rel="noreferrer" className="co-terms-link font-black text-indigo-700 underline">개인정보 수집·이용</a>
+                                    <a href="https://pages.tosspayments.com/terms/privacy/consent1" target="_blank" rel="noreferrer" className="co-terms-link font-black text-indigo-700 underline">{labelText("개인정보 수집·이용")}</a>
                                     {" · "}
-                                    <a href="https://pages.tosspayments.com/terms/privacy/consent2" target="_blank" rel="noreferrer" className="co-terms-link font-black text-indigo-700 underline">제3자 제공</a>
+                                    <a href="https://pages.tosspayments.com/terms/privacy/consent2" target="_blank" rel="noreferrer" className="co-terms-link font-black text-indigo-700 underline">{labelText("제3자 제공")}</a>
                                 </span>
                             </label>
                         )}
@@ -842,7 +843,7 @@ export default function CheckoutPage() {
                         <span className="co-sum-ring"><span><Image src="/images/ui/header-cart-128.webp" alt="" width={48} height={48} /></span></span>
                         <div>
                             <p className="co-sum-kicker">MY ORDER</p>
-                            <p className="co-sum-title">{locale === "en" ? <>Items <b>{lines.length}</b></> : <>담은 상품 <b>{lines.length}</b>개</>}</p>
+                            <p className="co-sum-title">{locale === "en" ? <>Items <b>{lines.length}</b></> : <>{labelText("담은 상품")} <b>{lines.length}</b>{labelText("개")}</>}</p>
                         </div>
                     </div>
                     <h2 className="text-lg font-black text-neutral-950">{t("orderedProducts")}</h2>

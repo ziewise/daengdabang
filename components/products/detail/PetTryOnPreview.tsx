@@ -1320,7 +1320,7 @@ export default function PetTryOnPreview({
                                             {selectedColor?.name || (locale === "en" ? "Main color" : "대표 색상")}
                                         </span>
                                     </div>
-                                    <ColorSelect
+                                    <ColorSelect folder={product.folder}
                                         colors={product.colors || []}
                                         colorIdx={colorIdx}
                                          onColorChange={loading ? undefined : (index) => {

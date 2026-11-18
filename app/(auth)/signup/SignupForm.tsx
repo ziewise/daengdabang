@@ -11,6 +11,7 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -101,6 +102,7 @@ function Stepper({ current }: { current: Step }) {
 
 /* ============ Step 1 — 약관 ============ */
 function Step1Terms({ onNext }: { onNext: () => void }) {
+    const { menuLabel: labelText } = useI18n();
     const [all, setAll] = useState(false);
     const [items, setItems] = useState([false, false, false, false, false]);
     const required = [true, true, true, false, false];
@@ -125,12 +127,12 @@ function Step1Terms({ onNext }: { onNext: () => void }) {
 
     return (
         <>
-            <h2 className="text-xl md:text-2xl font-black tracking-tight mb-1">약관에 동의해주세요</h2>
+            <h2 className="text-xl md:text-2xl font-black tracking-tight mb-1">{labelText("약관에 동의해주세요")}</h2>
             <p className="text-xs md:text-sm text-neutral-500 mb-5">
-                서비스 이용을 위해 아래 약관을 확인하고 동의해주세요.
+                {labelText("서비스 이용을 위해 아래 약관을 확인하고 동의해주세요.")}
             </p>
             <div className="rounded-2xl border border-neutral-200/70 p-3 mb-4 space-y-2">
-                <Check label="전체 동의" checked={all} onChange={toggleAll} bold />
+                <Check label={labelText("전체 동의")} checked={all} onChange={toggleAll} bold />
                 <div className="h-px bg-neutral-200/70 my-1" />
                 {labels.map((label, i) => (
                     <Check
@@ -147,9 +149,9 @@ function Step1Terms({ onNext }: { onNext: () => void }) {
                     href="/login"
                     className="text-center py-3 rounded-xl bg-white border-2 border-neutral-200 hover:border-aurora-indigo text-foreground text-sm font-extrabold no-underline transition"
                 >
-                    로그인
+                    {labelText("로그인")}
                 </Link>
-                <PrimaryButton type="button" onClick={onNext}>다음</PrimaryButton>
+                <PrimaryButton type="button" onClick={onNext}>{labelText("다음")}</PrimaryButton>
             </div>
         </>
     );
@@ -157,21 +159,22 @@ function Step1Terms({ onNext }: { onNext: () => void }) {
 
 /* ============ Step 2 — 본인 확인 ============ */
 function Step2Identity({ onPrev, onNext }: { onPrev: () => void; onNext: () => void }) {
+    const { menuLabel: labelText } = useI18n();
     const [codeSent, setCodeSent] = useState(false);
     return (
         <>
-            <h2 className="text-xl md:text-2xl font-black tracking-tight mb-1">본인 확인을 해주세요</h2>
+            <h2 className="text-xl md:text-2xl font-black tracking-tight mb-1">{labelText("본인 확인을 해주세요")}</h2>
             <p className="text-xs md:text-sm text-neutral-500 mb-5">
-                안전한 서비스 이용을 위해 휴대폰 본인인증을 진행합니다.
+                {labelText("안전한 서비스 이용을 위해 휴대폰 본인인증을 진행합니다.")}
             </p>
             <div className="space-y-3.5 mb-4">
-                <AuthField label="이름">
-                    <input type="text" placeholder="홍길동" className={inputClass} />
+                <AuthField label={labelText("이름")}>
+                    <input type="text" placeholder={labelText("홍길동")} className={inputClass} />
                 </AuthField>
-                <AuthField label="생년월일">
+                <AuthField label={labelText("생년월일")}>
                     <input type="text" placeholder="19960501" maxLength={8} className={inputClass} />
                 </AuthField>
-                <AuthField label="휴대폰 번호">
+                <AuthField label={labelText("휴대폰 번호")}>
                     <div className="flex gap-2">
                         <input type="tel" placeholder="01012345678" maxLength={11} className={inputClass} />
                         <button
@@ -179,16 +182,16 @@ function Step2Identity({ onPrev, onNext }: { onPrev: () => void; onNext: () => v
                             onClick={() => setCodeSent(true)}
                             className="px-4 py-2.5 rounded-xl bg-foreground text-white text-xs font-bold whitespace-nowrap hover:bg-neutral-800"
                         >
-                            인증번호 받기
+                            {labelText("인증번호 받기")}
                         </button>
                     </div>
                 </AuthField>
                 {codeSent && (
-                    <AuthField label="인증번호">
+                    <AuthField label={labelText("인증번호")}>
                         <div className="flex gap-2">
-                            <input type="text" placeholder="6자리 숫자" maxLength={6} className={inputClass} />
+                            <input type="text" placeholder={labelText("6자리 숫자")} maxLength={6} className={inputClass} />
                             <button type="button" className="px-4 py-2.5 rounded-xl bg-aurora-indigo text-white text-xs font-bold whitespace-nowrap hover:opacity-90">
-                                확인
+                                {labelText("확인")}
                             </button>
                         </div>
                     </AuthField>
@@ -196,12 +199,12 @@ function Step2Identity({ onPrev, onNext }: { onPrev: () => void; onNext: () => v
             </div>
             {codeSent && (
                 <p className="rounded-2xl bg-aurora-indigo/5 px-4 py-3 text-xs font-bold leading-5 text-aurora-indigo">
-                    인증번호를 입력해 주세요.
+                    {labelText("인증번호를 입력해 주세요.")}
                 </p>
             )}
             <div className="grid grid-cols-2 gap-2 mt-5">
-                <GhostButton onClick={onPrev}>이전</GhostButton>
-                <PrimaryButton type="button" onClick={onNext}>다음</PrimaryButton>
+                <GhostButton onClick={onPrev}>{labelText("이전")}</GhostButton>
+                <PrimaryButton type="button" onClick={onNext}>{labelText("다음")}</PrimaryButton>
             </div>
         </>
     );
@@ -209,29 +212,30 @@ function Step2Identity({ onPrev, onNext }: { onPrev: () => void; onNext: () => v
 
 /* ============ Step 3 — 정보 입력 ============ */
 function Step3Info({ onPrev, onNext }: { onPrev: () => void; onNext: () => void }) {
+    const { menuLabel: labelText } = useI18n();
     return (
         <>
-            <h2 className="text-xl md:text-2xl font-black tracking-tight mb-1">기본 정보를 입력해주세요</h2>
-            <p className="text-xs md:text-sm text-neutral-500 mb-5">로그인에 사용할 이메일과 비밀번호를 설정해주세요.</p>
+            <h2 className="text-xl md:text-2xl font-black tracking-tight mb-1">{labelText("기본 정보를 입력해주세요")}</h2>
+            <p className="text-xs md:text-sm text-neutral-500 mb-5">{labelText("로그인에 사용할 이메일과 비밀번호를 설정해주세요.")}</p>
             <div className="space-y-3.5 mb-4">
-                <AuthField label="이메일">
+                <AuthField label={labelText("이메일")}>
                     <div className="flex gap-2">
                         <input type="email" placeholder="email@example.com" className={inputClass} />
                         <button type="button" className="px-4 py-2.5 rounded-xl bg-foreground text-white text-xs font-bold whitespace-nowrap hover:bg-neutral-800">
-                            중복확인
+                            {labelText("중복확인")}
                         </button>
                     </div>
                 </AuthField>
-                <AuthField label="비밀번호" hint="영문·숫자·특수문자 조합 8자 이상">
+                <AuthField label={labelText("비밀번호")} hint="영문·숫자·특수문자 조합 8자 이상">
                     <input type="password" placeholder="" className={inputClass} />
                 </AuthField>
-                <AuthField label="비밀번호 확인">
-                    <input type="password" placeholder="비밀번호 재입력" className={inputClass} />
+                <AuthField label={labelText("비밀번호 확인")}>
+                    <input type="password" placeholder={labelText("비밀번호 재입력")} className={inputClass} />
                 </AuthField>
             </div>
             <div className="grid grid-cols-2 gap-2 mt-5">
-                <GhostButton onClick={onPrev}>이전</GhostButton>
-                <PrimaryButton type="button" onClick={onNext}>다음</PrimaryButton>
+                <GhostButton onClick={onPrev}>{labelText("이전")}</GhostButton>
+                <PrimaryButton type="button" onClick={onNext}>{labelText("다음")}</PrimaryButton>
             </div>
         </>
     );
@@ -239,35 +243,36 @@ function Step3Info({ onPrev, onNext }: { onPrev: () => void; onNext: () => void 
 
 /* ============ Step 4 — 펫 정보 (선택) ============ */
 function Step4Pet({ onPrev, onNext }: { onPrev: () => void; onNext: () => void }) {
+    const { menuLabel: labelText } = useI18n();
     return (
         <>
-            <h2 className="text-xl md:text-2xl font-black tracking-tight mb-1">우리 댕댕이를 알려주세요</h2>
+            <h2 className="text-xl md:text-2xl font-black tracking-tight mb-1">{labelText("우리 댕댕이를 알려주세요")}</h2>
             <p className="text-xs md:text-sm text-neutral-500 mb-5">
-                맞춤 상품·사이즈 추천에 활용돼요. 나중에 마이페이지에서도 추가할 수 있어요.
+                {labelText("맞춤 상품·사이즈 추천에 활용돼요. 나중에 마이페이지에서도 추가할 수 있어요.")}
             </p>
             <div className="space-y-3.5 mb-4">
-                <AuthField label="댕댕이 이름">
-                    <input type="text" placeholder="예: 럭키" className={inputClass} />
+                <AuthField label={labelText("댕댕이 이름")}>
+                    <input type="text" placeholder={labelText("예: 럭키")} className={inputClass} />
                 </AuthField>
-                <AuthField label="견종">
-                    <input type="text" placeholder="예: 골든리트리버" className={inputClass} />
+                <AuthField label={labelText("견종")}>
+                    <input type="text" placeholder={labelText("예: 골든리트리버")} className={inputClass} />
                 </AuthField>
-                <AuthField label="체중 (kg)">
-                    <input type="number" step="0.1" placeholder="예: 25.5" className={inputClass} />
+                <AuthField label={labelText("체중 (kg)")}>
+                    <input type="number" step="0.1" placeholder={labelText("예: 25.5")} className={inputClass} />
                 </AuthField>
-                <AuthField label="성별">
+                <AuthField label={labelText("성별")}>
                     <div className="grid grid-cols-2 gap-2">
-                        <GenderRadio value="male"   label="남아 (수컷)" />
-                        <GenderRadio value="female" label="여아 (암컷)" />
+                        <GenderRadio value="male"   label={labelText("남아 (수컷)")} />
+                        <GenderRadio value="female" label={labelText("여아 (암컷)")} />
                     </div>
                 </AuthField>
             </div>
             <p className="rounded-2xl bg-aurora-indigo/5 px-4 py-3 text-xs font-bold leading-5 text-aurora-indigo">
-                반려견 정보는 가입 후 마이페이지에서도 다시 등록할 수 있어요.
+                {labelText("반려견 정보는 가입 후 마이페이지에서도 다시 등록할 수 있어요.")}
             </p>
             <div className="grid grid-cols-2 gap-2 mt-5">
-                <GhostButton onClick={onPrev}>이전</GhostButton>
-                <PrimaryButton type="button" onClick={onNext}>다음</PrimaryButton>
+                <GhostButton onClick={onPrev}>{labelText("이전")}</GhostButton>
+                <PrimaryButton type="button" onClick={onNext}>{labelText("다음")}</PrimaryButton>
             </div>
         </>
     );
@@ -284,17 +289,18 @@ function GenderRadio({ value, label }: { value: string; label: string }) {
 
 /* ============ Step 5 — 완료 ============ */
 function Step5Done({ onFinish }: { onFinish: () => void }) {
+    const { menuLabel: labelText } = useI18n();
     return (
         <div className="text-center py-6">
             <div className="w-20 h-20 mx-auto mb-5 rounded-full bg-gradient-to-br from-success to-aurora-indigo flex items-center justify-center text-white text-3xl shadow-card">
                 <i className="fa-solid fa-check" />
             </div>
-            <h2 className="text-2xl font-black tracking-tight mb-1.5">가입을 환영해요!</h2>
+            <h2 className="text-2xl font-black tracking-tight mb-1.5">{labelText("가입을 환영해요!")}</h2>
             <p className="text-sm text-neutral-500 mb-7">
-                댕다방과 함께 우리 댕댕이의 매일을 더 특별하게 만들어보세요.
+                {labelText("댕다방과 함께 우리 댕댕이의 매일을 더 특별하게 만들어보세요.")}
             </p>
             <PrimaryButton type="button" onClick={onFinish}>
-                메인 페이지로 이동
+                {labelText("메인 페이지로 이동")}
             </PrimaryButton>
         </div>
     );

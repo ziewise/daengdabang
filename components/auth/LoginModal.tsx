@@ -9,6 +9,7 @@
  *   앱은 기존 모양 · 글 그대로. 링크 · 닫기 동작 그대로.
  */
 
+import { useI18n } from "@/lib/i18n";
 import { useEffect } from "react";
 import Link from "next/link";
 import { useWebScreen } from "@/hooks/useWebScreen";
@@ -31,6 +32,7 @@ function friendlySubtitle(text: string) {
 }
 
 export default function LoginModal({ open, onClose, subtitle }: Props) {
+    const { menuLabel: labelText } = useI18n();
     // 웹 화면이면 해요체 글 · 3D 그림(앱은 기존 글 · 아이콘)
     const webScreen = useWebScreen();
 
@@ -74,13 +76,13 @@ export default function LoginModal({ open, onClose, subtitle }: Props) {
                             <i className="fa-solid fa-right-to-bracket text-aurora-indigo" />
                         )}
                         {webScreen && <span className="lm-kicker">MEMBERS ONLY</span>}
-                        {webScreen ? <span className="lm-title">로그인이 필요해요</span> : "회원 로그인"}
+                        {webScreen ? <span className="lm-title">{labelText("로그인이 필요해요")}</span> : "회원 로그인"}
                     </h2>
                     <button
                         type="button"
                         onClick={onClose}
                         className="lm-close flex h-9 w-9 items-center justify-center rounded-full hover:bg-neutral-100"
-                        aria-label="닫기"
+                        aria-label={labelText("닫기")}
                     >
                         <i className="fa-solid fa-xmark" />
                     </button>
@@ -98,18 +100,18 @@ export default function LoginModal({ open, onClose, subtitle }: Props) {
                             onClick={onClose}
                             className="btn btn-primary w-full"
                         >
-                            {webScreen ? "로그인하러 가기" : "로그인 페이지로 이동"}
+                            {labelText(webScreen ? "로그인하러 가기" : "로그인 페이지로 이동")}
                         </Link>
                         <Link
                             href="/auth/signup"
                             onClick={onClose}
                             className="btn btn-secondary w-full"
                         >
-                            {webScreen ? "처음이면 회원가입" : "회원가입"}
+                            {labelText(webScreen ? "처음이면 회원가입" : "회원가입")}
                         </Link>
                     </div>
                     <p className="lm-note mt-4 text-center text-[11px] font-bold leading-5 text-neutral-500">
-                        {webScreen ? "로그인은 댕다방 로그인 화면에서 안전하게 해요." : "회원 정보 확인은 안전한 로그인 페이지에서만 진행합니다."}
+                        {labelText(webScreen ? "로그인은 댕다방 로그인 화면에서 안전하게 해요." : "회원 정보 확인은 안전한 로그인 페이지에서만 진행합니다.")}
                     </p>
                 </div>
             </div>

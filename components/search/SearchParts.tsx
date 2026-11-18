@@ -54,6 +54,7 @@ type HeroProps = {
 
 // 머리 판 — 검색어 · 결과 개수 · 큰 검색칸 · 인기 검색어
 export function SearchHero({ query, ownCount, externalCount, externalLoading }: HeroProps) {
+    const { menuLabel: labelText } = useI18n();
     const router = useRouter();
     const { locale } = useI18n();
     const en = locale === "en";
@@ -86,7 +87,7 @@ export function SearchHero({ query, ownCount, externalCount, externalLoading }: 
                             <span className="sr-title-rest">{en ? " results" : " 검색 결과"}</span>
                         </>
                     ) : (
-                        <span className="sr-term">{en ? "What are you looking for?" : "무엇을 찾고 계세요?"}</span>
+                        <span className="sr-term">{labelText(en ? "What are you looking for?" : "무엇을 찾고 계세요?")}</span>
                     )}
                 </h1>
                 <p className="sr-lead">
@@ -111,7 +112,7 @@ export function SearchHero({ query, ownCount, externalCount, externalLoading }: 
                             <i className="fa-solid fa-xmark" aria-hidden="true" />
                         </button>
                     ) : null}
-                    <button type="submit" className="sr-submit">{en ? "Search" : "검색"}</button>
+                    <button type="submit" className="sr-submit">{labelText(en ? "Search" : "검색")}</button>
                 </form>
 
                 <SearchKeywordPills label={en ? "Popular" : "인기 검색어"} />
@@ -122,12 +123,12 @@ export function SearchHero({ query, ownCount, externalCount, externalLoading }: 
                 <nav className="sr-glance" aria-label={en ? "Results at a glance" : "결과 한눈에"}>
                     <a href="#sr-own" className="sr-glance-item is-own">
                         <span className="sr-glance-art" aria-hidden="true"><Image src="/images/ui/header-cart-128.webp" alt="" width={64} height={64} /></span>
-                        <span className="sr-glance-label">{en ? "DaengDaBang" : "댕다방 상품"}</span>
+                        <span className="sr-glance-label">{labelText(en ? "DaengDaBang" : "댕다방 상품")}</span>
                         <b className="sr-glance-count">{ownCount.toLocaleString("ko-KR")}</b>
                     </a>
                     <a href="#sr-ext" className="sr-glance-item is-ext">
                         <span className="sr-glance-art" aria-hidden="true"><Image src="/images/ui/goods-pay-ready-256.webp" alt="" width={64} height={64} /></span>
-                        <span className="sr-glance-label">{en ? "Other sellers" : "다른 판매처"}</span>
+                        <span className="sr-glance-label">{labelText(en ? "Other sellers" : "다른 판매처")}</span>
                         <b className="sr-glance-count">{externalLoading ? "…" : externalCount.toLocaleString("ko-KR")}</b>
                     </a>
                 </nav>
@@ -150,6 +151,7 @@ type EmptyProps = {
 
 // 댕다방 상품이 없을 때 — 쿠션 안내 + (카테고리 탓이면) 전체로 보기 + 인기 검색어
 export function SearchOwnEmpty({ query, hiddenByCategory, onShowAll }: EmptyProps) {
+    const { menuLabel: labelText } = useI18n();
     const { locale } = useI18n();
     const en = locale === "en";
     return (
@@ -170,7 +172,7 @@ export function SearchOwnEmpty({ query, hiddenByCategory, onShowAll }: EmptyProp
                 </p>
                 {hiddenByCategory > 0 ? (
                     <button type="button" className="sr-showall" onClick={onShowAll}>
-                        {en ? "Show all categories" : "전체 카테고리로 보기"} <i className="fa-solid fa-arrow-right text-[10px]" aria-hidden="true" />
+                        {labelText(en ? "Show all categories" : "전체 카테고리로 보기")} <i className="fa-solid fa-arrow-right text-[10px]" aria-hidden="true" />
                     </button>
                 ) : (
                     <SearchKeywordPills label={en ? "Try" : "이런 검색어는 어때요"} />

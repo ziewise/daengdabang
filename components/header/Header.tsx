@@ -153,7 +153,7 @@ export default function Header() {
                             className={headerStyles.productSearch}
                         >
                             <i className="fa-solid fa-magnifying-glass" aria-hidden="true" />
-                            <span>{locale === "en" ? "Search DaengDaBang" : "댕다방에서 검색하세요"}</span>
+                            <span>{locale === "en" ? "Search 댕다방" : "댕다방에서 검색하세요"}</span>
                         </button>
                     )}
 
@@ -181,7 +181,7 @@ export default function Header() {
                                     ].map(([href, label, key]) => (
                                         <Link key={href} href={href} className="ddb-menu-pill" aria-current={isCurrentPath(pathname, href) ? "page" : undefined}>
                                             <Image src={`/images/ui/shop-menu-${key}-128.webp`} alt="" width={28} height={28} className="h-7 w-7 shrink-0 object-contain" />
-                                            <span>{label}</span>
+                                            <span>{menuLabel(label)}</span>
                                         </Link>
                                     ))}
                                 </div>
@@ -226,7 +226,7 @@ export default function Header() {
                                     <li key={href}>
                                         <Link href={href} className="ddb-menu-row" aria-current={isCurrentPath(pathname, href) ? "page" : undefined}>
                                             <Image src={`/images/ui/menu-${key}-128.webp`} alt="" width={30} height={30} className="h-[30px] w-[30px] shrink-0 object-contain" />
-                                            <span>{label}</span>
+                                            <span>{menuLabel(label)}</span>
                                         </Link>
                                     </li>
                                 ))}
@@ -237,7 +237,7 @@ export default function Header() {
                             aria-current={isCurrentPath(pathname, "/daeng-showcase/") ? "page" : undefined}
                             className={`${headerStyles.desktopNavItem} rounded-lg px-2 py-2 text-base font-bold text-foreground transition xl:px-3 xl:text-[17px]`}
                         >
-                            댕자랑
+                            {menuLabel("댕자랑")}
                         </Link>
                         <NavDropdown
                             label={t("customerCenter")}
@@ -289,7 +289,7 @@ export default function Header() {
                                             className="ddb-menu-row"
                                         >
                                             <Image src={icon} alt="" width={30} height={30} className="h-[30px] w-[30px] shrink-0 object-contain" />
-                                            <span>{label}</span>
+                                            <span>{menuLabel(label)}</span>
                                         </Link>
                                     </li>
                                 ))}

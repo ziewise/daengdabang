@@ -17,6 +17,7 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import Link from "next/link";
 import { useEffect, useId, useRef, type ReactNode } from "react";
 import { createPortal } from "react-dom";
@@ -102,6 +103,7 @@ export function SxShell({
     /** 아래 안내 줄. 없으면 회원가입 기본(이미 회원이신가요? 로그인), null 이면 숨김 */
     footer?: ReactNode | null;
 }) {
+    const { menuLabel: labelText } = useI18n();
     const current = steps[Math.min(now, steps.length - 1)];
     const routeLabel = route ? PROVIDER_NAME[route] : "";
     // 마지막 단계(가입 완료)면 로그인 안내를 숨기고 "가입했어요"로
@@ -118,7 +120,7 @@ export function SxShell({
                     {routeLabel && (
                         <span className="sxw-route" data-route={route}>
                             <ProviderMark provider={route || "email"} />
-                            {routeLabel}로 {finished ? "가입했어요" : "가입하고 있어요"}
+                            {routeLabel}{labelText("로")} {labelText(finished ? "가입했어요" : "가입하고 있어요")}
                         </span>
                     )}
                 </span>
@@ -137,8 +139,8 @@ export function SxShell({
                                     <i className={`fa-solid ${step.icon}`} />
                                     <b>{state === "done" ? <i className="fa-solid fa-check" /> : index + 1}</b>
                                 </span>
-                                <strong>{step.label}</strong>
-                                <small>{step.desc}</small>
+                                <strong>{labelText(step.label)}</strong>
+                                <small>{labelText(step.desc)}</small>
                             </li>
                         );
                     })}
@@ -154,7 +156,7 @@ export function SxShell({
             <div className="sxw-main">{children}</div>
 
             {footer === undefined
-                ? !finished && <p className="sxw-login">이미 회원이신가요?<Link href="/auth/login">로그인</Link></p>
+                ? !finished && <p className="sxw-login">{labelText("이미 회원이신가요?")}<Link href="/auth/login">{labelText("로그인")}</Link></p>
                 : footer}
         </div>
     );
@@ -276,6 +278,7 @@ export function SxBranch({ tone, art, tag, title, children, account, actions, br
     actions?: ReactNode;
     branch: string;
 }) {
+    const { menuLabel: labelText } = useI18n();
     return (
         <div className="sxw-branch" data-tone={tone} role="alert" data-branch={branch}>
             {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
@@ -289,7 +292,7 @@ export function SxBranch({ tone, art, tag, title, children, account, actions, br
                         <i className="fa-solid fa-user" aria-hidden="true" />
                         {account.text}
                         <em data-provider={account.provider}>
-                            {PROVIDER_NAME[account.provider] || account.provider} {account.provider === "email" ? "가입" : "간편가입"}
+                            {PROVIDER_NAME[account.provider] || account.provider} {labelText(account.provider === "email" ? "가입" : "간편가입")}
                         </em>
                     </span>
                 )}
@@ -319,12 +322,13 @@ const DOC_TITLE: Record<SxDocKind, string> = {
 };
 
 function DocTable({ rows, label }: { rows: ReadonlyArray<{ item: string; purpose: string; retention: string }>; label: string }) {
+    const { menuLabel: labelText } = useI18n();
     return (
         <div className="sxw-doc-table" role="table" aria-label={label}>
             <div role="row" className="is-head">
-                <span role="columnheader">수집 항목</span>
-                <span role="columnheader">이용 목적</span>
-                <span role="columnheader">보유 · 이용 기간</span>
+                <span role="columnheader">{labelText("수집 항목")}</span>
+                <span role="columnheader">{labelText("이용 목적")}</span>
+                <span role="columnheader">{labelText("보유 · 이용 기간")}</span>
             </div>
             {rows.map((row) => (
                 <div role="row" key={row.item}>
@@ -338,6 +342,7 @@ function DocTable({ rows, label }: { rows: ReadonlyArray<{ item: string; purpose
 }
 
 export function SxDocModal({ kind, onClose }: { kind: SxDocKind | null; onClose: () => void }) {
+    const { menuLabel: labelText } = useI18n();
     const titleId = useId();
     const closeRef = useRef<HTMLButtonElement>(null);
 
@@ -371,11 +376,11 @@ export function SxDocModal({ kind, onClose }: { kind: SxDocKind | null; onClose:
                     <span className="sxw-head-text">
                         <span className="sxw-kicker">{required ? "REQUIRED" : "OPTIONAL"}</span>
                         <h2 id={titleId}>
-                            <span className={required ? "sxw-req" : "sxw-opt"}>{required ? "필수" : "선택"}</span>
+                            <span className={required ? "sxw-req" : "sxw-opt"}>{labelText(required ? "필수" : "선택")}</span>
                             {DOC_TITLE[kind]}
                         </h2>
                     </span>
-                    <button ref={closeRef} type="button" className="sxw-doc-x" onClick={onClose} aria-label="닫기">
+                    <button ref={closeRef} type="button" className="sxw-doc-x" onClick={onClose} aria-label={labelText("닫기")}>
                         <i className="fa-solid fa-xmark" aria-hidden="true" />
                     </button>
                 </header>
@@ -383,53 +388,53 @@ export function SxDocModal({ kind, onClose }: { kind: SxDocKind | null; onClose:
                 <div className="sxw-doc-body">
                     {kind === "age14" && (
                         <>
-                            <p>댕다방은 만 14세 이상만 가입할 수 있어요.</p>
+                            <p>{labelText("댕다방은 만 14세 이상만 가입할 수 있어요.")}</p>
                             <ul className="sxw-doc-list">
-                                <li>만 14세 미만은 개인정보를 받을 때 법정대리인(부모님 등)의 동의가 필요해요.</li>
-                                <li>법정대리인 동의 절차를 갖추기 전까지는 만 14세 미만의 가입을 받지 않아요.</li>
-                                <li>사실과 다르게 동의한 것이 확인되면 계정 이용이 제한될 수 있어요.</li>
+                                <li>{labelText("만 14세 미만은 개인정보를 받을 때 법정대리인(부모님 등)의 동의가 필요해요.")}</li>
+                                <li>{labelText("법정대리인 동의 절차를 갖추기 전까지는 만 14세 미만의 가입을 받지 않아요.")}</li>
+                                <li>{labelText("사실과 다르게 동의한 것이 확인되면 계정 이용이 제한될 수 있어요.")}</li>
                             </ul>
                         </>
                     )}
                     {kind === "terms" && (
                         <>
-                            <p>주요 내용을 먼저 보여 드려요. 전체 약관은 아래 버튼으로 볼 수 있어요.</p>
+                            <p>{labelText("주요 내용을 먼저 보여 드려요. 전체 약관은 아래 버튼으로 볼 수 있어요.")}</p>
                             <ul className="sxw-doc-list">
                                 {SIGNUP_TERMS_AGREEMENT.summary.map((item) => <li key={item}>{item}</li>)}
                             </ul>
                             <Link href={SIGNUP_TERMS_AGREEMENT.href} target="_blank" rel="noopener" className="sxw-doc-full">
-                                이용약관 전문 보기 <i className="fa-solid fa-arrow-up-right-from-square" aria-hidden="true" />
+                                {labelText("이용약관 전문 보기")} <i className="fa-solid fa-arrow-up-right-from-square" aria-hidden="true" />
                             </Link>
                         </>
                     )}
                     {kind === "privacy" && (
                         <>
                             <p>{SIGNUP_REQUIRED_PRIVACY_CONSENT.intro}</p>
-                            <DocTable rows={SIGNUP_REQUIRED_PRIVACY_CONSENT.rows} label="개인정보 수집 항목 · 이용 목적 · 보유 기간" />
+                            <DocTable rows={SIGNUP_REQUIRED_PRIVACY_CONSENT.rows} label={labelText("개인정보 수집 항목 · 이용 목적 · 보유 기간")} />
                             <p className="sxw-doc-note">{SIGNUP_REQUIRED_PRIVACY_CONSENT.refusalNotice}</p>
                             <Link href={SIGNUP_REQUIRED_PRIVACY_CONSENT.href} target="_blank" rel="noopener" className="sxw-doc-full">
-                                개인정보처리방침 전문 보기 <i className="fa-solid fa-arrow-up-right-from-square" aria-hidden="true" />
+                                {labelText("개인정보처리방침 전문 보기")} <i className="fa-solid fa-arrow-up-right-from-square" aria-hidden="true" />
                             </Link>
                         </>
                     )}
                     {kind === "marketing" && (
                         <>
-                            <p>새 상품 · 할인 · 이벤트 소식을 이메일이나 문자로 받아요. 동의하지 않아도 가입과 쇼핑은 똑같이 할 수 있어요.</p>
-                            <DocTable rows={[{ item: "이메일 주소, 휴대전화번호", purpose: "상품 · 할인 · 이벤트 등 광고성 정보 안내", retention: "동의 철회 또는 회원 탈퇴 시까지" }]} label="마케팅 정보 수신 동의 내용" />
-                            <p className="sxw-doc-note">동의한 뒤에도 마이페이지에서 언제든 바꿀 수 있고, 처리 결과는 날짜와 함께 알려 드려요.</p>
+                            <p>{labelText("새 상품 · 할인 · 이벤트 소식을 이메일이나 문자로 받아요. 동의하지 않아도 가입과 쇼핑은 똑같이 할 수 있어요.")}</p>
+                            <DocTable rows={[{ item: "이메일 주소, 휴대전화번호", purpose: "상품 · 할인 · 이벤트 등 광고성 정보 안내", retention: "동의 철회 또는 회원 탈퇴 시까지" }]} label={labelText("마케팅 정보 수신 동의 내용")} />
+                            <p className="sxw-doc-note">{labelText("동의한 뒤에도 마이페이지에서 언제든 바꿀 수 있고, 처리 결과는 날짜와 함께 알려 드려요.")}</p>
                         </>
                     )}
                     {kind === "petlens" && (
                         <>
                             <p>{SIGNUP_PETLENS_PRIVACY_CONSENT.intro}</p>
-                            <DocTable rows={SIGNUP_PETLENS_PRIVACY_CONSENT.rows} label="반려동물 정보 수집 · 이용 내용" />
+                            <DocTable rows={SIGNUP_PETLENS_PRIVACY_CONSENT.rows} label={labelText("반려동물 정보 수집 · 이용 내용")} />
                             <p className="sxw-doc-note">{SIGNUP_PETLENS_PRIVACY_CONSENT.refusalNotice}</p>
                         </>
                     )}
                 </div>
 
                 <footer className="sxw-doc-foot">
-                    <button type="button" className="sxw-next" onClick={onClose}>확인했어요</button>
+                    <button type="button" className="sxw-next" onClick={onClose}>{labelText("확인했어요")}</button>
                 </footer>
             </section>
         </div>,
@@ -453,18 +458,19 @@ const REQUIRED_ROWS: Array<{ key: "age14" | "terms" | "privacy"; label: string }
 
 /** 마케팅 수신 동의 한 줄(이메일 · 문자 따로 고르기) — 약관 판 · 간편가입 정보 확인에서 같이 씀 */
 export function MarketingRow({ value, onChange, onOpenDoc }: { value: MarketingChoice; onChange: (next: MarketingChoice) => void; onOpenDoc: () => void }) {
+    const { menuLabel: labelText } = useI18n();
     const any = value.email || value.sms;
     return (
         <li className={any ? "is-on" : ""}>
             <label>
                 <SxCheck checked={any} onChange={(checked) => onChange({ email: checked, sms: checked })} />
-                <span className="sxw-opt">선택</span>
-                <span className="sxw-terms-t">마케팅 정보 수신에 동의해요</span>
+                <span className="sxw-opt">{labelText("선택")}</span>
+                <span className="sxw-terms-t">{labelText("마케팅 정보 수신에 동의해요")}</span>
             </label>
-            <button type="button" className="sxw-view" onClick={onOpenDoc} aria-label="마케팅 정보 수신 동의 내용 보기">
-                내용 <i className="fa-solid fa-chevron-right" aria-hidden="true" />
+            <button type="button" className="sxw-view" onClick={onOpenDoc} aria-label={labelText("마케팅 정보 수신 동의 내용 보기")}>
+                {labelText("내용")} <i className="fa-solid fa-chevron-right" aria-hidden="true" />
             </button>
-            <span className="sxw-channels" role="group" aria-label="받을 방법">
+            <span className="sxw-channels" role="group" aria-label={labelText("받을 방법")}>
                 {([["email", "이메일"], ["sms", "문자(SMS)"]] as const).map(([key, label]) => (
                     <label key={key} className={value[key] ? "is-on" : ""}>
                         <input type="checkbox" checked={value[key]} onChange={(event) => onChange({ ...value, [key]: event.target.checked })} />
@@ -484,6 +490,7 @@ export function TermsPanel({ value, onChange, marketingEnabled, onOpenDoc }: {
     marketingEnabled: boolean;
     onOpenDoc: (kind: SxDocKind) => void;
 }) {
+    const { menuLabel: labelText } = useI18n();
     const requiredCount = REQUIRED_ROWS.filter((row) => value[row.key]).length;
     const all = requiredCount === 3 && (!marketingEnabled || (value.marketing.email && value.marketing.sms));
     const setAll = (checked: boolean) => onChange({
@@ -496,23 +503,23 @@ export function TermsPanel({ value, onChange, marketingEnabled, onOpenDoc }: {
     return (
         <div className="sxw-terms" data-signup-web-terms>
             <label className={all ? "sxw-all is-on" : "sxw-all"}>
-                <SxCheck checked={all} onChange={setAll} label="전체 동의" />
+                <SxCheck checked={all} onChange={setAll} label={labelText("전체 동의")} />
                 <span>
-                    <b>전체 동의할게요</b>
-                    <small>{marketingEnabled ? "필수 3가지와 선택 1가지를 한 번에 동의해요" : "필수 3가지를 한 번에 동의해요"}</small>
+                    <b>{labelText("전체 동의할게요")}</b>
+                    <small>{labelText(marketingEnabled ? "필수 3가지와 선택 1가지를 한 번에 동의해요" : "필수 3가지를 한 번에 동의해요")}</small>
                 </span>
-                <em className={requiredCount === 3 ? "is-ok" : ""}>필수 {requiredCount}/3</em>
+                <em className={requiredCount === 3 ? "is-ok" : ""}>{labelText("필수")} {requiredCount}/3</em>
             </label>
             <ul>
                 {REQUIRED_ROWS.map((row) => (
                     <li key={row.key} className={value[row.key] ? "is-on" : ""}>
                         <label>
                             <SxCheck checked={value[row.key]} onChange={(checked) => onChange({ ...value, [row.key]: checked })} />
-                            <span className="sxw-req">필수</span>
-                            <span className="sxw-terms-t">{row.label}</span>
+                            <span className="sxw-req">{labelText("필수")}</span>
+                            <span className="sxw-terms-t">{labelText(row.label)}</span>
                         </label>
                         <button type="button" className="sxw-view" onClick={() => onOpenDoc(row.key)} aria-label={`${row.label} 내용 보기`}>
-                            내용 <i className="fa-solid fa-chevron-right" aria-hidden="true" />
+                            {labelText("내용")} <i className="fa-solid fa-chevron-right" aria-hidden="true" />
                         </button>
                     </li>
                 ))}
@@ -542,6 +549,7 @@ export function identityPasses(state: IdentityState) {
 const formatDate = (value: string) => value.replace(/^(\d{4})-(\d{2})-(\d{2})$/, "$1. $2. $3");
 
 export function IdentityPanel({ state, onStart, onRestart }: { state: IdentityState; onStart: () => void; onRestart: () => void }) {
+    const { menuLabel: labelText } = useI18n();
     // 결과 — 완료 · 갈림길
     if (state.phase === "result" && state.result.status === "verified") {
         const result = state.result;
@@ -557,27 +565,27 @@ export function IdentityPanel({ state, onStart, onRestart }: { state: IdentitySt
                     account={{ text: result.existingAccount.maskedAccount, provider: result.existingAccount.provider }}
                     actions={(
                         <>
-                            <Link href="/auth/login" className="sxw-pill is-pink">그 계정으로 로그인</Link>
-                            {isEmail && <Link href="/forgot-password" className="sxw-pill">비밀번호 찾기</Link>}
-                            <button type="button" className="sxw-pill" onClick={onRestart}>다른 명의로 인증</button>
+                            <Link href="/auth/login" className="sxw-pill is-pink">{labelText("그 계정으로 로그인")}</Link>
+                            {isEmail && <Link href="/forgot-password" className="sxw-pill">{labelText("비밀번호 찾기")}</Link>}
+                            <button type="button" className="sxw-pill" onClick={onRestart}>{labelText("다른 명의로 인증")}</button>
                         </>
                     )}
                 >
-                    한 사람은 한 계정만 만들 수 있어요. 쓰던 계정으로 로그인해 주세요.
+                    {labelText("한 사람은 한 계정만 만들 수 있어요. 쓰던 계정으로 로그인해 주세요.")}
                 </SxBranch>
             );
         }
         if (!result.over14) {
             return (
-                <SxBranch tone="gray" branch="identity-under14" art="stickers/login-lock.webp" tag="만 14세 미만" title="지금은 가입할 수 없어요" actions={<Link href="/" className="sxw-pill">홈으로</Link>}>
-                    만 14세 미만은 법정대리인(부모님 등)의 동의가 있어야 가입할 수 있어요. 법정대리인 동의 절차를 갖추기 전까지는 가입을 받지 않아요.
+                <SxBranch tone="gray" branch="identity-under14" art="stickers/login-lock.webp" tag="만 14세 미만" title={labelText("지금은 가입할 수 없어요")} actions={<Link href="/" className="sxw-pill">{labelText("홈으로")}</Link>}>
+                    {labelText("만 14세 미만은 법정대리인(부모님 등)의 동의가 있어야 가입할 수 있어요. 법정대리인 동의 절차를 갖추기 전까지는 가입을 받지 않아요.")}
                 </SxBranch>
             );
         }
         if (result.rejoinBlockedUntil) {
             return (
-                <SxBranch tone="gray" branch="identity-rejoin" art="policy-info-192.webp" tag="탈퇴 후 다시 가입" title={`${formatDate(result.rejoinBlockedUntil)}부터 다시 가입할 수 있어요`} actions={<Link href="/inquiry/?category=other#inquiry-form" className="sxw-pill">1:1 문의하기</Link>}>
-                    가입 혜택을 여러 번 받는 일을 막기 위해, 탈퇴한 뒤 정해진 기간에는 같은 사람이 다시 가입할 수 없어요.
+                <SxBranch tone="gray" branch="identity-rejoin" art="policy-info-192.webp" tag="탈퇴 후 다시 가입" title={`${formatDate(result.rejoinBlockedUntil)}부터 다시 가입할 수 있어요`} actions={<Link href="/inquiry/?category=other#inquiry-form" className="sxw-pill">{labelText("1:1 문의하기")}</Link>}>
+                    {labelText("가입 혜택을 여러 번 받는 일을 막기 위해, 탈퇴한 뒤 정해진 기간에는 같은 사람이 다시 가입할 수 없어요.")}
                 </SxBranch>
             );
         }
@@ -585,18 +593,18 @@ export function IdentityPanel({ state, onStart, onRestart }: { state: IdentitySt
             <div className="sxw-ok" role="status" data-branch="identity-verified">
                 <span className="sxw-ok-big" aria-hidden="true"><i className="fa-solid fa-check" /></span>
                 <span className="sxw-kicker">VERIFIED</span>
-                <h3>본인인증이 끝났어요</h3>
+                <h3>{labelText("본인인증이 끝났어요")}</h3>
                 <dl className="sxw-idres">
-                    <div><dt>이름</dt><dd>{result.name}</dd></div>
-                    <div><dt>생년월일</dt><dd>{formatDate(result.birthDate)}</dd></div>
-                    <div><dt>휴대폰</dt><dd>{result.maskedPhone}</dd></div>
-                    <div><dt>통신사</dt><dd>{result.carrier}</dd></div>
+                    <div><dt>{labelText("이름")}</dt><dd>{result.name}</dd></div>
+                    <div><dt>{labelText("생년월일")}</dt><dd>{formatDate(result.birthDate)}</dd></div>
+                    <div><dt>{labelText("휴대폰")}</dt><dd>{result.maskedPhone}</dd></div>
+                    <div><dt>{labelText("통신사")}</dt><dd>{result.carrier}</dd></div>
                 </dl>
                 <span className="sxw-ok-chips">
-                    <span><i className="fa-solid fa-check" aria-hidden="true" />만 14세 이상</span>
-                    <span><i className="fa-solid fa-check" aria-hidden="true" />가입 이력 없음</span>
+                    <span><i className="fa-solid fa-check" aria-hidden="true" />{labelText("만 14세 이상")}</span>
+                    <span><i className="fa-solid fa-check" aria-hidden="true" />{labelText("가입 이력 없음")}</span>
                 </span>
-                <button type="button" className="sxw-link" onClick={onRestart}>다른 명의로 다시 인증</button>
+                <button type="button" className="sxw-link" onClick={onRestart}>{labelText("다른 명의로 다시 인증")}</button>
             </div>
         );
     }
@@ -612,30 +620,30 @@ export function IdentityPanel({ state, onStart, onRestart }: { state: IdentitySt
 
     return (
         <div className="sxw-idv">
-            {notice && <SxNotice tone="amber" icon={notice.icon} title={notice.title}>{notice.text}</SxNotice>}
+            {notice && <SxNotice tone="amber" icon={notice.icon} title={notice.title}>{labelText(notice.text)}</SxNotice>}
 
-            <SxBlock icon="fa-route" title="이렇게 진행돼요" tone="sky">
+            <SxBlock icon="fa-route" title={labelText("이렇게 진행돼요")} tone="sky">
                 <ol className="sxw-timeline">
                     <li data-owner="us">
                         <b aria-hidden="true">1</b>
-                        <span><em>댕다방</em><strong>아래 버튼을 눌러요</strong><small>인증기관 창이 새로 열려요.</small></span>
+                        <span><em>댕다방</em><strong>{labelText("아래 버튼을 눌러요")}</strong><small>{labelText("인증기관 창이 새로 열려요.")}</small></span>
                     </li>
                     <li data-owner="agency">
                         <b aria-hidden="true">2</b>
-                        <span><em>인증기관 창</em><strong>통신사를 고르고 정보를 넣어요</strong><small>이름 · 생년월일 · 휴대폰 번호를 넣고 문자 또는 PASS 앱으로 인증해요.</small></span>
+                        <span><em>{labelText("인증기관 창")}</em><strong>{labelText("통신사를 고르고 정보를 넣어요")}</strong><small>{labelText("이름 · 생년월일 · 휴대폰 번호를 넣고 문자 또는 PASS 앱으로 인증해요.")}</small></span>
                     </li>
                     <li data-owner="us">
                         <b aria-hidden="true">3</b>
-                        <span><em>댕다방</em><strong>결과를 확인하고 다음으로</strong><small>이름과 휴대폰 번호는 다음 단계에 자동으로 채워져요.</small></span>
+                        <span><em>댕다방</em><strong>{labelText("결과를 확인하고 다음으로")}</strong><small>{labelText("이름과 휴대폰 번호는 다음 단계에 자동으로 채워져요.")}</small></span>
                     </li>
                 </ol>
             </SxBlock>
 
-            <SxBlock icon="fa-shield-halved" title="확인하는 것 · 받는 정보" tone="yellow">
+            <SxBlock icon="fa-shield-halved" title={labelText("확인하는 것 · 받는 정보")} tone="yellow">
                 <ul className="sxw-facts">
-                    <li><i className="fa-solid fa-user-check" aria-hidden="true" /><span><b>중복 가입</b>이미 가입한 사람인지 확인해요.</span></li>
-                    <li><i className="fa-solid fa-cake-candles" aria-hidden="true" /><span><b>나이</b>만 14세 이상인지 확인해요.</span></li>
-                    <li><i className="fa-solid fa-lock" aria-hidden="true" /><span><b>받는 정보</b>이름 · 생년월일 · 성별 · 휴대폰 번호 · 중복가입 확인값(CI/DI). 주민등록번호는 받지 않아요.</span></li>
+                    <li><i className="fa-solid fa-user-check" aria-hidden="true" /><span><b>{labelText("중복 가입")}</b>{labelText("이미 가입한 사람인지 확인해요.")}</span></li>
+                    <li><i className="fa-solid fa-cake-candles" aria-hidden="true" /><span><b>{labelText("나이")}</b>{labelText("만 14세 이상인지 확인해요.")}</span></li>
+                    <li><i className="fa-solid fa-lock" aria-hidden="true" /><span><b>{labelText("받는 정보")}</b>{labelText("이름 · 생년월일 · 성별 · 휴대폰 번호 · 중복가입 확인값(CI/DI). 주민등록번호는 받지 않아요.")}</span></li>
                 </ul>
             </SxBlock>
 
@@ -643,7 +651,7 @@ export function IdentityPanel({ state, onStart, onRestart }: { state: IdentitySt
                 <span className="sxw-cta-i" aria-hidden="true"><i className={busy ? "fa-solid fa-circle-notch fa-spin" : "fa-solid fa-mobile-screen-button"} /></span>
                 <span>
                     <b>{busy ? "인증 창에서 진행하고 있어요" : notice ? "본인인증 다시 하기" : "휴대폰 본인인증 시작"}</b>
-                    <small>{busy ? "창을 닫으면 취소돼요" : "SKT · KT · LG U+ · 알뜰폰 · PASS 앱"}</small>
+                    <small>{labelText(busy ? "창을 닫으면 취소돼요" : "SKT · KT · LG U+ · 알뜰폰 · PASS 앱")}</small>
                 </span>
                 {!busy && <i className="fa-solid fa-arrow-up-right-from-square" aria-hidden="true" />}
             </button>
@@ -666,6 +674,7 @@ export function SignupWebDone({ name, pet, providerLabel, emailNeedsSetup, marke
     /** 다른 화면으로 나갈 때(가입 이어 하기 표시 지우기) */
     onLeave: () => void;
 }) {
+    const { menuLabel: labelText } = useI18n();
     const processed = marketing ? new Date(marketing.processedAt) : null;
     const channels = marketing ? [marketing.choice.email && "이메일", marketing.choice.sms && "문자(SMS)"].filter(Boolean).join(" · ") : "";
     const sizeLabel = pet ? (pet.size === "small" ? "소형" : pet.size === "large" ? "대형" : "중형") : "";
@@ -677,7 +686,7 @@ export function SignupWebDone({ name, pet, providerLabel, emailNeedsSetup, marke
             {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
             <img className="sxw-done-art" src={`${UI}daily-hero-treasure-384.webp`} alt="" aria-hidden="true" />
             <span className="sxw-kicker">WELCOME TO DAENGDABANG</span>
-            <h2 id="sxw-done-title">가입을 환영해요, <span className="sxw-u">{name}</span>님!</h2>
+            <h2 id="sxw-done-title">{labelText("가입을 환영해요,")} <span className="sxw-u">{name}</span>{labelText("님!")}</h2>
             <p className="sxw-done-sub">
                 {providerLabel ? `다음부터는 ${providerLabel} 버튼 하나로 로그인해요.` : "다음부터는 이메일과 비밀번호로 로그인해요."}
             </p>
@@ -689,9 +698,9 @@ export function SignupWebDone({ name, pet, providerLabel, emailNeedsSetup, marke
                         <img src={`${UI}goods-pay-ready-256.webp`} alt="" />
                     </span>
                     <span>
-                        <em>가입 혜택</em>
-                        <b>{emailNeedsSetup ? "이메일 등록하고 20C 받기" : "이메일 인증하고 20C 받기"}</b>
-                        <small>마이페이지 코인 탭에서 {emailNeedsSetup ? "이메일을 등록 · 인증" : "인증"}하면 바로 들어와요</small>
+                        <em>{labelText("가입 혜택")}</em>
+                        <b>{labelText(emailNeedsSetup ? "이메일 등록하고 20C 받기" : "이메일 인증하고 20C 받기")}</b>
+                        <small>{labelText("마이페이지 코인 탭에서")} {labelText(emailNeedsSetup ? "이메일을 등록 · 인증" : "인증")}{labelText("하면 바로 들어와요")}</small>
                     </span>
                     <i className="fa-solid fa-chevron-right" aria-hidden="true" />
                 </Link>
@@ -702,8 +711,8 @@ export function SignupWebDone({ name, pet, providerLabel, emailNeedsSetup, marke
                             <img src={pet.photoDataUrl || `${UI}lab-dog-256.webp`} alt="" className={pet.photoDataUrl ? "is-photo" : ""} />
                         </span>
                         <span>
-                            <em>우리 아이</em>
-                            <b>{pet.name} 등록 완료</b>
+                            <em>{labelText("우리 아이")}</em>
+                            <b>{pet.name} {labelText("등록 완료")}</b>
                             <small>{[pet.breed, sizeLabel, pet.age].filter(Boolean).join(" · ")}</small>
                         </span>
                         <i className="fa-solid fa-circle-check" aria-hidden="true" />
@@ -715,9 +724,9 @@ export function SignupWebDone({ name, pet, providerLabel, emailNeedsSetup, marke
                             <img src={`${UI}lab-dog-256.webp`} alt="" />
                         </span>
                         <span>
-                            <em>우리 아이</em>
-                            <b>우리 아이 등록하기</b>
-                            <small>마이페이지에서 언제든 등록할 수 있어요</small>
+                            <em>{labelText("우리 아이")}</em>
+                            <b>{labelText("우리 아이 등록하기")}</b>
+                            <small>{labelText("마이페이지에서 언제든 등록할 수 있어요")}</small>
                         </span>
                         <i className="fa-solid fa-chevron-right" aria-hidden="true" />
                     </Link>
@@ -728,13 +737,13 @@ export function SignupWebDone({ name, pet, providerLabel, emailNeedsSetup, marke
                 <p className="sxw-mkt-result" role="status">
                     <i className="fa-solid fa-envelope-circle-check" aria-hidden="true" />
                     <span>
-                        <b>마케팅 정보 수신 동의 결과</b>
-                        댕다방 · {processed.getFullYear()}년 {processed.getMonth() + 1}월 {processed.getDate()}일 · {channels} 수신에 동의했어요. 마이페이지에서 언제든 바꿀 수 있어요.
+                        <b>{labelText("마케팅 정보 수신 동의 결과")}</b>
+                        {labelText("댕다방 ·")} {processed.getFullYear()}{labelText("년")} {processed.getMonth() + 1}{labelText("월")} {processed.getDate()}{labelText("일 ·")} {channels} {labelText("수신에 동의했어요. 마이페이지에서 언제든 바꿀 수 있어요.")}
                     </span>
                 </p>
             )}
 
-            <p className="sxw-next3-t">이어서 해 보세요</p>
+            <p className="sxw-next3-t">{labelText("이어서 해 보세요")}</p>
             <div className="sxw-next3">
                 <Link href="/recommendations/" onClick={onLeave}>
                     {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
@@ -744,12 +753,12 @@ export function SignupWebDone({ name, pet, providerLabel, emailNeedsSetup, marke
                 <Link href="/mypage/daily/" onClick={onLeave}>
                     {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                     <img src={`${UI}daily-checkin-256.webp`} alt="" aria-hidden="true" />
-                    <span>첫 출석 도장</span>
+                    <span>{labelText("첫 출석 도장")}</span>
                 </Link>
                 <Link href="/pet-lens/" onClick={onLeave}>
                     {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                     <img src={`${UI}header-petlens-128.webp`} alt="" aria-hidden="true" />
-                    <span>사진 건강 분석</span>
+                    <span>{labelText("사진 건강 분석")}</span>
                 </Link>
             </div>
 

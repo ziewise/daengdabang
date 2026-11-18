@@ -10,6 +10,7 @@
  *  - IconDot(옅은 동그라미 + 아이콘) · SectionHead · Pill · Reveal · useInView · BottomSheet · DL_CSS
  */
 
+import { useI18n } from "@/lib/i18n";
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode, type RefObject } from "react";
 import { createPortal } from "react-dom";
 
@@ -111,6 +112,7 @@ export function Reveal({ children, order = 0, className = "" }: { children: Reac
 
 /** 아래에서 올라오는 판 — 바깥 누르기 · 닫기 · Esc 로 닫힘, 열린 동안 뒤 화면 스크롤 잠금 */
 export function BottomSheet({ open, onClose, label, children }: { open: boolean; onClose: () => void; label: string; children: ReactNode }) {
+    const { menuLabel: labelText } = useI18n();
     const closeRef = useRef<HTMLButtonElement>(null);
     useEffect(() => {
         if (!open) return;
@@ -128,11 +130,11 @@ export function BottomSheet({ open, onClose, label, children }: { open: boolean;
     return createPortal(
         // 탭바(z 2150) · 옵션 시트(2301) 보다 위
         <div className="fixed inset-0 z-[2400] flex items-end justify-center" role="dialog" aria-modal="true" aria-label={label}>
-            <button type="button" className="pv-sheet-dim absolute inset-0 bg-[#1f1a18]/40 backdrop-blur-[2px]" onClick={onClose} aria-label="닫기" tabIndex={-1} />
+            <button type="button" className="pv-sheet-dim absolute inset-0 bg-[#1f1a18]/40 backdrop-blur-[2px]" onClick={onClose} aria-label={labelText("닫기")} tabIndex={-1} />
             <div className="pv-sheet relative max-h-[86vh] w-full max-w-md overflow-y-auto rounded-t-[28px] bg-white px-5 pb-[calc(22px+env(safe-area-inset-bottom,0px))] pt-3 shadow-[0_-20px_50px_-20px_rgba(31,26,24,0.45)]">
                 <div className="sticky top-0 z-10 -mx-5 mb-2 flex items-center justify-center bg-white px-5 pb-2">
                     <span className="h-1 w-10 rounded-full bg-[#e7dfda]" aria-hidden="true" />
-                    <button ref={closeRef} type="button" onClick={onClose} className="absolute right-4 top-0 grid h-8 w-8 place-items-center rounded-full bg-[#f4efec] text-[#6f625c]" aria-label="닫기">
+                    <button ref={closeRef} type="button" onClick={onClose} className="absolute right-4 top-0 grid h-8 w-8 place-items-center rounded-full bg-[#f4efec] text-[#6f625c]" aria-label={labelText("닫기")}>
                         <i className="fa-solid fa-xmark text-[13px]" aria-hidden="true" />
                     </button>
                 </div>

@@ -7,6 +7,7 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import Link from "next/link";
 import { useState } from "react";
 import "@/app/guest-web.css";
@@ -14,6 +15,7 @@ import "@/app/guest-web.css";
 const UI = "/images/ui/";
 
 export default function GuestOrderDone({ orderId, amount, buyerName, email }: { orderId: string; amount: number; buyerName: string; email: string }) {
+    const { menuLabel: labelText } = useI18n();
     const [copied, setCopied] = useState(false);
     const copy = async () => {
         try {
@@ -31,34 +33,34 @@ export default function GuestOrderDone({ orderId, amount, buyerName, email }: { 
                 {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                 <img src={`${UI}daily-hero-treasure-384.webp`} alt="" aria-hidden="true" />
                 <span className="gw-kicker">THANK YOU</span>
-                <h1 id="gw-done-title">주문이 완료됐어요, <span className="gw-hl">{buyerName || "고객"}</span>님!</h1>
-                <p>{amount.toLocaleString("ko-KR")}원 결제가 확인됐어요. 아래 주문번호로 언제든 주문을 확인할 수 있어요.</p>
+                <h1 id="gw-done-title">{labelText("주문이 완료됐어요,")} <span className="gw-hl">{buyerName || "고객"}</span>{labelText("님!")}</h1>
+                <p>{amount.toLocaleString("ko-KR")}{labelText("원 결제가 확인됐어요. 아래 주문번호로 언제든 주문을 확인할 수 있어요.")}</p>
 
                 <div className="gw-ticket">
-                    <small>주문번호</small>
+                    <small>{labelText("주문번호")}</small>
                     <b>{orderId}</b>
                     <button type="button" className="gw-pill" onClick={() => void copy()}>
-                        <i className={copied ? "fa-solid fa-check" : "fa-regular fa-copy"} aria-hidden="true" />{copied ? "복사했어요" : "주문번호 복사"}
+                        <i className={copied ? "fa-solid fa-check" : "fa-regular fa-copy"} aria-hidden="true" />{labelText(copied ? "복사했어요" : "주문번호 복사")}
                     </button>
                 </div>
 
                 <ul>
-                    <li><i className="fa-solid fa-envelope-open-text" aria-hidden="true" /><span>주문번호를 복사해 보관해 주세요. 문의 시 {email || "주문할 때 넣은 이메일"}로 주문 정보를 확인해요.</span></li>
-                    <li><i className="fa-solid fa-key" aria-hidden="true" /><span>비회원 주문 조회에서 주문번호와 주문 조회 비밀번호로 배송 · 취소 · 교환 · 반품 · 문의를 할 수 있어요.</span></li>
-                    <li><i className="fa-solid fa-truck-fast" aria-hidden="true" /><span>상품이 발송되면 조회 화면에서 택배사와 송장 번호를 볼 수 있어요.</span></li>
+                    <li><i className="fa-solid fa-envelope-open-text" aria-hidden="true" /><span>{labelText("주문번호를 복사해 보관해 주세요. 문의 시")} {email || "주문할 때 넣은 이메일"}{labelText("로 주문 정보를 확인해요.")}</span></li>
+                    <li><i className="fa-solid fa-key" aria-hidden="true" /><span>{labelText("비회원 주문 조회에서 주문번호와 주문 조회 비밀번호로 배송 · 취소 · 교환 · 반품 · 문의를 할 수 있어요.")}</span></li>
+                    <li><i className="fa-solid fa-truck-fast" aria-hidden="true" /><span>{labelText("상품이 발송되면 조회 화면에서 택배사와 송장 번호를 볼 수 있어요.")}</span></li>
                 </ul>
 
                 <div className="gw-done-go">
-                    <Link href="/order-lookup" className="gw-go"><i className="fa-solid fa-magnifying-glass" aria-hidden="true" />주문 조회하기</Link>
-                    <Link href="/products" className="gw-go is-soft">쇼핑 계속하기</Link>
+                    <Link href="/order-lookup" className="gw-go"><i className="fa-solid fa-magnifying-glass" aria-hidden="true" />{labelText("주문 조회하기")}</Link>
+                    <Link href="/products" className="gw-go is-soft">{labelText("쇼핑 계속하기")}</Link>
                 </div>
             </section>
 
-            <section className="gw-join" aria-label="회원가입 안내">
+            <section className="gw-join" aria-label={labelText("회원가입 안내")}>
                 {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                 <img src={`${UI}goods-pay-ready-256.webp`} alt="" aria-hidden="true" />
-                <span><b>다음엔 회원으로 주문해 보세요</b><small>주문 내역이 마이페이지에 모이고, 가입 혜택 코인 20C도 받아요.</small></span>
-                <Link href="/auth/signup" className="gw-pill is-lav">회원가입<i className="fa-solid fa-arrow-right" aria-hidden="true" /></Link>
+                <span><b>{labelText("다음엔 회원으로 주문해 보세요")}</b><small>{labelText("주문 내역이 마이페이지에 모이고, 가입 혜택 코인 20C도 받아요.")}</small></span>
+                <Link href="/auth/signup" className="gw-pill is-lav">{labelText("회원가입")}<i className="fa-solid fa-arrow-right" aria-hidden="true" /></Link>
             </section>
         </main>
     );

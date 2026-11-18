@@ -1,5 +1,7 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
+import { useCareTalkCopy } from "@/hooks/useCareTalkCopy";
 import { useState } from "react";
 import {
     submitShopChatFeedback,
@@ -27,6 +29,8 @@ export default function ChatAnswerControls({
     onRetry,
     compact = false,
 }: Props) {
+    const copy = useCareTalkCopy();
+    const { locale } = useI18n();
     const [feedback, setFeedback] = useState<FeedbackState>("idle");
 
     const sendFeedback = async (verdict: ShopChatFeedbackVerdict) => {
@@ -56,11 +60,11 @@ export default function ChatAnswerControls({
                     data-chat-delivery={delivery.status}
                 >
                     <p className="text-[12px] font-extrabold leading-5">
-                        {delivery.message || "연결이 잠시 불안정해요. 잠시 뒤 다시 확인해 주세요."}
+                        {copy(delivery.message || "연결이 잠시 불안정해요. 잠시 뒤 다시 확인해 주세요.")}
                     </p>
                     <div className="mt-2 flex flex-wrap items-center gap-2">
                         {typeof delivery.retryAfterSeconds === "number" && delivery.retryAfterSeconds > 0 ? (
-                            <span className="text-[11px] font-bold opacity-70">약 {delivery.retryAfterSeconds}초 후 재시도</span>
+                            <span className="text-[11px] font-bold opacity-70">{locale === "en" ? <>Try again in {delivery.retryAfterSeconds}s</> : <>약 {delivery.retryAfterSeconds}초 후 재시도</>}</span>
                         ) : null}
                         {onRetry ? (
                             <button
@@ -68,7 +72,7 @@ export default function ChatAnswerControls({
                                 onClick={onRetry}
                                 className="rounded-full border border-current/20 bg-white px-3 py-1.5 text-[11px] font-black transition hover:-translate-y-0.5"
                             >
-                                다시 확인하기
+                                {copy("다시 확인하기")}
                             </button>
                         ) : null}
                     </div>
@@ -77,7 +81,7 @@ export default function ChatAnswerControls({
 
             {traceId ? (
                 <div className="flex min-h-8 items-center gap-1.5 text-[11px] font-bold text-neutral-500" data-chat-feedback>
-                    <span className="mr-1">답변이 도움됐나요?</span>
+                    <span className="mr-1">{copy("답변이 도움됐나요?")}</span>
                     <button
                         type="button"
                         onClick={() => void sendFeedback("helpful")}
@@ -87,9 +91,9 @@ export default function ChatAnswerControls({
                                 ? "border-emerald-500 bg-emerald-50 text-emerald-700"
                                 : "border-neutral-200 bg-white text-neutral-500 hover:border-emerald-400 hover:text-emerald-700"
                         } disabled:cursor-default`}
-                        aria-label="도움된 답변으로 평가"
+                        aria-label={copy("도움된 답변으로 평가")}
                         aria-pressed={feedback === "helpful"}
-                        title="도움됐어요"
+                        title={copy("도움됐어요")}
                     >
                         <i className="fa-regular fa-thumbs-up" aria-hidden="true" />
                     </button>
@@ -102,19 +106,19 @@ export default function ChatAnswerControls({
                                 ? "border-rose-500 bg-rose-50 text-rose-700"
                                 : "border-neutral-200 bg-white text-neutral-500 hover:border-rose-400 hover:text-rose-700"
                         } disabled:cursor-default`}
-                        aria-label="도움되지 않은 답변으로 평가"
+                        aria-label={copy("도움되지 않은 답변으로 평가")}
                         aria-pressed={feedback === "not_helpful"}
-                        title="아쉬워요"
+                        title={copy("아쉬워요")}
                     >
                         <i className="fa-regular fa-thumbs-down" aria-hidden="true" />
                     </button>
-                    {feedback === "sending" ? <span aria-live="polite">반영 중…</span> : null}
-                    {feedback === "helpful" || feedback === "not_helpful" ? <span aria-live="polite">고마워요. 다음 답변 개선에 반영할게요.</span> : null}
-                    {feedback === "error" ? <span className="text-amber-700" aria-live="polite">지금은 반영하지 못했어요.</span> : null}
+                    {feedback === "sending" ? <span aria-live="polite">{copy("반영 중…")}</span> : null}
+                    {feedback === "helpful" || feedback === "not_helpful" ? <span aria-live="polite">{copy("고마워요. 다음 답변 개선에 반영할게요.")}</span> : null}
+                    {feedback === "error" ? <span className="text-amber-700" aria-live="polite">{copy("지금은 반영하지 못했어요.")}</span> : null}
                 </div>
             ) : quality?.grounded || quality?.status === "verified" ? (
                 <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-black text-emerald-700">
-                    <i className="fa-solid fa-check" aria-hidden="true" /> 근거 확인 답변
+                    <i className="fa-solid fa-check" aria-hidden="true" /> {copy("근거 확인 답변")}
                 </span>
             ) : null}
         </div>

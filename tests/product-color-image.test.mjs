@@ -8,7 +8,7 @@ import { productVideoHook } from "./helpers/product-video-hook.mjs";
 
 const require = createRequire(import.meta.url);
 function loadModule(relative, dependencies = {}, browser = {}) {
-    dependencies = { "@/lib/catalog/hover-video-framing": hoverVideoFraming, ...dependencies };
+    dependencies = { "@/lib/i18n": { useI18n: () => ({ locale: "ko", optionName: (_, name) => name }) }, "@/lib/catalog/hover-video-framing": hoverVideoFraming, ...dependencies };
     const { outputText } = ts.transpileModule(readFileSync(new URL(`../${relative}`, import.meta.url), "utf8"), {
         compilerOptions: { module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX, esModuleInterop: true },
     });

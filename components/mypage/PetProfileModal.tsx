@@ -11,6 +11,7 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { createContext, useContext, useEffect, useRef, useSyncExternalStore, type FormEvent, type ReactNode, type RefObject } from "react";
 import { createPortal } from "react-dom";
 import PetLensPhotoViewFields from "@/components/petlens/PetLensPhotoViewFields";
@@ -62,6 +63,7 @@ type ModalProps = {
 
 /** 창 겉모양 — 머리 · 본문(칸 묶음) · 아래 버튼 줄 */
 export function PetProfileModal({ host, titleId, kicker, name, titleRest, sub, avatar, avatarIsPhoto, busy, onClose, onSubmit, hint, submit, formProps, children }: ModalProps) {
+    const { menuLabel: labelText } = useI18n();
     const closeRef = useRef<HTMLButtonElement>(null);
 
     // 열려 있는 동안 뒤 화면 스크롤 잠금 · 닫기 단추에 초점
@@ -104,7 +106,7 @@ export function PetProfileModal({ host, titleId, kicker, name, titleRest, sub, a
                 <div className="ddb-pf-body">{children}</div>
                 <footer className="ddb-pf-foot">
                     <p className="ddb-pf-hint"><i className="fa-solid fa-paw" aria-hidden="true" />{hint}</p>
-                    <button type="button" className="ddb-pf-cancel" onClick={onClose} disabled={busy}>닫기</button>
+                    <button type="button" className="ddb-pf-cancel" onClick={onClose} disabled={busy}>{labelText("닫기")}</button>
                     {submit}
                 </footer>
             </form>
@@ -211,8 +213,9 @@ type FieldsProps = {
 
 /** 웹 창 입력 칸 — 사진 · 기본 정보 · 몸과 성격 */
 export function PetProfileWebFields(props: FieldsProps) {
+    const { menuLabel: labelText } = useI18n();
     const { groupId, breedListId, saving, required } = props;
-    const must = required ? <b className="ddb-pf-must">필수</b> : null;
+    const must = required ? <b className="ddb-pf-must">{labelText("필수")}</b> : null;
     return (
         <>
             {/* 사진 — 기존 사진 칸 그대로(앞·뒤·좌·우), 모양만 창에 맞춤 */}
@@ -226,26 +229,26 @@ export function PetProfileWebFields(props: FieldsProps) {
                 />
             </div>
 
-            <PetFormSection icon="/images/ui/pet-home-96.webp" title="기본 정보" sub="이름과 실제 견종을 적어 주세요." tone="mint">
+            <PetFormSection icon="/images/ui/pet-home-96.webp" title={labelText("기본 정보")} sub="이름과 실제 견종을 적어 주세요." tone="mint">
                 <div className="ddb-pf-grid">
                     <label className="ddb-pf-field">
-                        <span className="ddb-pf-label">이름 {must}</span>
+                        <span className="ddb-pf-label">{labelText("이름")} {must}</span>
                         {props.onName ? (
-                            <input value={props.name} onChange={(event) => props.onName?.(event.target.value)} className="input" maxLength={80} placeholder="예: 럭키" required />
+                            <input value={props.name} onChange={(event) => props.onName?.(event.target.value)} className="input" maxLength={80} placeholder={labelText("예: 럭키")} required />
                         ) : (
                             <input value={props.name} className="input" readOnly disabled />
                         )}
                         {props.nameHelp && <span className="ddb-pf-help">{props.nameHelp}</span>}
                     </label>
                     <label className="ddb-pf-field">
-                        <span className="ddb-pf-label">{required ? "실제 견종" : "견종"} {must}</span>
+                        <span className="ddb-pf-label">{labelText(required ? "실제 견종" : "견종")} {must}</span>
                         <input
                             value={props.breed}
                             onChange={(event) => props.onBreed(event.target.value)}
                             className="input"
                             list={breedListId}
                             maxLength={100}
-                            placeholder="견종을 입력하거나 목록에서 선택"
+                            placeholder={labelText("견종을 입력하거나 목록에서 선택")}
                             required={required}
                         />
                         <datalist id={breedListId}>
@@ -255,14 +258,14 @@ export function PetProfileWebFields(props: FieldsProps) {
                 </div>
             </PetFormSection>
 
-            <PetFormSection icon="/images/ui/lab-health-160.webp" title="몸과 성격" sub="고르기만 하면 돼요. 모르는 칸은 비워 두세요." tone="pink">
+            <PetFormSection icon="/images/ui/lab-health-160.webp" title={labelText("몸과 성격")} sub="고르기만 하면 돼요. 모르는 칸은 비워 두세요." tone="pink">
                 <div className="ddb-pf-grid">
                     <label className="ddb-pf-field">
-                        <span className="ddb-pf-label">나이</span>
-                        <input value={props.age} onChange={(event) => props.onAge(event.target.value)} className="input" maxLength={80} placeholder="예: 3살" />
+                        <span className="ddb-pf-label">{labelText("나이")}</span>
+                        <input value={props.age} onChange={(event) => props.onAge(event.target.value)} className="input" maxLength={80} placeholder={labelText("예: 3살")} />
                     </label>
                     <label className="ddb-pf-field">
-                        <span className="ddb-pf-label">현재 체중</span>
+                        <span className="ddb-pf-label">{labelText("현재 체중")}</span>
                         <span className="ddb-pf-unit">
                             <input
                                 type="number"
@@ -279,15 +282,15 @@ export function PetProfileWebFields(props: FieldsProps) {
                         </span>
                         {props.weightHint}
                     </label>
-                    <ChoicePills label="크기" name={`${groupId}-size`} value={props.size} options={SIZE_OPTIONS} onChange={props.onSize} disabled={saving} />
-                    <ChoicePills label="성별" name={`${groupId}-sex`} value={props.sex} options={SEX_OPTIONS} onChange={props.onSex} disabled={saving} />
-                    <ChoicePills label="모질 길이" name={`${groupId}-coat`} value={props.coat} options={COAT_OPTIONS} onChange={props.onCoat} disabled={saving} />
+                    <ChoicePills label={labelText("크기")} name={`${groupId}-size`} value={props.size} options={SIZE_OPTIONS} onChange={props.onSize} disabled={saving} />
+                    <ChoicePills label={labelText("성별")} name={`${groupId}-sex`} value={props.sex} options={SEX_OPTIONS} onChange={props.onSex} disabled={saving} />
+                    <ChoicePills label={labelText("모질 길이")} name={`${groupId}-coat`} value={props.coat} options={COAT_OPTIONS} onChange={props.onCoat} disabled={saving} />
                     <label className="ddb-pf-field">
-                        <span className="ddb-pf-label">털 색상</span>
+                        <span className="ddb-pf-label">{labelText("털 색상")}</span>
                         <input value={props.coatColor} onChange={(event) => props.onCoatColor(event.target.value)} className="input" maxLength={80} placeholder={props.coatColorPlaceholder} />
                     </label>
                     <div className="ddb-pf-wide">
-                        <ChoicePills label="활동량" name={`${groupId}-activity`} value={props.activity} options={ACTIVITY_OPTIONS} onChange={props.onActivity} disabled={saving} />
+                        <ChoicePills label={labelText("활동량")} name={`${groupId}-activity`} value={props.activity} options={ACTIVITY_OPTIONS} onChange={props.onActivity} disabled={saving} />
                     </div>
                 </div>
             </PetFormSection>

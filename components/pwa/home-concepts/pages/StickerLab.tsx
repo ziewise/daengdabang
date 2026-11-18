@@ -19,6 +19,7 @@
  * 문구: 사진 방향 · 코인 · 긴급도 · 응급 안내는 협업자 연구소 화면 문구(docs/07 03-댕다방연구소.md). 그 밖 짧은 안내는 시안용.
  */
 
+import { useI18n } from "@/lib/i18n";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { haptic } from "../gestures";
@@ -123,11 +124,12 @@ function useObservationHistory(petProfileId?: number) {
 /** 반려견이 없을 때 안내 — 웹 MyPetHub "먼저 우리 아이를 등록해 주세요"(반려견은 있는데 서버 프로필이 없으면 AppAiCareOverview "우리 아이부터 연결해 주세요")
  *  + 반려견 등록하기 와펜(협업자 PETLENS_PROFILE_SETUP_HREF — 마이페이지가 읽는 petProfile=required) */
 function PetSetupMemo({ hasPets, className = "" }: { hasPets: boolean; className?: string }) {
+    const { menuLabel: labelText } = useI18n();
     return (
         <div className={`lb-memo relative rounded-[10px] px-3.5 pb-3.5 pt-3 ${className}`} style={{ rotate: "-0.6deg" }}>
-            <span className="ah-display block text-[13.5px] leading-snug">{hasPets ? "우리 아이부터 연결해 주세요" : "먼저 우리 아이를 등록해 주세요"}</span>
-            <span className="ah-light mt-1 block text-[12px] leading-relaxed" style={{ color: TEXT_SOFT }}>프로필이 생기면 주간 사진 분석과 건강 관찰 기록이 이곳에 차곡차곡 쌓입니다.</span>
-            <Patch href={PETLENS_PROFILE_SETUP_HREF} small className="mt-3">반려견 등록하기<i aria-hidden="true" className="fa-solid fa-paw text-[12px]" /></Patch>
+            <span className="ah-display block text-[13.5px] leading-snug">{labelText(hasPets ? "우리 아이부터 연결해 주세요" : "먼저 우리 아이를 등록해 주세요")}</span>
+            <span className="ah-light mt-1 block text-[12px] leading-relaxed" style={{ color: TEXT_SOFT }}>{labelText("프로필이 생기면 주간 사진 분석과 건강 관찰 기록이 이곳에 차곡차곡 쌓입니다.")}</span>
+            <Patch href={PETLENS_PROFILE_SETUP_HREF} small className="mt-3">{labelText("반려견 등록하기")}<i aria-hidden="true" className="fa-solid fa-paw text-[12px]" /></Patch>
         </div>
     );
 }
@@ -179,6 +181,7 @@ function LabArt({ k }: { k: "photo" | "sound" }) {
 }
 
 export default function StickerLab() {
+    const { menuLabel: labelText } = useI18n();
     const [session, setSession] = useDemoSession();
     const initialTab = useInitialTab(TABS.length);
     const member = session === "member";
@@ -217,17 +220,17 @@ export default function StickerLab() {
                             {/* ───────── 로그인 전: 주간 기록 예시 — 실제 기록과 같은 모양(사용자 2026-10-16 "실제와 같아야 오해가 없다")
                                 주간 분석 기록엔 사진이 남지 않아(서버는 촬영 방향 · 분석 글만 저장) 사진 나란히 비교는 넣지 않는다.
                                 실제로 나오는 것: 주차 · 한 줄 비교(comparison.headline) · 새로 보임(newObservations) · 이번엔 안 보임(notObservedNow) ───────── */}
-                            <p className="ah-display text-[18px] leading-snug">매주 사진을 찍으면<br /><span className="st-marker">달라진 점을 글로 정리해요</span></p>
+                            <p className="ah-display text-[18px] leading-snug">{labelText("매주 사진을 찍으면")}<br /><span className="st-marker">{labelText("달라진 점을 글로 정리해요")}</span></p>
                             <div className="lb-compare relative mt-5 rounded-[16px] bg-white px-4 pb-4 pt-5">
                                 <Tape className="-top-2 left-1/2 h-4 w-16 -translate-x-1/2" color="rgba(255,226,150,.9)" style={{ rotate: "-3deg" }} />
-                                <InkStamp rot={12} color="#5a7fe0" className="absolute -right-2 -top-3 z-[1] bg-white/90 text-[11px]">예시</InkStamp>
-                                <span className="st-tape ah-display inline-block px-2 py-0.5 text-[11px] text-[#563fa8]" style={{ background: "rgba(220,205,255,.92)", rotate: "-2deg" }}>{WEEKLY_RECORDS[0].week} 기록</span>
+                                <InkStamp rot={12} color="#5a7fe0" className="absolute -right-2 -top-3 z-[1] bg-white/90 text-[11px]">{labelText("예시")}</InkStamp>
+                                <span className="st-tape ah-display inline-block px-2 py-0.5 text-[11px] text-[#563fa8]" style={{ background: "rgba(220,205,255,.92)", rotate: "-2deg" }}>{WEEKLY_RECORDS[0].week} {labelText("기록")}</span>
                                 <p className="ah-display mt-2.5 text-[15px] leading-snug">{LAB_EXAMPLE.headline}</p>
                                 <p className="mt-2.5 flex flex-wrap gap-1.5">
-                                    <span className="ah-display rounded-full bg-[#ddf5ea] px-2.5 py-0.5 text-[11px] text-[#1f7a59]">새로 보임 · {LAB_EXAMPLE.added[0]}</span>
-                                    <span className="ah-display rounded-full bg-[#f1ece9] px-2.5 py-0.5 text-[11px] text-[#7a6a63]">이번엔 안 보임 · {LAB_EXAMPLE.gone[0]}</span>
+                                    <span className="ah-display rounded-full bg-[#ddf5ea] px-2.5 py-0.5 text-[11px] text-[#1f7a59]">{labelText("새로 보임 ·")} {LAB_EXAMPLE.added[0]}</span>
+                                    <span className="ah-display rounded-full bg-[#f1ece9] px-2.5 py-0.5 text-[11px] text-[#7a6a63]">{labelText("이번엔 안 보임 ·")} {LAB_EXAMPLE.gone[0]}</span>
                                 </p>
-                                <p className="ah-light mt-3 text-[11px] leading-relaxed" style={{ color: TEXT_SOFT }}>찍은 사진은 분석에만 쓰이고, 기록에는 달라진 점만 글로 남아요.</p>
+                                <p className="ah-light mt-3 text-[11px] leading-relaxed" style={{ color: TEXT_SOFT }}>{labelText("찍은 사진은 분석에만 쓰이고, 기록에는 달라진 점만 글로 남아요.")}</p>
                             </div>
                             <LoginInvite redirect={REDIRECT} title={["로그인하고", "우리 아이 기록 시작"]} cta="로그인하고 기록하기"
                                 items={[
@@ -255,7 +258,7 @@ export default function StickerLab() {
                                     <p className="ah-display flex items-center justify-between gap-2 text-[19px]"><span className="st-marker">{petName}</span><CoinChip ref={coinRef} coins={today.coins} /></p>
                                     <p className="mt-1.5 flex items-center gap-2">
                                         <span className="ah-light text-[13px]">{pet?.breed || "견종 미등록"}</span>
-                                        {pet?.breed ? <InkStamp rot={-8} color="#1f9e75" className="!px-1.5 !py-0.5 text-[9.5px]">견종 확인</InkStamp> : null}
+                                        {pet?.breed ? <InkStamp rot={-8} color="#1f9e75" className="!px-1.5 !py-0.5 text-[9.5px]">{labelText("견종 확인")}</InkStamp> : null}
                                     </p>
                                     <p className="mt-2 flex flex-wrap gap-1.5">
                                         {[pet?.age, pet?.weightKg ? `${pet.weightKg}kg` : ""].filter(Boolean).map((t) => <span key={t} className="lb-tag ah-display text-[11.5px]">{t}</span>)}
@@ -264,14 +267,14 @@ export default function StickerLab() {
                             </div>
 
                             {/* 이번 주 사진 4칸 — 비어 있는 칸은 점선 폴라로이드, 누르면 촬영 화면 */}
-                            <SectionLabel className="mt-6" icon="fa-camera">이번 주 사진 기록</SectionLabel>
-                            <p className="ah-light mt-1 text-[12px]" style={{ color: TEXT_SOFT }}>4방향을 남기면 지난주와 비교해 드려요 · 무료</p>
-                            <Link href="/app/sticker/report/" className="lb-shots mt-3 grid grid-cols-4 gap-2" aria-label="이번 주 사진 남기러 가기">
+                            <SectionLabel className="mt-6" icon="fa-camera">{labelText("이번 주 사진 기록")}</SectionLabel>
+                            <p className="ah-light mt-1 text-[12px]" style={{ color: TEXT_SOFT }}>{labelText("4방향을 남기면 지난주와 비교해 드려요 · 무료")}</p>
+                            <Link href="/app/sticker/report/" className="lb-shots mt-3 grid grid-cols-4 gap-2" aria-label={labelText("이번 주 사진 남기러 가기")}>
                                 {SHOTS.map((s, i) => (
                                     <span key={s.label} className="lb-shot flex flex-col items-center rounded-[10px] bg-white px-1 pb-1.5 pt-1.5" style={{ rotate: `${[-1, 0.8, -0.6, 1][i]}deg` }}>
                                         <span className="lb-shot-hole grid aspect-square w-full place-items-center rounded-[7px] text-[15px] text-[#f08eae]"><i aria-hidden="true" className="fa-solid fa-camera" /></span>
-                                        <span className="ah-display mt-1 text-[11.5px]">{s.label}</span>
-                                        <span className="ah-light text-[9.5px] leading-tight" style={{ color: TEXT_SOFT }}>{s.hint}</span>
+                                        <span className="ah-display mt-1 text-[11.5px]">{labelText(s.label)}</span>
+                                        <span className="ah-light text-[9.5px] leading-tight" style={{ color: TEXT_SOFT }}>{labelText(s.hint)}</span>
                                     </span>
                                 ))}
                             </Link>
@@ -285,7 +288,7 @@ export default function StickerLab() {
                             )}
 
                             {/* 분석 두 가지 — 젤리 그림 카드 */}
-                            <SectionLabel className="mt-7" icon="fa-lightbulb">궁금할 땐 분석해요</SectionLabel>
+                            <SectionLabel className="mt-7" icon="fa-lightbulb">{labelText("궁금할 땐 분석해요")}</SectionLabel>
                             {/* 코인 — 분석 카드 위(분석 전에 남은 코인을 먼저 보게, 사용자 2026-10-17) · 남은 횟수 · 모자라면 매일 댕생활(출근도장)로. 출근 보상 코인은 서버 값(today.dailyRewardCoins).
                                 웹 연구소의 코인 부족 버튼은 /mypage#daenglab-wallet(적립금 → 코인 전환)로 가지만, 앱은 코인 모으는 곳 = 출근 화면이라 /app/sticker/daily/ 유지 */}
                             <Link href={pageHref("sticker", "daily")} className="lb-coin mt-3 flex items-center gap-2.5 rounded-full py-2 pl-2.5 pr-3.5">
@@ -293,44 +296,44 @@ export default function StickerLab() {
                                 <span className="ah-display flex-1 text-[12.5px]">
                                     {/* 지갑을 아직 못 불러왔으면 "부족해요" 대신 확인 중(불러오기 실패면 그 문구) */}
                                     {!today.ready ? <span style={{ color: TEXT_SOFT }}>{today.error || "코인을 확인하고 있어요"}</span>
-                                        : times > 0 ? <>행동 · 소리 분석 <b className="text-[#e0557f]">{times}회</b> 가능해요</>
-                                            : <>코인이 부족해요 · <b className="text-[#e0557f]">매일 출근하면 {today.dailyRewardCoins}코인씩</b></>}
+                                        : times > 0 ? <>{labelText("행동 · 소리 분석")} <b className="text-[#e0557f]">{times}{labelText("회")}</b> {labelText("가능해요")}</>
+                                            : <>{labelText("코인이 부족해요 ·")} <b className="text-[#e0557f]">{labelText("매일 출근하면")} {today.dailyRewardCoins}{labelText("코인씩")}</b></>}
                                 </span>
-                                <span className="ah-light text-[11.5px] text-[#c4567a]">코인 모으기</span>
+                                <span className="ah-light text-[11.5px] text-[#c4567a]">{labelText("코인 모으기")}</span>
                                 <i aria-hidden="true" className="fa-solid fa-chevron-right text-[9px] text-[#c4567a]" />
                             </Link>
                             {/* 코인이 모자랄 때 적립금 전환 — 웹 연구소 "전환하러 가기"(/mypage#daenglab-wallet) 자리.
                                 앱의 적립금 → 코인 바꾸기는 앱 마이 화면 코인 봉투(웹 DaengLabWalletCard 와 같은 함수)에 있어서 /app/sticker/my/ 로 */}
                             {today.ready && times === 0 ? (
                                 <Link href={pageHref("sticker", "my")} className="ah-display ml-auto mt-1.5 flex w-fit items-center gap-1 px-2 text-[11.5px] text-[#5b46b0]">
-                                    적립금을 코인으로 바꾸기<i aria-hidden="true" className="fa-solid fa-chevron-right text-[9px]" />
+                                    {labelText("적립금을 코인으로 바꾸기")}<i aria-hidden="true" className="fa-solid fa-chevron-right text-[9px]" />
                                 </Link>
                             ) : null}
-                            <p className="ah-light mt-1.5 px-2 text-[11px]" style={{ color: TEXT_SOFT }}>분석 실패·반려견 미검출·고객용 후보 0건 결과는 코인이 자동 환급돼요.</p>
+                            <p className="ah-light mt-1.5 px-2 text-[11px]" style={{ color: TEXT_SOFT }}>{labelText("분석 실패·반려견 미검출·고객용 후보 0건 결과는 코인이 자동 환급돼요.")}</p>
                             <div className="mt-4 grid grid-cols-2 gap-2.5">
                                 <Link href={photoHref} className="lb-card relative flex flex-col items-start px-3 pb-3 pt-3" style={{ background: "#fff8e3", rotate: "-0.8deg" }}>
                                     <LabArt k="photo" />
-                                    <span className="ah-display mt-2 block text-[14px] leading-snug">사진 · 외형 분석</span>
-                                    <span className="ah-light mt-0.5 block text-[11.5px] leading-snug" style={{ color: TEXT_SOFT }}>털 · 체형 · 케어 포인트와 맞춤 상품</span>
-                                    <span className="st-tape ah-display absolute right-2.5 top-2.5 px-2 py-0.5 text-[10.5px] text-[#1f7a59]" style={{ background: "rgba(170,230,200,.9)", rotate: "4deg" }}>무료</span>
+                                    <span className="ah-display mt-2 block text-[14px] leading-snug">{labelText("사진 · 외형 분석")}</span>
+                                    <span className="ah-light mt-0.5 block text-[11.5px] leading-snug" style={{ color: TEXT_SOFT }}>{labelText("털 · 체형 · 케어 포인트와 맞춤 상품")}</span>
+                                    <span className="st-tape ah-display absolute right-2.5 top-2.5 px-2 py-0.5 text-[10.5px] text-[#1f7a59]" style={{ background: "rgba(170,230,200,.9)", rotate: "4deg" }}>{labelText("무료")}</span>
                                 </Link>
                                 <Link href={observationHref} className="lb-card relative flex flex-col items-start px-3 pb-3 pt-3" style={{ background: "#f3eeff", rotate: "0.8deg" }}>
                                     <LabArt k="sound" />
-                                    <span className="ah-display mt-2 block text-[14px] leading-snug">행동 · 소리 분석</span>
-                                    <span className="ah-light mt-0.5 block text-[11.5px] leading-snug" style={{ color: TEXT_SOFT }}>15초 영상으로 행동 · 소리 · 건강 신호</span>
-                                    <span className="st-tape ah-display absolute right-2.5 top-2.5 px-2 py-0.5 text-[10.5px] text-[#a8560f]" style={{ background: "rgba(255,226,150,.9)", rotate: "-4deg" }}>1회 {today.analysisCoinCost}C</span>
+                                    <span className="ah-display mt-2 block text-[14px] leading-snug">{labelText("행동 · 소리 분석")}</span>
+                                    <span className="ah-light mt-0.5 block text-[11.5px] leading-snug" style={{ color: TEXT_SOFT }}>{labelText("15초 영상으로 행동 · 소리 · 건강 신호")}</span>
+                                    <span className="st-tape ah-display absolute right-2.5 top-2.5 px-2 py-0.5 text-[10.5px] text-[#a8560f]" style={{ background: "rgba(255,226,150,.9)", rotate: "-4deg" }}>{labelText("1회")} {today.analysisCoinCost}C</span>
                                 </Link>
                             </div>
                             {/* 행동·소리 분석은 별개 기능 — 운영 연구소 문구 */}
                             <p className="ah-light mt-3 flex items-start gap-1.5 px-1 text-[11.5px] leading-relaxed" style={{ color: TEXT_SOFT }}>
                                 <i aria-hidden="true" className="fa-solid fa-circle-info mt-[3px] text-[10px] text-[#8a74d6]" />
-                                <span><b className="ah-display font-normal text-[#5b46b0]">행동·소리 분석은 등록한 우리 아이와 별개예요.</b> 궁금한 강아지의 행동·소리 영상을 관찰하는 독립 기능이며, 주간 사진 변화 기록과 섞이지 않습니다.</span>
+                                <span><b className="ah-display font-normal text-[#5b46b0]">{labelText("행동·소리 분석은 등록한 우리 아이와 별개예요.")}</b> {labelText("궁금한 강아지의 행동·소리 영상을 관찰하는 독립 기능이며, 주간 사진 변화 기록과 섞이지 않습니다.")}</span>
                             </p>
                             {/* 응급 안내 — 톡 하면 증상 목록이 펼쳐지는 메모(운영 연구소 문구) */}
                             <div className="lb-alert mt-4 rounded-[10px] px-3 py-2.5">
                                 <button type="button" onClick={() => { setSosOpen((v) => !v); haptic("light"); }} aria-expanded={sosOpen} className="ah-display flex w-full items-center gap-2 text-left text-[12.5px]">
                                     <i aria-hidden="true" className="fa-solid fa-truck-medical text-[13px]" />
-                                    <span className="flex-1">이럴 때는 촬영보다 병원 연락이 먼저예요</span>
+                                    <span className="flex-1">{labelText("이럴 때는 촬영보다 병원 연락이 먼저예요")}</span>
                                     <i aria-hidden="true" className={`fa-solid fa-chevron-down text-[10px] transition-transform ${sosOpen ? "rotate-180" : ""}`} />
                                 </button>
                                 <div className="lb-fold" data-open={sosOpen}>
@@ -339,7 +342,7 @@ export default function StickerLab() {
                                             <li key={t} className="ah-light rounded-full bg-white/85 px-2.5 py-0.5 text-[11px]">{t}</li>
                                         ))}
                                     </ul>
-                                    <p className="ah-display mt-2 text-[11.5px]">이런 증상이 있으면 즉시 응급 동물병원에 연락하세요.</p>
+                                    <p className="ah-display mt-2 text-[11.5px]">{labelText("이런 증상이 있으면 즉시 응급 동물병원에 연락하세요.")}</p>
                                 </div>
                             </div>
                         </>
@@ -348,12 +351,12 @@ export default function StickerLab() {
                             {/* ───────── 기록 ───────── */}
                             {/* 주간 기록 — 가로로 넘기는 메모 카드(주차 테이프 · 한 줄 비교 · 새로 보임/안 보임).
                                 실제 기록엔 사진이 없어서 사진칸을 뺐다(사용자 2026-10-16 "실제와 같게"). 실제 데이터는 loadWeeklyPhotoAnalyses */}
-                            <SectionLabel icon="fa-images">주간 기록</SectionLabel>
-                            <p className="ah-light mt-1 text-[12px]" style={{ color: TEXT_SOFT }}>옆으로 넘겨 지난 기록을 봐요</p>
+                            <SectionLabel icon="fa-images">{labelText("주간 기록")}</SectionLabel>
+                            <p className="ah-light mt-1 text-[12px]" style={{ color: TEXT_SOFT }}>{labelText("옆으로 넘겨 지난 기록을 봐요")}</p>
                             {/* 반려견(서버 프로필)이 없으면 등록 안내 · 실패면 분홍 메모 · 불러오는 중 / 없음은 아래 글 */}
                             {!pet ? <PetSetupMemo hasPets={allPets.length > 0} className="mt-3" /> : weekly.error ? <ErrorMemo message={weekly.error} className="mt-3" /> : null}
                             <ol className="lb-album -mr-4 mt-3 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-3 pr-4 pt-2">
-                                {pet && !weekly.error && records.length === 0 ? <li className="ah-light w-full py-3 text-[12.5px]" style={{ color: TEXT_SOFT }}>{weekly.records ? "아직 주간 기록이 없어요." : "기록을 확인하고 있어요."}</li> : null}
+                                {pet && !weekly.error && records.length === 0 ? <li className="ah-light w-full py-3 text-[12.5px]" style={{ color: TEXT_SOFT }}>{labelText(weekly.records ? "아직 주간 기록이 없어요." : "기록을 확인하고 있어요.")}</li> : null}
                                 {records.map((r, i) => (
                                     <li key={r.week} className="lb-page flex w-[11.5rem] shrink-0 snap-start">
                                         {/* 사진첩 칸 높이를 같게(h-full) */}
@@ -363,8 +366,8 @@ export default function StickerLab() {
                                             <span className="ah-display block text-[12.5px] leading-snug">{r.headline}</span>
                                             {r.added.length || r.gone.length ? (
                                                 <span className="mt-1.5 flex flex-wrap gap-1">
-                                                    {r.added.map((a) => <span key={a} className="ah-display rounded-full bg-[#ddf5ea] px-2 py-0.5 text-[10px] text-[#1f7a59]">새로 보임 · {a}</span>)}
-                                                    {r.gone.map((g) => <span key={g} className="ah-display rounded-full bg-[#f1ece9] px-2 py-0.5 text-[10px] text-[#7a6a63]">안 보임 · {g}</span>)}
+                                                    {r.added.map((a) => <span key={a} className="ah-display rounded-full bg-[#ddf5ea] px-2 py-0.5 text-[10px] text-[#1f7a59]">{labelText("새로 보임 ·")} {a}</span>)}
+                                                    {r.gone.map((g) => <span key={g} className="ah-display rounded-full bg-[#f1ece9] px-2 py-0.5 text-[10px] text-[#7a6a63]">{labelText("안 보임 ·")} {g}</span>)}
                                                 </span>
                                             ) : null}
                                         </div>
@@ -373,11 +376,11 @@ export default function StickerLab() {
                             </ol>
 
                             {/* 행동 · 소리 분석 기록 — 메모지(긴급도는 테이프 이름표) */}
-                            <SectionLabel className="mt-5" icon="fa-wave-square">행동 · 소리 분석 기록</SectionLabel>
+                            <SectionLabel className="mt-5" icon="fa-wave-square">{labelText("행동 · 소리 분석 기록")}</SectionLabel>
                             <ul className="mt-4 space-y-4">
                                 {/* 불러오는 중(null) · 없음([]) — 웹 기록 목록처럼 실패도 빈 목록 */}
-                                {pet && observations === null ? <li className="ah-light text-[12.5px]" style={{ color: TEXT_SOFT }}>기록을 확인하고 있어요.</li> : null}
-                                {pet && observations && observations.length === 0 ? <li className="ah-light text-[12.5px]" style={{ color: TEXT_SOFT }}>아직 행동 · 소리 분석 기록이 없어요.</li> : null}
+                                {pet && observations === null ? <li className="ah-light text-[12.5px]" style={{ color: TEXT_SOFT }}>{labelText("기록을 확인하고 있어요.")}</li> : null}
+                                {pet && observations && observations.length === 0 ? <li className="ah-light text-[12.5px]" style={{ color: TEXT_SOFT }}>{labelText("아직 행동 · 소리 분석 기록이 없어요.")}</li> : null}
                                 {(observations ?? []).map(toObservationCard).map((o, i) => {
                                     const u = URGENCY_TAPE[o.urgency] ?? URGENCY_TAPE["판단 어려움"];
                                     return (
@@ -396,13 +399,13 @@ export default function StickerLab() {
                             </ul>
                             {/* 진단 아님 안내 — 연한 메모 */}
                             <p className="lb-note ah-light mt-5 rounded-[10px] px-3.5 py-2.5 text-[12px] leading-relaxed">
-                                AI 기록은 의료 진단이 아닌 참고 정보예요. 걱정되는 변화가 계속되면 동물병원에 확인해 주세요.
+                                {labelText("AI 기록은 의료 진단이 아닌 참고 정보예요. 걱정되는 변화가 계속되면 동물병원에 확인해 주세요.")}
                             </p>
-                            <Patch href="/app/sticker/report/" small className="mt-4">주간 리포트 전체 보기<i aria-hidden="true" className="fa-solid fa-chart-line text-[12px]" /></Patch>
+                            <Patch href="/app/sticker/report/" small className="mt-4">{labelText("주간 리포트 전체 보기")}<i aria-hidden="true" className="fa-solid fa-chart-line text-[12px]" /></Patch>
                         </>
                     )}
                 </DiaryBody>
-                {member ? <p className="ah-light mt-3 text-center text-[11.5px]" style={{ color: TEXT_SOFT }}>속지를 옆으로 밀면 다음 쪽으로 넘어가요</p> : null}
+                {member ? <p className="ah-light mt-3 text-center text-[11.5px]" style={{ color: TEXT_SOFT }}>{labelText("속지를 옆으로 밀면 다음 쪽으로 넘어가요")}</p> : null}
             </div>
         </div>
     );

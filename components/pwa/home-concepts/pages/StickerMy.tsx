@@ -10,6 +10,7 @@
  * 세부 화면(주문 상세 · 배송지 · 결제수단 · 추천 설정 · 정보 수정 · 탈퇴 등)은 기존 마이페이지로 이어진다.
  */
 
+import { useI18n } from "@/lib/i18n";
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -72,6 +73,7 @@ function LinedMenu({ items }: { items: readonly { icon: string; title: string; h
 }
 
 export default function StickerMy() {
+    const { menuLabel: labelText } = useI18n();
     // 로그인 상태 — 협업자 useAuth 그대로(시안 "로그인 전/후" 토글 대신 실제 상태, 배포 전 연결 2026-10-16)
     const { user, hydrated, logout, updateMemberEmail } = useAuth();
     const member = hydrated && Boolean(user);
@@ -188,7 +190,7 @@ export default function StickerMy() {
                                 이름(형광펜) · 이메일 · 회원 등급 잉크 도장 */}
                             <div className="my-tag relative mx-auto w-[92%] rounded-[6px_6px_18px_6px] px-5 pb-4 pt-5" style={{ rotate: "-1deg" }}>
                                 <Tape className="-top-2 left-5 h-4 w-14" color="repeating-linear-gradient(90deg, rgba(255,200,215,.92) 0 7px, rgba(255,226,234,.92) 7px 14px)" style={{ rotate: "-4deg" }} />
-                                <p className="ah-display mt-1 text-[26px] leading-tight"><span className="st-marker">{user?.name}</span><span className="text-[17px]"> 님</span></p>
+                                <p className="ah-display mt-1 text-[26px] leading-tight"><span className="st-marker">{user?.name}</span><span className="text-[17px]"> {labelText("님")}</span></p>
                                 <p className="ah-light mt-1 text-[11.5px]" style={{ color: TEXT_SOFT }}>{memberAccountDisplay(user?.email, user?.authProvider)}</p>
                                 {/* 회원 등급 도장 — 협업자 등급 정의(lib/grades) 첫 단계 이름. 실제 등급 산정(서버 결제액 · 활동 점수)이 아직 연결되지 않아
                                     모두 첫 등급으로 통일(사용자 결정 2026-10-16). 연결되면 그 회원의 등급으로 바꾼다 */}
@@ -219,19 +221,19 @@ export default function StickerMy() {
                                 <span aria-hidden="true" className="my-flap" />
                                 <div className="relative flex items-center justify-between">
                                     <span>
-                                        <span className="ah-light block text-[11.5px] text-[#8f5e12]">댕다방 연구소 코인</span>
+                                        <span className="ah-light block text-[11.5px] text-[#8f5e12]">{labelText("댕다방 연구소 코인")}</span>
                                         {/* 불러오는 중 · 실패면 0 대신 "—"(적립금과 같게 · 웹은 불러온 뒤에만 숫자 표시) */}
                                         {wallet
                                             ? <span className="mt-1 inline-block"><CoinChip ref={coinRef} coins={wallet.daengLabCoins} /></span>
                                             : <span className="ah-display mt-1 block text-[18px] tabular-nums">—</span>}
                                     </span>
                                     <span className="text-right">
-                                        <span className="ah-light block text-[11.5px] text-[#8f5e12]">적립금</span>
+                                        <span className="ah-light block text-[11.5px] text-[#8f5e12]">{labelText("적립금")}</span>
                                         <span className="ah-display block text-[18px] tabular-nums">{wallet ? `${wallet.rewardPoints.toLocaleString("ko-KR")}P` : "—"}</span>
                                     </span>
                                 </div>
                                 {/* 바꿀 적립금 고르기 — −/＋ 동그란 스티커(전환 단위씩) · 가운데 금액 → 코인 */}
-                                <div className="relative mt-3 flex items-center justify-between gap-2" role="group" aria-label="바꿀 적립금 고르기">
+                                <div className="relative mt-3 flex items-center justify-between gap-2" role="group" aria-label={labelText("바꿀 적립금 고르기")}>
                                     <button type="button" onClick={() => stepPoints(-1)} disabled={!wallet || points <= unit || converting} aria-label={`${unit.toLocaleString("ko-KR")}P 줄이기`}
                                         className="my-step ah-display grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white text-[15px] text-[#c4560f] disabled:opacity-40">−</button>
                                     <span className="ah-display min-w-0 flex-1 text-center text-[13.5px] tabular-nums" aria-live="polite">
@@ -242,13 +244,13 @@ export default function StickerMy() {
                                 </div>
                                 <button ref={convertRef} type="button" onClick={() => void convert()} disabled={!canConvert || converting}
                                     className="ah-display relative mt-2.5 w-full rounded-full bg-white/90 py-2.5 text-[13px] text-[#c4560f] shadow-[0_6px_12px_-8px_rgba(150,100,30,.6)] disabled:opacity-50">
-                                    {converting ? "바꾸는 중…" : (<>적립금 {points.toLocaleString("ko-KR")}P <i aria-hidden="true" className="fa-solid fa-arrow-right mx-0.5 text-[11px]" /> {coinsFor}코인 바꾸기</>)}
+                                    {converting ? "바꾸는 중…" : (<>{labelText("적립금")} {points.toLocaleString("ko-KR")}P <i aria-hidden="true" className="fa-solid fa-arrow-right mx-0.5 text-[11px]" /> {coinsFor}{labelText("코인 바꾸기")}</>)}
                                 </button>
-                                <p className="ah-light relative mt-1.5 text-center text-[10.5px] text-[#a07a3e]">{unit.toLocaleString("ko-KR")}P 단위로 바꿔요 · 바꾼 코인은 되돌릴 수 없어요{wallet ? ` · 행동 · 소리 분석 1회 ${wallet.analysisCoinCost}코인` : ""}</p>
+                                <p className="ah-light relative mt-1.5 text-center text-[10.5px] text-[#a07a3e]">{unit.toLocaleString("ko-KR")}{labelText("P 단위로 바꿔요 · 바꾼 코인은 되돌릴 수 없어요")}{wallet ? ` · 행동 · 소리 분석 1회 ${wallet.analysisCoinCost}코인` : ""}</p>
                                 {/* 빚 안내 — 웹 지갑 카드와 같은 조건(적립금 · 코인 빚이 있을 때) · 같은 문구. 빚이 있으면 바꾸기 버튼이 잠기는 이유 */}
                                 {wallet && (wallet.rewardPointsDebt > 0 || wallet.daengLabCoinsDebt > 0) ? (
                                     <p className="ah-light relative mt-2 rounded-[4px_4px_12px_4px] bg-[#ffe1ea] px-3 py-2 text-[11px] leading-relaxed text-[#b23a5e]" style={{ rotate: "-0.5deg" }}>
-                                        취소·환불된 주문의 사용 완료 혜택이 있어 다음 적립분에서 먼저 정산됩니다.
+                                        {labelText("취소·환불된 주문의 사용 완료 혜택이 있어 다음 적립분에서 먼저 정산됩니다.")}
                                         {wallet.rewardPointsDebt > 0 ? ` 적립금 ${wallet.rewardPointsDebt.toLocaleString("ko-KR")}P` : ""}
                                         {wallet.daengLabCoinsDebt > 0 ? ` · 코인 ${wallet.daengLabCoinsDebt}C` : ""}
                                     </p>
@@ -257,7 +259,7 @@ export default function StickerMy() {
                             </div>
 
                             {/* 우리 아이 */}
-                            <SectionLabel className="mt-6" icon="fa-paw">우리 아이</SectionLabel>
+                            <SectionLabel className="mt-6" icon="fa-paw">{labelText("우리 아이")}</SectionLabel>
                             <div className="mt-3 flex flex-wrap items-start gap-3">
                                 {/* 실제 반려견 프로필(useAuth) — 서버가 확인한 사진만 보여 줌(웹 마이페이지와 같은 hasVerifiedPetPhoto 기준).
                                     누르면 앱 우리 아이 화면의 그 아이 카드로(정보 수정 · 주간 리포트, 2026-10-28) */}
@@ -277,13 +279,13 @@ export default function StickerMy() {
                                 <Link href="/app/sticker/pets/?add=1" className="grid aspect-[5/6] w-[5.6rem] place-items-center rounded-[6px] border-2 border-dashed border-[#f4c3d3] text-center" style={{ rotate: "2deg" }}>
                                     <span>
                                         <i aria-hidden="true" className="fa-solid fa-plus text-[16px] text-[#f48fac]" />
-                                        <span className="ah-display mt-1 block text-[12px] text-[#e0557f]">아이 추가</span>
+                                        <span className="ah-display mt-1 block text-[12px] text-[#e0557f]">{labelText("아이 추가")}</span>
                                     </span>
                                 </Link>
                             </div>
 
                             {/* 최근 주문 영수증 */}
-                            <SectionLabel className="mt-6" icon="fa-receipt">최근 주문</SectionLabel>
+                            <SectionLabel className="mt-6" icon="fa-receipt">{labelText("최근 주문")}</SectionLabel>
                             {orders && orders.length > 0 ? (
                                 <div className="mt-3 grid grid-cols-2 gap-3">
                                     {orders.map((o, i) => (
@@ -304,9 +306,9 @@ export default function StickerMy() {
                             )}
 
                             {/* 찜한 상품 — 웹 마이페이지 찜 목록과 같은 자료(store.wishlist → findProduct), 하트를 다시 누르면 빠짐(앱 상품 카드 그대로) */}
-                            <SectionLabel className="mt-6" icon="fa-heart">찜한 상품{wished.length ? ` ${wished.length}` : ""}</SectionLabel>
+                            <SectionLabel className="mt-6" icon="fa-heart">{labelText("찜한 상품")}{wished.length ? ` ${wished.length}` : ""}</SectionLabel>
                             {wished.length > 0 ? (
-                                <ul className="my-shelf -mr-3 mt-3.5 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-3 pr-3 pt-2.5" aria-label="찜한 상품">
+                                <ul className="my-shelf -mr-3 mt-3.5 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-3 pr-3 pt-2.5" aria-label={labelText("찜한 상품")}>
                                     {wished.map((product, i) => (
                                         <li key={product.id} className="w-[10.4rem] shrink-0 snap-start"><ShopProductCard product={product} index={i} /></li>
                                     ))}
@@ -316,21 +318,21 @@ export default function StickerMy() {
                                     <Tape className="-top-2 left-6 h-3.5 w-11" color="rgba(255,232,170,.92)" style={{ rotate: "-4deg" }} />
                                     <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white text-[16px] text-[#e0557f]"><i aria-hidden="true" className="fa-solid fa-heart" /></span>
                                     <span className="min-w-0 flex-1">
-                                        <span className="ah-display block text-[13.5px] text-[#c4456f]">아직 찜한 상품이 없어요</span>
-                                        <span className="ah-light block text-[11px] text-[#b0597a]">상품 카드의 하트를 누르면 여기에 모여요</span>
+                                        <span className="ah-display block text-[13.5px] text-[#c4456f]">{labelText("아직 찜한 상품이 없어요")}</span>
+                                        <span className="ah-light block text-[11px] text-[#b0597a]">{labelText("상품 카드의 하트를 누르면 여기에 모여요")}</span>
                                     </span>
                                     <i aria-hidden="true" className="fa-solid fa-chevron-right text-[10px] text-[#e8a2b8]" />
                                 </Link>
                             )}
 
-                            <SectionLabel className="mt-6" icon="fa-user">내 정보</SectionLabel>
+                            <SectionLabel className="mt-6" icon="fa-user">{labelText("내 정보")}</SectionLabel>
                             <LinedMenu items={MY_MENUS} />
-                            <SectionLabel className="mt-6" icon="fa-headset">고객센터</SectionLabel>
+                            <SectionLabel className="mt-6" icon="fa-headset">{labelText("고객센터")}</SectionLabel>
                             <LinedMenu items={CS_MENUS} />
                             {/* 로그아웃 — 웹 마이페이지 메뉴(앱에서는 숨김)에 있던 것을 여기로. 웹 메뉴와 같은 기능(확인 → logout()) 뒤 앱 홈으로.
                                 회원 탈퇴는 눈에 덜 띄게 "정보 수정" 화면 맨 아래로(사용자 결정 2026-10-16) */}
                             <button type="button" onClick={() => { haptic("light"); handleLogout(); }} className="ah-display mt-5 w-full text-center text-[13px] text-[#9c8f88] underline decoration-dashed underline-offset-4">
-                                로그아웃
+                                {labelText("로그아웃")}
                             </button>
                         </>
                     ) : (
@@ -341,8 +343,8 @@ export default function StickerMy() {
                                     { icon: "fa-dog", text: "우리 아이 프로필과 기록" },
                                     { icon: "fa-coins", text: "코인 지갑 · 가입하면 20코인" },
                                 ]} />
-                            <SectionLabel className="mt-7" icon="fa-headset">고객센터</SectionLabel>
-                            <p className="ah-light mt-1 text-[12px]" style={{ color: TEXT_SOFT }}>로그인 없이도 볼 수 있어요</p>
+                            <SectionLabel className="mt-7" icon="fa-headset">{labelText("고객센터")}</SectionLabel>
+                            <p className="ah-light mt-1 text-[12px]" style={{ color: TEXT_SOFT }}>{labelText("로그인 없이도 볼 수 있어요")}</p>
                             <LinedMenu items={CS_MENUS} />
                         </>
                     )}
@@ -358,6 +360,7 @@ export default function StickerMy() {
 
 /** 로그아웃 확인 카드 — 테이프 붙인 메모 + 와펜 두 개(취소 · 로그아웃). 바깥을 누르거나 Esc 면 취소 */
 function LogoutConfirm({ onCancel, onConfirm }: { onCancel: () => void; onConfirm: () => void }) {
+    const { menuLabel: labelText } = useI18n();
     // Esc = 취소 (휴대폰 기본 확인창과 같게)
     useEffect(() => {
         const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onCancel(); };
@@ -369,10 +372,10 @@ function LogoutConfirm({ onCancel, onConfirm }: { onCancel: () => void; onConfir
             <div role="alertdialog" aria-modal="true" aria-labelledby="my-logout-title" onClick={(e) => e.stopPropagation()}
                 className="st-page relative w-full max-w-[300px] rounded-[18px] px-5 pb-5 pt-7 text-center">
                 <Tape className="-top-2.5 left-1/2 h-5 w-20 -translate-x-1/2" color="repeating-linear-gradient(90deg, rgba(255,200,215,.9) 0 8px, rgba(255,226,234,.9) 8px 16px)" style={{ rotate: "-2deg" }} />
-                <p id="my-logout-title" className="ah-display text-[17px]" style={{ color: TEXT }}>로그아웃 하시겠어요?</p>
+                <p id="my-logout-title" className="ah-display text-[17px]" style={{ color: TEXT }}>{labelText("로그아웃 하시겠어요?")}</p>
                 <div className="mt-5 grid grid-cols-2 gap-2.5">
-                    <Patch small tone="cream" onClick={onCancel}>취소</Patch>
-                    <Patch small onClick={onConfirm}>로그아웃</Patch>
+                    <Patch small tone="cream" onClick={onCancel}>{labelText("취소")}</Patch>
+                    <Patch small onClick={onConfirm}>{labelText("로그아웃")}</Patch>
                 </div>
             </div>
         </div>

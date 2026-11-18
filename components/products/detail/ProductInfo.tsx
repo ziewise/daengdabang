@@ -46,6 +46,7 @@ interface Props {
 }
 
 export default function ProductInfo({ product, colorIdx = null, onColorChange, onTryOn }: Props) {
+    const { menuLabel: labelText } = useI18n();
     const p = useLiveInventoryProduct(product);
     const { toggleWishlist, isWished } = useStore();
     const { user } = useAuth();
@@ -162,14 +163,14 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
 
                 {(p.externalReviewCount ?? 0) > 0 && (
                     <div className="pd-review-line flex flex-wrap items-center gap-2 text-sm">
-                        <span className="text-xs text-neutral-500">{locale === "en" ? "Naver Daengdabang store reviews" : "네이버 댕다방 스토어 후기"}</span>
+                        <span className="text-xs text-neutral-500">{locale === "en" ? "댕다방 store on Naver reviews" : "네이버 댕다방 스토어 후기"}</span>
                         <i className="fa-solid fa-star text-amber-400" />
                         <span className="font-black">{p.externalReviewAverage?.toFixed(1) ?? '—'}</span>
                         <span className="text-neutral-300">|</span>
                         <a href="#tab-review" className="font-bold text-neutral-600 hover:text-indigo-600">
                             {p.externalReviewCount?.toLocaleString(locale === "en" ? "en-US" : "ko-KR")} {locale === "en" ? "reviews" : "개 후기"}
                         </a>
-                        <span className="basis-full text-xs leading-5 text-neutral-500">{reviewSellerLabel(p.externalReviewUrl)}. {locale === "en" ? "Separate from this site's purchase reviews." : "자사몰 구매 후기와 별개입니다."}</span>
+                        <span className="basis-full text-xs leading-5 text-neutral-500">{reviewSellerLabel(p.externalReviewUrl, locale === "en")}. {locale === "en" ? "Separate from this site's purchase reviews." : "자사몰 구매 후기와 별개입니다."}</span>
                     </div>
                 )}
 
@@ -258,7 +259,7 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
                                     </a>
                                 ) : (
                                     <ReturnPolicyDialogLink
-                                        label="배송·반품 안내"
+                                        label={labelText("배송·반품 안내")}
                                         className="ml-2 font-black text-indigo-700 underline underline-offset-2"
                                     />
                                 )}
@@ -276,7 +277,7 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
                 )}
 
                 {/* 색상 — PC(lg+)는 여기(우측 구매정보), 모바일은 이미지 바로 아래(ProductDetailClient)에서 표시 */}
-                <ColorSelect
+                <ColorSelect folder={p.folder}
                     colors={colors}
                     colorIdx={colorIdx}
                     onColorChange={onColorChange}

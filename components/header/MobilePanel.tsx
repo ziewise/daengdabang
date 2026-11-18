@@ -72,6 +72,7 @@ interface Props {
 }
 
 export default function MobilePanel({ open, onClose }: Props) {
+    const { menuLabel: labelText } = useI18n();
     const [expanded, setExpanded] = useState<string | null>(null);
     // 2026-10-25 속도 — 메뉴 본문(3D 그림 20여 장)은 처음 열 때 그림. 닫혀 있는 동안 모든 페이지가 그림을 미리 받지 않게.
     // 한 번 연 뒤에는 계속 두어 닫힘 · 다시 열림 움직임과 펼친 상태가 그대로 유지됨
@@ -197,10 +198,10 @@ export default function MobilePanel({ open, onClose }: Props) {
                         <div className="mpn-member">
                             <span className="mpn-member-hi">
                                 <i className="fa-solid fa-paw" aria-hidden="true" />
-                                <b>{member?.name ? `${member.name}님` : "회원님"}</b>, 반가워요
+                                <b>{member?.name ? `${member.name}님` : "회원님"}</b>{labelText(", 반가워요")}
                             </span>
                             <button type="button" onClick={handleLogout} className="mpn-logout">
-                                <i className="fa-solid fa-right-from-bracket" aria-hidden="true" />로그아웃
+                                <i className="fa-solid fa-right-from-bracket" aria-hidden="true" />{labelText("로그아웃")}
                             </button>
                         </div>
                     ) : null}
@@ -251,15 +252,15 @@ export default function MobilePanel({ open, onClose }: Props) {
                             onToggle={() => setExpanded(expanded === "daily" ? null : "daily")}
                         >
                             <div className="mpn-tiles">
-                                <SubLink href="/treasure-mine/" icon="fa-gem" art="menu-daily-treasure-128.webp" onClick={onClose}>보물광산 · 오늘의 루틴</SubLink>
-                                <SubLink href="/goods-contest/" icon="fa-gift" art="menu-daily-goods-128.webp" onClick={onClose}>굿즈 500명 공모전 · 진행 중</SubLink>
+                                <SubLink href="/treasure-mine/" icon="fa-gem" art="menu-daily-treasure-128.webp" onClick={onClose}>{labelText("보물광산 · 오늘의 루틴")}</SubLink>
+                                <SubLink href="/goods-contest/" icon="fa-gift" art="menu-daily-goods-128.webp" onClick={onClose}>{labelText("굿즈 500명 공모전 · 진행 중")}</SubLink>
                                 <SubLink href="/my-pet/" icon="fa-dog" art="menu-daily-mypet-128.webp" onClick={onClose}>{locale === "en" ? t("myPet") : "우리 아이 기록"}</SubLink>
                                 <SubLink href="/community/" icon="fa-people-group" art="menu-daily-community-128.webp" onClick={onClose}>{t("community")}</SubLink>
                             </div>
                         </MobileGroup>
 
                         <MobileLink href="/daeng-showcase/" icon="fa-images" art="showcase-hero-640.webp" onClick={onClose} crayon tone="coral">
-                            댕자랑
+                            {menuLabel("댕자랑")}
                         </MobileLink>
 
                         <MobileGroup
@@ -288,16 +289,16 @@ export default function MobilePanel({ open, onClose }: Props) {
                             onToggle={() => setExpanded(expanded === "lab" ? null : "lab")}
                         >
                             <div className="mpn-tiles">
-                                <SubLink href="/pet-lens/" icon="fa-camera-retro" art="lab-tab-photo-160.webp" onClick={onClose}>사진 건강 분석</SubLink>
-                                <SubLink href="/pet-lens/?mode=observation" icon="fa-wave-square" art="menu-lab-observation-128.webp" onClick={onClose}>울음소리·행동 분석</SubLink>
-                                <SubLink href="/health-report/" icon="fa-chart-line" art="menu-lab-report-128.webp" onClick={onClose}>건강 변화 리포트</SubLink>
-                                <SubLink href="/chat/" icon="fa-comment-dots" art="caretalk-web-128.webp" onClick={onClose}>AI 상담</SubLink>
+                                <SubLink href="/pet-lens/" icon="fa-camera-retro" art="lab-tab-photo-160.webp" onClick={onClose}>{labelText("사진 건강 분석")}</SubLink>
+                                <SubLink href="/pet-lens/?mode=observation" icon="fa-wave-square" art="menu-lab-observation-128.webp" onClick={onClose}>{labelText("울음소리·행동 분석")}</SubLink>
+                                <SubLink href="/health-report/" icon="fa-chart-line" art="menu-lab-report-128.webp" onClick={onClose}>{labelText("건강 변화 리포트")}</SubLink>
+                                <SubLink href="/chat/" icon="fa-comment-dots" art="caretalk-web-128.webp" onClick={onClose}>{labelText("AI 상담")}</SubLink>
                             </div>
                         </MobileGroup>
 
                         {pwaReady && (isNativeApp || isStandalone) ? (
                             <MobileLink href="/app/" icon="fa-house" art="header-app-install.webp" onClick={onClose} crayon tone="teal">
-                                댕다방 앱 홈
+                                {labelText("댕다방 앱 홈")}
                             </MobileLink>
                         ) : (
                             <PwaInstallButton onBeforeInstall={onClose} className="mpn-card" data-tone="teal">
@@ -305,7 +306,7 @@ export default function MobilePanel({ open, onClose }: Props) {
                                     {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                                     <img src={`${UI}header-app-install.webp`} alt="" />
                                 </span>
-                                <span className="mpn-card-label">댕다방 앱 설치</span>
+                                <span className="mpn-card-label">{labelText("댕다방 앱 설치")}</span>
                                 <i className="fa-solid fa-chevron-right mpn-card-go" aria-hidden="true" />
                             </PwaInstallButton>
                         )}

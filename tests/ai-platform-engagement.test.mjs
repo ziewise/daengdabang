@@ -1,8 +1,9 @@
+import { koreanMarkup } from "./helpers/korean-markup.mjs";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
-const read = (path) => readFileSync(new URL(path, import.meta.url), "utf8");
+const read = (path) => koreanMarkup(readFileSync(new URL(path, import.meta.url), "utf8"));
 
 test("home exposes one compact daily entry and keeps the full engagement hub off the shopping page", () => {
     const home = read("../app/page.tsx");

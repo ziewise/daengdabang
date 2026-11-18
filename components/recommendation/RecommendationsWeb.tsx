@@ -12,6 +12,7 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import RecommendationPetSelector from "@/components/recommendation/RecommendationPetSelector";
@@ -60,6 +61,7 @@ export type RecommendationsWebProps = {
 };
 
 export default function RecommendationsWeb(props: RecommendationsWebProps) {
+    const { menuLabel: labelText } = useI18n();
     const total = props.groups.reduce((sum, [, items]) => sum + items.length, 0);
     return (
         <main className="rc-web" data-recommendations-page {...props.mainAttrs}>
@@ -71,7 +73,7 @@ export default function RecommendationsWeb(props: RecommendationsWebProps) {
                     <p className="rc-lead">{props.lead}</p>
                     <span className="rc-chips">
                         <span><i className="fa-solid fa-wand-magic-sparkles" aria-hidden="true" />{props.modeLabel}</span>
-                        <span className="is-mint"><i className="fa-solid fa-shield-heart" aria-hidden="true" />질환·치료 효능을 추천 이유로 사용하지 않음</span>
+                        <span className="is-mint"><i className="fa-solid fa-shield-heart" aria-hidden="true" />{labelText("질환·치료 효능을 추천 이유로 사용하지 않음")}</span>
                     </span>
                 </span>
                 <span className="rc-hero-side">
@@ -80,7 +82,7 @@ export default function RecommendationsWeb(props: RecommendationsWebProps) {
                         <img src={`${UI}stickers/my-recommend.webp`} alt="" />
                     </span>
                     {props.showPreferencesLink && (
-                        <Link href="/mypage/recommendations/" className="rc-manage"><i className="fa-solid fa-sliders" aria-hidden="true" />추천 데이터 관리</Link>
+                        <Link href="/mypage/recommendations/" className="rc-manage"><i className="fa-solid fa-sliders" aria-hidden="true" />{labelText("추천 데이터 관리")}</Link>
                     )}
                 </span>
             </header>
@@ -97,10 +99,10 @@ export default function RecommendationsWeb(props: RecommendationsWebProps) {
             )}
 
             {/* 이렇게 골라요 */}
-            <ul className="rc-how" aria-label="추천을 고르는 방법">
-                <HowItem tone="sky" icon="fa-dog" title="우리 아이 프로필" text="체형 · 생애단계 · 활동량 · 직접 등록한 관심사를 살펴요." />
-                <HowItem tone="lav" icon="fa-camera" title="동의한 펫렌즈 신호만" text="사용에 동의한 케어 신호만 반영하고, 끄면 프로필만 써요." />
-                <HowItem tone="mint" icon="fa-shield-heart" title="효능은 이유로 쓰지 않아요" text="질환 · 치료 효능을 추천 이유로 사용하지 않아요." />
+            <ul className="rc-how" aria-label={labelText("추천을 고르는 방법")}>
+                <HowItem tone="sky" icon="fa-dog" title={labelText("우리 아이 프로필")} text="체형 · 생애단계 · 활동량 · 직접 등록한 관심사를 살펴요." />
+                <HowItem tone="lav" icon="fa-camera" title={labelText("동의한 펫렌즈 신호만")} text="사용에 동의한 케어 신호만 반영하고, 끄면 프로필만 써요." />
+                <HowItem tone="mint" icon="fa-shield-heart" title={labelText("효능은 이유로 쓰지 않아요")} text="질환 · 치료 효능을 추천 이유로 사용하지 않아요." />
             </ul>
 
             {props.action && (
@@ -122,9 +124,9 @@ export default function RecommendationsWeb(props: RecommendationsWebProps) {
                     <span className="rc-action-art" aria-hidden="true"><i className="fa-solid fa-hourglass-half" /></span>
                     <span className="rc-action-text">
                         <h2>{props.checking.message}</h2>
-                        <p>확인 전에는 회원 정보를 사용하지 않고 편집 추천만 표시합니다.</p>
+                        <p>{labelText("확인 전에는 회원 정보를 사용하지 않고 편집 추천만 표시합니다.")}</p>
                     </span>
-                    {props.checking.canRetry && <button type="button" className="rc-pill" onClick={props.checking.onRetry}>다시 확인</button>}
+                    {props.checking.canRetry && <button type="button" className="rc-pill" onClick={props.checking.onRetry}>{labelText("다시 확인")}</button>}
                 </section>
             )}
 
@@ -141,7 +143,7 @@ export default function RecommendationsWeb(props: RecommendationsWebProps) {
                                 <div className="rc-group-h">
                                     <span aria-hidden="true"><i className={`fa-solid ${look.icon}`} /></span>
                                     <h2 id={`recommendation-group-${reason}`}>{props.groupTitle[reason]}</h2>
-                                    <em>{items.length}개</em>
+                                    <em>{items.length}{labelText("개")}</em>
                                 </div>
                                 <div className="rc-grid">
                                     {items.map((item) => (
@@ -159,13 +161,13 @@ export default function RecommendationsWeb(props: RecommendationsWebProps) {
                     })}
                 </div>
             ) : props.allHidden ? (
-                <Empty art="stickers/search-empty.webp" title="이 추천 묶음의 상품을 모두 숨겼어요." text="숨긴 상품은 언제든 다시 볼 수 있어요.">
-                    <button type="button" className="rc-pill is-pink" onClick={props.onResetHidden}><i className="fa-solid fa-eye" aria-hidden="true" />숨긴 상품 다시 보기</button>
+                <Empty art="stickers/search-empty.webp" title={labelText("이 추천 묶음의 상품을 모두 숨겼어요.")} text="숨긴 상품은 언제든 다시 볼 수 있어요.">
+                    <button type="button" className="rc-pill is-pink" onClick={props.onResetHidden}><i className="fa-solid fa-eye" aria-hidden="true" />{labelText("숨긴 상품 다시 보기")}</button>
                 </Empty>
             ) : (
-                <Empty art="stickers/search-empty.webp" title="현재 안전 기준을 통과한 추천 상품이 없어요." text="프로필을 수정하거나 전체 상품을 직접 둘러볼 수 있어요.">
-                    <Link href="/mypage/#pet-profiles" className="rc-pill"><i className="fa-solid fa-pen" aria-hidden="true" />프로필 수정</Link>
-                    <Link href="/products/" className="rc-pill is-pink">전체 상품 보기<i className="fa-solid fa-arrow-right" aria-hidden="true" /></Link>
+                <Empty art="stickers/search-empty.webp" title={labelText("현재 안전 기준을 통과한 추천 상품이 없어요.")} text="프로필을 수정하거나 전체 상품을 직접 둘러볼 수 있어요.">
+                    <Link href="/mypage/#pet-profiles" className="rc-pill"><i className="fa-solid fa-pen" aria-hidden="true" />{labelText("프로필 수정")}</Link>
+                    <Link href="/products/" className="rc-pill is-pink">{labelText("전체 상품 보기")}<i className="fa-solid fa-arrow-right" aria-hidden="true" /></Link>
                 </Empty>
             )}
         </main>

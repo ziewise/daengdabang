@@ -6,6 +6,7 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/lib/store";
@@ -25,6 +26,7 @@ const WEB_SUMMARY_HREF: Record<string, string> = {
 };
 
 export default function MypageSidebar({ className = "" }: { className?: string }) {
+    const { menuLabel: labelText } = useI18n();
     const pathname = usePathname();
     const appMode = useAppMode(pathname ?? "");
     const router = useRouter();
@@ -50,7 +52,7 @@ export default function MypageSidebar({ className = "" }: { className?: string }
 
     return (
         <aside className={`lg:sticky lg:top-[calc(var(--header-height)+24px)] lg:self-start ${className}`.trim()}>
-            <nav className="glass-card rounded-2xl p-3 sm:p-4" aria-label="마이페이지 메뉴">
+            <nav className="glass-card rounded-2xl p-3 sm:p-4" aria-label={labelText("마이페이지 메뉴")}>
                 {MYPAGE_MENU_GROUPS.map((group, groupIndex) => {
                     const headingId = `mypage-menu-${group.id}`;
                     return (
@@ -100,7 +102,7 @@ export default function MypageSidebar({ className = "" }: { className?: string }
                         className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-xs font-bold text-danger transition hover:bg-danger/[0.08] focus-visible:bg-danger/[0.08] lg:justify-start lg:gap-3 lg:px-4 lg:text-sm"
                     >
                         <i className="fa-solid fa-right-from-bracket w-4 shrink-0 text-center text-xs lg:text-sm" aria-hidden="true" />
-                        <span>로그아웃</span>
+                        <span>{labelText("로그아웃")}</span>
                     </button>
                 </div>
             </nav>

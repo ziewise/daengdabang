@@ -13,6 +13,7 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import type { ShowcasePost } from "@/lib/daeng-showcase";
@@ -34,6 +35,7 @@ type Props = {
 };
 
 export default function ShowcasePostDialog({ post, tint, open, onClose, busy, createdLabel, onBone, onFollow, onShare, onOpenAuthor, onReport, onDelete }: Props) {
+    const { menuLabel: labelText } = useI18n();
     const closeRef = useRef<HTMLButtonElement>(null);
 
     // 열려 있는 동안: 뒤 화면 스크롤 막기 · Esc 닫기 · 닫기 단추 초점
@@ -63,7 +65,7 @@ export default function ShowcasePostDialog({ post, tint, open, onClose, busy, cr
             }}
         >
             <div className={`spd ${tint}`} role="dialog" aria-modal="true" aria-label={`${who}의 댕자랑`}>
-                <button ref={closeRef} type="button" className="spd-close" onClick={onClose} aria-label="댕자랑 크게 보기 닫기">
+                <button ref={closeRef} type="button" className="spd-close" onClick={onClose} aria-label={labelText("댕자랑 크게 보기 닫기")}>
                     <i className="fa-solid fa-xmark" aria-hidden="true" />
                 </button>
 
@@ -99,8 +101,8 @@ export default function ShowcasePostDialog({ post, tint, open, onClose, busy, cr
                         <button type="button" className="spd-author-btn" onClick={onOpenAuthor} aria-label={`${post.author.displayName} 프로필 보기`}>
                             <span className="spd-avatar" aria-hidden="true">{post.author.displayName.slice(0, 1)}</span>
                             <span className="spd-author-text">
-                                <b>{post.author.displayName}{post.author.isMe ? <small>나</small> : null}</b>
-                                <span>팔로워 {post.author.followerCount.toLocaleString("ko-KR")}명</span>
+                                <b>{post.author.displayName}{post.author.isMe ? <small>{labelText("나")}</small> : null}</b>
+                                <span>{labelText("팔로워")} {post.author.followerCount.toLocaleString("ko-KR")}{labelText("명")}</span>
                             </span>
                         </button>
                         {!post.author.isMe ? (
@@ -111,7 +113,7 @@ export default function ShowcasePostDialog({ post, tint, open, onClose, busy, cr
                                 aria-pressed={post.author.followedByMe}
                                 className={post.author.followedByMe ? "spd-follow is-on" : "spd-follow"}
                             >
-                                {busy === "follow" ? "처리 중" : post.author.followedByMe ? <><i className="fa-solid fa-check" aria-hidden="true" />팔로잉</> : <><i className="fa-solid fa-plus" aria-hidden="true" />팔로우</>}
+                                {busy === "follow" ? "처리 중" : post.author.followedByMe ? <><i className="fa-solid fa-check" aria-hidden="true" />{labelText("팔로잉")}</> : <><i className="fa-solid fa-plus" aria-hidden="true" />{labelText("팔로우")}</>}
                             </button>
                         ) : null}
                     </div>
@@ -125,18 +127,18 @@ export default function ShowcasePostDialog({ post, tint, open, onClose, busy, cr
                             aria-pressed={post.bonedByMe}
                             className={post.bonedByMe ? "spd-bone is-on" : "spd-bone"}
                         >
-                            <i className="fa-solid fa-bone" aria-hidden="true" />{post.bonedByMe ? "응원했어요" : "응원하기"}
+                            <i className="fa-solid fa-bone" aria-hidden="true" />{labelText(post.bonedByMe ? "응원했어요" : "응원하기")}
                             <b>{post.boneCount.toLocaleString("ko-KR")}</b>
                         </button>
                         <button type="button" onClick={onShare} className="spd-mini" aria-label={`${post.author.displayName}의 댕자랑 공유`}>
                             <i className="fa-solid fa-share-nodes" aria-hidden="true" />
                         </button>
                         {post.canDelete ? (
-                            <button type="button" onClick={onDelete} disabled={busy === "delete"} className="spd-mini is-text" aria-label="이 댕자랑 삭제">
-                                {busy === "delete" ? "삭제 중" : "삭제"}
+                            <button type="button" onClick={onDelete} disabled={busy === "delete"} className="spd-mini is-text" aria-label={labelText("이 댕자랑 삭제")}>
+                                {labelText(busy === "delete" ? "삭제 중" : "삭제")}
                             </button>
                         ) : (
-                            <button type="button" onClick={onReport} className="spd-mini" aria-label="이 댕자랑 신고">
+                            <button type="button" onClick={onReport} className="spd-mini" aria-label={labelText("이 댕자랑 신고")}>
                                 <i className="fa-regular fa-flag" aria-hidden="true" />
                             </button>
                         )}

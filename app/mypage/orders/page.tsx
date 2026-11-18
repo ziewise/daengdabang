@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import Image from "next/image";
 import Link from "next/link";
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
@@ -101,11 +102,12 @@ function lineImage(line: TossOrderHistoryLine): { src: string; href: string } | 
 const RETURN_REQUEST_HREF = "/inquiry?category=exchange#inquiry-form";
 
 function OrderLineView({ line, compact = false, onReturnRequest }: { line: TossOrderHistoryLine; compact?: boolean; onReturnRequest?: () => void }) {
+    const { menuLabel: labelText } = useI18n();
     const image = lineImage(line);
     // 반품 신청 버튼 · 배송 완료된 실제 주문에서만 넘어옴(앱도 2026-10-26부터 보임 — 꾸밈은 앱 appShopSkin)
     const returnLink = onReturnRequest ? (
         <Link href={RETURN_REQUEST_HREF} className="mp-line-return" onClick={(event) => { if (opensInModal(event)) { event.preventDefault(); onReturnRequest(); } }}>
-            반품 신청
+            {labelText("반품 신청")}
         </Link>
     ) : null;
     const imageBox = (
@@ -143,7 +145,7 @@ function OrderLineView({ line, compact = false, onReturnRequest }: { line: TossO
                     </p>
                 )}
                 <p className="mt-1 text-xs font-bold text-neutral-500">
-                    {formatOrderAmount(line.unitAmount)} · {line.qty}개
+                    {formatOrderAmount(line.unitAmount)} · {line.qty}{labelText("개")}
                 </p>
             </div>
             {!compact && <b className="shrink-0 text-sm font-black text-neutral-950">{formatOrderAmount(line.lineAmount)}</b>}
@@ -153,7 +155,7 @@ function OrderLineView({ line, compact = false, onReturnRequest }: { line: TossO
             {compact && (
                 <span className="hidden mp-line-side">
                     <b>{formatOrderAmount(line.lineAmount)}</b>
-                    {image && <Link href={image.href}>상품 보기</Link>}
+                    {image && <Link href={image.href}>{labelText("상품 보기")}</Link>}
                     {returnLink}
                 </span>
             )}
@@ -191,6 +193,7 @@ function OrderSteps({ order }: { order: TossOrderHistoryItem }) {
 }
 
 function DeliverySummary({ order }: { order: TossOrderHistoryItem }) {
+    const { menuLabel: labelText } = useI18n();
     const estimate = estimatedDeliveryLabel(order);
     // test · live 기록이 섞인 주문 — 배송 여부를 단정하지 않음(lib/toss-order-history 의 hasMixedTossMode)
     if (hasMixedTossMode(order)) {
@@ -198,9 +201,9 @@ function DeliverySummary({ order }: { order: TossOrderHistoryItem }) {
             <div className="mt-3 rounded-xl border border-amber-200 bg-amber-50 px-3 py-3" data-fulfillment-mode="review_required">
                 <p className="text-sm font-black text-amber-900">
                     <i className="fa-solid fa-circle-exclamation mr-2" aria-hidden="true" />
-                    결제 기록 확인 필요
+                    {labelText("결제 기록 확인 필요")}
                 </p>
-                <p className="mt-1 text-xs font-bold leading-5 text-amber-800">결제 기록을 확인한 뒤 배송을 안내해 드립니다. 궁금하시면 1:1 문의에 주문번호를 남겨 주세요.</p>
+                <p className="mt-1 text-xs font-bold leading-5 text-amber-800">{labelText("결제 기록을 확인한 뒤 배송을 안내해 드립니다. 궁금하시면 1:1 문의에 주문번호를 남겨 주세요.")}</p>
             </div>
         );
     }
@@ -213,7 +216,7 @@ function DeliverySummary({ order }: { order: TossOrderHistoryItem }) {
                 <p className={`text-sm font-black ${status === "refunded" ? "text-red-800" : "text-amber-900"}`}>
                     <i className="fa-solid fa-rotate-left mr-2" aria-hidden="true" />
                     {orderStatusLabel(order)}
-                    {isTestOrder(order) && <span className="ml-1.5 text-xs font-bold">(테스트 결제)</span>}
+                    {isTestOrder(order) && <span className="ml-1.5 text-xs font-bold">{labelText("(테스트 결제)")}</span>}
                 </p>
                 <p className={`mt-1 text-xs font-bold leading-5 ${status === "refunded" ? "text-red-700" : "text-amber-800"}`}>
                     {status === "cancel_pending"
@@ -223,7 +226,7 @@ function DeliverySummary({ order }: { order: TossOrderHistoryItem }) {
                             : "환불 내역은 주문 상세에서 확인할 수 있습니다."}
                 </p>
                 {status === "partially_refunded" && (
-                    <p className="mt-1 text-xs font-bold leading-5 text-amber-800">남은 상품은 확인 뒤 따로 안내해 드립니다. 궁금하시면 1:1 문의에 주문번호를 남겨 주세요.</p>
+                    <p className="mt-1 text-xs font-bold leading-5 text-amber-800">{labelText("남은 상품은 확인 뒤 따로 안내해 드립니다. 궁금하시면 1:1 문의에 주문번호를 남겨 주세요.")}</p>
                 )}
             </div>
         );
@@ -233,7 +236,7 @@ function DeliverySummary({ order }: { order: TossOrderHistoryItem }) {
             <div className="mt-3 rounded-xl border border-sky-200 bg-sky-50 px-3 py-3" data-fulfillment-mode="test_no_delivery">
                 <p className="text-sm font-black text-sky-900">
                     <i className="fa-solid fa-flask mr-2" aria-hidden="true" />
-                    실제 배송 없음
+                    {labelText("실제 배송 없음")}
                 </p>
                 {estimate && <p className="mt-1 text-xs font-bold text-sky-700">{estimate}</p>}
             </div>
@@ -289,6 +292,7 @@ function LiveOrderActions({ order, className = "" }: { order: TossOrderHistoryIt
 }
 
 function OrderCard({ order }: { order: TossOrderHistoryItem }) {
+    const { menuLabel: labelText } = useI18n();
     const visibleLines = order.lines.slice(0, 2);
     const [returnLine, setReturnLine] = useState<TossOrderHistoryLine | null>(null);
     const returnable = canRequestReturn(order);
@@ -296,15 +300,15 @@ function OrderCard({ order }: { order: TossOrderHistoryItem }) {
         <article className="rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm sm:p-5" data-order-mode={isTestOrder(order) ? "test" : "live"}>
             <header className="flex flex-wrap items-start justify-between gap-3 border-b border-neutral-100 pb-4">
                 <div>
-                    <p className="text-sm font-black text-neutral-950">{orderDateLabel(order.createdAt ?? order.approvedAt)} 주문</p>
-                    <p className="mt-1 break-all text-xs font-bold text-neutral-500">주문번호 {order.orderId}</p>
+                    <p className="text-sm font-black text-neutral-950">{orderDateLabel(order.createdAt ?? order.approvedAt)} {labelText("주문")}</p>
+                    <p className="mt-1 break-all text-xs font-bold text-neutral-500">{labelText("주문번호")} {order.orderId}</p>
                 </div>
                 <div className="flex items-center gap-2">
                     <span className={`rounded-full border px-2.5 py-1 text-xs font-black ${statusTone(order)}`}>
                         {orderStatusLabel(order)}
                     </span>
                     <Link href={detailHref(order.orderId)} className="text-xs font-black text-indigo-700 hover:underline">
-                        주문 상세보기 <i className="fa-solid fa-chevron-right ml-1 text-[10px]" aria-hidden="true" />
+                        {labelText("주문 상세보기")} <i className="fa-solid fa-chevron-right ml-1 text-[10px]" aria-hidden="true" />
                     </Link>
                 </div>
             </header>
@@ -318,12 +322,12 @@ function OrderCard({ order }: { order: TossOrderHistoryItem }) {
             </div>
             <LineReturnModal order={order} line={returnLine} onClose={() => setReturnLine(null)} />
             {order.lines.length > visibleLines.length && (
-                <p className="mt-3 text-xs font-black text-neutral-500">외 {order.lines.length - visibleLines.length}개 상품</p>
+                <p className="mt-3 text-xs font-black text-neutral-500">{labelText("외")} {order.lines.length - visibleLines.length}{labelText("개 상품")}</p>
             )}
 
             <footer className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-neutral-100 pt-4">
                 <div>
-                    <span className="text-xs font-bold text-neutral-500">총 결제금액</span>
+                    <span className="text-xs font-bold text-neutral-500">{labelText("총 결제금액")}</span>
                     <b className="ml-2 text-lg font-black text-neutral-950">{formatOrderAmount(order.amount)}</b>
                 </div>
                 <LiveOrderActions order={order} />
@@ -333,6 +337,7 @@ function OrderCard({ order }: { order: TossOrderHistoryItem }) {
 }
 
 function LoadingView() {
+    const { menuLabel: labelText } = useI18n();
     // 웹: 사이드 메뉴 + 머리 판 + 흰 쿠션 카드 자리(앱은 아래 원래 회색 자리)
     const webScreen = useWebScreen();
     if (webScreen) {
@@ -340,7 +345,7 @@ function LoadingView() {
             <OrdersShell>
                 <MypageWebLoading
                     head={{ kicker: "MY ORDERS", title: "주문 내역", text: "주문 내역을 불러오고 있어요.", art: "cart" }}
-                    label="주문 내역을 불러오는 중이에요."
+                    label={labelText("주문 내역을 불러오는 중이에요.")}
                 />
             </OrdersShell>
         );
@@ -351,12 +356,13 @@ function LoadingView() {
             <div className="mt-6 grid gap-4">
                 {[1, 2].map((key) => <div key={key} className="h-56 animate-pulse rounded-2xl bg-neutral-100" />)}
             </div>
-            <span className="sr-only">주문 내역을 불러오는 중입니다.</span>
+            <span className="sr-only">{labelText("주문 내역을 불러오는 중입니다.")}</span>
         </main>
     );
 }
 
 function LoginGate({ orderId, expired = false }: { orderId: string; expired?: boolean }) {
+    const { menuLabel: labelText } = useI18n();
     // 웹은 해요체(앱 문구 그대로)
     const webScreen = useWebScreen();
     return (
@@ -368,13 +374,13 @@ function LoginGate({ orderId, expired = false }: { orderId: string; expired?: bo
                     : (expired ? "로그인이 만료되었습니다." : "로그인이 필요합니다.")}
             </h1>
             <p className="mt-3 text-sm font-bold leading-6 text-neutral-600">
-                {webScreen ? "주문과 배송 정보는 본인 확인 후에 볼 수 있어요." : "주문과 배송정보는 본인 확인 후에만 볼 수 있습니다."}
+                {labelText(webScreen ? "주문과 배송 정보는 본인 확인 후에 볼 수 있어요." : "주문과 배송정보는 본인 확인 후에만 볼 수 있습니다.")}
             </p>
-            <Link href={loginHref(orderId)} className="btn btn-primary mt-6">로그인 후 주문 보기</Link>
+            <Link href={loginHref(orderId)} className="btn btn-primary mt-6">{labelText("로그인 후 주문 보기")}</Link>
             {/* 웹 전용(2026-10-26) — 하위 화면 로그인 안내와 같게 비회원 주문 조회 줄(앱은 hidden 그대로, 꾸밈은 app/mypage-web.css) */}
             <p className="hidden mp-gate-guest">
-                비회원으로 주문하셨나요?
-                <Link href="/order-lookup">비회원 주문 조회<i className="fa-solid fa-chevron-right" aria-hidden="true" /></Link>
+                {labelText("비회원으로 주문하셨나요?")}
+                <Link href="/order-lookup">{labelText("비회원 주문 조회")}<i className="fa-solid fa-chevron-right" aria-hidden="true" /></Link>
             </p>
         </main>
     );
@@ -389,15 +395,16 @@ function webOrderErrorText(error: TossOrderHistoryApiError): string {
 }
 
 function ErrorView({ error, retry }: { error: TossOrderHistoryApiError; retry: () => void }) {
+    const { menuLabel: labelText } = useI18n();
     const webScreen = useWebScreen();
     return (
         <section className="mx-auto max-w-[680px] py-12 text-center" role="alert">
             <i className="fa-solid fa-circle-exclamation text-5xl text-red-500" aria-hidden="true" />
-            <h1 className="mt-4 text-2xl font-black text-neutral-950">{webScreen ? "주문 내역을 불러오지 못했어요" : "주문 내역을 불러오지 못했습니다."}</h1>
+            <h1 className="mt-4 text-2xl font-black text-neutral-950">{labelText(webScreen ? "주문 내역을 불러오지 못했어요" : "주문 내역을 불러오지 못했습니다.")}</h1>
             <p className="mt-3 text-sm font-bold leading-6 text-neutral-600">{webScreen ? webOrderErrorText(error) : error.message}</p>
             <div className="mt-6 flex flex-wrap justify-center gap-2">
-                <button type="button" onClick={retry} className="btn btn-primary">다시 불러오기</button>
-                <Link href="/mypage" className="btn btn-secondary">마이페이지</Link>
+                <button type="button" onClick={retry} className="btn btn-primary">{labelText("다시 불러오기")}</button>
+                <Link href="/mypage" className="btn btn-secondary">{labelText("마이페이지")}</Link>
             </div>
         </section>
     );
@@ -416,6 +423,7 @@ function OrderListView({
     loadMoreError?: string;
     loadMore: () => void;
 }) {
+    const { menuLabel: labelText } = useI18n();
     const [query, setQuery] = useState("");
     // 웹은 안내 · 빈 화면 문구를 해요체로(앱 문구 그대로)
     const webScreen = useWebScreen();
@@ -437,26 +445,26 @@ function OrderListView({
             <div className="flex flex-wrap items-end justify-between gap-3" data-mp-hello data-mp-art="cart">
                 <div>
                     <p className="text-sm font-black text-indigo-700">MY ORDERS</p>
-                    <h1 className="mt-1 text-3xl font-black tracking-tight text-neutral-950">주문 내역</h1>
-                    <p className="mt-2 text-sm font-bold text-neutral-500">{webScreen ? "결제 결과와 배송 상태를 주문별로 확인할 수 있어요." : "결제 결과와 배송 상태를 주문별로 확인할 수 있습니다."}</p>
+                    <h1 className="mt-1 text-3xl font-black tracking-tight text-neutral-950">{labelText("주문 내역")}</h1>
+                    <p className="mt-2 text-sm font-bold text-neutral-500">{labelText(webScreen ? "결제 결과와 배송 상태를 주문별로 확인할 수 있어요." : "결제 결과와 배송 상태를 주문별로 확인할 수 있습니다.")}</p>
                 </div>
-                <Link href="/mypage" className="btn btn-secondary">마이페이지로</Link>
+                <Link href="/mypage" className="btn btn-secondary">{labelText("마이페이지로")}</Link>
             </div>
 
             {/* 웹 전용 — 주문 요약 4칸(불러온 주문 기준, 누르는 기능 없음). 앱에서는 숨김 */}
             {orders.length > 0 && (
                 <dl className="hidden mp-order-stats">
-                    <div data-stat="all"><dt>전체 주문</dt><dd>{orders.length}<small>건</small></dd></div>
-                    <div data-stat="moving"><dt>준비 · 배송중</dt><dd>{orders.filter((order) => { const stage = orderStage(order); return stage === 1 || stage === 2; }).length}<small>건</small></dd></div>
-                    <div data-stat="done"><dt>배송 완료</dt><dd>{orders.filter((order) => orderStage(order) === 3).length}<small>건</small></dd></div>
-                    <div data-stat="sum"><dt>누적 결제</dt><dd>{formatOrderAmount(orders.filter((order) => !isTestOrder(order)).reduce((total, order) => total + netPaidAmount(order), 0))}</dd></div>
+                    <div data-stat="all"><dt>{labelText("전체 주문")}</dt><dd>{orders.length}<small>{labelText("건")}</small></dd></div>
+                    <div data-stat="moving"><dt>{labelText("준비 · 배송중")}</dt><dd>{orders.filter((order) => { const stage = orderStage(order); return stage === 1 || stage === 2; }).length}<small>{labelText("건")}</small></dd></div>
+                    <div data-stat="done"><dt>{labelText("배송 완료")}</dt><dd>{orders.filter((order) => orderStage(order) === 3).length}<small>{labelText("건")}</small></dd></div>
+                    <div data-stat="sum"><dt>{labelText("누적 결제")}</dt><dd>{formatOrderAmount(orders.filter((order) => !isTestOrder(order)).reduce((total, order) => total + netPaidAmount(order), 0))}</dd></div>
                 </dl>
             )}
 
             {orders.length > 0 && (
                 <div className="mt-6 rounded-2xl border border-neutral-200 bg-white p-3 shadow-sm sm:p-4">
                     <label className="relative block" data-order-search>
-                        <span className="sr-only">주문 상품 또는 주문번호 검색</span>
+                        <span className="sr-only">{labelText("주문 상품 또는 주문번호 검색")}</span>
                         <i className="fa-solid fa-magnifying-glass pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400" aria-hidden="true" />
                         <input
                             type="search"
@@ -464,7 +472,7 @@ function OrderListView({
                             autoComplete="off"
                             value={query}
                             onChange={(event) => setQuery(event.target.value)}
-                            placeholder="주문 상품 또는 주문번호 검색"
+                            placeholder={labelText("주문 상품 또는 주문번호 검색")}
                             className="input h-12 w-full"
                         />
                     </label>
@@ -479,17 +487,17 @@ function OrderListView({
             {orders.length === 0 ? (
                 <section className="mt-6 rounded-2xl border border-dashed border-neutral-300 bg-white p-10 text-center">
                     <i className="fa-solid fa-bag-shopping text-4xl text-neutral-300" aria-hidden="true" />
-                    <h2 className="mt-4 text-lg font-black text-neutral-950">{webScreen ? "아직 주문 내역이 없어요" : "아직 주문 내역이 없습니다."}</h2>
-                    <p className="mt-2 text-sm font-bold text-neutral-500">{webScreen ? "결제가 확인된 주문이 이곳에 보여요." : "결제가 확인된 주문이 이곳에 표시됩니다."}</p>
-                    <Link href="/products" className="btn btn-primary mt-6">상품 보러 가기</Link>
+                    <h2 className="mt-4 text-lg font-black text-neutral-950">{labelText(webScreen ? "아직 주문 내역이 없어요" : "아직 주문 내역이 없습니다.")}</h2>
+                    <p className="mt-2 text-sm font-bold text-neutral-500">{labelText(webScreen ? "결제가 확인된 주문이 이곳에 보여요." : "결제가 확인된 주문이 이곳에 표시됩니다.")}</p>
+                    <Link href="/products" className="btn btn-primary mt-6">{labelText("상품 보러 가기")}</Link>
                 </section>
             ) : filteredOrders.length === 0 ? (
                 <section className="mt-6 rounded-2xl border border-dashed border-neutral-300 bg-white p-8 text-center">
-                    <h2 className="text-lg font-black text-neutral-950">{webScreen ? "검색 결과가 없어요" : "검색 결과가 없습니다."}</h2>
-                    <button type="button" onClick={() => setQuery("")} className="btn btn-secondary mt-4">검색어 지우기</button>
+                    <h2 className="text-lg font-black text-neutral-950">{labelText(webScreen ? "검색 결과가 없어요" : "검색 결과가 없습니다.")}</h2>
+                    <button type="button" onClick={() => setQuery("")} className="btn btn-secondary mt-4">{labelText("검색어 지우기")}</button>
                 </section>
             ) : (
-                <section className="mt-6 grid gap-4" aria-label="주문 목록">
+                <section className="mt-6 grid gap-4" aria-label={labelText("주문 목록")}>
                     {filteredOrders.map((order) => <OrderCard key={order.orderId} order={order} />)}
                 </section>
             )}
@@ -498,7 +506,7 @@ function OrderListView({
                 <div className="mt-6 rounded-2xl border border-neutral-200 bg-white p-4 text-center shadow-sm">
                     {query && (
                         <p className="mb-3 text-xs font-bold leading-5 text-neutral-500">
-                            검색은 지금까지 불러온 주문에 적용됩니다. 이전 주문도 계속 불러와 검색할 수 있습니다.
+                            {labelText("검색은 지금까지 불러온 주문에 적용됩니다. 이전 주문도 계속 불러와 검색할 수 있습니다.")}
                         </p>
                     )}
                     {loadMoreError && (
@@ -542,6 +550,7 @@ function deliveryRequestText(delivery: TossOrderDelivery): string {
 }
 
 function DeliveryDetail({ order }: { order: TossOrderHistoryItem }) {
+    const { menuLabel: labelText } = useI18n();
     const delivery = order.delivery;
     const address = delivery ? deliveryAddress(delivery) : "";
     const request = delivery ? deliveryRequestText(delivery) : "";
@@ -551,31 +560,31 @@ function DeliveryDetail({ order }: { order: TossOrderHistoryItem }) {
     return (
         <section className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm sm:p-6" data-mp-card>
             <div className="flex flex-wrap items-center justify-between gap-2" data-mp-band="mint" data-mp-art="home">
-                <h2 className="text-lg font-black text-neutral-950" data-mp-kicker="DELIVERY">받는 사람 정보</h2>
-                {testNotice && <span className="rounded-full bg-sky-50 px-2.5 py-1 text-xs font-black text-sky-700">화면 검증용</span>}
+                <h2 className="text-lg font-black text-neutral-950" data-mp-kicker="DELIVERY">{labelText("받는 사람 정보")}</h2>
+                {testNotice && <span className="rounded-full bg-sky-50 px-2.5 py-1 text-xs font-black text-sky-700">{labelText("화면 검증용")}</span>}
             </div>
             {testNotice && (
                 <div className="mt-4 rounded-xl border border-sky-200 bg-sky-50 px-4 py-3">
-                    <p className="text-sm font-black text-sky-900">실제 배송 없음</p>
+                    <p className="text-sm font-black text-sky-900">{labelText("실제 배송 없음")}</p>
                     <p className="mt-1 text-xs font-bold leading-5 text-sky-700">
-                        아래 배송정보와 일정은 결제 화면 검증을 위한 기록이며 출고에 사용되지 않습니다.
+                        {labelText("아래 배송정보와 일정은 결제 화면 검증을 위한 기록이며 출고에 사용되지 않습니다.")}
                     </p>
                     {estimatedDeliveryLabel(order) && <p className="mt-1 text-xs font-black text-sky-800">{estimatedDeliveryLabel(order)}</p>}
                 </div>
             )}
             {delivery ? (
                 <dl className="mt-4 grid gap-x-5 gap-y-3 text-sm sm:grid-cols-[120px_1fr]">
-                    {delivery.recipient && <><dt className="font-bold text-neutral-500">받는 분</dt><dd className="font-black text-neutral-900">{delivery.recipient}</dd></>}
-                    {delivery.phone && <><dt className="font-bold text-neutral-500">연락처</dt><dd className="font-black text-neutral-900">{delivery.phone}</dd></>}
-                    {address && <><dt className="font-bold text-neutral-500">받는 주소</dt><dd className="break-words font-black leading-6 text-neutral-900">{address}</dd></>}
-                    {request && <><dt className="font-bold text-neutral-500">배송 요청사항</dt><dd className="break-words font-black leading-6 text-neutral-900">{request}</dd></>}
-                    {delivery.entranceMethod && <><dt className="font-bold text-neutral-500">공동현관</dt><dd className="break-words font-black leading-6 text-neutral-900">{delivery.entranceMethod}</dd></>}
-                    {!testOrder && delivery.carrier && <><dt className="font-bold text-neutral-500">택배사</dt><dd className="font-black text-neutral-900">{delivery.carrier}</dd></>}
-                    {!testOrder && delivery.trackingNumber && <><dt className="font-bold text-neutral-500">송장번호</dt><dd className="font-black text-neutral-900">{delivery.trackingNumber}</dd></>}
+                    {delivery.recipient && <><dt className="font-bold text-neutral-500">{labelText("받는 분")}</dt><dd className="font-black text-neutral-900">{delivery.recipient}</dd></>}
+                    {delivery.phone && <><dt className="font-bold text-neutral-500">{labelText("연락처")}</dt><dd className="font-black text-neutral-900">{delivery.phone}</dd></>}
+                    {address && <><dt className="font-bold text-neutral-500">{labelText("받는 주소")}</dt><dd className="break-words font-black leading-6 text-neutral-900">{address}</dd></>}
+                    {request && <><dt className="font-bold text-neutral-500">{labelText("배송 요청사항")}</dt><dd className="break-words font-black leading-6 text-neutral-900">{request}</dd></>}
+                    {delivery.entranceMethod && <><dt className="font-bold text-neutral-500">{labelText("공동현관")}</dt><dd className="break-words font-black leading-6 text-neutral-900">{delivery.entranceMethod}</dd></>}
+                    {!testOrder && delivery.carrier && <><dt className="font-bold text-neutral-500">{labelText("택배사")}</dt><dd className="font-black text-neutral-900">{delivery.carrier}</dd></>}
+                    {!testOrder && delivery.trackingNumber && <><dt className="font-bold text-neutral-500">{labelText("송장번호")}</dt><dd className="font-black text-neutral-900">{delivery.trackingNumber}</dd></>}
                 </dl>
             ) : (
                 <p className="mt-4 rounded-xl bg-neutral-50 px-4 py-4 text-sm font-bold leading-6 text-neutral-600">
-                    배송정보가 없는 기존 주문입니다. 결제 정보와 주문 상품은 정상적으로 확인할 수 있습니다.
+                    {labelText("배송정보가 없는 기존 주문입니다. 결제 정보와 주문 상품은 정상적으로 확인할 수 있습니다.")}
                 </p>
             )}
         </section>
@@ -583,21 +592,22 @@ function DeliveryDetail({ order }: { order: TossOrderHistoryItem }) {
 }
 
 function OrderDetailView({ order }: { order: TossOrderHistoryItem }) {
+    const { menuLabel: labelText } = useI18n();
     const productAmount = order.lines.reduce((sum, line) => sum + line.lineAmount, 0);
     const [returnLine, setReturnLine] = useState<TossOrderHistoryLine | null>(null);
     const returnable = canRequestReturn(order);
     return (
         <div>
             <Link href="/mypage/orders/" className="inline-flex items-center gap-2 text-sm font-black text-indigo-700 hover:underline">
-                <i className="fa-solid fa-arrow-left" aria-hidden="true" /> 주문 목록
+                <i className="fa-solid fa-arrow-left" aria-hidden="true" /> {labelText("주문 목록")}
             </Link>
             {/* 웹 K5 결 — 주문 상세 머리 분홍 띠 판 + 메모 그림(data-mp-hello, 꾸밈은 app/mypage-web.css · 앱 그대로) */}
             <div className="mt-5 flex flex-wrap items-start justify-between gap-3" data-mp-hello data-mp-art="memo">
                 <div>
                     <p className="text-sm font-black text-indigo-700">ORDER DETAIL</p>
-                    <h1 className="mt-1 text-3xl font-black tracking-tight text-neutral-950">주문 상세</h1>
+                    <h1 className="mt-1 text-3xl font-black tracking-tight text-neutral-950">{labelText("주문 상세")}</h1>
                     <p className="mt-2 break-all text-sm font-bold text-neutral-500">
-                        {orderDateLabel(order.createdAt ?? order.approvedAt)} 주문 · {order.orderId}
+                        {orderDateLabel(order.createdAt ?? order.approvedAt)} {labelText("주문 ·")} {order.orderId}
                     </p>
                 </div>
                 <span className={`rounded-full border px-3 py-1.5 text-sm font-black ${statusTone(order)}`}>
@@ -621,7 +631,7 @@ function OrderDetailView({ order }: { order: TossOrderHistoryItem }) {
                     {order.lines.length > 0 ? order.lines.map((line, index) => (
                         <OrderLineView key={`${line.productId}-${line.color ?? ""}-${line.size ?? ""}-${index}`} line={line} onReturnRequest={returnable ? () => setReturnLine(line) : undefined} />
                     )) : (
-                        <p className="text-sm font-bold text-neutral-500">주문 상품 정보를 확인하지 못했습니다.</p>
+                        <p className="text-sm font-bold text-neutral-500">{labelText("주문 상품 정보를 확인하지 못했습니다.")}</p>
                     )}
                 </div>
                 <LineReturnModal order={order} line={returnLine} onClose={() => setReturnLine(null)} />
@@ -630,22 +640,22 @@ function OrderDetailView({ order }: { order: TossOrderHistoryItem }) {
             <div className="mt-5 grid gap-5 lg:grid-cols-2">
                 <DeliveryDetail order={order} />
                 <section className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm sm:p-6" data-mp-card>
-                    <h2 className="text-lg font-black text-neutral-950" data-mp-band="yellow" data-mp-art="coin" data-mp-kicker="PAYMENT">결제 정보</h2>
+                    <h2 className="text-lg font-black text-neutral-950" data-mp-band="yellow" data-mp-art="coin" data-mp-kicker="PAYMENT">{labelText("결제 정보")}</h2>
                     <dl className="mt-4 grid grid-cols-[1fr_auto] gap-x-4 gap-y-3 text-sm">
-                        <dt className="font-bold text-neutral-500">결제수단</dt>
+                        <dt className="font-bold text-neutral-500">{labelText("결제수단")}</dt>
                         <dd className="text-right font-black text-neutral-900">{paymentMethodLabel(order.paymentMethod)}</dd>
-                        <dt className="font-bold text-neutral-500">총 상품금액</dt>
+                        <dt className="font-bold text-neutral-500">{labelText("총 상품금액")}</dt>
                         <dd className="text-right font-black text-neutral-900">{formatOrderAmount(productAmount)}</dd>
-                        <dt className="font-bold text-neutral-500">배송비</dt>
+                        <dt className="font-bold text-neutral-500">{labelText("배송비")}</dt>
                         <dd className="text-right font-black text-neutral-900">{order.shippingFee === 0 ? "무료" : formatOrderAmount(order.shippingFee)}</dd>
-                        <dt className="border-t border-neutral-200 pt-4 font-black text-neutral-950">총 결제금액</dt>
+                        <dt className="border-t border-neutral-200 pt-4 font-black text-neutral-950">{labelText("총 결제금액")}</dt>
                         <dd className="border-t border-neutral-200 pt-4 text-right text-xl font-black text-neutral-950">{formatOrderAmount(order.amount)}</dd>
                         {/* 결제 뒤 환불 — 서버 환불 요약(cancel)이 있을 때만 */}
                         {order.cancel && order.cancel.refundedAmount > 0 && (
                             <>
-                                <dt className="font-bold text-red-600">환불 금액</dt>
+                                <dt className="font-bold text-red-600">{labelText("환불 금액")}</dt>
                                 <dd className="text-right font-black text-red-600">-{formatOrderAmount(order.cancel.refundedAmount)}</dd>
-                                <dt className="font-black text-neutral-950">환불 후 결제금액</dt>
+                                <dt className="font-black text-neutral-950">{labelText("환불 후 결제금액")}</dt>
                                 <dd className="text-right font-black text-neutral-950">{formatOrderAmount(netPaidAmount(order))}</dd>
                             </>
                         )}
@@ -653,11 +663,11 @@ function OrderDetailView({ order }: { order: TossOrderHistoryItem }) {
                     <CashReceiptCard receipt={order.cashReceipt} />
                     {hasMixedTossMode(order) ? (
                         <p className="mt-5 rounded-xl bg-amber-50 px-4 py-3 text-xs font-bold leading-5 text-amber-800">
-                            결제 모드 기록이 서로 맞지 않아 확인이 필요합니다. 1:1 문의에 주문번호를 남겨 주시면 확인해 드립니다.
+                            {labelText("결제 모드 기록이 서로 맞지 않아 확인이 필요합니다. 1:1 문의에 주문번호를 남겨 주시면 확인해 드립니다.")}
                         </p>
                     ) : isTestOrder(order) && (
                         <p className="mt-5 rounded-xl bg-sky-50 px-4 py-3 text-xs font-bold leading-5 text-sky-800">
-                            테스트 키 승인 기록입니다. 실제 출금·배송·적립은 발생하지 않습니다.
+                            {labelText("테스트 키 승인 기록입니다. 실제 출금·배송·적립은 발생하지 않습니다.")}
                         </p>
                     )}
                 </section>

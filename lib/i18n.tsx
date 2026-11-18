@@ -5,11 +5,20 @@ import type { CatalogProduct, CategorySlug, SubcategorySlug } from "@/lib/catalo
 // 통화(원/달러) — 국가 선택(RegionProvider)이 세팅, formatPrice 가 전 사이트 가격 환산
 import { useCurrency, convertFromKRW } from "@/lib/currency-store";
 import { formatPriceAmount } from "@/lib/display-format";
+import storefrontLabels from "@/lib/storefront-labels.en.json";
+import englishNames from "@/lib/catalog/storefront-english-names.json";
+import { ddbApiBase } from "@/lib/ddb-api-base";
 import { isNativeAppRuntime } from "@/lib/native-runtime";
 
 export type Locale = "ko" | "en";
 
 const STORAGE_KEY = "daengdabang.locale";
+
+type EnglishProduct = { name: string; description: string; options?: Record<string, string> };
+type EnglishEdition = Record<string, EnglishProduct>;
+type NamedProduct = Pick<CatalogProduct, "name"> & Partial<Pick<CatalogProduct, "folder" | "brandEn" | "brandKo">>;
+const storefrontEnglishLabels: Readonly<Record<string, string>> = storefrontLabels;
+const bundledNames: Record<string, string> = englishNames;
 
 type I18nContextValue = {
     locale: Locale;
@@ -17,10 +26,12 @@ type I18nContextValue = {
     toggleLocale: () => void;
     t: (key: I18nKey) => string;
     formatPrice: (value: number) => string;
-    productName: (product: CatalogProduct | Pick<CatalogProduct, "name" | "brandEn" | "brandKo">) => string;
+    productName: (product: NamedProduct) => string;
     categoryLabel: (slug: CategorySlug, fallback?: string) => string;
     subcategoryLabel: (slug: SubcategorySlug, fallback?: string) => string;
-    menuLabel: (label: string) => string;
+    menuLabel: (label: string | undefined | null) => string;
+    englishProduct: (folder?: string) => EnglishProduct | undefined;
+    optionName: (folder: string | undefined, label?: string) => string;
 };
 
 const STRINGS = {
@@ -136,12 +147,12 @@ const STRINGS = {
         new: "New",
         category: "Categories",
         brand: "Brands",
-        brandStory: "DaengDaBang Story",
+        brandStory: "댕다방 Story",
         promotion: "Collections",
         customerCenter: "Support",
         shop: "Shop",
         aiAnalysis: "AI Analysis",
-        daengLab: "DaengDaBang Research Lab",
+        daengLab: "댕다방 Lab",
         myPet: "My Pet",
         challenge: "Challenge",
         community: "Community",
@@ -167,7 +178,7 @@ const STRINGS = {
         sort: "Sort",
         all: "All",
         searchFieldPlaceholder: "Product name, brand, or use",
-        daengdabangProducts: "DaengDaBang products",
+        daengdabangProducts: "댕다방 products",
         priceCompare: "Product price comparison",
         searching: "Searching",
         noProducts: "No products match these filters.",
@@ -301,6 +312,35 @@ const SUBCATEGORY_KO: Record<SubcategorySlug, string> = {
 };
 
 const MENU_EN: Record<string, string> = {
+    "상품군": "Shop by category",
+    "기획전": "Collections",
+    "우리 댕댕이에게 딱 맞는 큐레이션": "Curated picks for your pup",
+    "브랜드 전체 보기": "Browse all brands",
+
+    "댕자랑": "Dog Showcase",
+    "쇼핑": "Shop",
+    "댕생활": "Daily Life",
+    "마이": "My Account",
+    "연구소": "Lab",
+    "댕다방 연구소": "댕다방 Lab",
+    "댕다방": "댕다방",
+    "보물광산 · 오늘의 루틴": "Treasure Mine · Daily Routine",
+    "굿즈 500명 공모전 · 진행 중": "Merch contest · Now open",
+    "우리 아이 기록": "My Dog’s Journal",
+    "사진 건강 분석": "Photo Health Check",
+    "울음소리·행동 분석": "Sounds & Behavior",
+    "건강 변화 리포트": "Health Trends",
+    "AI 상담": "AI Chat",
+    "홈": "Home",
+    "대표 브랜드": "Featured Brands",
+    "댕다방이 자신있게 큐레이션하는 정식 수입 브랜드": "Official imports selected by 댕다방",
+    "뒤로 가기": "Go back",
+    "댕다방 메뉴": "댕다방 menu",
+    "댕다방 홈": "댕다방 home",
+    "장바구니": "Cart",
+    "검색": "Search",
+    "오늘": "Today",
+
     "산책/아웃도어": "Walk & Outdoor",
     "하네스": "Harnesses",
     "리드줄": "Leashes",
@@ -363,7 +403,7 @@ const MENU_EN: Record<string, string> = {
 };
 
 const PRODUCT_REPLACEMENTS: Array<[RegExp, string]> = [
-    [/댕다방/g, "DaengDaBang"],
+
     [/러프웨어/g, "Ruffwear"],
     [/렉스스펙스/g, "Rex Specs"],
     [/헤이렉스/g, "HEYREX"],
@@ -444,7 +484,7 @@ async function detectLocaleByEdge(): Promise<Locale | null> {
     }
 }
 
-function translateProductName(product: CatalogProduct | Pick<CatalogProduct, "name" | "brandEn" | "brandKo">, locale: Locale) {
+function translateProductName(product: NamedProduct, locale: Locale) {
     if (locale === "ko") return product.name;
     let name = product.name;
     for (const [pattern, replacement] of PRODUCT_REPLACEMENTS) {
@@ -457,6 +497,53 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     const [locale, setLocaleState] = useState<Locale>("ko");
     // 현재 통화 구독 — 달러면 formatPrice 가 환산해서 표시(원이면 기존 동작 유지)
     const currency = useCurrency();
+    const [edition, setEdition] = useState<EnglishEdition>({});
+
+    useEffect(() => {
+        if (locale !== "en") return;
+        let active = true;
+        let hasLiveEdition = false;
+        let pending = false;
+        const controller = new AbortController();
+        import("@/lib/catalog/storefront-english.generated.json").then(({ default: snapshot }) => {
+            if (active && !hasLiveEdition) setEdition(snapshot.products as EnglishEdition);
+        }).catch(() => {});
+        const refresh = async () => {
+            const base = ddbApiBase();
+            if (!base || pending || document.visibilityState === "hidden") return;
+            pending = true;
+            const deadline = new AbortController();
+            const cancel = () => deadline.abort();
+            controller.signal.addEventListener("abort", cancel, { once: true });
+            const timer = window.setTimeout(cancel, 9000);
+            try {
+                const response = await fetch(base + "/api/v1/products/storefront-english/catalog", { signal: deadline.signal });
+                if (!response.ok) return;
+                const data = await response.json();
+                if (active && data.schema === "ddb.storefront-english.v1" && data.products && typeof data.products === "object") {
+                    hasLiveEdition = true;
+                    setEdition(data.products);
+                }
+            } catch {
+                // The bundled English edition also works offline in the app.
+            } finally {
+                pending = false;
+                window.clearTimeout(timer);
+                controller.signal.removeEventListener("abort", cancel);
+            }
+        };
+        void refresh();
+        const interval = window.setInterval(refresh, 60000);
+        window.addEventListener("focus", refresh);
+        document.addEventListener("visibilitychange", refresh);
+        return () => {
+            active = false;
+            controller.abort();
+            window.clearInterval(interval);
+            window.removeEventListener("focus", refresh);
+            document.removeEventListener("visibilitychange", refresh);
+        };
+    }, [locale]);
 
     useEffect(() => {
         const saved = window.localStorage.getItem(STORAGE_KEY);
@@ -470,7 +557,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         setLocaleState(fallback);
         document.documentElement.lang = fallback;
         detectLocaleByEdge().then((edgeLocale) => {
-            if (!edgeLocale) return;
+            if (!edgeLocale || window.localStorage.getItem(STORAGE_KEY)) return;
             setLocaleState(edgeLocale);
             document.documentElement.lang = edgeLocale;
         });
@@ -495,11 +582,15 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
             }
             return formatPriceAmount(value, locale, "KRW");
         },
-        productName: (product) => translateProductName(product, locale),
+        productName: (product) => locale === "en" && product.folder
+            ? edition[product.folder]?.name || bundledNames[product.folder] || translateProductName(product, locale)
+            : translateProductName(product, locale),
+        englishProduct: (folder) => folder ? edition[folder] : undefined,
+        optionName: (folder, label = "") => locale === "en" && folder ? edition[folder]?.options?.[label] || label : label,
         categoryLabel: (slug, fallback) => locale === "en" ? CATEGORY_EN[slug] : fallback || CATEGORY_KO[slug],
         subcategoryLabel: (slug, fallback) => locale === "en" ? SUBCATEGORY_EN[slug] : fallback || SUBCATEGORY_KO[slug],
-        menuLabel: (label) => locale === "en" ? MENU_EN[label] || translateProductName({ name: label, brandEn: "", brandKo: "" }, "en") : label,
-    }), [locale, setLocale, currency]);
+        menuLabel: (label) => locale === "en" && label ? MENU_EN[label] || storefrontEnglishLabels[label] || label : label || "",
+    }), [locale, setLocale, currency, edition]);
 
     return <LocaleContext.Provider value={value}>{children}</LocaleContext.Provider>;
 }

@@ -8,7 +8,10 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
+
 export default function ShowcaseComposeLauncher({ topicTitle, onOpen }: { topicTitle?: string; onOpen: () => void }) {
+    const { menuLabel: labelText } = useI18n();
     return (
         <div className="scl">
             <span className="scl-art" aria-hidden="true">
@@ -18,15 +21,15 @@ export default function ShowcaseComposeLauncher({ topicTitle, onOpen }: { topicT
             </span>
             <div className="scl-text">
                 <p className="ddb-crayon-kicker scl-kicker">SHARE TODAY</p>
-                <h2 className="scl-title">오늘의 <em>한 장</em>, 자랑해 볼까요?</h2>
+                <h2 className="scl-title">{labelText("오늘의")} <em>{labelText("한 장")}</em>{labelText(", 자랑해 볼까요?")}</h2>
                 <p className="scl-sub">
-                    사진 한 장과 짧은 이야기면 충분해요.
-                    {topicTitle ? <span className="scl-topic"><i className="fa-solid fa-hashtag" aria-hidden="true" />{topicTitle} 참여 중</span> : null}
+                    {labelText("사진 한 장과 짧은 이야기면 충분해요.")}
+                    {topicTitle ? <span className="scl-topic"><i className="fa-solid fa-hashtag" aria-hidden="true" />{topicTitle} {labelText("참여 중")}</span> : null}
                 </p>
             </div>
             <button id="showcase-compose-open" type="button" className="scl-btn" onClick={onOpen} aria-haspopup="dialog">
                 <span className="scl-btn-icon" aria-hidden="true"><i className="fa-solid fa-camera" /></span>
-                사진 올리기
+                {labelText("사진 올리기")}
                 <i className="fa-solid fa-arrow-right scl-btn-arrow" aria-hidden="true" />
             </button>
         </div>

@@ -5,6 +5,7 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import type { PetlensInputMode } from "@/lib/types";
 
 export default function PetlensModeSelect({
@@ -12,24 +13,25 @@ export default function PetlensModeSelect({
 }: {
     onSelect: (mode: PetlensInputMode) => void;
 }) {
+    const { menuLabel: labelText } = useI18n();
     return (
         <div className="text-center">
             <h3 className="text-lg font-extrabold mb-1.5">
-                어떻게 사진을 가져올까요?
+                {labelText("어떻게 사진을 가져올까요?")}
             </h3>
             <p className="text-xs text-neutral-500 mb-6">
-                3장 모두 같은 방식으로 입력해요
+                {labelText("3장 모두 같은 방식으로 입력해요")}
             </p>
             <div className="grid grid-cols-2 gap-3">
                 <ModeCard
                     icon="fa-camera"
-                    label="촬영하기"
+                    label={labelText("촬영하기")}
                     desc="카메라로 바로 찍기"
                     onClick={() => onSelect("camera")}
                 />
                 <ModeCard
                     icon="fa-image"
-                    label="불러오기"
+                    label={labelText("불러오기")}
                     desc="기존 사진 선택"
                     onClick={() => onSelect("file")}
                 />

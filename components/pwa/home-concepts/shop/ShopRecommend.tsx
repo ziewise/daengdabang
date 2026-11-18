@@ -26,6 +26,7 @@ const SOURCE_LABEL: Record<RecommendationSourceGroup, string> = {
 };
 
 export default function ShopRecommend() {
+    const { menuLabel: labelText } = useI18n();
     const { user, hydrated } = useAuth();
     const personalizationEnabled = recommendationPersonalizationEnabled(RECOMMENDATION_FEATURE_FLAGS, "home");
     const prefState = useRecommendationPreferences({ enabled: personalizationEnabled });
@@ -120,7 +121,7 @@ export default function ShopRecommend() {
                 {items.length > 0 ? (
                     <button type="button" onClick={openBasis} className="shp-basis ah-display relative px-3 pb-1 pt-1.5 text-[12px]">
                         <span aria-hidden="true" className="st-tape absolute -top-1.5 left-1/2 h-2.5 w-7 -translate-x-1/2" style={{ background: "rgba(255,200,215,.9)", rotate: "-6deg" }} />
-                        추천 기준 보기
+                        {labelText("추천 기준 보기")}
                     </button>
                 ) : null}
                 {personalizationEnabled && prefs && selectedPet && pets.length > 1 ? pets.map((p) => (
@@ -132,9 +133,9 @@ export default function ShopRecommend() {
                     </button>
                 )) : null}
                 <Link href={personalizationEnabled && !selectedPet ? "/mypage/#pet-profiles" : "/recommendations/"} className="ah-display ml-auto text-[12px] text-[#e0557f]">
-                    {personalizationEnabled && !selectedPet ? "프로필 등록하기" : "추천 전체 보기"} <i aria-hidden="true" className="fa-solid fa-arrow-right text-[10px]" />
+                    {labelText(personalizationEnabled && !selectedPet ? "프로필 등록하기" : "추천 전체 보기")} <i aria-hidden="true" className="fa-solid fa-arrow-right text-[10px]" />
                 </Link>
-                {personalizationEnabled && prefs && !prefs.enabled ? <Link href="/mypage/recommendations/" className="ah-display text-[12px] text-[#5a6fe0]">맞춤 추천 켜기</Link> : null}
+                {personalizationEnabled && prefs && !prefs.enabled ? <Link href="/mypage/recommendations/" className="ah-display text-[12px] text-[#5a6fe0]">{labelText("맞춤 추천 켜기")}</Link> : null}
             </div>
             {personalizationEnabled && prefState.errorMessage && selectedPet ? <p role="status" className="ah-light mt-2 rounded-[10px] bg-[#fff4dc] px-3 py-2 text-[12px] text-[#8a5a0c]">{prefState.errorMessage}</p> : null}
             {personalizationEnabled ? personalized?.notices.map((n) => <p key={n} className="ah-light mt-2 rounded-[10px] bg-[#e6f4ff] px-3 py-2 text-[12px] text-[#1f5c8f]">{n}</p>) : null}
@@ -152,19 +153,19 @@ export default function ShopRecommend() {
                 </ul>
             ) : allItems.length > 0 ? (
                 <div className="shp-empty mt-3 rounded-[14px] px-4 py-6 text-center">
-                    <p className="ah-display text-[13.5px]">이 추천 묶음의 상품을 모두 숨겼어요.</p>
-                    <button type="button" onClick={unhide} className="ah-display mt-2 text-[12.5px] text-[#e0557f]">숨긴 상품 다시 보기</button>
+                    <p className="ah-display text-[13.5px]">{labelText("이 추천 묶음의 상품을 모두 숨겼어요.")}</p>
+                    <button type="button" onClick={unhide} className="ah-display mt-2 text-[12.5px] text-[#e0557f]">{labelText("숨긴 상품 다시 보기")}</button>
                 </div>
             ) : (
                 <div className="shp-empty mt-3 rounded-[14px] px-4 py-6 text-center">
-                    <p className="ah-display text-[13.5px]">현재 안전 기준을 통과한 맞춤 상품이 없어요.</p>
-                    <Link href="/products/" className="ah-display mt-2 inline-block text-[12.5px] text-[#e0557f]">전체 상품 직접 보기</Link>
+                    <p className="ah-display text-[13.5px]">{labelText("현재 안전 기준을 통과한 맞춤 상품이 없어요.")}</p>
+                    <Link href="/products/" className="ah-display mt-2 inline-block text-[12.5px] text-[#e0557f]">{labelText("전체 상품 직접 보기")}</Link>
                 </div>
             )}
 
             {/* 추천 기준 속지 — 웹 카드의 "왜 추천했나요"(사용한 정보 · 주의 · 추천 데이터 관리)와 상품별 이유 · 관심 없음을 한곳에 */}
-            <Sheet open={basisOpen} onClose={closeBasis} label="추천 기준"
-                title={<span className="ah-display st-marker text-[18px]">{petName}를 위한 추천 기준</span>}>
+            <Sheet open={basisOpen} onClose={closeBasis} label={labelText("추천 기준")}
+                title={<span className="ah-display st-marker text-[18px]">{petName}{labelText("를 위한 추천 기준")}</span>}>
                 {/* 반영 기준 — 테이프 붙인 노란 메모지 */}
                 <div className="shp-memo relative mt-2 px-4 pb-3 pt-4" style={{ rotate: "-0.8deg" }}>
                     <span aria-hidden="true" className="st-tape absolute -top-2 left-6 h-3.5 w-12" style={{ background: "rgba(200,226,255,.9)", rotate: "-4deg" }} />
@@ -172,7 +173,7 @@ export default function ShopRecommend() {
                 </div>
 
                 {/* 사용한 정보 — 오려 붙인 스티커 */}
-                <SectionLabel className="mt-6" icon="fa-paw">사용한 정보</SectionLabel>
+                <SectionLabel className="mt-6" icon="fa-paw">{labelText("사용한 정보")}</SectionLabel>
                 <ul className="mt-3 flex flex-wrap gap-2">
                     {usedSources.map((src, i) => (
                         <li key={src} className="shp-src ah-display px-3 py-1.5 text-[12px]" style={{ background: ["#efe8ff", "#e1f4ea", "#ffe4ec"][i % 3], rotate: `${[-1.5, 1.2, -0.8][i % 3]}deg` }}>{SOURCE_LABEL[src]}</li>
@@ -181,7 +182,7 @@ export default function ShopRecommend() {
                 {cautions.map((c) => <p key={c} className="shp-caution ah-light mt-3 px-3 py-2 text-[11.5px] leading-snug">{c}</p>)}
 
                 {/* 상품별 추천 이유 — 작은 폴라로이드 + 메모 · 관심 없음 와펜 */}
-                <SectionLabel className="mt-7" icon="fa-pen">상품별 추천 이유</SectionLabel>
+                <SectionLabel className="mt-7" icon="fa-pen">{labelText("상품별 추천 이유")}</SectionLabel>
                 <ul className="mt-4 space-y-4 pb-1">
                     {items.map((it, i) => (
                         <li key={it.product.id} className="flex items-start gap-3">
@@ -195,25 +196,25 @@ export default function ShopRecommend() {
                                 {/* 왜 추천했나요? — 웹 카드처럼 접혀 있다가 누르면 이 상품에 쓴 정보 · 주의 문구를 펼침 */}
                                 <button type="button" onClick={() => toggleReason(it.product.id)} aria-expanded={openReasons.has(it.product.id)} aria-controls={`shp-why-${it.product.id}`}
                                     className="shp-why ah-display mt-1.5 inline-flex items-center gap-1 text-[11.5px] text-[#5a6fe0]">
-                                    왜 추천했나요?<i aria-hidden="true" className={`fa-solid fa-chevron-down text-[9px] transition-transform duration-300 ${openReasons.has(it.product.id) ? "rotate-180" : ""}`} />
+                                    {labelText("왜 추천했나요?")}<i aria-hidden="true" className={`fa-solid fa-chevron-down text-[9px] transition-transform duration-300 ${openReasons.has(it.product.id) ? "rotate-180" : ""}`} />
                                 </button>
                                 {openReasons.has(it.product.id) ? (
                                     <span id={`shp-why-${it.product.id}`} className="shp-why-memo ah-light mt-1.5 block px-2.5 py-2 text-[11px] leading-snug">
-                                        <span className="block">사용한 정보</span>
+                                        <span className="block">{labelText("사용한 정보")}</span>
                                         {it.sourceGroups.map((src) => <span key={src} className="block">· {SOURCE_LABEL[src]}</span>)}
                                         {it.cautionLabels.map((c) => <span key={c} className="mt-1 block text-[#8a5a0c]">{c}</span>)}
                                     </span>
                                 ) : null}
                             </span>
-                            <span className="w-[5.2rem] shrink-0 pt-0.5"><Patch tone="cream" small onClick={() => hide(it.product.id)}>관심 없음</Patch></span>
+                            <span className="w-[5.2rem] shrink-0 pt-0.5"><Patch tone="cream" small onClick={() => hide(it.product.id)}>{labelText("관심 없음")}</Patch></span>
                         </li>
                     ))}
                 </ul>
                 {items.length === 0 && allItems.length > 0 ? (
-                    <div className="mt-3"><Patch tone="cream" small onClick={unhide}>숨긴 상품 다시 보기</Patch></div>
+                    <div className="mt-3"><Patch tone="cream" small onClick={unhide}>{labelText("숨긴 상품 다시 보기")}</Patch></div>
                 ) : null}
                 {RECOMMENDATION_FEATURE_FLAGS.preferences ? (
-                    <div className="mt-6"><Patch href="/mypage/recommendations/" tone="lavender" small>추천 데이터 관리<i aria-hidden="true" className="fa-solid fa-arrow-right text-[11px]" /></Patch></div>
+                    <div className="mt-6"><Patch href="/mypage/recommendations/" tone="lavender" small>{labelText("추천 데이터 관리")}<i aria-hidden="true" className="fa-solid fa-arrow-right text-[11px]" /></Patch></div>
                 ) : null}
             </Sheet>
         </section>

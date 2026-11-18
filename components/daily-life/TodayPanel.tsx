@@ -13,6 +13,7 @@
  * 머리말 · 제목 · 설명은 관리자 화면에서 바꾸는 content.today 를 그대로 쓴다.
  */
 
+import { useI18n } from "@/lib/i18n";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
@@ -95,6 +96,7 @@ function seoulNow() {
 }
 
 function StickerBoard() {
+    const { menuLabel: labelText } = useI18n();
     // 날짜 · 시각은 브라우저에서만 (서버 렌더와 어긋나지 않게)
     const [now, setNow] = useState<ReturnType<typeof seoulNow> | null>(null);
     useEffect(() => {
@@ -124,7 +126,7 @@ function StickerBoard() {
             <div className="flex items-center gap-3">
                 <div className="min-w-0 flex-1">
                     <p className="text-[11px] font-extrabold tracking-[0.08em]" style={{ color: VIOLET }}>DAILY STICKER</p>
-                    <h3 id="pv-sticker-title" className="mt-0.5 font-['Cafe24Ssurround',var(--font-wanted-sans)] text-[19px] tracking-[-0.02em]" style={{ color: TEXT }}>이번 주 출근 스티커</h3>
+                    <h3 id="pv-sticker-title" className="mt-0.5 font-['Cafe24Ssurround',var(--font-wanted-sans)] text-[19px] tracking-[-0.02em]" style={{ color: TEXT }}>{labelText("이번 주 출근 스티커")}</h3>
                     <p className="mt-1 text-[12.5px] text-[#8c7f78]">{now ? `${now.label} · ${greetOf(now.hour)}` : " "}</p>
                 </div>
                 <span className="relative mr-1 h-[46px] w-[64px] shrink-0" aria-hidden="true">
@@ -135,7 +137,7 @@ function StickerBoard() {
             </div>
 
             {/* 도장판 — 월~일 한 줄. 칸마다 요일 글자, 찍으면 그 위에 스티커가 쾅 */}
-            <ol className={`pv-tray mt-4 grid grid-cols-7 gap-1.5 ${thud ? "pv-thud" : ""}`} aria-label="이번 주 출근 스티커 (로그인 전 미리보기)">
+            <ol className={`pv-tray mt-4 grid grid-cols-7 gap-1.5 ${thud ? "pv-thud" : ""}`} aria-label={labelText("이번 주 출근 스티커 (로그인 전 미리보기)")}>
                 {WEEK.map((w, i) => {
                     const isToday = i === today;
                     const stuck = isToday && done;
@@ -154,7 +156,7 @@ function StickerBoard() {
                                     </>
                                 )}
                             </span>
-                            <span className="h-[13px] text-[10.5px] font-bold" style={{ color: PINK }}>{isToday ? "오늘" : ""}</span>
+                            <span className="h-[13px] text-[10.5px] font-bold" style={{ color: PINK }}>{labelText(isToday ? "오늘" : "")}</span>
                         </li>
                     );
                 })}
@@ -172,7 +174,7 @@ function StickerBoard() {
                     style={done ? { background: "rgba(240,87,127,.08)", color: PINK } : { background: `linear-gradient(100deg, #ff7fa2 0%, ${PINK} 45%, ${VIOLET} 120%)`, color: "#fff", boxShadow: "0 12px 22px -12px rgba(220,70,130,.7)" }}
                     aria-label={done ? "오늘 출근 스티커 미리보기 완료" : "오늘 출근 스티커 붙이기 (미리보기)"}
                 >
-                    {done ? <><i className="fa-solid fa-check text-[13px]" aria-hidden="true" />오늘 출근 완료</> : "오늘 스티커 붙이기"}
+                    {done ? <><i className="fa-solid fa-check text-[13px]" aria-hidden="true" />{labelText("오늘 출근 완료")}</> : "오늘 스티커 붙이기"}
                 </button>
             </div>
 
@@ -180,8 +182,8 @@ function StickerBoard() {
             <div className={`grid transition-[grid-template-rows,opacity,margin] duration-500 ease-[cubic-bezier(.22,1,.36,1)] ${done ? "mt-3 grid-rows-[1fr] opacity-100" : "mt-0 grid-rows-[0fr] opacity-0"}`}>
                 <div className="overflow-hidden">
                     <div className="flex items-center gap-3 rounded-2xl bg-white/80 p-3 shadow-[inset_0_0_0_1px_rgba(240,87,127,.15)]">
-                        <p className="min-w-0 flex-1 text-[12.5px] leading-snug text-[#7a5f66]">미리보기예요. 로그인하면 하루 한 장씩 진짜로 모여요.</p>
-                        <Link href={LOGIN_HREF} className="pv-press shrink-0 rounded-full px-4 py-2.5 text-[13px] font-bold text-white" style={{ background: PINK }}>로그인</Link>
+                        <p className="min-w-0 flex-1 text-[12.5px] leading-snug text-[#7a5f66]">{labelText("미리보기예요. 로그인하면 하루 한 장씩 진짜로 모여요.")}</p>
+                        <Link href={LOGIN_HREF} className="pv-press shrink-0 rounded-full px-4 py-2.5 text-[13px] font-bold text-white" style={{ background: PINK }}>{labelText("로그인")}</Link>
                     </div>
                 </div>
             </div>
@@ -193,6 +195,7 @@ function StickerBoard() {
 /* ───────────── 2) 단계 ───────────── */
 
 function Steps() {
+    const { menuLabel: labelText } = useI18n();
     const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
     const [reached, setReached] = useState(-1);
     // 단계가 화면 가운데쯤 오면 그 단계 스티커가 붙음
@@ -215,7 +218,7 @@ function Steps() {
     return (
         <section aria-labelledby="pv-steps-title">
             <h3 id="pv-steps-title" className="px-0.5 font-['Cafe24Ssurround',var(--font-wanted-sans)] text-[17px] tracking-[-0.02em]" style={{ color: TEXT }}>
-                매일 댕생활은 이렇게 이어져요
+                {labelText("매일 댕생활은 이렇게 이어져요")}
             </h3>
             <ol className="pv-card mt-3 overflow-hidden">
                 {GUEST_STEPS.map((step, i) => {
@@ -228,10 +231,10 @@ function Steps() {
                             </span>
                             <div className="min-w-0 flex-1">
                                 <p className="flex flex-wrap items-center gap-1.5">
-                                    <span className="pv-h3">{step.title}</span>
+                                    <span className="pv-h3">{labelText(step.title)}</span>
                                     <span className="rounded-full px-2 py-0.5 text-[10.5px] font-extrabold" style={{ background: st.tagBg, color: st.tagInk }}>{st.tag}</span>
                                 </p>
-                                <p className="pv-body mt-1 text-[13px]">{step.body}</p>
+                                <p className="pv-body mt-1 text-[13px]">{labelText(step.body)}</p>
                             </div>
                         </li>
                     );
@@ -244,6 +247,7 @@ function Steps() {
 /* ───────────── 3) 로그인 카드 ───────────── */
 
 function LoginCard() {
+    const { menuLabel: labelText } = useI18n();
     return (
         <section className="pv-luxe pv-luxe-pink relative overflow-hidden p-5">
             {/* 우리 아이 기록 보관함 — 둥실 떠 있고 아래 그림자가 함께 숨쉼 */}
@@ -255,16 +259,16 @@ function LoginCard() {
             </span>
             <div className="max-w-[60%]">
                 <h3 className="font-['Cafe24Ssurround',var(--font-wanted-sans)] text-[18px] leading-[1.35] tracking-[-0.02em]" style={{ color: TEXT }}>
-                    로그인하면<br />오늘 기록이<br />계정에 이어져요
+                    {labelText("로그인하면")}<br />{labelText("오늘 기록이")}<br />{labelText("계정에 이어져요")}
                 </h3>
-                <p className="mt-1.5 text-[12.5px] leading-snug text-[#8a7076]">비회원도 이벤트 · 동네 · 안내 탭은 먼저 둘러볼 수 있어요.</p>
+                <p className="mt-1.5 text-[12.5px] leading-snug text-[#8a7076]">{labelText("비회원도 이벤트 · 동네 · 안내 탭은 먼저 둘러볼 수 있어요.")}</p>
             </div>
             <div className="mt-4 grid grid-cols-2 gap-2">
                 <Link href={LOGIN_HREF} className="pv-press inline-flex min-h-[48px] items-center justify-center rounded-2xl text-[14.5px] font-bold text-white" style={{ background: `linear-gradient(100deg, #ff7fa2 0%, ${PINK} 45%, ${VIOLET} 120%)`, boxShadow: "0 12px 22px -12px rgba(220,70,130,.7)" }}>
-                    로그인하고 시작
+                    {labelText("로그인하고 시작")}
                 </Link>
                 <Link href={SIGNUP_HREF} className="pv-press inline-flex min-h-[48px] items-center justify-center rounded-2xl bg-white text-[14px] font-bold" style={{ color: "#b8335d", boxShadow: "inset 0 0 0 1px rgba(240,87,127,.25)" }}>
-                    처음이라면 회원가입
+                    {labelText("처음이라면 회원가입")}
                 </Link>
             </div>
         </section>

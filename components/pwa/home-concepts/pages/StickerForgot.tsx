@@ -14,6 +14,7 @@
  * 모양: 앱 가입 화면과 같은 다이어리 속지 · 색인 탭 · 라벨 스티커 입력칸 · 포스트잇 · 자수 와펜.
  */
 
+import { useI18n } from "@/lib/i18n";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -46,6 +47,7 @@ function passwordScore(value: string) {
 const mmss = (seconds: number) => `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
 
 export default function AppForgotView(props: ForgotWebProps) {
+    const { menuLabel: labelText } = useI18n();
     // 입력값 · 함수를 미리 꺼내 씀(입력칸 참조 codeRef 가 섞인 props 를 그리는 중에 직접 읽지 않게 — React 규칙)
     const {
         step, apiReady, challengeConfigured, email, setEmail, code, setCode, codeRef, newPassword, setNewPassword, confirmPassword, setConfirmPassword,
@@ -64,7 +66,7 @@ export default function AppForgotView(props: ForgotWebProps) {
     // 알림 — 서버 준비 중(노랑) · 안내(연보라) · 오류(분홍)
     const notes = (
         <>
-            {apiReady === false ? <div className="mb-3"><Note tone="warn">지금은 본인 확인 서비스를 준비 중입니다. 잠시 후 다시 이용해 주세요.</Note></div> : null}
+            {apiReady === false ? <div className="mb-3"><Note tone="warn">{labelText("지금은 본인 확인 서비스를 준비 중입니다. 잠시 후 다시 이용해 주세요.")}</Note></div> : null}
             {notice ? <div className="mb-3"><Note tone="info">{notice}</Note></div> : null}
             {error ? <div className="mb-3"><Note tone="error">{error}</Note></div> : null}
         </>
@@ -77,35 +79,35 @@ export default function AppForgotView(props: ForgotWebProps) {
             <div className="mx-auto w-full max-w-md">
                 {step !== "done" ? <DiaryTabs tabs={TABS} active={now} onPick={(i) => { if (i === 0 && now > 0) restart(); }} /> : null}
                 <DiaryBody pageKey={`forgot-${step}`} dir={1}>
-                    <h1 className="sr-only">비밀번호 재설정</h1>
+                    <h1 className="sr-only">{labelText("비밀번호 재설정")}</h1>
 
                     {step === "email" ? (
                         <form onSubmit={(e) => sendCode(e)}>
                             <p className="ah-light text-[10.5px] tracking-[.16em] text-[#3d8fb8]">STEP 1 · EMAIL</p>
-                            <p className="ah-display mt-0.5 text-[19px] leading-snug"><span className="st-marker">가입한 이메일</span>을 알려 주세요</p>
-                            <p className="ah-light mt-1 text-[12.5px]" style={{ color: TEXT_SOFT }}>그 주소로 인증번호 6자리를 보내 드려요.</p>
+                            <p className="ah-display mt-0.5 text-[19px] leading-snug"><span className="st-marker">{labelText("가입한 이메일")}</span>{labelText("을 알려 주세요")}</p>
+                            <p className="ah-light mt-1 text-[12.5px]" style={{ color: TEXT_SOFT }}>{labelText("그 주소로 인증번호 6자리를 보내 드려요.")}</p>
                             <div className="mt-4">{notes}</div>
                             <label className="su-label flex h-[50px] items-stretch" style={{ ["--stub" as string]: "#e3f2fb", ["--ink" as string]: "#3d8fb8" }}>
                                 <span className="su-stub grid w-11 shrink-0 place-items-center text-[13px]"><i aria-hidden="true" className="fa-solid fa-envelope" /></span>
-                                <span className="sr-only">가입 이메일</span>
-                                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" inputMode="email" required placeholder="가입 이메일 · email@example.com"
+                                <span className="sr-only">{labelText("가입 이메일")}</span>
+                                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" inputMode="email" required placeholder={labelText("가입 이메일 · email@example.com")}
                                     className="min-w-0 flex-1 bg-transparent px-3.5 text-[15px] outline-none placeholder:text-[#c2b2aa]" />
                             </label>
                             <div className="su-bot mt-4">
-                                <SignupBotChallenge action="password_reset" title="본인 확인 보호" description="자동 요청을 막기 위한 확인을 완료해 주세요."
+                                <SignupBotChallenge action="password_reset" title={labelText("본인 확인 보호")} description={labelText("자동 요청을 막기 위한 확인을 완료해 주세요.")}
                                     unavailableMessage="본인 확인 보호 기능을 준비 중입니다. 잠시 후 다시 이용해 주세요." onTokenChange={setBotToken} resetKey={challengeResetKey} />
                             </div>
-                            <div className="mt-4"><Patch type="submit" disabled={!canSend}>{loading ? "확인 중…" : "인증번호 받기"}<i aria-hidden="true" className="fa-solid fa-paper-plane text-[12px]" /></Patch></div>
+                            <div className="mt-4"><Patch type="submit" disabled={!canSend}>{labelText(loading ? "확인 중…" : "인증번호 받기")}<i aria-hidden="true" className="fa-solid fa-paper-plane text-[12px]" /></Patch></div>
 
                             {/* 이런 경우엔 달라요 — 간편가입 회원 · 이메일 기억 안 남(웹과 같은 갈래) */}
-                            <p className="ah-display mt-7 text-center text-[12.5px] text-[#b07a8a]">이런 경우엔 달라요</p>
+                            <p className="ah-display mt-7 text-center text-[12.5px] text-[#b07a8a]">{labelText("이런 경우엔 달라요")}</p>
                             <div className="mt-3 space-y-3">
                                 <Link href={appLoginHref(null)} onClick={() => haptic("light")} className="fx-case st-postit relative flex items-center gap-3 px-3.5 pb-3 pt-3.5" style={{ background: "#fff3a6", rotate: "-0.6deg" }}>
                                     <Tape className="-top-2 left-6 h-3.5 w-11" color="rgba(200,226,255,.88)" style={{ rotate: "-4deg" }} />
                                     <Image src="/images/ui/header-login-128.webp" alt="" width={40} height={40} className="h-10 w-10 shrink-0 object-contain" />
                                     <span className="min-w-0 flex-1">
-                                        <span className="ah-display block text-[13.5px]">간편가입으로 가입했어요</span>
-                                        <span className="ah-light block text-[11px] leading-snug text-[#8f5e12]">카카오 · 네이버 · 구글 회원은 비밀번호가 없어요. 그 버튼으로 로그인해 주세요.</span>
+                                        <span className="ah-display block text-[13.5px]">{labelText("간편가입으로 가입했어요")}</span>
+                                        <span className="ah-light block text-[11px] leading-snug text-[#8f5e12]">{labelText("카카오 · 네이버 · 구글 회원은 비밀번호가 없어요. 그 버튼으로 로그인해 주세요.")}</span>
                                     </span>
                                     <i aria-hidden="true" className="fa-solid fa-chevron-right text-[10px] text-[#c9a64a]" />
                                 </Link>
@@ -113,8 +115,8 @@ export default function AppForgotView(props: ForgotWebProps) {
                                     <Tape className="-top-2 right-7 h-3.5 w-11" color="rgba(255,200,215,.9)" style={{ rotate: "5deg" }} />
                                     <Image src="/images/ui/stickers/inquiry-email.webp" alt="" width={40} height={40} className="h-10 w-10 shrink-0 object-contain" />
                                     <span className="min-w-0 flex-1">
-                                        <span className="ah-display block text-[13.5px]">이메일이 기억나지 않아요</span>
-                                        <span className="ah-light block text-[11px] leading-snug text-[#1f7f5a]">1:1 문의에 이름과 주문 정보를 남기면 본인 확인 뒤 도와드려요.</span>
+                                        <span className="ah-display block text-[13.5px]">{labelText("이메일이 기억나지 않아요")}</span>
+                                        <span className="ah-light block text-[11px] leading-snug text-[#1f7f5a]">{labelText("1:1 문의에 이름과 주문 정보를 남기면 본인 확인 뒤 도와드려요.")}</span>
                                     </span>
                                     <i aria-hidden="true" className="fa-solid fa-chevron-right text-[10px] text-[#4fae84]" />
                                 </Link>
@@ -123,29 +125,29 @@ export default function AppForgotView(props: ForgotWebProps) {
                     ) : step === "code" ? (
                         <form onSubmit={(e) => verifyCode(e)}>
                             <p className="ah-light text-[10.5px] tracking-[.16em] text-[#7457d8]">STEP 2 · CODE</p>
-                            <p className="ah-display mt-0.5 text-[19px] leading-snug"><span className="st-marker">인증번호 6자리</span>를 넣어 주세요</p>
-                            <p className="ah-light mt-1 text-[12.5px]" style={{ color: TEXT_SOFT }}>메일 제목에 댕다방이 들어 있어요.</p>
+                            <p className="ah-display mt-0.5 text-[19px] leading-snug"><span className="st-marker">{labelText("인증번호 6자리")}</span>{labelText("를 넣어 주세요")}</p>
+                            <p className="ah-light mt-1 text-[12.5px]" style={{ color: TEXT_SOFT }}>{labelText("메일 제목에 댕다방이 들어 있어요.")}</p>
                             <div className="mt-4">{notes}</div>
 
                             {/* 보낸 주소 · 남은 시간 */}
                             <div className="su-paper flex items-center gap-3 rounded-[16px] px-3.5 py-3">
                                 <span className="min-w-0 flex-1">
-                                    <span className="ah-light block text-[11px]" style={{ color: TEXT_SOFT }}>보낸 주소</span>
+                                    <span className="ah-light block text-[11px]" style={{ color: TEXT_SOFT }}>{labelText("보낸 주소")}</span>
                                     <span className="ah-display block truncate text-[14px]">{maskEmail(email)}</span>
                                 </span>
-                                <button type="button" onClick={() => { haptic("light"); restart(); }} className="ah-display shrink-0 text-[12px] text-[#e0557f] underline underline-offset-2">바꾸기</button>
+                                <button type="button" onClick={() => { haptic("light"); restart(); }} className="ah-display shrink-0 text-[12px] text-[#e0557f] underline underline-offset-2">{labelText("바꾸기")}</button>
                                 <span className={`fx-timer grid h-14 w-14 shrink-0 place-items-center rounded-full ${urgent ? "is-urgent" : ""}`}
                                     style={{ ["--p" as string]: `${expiryTotal ? Math.round((expirySeconds / expiryTotal) * 360) : 360}deg` }}>
                                     <span className="grid h-11 w-11 place-items-center rounded-full bg-white text-center">
                                         <span className="ah-display block text-[12.5px] leading-none">{mmss(expirySeconds)}</span>
-                                        <span className="ah-light block text-[8.5px] leading-none" style={{ color: TEXT_SOFT }}>{urgent ? "곧 끝나요" : "남은 시간"}</span>
+                                        <span className="ah-light block text-[8.5px] leading-none" style={{ color: TEXT_SOFT }}>{labelText(urgent ? "곧 끝나요" : "남은 시간")}</span>
                                     </span>
                                 </span>
                             </div>
 
                             {/* 6칸 숫자 — 실제 입력은 한 칸(붙여넣기 · 자동 채움 그대로) */}
                             <label className="fx-code relative mt-4 block cursor-text">
-                                <span className="sr-only">인증번호 6자리</span>
+                                <span className="sr-only">{labelText("인증번호 6자리")}</span>
                                 <span className="flex justify-between gap-1.5" aria-hidden="true">
                                     {Array.from({ length: 6 }, (_, k) => (
                                         <span key={k} className={`fx-cell ah-display grid h-12 flex-1 place-items-center rounded-[12px] text-[20px] ${code[k] ? "is-on" : ""} ${k === code.length ? "is-now" : ""}`} style={{ rotate: `${[-1.5, 1, -0.6, 1.2, -1, 0.8][k]}deg` }}>{code[k] ?? ""}</span>
@@ -154,20 +156,20 @@ export default function AppForgotView(props: ForgotWebProps) {
                                 <input ref={codeRef} type="text" value={code} onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
                                     inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{6}" maxLength={6} required className="absolute inset-0 h-full w-full opacity-0" />
                             </label>
-                            <div className="mt-4"><Patch type="submit" disabled={loading || code.length !== 6}>{loading ? "확인 중…" : "이메일 확인"}<i aria-hidden="true" className="fa-solid fa-check text-[12px]" /></Patch></div>
+                            <div className="mt-4"><Patch type="submit" disabled={loading || code.length !== 6}>{labelText(loading ? "확인 중…" : "이메일 확인")}<i aria-hidden="true" className="fa-solid fa-check text-[12px]" /></Patch></div>
 
                             {/* 메일이 안 왔나요? — 노란 포스트잇 · 다시 받기 */}
                             <div className="st-postit relative mt-6 px-3.5 pb-3.5 pt-4" style={{ background: "#fff3a6", rotate: "-0.5deg" }}>
                                 <Tape className="-top-2 left-1/2 h-3.5 w-12 -translate-x-1/2" color="rgba(220,205,255,.9)" style={{ rotate: "3deg" }} />
-                                <p className="ah-display text-[13.5px]">메일이 안 왔나요?</p>
+                                <p className="ah-display text-[13.5px]">{labelText("메일이 안 왔나요?")}</p>
                                 <ul className="ah-light mt-1.5 space-y-1 text-[11.5px] leading-snug text-[#8f5e12]">
-                                    <li><i aria-hidden="true" className="fa-solid fa-filter mr-1 text-[9.5px]" />스팸 · 프로모션 메일함도 확인해 주세요.</li>
-                                    <li><i aria-hidden="true" className="fa-solid fa-spell-check mr-1 text-[9.5px]" />주소에 오타가 있으면 메일이 가지 않아요. <button type="button" onClick={restart} className="ah-display text-[#c4456f] underline underline-offset-2">이메일 다시 넣기</button></li>
-                                    <li><i aria-hidden="true" className="fa-solid fa-clock mr-1 text-[9.5px]" />메일이 오기까지 1~2분 걸릴 수 있어요.</li>
+                                    <li><i aria-hidden="true" className="fa-solid fa-filter mr-1 text-[9.5px]" />{labelText("스팸 · 프로모션 메일함도 확인해 주세요.")}</li>
+                                    <li><i aria-hidden="true" className="fa-solid fa-spell-check mr-1 text-[9.5px]" />{labelText("주소에 오타가 있으면 메일이 가지 않아요.")} <button type="button" onClick={restart} className="ah-display text-[#c4456f] underline underline-offset-2">{labelText("이메일 다시 넣기")}</button></li>
+                                    <li><i aria-hidden="true" className="fa-solid fa-clock mr-1 text-[9.5px]" />{labelText("메일이 오기까지 1~2분 걸릴 수 있어요.")}</li>
                                 </ul>
                                 {resendSeconds === 0 ? (
                                     <div className="su-bot mt-3">
-                                        <SignupBotChallenge action="password_reset" title="재전송 보호" description="인증번호를 다시 받을 때 필요한 확인입니다."
+                                        <SignupBotChallenge action="password_reset" title={labelText("재전송 보호")} description={labelText("인증번호를 다시 받을 때 필요한 확인입니다.")}
                                             unavailableMessage="재전송 보호 기능을 준비 중입니다. 잠시 후 다시 이용해 주세요." onTokenChange={setBotToken} resetKey={challengeResetKey} />
                                     </div>
                                 ) : null}
@@ -179,14 +181,14 @@ export default function AppForgotView(props: ForgotWebProps) {
                     ) : step === "password" ? (
                         <form onSubmit={(e) => setPassword(e)}>
                             <p className="ah-light text-[10.5px] tracking-[.16em] text-[#1f9e75]">STEP 3 · NEW PASSWORD</p>
-                            <p className="ah-display mt-0.5 text-[19px] leading-snug"><span className="st-marker">새 비밀번호</span>를 정해 주세요</p>
-                            <p className="ah-light mt-1 text-[12.5px]" style={{ color: TEXT_SOFT }}>앞으로 이 비밀번호로 로그인해요.</p>
+                            <p className="ah-display mt-0.5 text-[19px] leading-snug"><span className="st-marker">{labelText("새 비밀번호")}</span>{labelText("를 정해 주세요")}</p>
+                            <p className="ah-light mt-1 text-[12.5px]" style={{ color: TEXT_SOFT }}>{labelText("앞으로 이 비밀번호로 로그인해요.")}</p>
                             <div className="mt-4">{notes}</div>
                             <div className="space-y-3">
                                 <label className="su-label flex h-[50px] items-stretch" style={{ ["--stub" as string]: "#fff1c4", ["--ink" as string]: "#c98a12" }}>
                                     <span className="su-stub grid w-11 shrink-0 place-items-center text-[13px]"><i aria-hidden="true" className="fa-solid fa-lock" /></span>
-                                    <span className="sr-only">새 비밀번호</span>
-                                    <input type={showPw ? "text" : "password"} value={newPassword} onChange={(e) => setNewPassword(e.target.value)} minLength={8} maxLength={72} autoComplete="new-password" required placeholder="새 비밀번호 · 8자 이상"
+                                    <span className="sr-only">{labelText("새 비밀번호")}</span>
+                                    <input type={showPw ? "text" : "password"} value={newPassword} onChange={(e) => setNewPassword(e.target.value)} minLength={8} maxLength={72} autoComplete="new-password" required placeholder={labelText("새 비밀번호 · 8자 이상")}
                                         className="min-w-0 flex-1 bg-transparent px-3.5 text-[15px] outline-none placeholder:text-[#c2b2aa]" />
                                     <button type="button" onClick={() => setShowPw((v) => !v)} aria-label={showPw ? "비밀번호 숨기기" : "비밀번호 표시"} aria-pressed={showPw} className="su-eye grid w-11 shrink-0 place-items-center text-[13px] text-[#b8a59c]">
                                         <i aria-hidden="true" className={`fa-solid ${showPw ? "fa-eye-slash" : "fa-eye"}`} />
@@ -209,29 +211,29 @@ export default function AppForgotView(props: ForgotWebProps) {
                                 </div>
                                 <label className="su-label flex h-[50px] items-stretch" style={{ ["--stub" as string]: "#e8ddff", ["--ink" as string]: "#7457d8" }}>
                                     <span className="su-stub grid w-11 shrink-0 place-items-center text-[13px]"><i aria-hidden="true" className="fa-solid fa-key" /></span>
-                                    <span className="sr-only">새 비밀번호 확인</span>
-                                    <input type={showPw ? "text" : "password"} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} minLength={8} maxLength={72} autoComplete="new-password" required placeholder="새 비밀번호 확인 · 한 번 더"
+                                    <span className="sr-only">{labelText("새 비밀번호 확인")}</span>
+                                    <input type={showPw ? "text" : "password"} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} minLength={8} maxLength={72} autoComplete="new-password" required placeholder={labelText("새 비밀번호 확인 · 한 번 더")}
                                         className="min-w-0 flex-1 bg-transparent px-3.5 text-[15px] outline-none placeholder:text-[#c2b2aa]" />
-                                    {matchOk ? <span className="ah-display grid shrink-0 place-items-center pr-3 text-[11px] text-[#1f9e75]">같아요</span> : confirmPassword ? <span className="ah-display grid shrink-0 place-items-center pr-3 text-[11px] text-[#d2457a]">달라요</span> : null}
+                                    {matchOk ? <span className="ah-display grid shrink-0 place-items-center pr-3 text-[11px] text-[#1f9e75]">{labelText("같아요")}</span> : confirmPassword ? <span className="ah-display grid shrink-0 place-items-center pr-3 text-[11px] text-[#d2457a]">{labelText("달라요")}</span> : null}
                                 </label>
                             </div>
-                            <p className="ah-light mt-3 text-[11px] leading-snug" style={{ color: TEXT_SOFT }}><i aria-hidden="true" className="fa-solid fa-paw mr-1 text-[9px] text-[#f08eae]" />다른 사이트와 같은 비밀번호는 피하고, 이름 · 생일처럼 짐작하기 쉬운 말은 빼 주세요.</p>
-                            <div className="mt-4"><Patch type="submit" disabled={loading}>{loading ? "변경 중…" : "새 비밀번호 저장"}<i aria-hidden="true" className="fa-solid fa-floppy-disk text-[12px]" /></Patch></div>
+                            <p className="ah-light mt-3 text-[11px] leading-snug" style={{ color: TEXT_SOFT }}><i aria-hidden="true" className="fa-solid fa-paw mr-1 text-[9px] text-[#f08eae]" />{labelText("다른 사이트와 같은 비밀번호는 피하고, 이름 · 생일처럼 짐작하기 쉬운 말은 빼 주세요.")}</p>
+                            <div className="mt-4"><Patch type="submit" disabled={loading}>{labelText(loading ? "변경 중…" : "새 비밀번호 저장")}<i aria-hidden="true" className="fa-solid fa-floppy-disk text-[12px]" /></Patch></div>
                         </form>
                     ) : (
                         /* ④ 완료 — 축하 그림 · 로그인하기 */
                         <div className="flex flex-col items-center text-center">
                             <Image src="/images/ui/stickers/login-lock.webp" alt="" width={96} height={96} className="su-done-art st-diecut-img h-24 w-24 object-contain" />
                             <p className="ah-light mt-2 text-[10.5px] tracking-[.18em] text-[#1f9e75]">ALL DONE</p>
-                            <h2 className="ah-display mt-1 text-[20px]"><span className="st-marker">비밀번호를 바꿨어요</span></h2>
-                            <p className="ah-light mt-2 text-[12.5px] leading-relaxed" style={{ color: TEXT_SOFT }}>새 비밀번호로 다시 로그인해 주세요. 다른 기기에서 로그인돼 있었다면 다시 로그인해야 할 수 있어요.</p>
-                            <div className="mt-6 w-full"><Patch href={appLoginHref(null)}>로그인하기<i aria-hidden="true" className="fa-solid fa-arrow-right text-[12px]" /></Patch></div>
+                            <h2 className="ah-display mt-1 text-[20px]"><span className="st-marker">{labelText("비밀번호를 바꿨어요")}</span></h2>
+                            <p className="ah-light mt-2 text-[12.5px] leading-relaxed" style={{ color: TEXT_SOFT }}>{labelText("새 비밀번호로 다시 로그인해 주세요. 다른 기기에서 로그인돼 있었다면 다시 로그인해야 할 수 있어요.")}</p>
+                            <div className="mt-6 w-full"><Patch href={appLoginHref(null)}>{labelText("로그인하기")}<i aria-hidden="true" className="fa-solid fa-arrow-right text-[12px]" /></Patch></div>
                         </div>
                     )}
 
                     {step !== "done" ? (
                         <p className="ah-light mt-6 text-center text-[12.5px]" style={{ color: TEXT_SOFT }}>
-                            <Link href={appLoginHref(null)} className="ah-display text-[#e0557f] underline underline-offset-4">로그인으로 돌아가기</Link>
+                            <Link href={appLoginHref(null)} className="ah-display text-[#e0557f] underline underline-offset-4">{labelText("로그인으로 돌아가기")}</Link>
                         </p>
                     ) : null}
                 </DiaryBody>

@@ -1,3 +1,4 @@
+import { koreanMarkup } from "./helpers/korean-markup.mjs";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
@@ -6,7 +7,7 @@ const files = await Promise.all([
     readFile(new URL("../lib/store.tsx", import.meta.url), "utf8"),
     readFile(new URL("../lib/customer-api.ts", import.meta.url), "utf8"),
     readFile(new URL("../lib/daengdabang-llm.ts", import.meta.url), "utf8"),
-    readFile(new URL("../app/auth/signup/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/auth/signup/page.tsx", import.meta.url), "utf8").then(koreanMarkup),
     readFile(new URL("../components/mypage/MemberPetProfileEditor.tsx", import.meta.url), "utf8"),
 ]);
 

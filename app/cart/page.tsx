@@ -67,6 +67,7 @@ const CART_SHORTCUTS = [
 ] as const;
 
 export default function CartPage() {
+    const { menuLabel: labelText } = useI18n();
     const router = useRouter();
     const cart = useCart();
     const { user } = useAuth();
@@ -319,7 +320,7 @@ export default function CartPage() {
                                             onClick={() => cart.setQty(product.id, qty - 1, color, size)}
                                             disabled={qty <= 1}
                                             className="flex h-full w-9 items-center justify-center text-neutral-600 transition disabled:cursor-not-allowed disabled:opacity-30"
-                                            aria-label="수량 감소"
+                                            aria-label={labelText("수량 감소")}
                                         >
                                             <i className="fa-solid fa-minus text-xs" />
                                         </button>
@@ -329,7 +330,7 @@ export default function CartPage() {
                                             onClick={() => cart.setQty(product.id, Math.min(99, qty + 1), color, size)}
                                             disabled={qty >= 99 || !purchaseState.purchasable}
                                             className="flex h-full w-9 items-center justify-center text-neutral-600 transition disabled:cursor-not-allowed disabled:opacity-30"
-                                            aria-label="수량 증가"
+                                            aria-label={labelText("수량 증가")}
                                         >
                                             <i className="fa-solid fa-plus text-xs" />
                                         </button>

@@ -38,6 +38,8 @@ test("blank member widget starts fresh, visible followups retain context, new ch
     const jsx = (type, props) => ({ type, props });
     const stubs = {
         react,
+        "@/lib/i18n": { useI18n: () => ({ locale: "ko" }) },
+        "@/hooks/useCareTalkCopy": { useCareTalkCopy: () => text => text },
         "@/hooks/useChatWindow": { useChatWindow: () => ({ desktop: false }) },
         "@/components/site/ChatBotProtection": { useChatBotProtection: () => ({ consume: () => ({ allowed: true, proof: "" }), refresh() {}, challenge: null, ready: true }) },
         "@/lib/chat-widget-events": { CHAT_WIDGET_OPEN_EVENT: "open-chat", consumeChatWidgetOpen: () => undefined },

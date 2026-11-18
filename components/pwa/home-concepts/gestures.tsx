@@ -10,6 +10,7 @@
  *  - Peek: 꾹 누르면 카드 자리에서 미리보기 판이 커져 나옴(바깥을 누르면 다시 줄어듦)
  */
 
+import { useI18n } from "@/lib/i18n";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
@@ -116,6 +117,7 @@ export function useExpandNav() {
  * 꾹 눌러 미리보기 — 카드 자리에서 판이 커져 나오고, 바깥을 누르면 다시 카드 자리로 줄어든다
  */
 export function Peek({ from, bg, onClose, children }: { from: DOMRect | null; bg: string; onClose: () => void; children: ReactNode }) {
+    const { menuLabel: labelText } = useI18n();
     const panelRef = useRef<HTMLDivElement>(null);
     const dimRef = useRef<HTMLDivElement>(null);
     useLayoutEffect(() => {
@@ -145,7 +147,7 @@ export function Peek({ from, bg, onClose, children }: { from: DOMRect | null; bg
             <div ref={dimRef} className="absolute inset-0 bg-[#3a2f2c]/30 backdrop-blur-[6px]" onClick={close} />
             <div ref={panelRef} className="ah-sq absolute inset-x-4 top-1/2 max-h-[78dvh] -translate-y-1/2 overflow-y-auto rounded-[30px]" style={{ background: bg, boxShadow: "0 30px 60px -24px rgba(60,30,40,.45)" }}>
                 {children}
-                <p className="ah-light pb-3 text-center text-[11.5px] text-[#7a6a63]">바깥을 누르면 닫혀요</p>
+                <p className="ah-light pb-3 text-center text-[11.5px] text-[#7a6a63]">{labelText("바깥을 누르면 닫혀요")}</p>
             </div>
         </div>,
         document.body,

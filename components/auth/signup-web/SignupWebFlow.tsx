@@ -13,6 +13,7 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import Link from "next/link";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import SignupBotChallenge from "@/components/auth/SignupBotChallenge";
@@ -157,6 +158,7 @@ function passwordScore(value: string) {
 }
 
 export default function SignupWebFlow(props: Props) {
+    const { menuLabel: labelText } = useI18n();
     const { pet } = props;
     const [features] = useState(readSignupFlowFeatures);
     const providers = useSocialProviderStatus();
@@ -290,7 +292,7 @@ export default function SignupWebFlow(props: Props) {
     /* ───────── 가입 완료 ───────── */
     if (done) {
         return withDev(
-            <SxShell steps={steps} now={now} route={route} lead="가입이 모두 끝났어요.">
+            <SxShell steps={steps} now={now} route={route} lead={labelText("가입이 모두 끝났어요.")}>
                 <SignupWebDone
                     name={done.member.name}
                     pet={done.member.pets[0]}
@@ -314,17 +316,17 @@ export default function SignupWebFlow(props: Props) {
         const connectionError = props.apiReady === true && providers.statusChecked && !providers.enabledByProvider;
         const emailFlow = emailSteps(features.identity).slice(1, -1).map((step) => step.label);
         return withDev(
-            <SxShell steps={steps} now={0} lead="우리 아이 정보를 함께 등록하면 꼭 맞는 상품과 돌봄을 추천해 드려요.">
+            <SxShell steps={steps} now={0} lead={labelText("우리 아이 정보를 함께 등록하면 꼭 맞는 상품과 돌봄을 추천해 드려요.")}>
                 <SxCard labelledBy="sxw-method-title" screen="method">
                     <SxHead
                         id="sxw-method-title"
                         art="header-login-128.webp"
                         kicker={kicker("START")}
-                        title={<>어떻게 <Hl>가입</Hl>할까요?</>}
+                        title={<>{labelText("어떻게")} <Hl>{labelText("가입")}</Hl>{labelText("할까요?")}</>}
                         sub="이메일로 가입하거나, 쓰던 계정으로 바로 시작할 수 있어요."
                     />
                     {props.apiReady === false && (
-                        <SxNotice tone="amber" icon="fa-screwdriver-wrench" title="지금은 회원가입 준비 중이에요">잠시 후 다시 이용해 주세요.</SxNotice>
+                        <SxNotice tone="amber" icon="fa-screwdriver-wrench" title={labelText("지금은 회원가입 준비 중이에요")}>{labelText("잠시 후 다시 이용해 주세요.")}</SxNotice>
                     )}
 
                     <button
@@ -342,9 +344,9 @@ export default function SignupWebFlow(props: Props) {
                             <img src={`${UI}stickers/my-profile.webp`} alt="" />
                         </span>
                         <span className="sxw-way-text">
-                            <b>이메일로 가입하기</b>
-                            <small>이메일 · 비밀번호로 로그인해요</small>
-                            <span className="sxw-way-flow" aria-label="가입 순서">
+                            <b>{labelText("이메일로 가입하기")}</b>
+                            <small>{labelText("이메일 · 비밀번호로 로그인해요")}</small>
+                            <span className="sxw-way-flow" aria-label={labelText("가입 순서")}>
                                 {emailFlow.map((label, index) => (
                                     <span key={label}>{index > 0 && <i className="fa-solid fa-chevron-right" aria-hidden="true" />}{label}</span>
                                 ))}
@@ -353,7 +355,7 @@ export default function SignupWebFlow(props: Props) {
                         <span className="sxw-way-go" aria-hidden="true"><i className="fa-solid fa-arrow-right" /></span>
                     </button>
 
-                    <p className="sxw-or"><span>또는 쓰던 계정으로 바로 시작</span></p>
+                    <p className="sxw-or"><span>{labelText("또는 쓰던 계정으로 바로 시작")}</span></p>
 
                     <div className="sxw-socials">
                         {SOCIAL.map((provider) => {
@@ -373,20 +375,20 @@ export default function SignupWebFlow(props: Props) {
                                     data-signup-start={provider.id}
                                 >
                                     <ProviderMark provider={provider.id} />
-                                    <span>{provider.label}로 시작</span>
-                                    {state === "checking" && <em>확인 중</em>}
-                                    {state === "off" && props.apiReady === true && <em>준비 중</em>}
+                                    <span>{provider.label}{labelText("로 시작")}</span>
+                                    {state === "checking" && <em>{labelText("확인 중")}</em>}
+                                    {state === "off" && props.apiReady === true && <em>{labelText("준비 중")}</em>}
                                 </button>
                             );
                         })}
                     </div>
                     {connectionError && (
                         <p className="sxw-retry" role="status">
-                            간편 가입 연결을 확인하지 못했어요.
-                            <button type="button" onClick={providers.retryProviders}>다시 확인</button>
+                            {labelText("간편 가입 연결을 확인하지 못했어요.")}
+                            <button type="button" onClick={providers.retryProviders}>{labelText("다시 확인")}</button>
                         </p>
                     )}
-                    <p className="sxw-note">간편 가입은 비밀번호 없이 카카오 · 네이버 · 구글 계정으로 로그인해요. 그 화면에서 동의하면 댕다방으로 돌아와요.</p>
+                    <p className="sxw-note">{labelText("간편 가입은 비밀번호 없이 카카오 · 네이버 · 구글 계정으로 로그인해요. 그 화면에서 동의하면 댕다방으로 돌아와요.")}</p>
 
                     {/* 가입 혜택 — 가입 방법 카드 아래 */}
                     <div className="sxw-bonus">
@@ -395,9 +397,9 @@ export default function SignupWebFlow(props: Props) {
                             <img src={`${UI}goods-pay-ready-256.webp`} alt="" />
                         </span>
                         <span>
-                            <em>가입 혜택</em>
-                            <b>코인 20C · 행동·소리 분석 2회</b>
-                            <small>가입 후 마이페이지에서 이메일을 인증하면 바로 들어와요.</small>
+                            <em>{labelText("가입 혜택")}</em>
+                            <b>{labelText("코인 20C · 행동·소리 분석 2회")}</b>
+                            <small>{labelText("가입 후 마이페이지에서 이메일을 인증하면 바로 들어와요.")}</small>
                         </span>
                     </div>
                 </SxCard>
@@ -416,15 +418,15 @@ export default function SignupWebFlow(props: Props) {
                         id="sxw-terms-title"
                         art="policy-info-192.webp"
                         kicker={kicker("AGREEMENT")}
-                        title={<><Hl>약관</Hl>에 동의해 주세요</>}
+                        title={<><Hl>{labelText("약관")}</Hl>{labelText("에 동의해 주세요")}</>}
                         sub="필수 3가지에 동의하면 다음으로 넘어가요. 내용은 항목마다 펼쳐 볼 수 있어요."
                     />
                     {isSocial && provider && (
                         <div className="sxw-provider" data-provider={provider.id}>
                             <span className="sxw-provider-mark" aria-hidden="true"><ProviderMark provider={provider.id} /></span>
                             <span>
-                                <b>{provider.label}에서 받는 정보</b>
-                                <small>{provider.gives} · 비밀번호는 받지 않아요</small>
+                                <b>{provider.label}{labelText("에서 받는 정보")}</b>
+                                <small>{provider.gives} {labelText("· 비밀번호는 받지 않아요")}</small>
                             </span>
                         </div>
                     )}
@@ -440,19 +442,19 @@ export default function SignupWebFlow(props: Props) {
                         onOpenDoc={setDoc}
                     />
                     {!isSocial && (
-                        <p className="sxw-note"><i className="fa-solid fa-paw" aria-hidden="true" />반려동물 정보 동의(선택)는 &quot;우리 아이&quot; 단계에서 따로 받아요.</p>
+                        <p className="sxw-note"><i className="fa-solid fa-paw" aria-hidden="true" />{labelText("반려동물 정보 동의(선택)는 &quot;우리 아이&quot; 단계에서 따로 받아요.")}</p>
                     )}
                     {isSocial && (
                         <div className="sxw-bot">
                             <SignupBotChallenge
                                 onTokenChange={props.setBotToken}
                                 resetKey={props.botResetKey}
-                                title="가입 보안 확인"
-                                description="자동 가입을 막기 위해 확인해요. 확인이 끝나면 다음 버튼이 켜져요."
+                                title={labelText("가입 보안 확인")}
+                                description={labelText("자동 가입을 막기 위해 확인해요. 확인이 끝나면 다음 버튼이 켜져요.")}
                             />
                         </div>
                     )}
-                    {tried && !requiredAgreed && <SxNotice tone="rose" icon="fa-circle-exclamation">필수 3가지에 모두 동의해 주세요.</SxNotice>}
+                    {tried && !requiredAgreed && <SxNotice tone="rose" icon="fa-circle-exclamation">{labelText("필수 3가지에 모두 동의해 주세요.")}</SxNotice>}
                     {socialError && <SxNotice tone="rose" icon="fa-circle-exclamation">{socialError}</SxNotice>}
                     <SxFoot
                         onPrev={() => go("method")}
@@ -475,7 +477,7 @@ export default function SignupWebFlow(props: Props) {
                                 data-signup-social-go={route}
                             >
                                 <ProviderMark provider={route} />
-                                {providerLabel}로 계속하기
+                                {providerLabel}{labelText("로 계속하기")}
                             </button>
                         ) : (
                             <button
@@ -491,7 +493,7 @@ export default function SignupWebFlow(props: Props) {
                                 }}
                                 data-signup-next="terms"
                             >
-                                {features.identity ? "동의하고 본인인증" : "동의하고 계속"}
+                                {labelText(features.identity ? "동의하고 본인인증" : "동의하고 계속")}
                                 <i className="fa-solid fa-arrow-right" aria-hidden="true" />
                             </button>
                         )}
@@ -511,7 +513,7 @@ export default function SignupWebFlow(props: Props) {
                         id="sxw-id-title"
                         art="web-cs-phone-256.webp"
                         kicker={kicker("IDENTITY")}
-                        title={<>휴대폰으로 <Hl>본인인증</Hl> 해 주세요</>}
+                        title={<>{labelText("휴대폰으로")} <Hl>{labelText("본인인증")}</Hl> {labelText("해 주세요")}</>}
                         sub="내 명의 휴대폰으로 인증해요. 입력은 인증기관 창에서 해요."
                     />
                     <IdentityPanel
@@ -527,7 +529,7 @@ export default function SignupWebFlow(props: Props) {
                     />
                     <SxFoot onPrev={() => go("terms")}>
                         <button type="button" className="sxw-next" disabled={!identityOk} onClick={() => go("account")} data-signup-next="identity">
-                            {identityOk ? "다음 · 계정 정보" : "인증을 마치면 다음으로"}
+                            {labelText(identityOk ? "다음 · 계정 정보" : "인증을 마치면 다음으로")}
                             <i className="fa-solid fa-arrow-right" aria-hidden="true" />
                         </button>
                     </SxFoot>
@@ -568,7 +570,7 @@ export default function SignupWebFlow(props: Props) {
         };
 
         return withDev(
-            <SxShell steps={steps} now={now} route={route} lead="로그인할 이메일과 비밀번호를 정해 주세요.">
+            <SxShell steps={steps} now={now} route={route} lead={labelText("로그인할 이메일과 비밀번호를 정해 주세요.")}>
                 <SxCard
                     as="form"
                     labelledBy="sxw-acc-title"
@@ -582,16 +584,16 @@ export default function SignupWebFlow(props: Props) {
                         id="sxw-acc-title"
                         art="stickers/my-profile.webp"
                         kicker={kicker("ACCOUNT")}
-                        title={<><Hl>계정 정보</Hl>를 정해 주세요</>}
+                        title={<><Hl>{labelText("계정 정보")}</Hl>{labelText("를 정해 주세요")}</>}
                         sub={identityVerified ? "이름과 휴대폰은 본인인증 정보로 채워져요." : "이메일이 로그인 아이디가 돼요. 주문 안내도 이 주소로 보내 드려요."}
                     />
 
-                    <SxBlock icon="fa-user" title="내 정보" tone="sky">
+                    <SxBlock icon="fa-user" title={labelText("내 정보")} tone="sky">
                         <div className="sxw-form">
                             <label className="sxw-f">
-                                <span className="sxw-label">이름</span>
+                                <span className="sxw-label">{labelText("이름")}</span>
                                 {identityVerified ? (
-                                    <span className="sxw-in is-lock">{identityVerified.name}<i className="fa-solid fa-lock" aria-label="본인인증 정보" /></span>
+                                    <span className="sxw-in is-lock">{identityVerified.name}<i className="fa-solid fa-lock" aria-label={labelText("본인인증 정보")} /></span>
                                 ) : (
                                     <input
                                         className="sxw-in"
@@ -599,30 +601,30 @@ export default function SignupWebFlow(props: Props) {
                                         onChange={(event) => props.setName(event.target.value)}
                                         autoComplete="name"
                                         maxLength={40}
-                                        placeholder="예: 김댕댕"
+                                        placeholder={labelText("예: 김댕댕")}
                                         aria-invalid={tried && !nameOk}
                                     />
                                 )}
-                                {tried && !nameOk && <span className="sxw-err">이름을 넣어 주세요.</span>}
+                                {tried && !nameOk && <span className="sxw-err">{labelText("이름을 넣어 주세요.")}</span>}
                             </label>
                             {identityVerified ? (
                                 <div className="sxw-f">
-                                    <span className="sxw-label">휴대폰</span>
-                                    <span className="sxw-in is-lock">{identityVerified.maskedPhone}<i className="fa-solid fa-lock" aria-label="본인인증 정보" /></span>
+                                    <span className="sxw-label">{labelText("휴대폰")}</span>
+                                    <span className="sxw-in is-lock">{identityVerified.maskedPhone}<i className="fa-solid fa-lock" aria-label={labelText("본인인증 정보")} /></span>
                                 </div>
                             ) : (
                                 <p className="sxw-f-tip">
                                     <i className="fa-solid fa-receipt" aria-hidden="true" />
-                                    주문 · 배송 안내와 영수증을 이메일로 보내 드려요. 실제로 쓰는 주소를 넣어 주세요.
+                                    {labelText("주문 · 배송 안내와 영수증을 이메일로 보내 드려요. 실제로 쓰는 주소를 넣어 주세요.")}
                                 </p>
                             )}
                         </div>
                     </SxBlock>
 
-                    <SxBlock icon="fa-key" title="로그인 정보" tone="lav">
+                    <SxBlock icon="fa-key" title={labelText("로그인 정보")} tone="lav">
                         <div className="sxw-form">
                             <div className="sxw-f is-wide">
-                                <label className="sxw-label" htmlFor="sxw-email">이메일 <small>로그인 아이디</small></label>
+                                <label className="sxw-label" htmlFor="sxw-email">{labelText("이메일")} <small>{labelText("로그인 아이디")}</small></label>
                                 <span className="sxw-row">
                                     <span className={`sxw-inwrap${emailStatus === "available" ? " is-ok" : ""}${emailTaken ? " is-bad" : ""}`}>
                                         <input
@@ -640,18 +642,18 @@ export default function SignupWebFlow(props: Props) {
                                             placeholder="daeng@example.com"
                                             aria-invalid={(tried && !emailFormatOk) || emailTaken}
                                         />
-                                        {emailStatus === "available" && <em className="is-ok">쓸 수 있어요</em>}
-                                        {emailStatus === "unknown" && <em>가입할 때 확인해요</em>}
+                                        {emailStatus === "available" && <em className="is-ok">{labelText("쓸 수 있어요")}</em>}
+                                        {emailStatus === "unknown" && <em>{labelText("가입할 때 확인해요")}</em>}
                                     </span>
                                     {features.emailCheck && (
                                         <button type="button" className="sxw-mini" onClick={() => void runEmailCheck()} disabled={!emailFormatOk || emailStatus === "checking"}>
                                             <i className={emailStatus === "checking" ? "fa-solid fa-circle-notch fa-spin" : "fa-solid fa-magnifying-glass"} aria-hidden="true" />
-                                            중복 확인
+                                            {labelText("중복 확인")}
                                         </button>
                                     )}
                                 </span>
-                                {tried && !emailFormatOk && <span className="sxw-err">이메일 주소 모양을 확인해 주세요. 예: daeng@example.com</span>}
-                                {!features.emailCheck && emailFormatOk && <span className="sxw-hint">이미 가입된 이메일인지는 가입하기를 누를 때 확인해요.</span>}
+                                {tried && !emailFormatOk && <span className="sxw-err">{labelText("이메일 주소 모양을 확인해 주세요. 예: daeng@example.com")}</span>}
+                                {!features.emailCheck && emailFormatOk && <span className="sxw-hint">{labelText("이미 가입된 이메일인지는 가입하기를 누를 때 확인해요.")}</span>}
                                 {emailTaken && (
                                     <SxBranch
                                         tone="pink"
@@ -661,18 +663,18 @@ export default function SignupWebFlow(props: Props) {
                                         title={`${maskEmail(emailValue)} 계정이 있어요`}
                                         actions={(
                                             <>
-                                                <Link href="/auth/login" className="sxw-pill is-pink">로그인</Link>
-                                                <Link href="/forgot-password" className="sxw-pill">비밀번호 찾기</Link>
+                                                <Link href="/auth/login" className="sxw-pill is-pink">{labelText("로그인")}</Link>
+                                                <Link href="/forgot-password" className="sxw-pill">{labelText("비밀번호 찾기")}</Link>
                                             </>
                                         )}
                                     >
-                                        예전에 가입했다면 로그인해 주세요. 다른 이메일로 새로 가입할 수도 있어요.
+                                        {labelText("예전에 가입했다면 로그인해 주세요. 다른 이메일로 새로 가입할 수도 있어요.")}
                                     </SxBranch>
                                 )}
                             </div>
 
                             <div className="sxw-f">
-                                <label className="sxw-label" htmlFor="sxw-pw">비밀번호</label>
+                                <label className="sxw-label" htmlFor="sxw-pw">{labelText("비밀번호")}</label>
                                 <span className="sxw-inwrap">
                                     <input
                                         id="sxw-pw"
@@ -682,7 +684,7 @@ export default function SignupWebFlow(props: Props) {
                                         onChange={(event) => props.setPassword(event.target.value)}
                                         autoComplete="new-password"
                                         maxLength={72}
-                                        placeholder="8자 이상"
+                                        placeholder={labelText("8자 이상")}
                                         aria-invalid={tried && (!lengthOk || !bytesOk)}
                                         aria-describedby="sxw-pw-rules"
                                     />
@@ -695,15 +697,15 @@ export default function SignupWebFlow(props: Props) {
                                     {props.password && <b>{score >= 3 ? "튼튼해요" : score === 2 ? "괜찮아요" : "약해요"}</b>}
                                 </span>
                                 <span className="sxw-rules" id="sxw-pw-rules">
-                                    <span className={lengthOk ? "is-ok" : ""}><i className={lengthOk ? "fa-solid fa-check" : "fa-regular fa-circle"} aria-hidden="true" />8자 이상</span>
-                                    <span className={mixOk ? "is-ok" : ""}><i className={mixOk ? "fa-solid fa-check" : "fa-regular fa-circle"} aria-hidden="true" />영문 · 숫자 섞기</span>
-                                    <span className={!props.password ? "" : bytesOk ? "is-ok" : "is-bad"}><i className={bytesOk ? (props.password ? "fa-solid fa-check" : "fa-regular fa-circle") : "fa-solid fa-xmark"} aria-hidden="true" />72바이트 이하</span>
+                                    <span className={lengthOk ? "is-ok" : ""}><i className={lengthOk ? "fa-solid fa-check" : "fa-regular fa-circle"} aria-hidden="true" />{labelText("8자 이상")}</span>
+                                    <span className={mixOk ? "is-ok" : ""}><i className={mixOk ? "fa-solid fa-check" : "fa-regular fa-circle"} aria-hidden="true" />{labelText("영문 · 숫자 섞기")}</span>
+                                    <span className={!props.password ? "" : bytesOk ? "is-ok" : "is-bad"}><i className={bytesOk ? (props.password ? "fa-solid fa-check" : "fa-regular fa-circle") : "fa-solid fa-xmark"} aria-hidden="true" />{labelText("72바이트 이하")}</span>
                                 </span>
-                                {tried && !lengthOk && <span className="sxw-err">비밀번호는 8자 이상으로 정해 주세요.</span>}
-                                {!bytesOk && <span className="sxw-err">너무 길어요(한글은 한 글자에 3바이트). 조금 줄여 주세요.</span>}
+                                {tried && !lengthOk && <span className="sxw-err">{labelText("비밀번호는 8자 이상으로 정해 주세요.")}</span>}
+                                {!bytesOk && <span className="sxw-err">{labelText("너무 길어요(한글은 한 글자에 3바이트). 조금 줄여 주세요.")}</span>}
                             </div>
                             <div className="sxw-f">
-                                <label className="sxw-label" htmlFor="sxw-pw2">비밀번호 확인</label>
+                                <label className="sxw-label" htmlFor="sxw-pw2">{labelText("비밀번호 확인")}</label>
                                 <span className={`sxw-inwrap${matchOk ? " is-ok" : password2 && !matchOk ? " is-bad" : ""}`}>
                                     <input
                                         id="sxw-pw2"
@@ -713,20 +715,20 @@ export default function SignupWebFlow(props: Props) {
                                         onChange={(event) => setPassword2(event.target.value)}
                                         autoComplete="new-password"
                                         maxLength={72}
-                                        placeholder="한 번 더 넣어 주세요"
+                                        placeholder={labelText("한 번 더 넣어 주세요")}
                                         aria-invalid={Boolean(password2) && !matchOk}
                                     />
-                                    {matchOk && <em className="is-ok">같아요</em>}
-                                    {password2 && !matchOk && <em className="is-bad">달라요</em>}
+                                    {matchOk && <em className="is-ok">{labelText("같아요")}</em>}
+                                    {password2 && !matchOk && <em className="is-bad">{labelText("달라요")}</em>}
                                 </span>
-                                {tried && !password2 && <span className="sxw-err">비밀번호를 한 번 더 넣어 주세요.</span>}
+                                {tried && !password2 && <span className="sxw-err">{labelText("비밀번호를 한 번 더 넣어 주세요.")}</span>}
                             </div>
                         </div>
                     </SxBlock>
 
                     <SxFoot onPrev={() => go(features.identity ? "identity" : "terms")}>
                         <button type="submit" className={ready ? "sxw-next" : "sxw-next is-off"} aria-disabled={!ready} data-signup-next="account">
-                            다음 · 우리 아이<i className="fa-solid fa-arrow-right" aria-hidden="true" />
+                            {labelText("다음 · 우리 아이")}<i className="fa-solid fa-arrow-right" aria-hidden="true" />
                         </button>
                     </SxFoot>
                 </SxCard>
@@ -737,7 +739,7 @@ export default function SignupWebFlow(props: Props) {
     /* ───────── ⑤ 우리 아이 + 마지막 확인 · 가입 ───────── */
     const canSubmit = Boolean(choice) && props.apiReady === true && props.botConfigured && Boolean(props.botToken) && !props.loading && !pet.photoLoading;
     return withDev(
-        <SxShell steps={steps} now={now} route={route} lead="우리 아이를 함께 등록하면 꼭 맞는 상품을 먼저 보여 드려요.">
+        <SxShell steps={steps} now={now} route={route} lead={labelText("우리 아이를 함께 등록하면 꼭 맞는 상품을 먼저 보여 드려요.")}>
             <SxCard
                 as="form"
                 labelledBy="sxw-pet-title"
@@ -755,27 +757,27 @@ export default function SignupWebFlow(props: Props) {
                     id="sxw-pet-title"
                     art="lab-dog-256.webp"
                     kicker={kicker("MY DOG")}
-                    title={<><Hl>우리 아이</Hl>도 함께 등록할까요?</>}
+                    title={<><Hl>{labelText("우리 아이")}</Hl>{labelText("도 함께 등록할까요?")}</>}
                     sub="사진 한 장만 있어도 견종 · 크기 후보를 찾아 드려요. 지금 안 해도 돼요."
                 />
 
-                <div className="sxw-choice" role="radiogroup" aria-label="우리 아이 등록">
+                <div className="sxw-choice" role="radiogroup" aria-label={labelText("우리 아이 등록")}>
                     <label className={choice === "now" ? "is-on" : ""}>
                         <input type="radio" name="sxw-pet-choice" checked={choice === "now"} onChange={() => setPetChoice("now")} />
                         {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                         <img src={`${UI}mypet-view-front-160.webp`} alt="" aria-hidden="true" />
-                        <span><b>지금 등록할게요</b><small>맞춤 추천을 바로 받아요</small></span>
+                        <span><b>{labelText("지금 등록할게요")}</b><small>{labelText("맞춤 추천을 바로 받아요")}</small></span>
                         <i className="fa-solid fa-circle-check" aria-hidden="true" />
                     </label>
                     <label className={choice === "later" ? "is-on" : ""}>
                         <input type="radio" name="sxw-pet-choice" checked={choice === "later"} onChange={() => setPetChoice("later")} />
                         {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                         <img src={`${UI}daily-checkin-256.webp`} alt="" aria-hidden="true" />
-                        <span><b>나중에 할게요</b><small>계정만 먼저 만들어요</small></span>
+                        <span><b>{labelText("나중에 할게요")}</b><small>{labelText("계정만 먼저 만들어요")}</small></span>
                         <i className="fa-solid fa-circle-check" aria-hidden="true" />
                     </label>
                 </div>
-                {tried && !choice && <SxNotice tone="rose" icon="fa-circle-exclamation">우리 아이를 지금 등록할지 골라 주세요.</SxNotice>}
+                {tried && !choice && <SxNotice tone="rose" icon="fa-circle-exclamation">{labelText("우리 아이를 지금 등록할지 골라 주세요.")}</SxNotice>}
 
                 {choice === "now" && (
                     <SignupPetFields
@@ -792,33 +794,33 @@ export default function SignupWebFlow(props: Props) {
                         {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                         <img src={`${UI}mypet-analysis-256.webp`} alt="" aria-hidden="true" />
                         <span>
-                            <b>마이페이지에서 언제든 등록할 수 있어요</b>
-                            <small>마이페이지 · 우리 아이에서 사진 네 방향과 정보를 넣으면 맞춤 추천과 펫렌즈 분석이 같은 아이를 기준으로 시작돼요.</small>
+                            <b>{labelText("마이페이지에서 언제든 등록할 수 있어요")}</b>
+                            <small>{labelText("마이페이지 · 우리 아이에서 사진 네 방향과 정보를 넣으면 맞춤 추천과 펫렌즈 분석이 같은 아이를 기준으로 시작돼요.")}</small>
                         </span>
                     </div>
                 )}
 
-                <SxBlock icon="fa-clipboard-check" title="가입 전 마지막 확인" className="sxw-final" tone="mint">
+                <SxBlock icon="fa-clipboard-check" title={labelText("가입 전 마지막 확인")} className="sxw-final" tone="mint">
                     <div className="sxw-summary">
                         <span className="sxw-av" aria-hidden="true">{(props.name.trim() || "댕").slice(0, 1)}</span>
                         <span className="sxw-summary-who">
                             <b>{props.name.trim() || "댕다방 회원"}</b>
                             <small>{props.email.trim()}</small>
                         </span>
-                        <button type="button" className="sxw-link" onClick={() => go("account")}>수정</button>
+                        <button type="button" className="sxw-link" onClick={() => go("account")}>{labelText("수정")}</button>
                         <span className="sxw-summary-chips">
-                            <em><i className="fa-solid fa-check" aria-hidden="true" />약관 동의</em>
-                            {identityVerified && <em><i className="fa-solid fa-check" aria-hidden="true" />본인인증</em>}
-                            {(marketing.email || marketing.sms) && <em><i className="fa-solid fa-check" aria-hidden="true" />마케팅 수신</em>}
-                            {choice === "now" && <em><i className="fa-solid fa-paw" aria-hidden="true" />{pet.name.trim() || "우리 아이"} 함께 등록</em>}
+                            <em><i className="fa-solid fa-check" aria-hidden="true" />{labelText("약관 동의")}</em>
+                            {identityVerified && <em><i className="fa-solid fa-check" aria-hidden="true" />{labelText("본인인증")}</em>}
+                            {(marketing.email || marketing.sms) && <em><i className="fa-solid fa-check" aria-hidden="true" />{labelText("마케팅 수신")}</em>}
+                            {choice === "now" && <em><i className="fa-solid fa-paw" aria-hidden="true" />{pet.name.trim() || "우리 아이"} {labelText("함께 등록")}</em>}
                         </span>
                     </div>
                     <div className="sxw-bot">
                         <SignupBotChallenge
                             onTokenChange={props.setBotToken}
                             resetKey={props.botResetKey}
-                            title="가입 보안 확인"
-                            description="자동 가입을 막기 위해 확인해요. 확인이 끝나면 가입하기 버튼이 켜져요."
+                            title={labelText("가입 보안 확인")}
+                            description={labelText("자동 가입을 막기 위해 확인해요. 확인이 끝나면 가입하기 버튼이 켜져요.")}
                         />
                     </div>
                 </SxBlock>
@@ -832,13 +834,13 @@ export default function SignupWebFlow(props: Props) {
                         title={`${maskEmail(props.email.trim())} 계정이 이미 있어요`}
                         actions={(
                             <>
-                                <Link href="/auth/login" className="sxw-pill is-pink">로그인</Link>
-                                <Link href="/forgot-password" className="sxw-pill">비밀번호 찾기</Link>
-                                <button type="button" className="sxw-pill" onClick={() => go("account")}>다른 이메일로</button>
+                                <Link href="/auth/login" className="sxw-pill is-pink">{labelText("로그인")}</Link>
+                                <Link href="/forgot-password" className="sxw-pill">{labelText("비밀번호 찾기")}</Link>
+                                <button type="button" className="sxw-pill" onClick={() => go("account")}>{labelText("다른 이메일로")}</button>
                             </>
                         )}
                     >
-                        예전에 가입했다면 로그인해 주세요. 다른 이메일로 새로 가입할 수도 있어요.
+                        {labelText("예전에 가입했다면 로그인해 주세요. 다른 이메일로 새로 가입할 수도 있어요.")}
                     </SxBranch>
                 ) : props.errorKind === "email_domain" ? (
                     <SxBranch
@@ -846,15 +848,15 @@ export default function SignupWebFlow(props: Props) {
                         branch="email-domain"
                         art="web-cs-mail-256.webp"
                         tag="가입할 수 없는 이메일"
-                        title="이 이메일 주소로는 가입할 수 없어요"
-                        actions={<button type="button" className="sxw-pill is-pink" onClick={() => go("account")}>이메일 바꾸기</button>}
+                        title={labelText("이 이메일 주소로는 가입할 수 없어요")}
+                        actions={<button type="button" className="sxw-pill is-pink" onClick={() => go("account")}>{labelText("이메일 바꾸기")}</button>}
                     >
-                        임시 · 일회용 이메일은 받지 않아요. 실제로 쓰는 다른 이메일을 넣어 주세요.
+                        {labelText("임시 · 일회용 이메일은 받지 않아요. 실제로 쓰는 다른 이메일을 넣어 주세요.")}
                     </SxBranch>
                 ) : props.error ? (
                     <SxNotice tone="rose" icon="fa-circle-exclamation">{props.error}</SxNotice>
                 ) : null}
-                {props.apiReady === false && <SxNotice tone="amber" icon="fa-screwdriver-wrench">지금은 회원가입 준비 중이에요. 잠시 후 다시 이용해 주세요.</SxNotice>}
+                {props.apiReady === false && <SxNotice tone="amber" icon="fa-screwdriver-wrench">{labelText("지금은 회원가입 준비 중이에요. 잠시 후 다시 이용해 주세요.")}</SxNotice>}
 
                 <SxFoot
                     onPrev={() => go("account")}
@@ -862,7 +864,7 @@ export default function SignupWebFlow(props: Props) {
                 >
                     <button type="submit" className="sxw-next" disabled={!canSubmit} aria-busy={props.loading} data-signup-submit>
                         {props.loading ? (
-                            <><i className="fa-solid fa-circle-notch fa-spin" aria-hidden="true" />가입하는 중이에요</>
+                            <><i className="fa-solid fa-circle-notch fa-spin" aria-hidden="true" />{labelText("가입하는 중이에요")}</>
                         ) : (
                             <>{choice === "now" ? "우리 아이와 함께 가입하기" : "가입하기"}<i className="fa-solid fa-arrow-right" aria-hidden="true" /></>
                         )}

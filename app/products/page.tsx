@@ -2,6 +2,7 @@
  * app/products/page.tsx — 전체상품(/products) · 목록 · 필터 · 정렬은 ProductsClient 그대로
  * 2026-10-26 대기 화면(Suspense fallback)에 웹 전용 쿠션 뼈대 — 꾸밈 app/shop-list-web.css(웹에서만), 앱은 기존 한 줄 글
  */
+import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import ProductsClient from "./ProductsClient";
@@ -18,7 +19,7 @@ export default function ProductsPage() {
         <Suspense fallback={(
             // data-list-fallback — 웹은 글 대신 쿠션 뼈대(app/shop-list-web.css), 앱은 기존 한 줄 글 그대로
             <div className="mx-auto min-h-screen w-full max-w-[1280px] px-4 py-10 text-sm font-black" data-list-fallback>
-                <p className="list-fallback-text">상품을 불러오는 중입니다.</p>
+                <p className="list-fallback-text"><LocalizedMenuLabel label={"상품을 불러오는 중입니다."} /></p>
                 <div className="hidden list-fallback-sk" aria-hidden="true">
                     <span className="is-hero" />
                     {Array.from({ length: 10 }, (_, index) => <span key={index} />)}

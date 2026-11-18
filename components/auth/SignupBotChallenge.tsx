@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import Script from "next/script";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -70,6 +71,7 @@ export default function SignupBotChallenge({
     unavailableMessage?: string;
     headingId?: string;
 }) {
+    const { menuLabel: labelText } = useI18n();
     const siteKey = signupTurnstileSiteKey();
     const containerRef = useRef<HTMLDivElement>(null);
     const widgetIdRef = useRef<TurnstileWidgetId | null>(null);
@@ -175,7 +177,7 @@ export default function SignupBotChallenge({
                         onClick={resetChallenge}
                         className="shrink-0 rounded-md border border-neutral-300 bg-white px-3 py-1.5 text-xs font-black text-neutral-700"
                     >
-                        다시 확인
+                        {labelText("다시 확인")}
                     </button>
                 )}
             </div>

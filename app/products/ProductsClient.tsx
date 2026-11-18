@@ -109,7 +109,7 @@ export default function ProductsClient({ initialCategory, title, variant }: Prop
     const [externalLoading, setExternalLoading] = useState(false);
     const [externalSearched, setExternalSearched] = useState(false);
     const [externalReveal, setExternalReveal] = useState({ scope: "", count: 30 });
-    const { t, locale, categoryLabel, subcategoryLabel, menuLabel } = useI18n();
+    const { t, locale, categoryLabel, subcategoryLabel, menuLabel, productName } = useI18n();
     const webScreen = useWebScreen();
 
     useEffect(() => {
@@ -135,13 +135,13 @@ export default function ProductsClient({ initialCategory, title, variant }: Prop
     }, [category]);
 
     const products = useMemo(() => {
-        let list = query.trim() ? searchCatalog(query) : CATALOG;
+        let list = query.trim() ? searchCatalog(query, productName) : CATALOG;
 
         if (category !== "all") list = list.filter((product) => product.category === category);
         if (subcategory !== "all") list = list.filter((product) => product.subcategory === subcategory);
 
         return applySort(list, sort);
-    }, [query, category, subcategory, sort]);
+    }, [query, category, subcategory, sort, productName]);
     const hasSearch = query.trim().length > 0;
     const referenceExternalRows = useMemo(() => {
         const anchor = externalProducts.find((product) => comparisonStatus(product) === "anchor");
@@ -305,7 +305,7 @@ export default function ProductsClient({ initialCategory, title, variant }: Prop
     // 카테고리를 골라 0개일 때, 전체로 보면 나오는 개수(검색 결과 페이지 · 웹 전체상품 검색의 빈 안내용 —
     // 제품군 페이지(initialCategory)는 카테고리가 고정이라 "전체로 보기"를 내지 않음)
     const hiddenByCategory = (isSearchPage || !initialCategory) && hasSearch && products.length === 0 && category !== "all"
-        ? searchCatalog(query).length
+        ? searchCatalog(query, productName).length
         : 0;
 
     // ── 웹 검색 결과 페이지(/search) ── 머리 판 → 발자국 → 댕다방 상품(카테고리 · 정렬) → 발자국 → 다른 판매처 가격 비교

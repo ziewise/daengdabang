@@ -10,6 +10,7 @@
  *     관리자 화면에서 숨기면(visibility.policy) 빼고 보여 준다.
  */
 
+import { useI18n } from "@/lib/i18n";
 import Link from "next/link";
 import { useRef, useState } from "react";
 import { EXPANSION_CARDS } from "@/components/growth/CommerceCommunityExpansion";
@@ -25,6 +26,7 @@ function statusTone(status: string): Tone {
 }
 
 export default function InfoPanel({ showPolicy, goTo }: { showPolicy: boolean; goTo: (anchor: string) => void }) {
+    const { menuLabel: labelText } = useI18n();
     // 펼친 단계 — 한 번에 하나
     const [openStep, setOpenStep] = useState<string | null>(EXPANSION_CARDS[0]?.step ?? null);
 
@@ -32,15 +34,15 @@ export default function InfoPanel({ showPolicy, goTo }: { showPolicy: boolean; g
         <div className="space-y-8">
             <section id="community-commerce-roadmap" className="dl-anchor space-y-4" aria-labelledby="pv-roadmap-title">
                 <Reveal>
-                    <SectionHead kicker="CARE TO COMMUNITY" title={<span id="pv-roadmap-title">돌봄 기록이 좋은 발견으로 이어지도록</span>} tone={TONES.amber}
-                        extra={<Pill tone={TONES.blue}>운영 기능과 준비 기능을 구분해 안내해요</Pill>}>
-                        혼자 쓰는 AI 도구를 넘어, 서로의 경험에서 배우고 좋은 브랜드를 함께 발견하는 댕다방을 만들고 있어요. 지금 이용할 수 있는 기능은 바로 연결하고, 준비 단계는 약속보다 진행 상태를 먼저 알려드립니다.
+                    <SectionHead kicker="CARE TO COMMUNITY" title={<span id="pv-roadmap-title">{labelText("돌봄 기록이 좋은 발견으로 이어지도록")}</span>} tone={TONES.amber}
+                        extra={<Pill tone={TONES.blue}>{labelText("운영 기능과 준비 기능을 구분해 안내해요")}</Pill>}>
+                        {labelText("혼자 쓰는 AI 도구를 넘어, 서로의 경험에서 배우고 좋은 브랜드를 함께 발견하는 댕다방을 만들고 있어요. 지금 이용할 수 있는 기능은 바로 연결하고, 준비 단계는 약속보다 진행 상태를 먼저 알려드립니다.")}
                     </SectionHead>
                 </Reveal>
 
                 {/* 큰 번호 목록 — 누르면 그 자리에서 펼쳐짐 */}
                 <Reveal order={1}>
-                    <ol className="pv-card overflow-hidden" aria-label="커뮤니티·콘텐츠·브랜드·기본템 확장 계획">
+                    <ol className="pv-card overflow-hidden" aria-label={labelText("커뮤니티·콘텐츠·브랜드·기본템 확장 계획")}>
                         {EXPANSION_CARDS.map((card) => {
                             const tone = toneOf(card.tone);
                             const st = statusTone(card.status);
@@ -53,7 +55,7 @@ export default function InfoPanel({ showPolicy, goTo }: { showPolicy: boolean; g
                                         <span className="pv-num w-9 shrink-0 text-[26px] leading-none transition-colors duration-300" style={{ color: open ? tone.accent : "#d6ccc6" }}>{card.step}</span>
                                         <span className="min-w-0 flex-1">
                                             <span className="pv-kicker block text-[10px]" style={{ color: "#a3968f" }}>{card.eyebrow}</span>
-                                            <span className="pv-h3 mt-0.5 block">{card.title}</span>
+                                            <span className="pv-h3 mt-0.5 block">{labelText(card.title)}</span>
                                         </span>
                                         <Pill tone={st}>{card.status}</Pill>
                                         <i className="fa-solid fa-chevron-down text-[11px] text-[#c9bfb9] transition-transform duration-500" style={{ transform: open ? "rotate(180deg)" : "none" }} aria-hidden="true" />
@@ -80,7 +82,7 @@ export default function InfoPanel({ showPolicy, goTo }: { showPolicy: boolean; g
                         })}
                     </ol>
                 </Reveal>
-                <p className="pv-small px-0.5">준비 중인 기능은 일정·가격·혜택이 확정될 때 다시 안내하며, 관심등록만으로 구매나 유료 멤버십이 시작되지 않습니다.</p>
+                <p className="pv-small px-0.5">{labelText("준비 중인 기능은 일정·가격·혜택이 확정될 때 다시 안내하며, 관심등록만으로 구매나 유료 멤버십이 시작되지 않습니다.")}</p>
             </section>
 
             {showPolicy && <Reveal><PolicyCard /></Reveal>}
@@ -90,6 +92,7 @@ export default function InfoPanel({ showPolicy, goTo }: { showPolicy: boolean; g
 
 /** 안심하고 이용하세요 — 펼쳐 보는 판 (처음 펼칠 때 한 번만 기록) */
 function PolicyCard() {
+    const { menuLabel: labelText } = useI18n();
     const wasOpenRef = useRef(false);
     return (
         <section aria-labelledby="pv-policy-title">
@@ -107,8 +110,8 @@ function PolicyCard() {
                     <IconDot icon="fa-shield-heart" tone={TONES.green} size={44} />
                     <div className="min-w-0 flex-1">
                         <p className="pv-kicker" style={{ color: TONES.green.accent }}>SAFE BY DEFAULT</p>
-                        <h2 id="pv-policy-title" className="pv-h3 mt-0.5">안심하고 이용하세요</h2>
-                        <p className="pv-small mt-0.5">AI 기록은 의료 진단이 아니며, 광고·보상 운영 기준도 함께 확인할 수 있어요.</p>
+                        <h2 id="pv-policy-title" className="pv-h3 mt-0.5">{labelText("안심하고 이용하세요")}</h2>
+                        <p className="pv-small mt-0.5">{labelText("AI 기록은 의료 진단이 아니며, 광고·보상 운영 기준도 함께 확인할 수 있어요.")}</p>
                     </div>
                     <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-[#f4efec] transition-transform duration-500 group-open:rotate-180" aria-hidden="true">
                         <i className="fa-solid fa-chevron-down text-[11px] text-[#8c7f78]" />
@@ -128,7 +131,7 @@ function PolicyCard() {
                         );
                     })}
                     <li className="pt-1">
-                        <Link href="/privacy/" className="pv-small inline-flex items-center gap-1 font-bold underline underline-offset-2">개인정보처리방침</Link>
+                        <Link href="/privacy/" className="pv-small inline-flex items-center gap-1 font-bold underline underline-offset-2">{labelText("개인정보처리방침")}</Link>
                     </li>
                 </ul>
             </details>

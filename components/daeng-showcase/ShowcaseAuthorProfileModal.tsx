@@ -1,4 +1,5 @@
 "use client";
+import { useI18n } from "@/lib/i18n";
 import ShowcaseThumbnail from "./ShowcaseThumbnail";
 
 /**
@@ -39,6 +40,7 @@ export default function ShowcaseAuthorProfileModal({
     onShowPost,
     onNotice,
 }: ShowcaseAuthorProfileModalProps) {
+    const { menuLabel: labelText } = useI18n();
     const [profile, setProfile] = useState<ShowcaseAuthorProfile | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
@@ -122,7 +124,7 @@ export default function ShowcaseAuthorProfileModal({
                             {profile?.author.displayName || "작성자 프로필"}
                         </h2>
                     </div>
-                    <button type="button" onClick={onClose} className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-neutral-100 text-neutral-600" aria-label="작성자 프로필 닫기">
+                    <button type="button" onClick={onClose} className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-neutral-100 text-neutral-600" aria-label={labelText("작성자 프로필 닫기")}>
                         <i className="fa-solid fa-xmark" aria-hidden="true" />
                     </button>
                 </div>
@@ -131,7 +133,7 @@ export default function ShowcaseAuthorProfileModal({
                     <div className="grid min-h-72 place-items-center p-8" aria-busy="true" data-showcase-profile-state="loading">
                         {/* 웹 전용 3D 그림(앱은 hidden) */}
                         <Image src="/images/ui/menu-daily-community-128.webp" alt="" width={72} height={72} className="hidden" aria-hidden="true" data-showcase-profile-art />
-                        <p className="text-sm font-black text-neutral-500">프로필을 불러오는 중</p>
+                        <p className="text-sm font-black text-neutral-500">{labelText("프로필을 불러오는 중")}</p>
                     </div>
                 ) : error || !profile ? (
                     <div className="grid min-h-72 place-items-center p-8 text-center" data-showcase-profile-state="error">
@@ -139,7 +141,7 @@ export default function ShowcaseAuthorProfileModal({
                             {/* 웹 전용 3D 그림(앱은 hidden) */}
                             <Image src="/images/ui/menu-daily-community-128.webp" alt="" width={72} height={72} className="hidden" aria-hidden="true" data-showcase-profile-art />
                             <p className="text-sm font-black text-red-800">{error || "작성자 프로필을 찾지 못했어요."}</p>
-                            <button type="button" onClick={() => setRetryKey((value) => value + 1)} className="mt-4 min-h-10 rounded-full border border-red-200 bg-white px-5 text-xs font-black text-red-800" data-showcase-profile-retry>다시 불러오기</button>
+                            <button type="button" onClick={() => setRetryKey((value) => value + 1)} className="mt-4 min-h-10 rounded-full border border-red-200 bg-white px-5 text-xs font-black text-red-800" data-showcase-profile-retry>{labelText("다시 불러오기")}</button>
                         </div>
                     </div>
                 ) : (
@@ -151,27 +153,27 @@ export default function ShowcaseAuthorProfileModal({
                             <div className="min-w-0 flex-1">
                                 <h3 className="truncate text-xl font-black text-neutral-950">{profile.author.displayName}</h3>
                                 <dl className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-xs font-bold text-neutral-600">
-                                    <div><dt className="inline">게시물 </dt><dd className="inline font-black text-neutral-950">{profile.postCount.toLocaleString("ko-KR")}</dd></div>
-                                    <div><dt className="inline">팔로워 </dt><dd className="inline font-black text-neutral-950">{profile.author.followerCount.toLocaleString("ko-KR")}</dd></div>
-                                    <div><dt className="inline">받은 응원 </dt><dd className="inline font-black text-neutral-950">{profile.receivedBoneCount.toLocaleString("ko-KR")}</dd></div>
+                                    <div><dt className="inline">{labelText("게시물")} </dt><dd className="inline font-black text-neutral-950">{profile.postCount.toLocaleString("ko-KR")}</dd></div>
+                                    <div><dt className="inline">{labelText("팔로워")} </dt><dd className="inline font-black text-neutral-950">{profile.author.followerCount.toLocaleString("ko-KR")}</dd></div>
+                                    <div><dt className="inline">{labelText("받은 응원")} </dt><dd className="inline font-black text-neutral-950">{profile.receivedBoneCount.toLocaleString("ko-KR")}</dd></div>
                                 </dl>
                             </div>
                             {!profile.author.isMe ? (
                                 <button type="button" onClick={toggleFollow} disabled={followBusy} aria-pressed={profile.author.followedByMe} className={`min-h-11 rounded-full border px-5 text-xs font-black ${profile.author.followedByMe ? "border-neutral-300 bg-white text-neutral-700" : "border-cyan-300 bg-cyan-700 text-white"}`}>
                                     {followBusy ? "처리 중" : profile.author.followedByMe ? "팔로잉" : "팔로우"}
                                 </button>
-                            ) : <span className="rounded-full bg-indigo-100 px-4 py-2 text-xs font-black text-indigo-800" data-showcase-profile-me>내 프로필</span>}
+                            ) : <span className="rounded-full bg-indigo-100 px-4 py-2 text-xs font-black text-indigo-800" data-showcase-profile-me>{labelText("내 프로필")}</span>}
                         </div>
 
                         <div className="mt-7 flex items-center justify-between gap-4">
-                            <h3 className="ddb-crayon-title text-2xl text-neutral-950">최근 댕자랑</h3>
-                            <span className="text-[10px] font-bold text-neutral-500" data-showcase-profile-small>공개 게시물만 표시</span>
+                            <h3 className="ddb-crayon-title text-2xl text-neutral-950">{labelText("최근 댕자랑")}</h3>
+                            <span className="text-[10px] font-bold text-neutral-500" data-showcase-profile-small>{labelText("공개 게시물만 표시")}</span>
                         </div>
                         <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
                             {profile.posts.map((post) => (
                                 <button key={post.postId} type="button" onClick={() => onShowPost(post)} className="group overflow-hidden rounded-[18px] border border-white bg-white text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-card motion-reduce:transform-none">
                                     <ShowcaseThumbnail src={post.imageUrl} alt={`${post.author.displayName}의 댕자랑`} width={post.imageWidth} height={post.imageHeight} className="aspect-square w-full bg-[#f6f3ee] object-cover" />
-                                    <span className="block truncate px-3 py-2 text-[10px] font-black text-neutral-700" data-showcase-profile-small><i className="fa-solid fa-bone mr-1 text-amber-700" aria-hidden="true" />응원 {post.boneCount.toLocaleString("ko-KR")}</span>
+                                    <span className="block truncate px-3 py-2 text-[10px] font-black text-neutral-700" data-showcase-profile-small><i className="fa-solid fa-bone mr-1 text-amber-700" aria-hidden="true" />{labelText("응원")} {post.boneCount.toLocaleString("ko-KR")}</span>
                                 </button>
                             ))}
                         </div>

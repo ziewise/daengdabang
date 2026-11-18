@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import Image from "next/image";
 import Link from "next/link";
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";
@@ -152,6 +153,7 @@ export default function GoodsContest({
     content: GrowthGoodsContent;
     contentReady: boolean;
 }) {
+    const { menuLabel: labelText } = useI18n();
     const { hydrated, user } = useAuth();
     const accessToken = user?.apiAccessToken || "";
     // 휴대폰에서는 굿즈 카드를 8개씩 보여 주고 "굿즈 더보기"로 8개씩 더(2026-10-22 사용자) — 보이기만 바꿈, 선택 · 집계 동작은 그대로
@@ -492,7 +494,7 @@ export default function GoodsContest({
                                         playsInline
                                         preload="auto"
                                         poster="/images/goods/goods-hero-lifestyle.webp"
-                                        aria-label="댕다방 굿즈 공모전 상품 미리보기 영상"
+                                        aria-label={labelText("댕다방 굿즈 공모전 상품 미리보기 영상")}
                                         className="absolute inset-0 h-full w-full object-cover"
                                     >
                                         <source media="(max-width: 640px)" src="/videos/goods-contest-hero-mobile.mp4" type="video/mp4" />
@@ -522,22 +524,22 @@ export default function GoodsContest({
                                     <span className="dw-ichip dw-gcover-date">
                                         <i className="fa-regular fa-calendar" aria-hidden="true" />
                                         {/* 시작 · 끝을 덩이로 묶어 좁은 휴대폰에서는 "시작 ~ / 끝" 두 줄로만 꺾이게 */}
-                                        <span className="dw-gcover-when"><span className="sr-only">공모 시작 </span>{formattedCampaignDate(campaignStartsAt)} ~</span>{" "}
-                                        <span className="dw-gcover-when"><span className="sr-only">공모 종료 예정 </span>{formattedCampaignDate(campaignEndsAt)}</span>
+                                        <span className="dw-gcover-when"><span className="sr-only">{labelText("공모 시작")} </span>{formattedCampaignDate(campaignStartsAt)} ~</span>{" "}
+                                        <span className="dw-gcover-when"><span className="sr-only">{labelText("공모 종료 예정")} </span>{formattedCampaignDate(campaignEndsAt)}</span>
                                     </span>
                                     <span className={`dw-ichip ${campaignClosed ? "is-closed" : "is-open"}`}>
                                         <i className="fa-solid fa-circle-check" aria-hidden="true" />{campaignStatusLabel}
                                     </span>
-                                    <span className="dw-ichip is-violet"><i className="fa-solid fa-user-group" aria-hidden="true" />회원·비회원 모두 참여</span>
+                                    <span className="dw-ichip is-violet"><i className="fa-solid fa-user-group" aria-hidden="true" />{labelText("회원·비회원 모두 참여")}</span>
                                 </div>
                                 <p className="dw-gcover-note">
                                     <i className="fa-solid fa-circle-info mr-1.5" aria-hidden="true" />
-                                    선택은 주문·예약·결제가 아니며, 이 단계에서는 결제가 없습니다.
+                                    {labelText("선택은 주문·예약·결제가 아니며, 이 단계에서는 결제가 없습니다.")}
                                 </p>
                             </div>
                         </div>
 
-                        <ol className="dw-dsteps dw-gcover-steps" aria-label="굿즈 공모전 진행 순서">
+                        <ol className="dw-dsteps dw-gcover-steps" aria-label={labelText("굿즈 공모전 진행 순서")}>
                             {CONTEST_STEPS.map((step, index) => (
                                 <li key={step.number} className={["is-lav", "is-pink", "is-yellow", "is-mint"][index]}>
                                     <span className="dw-dstep-art" aria-hidden="true">
@@ -545,7 +547,7 @@ export default function GoodsContest({
                                         <span className="dw-dstep-no">{Number(step.number)}</span>
                                     </span>
                                     <span className="sr-only">STEP {Number(step.number)} ({step.number})</span>
-                                    <strong className="dw-dstep-title">{step.title}</strong>
+                                    <strong className="dw-dstep-title">{labelText(step.title)}</strong>
                                     <p className="dw-dstep-body">{step.description}</p>
                                 </li>
                             ))}
@@ -572,7 +574,7 @@ export default function GoodsContest({
                                 }}
                                 className="font-black underline underline-offset-2"
                             >
-                                집계 다시 불러오기
+                                {labelText("집계 다시 불러오기")}
                             </button>
                         ) : null}
                         {notice.tone === "error" && hydrated && identityKey !== "anonymous" && selectionState === "error" ? (
@@ -585,21 +587,21 @@ export default function GoodsContest({
                                 }}
                                 className="font-black underline underline-offset-2"
                             >
-                                내 선택 다시 확인하기
+                                {labelText("내 선택 다시 확인하기")}
                             </button>
                         ) : null}
                         {notice.tone === "error" && notice.message.includes("로그인") ? (
-                            <Link href={LOGIN_HREF} className="font-black underline underline-offset-2">다시 로그인</Link>
+                            <Link href={LOGIN_HREF} className="font-black underline underline-offset-2">{labelText("다시 로그인")}</Link>
                         ) : null}
                     </div>
                 ) : null}
 
-                <aside className="dw-prodnote mt-6" aria-label="소량 제작 예상 펀딩가 안내">
+                <aside className="dw-prodnote mt-6" aria-label={labelText("소량 제작 예상 펀딩가 안내")}>
                     <span className="dw-prodnote-icon" aria-hidden="true"><i className="fa-solid fa-gem" /></span>
                     <div>
-                        <p className="dw-prodnote-title">좋은 소재와 꼼꼼한 마감을 위한 소량 제작</p>
-                        <p className="mt-1">예상 펀딩가는 샘플 제작·인쇄·마감·검수·포장과 불량 대응 비용을 고려했습니다. 부가세 포함, 배송비 별도이며 최종 사양과 제조사 견적에 따라 달라질 수 있어요.</p>
-                        <p className="mt-1">세트 상품은 1세트, 그 외 상품은 1개 기준입니다. 이미지 속 여러 캐릭터가 모두 포함되는 것은 아니며, 크기·소재·세트 구성은 제작 전 안내합니다.</p>
+                        <p className="dw-prodnote-title">{labelText("좋은 소재와 꼼꼼한 마감을 위한 소량 제작")}</p>
+                        <p className="mt-1">{labelText("예상 펀딩가는 샘플 제작·인쇄·마감·검수·포장과 불량 대응 비용을 고려했습니다. 부가세 포함, 배송비 별도이며 최종 사양과 제조사 견적에 따라 달라질 수 있어요.")}</p>
+                        <p className="mt-1">{labelText("세트 상품은 1세트, 그 외 상품은 1개 기준입니다. 이미지 속 여러 캐릭터가 모두 포함되는 것은 아니며, 크기·소재·세트 구성은 제작 전 안내합니다.")}</p>
                     </div>
                 </aside>
 
@@ -635,7 +637,7 @@ export default function GoodsContest({
                                         className="aspect-square h-auto w-full bg-[#f4e8d3] object-cover transition duration-300 hover:scale-[1.02]"
                                     />
                                     {contentReady && !itemContent.active ? (
-                                        <span className="absolute right-3 top-3 rounded-full bg-neutral-900/80 px-2.5 py-1 text-[10px] font-black text-white" data-goods-soon>선택 준비 중</span>
+                                        <span className="absolute right-3 top-3 rounded-full bg-neutral-900/80 px-2.5 py-1 text-[10px] font-black text-white" data-goods-soon>{labelText("선택 준비 중")}</span>
                                     ) : null}
                                     <span className="dw-goods-zoom-hint" aria-hidden="true"><i className="fa-solid fa-magnifying-glass-plus" /></span>
                                 </button>
@@ -645,7 +647,7 @@ export default function GoodsContest({
                                     <p className="mt-2 min-h-10 text-xs font-bold leading-5 text-neutral-600">{itemContent.summary}</p>
                                     {/* 예상 펀딩가 — 설명 아래 크게(폭신한 쿠션 카드 G8, 2026-10-22 사용자 선택) */}
                                     <p className="dw-goods-price">
-                                        <span className="sr-only">예상 펀딩가 </span>{itemContent.expectedPriceKrw.toLocaleString("ko-KR")}원
+                                        <span className="sr-only">{labelText("예상 펀딩가")} </span>{itemContent.expectedPriceKrw.toLocaleString("ko-KR")}{labelText("원")}
                                         <small> · {catalogItem.priceUnit}</small>
                                     </p>
 
@@ -653,7 +655,7 @@ export default function GoodsContest({
                                         {itemSummary ? (
                                             <>
                                                 <div className="flex items-center justify-between gap-2 text-xs font-black">
-                                                    <span className="text-neutral-950">{itemSummary.selectionCount.toLocaleString("ko-KR")}/{itemSummary.goal.toLocaleString("ko-KR")}명</span>
+                                                    <span className="text-neutral-950">{itemSummary.selectionCount.toLocaleString("ko-KR")}/{itemSummary.goal.toLocaleString("ko-KR")}{labelText("명")}</span>
                                                     <span className={itemSummary.productionEligible ? "text-emerald-700" : "text-neutral-500"}>
                                                         {itemSummary.productionEligible ? "500명 달성" : `${itemSummary.remainingCount.toLocaleString("ko-KR")}명 남음`}
                                                     </span>
@@ -679,24 +681,24 @@ export default function GoodsContest({
                                             </>
                                         ) : (
                                             <div className="dw-goods-wait grid min-h-[62px] place-items-center rounded-2xl bg-neutral-100 text-[10px] font-black text-neutral-500">
-                                                {summaryState === "error" ? "집계를 연결한 뒤 선택할 수 있어요" : "정확한 선택 수 확인 중"}
+                                                {labelText(summaryState === "error" ? "집계를 연결한 뒤 선택할 수 있어요" : "정확한 선택 수 확인 중")}
                                             </div>
                                         )}
                                     </div>
 
                                     <div className="mt-auto pt-4">
                                         {!contentReady ? (
-                                            <span className="block h-11 animate-pulse rounded-full bg-neutral-100" aria-label="굿즈 공모전 설정 확인 중" />
+                                            <span className="block h-11 animate-pulse rounded-full bg-neutral-100" aria-label={labelText("굿즈 공모전 설정 확인 중")} />
                                         ) : campaignClosed ? (
                                             <button type="button" disabled className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-neutral-300 bg-neutral-100 px-4 text-xs font-black text-neutral-600">
-                                                {selected ? "최종 선택 완료" : "공모 종료"}
+                                                {labelText(selected ? "최종 선택 완료" : "공모 종료")}
                                             </button>
                                         ) : !itemContent.active && !selected ? (
                                             <button type="button" disabled className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-neutral-200 bg-neutral-100 px-4 text-xs font-black text-neutral-500">
-                                                현재 선택을 받지 않아요
+                                                {labelText("현재 선택을 받지 않아요")}
                                             </button>
                                         ) : !hydrated ? (
-                                            <span className="block h-11 animate-pulse rounded-full bg-neutral-100" aria-label="회원 상태 확인 중" />
+                                            <span className="block h-11 animate-pulse rounded-full bg-neutral-100" aria-label={labelText("회원 상태 확인 중")} />
                                         ) : identityKey === "anonymous" ? (
                                             <div className="space-y-2">
                                                 <button
@@ -705,10 +707,10 @@ export default function GoodsContest({
                                                     onClick={() => openGuestVerification(catalogItem.id)}
                                                     className="ddb-crayon-link inline-flex min-h-11 w-full items-center justify-center rounded-full px-4 text-xs"
                                                 >
-                                                    이메일 확인 후 선택
+                                                    {labelText("이메일 확인 후 선택")}
                                                 </button>
                                                 <Link href={LOGIN_HREF} className="block text-center text-[10px] font-black text-indigo-700 underline decoration-indigo-300 underline-offset-2" data-goods-login-link>
-                                                    회원은 로그인하고 바로 선택
+                                                    {labelText("회원은 로그인하고 바로 선택")}
                                                 </Link>
                                             </div>
                                         ) : (
@@ -720,7 +722,7 @@ export default function GoodsContest({
                                                 onClick={() => void toggleSelection(catalogItem.id, itemContent.active)}
                                                 className={`inline-flex min-h-11 w-full items-center justify-center rounded-full border px-4 text-xs font-black transition disabled:cursor-wait disabled:opacity-55 ${selected ? "dw-select-on" : "dw-select"}`}
                                             >
-                                                {pending ? <><i className="fa-solid fa-circle-notch fa-spin mr-2" aria-hidden="true" />처리 중…</> : selected ? "선택 취소" : "이 굿즈 선택"}
+                                                {pending ? <><i className="fa-solid fa-circle-notch fa-spin mr-2" aria-hidden="true" />{labelText("처리 중…")}</> : selected ? "선택 취소" : "이 굿즈 선택"}
                                             </button>
                                         )}
                                     </div>
@@ -738,7 +740,7 @@ export default function GoodsContest({
                             className="dw-goods-more"
                             onClick={() => setMobileVisibleCount((count) => count + MOBILE_GOODS_STEP)}
                         >
-                            굿즈 더보기
+                            {labelText("굿즈 더보기")}
                             <span className="dw-goods-more-count">{mobileVisibleCount} / {GOODS_CONTEST_CATALOG.length}</span>
                             <i className="fa-solid fa-chevron-down text-[11px]" aria-hidden="true" />
                         </button>
@@ -747,49 +749,49 @@ export default function GoodsContest({
 
                 {/* 결제 안전 안내 — 발자국 + 둥근 쿠션 셋(2026-10-22 사용자 선택 G1): 지금은 결제 없음 · 결제 준비 · 에스크로 */}
                 <PawTrail />
-                <aside className="dw-gsafe" aria-label="굿즈 공모전 결제 및 제작 안내">
+                <aside className="dw-gsafe" aria-label={labelText("굿즈 공모전 결제 및 제작 안내")}>
                     <div className="dw-rhead">
                         <p className="ddb-crayon-kicker dw-kicker">SAFE CHECKOUT</p>
-                        <p className="ddb-crayon-title ddb-crayon-underline dw-h2 dw-safe-title">선택 단계 안전 안내</p>
+                        <p className="ddb-crayon-title ddb-crayon-underline dw-h2 dw-safe-title">{labelText("선택 단계 안전 안내")}</p>
                     </div>
                     <div className="dw-rounds is-text">
                         <div className={`dw-round is-sky ${safeOpen === 0 ? "is-active" : ""}`}>
                             <button type="button" className="dw-round-pick" onClick={() => setSafeOpen(0)} aria-expanded={safeOpen === 0}>
                                 <span className="dw-round-art" aria-hidden="true"><Image src="/images/ui/goods-pay-none-256.webp" alt="" width={120} height={120} /></span>
-                                <span className="dw-round-title">지금은 결제가 없어요</span>
+                                <span className="dw-round-title">{labelText("지금은 결제가 없어요")}</span>
                             </button>
                             <div className="dw-round-body">
-                                <p>선택은 주문·예약·결제가 아니며 결제 정보도 받지 않습니다.</p>
-                                <p>상품별 500명 달성 후 최종 사양·가격·배송·제작일을 다시 알리고, 조건에 동의한 분만 별도 결제 단계로 진행합니다.</p>
+                                <p>{labelText("선택은 주문·예약·결제가 아니며 결제 정보도 받지 않습니다.")}</p>
+                                <p>{labelText("상품별 500명 달성 후 최종 사양·가격·배송·제작일을 다시 알리고, 조건에 동의한 분만 별도 결제 단계로 진행합니다.")}</p>
                             </div>
                         </div>
                         <div className={`dw-round is-yellow ${safeOpen === 1 ? "is-active" : ""}`}>
                             <button type="button" className="dw-round-pick" onClick={() => setSafeOpen(1)} aria-expanded={safeOpen === 1}>
                                 <span className="dw-round-art" aria-hidden="true"><Image src="/images/ui/goods-pay-ready-256.webp" alt="" width={120} height={120} /></span>
-                                <span className="dw-round-title">결제는 이렇게 준비해요</span>
+                                <span className="dw-round-title">{labelText("결제는 이렇게 준비해요")}</span>
                             </button>
                             <div className="dw-round-body">
-                                <div className="dw-safe-methods" aria-label="향후 결제 방식">
-                                    <span><i className="fa-solid fa-credit-card text-indigo-600" aria-hidden="true" />현금 결제</span>
-                                    <span><i className="fa-solid fa-coins text-amber-600" aria-hidden="true" />적립금 + 댕코인 일부 사용</span>
-                                    <span><i className="fa-solid fa-wallet text-emerald-600" aria-hidden="true" />적립금·댕코인 전액 결제</span>
+                                <div className="dw-safe-methods" aria-label={labelText("향후 결제 방식")}>
+                                    <span><i className="fa-solid fa-credit-card text-indigo-600" aria-hidden="true" />{labelText("현금 결제")}</span>
+                                    <span><i className="fa-solid fa-coins text-amber-600" aria-hidden="true" />{labelText("적립금 + 댕코인 일부 사용")}</span>
+                                    <span><i className="fa-solid fa-wallet text-emerald-600" aria-hidden="true" />{labelText("적립금·댕코인 전액 결제")}</span>
                                 </div>
-                                <p>최종 결제 기준은 1P=1원, 1댕코인=100원이며 현금·적립금·댕코인을 원하는 만큼 섞어 사용할 수 있도록 준비 중입니다.</p>
+                                <p>{labelText("최종 결제 기준은 1P=1원, 1댕코인=100원이며 현금·적립금·댕코인을 원하는 만큼 섞어 사용할 수 있도록 준비 중입니다.")}</p>
                             </div>
                         </div>
                         <div className={`dw-round is-mint ${safeOpen === 2 ? "is-active" : ""}`}>
                             <button type="button" className="dw-round-pick" onClick={() => setSafeOpen(2)} aria-expanded={safeOpen === 2}>
                                 <span className="dw-round-art" aria-hidden="true"><Image src="/images/ui/goods-escrow-256.webp" alt="" width={120} height={120} /></span>
-                                <span className="dw-round-title">에스크로로 지켜요</span>
+                                <span className="dw-round-title">{labelText("에스크로로 지켜요")}</span>
                             </button>
                             <div className="dw-round-body">
                                 <p>{content.escrowNotice}</p>
-                                <p>현금이 포함된 주문은 에스크로 계약과 배송 연동 준비가 확인된 뒤에만 결제를 열며, 현재 선택 단계에는 결제나 에스크로가 적용되지 않습니다.</p>
+                                <p>{labelText("현금이 포함된 주문은 에스크로 계약과 배송 연동 준비가 확인된 뒤에만 결제를 열며, 현재 선택 단계에는 결제나 에스크로가 적용되지 않습니다.")}</p>
                             </div>
-                            <Link href="/legal/escrow/" className="dw-round-go">에스크로 안내 보기 <i className="fa-solid fa-arrow-right text-[10px]" aria-hidden="true" /></Link>
+                            <Link href="/legal/escrow/" className="dw-round-go">{labelText("에스크로 안내 보기")} <i className="fa-solid fa-arrow-right text-[10px]" aria-hidden="true" /></Link>
                         </div>
                     </div>
-                    <p className="dw-safe-fine">표시 가격은 부가세 포함 예상 펀딩가이며 배송비는 별도입니다. 시제품·제조사 견적과 최종 사양에 따라 결제 전 달라질 수 있습니다.</p>
+                    <p className="dw-safe-fine">{labelText("표시 가격은 부가세 포함 예상 펀딩가이며 배송비는 별도입니다. 시제품·제조사 견적과 최종 사양에 따라 결제 전 달라질 수 있습니다.")}</p>
                 </aside>
             </div>
 
@@ -808,7 +810,7 @@ export default function GoodsContest({
                         }}
                     >
                         <figure className="dw-zoom-card">
-                            <button ref={zoomCloseRef} type="button" className="dw-zoom-close" onClick={() => setZoomIndex(null)} aria-label="크게 보기 닫기">
+                            <button ref={zoomCloseRef} type="button" className="dw-zoom-close" onClick={() => setZoomIndex(null)} aria-label={labelText("크게 보기 닫기")}>
                                 <i className="fa-solid fa-xmark" aria-hidden="true" />
                             </button>
                             <div className="dw-zoom-shot">
@@ -823,10 +825,10 @@ export default function GoodsContest({
                                     sizes="(max-width: 640px) 92vw, 620px"
                                     className="dw-zoom-img"
                                 />
-                                <button type="button" className="dw-zoom-nav is-prev" onClick={() => setZoomIndex((zoomIndex - 1 + total) % total)} aria-label="이전 굿즈 사진">
+                                <button type="button" className="dw-zoom-nav is-prev" onClick={() => setZoomIndex((zoomIndex - 1 + total) % total)} aria-label={labelText("이전 굿즈 사진")}>
                                     <i className="fa-solid fa-chevron-left" aria-hidden="true" />
                                 </button>
-                                <button type="button" className="dw-zoom-nav is-next" onClick={() => setZoomIndex((zoomIndex + 1) % total)} aria-label="다음 굿즈 사진">
+                                <button type="button" className="dw-zoom-nav is-next" onClick={() => setZoomIndex((zoomIndex + 1) % total)} aria-label={labelText("다음 굿즈 사진")}>
                                     <i className="fa-solid fa-chevron-right" aria-hidden="true" />
                                 </button>
                             </div>
@@ -834,7 +836,7 @@ export default function GoodsContest({
                                 <span className="dw-zoom-count">{zoomIndex + 1} / {total}</span>
                                 <strong>{zoomContent.name}</strong>
                                 <span className="dw-zoom-summary">{zoomContent.summary}</span>
-                                <span className="dw-zoom-price"><span className="sr-only">예상 펀딩가 </span>{zoomContent.expectedPriceKrw.toLocaleString("ko-KR")}원<small> · {zoomItem.priceUnit}</small></span>
+                                <span className="dw-zoom-price"><span className="sr-only">{labelText("예상 펀딩가")} </span>{zoomContent.expectedPriceKrw.toLocaleString("ko-KR")}{labelText("원")}<small> · {zoomItem.priceUnit}</small></span>
                             </figcaption>
                         </figure>
                     </div>
@@ -851,15 +853,15 @@ export default function GoodsContest({
                         <div className="flex items-start justify-between gap-4">
                             <div>
                                 <p className="ddb-crayon-kicker text-[10px]">GUEST SELECTION</p>
-                                <h3 id="goods-guest-verification-title" className="ddb-crayon-title mt-2 text-2xl text-neutral-950">비회원 이메일 확인</h3>
-                                <p className="mt-2 text-xs font-bold leading-5 text-neutral-600">중복 선택을 막고 내 선택을 다시 확인하기 위한 1회 인증이에요. 주문이나 결제는 발생하지 않습니다.</p>
+                                <h3 id="goods-guest-verification-title" className="ddb-crayon-title mt-2 text-2xl text-neutral-950">{labelText("비회원 이메일 확인")}</h3>
+                                <p className="mt-2 text-xs font-bold leading-5 text-neutral-600">{labelText("중복 선택을 막고 내 선택을 다시 확인하기 위한 1회 인증이에요. 주문이나 결제는 발생하지 않습니다.")}</p>
                             </div>
                             <button
                                 type="button"
                                 disabled={guestVerification.submitting}
                                 onClick={() => setGuestVerificationOpen(false)}
                                 className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-neutral-100 text-neutral-600 disabled:opacity-50"
-                                aria-label="닫기"
+                                aria-label={labelText("닫기")}
                             >
                                 <i className="fa-solid fa-xmark" aria-hidden="true" />
                             </button>
@@ -867,7 +869,7 @@ export default function GoodsContest({
 
                         {guestVerification.stage === "email" ? (
                             <form className="mt-5" onSubmit={requestGuestCode}>
-                                <label htmlFor="goods-guest-email" className="text-xs font-black text-neutral-800">이메일</label>
+                                <label htmlFor="goods-guest-email" className="text-xs font-black text-neutral-800">{labelText("이메일")}</label>
                                 <input
                                     id="goods-guest-email"
                                     type="email"
@@ -881,13 +883,13 @@ export default function GoodsContest({
                                 />
                                 {guestVerification.error ? <p role="alert" className="mt-2 text-xs font-bold text-rose-700">{guestVerification.error}</p> : null}
                                 <button type="submit" disabled={guestVerification.submitting} className="ddb-crayon-link mt-4 inline-flex min-h-12 w-full items-center justify-center rounded-full px-5 text-xs disabled:opacity-60">
-                                    {guestVerification.submitting ? <><i className="fa-solid fa-circle-notch fa-spin mr-2" aria-hidden="true" />발송 중…</> : "인증번호 받기"}
+                                    {guestVerification.submitting ? <><i className="fa-solid fa-circle-notch fa-spin mr-2" aria-hidden="true" />{labelText("발송 중…")}</> : "인증번호 받기"}
                                 </button>
                             </form>
                         ) : (
                             <form className="mt-5" onSubmit={confirmGuestCode}>
-                                <p className="rounded-xl bg-indigo-50 px-3 py-2 text-xs font-bold text-indigo-900" data-goods-guest-info><strong>{guestVerification.maskedEmail}</strong>로 보낸 6자리 번호를 입력해 주세요.</p>
-                                <label htmlFor="goods-guest-code" className="mt-4 block text-xs font-black text-neutral-800">인증번호</label>
+                                <p className="rounded-xl bg-indigo-50 px-3 py-2 text-xs font-bold text-indigo-900" data-goods-guest-info><strong>{guestVerification.maskedEmail}</strong>{labelText("로 보낸 6자리 번호를 입력해 주세요.")}</p>
+                                <label htmlFor="goods-guest-code" className="mt-4 block text-xs font-black text-neutral-800">{labelText("인증번호")}</label>
                                 <input
                                     id="goods-guest-code"
                                     inputMode="numeric"
@@ -903,7 +905,7 @@ export default function GoodsContest({
                                 />
                                 {guestVerification.error ? <p role="alert" className="mt-2 text-xs font-bold text-rose-700">{guestVerification.error}</p> : null}
                                 <button type="submit" disabled={guestVerification.submitting} className="ddb-crayon-link mt-4 inline-flex min-h-12 w-full items-center justify-center rounded-full px-5 text-xs disabled:opacity-60">
-                                    {guestVerification.submitting ? <><i className="fa-solid fa-circle-notch fa-spin mr-2" aria-hidden="true" />확인 중…</> : "확인하고 이 굿즈 선택"}
+                                    {guestVerification.submitting ? <><i className="fa-solid fa-circle-notch fa-spin mr-2" aria-hidden="true" />{labelText("확인 중…")}</> : "확인하고 이 굿즈 선택"}
                                 </button>
                                 <button
                                     type="button"
@@ -911,13 +913,13 @@ export default function GoodsContest({
                                     onClick={() => setGuestVerification((current) => ({ ...current, stage: "email", code: "", verificationId: "", error: "" }))}
                                     className="mt-3 w-full text-center text-[11px] font-black text-neutral-500 underline underline-offset-2"
                                 >
-                                    이메일 다시 입력
+                                    {labelText("이메일 다시 입력")}
                                 </button>
                             </form>
                         )}
 
                         <div className="mt-5 border-t border-neutral-200 pt-4 text-center">
-                            <Link href={LOGIN_HREF} className="text-xs font-black text-indigo-700 underline decoration-indigo-300 underline-offset-3" data-goods-login-link>이미 회원이라면 로그인하기</Link>
+                            <Link href={LOGIN_HREF} className="text-xs font-black text-indigo-700 underline decoration-indigo-300 underline-offset-3" data-goods-login-link>{labelText("이미 회원이라면 로그인하기")}</Link>
                         </div>
                     </div>
                 </div>

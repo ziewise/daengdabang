@@ -15,6 +15,7 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { PetlensInputMode, PetlensStep, PetProfile } from "@/lib/types";
 import { useAuth } from "@/hooks/useAuth";
@@ -34,6 +35,7 @@ interface Props {
 }
 
 export default function PetlensModal({ open, onClose }: Props) {
+    const { menuLabel: labelText } = useI18n();
     const { isLoggedIn } = useAuth();
     const { pets: allPets, add: addPet, update: updatePet } = usePets();
     const { set: setPending } = usePendingPet();
@@ -154,13 +156,13 @@ export default function PetlensModal({ open, onClose }: Props) {
                         className="text-base font-extrabold text-foreground flex items-center gap-2"
                     >
                         <i className="fa-solid fa-paw text-aurora-indigo" />
-                        펫렌즈 — 사진 분석
+                        {labelText("펫렌즈 — 사진 분석")}
                     </h2>
                     <button
                         type="button"
                         onClick={onClose}
                         className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-neutral-100"
-                        aria-label="닫기"
+                        aria-label={labelText("닫기")}
                     >
                         <i className="fa-solid fa-xmark" />
                     </button>

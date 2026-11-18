@@ -6,6 +6,7 @@
  * 2026-10-23 웹 크레파스 결: 고객센터 탭 · 하늘 쿠션 머리 판(SupportTop, "1:1 문의 바로 작성"은 판 안 분홍 알약) → 발자국 →
  * Q · A 쿠션 목록 → 끝에 "찾는 답이 없나요?" 한 줄(웹 전용, 같은 1:1 문의 주소). 앱은 기존 앱 꾸밈 그대로.
  */
+import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
 import type { Metadata } from "next";
 // "1:1 문의 바로 작성" — 웹은 페이지 이동 없이 문의 창(마이페이지와 같은 창 · 같은 양식), 앱 · 새 탭은 원래대로 이동(2026-10-25)
 import MypageInquiryLink from "@/components/mypage/MypageInquiryLink";
@@ -45,7 +46,7 @@ export default function FaqPage() {
                 preset={FAQ_INQUIRY}
                 className="cs-cta mt-4 inline-flex min-h-10 items-center gap-2 rounded-full border border-aurora-indigo/20 bg-white/85 px-4 py-2 text-sm font-extrabold text-aurora-indigo shadow-sm transition hover:-translate-y-0.5 hover:border-aurora-indigo/40 hover:bg-indigo-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aurora-indigo"
             >
-                <i className="fa-solid fa-envelope" aria-hidden="true" /> 1:1 문의 바로 작성 <i className="fa-solid fa-chevron-right text-[9px]" aria-hidden="true" />
+                <i className="fa-solid fa-envelope" aria-hidden="true" /> <LocalizedMenuLabel label={"1:1 문의 바로 작성"} /> <i className="fa-solid fa-chevron-right text-[9px]" aria-hidden="true" />
             </MypageInquiryLink>
             </SupportTopCopy>
             <SupportPaws />
@@ -54,8 +55,8 @@ export default function FaqPage() {
 
             {/* 웹 전용 — 목록 끝 안내 한 줄(같은 1:1 문의 주소) */}
             <p className="hidden cs-more">
-                <span>찾는 답이 없나요? 1:1 문의로 남겨 주시면 확인 후 답변드려요.</span>
-                <MypageInquiryLink href="/inquiry#inquiry-form" preset={FAQ_INQUIRY}>1:1 문의하기 <i className="fa-solid fa-arrow-right text-[10px]" aria-hidden="true" /></MypageInquiryLink>
+                <span><LocalizedMenuLabel label={"찾는 답이 없나요? 1:1 문의로 남겨 주시면 확인 후 답변드려요."} /></span>
+                <MypageInquiryLink href="/inquiry#inquiry-form" preset={FAQ_INQUIRY}><LocalizedMenuLabel label={"1:1 문의하기"} /> <i className="fa-solid fa-arrow-right text-[10px]" aria-hidden="true" /></MypageInquiryLink>
             </p>
         </main>
     );

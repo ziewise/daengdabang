@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { useMemo } from "react";
 import { CATALOG, type CatalogProduct } from "@/lib/catalog";
 import ProductCard from "@/components/products/ProductCard";
@@ -11,6 +12,7 @@ interface Props {
 const LIMIT = 5;
 
 export default function RelatedProducts({ product: p }: Props) {
+    const { menuLabel: labelText } = useI18n();
     const related = useMemo(() => {
         const pool = CATALOG.filter((item) => item.no !== p.no);
         const scored = pool.map((item) => {
@@ -33,10 +35,10 @@ export default function RelatedProducts({ product: p }: Props) {
                 {/* 웹 전용 — 영문 손글씨 꼬리표 */}
                 <p className="hidden pd-kicker">YOU MAY ALSO LIKE</p>
                 <h2 className="pd-sec-title text-xl font-black tracking-tight text-neutral-950 md:text-2xl">
-                    같이 보면 좋은 상품
+                    {labelText("같이 보면 좋은 상품")}
                 </h2>
                 <p className="mt-1 text-sm font-bold text-neutral-500">
-                    같은 브랜드와 비슷한 카테고리에서 골랐습니다.
+                    {labelText("같은 브랜드와 비슷한 카테고리에서 골랐습니다.")}
                 </p>
             </header>
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">

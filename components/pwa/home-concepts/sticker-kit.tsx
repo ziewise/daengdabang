@@ -9,6 +9,7 @@
  *  - STICKER_CSS: 속지 · 테이프 · 포스트잇 · 스티커 떼기 · 손으로 놓기 · 속지 넘기기 · 편지지 CSS
  */
 
+import { useI18n } from "@/lib/i18n";
 import Image from "next/image";
 import Link from "@/components/app-shell/AppLink";
 import { forwardRef, useState, type CSSProperties, type ReactNode } from "react";
@@ -69,6 +70,7 @@ export const INVITE = [
     { icon: "fa-heart", text: "댕자랑에서 응원 주고받기" },
 ];
 export function LoginInvite({ redirect = "/app/home-1/", title = ["로그인하고", "오늘부터 출근해요!"], items = INVITE, cta = "로그인하고 출근하기" }: { redirect?: string; title?: [string, string]; items?: { icon: string; text: string }[]; cta?: string }) {
+    const { menuLabel: labelText } = useI18n();
     return (
         <div className="st-place st-invite relative mt-4 rounded-[1.2rem] pb-4 pl-6 pr-4 pt-6" style={{ ["--r" as string]: "-1deg", ["--d" as string]: "380ms", rotate: "-1deg" }}>
             <Tape className="-top-2 left-1/2 h-5 w-20 -translate-x-1/2" color="repeating-linear-gradient(90deg, rgba(255,200,215,.85) 0 8px, rgba(255,226,234,.85) 8px 16px)" style={{ rotate: "2deg" }} />
@@ -91,13 +93,13 @@ export function LoginInvite({ redirect = "/app/home-1/", title = ["로그인하�
                             <path d="M7 14 L12 19 L23 6" fill="none" stroke="#ea4c7c" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="st-check" style={{ animationDelay: `${700 + i * 220}ms` }} />
                         </svg>
                         <i aria-hidden="true" className={`fa-solid ${it.icon} w-4 text-center text-[12px] text-[#f48fac]`} />
-                        <span className="ah-light text-[13.5px]">{it.text}</span>
+                        <span className="ah-light text-[13.5px]">{labelText(it.text)}</span>
                     </li>
                 ))}
             </ul>
             <Patch href={appLoginHref(redirect)} className="mt-4">{cta}<i aria-hidden="true" className="fa-solid fa-paw text-[14px]" /></Patch>
             <Link href={appSignupHref(redirect)} className="ah-display mt-3 block text-center text-[13px]" style={{ color: "#ea4c7c" }}>
-                처음이에요 · 가입하면 {SIGNUP_BONUS_COINS}코인 선물
+                {labelText("처음이에요 · 가입하면")} {SIGNUP_BONUS_COINS}{labelText("코인 선물")}
             </Link>
         </div>
     );

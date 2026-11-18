@@ -1,3 +1,4 @@
+import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -51,25 +52,25 @@ export default async function BundleDetailPage({ params }: PageProps) {
                         <div className="flex flex-wrap gap-2">
                             <span className="rounded-full bg-white px-3 py-1 text-xs font-black text-neutral-950">{bundleCustomerBadge(bundle)}</span>
                             <span className="rounded-full bg-white/14 px-3 py-1 text-xs font-black text-white ring-1 ring-white/24">
-                                {bundle.products.length}종 세트
+                                {bundle.products.length}<LocalizedMenuLabel label={"종 세트"} />
                             </span>
                         </div>
                         <h1 className="mt-4 max-w-3xl text-4xl font-black leading-tight md:text-6xl">{bundle.title}</h1>
                         <p className="mt-5 max-w-2xl text-base font-bold leading-7 text-white/86 md:text-lg">{bundle.story}</p>
                     </div>
                     <aside className="rounded-lg border border-white/16 bg-white/94 p-5 text-neutral-950 shadow-card backdrop-blur">
-                        <p className="ddb-sale-label ddb-sale-label--compact">세트가</p>
+                        <p className="ddb-sale-label ddb-sale-label--compact"><LocalizedMenuLabel label={"세트가"} /></p>
                         <div className="mt-2 flex items-end justify-between gap-3">
                             <div>
-                                <p className="text-sm font-bold text-neutral-400 line-through">{formatKRW(bundle.basePrice)}원</p>
-                                <p className="ddb-crayon-price text-3xl">{formatKRW(bundle.salePrice)}원</p>
+                                <p className="text-sm font-bold text-neutral-400 line-through">{formatKRW(bundle.basePrice)}<LocalizedMenuLabel label={"원"} /></p>
+                                <p className="ddb-crayon-price text-3xl">{formatKRW(bundle.salePrice)}<LocalizedMenuLabel label={"원"} /></p>
                             </div>
                             <span className="rounded-full bg-rose-600 px-3 py-1 text-sm font-black text-white">{bundle.discountRate}%</span>
                         </div>
                         <p className="mt-3 text-sm font-bold leading-6 text-neutral-600">{bundle.subtitle}</p>
                         <div className="mt-5 flex flex-wrap gap-2">
                             <BundleAddButton productIds={bundle.products.map((product) => product.id)} />
-                            <Link href="/bundles" className="btn btn-secondary">다른 세트 보기</Link>
+                            <Link href="/bundles" className="btn btn-secondary"><LocalizedMenuLabel label={"다른 세트 보기"} /></Link>
                         </div>
                     </aside>
                 </div>
@@ -78,17 +79,17 @@ export default async function BundleDetailPage({ params }: PageProps) {
             <section className="mx-auto max-w-[1280px] px-4 py-8 md:px-6">
                 <div className="grid gap-6 lg:grid-cols-[360px_1fr]">
                     <aside className="surface h-fit p-5">
-                        <p className="text-xs font-black text-indigo-700">추천 이유</p>
-                        <h2 className="mt-2 text-2xl font-black text-neutral-950">함께 쓰는 흐름까지 맞췄어요</h2>
+                        <p className="text-xs font-black text-indigo-700"><LocalizedMenuLabel label={"추천 이유"} /></p>
+                        <h2 className="mt-2 text-2xl font-black text-neutral-950"><LocalizedMenuLabel label={"함께 쓰는 흐름까지 맞췄어요"} /></h2>
                         <p className="mt-3 text-sm font-bold leading-6 text-neutral-600">{bundle.reason}</p>
                         <div className="mt-5 grid gap-2">
                             <div className="flex items-center justify-between text-sm font-bold text-neutral-600">
-                                <span>포함 상품</span>
-                                <b className="text-neutral-950">{bundle.products.length}개</b>
+                                <span><LocalizedMenuLabel label={"포함 상품"} /></span>
+                                <b className="text-neutral-950">{bundle.products.length}<LocalizedMenuLabel label={"개"} /></b>
                             </div>
                             <div className="flex items-center justify-between text-sm font-bold text-neutral-600">
-                                <span>세트 절약</span>
-                                <b className="text-rose-600">{formatKRW(bundle.savings)}원</b>
+                                <span><LocalizedMenuLabel label={"세트 절약"} /></span>
+                                <b className="text-rose-600">{formatKRW(bundle.savings)}<LocalizedMenuLabel label={"원"} /></b>
                             </div>
                         </div>
                     </aside>
@@ -102,8 +103,8 @@ export default async function BundleDetailPage({ params }: PageProps) {
                         </div>
                         <section className="mt-8">
                             <div className="mb-5 flex items-center justify-between gap-3">
-                                <h2 className="text-2xl font-black tracking-tight text-neutral-950">포함 상품</h2>
-                                <span className="text-sm font-black text-neutral-500">{bundle.products.length}개</span>
+                                <h2 className="text-2xl font-black tracking-tight text-neutral-950"><LocalizedMenuLabel label={"포함 상품"} /></h2>
+                                <span className="text-sm font-black text-neutral-500">{bundle.products.length}<LocalizedMenuLabel label={"개"} /></span>
                             </div>
                             <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
                                 {bundle.products.map((product) => (

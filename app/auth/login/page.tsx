@@ -16,6 +16,7 @@
  * 로그인 로직은 기존 흐름을 유지.
  */
 
+import { useI18n } from "@/lib/i18n";
 import { FormEvent, useState, useSyncExternalStore } from "react";
 import "../../auth-web.css";
 import Link from "next/link";
@@ -47,6 +48,7 @@ const getClientRedirect = () => {
 };
 
 export default function LoginPage() {
+    const { menuLabel: labelText } = useI18n();
     const router = useRouter();
     const { login } = useAuth();
     const [email, setEmail] = useState("");
@@ -145,11 +147,11 @@ export default function LoginPage() {
                 {/* 카드 우측 상단 — 홈으로 이동(헤더 없는 풀스크린이라 별도 제공) */}
                 <Link
                     href="/main"
-                    aria-label="홈으로"
+                    aria-label={labelText("홈으로")}
                     className="absolute right-4 top-4 z-20 inline-flex items-center gap-1.5 rounded-full bg-white/85 px-3.5 py-1.5 text-xs font-black text-neutral-600 shadow-sm ring-1 ring-black/5 backdrop-blur transition hover:bg-white hover:text-amber-600"
                 >
                     <i className="fa-solid fa-house text-xs" />
-                    홈으로
+                    {labelText("홈으로")}
                 </Link>
                 {/* 좌: 9:16 브랜드 영상 (md+ 노출) — 자동재생 무한루프 */}
                 <div className="relative hidden w-[42%] shrink-0 overflow-hidden bg-[#f6efe3] md:block">
@@ -163,7 +165,7 @@ export default function LoginPage() {
                     />
                     {/* 하단 살짝 어둡게 — 브랜드 문구 가독성 */}
                     <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/35 to-transparent p-5 pt-12">
-                        <p className="text-sm font-black text-white drop-shadow">우리 댕댕이의 매일이 특별해지는 곳</p>
+                        <p className="text-sm font-black text-white drop-shadow">{labelText("우리 댕댕이의 매일이 특별해지는 곳")}</p>
                     </div>
                 </div>
 
@@ -172,13 +174,13 @@ export default function LoginPage() {
                     {/* 헤더와 동일한 로고(강아지 + 댕다방 워드마크) — 로그인 버튼이 있어 "로그인" 제목은 생략 */}
                     <div className="mb-7">
                         <BrandLogo />
-                        <h1 className="sr-only">로그인</h1>
+                        <h1 className="sr-only">{labelText("로그인")}</h1>
                     </div>
 
                     {apiReady === false && (
                         <p className="lg-notice mb-4 rounded-md bg-amber-50 px-3 py-2 text-xs font-bold leading-6 text-amber-800" data-tone="amber">
                             {/* 웹은 해요체, 앱은 기존 글 그대로 */}
-                            {webScreen ? "지금은 회원 로그인을 준비하고 있어요. 잠시 후 다시 이용해 주세요." : "지금은 회원 로그인을 준비 중입니다. 잠시 후 다시 이용해 주세요."}
+                            {labelText(webScreen ? "지금은 회원 로그인을 준비하고 있어요. 잠시 후 다시 이용해 주세요." : "지금은 회원 로그인을 준비 중입니다. 잠시 후 다시 이용해 주세요.")}
                         </p>
                     )}
                     {error && (
@@ -206,7 +208,7 @@ export default function LoginPage() {
                                 type={showPw ? "text" : "password"}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                placeholder="비밀번호"
+                                placeholder={labelText("비밀번호")}
                                 autoComplete="current-password"
                                 className="h-12 w-full rounded-xl border border-neutral-200 bg-[#faf7f1] pl-10 pr-11 text-sm font-bold text-neutral-900 placeholder:font-medium placeholder:text-neutral-400 focus:border-amber-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-100"
                             />
@@ -225,7 +227,7 @@ export default function LoginPage() {
                             disabled={loading}
                             className="lg-submit mt-1 h-12 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 text-sm font-black text-white shadow-[0_8px_20px_rgba(245,158,11,0.35)] transition hover:from-amber-500 hover:to-amber-600 disabled:opacity-60"
                         >
-                            {loading ? "로그인 중…" : "로그인"}
+                            {labelText(loading ? "로그인 중…" : "로그인")}
                         </button>
                     </form>
 
@@ -235,14 +237,14 @@ export default function LoginPage() {
                             href="/forgot-password"
                             className="text-xs font-bold text-neutral-400 transition hover:text-amber-600"
                         >
-                            비밀번호를 잊으셨나요?
+                            {labelText("비밀번호를 잊으셨나요?")}
                         </Link>
                     </div>
 
                     {/* 간편 로그인 — 구분선 + 원형 아이콘 */}
                     <div className="my-5 flex items-center gap-3">
                         <div className="h-px flex-1 bg-neutral-200" />
-                        <span className="text-[11px] font-bold text-neutral-400">간편 로그인</span>
+                        <span className="text-[11px] font-bold text-neutral-400">{labelText("간편 로그인")}</span>
                         <div className="h-px flex-1 bg-neutral-200" />
                     </div>
                     <SocialAuthButtons mode="login" variant="compact" returnTo={redirect || "/mypage"} />
@@ -256,12 +258,12 @@ export default function LoginPage() {
                             className="mt-5 flex h-11 w-full items-center justify-center gap-2 rounded-xl border-2 border-neutral-200 text-sm font-black text-neutral-600 transition hover:border-amber-300 hover:bg-amber-50/60 hover:text-amber-700"
                         >
                             <i className="fa-solid fa-bag-shopping text-xs" />
-                            비회원 주문서 미리보기
+                            {labelText("비회원 주문서 미리보기")}
                         </button>
                     )}
                     {checkoutRedirect && (
                         <p className="mt-2 text-center text-[11px] font-bold leading-5 text-neutral-400">
-                            결제창은 로그인한 뒤 열 수 있습니다.
+                            {labelText("결제창은 로그인한 뒤 열 수 있습니다.")}
                         </p>
                     )}
 
@@ -270,20 +272,20 @@ export default function LoginPage() {
                         위계는 유지하되 "버튼"으로 확실히 눈에 띄게 한다(아이콘·화살표 hover). */}
                     <div className="mt-6 flex flex-col items-center">
                         <p className="mb-2 text-center text-[11px] font-bold text-neutral-400">
-                            아직 댕다방 회원이 아니신가요?
+                            {labelText("아직 댕다방 회원이 아니신가요?")}
                         </p>
                         <Link
                             href={signupHref}
                             className="group inline-flex h-10 items-center justify-center gap-2 rounded-full border-2 border-amber-300 bg-amber-50/60 px-5 text-sm font-black text-amber-700 transition hover:border-amber-400 hover:bg-amber-100/70 hover:shadow-[0_10px_24px_rgba(245,158,11,0.22)]"
                         >
                             <i className="fa-solid fa-user-plus text-xs" />
-                            회원가입
+                            {labelText("회원가입")}
                             <i className="fa-solid fa-arrow-right text-[11px] transition-transform group-hover:translate-x-0.5" />
                         </Link>
                         {/* 웹 전용(2026-10-25) — 비회원 주문 조회(앱은 hidden 그대로, 꾸밈 app/auth-web.css) */}
                         <Link href="/order-lookup" className="hidden lg-guest-lookup">
                             <i className="fa-solid fa-magnifying-glass" aria-hidden="true" />
-                            비회원 주문 조회
+                            {labelText("비회원 주문 조회")}
                         </Link>
                     </div>
                 </div>

@@ -6,6 +6,7 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { useState } from "react";
 import Link from "next/link";
 
@@ -27,6 +28,7 @@ const FAQS: Faq[] = [
 ];
 
 export default function FaqClient() {
+    const { menuLabel: labelText } = useI18n();
     const [open, setOpen] = useState<number | null>(0);
 
     return (
@@ -48,10 +50,10 @@ export default function FaqClient() {
                         >
                             <span className="hidden cs-qa" aria-hidden="true">Q</span>
                             <span className="cs-faq-cat px-2 py-0.5 rounded-full bg-aurora-indigo/10 text-aurora-indigo text-[10px] font-extrabold shrink-0">
-                                {f.category}
+                                {labelText(f.category)}
                             </span>
                             <span className="flex-1 text-sm md:text-base font-black text-foreground">
-                                {f.q}
+                                {labelText(f.q)}
                             </span>
                             <i className={`cs-faq-chev fa-solid fa-chevron-down text-xs text-neutral-400 transition-transform ${isOpen ? "rotate-180" : ""}`} />
                         </button>
@@ -59,7 +61,7 @@ export default function FaqClient() {
                             <div className="px-5 md:px-6 pb-5 pt-0 cs-faq-a">
                                 <span className="hidden cs-qa is-a" aria-hidden="true">A</span>
                                 <p className="text-sm font-bold leading-7 text-neutral-600 border-t border-neutral-100 pt-4">
-                                    {f.a}
+                                    {labelText(f.a)}
                                 </p>
                                 {f.links?.length ? (
                                     <div className="mt-3 flex flex-wrap gap-2 cs-faq-links">
@@ -70,7 +72,7 @@ export default function FaqClient() {
                                                 className="inline-flex min-h-10 items-center gap-2 rounded-full border border-aurora-indigo/20 bg-white px-3.5 py-2 text-sm font-extrabold text-aurora-indigo shadow-sm transition hover:-translate-y-0.5 hover:border-aurora-indigo/40 hover:bg-indigo-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aurora-indigo"
                                             >
                                                 <i className={`fa-solid ${link.icon} text-xs`} aria-hidden="true" />
-                                                {link.label}
+                                                {labelText(link.label)}
                                                 <i className="fa-solid fa-chevron-right text-[9px]" aria-hidden="true" />
                                             </Link>
                                         ))}

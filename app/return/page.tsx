@@ -7,6 +7,7 @@
  * 점선으로 이은 네 단계(웹 전용, 아래 정책 문구를 짧게 줄인 것) → 발자국 → 정책 구역마다 색 쿠션 판.
  * 꾸밈은 app/support-web.css(웹 전용), 앱은 기존 앱 꾸밈 그대로. 정책 문구 · 링크 그대로.
  */
+import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -49,13 +50,13 @@ export default function ReturnPage() {
                         preset={RETURN_INQUIRY}
                         className="cs-cta inline-flex min-h-10 items-center gap-2 rounded-full border border-aurora-indigo/20 bg-white/85 px-4 py-2 text-sm font-extrabold text-aurora-indigo shadow-sm transition hover:-translate-y-0.5 hover:border-aurora-indigo/40 hover:bg-indigo-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aurora-indigo"
                     >
-                        <i className="fa-solid fa-envelope" aria-hidden="true" /> 교환·반품 접수하기 <i className="fa-solid fa-chevron-right text-[9px]" aria-hidden="true" />
+                        <i className="fa-solid fa-envelope" aria-hidden="true" /> <LocalizedMenuLabel label={"교환·반품 접수하기"} /> <i className="fa-solid fa-chevron-right text-[9px]" aria-hidden="true" />
                     </MypageInquiryLink>
                     <Link
                         href="/faq"
                         className="cs-cta-sub inline-flex min-h-10 items-center gap-2 rounded-full border border-neutral-200 bg-white/70 px-4 py-2 text-sm font-extrabold text-neutral-700 shadow-sm transition hover:-translate-y-0.5 hover:border-neutral-300 hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aurora-indigo"
                     >
-                        <i className="fa-solid fa-circle-question" aria-hidden="true" /> 자주 묻는 질문
+                        <i className="fa-solid fa-circle-question" aria-hidden="true" /> <LocalizedMenuLabel label={"자주 묻는 질문"} />
                     </Link>
                 </div>
             </SupportTop>
@@ -65,7 +66,7 @@ export default function ReturnPage() {
             <section className="hidden cs-steps-wrap" aria-labelledby="cs-steps-title">
                 <div className="dw-rhead">
                     <p className="ddb-crayon-kicker dw-kicker">HOW IT WORKS</p>
-                    <h2 id="cs-steps-title" className="ddb-crayon-title ddb-crayon-underline dw-rhead-title">교환·반품은 이렇게 진행돼요</h2>
+                    <h2 id="cs-steps-title" className="ddb-crayon-title ddb-crayon-underline dw-rhead-title"><LocalizedMenuLabel label={"교환·반품은 이렇게 진행돼요"} /></h2>
                 </div>
                 <ol className="dw-dsteps cs-steps">
                     {RETURN_STEPS.map((step, index) => (
@@ -74,8 +75,8 @@ export default function ReturnPage() {
                                 <Image src={step.art} alt="" width={96} height={96} />
                                 <b className="dw-dstep-no">{index + 1}</b>
                             </span>
-                            <strong className="dw-dstep-title">{step.title}</strong>
-                            <span className="dw-dstep-body">{step.body}</span>
+                            <strong className="dw-dstep-title"><LocalizedMenuLabel label={step.title} /></strong>
+                            <span className="dw-dstep-body"><LocalizedMenuLabel label={step.body} /></span>
                         </li>
                     ))}
                 </ol>
@@ -85,10 +86,9 @@ export default function ReturnPage() {
             <div className="mt-8 rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm md:p-7 cs-policy">
                 <DeliveryReturnPolicyDetails />
                 <section className="mt-7 border-t border-neutral-200 pt-5 cs-refund">
-                    <h2 className="text-base font-black text-neutral-950">환불 처리</h2>
+                    <h2 className="text-base font-black text-neutral-950"><LocalizedMenuLabel label={"환불 처리"} /></h2>
                     <p className="mt-2 text-sm font-bold leading-7 text-neutral-600">
-                        반품 상품 회수와 검수가 완료되면 영업일 기준 3일 이내에 환불을 진행합니다.
-                        결제 수단에 따라 카드 승인 취소 또는 계좌 환불 등의 처리 방식과 소요 시간이 다를 수 있습니다.
+                        <LocalizedMenuLabel label={"반품 상품 회수와 검수가 완료되면 영업일 기준 3일 이내에 환불을 진행합니다.\n                        결제 수단에 따라 카드 승인 취소 또는 계좌 환불 등의 처리 방식과 소요 시간이 다를 수 있습니다."} />
                     </p>
                 </section>
             </div>

@@ -7,6 +7,7 @@
  * 2026-10-23 웹 크레파스 결: 고객센터 탭 · 분홍 쿠션 머리 판(SupportTop) → 발자국 → 이메일 · 전화 쿠션 둘 → 문의 쓰기 판(흰 쿠션 · 크림 입력칸 ·
  * 분홍 알약 접수) → 문의 전 확인 셋(흰 알약 줄). 꾸밈은 app/support-web.css(웹 전용), 앱은 기존 앱 꾸밈 그대로. 접수 동작 · 문구 · 링크 그대로.
  */
+import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
 import type { Metadata } from "next";
 import Link from "next/link";
 import CustomerInquiryPanel from "@/components/contact/CustomerInquiryPanel";
@@ -44,17 +45,17 @@ export default function InquiryPage() {
             <nav aria-label="문의 전 확인할 안내" className="mt-5 grid gap-2.5 rounded-2xl border border-dashed border-neutral-300 bg-white/40 p-4 sm:grid-cols-3 cs-help">
                 <Link href="/faq" className="cs-help-link is-sky group flex min-h-16 items-center gap-3 rounded-xl border border-sky-100 bg-white/85 px-4 py-3 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-sky-300 hover:bg-sky-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aurora-indigo">
                     <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-sky-100 text-sky-700"><i className="fa-solid fa-circle-question" aria-hidden="true" /></span>
-                    <span className="min-w-0 flex-1"><b className="block text-sm font-black text-neutral-900">자주 묻는 질문</b><span className="mt-0.5 block text-xs font-bold leading-5 text-neutral-500">빠른 해결 방법 보기</span></span>
+                    <span className="min-w-0 flex-1"><b className="block text-sm font-black text-neutral-900"><LocalizedMenuLabel label={"자주 묻는 질문"} /></b><span className="mt-0.5 block text-xs font-bold leading-5 text-neutral-500"><LocalizedMenuLabel label={"빠른 해결 방법 보기"} /></span></span>
                     <i className="fa-solid fa-chevron-right text-xs text-sky-600 transition group-hover:translate-x-0.5" aria-hidden="true" />
                 </Link>
                 <Link href="/mypage/orders/" className="cs-help-link is-lav group flex min-h-16 items-center gap-3 rounded-xl border border-indigo-100 bg-white/85 px-4 py-3 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-300 hover:bg-indigo-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aurora-indigo">
                     <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-indigo-700"><i className="fa-solid fa-box" aria-hidden="true" /></span>
-                    <span className="min-w-0 flex-1"><b className="block text-sm font-black text-neutral-900">주문·배송 조회</b><span className="mt-0.5 block text-xs font-bold leading-5 text-neutral-500">마이페이지 주문 내역</span></span>
+                    <span className="min-w-0 flex-1"><b className="block text-sm font-black text-neutral-900"><LocalizedMenuLabel label={"주문·배송 조회"} /></b><span className="mt-0.5 block text-xs font-bold leading-5 text-neutral-500"><LocalizedMenuLabel label={"마이페이지 주문 내역"} /></span></span>
                     <i className="fa-solid fa-chevron-right text-xs text-indigo-600 transition group-hover:translate-x-0.5" aria-hidden="true" />
                 </Link>
                 <Link href="/return" className="cs-help-link is-mint group flex min-h-16 items-center gap-3 rounded-xl border border-orange-100 bg-white/85 px-4 py-3 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-orange-300 hover:bg-orange-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aurora-indigo">
                     <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-orange-100 text-orange-700"><i className="fa-solid fa-rotate-left" aria-hidden="true" /></span>
-                    <span className="min-w-0 flex-1"><b className="block text-sm font-black text-neutral-900">교환·반품 안내</b><span className="mt-0.5 block text-xs font-bold leading-5 text-neutral-500">신청 기준 확인하기</span></span>
+                    <span className="min-w-0 flex-1"><b className="block text-sm font-black text-neutral-900"><LocalizedMenuLabel label={"교환·반품 안내"} /></b><span className="mt-0.5 block text-xs font-bold leading-5 text-neutral-500"><LocalizedMenuLabel label={"신청 기준 확인하기"} /></span></span>
                     <i className="fa-solid fa-chevron-right text-xs text-orange-600 transition group-hover:translate-x-0.5" aria-hidden="true" />
                 </Link>
             </nav>

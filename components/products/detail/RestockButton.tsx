@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
@@ -10,6 +11,7 @@ import type { CatalogProduct } from "@/lib/catalog/types";
 export default function RestockButton({ product, color = "", size = "", className = "" }: {
     product: CatalogProduct; color?: string; size?: string; className?: string;
 }) {
+    const { menuLabel: labelText } = useI18n();
     const router = useRouter();
     const [open, setOpen] = useState(false);
     const [busy, setBusy] = useState(false);
@@ -57,18 +59,18 @@ export default function RestockButton({ product, color = "", size = "", classNam
                     return;
                 }
                 setOpen(true); setMessage("");
-            }}>{done ? "재입고 알림 신청됨" : "재입고 알림"}</button>
+            }}>{labelText(done ? "재입고 알림 신청됨" : "재입고 알림")}</button>
         {open && createPortal(<div className="fixed inset-0 z-[2300] flex items-center justify-center bg-black/35 p-5" onClick={() => { if (!busy) setOpen(false); }}>
-            <section ref={dialog} tabIndex={-1} role="dialog" aria-modal="true" aria-label="재입고 알림 신청" className="max-h-[90dvh] w-full max-w-sm overflow-y-auto rounded-2xl bg-white p-5 shadow-xl" onClick={(event) => event.stopPropagation()}>
-                <h2 className="text-lg font-bold">재입고 알림</h2>
+            <section ref={dialog} tabIndex={-1} role="dialog" aria-modal="true" aria-label={labelText("재입고 알림 신청")} className="max-h-[90dvh] w-full max-w-sm overflow-y-auto rounded-2xl bg-white p-5 shadow-xl" onClick={(event) => event.stopPropagation()}>
+                <h2 className="text-lg font-bold">{labelText("재입고 알림")}</h2>
                 <p className="mt-3 text-base font-bold">{product.name}</p>
                 <p className="mt-1 text-sm">{[color, size].filter(Boolean).join(" / ") || "구매 가능한 옵션이 재입고되면 알려드려요."}</p>
-                <p className="mt-3 text-sm">마이페이지에서 확인할 수 있어요. 한 번 알린 뒤 신청은 종료되며, 구매 시점에 재고가 달라질 수 있어요.</p>
-                <label className="mt-4 flex items-start gap-2 text-sm"><input type="checkbox" checked={email} onChange={(event) => setEmail(event.target.checked)} />인증된 회원 이메일로도 알림 받기</label>
-                <p className="mt-2 text-xs text-neutral-500">인증된 이메일이 없으면 마이페이지로만 알려드려요.</p>
+                <p className="mt-3 text-sm">{labelText("마이페이지에서 확인할 수 있어요. 한 번 알린 뒤 신청은 종료되며, 구매 시점에 재고가 달라질 수 있어요.")}</p>
+                <label className="mt-4 flex items-start gap-2 text-sm"><input type="checkbox" checked={email} onChange={(event) => setEmail(event.target.checked)} />{labelText("인증된 회원 이메일로도 알림 받기")}</label>
+                <p className="mt-2 text-xs text-neutral-500">{labelText("인증된 이메일이 없으면 마이페이지로만 알려드려요.")}</p>
                 {message && <p role="status" className="mt-3 text-sm">{message}</p>}
                 <div className="mt-5 flex gap-2">
-                    <button type="button" className="min-h-11 flex-1 rounded-xl bg-neutral-100" disabled={busy} onClick={() => setOpen(false)}>닫기</button>
+                    <button type="button" className="min-h-11 flex-1 rounded-xl bg-neutral-100" disabled={busy} onClick={() => setOpen(false)}>{labelText("닫기")}</button>
                     <button type="button" className="min-h-11 flex-1 rounded-xl bg-pink-600 font-bold text-white" disabled={busy} onClick={async () => {
                         setBusy(true); setMessage("");
                         try {
@@ -78,7 +80,7 @@ export default function RestockButton({ product, color = "", size = "", classNam
                             window.dispatchEvent(new Event("ddb-restock-changed"));
                         } catch (error) { setMessage(error instanceof Error ? error.message : "신청하지 못했어요."); }
                         finally { setBusy(false); }
-                    }}>{busy ? "신청 중…" : "알림 신청"}</button>
+                    }}>{labelText(busy ? "신청 중…" : "알림 신청")}</button>
                 </div>
             </section>
         </div>, document.body)}

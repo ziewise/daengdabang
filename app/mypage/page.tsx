@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import Link from "next/link";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { CATALOG, SUBCATEGORY_LABEL, formatKRW, type CatalogProduct } from "@/lib/catalog";
@@ -74,6 +75,7 @@ function firstTryOnProduct(): CatalogProduct | undefined {
 }
 
 export default function MyPage() {
+    const { menuLabel: labelText } = useI18n();
     const { user } = useAuth();
     const store = useStore();
     const profileRouteRequested = useSyncExternalStore(
@@ -127,10 +129,10 @@ export default function MyPage() {
         return (
             <main className="mx-auto max-w-[720px] px-4 py-14 text-center" data-mypage-web="gate">
                 <i className="fa-regular fa-user text-4xl text-neutral-300" />
-                <h1 className="mt-4 text-2xl font-black text-neutral-950">로그인이 필요합니다.</h1>
+                <h1 className="mt-4 text-2xl font-black text-neutral-950">{labelText("로그인이 필요합니다.")}</h1>
                 <div className="mt-6 flex justify-center gap-2">
-                    <Link href="/auth/login" className="btn btn-primary">로그인</Link>
-                    <Link href="/auth/signup" className="btn btn-secondary">회원가입</Link>
+                    <Link href="/auth/login" className="btn btn-primary">{labelText("로그인")}</Link>
+                    <Link href="/auth/signup" className="btn btn-secondary">{labelText("회원가입")}</Link>
                 </div>
             </main>
         );
@@ -145,8 +147,8 @@ export default function MyPage() {
             {/* 2026-10-24 웹 K5 결: 인사 머리 = 분홍 띠 판 + 3D 그림(data-mp-hello · 꾸밈은 app/mypage-web.css, 앱 그대로) */}
             <div className="flex flex-wrap items-start justify-between gap-3" data-mp-hello data-mp-art="me">
                 <div>
-                    <p className="text-sm font-black text-indigo-700">마이페이지</p>
-                    <h1 className="mt-2 text-3xl font-black tracking-tight text-neutral-950">{user.name}님</h1>
+                    <p className="text-sm font-black text-indigo-700">{labelText("마이페이지")}</p>
+                    <h1 className="mt-2 text-3xl font-black tracking-tight text-neutral-950">{user.name}{labelText("님")}</h1>
                     <p className="mt-1 text-sm font-bold text-neutral-600">
                         {memberAccountDisplay(user.email, user.authProvider)}
                     </p>
@@ -154,7 +156,7 @@ export default function MyPage() {
             </div>
 
             {/* 웹 전용 — 대시보드 폴더 탭(우리 아이 · 연구소 코인 · 최근 결제 · 찜한 상품). 고른 탭 칸만 아래에 보임. 앱에서는 숨김(hidden) */}
-            <div className="hidden mp-tabs" role="tablist" aria-label="마이페이지 대시보드 보기">
+            <div className="hidden mp-tabs" role="tablist" aria-label={labelText("마이페이지 대시보드 보기")}>
                 {([
                     { id: "pets", label: "우리 아이", value: user.pets.length, unit: "마리" },
                     // 코인 · 적립금 탭은 글자만(11-11 사용자 "코인 표시 없이 문구만") — value 없음 = 숫자 배지 안 그림
@@ -183,10 +185,10 @@ export default function MyPage() {
                     <DaengLabWalletCard accessToken={user.apiAccessToken} accountEmail={user.email} />
                     <div id="pet-profiles" className="surface scroll-mt-24 p-5" data-mp-card>
                         <div className="flex items-center justify-between gap-3" data-mp-band="mint" data-mp-art="dog">
-                            <h2 className="text-lg font-black text-neutral-950" data-mp-kicker="MY DOG">반려견 프로필</h2>
+                            <h2 className="text-lg font-black text-neutral-950" data-mp-kicker="MY DOG">{labelText("반려견 프로필")}</h2>
                             {hasTryOnProfile && (
                                 <span className="rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-black text-indigo-700">
-                                    자동 피팅 준비
+                                    {labelText("자동 피팅 준비")}
                                 </span>
                             )}
                         </div>
@@ -217,9 +219,9 @@ export default function MyPage() {
                                                     {pet.coatColor ? `${pet.coatColor} · ` : ""}{activityLabel(pet.activity)}
                                                 </p>
                                                 {hasVerifiedPetPhoto(pet) ? (
-                                                    <p className="mt-2 text-xs font-black text-indigo-700">착용 상품 자동 피팅 가능</p>
+                                                    <p className="mt-2 text-xs font-black text-indigo-700">{labelText("착용 상품 자동 피팅 가능")}</p>
                                                 ) : (
-                                                    <p className="mt-2 text-xs font-black text-neutral-500">{webScreen ? "사진을 올리면 자동 피팅이 켜져요" : "사진을 올리면 자동 피팅이 켜집니다"}</p>
+                                                    <p className="mt-2 text-xs font-black text-neutral-500">{labelText(webScreen ? "사진을 올리면 자동 피팅이 켜져요" : "사진을 올리면 자동 피팅이 켜집니다")}</p>
                                                 )}
                                             </div>
                                         </div>
@@ -242,9 +244,9 @@ export default function MyPage() {
                             </div>
                         ) : (
                             <div className="mt-3 rounded-lg border border-dashed border-neutral-300 bg-neutral-50 p-4 text-sm font-bold leading-6 text-neutral-600">
-                                {webScreen
+                                {labelText(webScreen
                                     ? "먼저 우리 아이 이름과 실제 견종을 등록해 주세요. 저장이 끝나면 펫렌즈 사진 분석과 댕다방 연구소 행동·소리 분석을 바로 시작할 수 있어요."
-                                    : "먼저 우리 아이 이름과 실제 견종을 등록해 주세요. 저장이 끝나면 펫렌즈 사진 분석과 댕다방 연구소 행동·소리 분석을 바로 시작할 수 있습니다."}
+                                    : "먼저 우리 아이 이름과 실제 견종을 등록해 주세요. 저장이 끝나면 펫렌즈 사진 분석과 댕다방 연구소 행동·소리 분석을 바로 시작할 수 있습니다.")}
                             </div>
                         )}
                         <MemberPetProfileCreateForm
@@ -253,18 +255,18 @@ export default function MyPage() {
                         />
                         {petLensReady ? (
                             <Link href={PETLENS_PAGE_HREF} className="btn btn-primary mt-4 w-full">
-                                펫렌즈 사진 분석 열기
+                                {labelText("펫렌즈 사진 분석 열기")}
                             </Link>
                         ) : user.pets.length > 0 ? (
                             <p className="mt-4 rounded-lg bg-amber-50 px-3 py-2 text-xs font-black leading-5 text-amber-800">
-                                {webScreen
+                                {labelText(webScreen
                                     ? "위 프로필의 ‘정보 수정’에서 서버 등록과 실제 견종 확인을 마치면 펫렌즈 버튼이 열려요."
-                                    : "위 프로필의 ‘정보 수정’에서 서버 등록과 실제 견종 확인을 마치면 펫렌즈 버튼이 열립니다."}
+                                    : "위 프로필의 ‘정보 수정’에서 서버 등록과 실제 견종 확인을 마치면 펫렌즈 버튼이 열립니다.")}
                             </p>
                         ) : null}
                         {heroTryOnProduct && hasTryOnProfile && (
                             <Link href={productHref(heroTryOnProduct)} className="btn btn-secondary mt-2 w-full">
-                                자동 피팅 상품 보기
+                                {labelText("자동 피팅 상품 보기")}
                             </Link>
                         )}
                     </div>
@@ -274,11 +276,11 @@ export default function MyPage() {
                     <div id="mypage-orders" className="surface p-5" data-mp-card data-mp-slot="orders">
                         <div className="flex items-center justify-between gap-3" data-mp-band="sky" data-mp-art="cart">
                             <div>
-                                <h2 className="text-lg font-black text-neutral-950" data-mp-kicker="ORDERS">최근 결제</h2>
-                                <p className="mt-1 text-xs font-bold text-neutral-500">{webScreen ? "이 브라우저에서 마친 결제만 빠르게 보여 드려요." : "이 브라우저에서 완료한 결제만 빠르게 보여줍니다."}</p>
+                                <h2 className="text-lg font-black text-neutral-950" data-mp-kicker="ORDERS">{labelText("최근 결제")}</h2>
+                                <p className="mt-1 text-xs font-bold text-neutral-500">{labelText(webScreen ? "이 브라우저에서 마친 결제만 빠르게 보여 드려요." : "이 브라우저에서 완료한 결제만 빠르게 보여줍니다.")}</p>
                             </div>
                             <Link href="/mypage/orders/" className="text-sm font-black text-indigo-700 hover:underline">
-                                전체 주문 보기 <i className="fa-solid fa-chevron-right ml-1 text-[10px]" aria-hidden="true" />
+                                {labelText("전체 주문 보기")} <i className="fa-solid fa-chevron-right ml-1 text-[10px]" aria-hidden="true" />
                             </Link>
                         </div>
                         {store.state.orders.length > 0 ? (
@@ -302,7 +304,7 @@ export default function MyPage() {
                                                     }`}
                                                     data-order-status={order.status}
                                                 >
-                                                    {order.status === "test_paid" ? "테스트 결제완료 · 배송 없음" : "접수"}
+                                                    {labelText(order.status === "test_paid" ? "테스트 결제완료 · 배송 없음" : "접수")}
                                                 </span>
                                             </div>
                                             <div className="mt-3 grid gap-1 text-sm font-bold text-neutral-600">
@@ -314,14 +316,14 @@ export default function MyPage() {
                                                     </span>
                                                 ))}
                                             </div>
-                                            <p className="mt-3 text-right text-lg font-black text-neutral-950">{formatKRW(order.total)}원</p>
+                                            <p className="mt-3 text-right text-lg font-black text-neutral-950">{formatKRW(order.total)}{labelText("원")}</p>
                                         </article>
                                     );
                                 })}
                             </div>
                         ) : (
                             <p className="mt-3 text-sm font-bold leading-6 text-neutral-600">
-                                전체 주문과 배송 상태는 서버 기준 <Link href="/mypage/orders/" className="font-black text-indigo-700 hover:underline">주문 내역</Link>에서 확인해 주세요.
+                                {labelText("전체 주문과 배송 상태는 서버 기준")} <Link href="/mypage/orders/" className="font-black text-indigo-700 hover:underline">{labelText("주문 내역")}</Link>{labelText("에서 확인해 주세요.")}
                             </p>
                         )}
                     </div>
@@ -331,9 +333,9 @@ export default function MyPage() {
                             <div className="mb-4 flex items-center justify-between gap-3" data-mp-row="lav" data-mp-art="fit">
                                 <div>
                                     <p className="text-xs font-black text-indigo-700">PetLens Fit</p>
-                                    <h2 className="text-lg font-black text-neutral-950">바로 입혀볼 상품</h2>
+                                    <h2 className="text-lg font-black text-neutral-950">{labelText("바로 입혀볼 상품")}</h2>
                                 </div>
-                                <Link href="/category/outdoor" className="text-sm font-black text-indigo-700">산책용품 보기</Link>
+                                <Link href="/category/outdoor" className="text-sm font-black text-indigo-700">{labelText("산책용품 보기")}</Link>
                             </div>
                             <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
                                 {TRY_ON_PRODUCTS.slice(0, 4).map((product) => (
@@ -361,15 +363,15 @@ export default function MyPage() {
 
                     <div id="mypage-wishlist" data-mp-slot="wish">
                         <div className="mb-4 flex items-center justify-between" data-mp-row="pink" data-mp-art="wish">
-                            <h2 className="text-lg font-black text-neutral-950" data-mp-kicker="WISHLIST">찜한 상품</h2>
-                            <Link href="/products" className="text-sm font-black text-indigo-700">상품 더보기</Link>
+                            <h2 className="text-lg font-black text-neutral-950" data-mp-kicker="WISHLIST">{labelText("찜한 상품")}</h2>
+                            <Link href="/products" className="text-sm font-black text-indigo-700">{labelText("상품 더보기")}</Link>
                         </div>
                         {wishedProducts.length > 0 ? (
                             <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
                                 {wishedProducts.map((product) => product && <ProductCard key={product.id} product={product} />)}
                             </div>
                         ) : (
-                            <div className="surface p-6 text-sm font-bold text-neutral-600">{webScreen ? "아직 찜한 상품이 없어요." : "찜한 상품이 없습니다."}</div>
+                            <div className="surface p-6 text-sm font-bold text-neutral-600">{labelText(webScreen ? "아직 찜한 상품이 없어요." : "찜한 상품이 없습니다.")}</div>
                         )}
                     </div>
                 </section>

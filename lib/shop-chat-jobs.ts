@@ -10,7 +10,7 @@ function queueRecord(value: unknown): Record<string, unknown> | undefined {
 }
 
 /** Estimates describe time until work starts, never a promised completion time. */
-export function chatQueueMessage(value: unknown, accepted = true): string | undefined {
+export function chatQueueMessage(value: unknown, accepted = true, locale: "en" | "ko" = "ko"): string | undefined {
     const queue = queueRecord(value);
     const count = (value: unknown) => typeof value === "number" && Number.isInteger(value) && value >= 0 && value <= 100_000;
     if (!queue || !count(queue.waitingCount)) return undefined;
@@ -18,6 +18,17 @@ export function chatQueueMessage(value: unknown, accepted = true): string | unde
     const wait = queueRecord(queue.estimatedWaitSeconds);
     const lower = wait && count(wait.min) ? wait.min as number : undefined;
     const upper = wait && count(wait.max) ? wait.max as number : undefined;
+    if (locale === "en") {
+        const count = queue.waitingCount as number;
+        const position = accepted ? (ahead === undefined ? "Preparing your reply" : "Ahead of you: " + ahead) : "Waiting for a spot";
+        let estimate = "Calculating your estimated wait";
+        if (lower !== undefined && upper !== undefined && upper >= lower) {
+            const low = Math.max(1, Math.ceil(lower / 60));
+            const high = Math.max(low, Math.ceil(upper / 60));
+            estimate = upper < 60 ? "Estimated wait under a minute" : "Estimated wait: " + (low === high ? high : low + "–" + high) + " min";
+        }
+        return position + " · Total waiting: " + count + "\n" + estimate + (queue.estimateBasis === "initial" ? " (initial estimate)" : "");
+    }
     let estimate = "예상 대기시간을 계산하고 있어요";
     if (lower !== undefined && upper !== undefined && upper >= lower) {
         if (upper < 60) estimate = "예상 대기 1분 이내";
@@ -152,7 +163,7 @@ export async function awaitShopChatJob(input: {
                 const retryAfter = Number(response.headers.get("Retry-After"));
                 serverDelayMs = Number.isFinite(retryAfter) ? Math.min(60_000, Math.max(0, retryAfter * 1000)) : 0;
                 input.onProgress("queued", queueFull
-                    ? chatQueueMessage(value.detail?.queue, false)
+                    ? chatQueueMessage(value.detail?.queue, false, input.payload.locale === "en" ? "en" : "ko")
                     : value.detail?.code === "chat_actor_queue_full"
                         ? "이 접속에서 기다리는 질문이 많아요. 앞선 질문이 끝나면 이 질문도 자동으로 접수할게요."
                     : response.status === 429
@@ -171,7 +182,7 @@ export async function awaitShopChatJob(input: {
             const pollSeconds = queue?.pollAfterSeconds;
             serverDelayMs = typeof pollSeconds === "number" && Number.isFinite(pollSeconds)
                 ? Math.min(30_000, Math.max(1000, pollSeconds * 1000)) : 0;
-            input.onProgress(value.stage || "answering", value.stage === "queued" ? chatQueueMessage(queue) : undefined);
+            input.onProgress(value.stage || "answering", value.stage === "queued" ? chatQueueMessage(queue, true, input.payload.locale === "en" ? "en" : "ko") : undefined);
             await delay();
         }
     } finally {

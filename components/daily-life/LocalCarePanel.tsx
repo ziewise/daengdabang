@@ -10,6 +10,7 @@
  * 분류 · 지도 주소 · 거리 표시 · 위치 읽기 · 결과 정리 함수는 LocalCareFinder 에서 그대로 가져온다.
  */
 
+import { useI18n } from "@/lib/i18n";
 import { useEffect, useRef, useState } from "react";
 import {
     CATEGORIES,
@@ -32,6 +33,7 @@ import LocationRecoveryActions from "@/components/location/LocationRecoveryActio
 const TONE = TONES.green;
 
 export default function LocalCarePanel() {
+    const { menuLabel: labelText } = useI18n();
     const [selectedCategory, setSelectedCategory] = useState<LocalCareCategory>("veterinary");
     const [coordinates, setCoordinates] = useState<Coordinates | null>(null);
     const [searchState, setSearchState] = useState<SearchState>({ status: "idle" });
@@ -85,14 +87,14 @@ export default function LocalCarePanel() {
     return (
         <section id="local-care-finder" className="dl-anchor space-y-5" aria-labelledby="pv-local-title">
             <Reveal>
-                <SectionHead kicker="LOCAL CARE NOW" extra={<Pill tone={TONE}>오늘 바로 사용</Pill>} title={<span id="pv-local-title">필요할 때, 동네 돌봄부터 찾아요</span>} tone={TONE}>
-                    병원·미용·호텔·데이케어 중 필요한 곳을 고르면 현재 위치 주변의 공개 지도 후보를 찾아드려요.
+                <SectionHead kicker="LOCAL CARE NOW" extra={<Pill tone={TONE}>{labelText("오늘 바로 사용")}</Pill>} title={<span id="pv-local-title">{labelText("필요할 때, 동네 돌봄부터 찾아요")}</span>} tone={TONE}>
+                    {labelText("병원·미용·호텔·데이케어 중 필요한 곳을 고르면 현재 위치 주변의 공개 지도 후보를 찾아드려요.")}
                 </SectionHead>
             </Reveal>
 
             <Reveal order={1}>
                 {/* 종류 — 분할 버튼 (흰 판이 미끄러짐) */}
-                <div className="relative grid grid-cols-4 rounded-[16px] bg-[rgba(31,26,24,0.06)] p-1" role="tablist" aria-label="동네 돌봄 종류">
+                <div className="relative grid grid-cols-4 rounded-[16px] bg-[rgba(31,26,24,0.06)] p-1" role="tablist" aria-label={labelText("동네 돌봄 종류")}>
                     <span className="absolute bottom-1 top-1 rounded-[12px] bg-white shadow-[0_1px_2px_rgba(31,26,24,.08),0_6px_14px_-6px_rgba(31,26,24,.22)] transition-[left] duration-500 ease-[cubic-bezier(.22,1.2,.36,1)]"
                         style={{ left: `calc(4px + (100% - 8px) * ${selectedIndex} / 4)`, width: "calc((100% - 8px) / 4)" }} aria-hidden="true" />
                     {CATEGORIES.map((c) => {
@@ -117,18 +119,18 @@ export default function LocalCarePanel() {
                         <span className="relative grid h-12 w-12 place-items-center rounded-full bg-white shadow-[0_8px_18px_-8px_rgba(19,161,132,.6)]">
                             <i className={`fa-solid ${loading ? "fa-spinner fa-spin" : selected.icon} text-[17px]`} style={{ color: TONE.accent }} />
                         </span>
-                        <span className="absolute bottom-3 left-4 text-[11px] font-semibold text-[#8c9c96]">{loading ? "현재 위치 주변을 확인하고 있어요" : "CURRENT LOCATION"}</span>
+                        <span className="absolute bottom-3 left-4 text-[11px] font-semibold text-[#8c9c96]">{labelText(loading ? "현재 위치 주변을 확인하고 있어요" : "CURRENT LOCATION")}</span>
                     </div>
                     <div className="p-5">
-                        <p className="pv-h3">내 주변 {selected.label}</p>
+                        <p className="pv-h3">{labelText("내 주변")} {selected.label}</p>
                         <p className="pv-small mt-0.5">{selected.helper}</p>
-                        <p className="pv-small mt-2 flex items-center gap-1.5"><i className="fa-solid fa-lock text-[10px]" aria-hidden="true" />위치는 이 검색에만 사용하며 계정에 저장하지 않아요.</p>
+                        <p className="pv-small mt-2 flex items-center gap-1.5"><i className="fa-solid fa-lock text-[10px]" aria-hidden="true" />{labelText("위치는 이 검색에만 사용하며 계정에 저장하지 않아요.")}</p>
                         <div className="mt-4 grid grid-cols-[1fr_auto] gap-2">
                             <button type="button" onClick={() => void search(selected.id, null)} disabled={loading} className="pv-btn" style={{ background: TONE.accent, boxShadow: "0 10px 22px -12px rgba(19,161,132,.7)" }}>
-                                <i className="fa-solid fa-location-arrow text-[13px]" aria-hidden="true" />{loading ? "주변 후보 찾는 중" : "현재 위치로 찾기"}
+                                <i className="fa-solid fa-location-arrow text-[13px]" aria-hidden="true" />{labelText(loading ? "주변 후보 찾는 중" : "현재 위치로 찾기")}
                             </button>
                             <a href={mapUrl} target="_blank" rel="noopener noreferrer" className="pv-btn-ghost min-h-[50px] px-4 text-[13.5px]">
-                                <span className="grid h-5 w-5 place-items-center rounded-[6px] bg-[#03c75a] text-[11px] font-black text-white" aria-hidden="true">N</span>네이버지도
+                                <span className="grid h-5 w-5 place-items-center rounded-[6px] bg-[#03c75a] text-[11px] font-black text-white" aria-hidden="true">N</span>{labelText("네이버지도")}
                             </a>
                         </div>
                     </div>
@@ -138,20 +140,20 @@ export default function LocalCarePanel() {
             {/* 결과 */}
             <div aria-live="polite">
                 {stateForSelection.status === "idle" && (
-                    <Notice title={`${selected.label} 후보를 준비할게요`} body="현재 위치 버튼을 누르면 가까운 순으로 최대 5곳을 보여드려요." />
+                    <Notice title={`${selected.label} 후보를 준비할게요`} body={labelText("현재 위치 버튼을 누르면 가까운 순으로 최대 5곳을 보여드려요.")} />
                 )}
                 {stateForSelection.status === "loading" && (
-                    <Notice title="현재 위치 주변을 확인하고 있어요" body="기다리는 동안 네이버지도 버튼도 바로 사용할 수 있어요." />
+                    <Notice title={labelText("현재 위치 주변을 확인하고 있어요")} body={labelText("기다리는 동안 네이버지도 버튼도 바로 사용할 수 있어요.")} />
                 )}
                 {stateForSelection.status === "error" && (
                     <Notice title={stateForSelection.message} tone={TONES.rose}>
                         <LocationRecoveryActions recovery={stateForSelection.recovery} onRetry={() => void search(selected.id, null)} />
-                        <a href={stateForSelection.fallbackUrl} target="_blank" rel="noopener noreferrer" className="pv-btn-ghost mt-3 min-h-[40px] text-[13px]">네이버지도에서 {selected.shortLabel} 보기</a>
+                        <a href={stateForSelection.fallbackUrl} target="_blank" rel="noopener noreferrer" className="pv-btn-ghost mt-3 min-h-[40px] text-[13px]">{labelText("네이버지도에서")} {selected.shortLabel} {labelText("보기")}</a>
                     </Notice>
                 )}
                 {stateForSelection.status === "done" && stateForSelection.places.length === 0 && (
-                    <Notice title="지도 검색은 계속할 수 있어요" body={`확인된 업체명을 바로 불러오지 못했어요. 네이버지도에서 현재 위치 주변 ${selected.shortLabel}을 확인해 주세요.`}>
-                        <a href={stateForSelection.fallbackUrl} target="_blank" rel="noopener noreferrer" className="pv-btn-ghost mt-3 min-h-[40px] text-[13px]">네이버지도에서 {selected.shortLabel} 보기</a>
+                    <Notice title={labelText("지도 검색은 계속할 수 있어요")} body={`확인된 업체명을 바로 불러오지 못했어요. 네이버지도에서 현재 위치 주변 ${selected.shortLabel}을 확인해 주세요.`}>
+                        <a href={stateForSelection.fallbackUrl} target="_blank" rel="noopener noreferrer" className="pv-btn-ghost mt-3 min-h-[40px] text-[13px]">{labelText("네이버지도에서")} {selected.shortLabel} {labelText("보기")}</a>
                     </Notice>
                 )}
                 {stateForSelection.status === "done" && stateForSelection.places.length > 0 && (
@@ -159,9 +161,9 @@ export default function LocalCarePanel() {
                         <div className="flex items-end justify-between px-0.5">
                             <div>
                                 <p className="pv-kicker" style={{ color: TONE.accent }}>NEARBY CANDIDATES</p>
-                                <h3 className="pv-h3 mt-1">가까운 {selected.shortLabel} 후보 {stateForSelection.places.length}곳</h3>
+                                <h3 className="pv-h3 mt-1">{labelText("가까운")} {selected.shortLabel} {labelText("후보")} {stateForSelection.places.length}{labelText("곳")}</h3>
                             </div>
-                            <span className="pv-small">가까운 순</span>
+                            <span className="pv-small">{labelText("가까운 순")}</span>
                         </div>
                         <ol className="pv-card mt-3 overflow-hidden">
                             {stateForSelection.places.map((place, index) => (
@@ -175,8 +177,8 @@ export default function LocalCarePanel() {
                                             </p>
                                             <p className="pv-small mt-0.5">{place.address || "주소는 지도에서 확인해 주세요"}</p>
                                             <div className="mt-2.5 flex gap-1.5">
-                                                {place.phone && <a href={`tel:${place.phone}`} className="pv-btn-ghost min-h-[34px] rounded-[10px] px-3 text-[12px]"><i className="fa-solid fa-phone text-[11px]" aria-hidden="true" />전화</a>}
-                                                <a href={place.mapUrl} target="_blank" rel="noopener noreferrer" className="pv-btn-ghost min-h-[34px] rounded-[10px] px-3 text-[12px]"><i className="fa-solid fa-map text-[11px]" aria-hidden="true" />지도 보기</a>
+                                                {place.phone && <a href={`tel:${place.phone}`} className="pv-btn-ghost min-h-[34px] rounded-[10px] px-3 text-[12px]"><i className="fa-solid fa-phone text-[11px]" aria-hidden="true" />{labelText("전화")}</a>}
+                                                <a href={place.mapUrl} target="_blank" rel="noopener noreferrer" className="pv-btn-ghost min-h-[34px] rounded-[10px] px-3 text-[12px]"><i className="fa-solid fa-map text-[11px]" aria-hidden="true" />{labelText("지도 보기")}</a>
                                             </div>
                                         </div>
                                     </article>
@@ -188,7 +190,7 @@ export default function LocalCarePanel() {
             </div>
 
             <p className="pv-small px-0.5">
-                표시된 곳은 공개 지도에서 찾은 후보이며 댕다방 제휴·예약 가능 업체라는 뜻이 아닙니다. 영업시간, 진료·미용·숙박·등원 가능 여부와 비용은 방문 전에 업체에 직접 확인해 주세요.
+                {labelText("표시된 곳은 공개 지도에서 찾은 후보이며 댕다방 제휴·예약 가능 업체라는 뜻이 아닙니다. 영업시간, 진료·미용·숙박·등원 가능 여부와 비용은 방문 전에 업체에 직접 확인해 주세요.")}
             </p>
         </section>
     );

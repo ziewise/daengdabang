@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import Image from "next/image";
 import { useRef, useState } from "react";
 import {
@@ -25,6 +26,7 @@ export default function PetLensPhotoViewFields({
     onBusyChange,
     onError,
 }: Props) {
+    const { menuLabel: labelText } = useI18n();
     const captureInFlightRef = useRef(false);
     const [busy, setBusy] = useState(false);
 
@@ -56,9 +58,9 @@ export default function PetLensPhotoViewFields({
         >
             <div className="mb-3 flex items-start justify-between gap-3">
                 <div>
-                    <p className="text-xs font-black text-neutral-700">앞·뒤·좌·우 사진</p>
+                    <p className="text-xs font-black text-neutral-700">{labelText("앞·뒤·좌·우 사진")}</p>
                     <p className="mt-1 text-[11px] font-bold leading-5 text-neutral-500">
-                        PC에서는 사진 파일을 선택하고, 모바일에서는 카메라나 앨범을 사용할 수 있어요.
+                        {labelText("PC에서는 사진 파일을 선택하고, 모바일에서는 카메라나 앨범을 사용할 수 있어요.")}
                     </p>
                 </div>
                 <span className="shrink-0 whitespace-nowrap rounded-full bg-white px-2.5 py-1 text-[10px] font-black text-indigo-700 shadow-sm">
@@ -86,7 +88,7 @@ export default function PetLensPhotoViewFields({
                                             unoptimized
                                         />
                                         <span className="absolute inset-x-1 bottom-1 rounded-md bg-black/60 px-1.5 py-1 text-center text-[9px] font-black text-white">
-                                            사진 바꾸기
+                                            {labelText("사진 바꾸기")}
                                         </span>
                                     </>
                                 ) : (

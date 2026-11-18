@@ -24,6 +24,7 @@
  * 데이터: 댕자랑 · 굿즈 공모전 모두 실제 서버.
  */
 
+import { useI18n } from "@/lib/i18n";
 import { appLoginHref } from "@/components/app-shell/appTabs";
 import Image from "next/image";
 import Link from "next/link";
@@ -126,6 +127,7 @@ function replaceSummaryItem(current: GoodsContestSummary | null, next: GoodsCont
 }
 
 export default function StickerShow() {
+    const { menuLabel: labelText } = useI18n();
     const [session, setSession] = useDemoSession();
     const media = useShopMedia(); // 굿즈 공모전 영상 · 포스터 주소(네이티브 앱은 운영 사이트 파일)
     const initialTab = useInitialTab(TABS.length);
@@ -687,29 +689,29 @@ export default function StickerShow() {
                                 <Tape className="-top-2 left-1/2 h-4 w-16 -translate-x-1/2" color="rgba(255,200,215,.9)" />
                                 {topicState.loading ? (
                                     <>
-                                        <span className="ah-light text-[12px] text-[#b03a63]">오늘의 댕주제</span>
-                                        <p className="ah-light mt-1 flex items-center gap-1.5 text-[12.5px]" style={{ color: TEXT_SOFT }}><i aria-hidden="true" className="fa-solid fa-paw sh-paw-spin text-[12px] text-[#f0a3bb]" />주제를 불러오고 있어요</p>
+                                        <span className="ah-light text-[12px] text-[#b03a63]">{labelText("오늘의 댕주제")}</span>
+                                        <p className="ah-light mt-1 flex items-center gap-1.5 text-[12.5px]" style={{ color: TEXT_SOFT }}><i aria-hidden="true" className="fa-solid fa-paw sh-paw-spin text-[12px] text-[#f0a3bb]" />{labelText("주제를 불러오고 있어요")}</p>
                                     </>
                                 ) : topicState.error ? (
                                     <>
-                                        <span className="ah-light text-[12px] text-[#b03a63]">오늘의 댕주제</span>
+                                        <span className="ah-light text-[12px] text-[#b03a63]">{labelText("오늘의 댕주제")}</span>
                                         <p role="status" className="ah-light mt-1 text-[12.5px] leading-relaxed" style={{ color: TEXT_SOFT }}>{topicState.error}</p>
-                                        <div className="mt-3"><Patch tone="cream" small onClick={() => { haptic("light"); setTopicKey((k) => k + 1); }}>주제 다시 불러오기<i aria-hidden="true" className="fa-solid fa-rotate-right text-[11px]" /></Patch></div>
+                                        <div className="mt-3"><Patch tone="cream" small onClick={() => { haptic("light"); setTopicKey((k) => k + 1); }}>{labelText("주제 다시 불러오기")}<i aria-hidden="true" className="fa-solid fa-rotate-right text-[11px]" /></Patch></div>
                                     </>
                                 ) : topic ? (
                                     <>
                                         <span className="flex items-center justify-between gap-2">
-                                            <span className="ah-light text-[12px] text-[#b03a63]">오늘의 댕주제 · {topicPeriod(topic.startsAt, topic.endsAt)}</span>
+                                            <span className="ah-light text-[12px] text-[#b03a63]">{labelText("오늘의 댕주제 ·")} {topicPeriod(topic.startsAt, topic.endsAt)}</span>
                                             {topic.isActive ? (topicDday !== null ? <InkStamp rot={10} className="!py-1 text-[12px]">D-{topicDday}</InkStamp> : null)
-                                                : <InkStamp rot={-6} color="#9c8a80" className="!py-1 text-[11px]">지난 주제</InkStamp>}
+                                                : <InkStamp rot={-6} color="#9c8a80" className="!py-1 text-[11px]">{labelText("지난 주제")}</InkStamp>}
                                         </span>
                                         <p className="ah-display mt-1 text-[19px]">&lsquo;{topic.title}&rsquo;</p>
                                         {topic.prompt ? <p className="ah-light mt-1 whitespace-pre-wrap text-[13px] leading-relaxed">{topic.prompt}</p> : null}
-                                        <p className="ah-light mt-1 text-[12px] leading-relaxed" style={{ color: TEXT_SOFT }}>{topic.isActive ? "주제 참여는 선택이에요. 사진과 글을 올릴 때 현재 주제 연결 여부를 직접 고를 수 있습니다." : "주제 참여 기간이 끝났어요. 공개된 게시물과 대표 댕자랑은 그대로 볼 수 있습니다."}</p>
+                                        <p className="ah-light mt-1 text-[12px] leading-relaxed" style={{ color: TEXT_SOFT }}>{labelText(topic.isActive ? "주제 참여는 선택이에요. 사진과 글을 올릴 때 현재 주제 연결 여부를 직접 고를 수 있습니다." : "주제 참여 기간이 끝났어요. 공개된 게시물과 대표 댕자랑은 그대로 볼 수 있습니다.")}</p>
                                         {/* 올리기 : 공유카드 = 약 6 : 4 — 지난 주제면 공유카드만 */}
                                         <div className={`mt-3 grid gap-2 ${topic.isActive ? "grid-cols-[1.5fr_1fr]" : "grid-cols-1"}`}>
-                                            {topic.isActive ? <Patch small onClick={() => openComposer(true)}>{member ? "이 주제로 올리기" : "로그인하고 참여하기"}<i aria-hidden="true" className="fa-solid fa-camera text-[12px]" /></Patch> : null}
-                                            <Patch tone="cream" small onClick={() => { haptic("light"); setShareOf({ kind: "topic", id: topic.topicId, text: `오늘의 댕주제 · ${topic.title}`, topicTitle: topic.title, prompt: topic.prompt, shareUrl: topic.shareUrl }); }}>공유카드<i aria-hidden="true" className="fa-solid fa-share-nodes text-[11px]" /></Patch>
+                                            {topic.isActive ? <Patch small onClick={() => openComposer(true)}>{labelText(member ? "이 주제로 올리기" : "로그인하고 참여하기")}<i aria-hidden="true" className="fa-solid fa-camera text-[12px]" /></Patch> : null}
+                                            <Patch tone="cream" small onClick={() => { haptic("light"); setShareOf({ kind: "topic", id: topic.topicId, text: `오늘의 댕주제 · ${topic.title}`, topicTitle: topic.title, prompt: topic.prompt, shareUrl: topic.shareUrl }); }}>{labelText("공유카드")}<i aria-hidden="true" className="fa-solid fa-share-nodes text-[11px]" /></Patch>
                                         </div>
                                         {/* 운영자 선정 대표 댕자랑 — 작은 폴라로이드 + 글 두 줄, 톡 하면 게시물이 펼쳐짐(있을 때만) */}
                                         {featured ? (
@@ -721,7 +723,7 @@ export default function StickerShow() {
                                                     <span className="sh-feat-photo relative block h-[4.6rem] w-[4.6rem] overflow-hidden bg-[#fff3e8]"><PostPhoto src={featured.img} sizes="80px" thumbnail /></span>
                                                 </span>
                                                 <span className="min-w-0 flex-1">
-                                                    <span className="ah-display inline-flex items-center gap-1 rounded-full bg-[#fff1c4] px-2 py-0.5 text-[10.5px] text-[#a8720f]"><i aria-hidden="true" className="fa-solid fa-crown text-[9px]" />대표 댕자랑</span>
+                                                    <span className="ah-display inline-flex items-center gap-1 rounded-full bg-[#fff1c4] px-2 py-0.5 text-[10.5px] text-[#a8720f]"><i aria-hidden="true" className="fa-solid fa-crown text-[9px]" />{labelText("대표 댕자랑")}</span>
                                                     <span className="ah-display mt-1 block truncate text-[13px]">{featured.author}{featured.pet ? ` · ${featured.pet}` : ""}</span>
                                                     <span className="ah-light line-clamp-2 block text-[11.5px] leading-snug" style={{ color: TEXT_SOFT }}>{featured.text}</span>
                                                 </span>
@@ -731,10 +733,10 @@ export default function StickerShow() {
                                     </>
                                 ) : (
                                     <>
-                                        <span className="ah-light text-[12px] text-[#b03a63]">오늘의 댕주제</span>
-                                        <p className="ah-display mt-1 text-[16px] leading-snug">새 주제를 준비하고 있어요</p>
-                                        <p className="ah-light mt-0.5 text-[12.5px]" style={{ color: TEXT_SOFT }}>그동안 자유로운 오늘의 한 장을 들려주세요.</p>
-                                        <div className="mt-3"><Patch small onClick={() => openComposer(false)}>{member ? "자유 주제로 올리기" : "로그인하고 올리기"}<i aria-hidden="true" className="fa-solid fa-camera text-[12px]" /></Patch></div>
+                                        <span className="ah-light text-[12px] text-[#b03a63]">{labelText("오늘의 댕주제")}</span>
+                                        <p className="ah-display mt-1 text-[16px] leading-snug">{labelText("새 주제를 준비하고 있어요")}</p>
+                                        <p className="ah-light mt-0.5 text-[12.5px]" style={{ color: TEXT_SOFT }}>{labelText("그동안 자유로운 오늘의 한 장을 들려주세요.")}</p>
+                                        <div className="mt-3"><Patch small onClick={() => openComposer(false)}>{labelText(member ? "자유 주제로 올리기" : "로그인하고 올리기")}<i aria-hidden="true" className="fa-solid fa-camera text-[12px]" /></Patch></div>
                                     </>
                                 )}
                             </div>
@@ -744,16 +746,16 @@ export default function StickerShow() {
                                 {(["all", "following"] as const).map((f) => (
                                     <button key={f} type="button" onClick={() => chooseFeed(f)} aria-pressed={feed === f}
                                         className={`ah-display text-[15px] ${feed === f ? "st-marker" : "text-[#b7a9a1]"}`}>
-                                        {f === "all" ? "오늘 올라온 댕자랑" : "팔로잉"}
+                                        {labelText(f === "all" ? "오늘 올라온 댕자랑" : "팔로잉")}
                                     </button>
                                 ))}
                             </div>
-                            <p className="ah-light mt-1 text-[11.5px]" style={{ color: TEXT_SOFT }}>사진 톡 = 자세히 · 두 번 톡 = 뼈다귀 응원</p>
+                            <p className="ah-light mt-1 text-[11.5px]" style={{ color: TEXT_SOFT }}>{labelText("사진 톡 = 자세히 · 두 번 톡 = 뼈다귀 응원")}</p>
 
                             {!member ? (
                                 <PostIt color="#fff3a6" rot={-1} className="!static mt-3 !block w-full !px-3 !py-2 !text-left !text-[12.5px]">
-                                    구경은 누구나! 로그인하면 사진을 올리고 응원 · 팔로우할 수 있어요{" "}
-                                    <Link href={login(here, tab)} className="ah-display ml-1 text-[#e0557f]">로그인</Link>
+                                    {labelText("구경은 누구나! 로그인하면 사진을 올리고 응원 · 팔로우할 수 있어요")}{" "}
+                                    <Link href={login(here, tab)} className="ah-display ml-1 text-[#e0557f]">{labelText("로그인")}</Link>
                                 </PostIt>
                             ) : null}
 
@@ -774,8 +776,8 @@ export default function StickerShow() {
                                             <div role="button" tabIndex={0} aria-label={`${p.author}의 댕자랑 — 톡하면 자세히, 두 번 톡하면 응원`} onClick={(e) => onPhotoTap(p, e)}
                                                 className="sh-photo relative block aspect-square overflow-hidden bg-[#fff3e8]">
                                                 <PostPhoto src={p.img} sizes="45vw" eager={i < 4} thumbnail preparedImage={p.preparedImage} />
-                                                {p.topic ? <span className="ah-display absolute left-1.5 top-1.5 rounded-full bg-white/90 px-2 py-0.5 text-[10px] text-[#e0557f]">댕주제</span> : null}
-                                                {p.mine ? <span className="ah-display absolute right-1.5 top-1.5 rounded-full bg-[#e0557f] px-2 py-0.5 text-[10px] text-white">나</span> : null}
+                                                {p.topic ? <span className="ah-display absolute left-1.5 top-1.5 rounded-full bg-white/90 px-2 py-0.5 text-[10px] text-[#e0557f]">{labelText("댕주제")}</span> : null}
+                                                {p.mine ? <span className="ah-display absolute right-1.5 top-1.5 rounded-full bg-[#e0557f] px-2 py-0.5 text-[10px] text-white">{labelText("나")}</span> : null}
                                                 {burst?.id === p.id ? <BoneBurst key={burst.k} x={burst.x} y={burst.y} /> : null}
                                             </div>
                                             <div className="mt-1.5 flex items-center gap-1.5 px-0.5">
@@ -792,17 +794,17 @@ export default function StickerShow() {
                             </ul>
                             {posts.length === 0 && !live.loading && !live.error ? (
                                 <div className="mt-4 text-center">
-                                    <p className="ah-light text-[13px]" style={{ color: TEXT_SOFT }}>{feed === "following" ? "팔로우한 친구의 첫 소식을 기다려요" : "첫 번째 댕자랑의 주인공이 되어 주세요"}</p>
-                                    {feed === "following" ? <button type="button" onClick={() => chooseFeed("all")} className="ah-display mt-2 text-[13px] text-[#e0557f]">전체 피드 보기</button> : null}
+                                    <p className="ah-light text-[13px]" style={{ color: TEXT_SOFT }}>{labelText(feed === "following" ? "팔로우한 친구의 첫 소식을 기다려요" : "첫 번째 댕자랑의 주인공이 되어 주세요")}</p>
+                                    {feed === "following" ? <button type="button" onClick={() => chooseFeed("all")} className="ah-display mt-2 text-[13px] text-[#e0557f]">{labelText("전체 피드 보기")}</button> : null}
                                 </div>
                             ) : null}
                             {/* 쪽 넘김 — 이전 · 쪽 번호 스티커 · 다음 (전체 피드, 두 쪽 이상일 때) */}
                             {knownPages > 1 ? (
-                                <nav aria-label="댕자랑 쪽 넘기기" className="mt-7 flex items-center justify-center gap-1.5">
-                                    <button type="button" onClick={() => goPage(pageNo - 1)} disabled={pageNo === 1 || live.loading} aria-label="이전 쪽" className="sh-pg sh-pg-arrow"><i aria-hidden="true" className="fa-solid fa-chevron-left text-[11px]" /></button>
+                                <nav aria-label={labelText("댕자랑 쪽 넘기기")} className="mt-7 flex items-center justify-center gap-1.5">
+                                    <button type="button" onClick={() => goPage(pageNo - 1)} disabled={pageNo === 1 || live.loading} aria-label={labelText("이전 쪽")} className="sh-pg sh-pg-arrow"><i aria-hidden="true" className="fa-solid fa-chevron-left text-[11px]" /></button>
                                     {pageNums[0] > 1 ? (
                                         <>
-                                            <button type="button" onClick={() => goPage(1)} disabled={live.loading} aria-label="1쪽" className="sh-pg ah-display text-[13px]" style={{ rotate: "2deg" }}>1</button>
+                                            <button type="button" onClick={() => goPage(1)} disabled={live.loading} aria-label={labelText("1쪽")} className="sh-pg ah-display text-[13px]" style={{ rotate: "2deg" }}>1</button>
                                             {pageNums[0] > 2 ? <span aria-hidden="true" className="ah-display px-0.5 text-[13px] text-[#c9a8b4]">…</span> : null}
                                         </>
                                     ) : null}
@@ -810,19 +812,19 @@ export default function StickerShow() {
                                         <button key={n} type="button" onClick={() => goPage(n)} disabled={live.loading} aria-current={n === pageNo ? "page" : undefined} aria-label={`${n}쪽`}
                                             className={`sh-pg ah-display text-[13px] ${n === pageNo ? "is-on" : ""}`} style={{ rotate: `${n === pageNo ? -6 : [-2, 2, -1, 2, -2][k]}deg` }}>{n}</button>
                                     ))}
-                                    <button type="button" onClick={() => goPage(pageNo + 1)} disabled={!hasNext || live.loading} aria-label="다음 쪽" className="sh-pg sh-pg-arrow"><i aria-hidden="true" className="fa-solid fa-chevron-right text-[11px]" /></button>
+                                    <button type="button" onClick={() => goPage(pageNo + 1)} disabled={!hasNext || live.loading} aria-label={labelText("다음 쪽")} className="sh-pg sh-pg-arrow"><i aria-hidden="true" className="fa-solid fa-chevron-right text-[11px]" /></button>
                                 </nav>
                             ) : null}
                             <div className="mt-3 min-h-5 text-center" role="status">
                                 {live.loading && posts.length > 0 ? (
-                                    <p className="ah-light flex items-center justify-center gap-1.5 text-[12px]" style={{ color: TEXT_SOFT }}><i aria-hidden="true" className="fa-solid fa-paw sh-paw-spin text-[12px] text-[#f0a3bb]" />댕자랑을 불러오고 있어요</p>
+                                    <p className="ah-light flex items-center justify-center gap-1.5 text-[12px]" style={{ color: TEXT_SOFT }}><i aria-hidden="true" className="fa-solid fa-paw sh-paw-spin text-[12px] text-[#f0a3bb]" />{labelText("댕자랑을 불러오고 있어요")}</p>
                                 ) : live.error ? (
                                     <span className="inline-flex flex-col items-center gap-2">
-                                        <span className="ah-light text-[12px]" style={{ color: TEXT_SOFT }}>댕자랑을 불러오지 못했어요</span>
-                                        <Patch tone="cream" small onClick={() => { haptic("light"); loadPage(...lastTry.current, feed); }}>다시 불러오기<i aria-hidden="true" className="fa-solid fa-rotate-right text-[11px]" /></Patch>
+                                        <span className="ah-light text-[12px]" style={{ color: TEXT_SOFT }}>{labelText("댕자랑을 불러오지 못했어요")}</span>
+                                        <Patch tone="cream" small onClick={() => { haptic("light"); loadPage(...lastTry.current, feed); }}>{labelText("다시 불러오기")}<i aria-hidden="true" className="fa-solid fa-rotate-right text-[11px]" /></Patch>
                                     </span>
                                 ) : knownPages > 1 && !hasNext ? (
-                                    <p className="ah-light flex items-center justify-center gap-1.5 text-[12px]" style={{ color: TEXT_SOFT }}><i aria-hidden="true" className="fa-solid fa-paw text-[11px] text-[#f0a3bb]" />마지막 쪽이에요</p>
+                                    <p className="ah-light flex items-center justify-center gap-1.5 text-[12px]" style={{ color: TEXT_SOFT }}><i aria-hidden="true" className="fa-solid fa-paw text-[11px] text-[#f0a3bb]" />{labelText("마지막 쪽이에요")}</p>
                                 ) : null}
                             </div>
                         </>
@@ -831,10 +833,10 @@ export default function StickerShow() {
                             {/* 굿즈 공모전 머리 티켓 — 위: 기간 안내 · 가운데: 공모전 영상(글자 없이 깨끗하게, 웹 공모전과 같은 모바일 영상, 소리 없이 반복)
                                 · 아래: 제목 → 절취선 너머 안내. D-day 도장은 영상 오른쪽 위 모서리에 살짝 걸쳐 찍힘. 양옆 반달 홈은 절취선 높이에 맞춰 붙임 */}
                             <div className="st-ticket sh-vticket px-2.5 pt-3" style={{ rotate: "-1deg" }}>
-                                <p className="ah-light px-1.5 pb-2.5 pr-16 text-[12px] text-[#8f5e12]">{fmtDay(summary?.startsAt || goodsContent.campaign.startsAt)} – {fmtDay(summary?.endsAt || goodsContent.campaign.endsAt)} · 회원·비회원 모두 참여</p>
+                                <p className="ah-light px-1.5 pb-2.5 pr-16 text-[12px] text-[#8f5e12]">{fmtDay(summary?.startsAt || goodsContent.campaign.startsAt)} – {fmtDay(summary?.endsAt || goodsContent.campaign.endsAt)} {labelText("· 회원·비회원 모두 참여")}</p>
                                 <div className="relative">
                                     <div className="sh-vwin relative aspect-video overflow-hidden rounded-[13px] bg-[#f3e2b8]">
-                                        {media ? <InViewVideo muted loop playsInline preload="auto" poster={media("/images/goods/goods-hero-lifestyle.webp")} aria-label="댕다방 굿즈 공모전 상품 미리보기 영상" className="absolute inset-0 h-full w-full object-cover">
+                                        {media ? <InViewVideo muted loop playsInline preload="auto" poster={media("/images/goods/goods-hero-lifestyle.webp")} aria-label={labelText("댕다방 굿즈 공모전 상품 미리보기 영상")} className="absolute inset-0 h-full w-full object-cover">
                                             <source src={media("/videos/goods-contest-hero-mobile.mp4")} type="video/mp4" />
                                         </InViewVideo> : null}
                                     </div>
@@ -844,16 +846,16 @@ export default function StickerShow() {
                                 <p className="ah-light mt-1 break-keep px-1.5 text-[12.5px] leading-relaxed" style={{ color: TEXT_SOFT }}>{goodsContent.description}</p>
                                 <span className="st-ticket-cut sh-vcut relative mt-3 block px-1.5 pb-3 pt-2.5 text-[12px]">
                                     <span aria-hidden="true" className="sh-notch left-[-21px]" /><span aria-hidden="true" className="sh-notch right-[-21px]" />
-                                    <span className="ah-display flex items-start gap-1.5 text-[#a8560f]"><i aria-hidden="true" className="fa-solid fa-circle-info mt-0.5 text-[11px]" />선택은 주문·예약·결제가 아니며, 이 단계에서는 결제가 없습니다.</span>
+                                    <span className="ah-display flex items-start gap-1.5 text-[#a8560f]"><i aria-hidden="true" className="fa-solid fa-circle-info mt-0.5 text-[11px]" />{labelText("선택은 주문·예약·결제가 아니며, 이 단계에서는 결제가 없습니다.")}</span>
                                 </span>
                             </div>
 
                             {/* 진행 4단계 — 메모지 2×2(협업자 문구), 지금 단계(선택)에 "지금" 테이프 */}
-                            <SectionLabel className="mt-6" icon="fa-shoe-prints">이렇게 진행돼요</SectionLabel>
+                            <SectionLabel className="mt-6" icon="fa-shoe-prints">{labelText("이렇게 진행돼요")}</SectionLabel>
                             <ol className="mt-3 grid grid-cols-2 gap-x-2.5 gap-y-3">
                                 {CONTEST_STEPS.map((st, i) => (
                                     <li key={st.n} className={`sh-step relative rounded-[10px] px-3 pb-2.5 pt-3 ${i === 0 ? "is-now" : ""}`} style={{ rotate: `${[-0.6, 0.5, 0.5, -0.6][i]}deg` }}>
-                                        {i === 0 ? <span className="st-tape ah-display absolute -top-2 right-2.5 px-2 py-px text-[10px] text-[#c4456f]" style={{ background: "rgba(255,200,215,.9)", rotate: "4deg" }}>지금</span> : null}
+                                        {i === 0 ? <span className="st-tape ah-display absolute -top-2 right-2.5 px-2 py-px text-[10px] text-[#c4456f]" style={{ background: "rgba(255,200,215,.9)", rotate: "4deg" }}>{labelText("지금")}</span> : null}
                                         <span className="flex items-center gap-1.5">
                                             <span className="sh-step-no ah-display grid h-6 w-6 shrink-0 place-items-center rounded-full text-[10.5px]">{st.n}</span>
                                             <span className="ah-display text-[13.5px] leading-tight">{st.title}</span>
@@ -863,28 +865,28 @@ export default function StickerShow() {
                                 ))}
                             </ol>
 
-                            <SectionLabel className="mt-7" icon="fa-scissors">마음에 드는 굿즈를 골라요</SectionLabel>
-                            <p className="ah-light mt-1 text-[12px]" style={{ color: TEXT_SOFT }}>{campaignClosed ? "공모가 종료되어 최종 선택 수를 보존하고 있어요." : "선택 수는 상품별로 집계되며 공모 기간 안에는 취소할 수 있어요."}</p>
+                            <SectionLabel className="mt-7" icon="fa-scissors">{labelText("마음에 드는 굿즈를 골라요")}</SectionLabel>
+                            <p className="ah-light mt-1 text-[12px]" style={{ color: TEXT_SOFT }}>{labelText(campaignClosed ? "공모가 종료되어 최종 선택 수를 보존하고 있어요." : "선택 수는 상품별로 집계되며 공모 기간 안에는 취소할 수 있어요.")}</p>
                             {/* 비회원: 이메일 확인으로 내 선택 다시 보기 · 불러오기 실패: 다시 불러오기(협업자와 같은 버튼 문구) */}
                             {selectionState === "anonymous" && !campaignClosed ? (
-                                <p className="mt-1"><button type="button" onClick={() => { haptic("light"); setGuestPickFor(""); }} className="ah-display text-[12px] text-[#e0557f] underline decoration-dashed underline-offset-4">내 선택 다시 확인하기</button></p>
+                                <p className="mt-1"><button type="button" onClick={() => { haptic("light"); setGuestPickFor(""); }} className="ah-display text-[12px] text-[#e0557f] underline decoration-dashed underline-offset-4">{labelText("내 선택 다시 확인하기")}</button></p>
                             ) : null}
                             {summaryState === "error" ? (
-                                <p className="mt-1"><button type="button" onClick={() => { haptic("light"); setContestLoginNotice(false); setSummaryState("loading"); setSummaryRetry((v) => v + 1); }} className="ah-display text-[12px] text-[#e0557f] underline decoration-dashed underline-offset-4">집계 다시 불러오기</button></p>
+                                <p className="mt-1"><button type="button" onClick={() => { haptic("light"); setContestLoginNotice(false); setSummaryState("loading"); setSummaryRetry((v) => v + 1); }} className="ah-display text-[12px] text-[#e0557f] underline decoration-dashed underline-offset-4">{labelText("집계 다시 불러오기")}</button></p>
                             ) : null}
                             {selectionState === "error" ? (
-                                <p className="mt-1"><button type="button" onClick={() => { haptic("light"); setContestLoginNotice(false); setSelection({ owner: identityKey, state: "loading", ids: [] }); setSelectionRetry((v) => v + 1); }} className="ah-display text-[12px] text-[#e0557f] underline decoration-dashed underline-offset-4">내 선택 다시 확인하기</button></p>
+                                <p className="mt-1"><button type="button" onClick={() => { haptic("light"); setContestLoginNotice(false); setSelection({ owner: identityKey, state: "loading", ids: [] }); setSelectionRetry((v) => v + 1); }} className="ah-display text-[12px] text-[#e0557f] underline decoration-dashed underline-offset-4">{labelText("내 선택 다시 확인하기")}</button></p>
                             ) : null}
                             {/* 로그인 안내가 든 오류 뒤 — 웹 알림 줄 "다시 로그인"(앱 로그인 · 굿즈 공모전 쪽으로 돌아옴) */}
                             {contestLoginNotice ? (
-                                <p className="mt-1"><Link href={login(here, 1)} className="ah-display text-[12px] text-[#e0557f] underline decoration-dashed underline-offset-4">다시 로그인</Link></p>
+                                <p className="mt-1"><Link href={login(here, 1)} className="ah-display text-[12px] text-[#e0557f] underline decoration-dashed underline-offset-4">{labelText("다시 로그인")}</Link></p>
                             ) : null}
                             {/* 소량 제작 예상 펀딩가 안내 — 웹 굿즈 공모전과 같은 문구(협업자 2026-10-18), 노란 메모지 */}
-                            <aside className="st-postit ah-light relative mt-4 block px-3.5 pb-3 pt-3.5 text-[11.5px] leading-relaxed" style={{ background: "#fff6c9", rotate: "-0.5deg" }} aria-label="소량 제작 예상 펀딩가 안내">
+                            <aside className="st-postit ah-light relative mt-4 block px-3.5 pb-3 pt-3.5 text-[11.5px] leading-relaxed" style={{ background: "#fff6c9", rotate: "-0.5deg" }} aria-label={labelText("소량 제작 예상 펀딩가 안내")}>
                                 <Tape className="-top-2 left-5 h-3.5 w-11" color="rgba(255,200,215,.9)" style={{ rotate: "-4deg" }} />
-                                <p className="ah-display text-[13px] text-[#8f5e12]">좋은 소재와 꼼꼼한 마감을 위한 소량 제작</p>
-                                <p className="mt-1">예상 펀딩가는 샘플 제작·인쇄·마감·검수·포장과 불량 대응 비용을 고려했습니다. 부가세 포함, 배송비 별도이며 최종 사양과 제조사 견적에 따라 달라질 수 있어요.</p>
-                                <p className="mt-1">세트 상품은 1세트, 그 외 상품은 1개 기준입니다. 이미지 속 여러 캐릭터가 모두 포함되는 것은 아니며, 크기·소재·세트 구성은 제작 전 안내합니다.</p>
+                                <p className="ah-display text-[13px] text-[#8f5e12]">{labelText("좋은 소재와 꼼꼼한 마감을 위한 소량 제작")}</p>
+                                <p className="mt-1">{labelText("예상 펀딩가는 샘플 제작·인쇄·마감·검수·포장과 불량 대응 비용을 고려했습니다. 부가세 포함, 배송비 별도이며 최종 사양과 제조사 견적에 따라 달라질 수 있어요.")}</p>
+                                <p className="mt-1">{labelText("세트 상품은 1세트, 그 외 상품은 1개 기준입니다. 이미지 속 여러 캐릭터가 모두 포함되는 것은 아니며, 크기·소재·세트 구성은 제작 전 안내합니다.")}</p>
                             </aside>
                             <ul className="mt-5 grid grid-cols-2 gap-3">
                                 {GOODS_CONTEST_CATALOG.slice(0, goodsLimit).map((g, i) => {
@@ -908,8 +910,8 @@ export default function StickerShow() {
                                             {/* 가격표 태그 — 사진 오른쪽 위 모서리에 걸침 */}
                                             <span className="sh-tag absolute right-0.5 top-4 z-10 py-1 pl-4 pr-2 text-right leading-tight">
                                                 {/* 기준 단위(1개 · 1세트) — 웹 굿즈 공모전과 같게(협업자 2026-10-18 가격 조정) */}
-                                                <span className="ah-light block text-[9.5px]">예상 펀딩가 · {g.priceUnit}</span>
-                                                <span className="ah-display block text-[12px]">{item.expectedPriceKrw.toLocaleString("ko-KR")}원</span>
+                                                <span className="ah-light block text-[9.5px]">{labelText("예상 펀딩가 ·")} {g.priceUnit}</span>
+                                                <span className="ah-display block text-[12px]">{item.expectedPriceKrw.toLocaleString("ko-KR")}{labelText("원")}</span>
                                             </span>
                                             <p className="ah-display mt-2 truncate px-0.5 text-[13.5px]">{item.name}</p>
                                             <p className="ah-light line-clamp-2 min-h-[2.4em] px-0.5 text-[11px] leading-snug" style={{ color: TEXT_SOFT }}>{item.summary}</p>
@@ -920,14 +922,14 @@ export default function StickerShow() {
                                                 ))}
                                             </span>
                                             <p className="ah-light mt-1 px-0.5 text-[11px]" style={{ color: TEXT_SOFT }}>
-                                                {sum ? <><b className="ah-display text-[#c98a12]">{joined.toLocaleString("ko-KR")}</b>/{goal.toLocaleString("ko-KR")}명 · {sum.productionEligible ? <b className="ah-display text-[#1f9e75]">500명 달성</b> : `${sum.remainingCount.toLocaleString("ko-KR")}명 남음`}</>
+                                                {sum ? <><b className="ah-display text-[#c98a12]">{joined.toLocaleString("ko-KR")}</b>/{goal.toLocaleString("ko-KR")}{labelText("명 ·")} {sum.productionEligible ? <b className="ah-display text-[#1f9e75]">{labelText("500명 달성")}</b> : `${sum.remainingCount.toLocaleString("ko-KR")}명 남음`}</>
                                                     : summaryState === "error" ? "집계를 연결한 뒤 선택할 수 있어요" : "정확한 선택 수 확인 중"}
                                             </p>
                                             {/* 고르기 버튼 — 협업자와 같은 상태 순서(설정 확인 중 → 공모 종료 → 선택 안 받음 → 비회원 → 회원) */}
                                             <div className="mt-2">
-                                                {!contentReady ? <Patch tone="cream" small disabled>확인 중</Patch>
-                                                    : campaignClosed ? <Patch tone="cream" small disabled>{on ? "최종 선택 완료" : "공모 종료"}</Patch>
-                                                    : !item.active && !on ? <Patch tone="cream" small disabled>현재 선택을 받지 않아요</Patch>
+                                                {!contentReady ? <Patch tone="cream" small disabled>{labelText("확인 중")}</Patch>
+                                                    : campaignClosed ? <Patch tone="cream" small disabled>{labelText(on ? "최종 선택 완료" : "공모 종료")}</Patch>
+                                                    : !item.active && !on ? <Patch tone="cream" small disabled>{labelText("현재 선택을 받지 않아요")}</Patch>
                                                     : <Patch tone={on ? "pink" : "cream"} small disabled={selectionState !== "anonymous" && (pendingItem !== null || summaryState !== "ready" || selectionState !== "ready")} onClick={() => tryPick(g.id)}>
                                                         {pending ? "처리 중…" : on ? "선택 취소" : "이 굿즈 선택"}<i aria-hidden="true" className={`fa-solid ${pending ? "fa-circle-notch fa-spin" : on ? "fa-rotate-left" : "fa-hand-pointer"} text-[11px]`} />
                                                     </Patch>}
@@ -937,7 +939,7 @@ export default function StickerShow() {
                                 })}
                             </ul>
                             {GOODS_CONTEST_CATALOG.length > goodsLimit ? (
-                                <div className="mt-6"><Patch tone="cream" small onClick={() => { haptic("light"); setGoodsLimit((n) => n + 8); }}>굿즈 더 보기 · {GOODS_CONTEST_CATALOG.length - goodsLimit}개<i aria-hidden="true" className="fa-solid fa-chevron-down text-[11px]" /></Patch></div>
+                                <div className="mt-6"><Patch tone="cream" small onClick={() => { haptic("light"); setGoodsLimit((n) => n + 8); }}>{labelText("굿즈 더 보기 ·")} {GOODS_CONTEST_CATALOG.length - goodsLimit}{labelText("개")}<i aria-hidden="true" className="fa-solid fa-chevron-down text-[11px]" /></Patch></div>
                             ) : null}
 
                             {/* 선택 단계 안전 안내 — 협업자 공모전 안내 그대로, 톡 하면 펼쳐지는 편지 */}
@@ -945,20 +947,20 @@ export default function StickerShow() {
                                 <Tape className="-top-2 left-1/2 h-4 w-16 -translate-x-1/2" color="rgba(200,226,255,.85)" style={{ rotate: "-2deg" }} />
                                 <button type="button" onClick={() => { setSafetyOpen((v) => !v); haptic("light"); }} aria-expanded={safetyOpen} className="flex w-full items-center gap-2 text-left">
                                     <i aria-hidden="true" className="fa-solid fa-shield-heart text-[14px] text-[#5a7fe0]" />
-                                    <span className="ah-display flex-1 text-[14.5px]">선택 단계 안전 안내</span>
+                                    <span className="ah-display flex-1 text-[14.5px]">{labelText("선택 단계 안전 안내")}</span>
                                     <i aria-hidden="true" className={`fa-solid fa-chevron-down text-[11px] text-[#9fb2d8] transition-transform ${safetyOpen ? "rotate-180" : ""}`} />
                                 </button>
-                                <p className="ah-light mt-2 text-[12.5px] leading-relaxed">선택은 주문·예약·결제가 아니며 결제 정보도 받지 않습니다.</p>
+                                <p className="ah-light mt-2 text-[12.5px] leading-relaxed">{labelText("선택은 주문·예약·결제가 아니며 결제 정보도 받지 않습니다.")}</p>
                                 <div className="sh-fold space-y-2 text-[12px] leading-relaxed" data-open={safetyOpen} style={{ color: TEXT_SOFT }}>
-                                    <p className="ah-light">상품별 500명 달성 후 최종 사양·가격·배송·제작일을 다시 알리고, 조건에 동의한 분만 별도 결제 단계로 진행합니다.</p>
+                                    <p className="ah-light">{labelText("상품별 500명 달성 후 최종 사양·가격·배송·제작일을 다시 알리고, 조건에 동의한 분만 별도 결제 단계로 진행합니다.")}</p>
                                     <p className="flex flex-wrap gap-1.5">
                                         {["현금 결제", "적립금 + 댕코인 일부 사용", "적립금·댕코인 전액 결제"].map((m) => <span key={m} className="ah-display rounded-full bg-white px-2.5 py-0.5 text-[11px] text-[#4a6bc4]">{m}</span>)}
                                     </p>
-                                    <p className="ah-light">최종 결제 기준은 1P=1원, 1댕코인=100원이며 현금·적립금·댕코인을 원하는 만큼 섞어 사용할 수 있도록 준비 중입니다.</p>
+                                    <p className="ah-light">{labelText("최종 결제 기준은 1P=1원, 1댕코인=100원이며 현금·적립금·댕코인을 원하는 만큼 섞어 사용할 수 있도록 준비 중입니다.")}</p>
                                     <p className="ah-light">{goodsContent.escrowNotice}</p>
                                     {/* 웹 GoodsContest 안전 안내와 같은 에스크로 안내 링크 · 문구 */}
-                                    <p className="ah-light"><Link href="/legal/escrow/" className="ah-display text-[#4a6bc4] underline decoration-dashed underline-offset-4">에스크로 안내 보기</Link> · 현금이 포함된 주문은 에스크로 계약과 배송 연동 준비가 확인된 뒤에만 결제를 열며, 현재 선택 단계에는 결제나 에스크로가 적용되지 않습니다.</p>
-                                    <p className="ah-light">표시 가격은 부가세 포함 예상 펀딩가이며 배송비는 별도입니다. 시제품·제조사 견적과 최종 사양에 따라 결제 전 달라질 수 있습니다.</p>
+                                    <p className="ah-light"><Link href="/legal/escrow/" className="ah-display text-[#4a6bc4] underline decoration-dashed underline-offset-4">{labelText("에스크로 안내 보기")}</Link> {labelText("· 현금이 포함된 주문은 에스크로 계약과 배송 연동 준비가 확인된 뒤에만 결제를 열며, 현재 선택 단계에는 결제나 에스크로가 적용되지 않습니다.")}</p>
+                                    <p className="ah-light">{labelText("표시 가격은 부가세 포함 예상 펀딩가이며 배송비는 별도입니다. 시제품·제조사 견적과 최종 사양에 따라 결제 전 달라질 수 있습니다.")}</p>
                                 </div>
                             </div>
                         </>
@@ -968,7 +970,7 @@ export default function StickerShow() {
             {/* 오늘의 한 장 올리기 — 오른쪽 아래 카메라 스티커(댕자랑 쪽에서만) · 그림은 사용자 3D 사진첨부 아이콘.
                 크기 · 오른쪽 줄은 케어톡 떠 있는 버튼과 같게(52px · right 12px, 2026-10-20). data-app-fab: 케어톡 버튼이 있으면 이 버튼이 케어톡 바로 위로 올라감 · 스크롤 중엔 숨김(AppShell CSS, 2026-11-05) */}
             {tab === 0 ? (
-                <button type="button" onClick={() => openComposer(topicOn)} aria-label="오늘의 한 장 올리기" data-app-fab className="sh-fab fixed right-3 z-[2100] grid h-[52px] w-[52px] place-items-center rounded-full text-[20px] text-white"
+                <button type="button" onClick={() => openComposer(topicOn)} aria-label={labelText("오늘의 한 장 올리기")} data-app-fab className="sh-fab fixed right-3 z-[2100] grid h-[52px] w-[52px] place-items-center rounded-full text-[20px] text-white"
                     style={{ bottom: "calc(var(--app-tabbar-h, 88px) + 4px)" }}>
                     <Image src="/images/ui/stickers/caretalk-photo.webp" alt="" width={38} height={38} className="h-[34px] w-[34px]" />
                 </button>

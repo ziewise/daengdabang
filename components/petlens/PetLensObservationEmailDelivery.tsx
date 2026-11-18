@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import {
     confirmCustomerResultEmailRecipientVerification,
@@ -162,6 +163,7 @@ export default function PetLensObservationEmailDelivery({
     accessToken,
     onUnauthorized,
 }: Props) {
+    const { menuLabel: labelText } = useI18n();
     const normalizedAccountEmail = normalizeSignupEmail(accountEmail);
     const registeredEmail = normalizedAccountEmail && !isSyntheticSocialEmail(normalizedAccountEmail)
         ? normalizedAccountEmail
@@ -447,11 +449,10 @@ export default function PetLensObservationEmailDelivery({
                 </span>
                 <div className="min-w-0">
                     <h3 id="pet-observation-email-title" className="text-sm font-black text-neutral-950">
-                        분석 결과 이메일로 소장하기
+                        {labelText("분석 결과 이메일로 소장하기")}
                     </h3>
                     <p className="mt-1 text-[11px] font-bold leading-5 text-neutral-600">
-                        댕다방 연구소 분석 내용을 읽기 쉬운 본문과 파일로 보내 드립니다.
-                        발신 주소는 support@daengdabang.com입니다.
+                        {labelText("댕다방 연구소 분석 내용을 읽기 쉬운 본문과 파일로 보내 드립니다.\n                        발신 주소는 support@daengdabang.com입니다.")}
                     </p>
                 </div>
             </div>
@@ -460,7 +461,7 @@ export default function PetLensObservationEmailDelivery({
                 {requiresManualEmail ? (
                     <>
                         <label htmlFor="pet-observation-result-email" className="min-w-0">
-                            <span className="mb-1 block text-xs font-black text-neutral-700">결과를 받을 이메일</span>
+                            <span className="mb-1 block text-xs font-black text-neutral-700">{labelText("결과를 받을 이메일")}</span>
                             <input
                                 ref={emailRef}
                                 id="pet-observation-result-email"
@@ -489,7 +490,7 @@ export default function PetLensObservationEmailDelivery({
                             <div className="grid gap-2 rounded-xl border border-indigo-100 bg-white/90 p-3" data-result-email-verification>
                                 <div className="flex flex-wrap items-end gap-2">
                                     <label htmlFor="pet-observation-result-email-code" className="min-w-0 flex-1">
-                                        <span className="mb-1 block text-xs font-black text-neutral-700">이메일 인증번호</span>
+                                        <span className="mb-1 block text-xs font-black text-neutral-700">{labelText("이메일 인증번호")}</span>
                                         <input
                                             ref={codeRef}
                                             id="pet-observation-result-email-code"
@@ -502,7 +503,7 @@ export default function PetLensObservationEmailDelivery({
                                             inputMode="numeric"
                                             autoComplete="one-time-code"
                                             maxLength={6}
-                                            placeholder="6자리 입력"
+                                            placeholder={labelText("6자리 입력")}
                                             disabled={busy || deliveryLocked || verificationExpired}
                                             aria-invalid={Boolean(code) && !/^\d{6}$/.test(code)}
                                             aria-describedby="pet-observation-email-verification-help pet-observation-email-feedback"
@@ -519,11 +520,11 @@ export default function PetLensObservationEmailDelivery({
                                         className="btn min-h-11 border border-neutral-200 bg-white px-3 text-xs text-neutral-700"
                                         disabled={busy || deliveryLocked}
                                     >
-                                        이메일 수정
+                                        {labelText("이메일 수정")}
                                     </button>
                                 </div>
                                 <p id="pet-observation-email-verification-help" className="text-[10px] font-bold leading-4 text-neutral-500">
-                                    {verification.maskedEmail}로 보낸 번호를 입력해 주세요.
+                                    {verification.maskedEmail}{labelText("로 보낸 번호를 입력해 주세요.")}
                                     {verificationExpired ? " 인증번호 유효시간이 끝났습니다." : " 인증번호는 잠시 후 만료됩니다."}
                                 </p>
                                 <button
@@ -549,18 +550,18 @@ export default function PetLensObservationEmailDelivery({
                                 disabled={busy || deliveryLocked}
                                 aria-describedby="pet-observation-result-email-help"
                             />
-                            <span>입력한 이메일을 인증하고 이 분석 결과 1회 발송에 사용하는 데 동의합니다.</span>
+                            <span>{labelText("입력한 이메일을 인증하고 이 분석 결과 1회 발송에 사용하는 데 동의합니다.")}</span>
                         </label>
                         <p id="pet-observation-result-email-help" className="text-[10px] font-bold leading-4 text-neutral-500">
-                            입력한 주소는 계정 이메일로 저장되거나 변경되지 않습니다. 이메일 주소·인증번호·인증정보는 브라우저 저장소에 보관하지 않습니다.
+                            {labelText("입력한 주소는 계정 이메일로 저장되거나 변경되지 않습니다. 이메일 주소·인증번호·인증정보는 브라우저 저장소에 보관하지 않습니다.")}
                         </p>
                     </>
                 ) : (
                     <div className="rounded-xl border border-indigo-100 bg-white/85 px-3 py-3">
-                        <p className="text-[10px] font-black text-neutral-500">등록된 이메일</p>
+                        <p className="text-[10px] font-black text-neutral-500">{labelText("등록된 이메일")}</p>
                         <p className="mt-1 break-all text-sm font-black text-neutral-900">{registeredEmail}</p>
                         <p className="mt-1 text-[10px] font-bold leading-4 text-neutral-500">
-                            버튼을 누르면 이 주소로만 발송합니다. 별도 인증번호는 필요하지 않습니다.
+                            {labelText("버튼을 누르면 이 주소로만 발송합니다. 별도 인증번호는 필요하지 않습니다.")}
                         </p>
                     </div>
                 )}
@@ -576,7 +577,7 @@ export default function PetLensObservationEmailDelivery({
                             <p className="text-sm font-black">{presentation.title}</p>
                             <p className="mt-1 text-[11px] font-bold leading-5 opacity-90">{presentation.detail}</p>
                             {checkingStatus && receipt.status === "scheduled" && (
-                                <p className="mt-1 text-[10px] font-black opacity-75">최신 발송 상태 확인 중</p>
+                                <p className="mt-1 text-[10px] font-black opacity-75">{labelText("최신 발송 상태 확인 중")}</p>
                             )}
                         </div>
                     )}

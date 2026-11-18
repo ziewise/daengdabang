@@ -9,6 +9,7 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { useEffect, useRef, useState } from "react";
 import { usePets } from "@/hooks/usePets";
 import { MOCK_PETS } from "@/lib/mypage-data";
@@ -34,6 +35,7 @@ function ensureOption(list: string[], value: string | undefined): string[] {
 }
 
 export default function PetRegisterModal({ open, onClose, pet }: Props) {
+    const { menuLabel: labelText } = useI18n();
     const { pets: allPets, add, update } = usePets();
     const fileInputRef = useRef<HTMLInputElement>(null);
     const isEdit = !!pet;
@@ -195,20 +197,20 @@ export default function PetRegisterModal({ open, onClose, pet }: Props) {
             <div
                 role="dialog"
                 aria-modal="true"
-                aria-label="댕댕이 등록"
+                aria-label={labelText("댕댕이 등록")}
                 className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[2501] w-[min(440px,calc(100vw-32px))] max-h-[calc(100vh-64px)] overflow-y-auto bg-white rounded-3xl shadow-modal animate-in zoom-in-95 fade-in duration-200"
             >
                 {/* 헤더 */}
                 <div className="flex items-center justify-between px-6 pt-5 pb-3 border-b border-neutral-100">
                     <h2 className="text-base font-extrabold flex items-center gap-2">
                         <i className={`fa-solid ${isEdit ? "fa-pen-to-square" : "fa-paw"} text-aurora-indigo`} />
-                        {isEdit ? "댕댕이 정보 수정" : "댕댕이 등록"}
+                        {labelText(isEdit ? "댕댕이 정보 수정" : "댕댕이 등록")}
                     </h2>
                     <button
                         type="button"
                         onClick={onClose}
                         className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-neutral-100"
-                        aria-label="닫기"
+                        aria-label={labelText("닫기")}
                     >
                         <i className="fa-solid fa-xmark" />
                     </button>
@@ -216,9 +218,9 @@ export default function PetRegisterModal({ open, onClose, pet }: Props) {
 
                 <form onSubmit={submit} className="px-6 py-5 space-y-4">
                     <p className="text-[11px] text-neutral-500">
-                        {isEdit
+                        {labelText(isEdit
                             ? "원하는 항목을 자유롭게 수정한 뒤 저장하세요."
-                            : "직접 등록하면 펫 프로필에 추가돼요. 사진 분석으로 등록하려면 펫렌즈를 이용하세요."}
+                            : "직접 등록하면 펫 프로필에 추가돼요. 사진 분석으로 등록하려면 펫렌즈를 이용하세요.")}
                     </p>
 
                     {/* 아바타 (선택) */}
@@ -226,7 +228,7 @@ export default function PetRegisterModal({ open, onClose, pet }: Props) {
                         <div className="w-16 h-16 rounded-full bg-gradient-to-br from-aurora-blue to-aurora-indigo overflow-hidden flex items-center justify-center text-white text-2xl flex-shrink-0">
                             {avatar ? (
                                 /* eslint-disable-next-line @next/next/no-img-element */
-                                <img src={avatar} alt="아바타" className="w-full h-full object-cover" />
+                                <img src={avatar} alt={labelText("아바타")} className="w-full h-full object-cover" />
                             ) : (
                                 <i className="fa-solid fa-dog" />
                             )}
@@ -238,7 +240,7 @@ export default function PetRegisterModal({ open, onClose, pet }: Props) {
                                 className="px-3 py-1.5 rounded-full bg-foreground hover:bg-neutral-800 text-white text-[11px] font-extrabold"
                             >
                                 <i className="fa-solid fa-camera mr-1" />
-                                사진 {avatar ? "변경" : "선택 (선택사항)"}
+                                {labelText("사진")} {labelText(avatar ? "변경" : "선택 (선택사항)")}
                             </button>
                             {avatar && (
                                 <button
@@ -246,7 +248,7 @@ export default function PetRegisterModal({ open, onClose, pet }: Props) {
                                     onClick={() => setAvatar(null)}
                                     className="text-[10px] text-neutral-500 hover:text-danger font-bold text-left px-1"
                                 >
-                                    삭제
+                                    {labelText("삭제")}
                                 </button>
                             )}
                             <input
@@ -260,12 +262,12 @@ export default function PetRegisterModal({ open, onClose, pet }: Props) {
                     </div>
 
                     {/* 이름 */}
-                    <Field label="이름" required>
+                    <Field label={labelText("이름")} required>
                         <input
                             type="text"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            placeholder="예) 초코, 콩이, 보리"
+                            placeholder={labelText("예) 초코, 콩이, 보리")}
                             maxLength={20}
                             required
                             className={inputCls}
@@ -273,12 +275,12 @@ export default function PetRegisterModal({ open, onClose, pet }: Props) {
                     </Field>
 
                     {/* 견종 */}
-                    <Field label="견종" required>
+                    <Field label={labelText("견종")} required>
                         <input
                             type="text"
                             value={breed}
                             onChange={(e) => setBreed(e.target.value)}
-                            placeholder="예) 골든리트리버, 말티즈, 믹스견"
+                            placeholder={labelText("예) 골든리트리버, 말티즈, 믹스견")}
                             required
                             className={inputCls}
                         />
@@ -286,17 +288,17 @@ export default function PetRegisterModal({ open, onClose, pet }: Props) {
 
                     {/* 분류 (size) + 체중 — 2열 */}
                     <div className="grid grid-cols-2 gap-3">
-                        <Field label="분류">
+                        <Field label={labelText("분류")}>
                             <select value={size} onChange={(e) => setSize(e.target.value)} className={inputCls}>
                                 {sizeOptions.map((s) => <option key={s} value={s}>{s}</option>)}
                             </select>
                         </Field>
-                        <Field label="체중">
+                        <Field label={labelText("체중")}>
                             <input
                                 type="text"
                                 value={weight}
                                 onChange={(e) => setWeight(e.target.value)}
-                                placeholder="예) 5kg, 10~15kg"
+                                placeholder={labelText("예) 5kg, 10~15kg")}
                                 className={inputCls}
                             />
                         </Field>
@@ -304,12 +306,12 @@ export default function PetRegisterModal({ open, onClose, pet }: Props) {
 
                     {/* 모질 + 활동량 — 2열 */}
                     <div className="grid grid-cols-2 gap-3">
-                        <Field label="모질">
+                        <Field label={labelText("모질")}>
                             <select value={coat} onChange={(e) => setCoat(e.target.value)} className={inputCls}>
                                 {coatOptions.map((c) => <option key={c} value={c}>{c}</option>)}
                             </select>
                         </Field>
-                        <Field label="활동량">
+                        <Field label={labelText("활동량")}>
                             <select value={activity} onChange={(e) => setActivity(e.target.value)} className={inputCls}>
                                 {activityOptions.map((a) => <option key={a} value={a}>{a}</option>)}
                             </select>
@@ -323,7 +325,7 @@ export default function PetRegisterModal({ open, onClose, pet }: Props) {
                             onClick={onClose}
                             className="flex-1 px-4 py-2.5 rounded-xl border border-neutral-200 bg-white text-xs font-bold hover:bg-neutral-50"
                         >
-                            취소
+                            {labelText("취소")}
                         </button>
                         <button
                             type="submit"

@@ -10,6 +10,7 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { useEffect, useRef, useState } from "react";
 import { isAppModeNow } from "@/components/app-shell/useAppMode";
 import styles from "@/app/intro.module.css";
@@ -23,6 +24,7 @@ const INTRO_SEEN_KEY = "ddb.intro.seen.v2";
 const MIN_INTRO_MS = 2200;
 
 export default function IntroSplash() {
+    const { menuLabel: labelText } = useI18n();
     const [visible, setVisible] = useState(false);
     const [isMobile] = useState(() =>
         typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches
@@ -193,7 +195,7 @@ export default function IntroSplash() {
             }}
             role="button"
             tabIndex={0}
-            aria-label="인트로 건너뛰기"
+            aria-label={labelText("인트로 건너뛰기")}
         >
             <div className={styles.videoFrame}>
                 <video
@@ -229,7 +231,7 @@ export default function IntroSplash() {
                 />
             </div>
             {/* 휴대폰은 "탭하면", PC 는 "클릭하면"(isMobile = 처음 열 때 767px 이하) */}
-            <span className={styles.skipText}>{isMobile ? "탭하면" : "클릭하면"} 바로 쇼핑하기</span>
+            <span className={styles.skipText}>{labelText(isMobile ? "탭하면" : "클릭하면")} {labelText("바로 쇼핑하기")}</span>
         </div>
     );
 }

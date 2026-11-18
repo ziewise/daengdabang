@@ -32,7 +32,7 @@ test("both CareTalk surfaces offer a persistent readable-font toggle before the 
     assert.doesNotMatch(widget, /window\.localStorage/);
 
     const toggleIndex = widget.indexOf("data-chat-font-toggle");
-    const clearIndex = widget.indexOf('aria-label="채팅 비우기"');
+    const clearIndex = widget.indexOf('aria-label={copy("채팅 비우기")}');
     assert.ok(toggleIndex >= 0 && clearIndex > toggleIndex);
 
     assert.match(page, /useSyncExternalStore/);

@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import Image from "next/image";
 import { useState } from "react";
 import type { PetLensResultDetails } from "@/lib/daengdabang-llm";
@@ -31,6 +32,7 @@ function InsightList({ items, icon = "fa-check" }: { items: string[]; icon?: str
 }
 
 export default function PetLensAnalysisSummary({ profile, details }: Props) {
+    const { menuLabel: labelText } = useI18n();
     // 앱 전용 "자세히 보기"(로컬 시안) — 웹에서는 버튼이 hidden · 감싼 틀이 display:contents 라 지금과 똑같이 전부 보임
     const [appMoreOpen, setAppMoreOpen] = useState(false);
     // 웹 연구소 페이지 전용 "자세히 보기"(V1) — 보호자 확인할 점 · 상품 고른 기준만 접어 둠(앱 · 펫렌즈 창은 그대로)
@@ -50,13 +52,13 @@ export default function PetLensAnalysisSummary({ profile, details }: Props) {
                 <div className="flex items-start gap-4">
                     <div className="min-w-0 flex-1">
                         {/* 웹 연구소 페이지 전용 이름표(lab-web.css) */}
-                        <p className="ddb-crayon-kicker dw-kicker lab-report-kicker hidden">사진 건강 리포트</p>
+                        <p className="ddb-crayon-kicker dw-kicker lab-report-kicker hidden">{labelText("사진 건강 리포트")}</p>
                         <div className="flex flex-wrap items-center gap-2 text-[11px] font-black">
                             <span className="rounded-full bg-white/80 px-2.5 py-1">{details.statusLabel}</span>
                             <span className="rounded-full bg-white/80 px-2.5 py-1">{details.photoQualityLabel}</span>
                             {details.analyzedViewCount > 0 && (
                                 <span className="rounded-full bg-white/80 px-2.5 py-1">
-                                    {details.analyzedViewCount}개 방향 확인
+                                    {details.analyzedViewCount}{labelText("개 방향 확인")}
                                 </span>
                             )}
                         </div>
@@ -80,7 +82,7 @@ export default function PetLensAnalysisSummary({ profile, details }: Props) {
 
             {details.observations.length > 0 && (
                 <section className="rounded-2xl border border-neutral-200 bg-white p-4" data-petlens-result-observations>
-                    <p className="mb-3 text-xs font-black text-neutral-500">사진에서 직접 확인한 특징</p>
+                    <p className="mb-3 text-xs font-black text-neutral-500">{labelText("사진에서 직접 확인한 특징")}</p>
                     <InsightList items={details.observations} />
                 </section>
             )}
@@ -88,13 +90,13 @@ export default function PetLensAnalysisSummary({ profile, details }: Props) {
             <div className="contents" data-app-more>
             {details.confirmedBreed && (
                 <section className="rounded-2xl border border-indigo-200 bg-indigo-50/70 p-4" data-petlens-result-confirmed-breed>
-                    <p className="text-xs font-black text-indigo-700">회원이 확인한 등록 견종</p>
+                    <p className="text-xs font-black text-indigo-700">{labelText("회원이 확인한 등록 견종")}</p>
                     <div className="mt-2 flex flex-wrap items-center gap-2">
                         <strong className="text-base font-black text-neutral-950">{details.confirmedBreed}</strong>
-                        <span className="rounded-full bg-white px-2.5 py-1 text-[10px] font-black text-indigo-700">회원 확인</span>
+                        <span className="rounded-full bg-white px-2.5 py-1 text-[10px] font-black text-indigo-700">{labelText("회원 확인")}</span>
                     </div>
                     <p className="mt-2 text-[11px] font-bold leading-5 text-neutral-600">
-                        등록 견종은 상품·케어 기준으로 사용하며, 아래 사진 후보와 구분해서 보여드려요.
+                        {labelText("등록 견종은 상품·케어 기준으로 사용하며, 아래 사진 후보와 구분해서 보여드려요.")}
                     </p>
                 </section>
             )}
@@ -102,13 +104,13 @@ export default function PetLensAnalysisSummary({ profile, details }: Props) {
             {details.breedCandidates.length > 0 && (
                 <section className="rounded-2xl border border-neutral-200 bg-white p-4" data-petlens-result-breed-candidates>
                     <div className="mb-3 flex items-end justify-between gap-3">
-                        <p className="text-xs font-black text-neutral-500">사진에서 본 가까운 견종 후보</p>
-                        <span className="text-[10px] font-bold text-neutral-400">등록 견종을 자동으로 바꾸지 않아요</span>
+                        <p className="text-xs font-black text-neutral-500">{labelText("사진에서 본 가까운 견종 후보")}</p>
+                        <span className="text-[10px] font-bold text-neutral-400">{labelText("등록 견종을 자동으로 바꾸지 않아요")}</span>
                     </div>
                     <div className="grid gap-2 sm:grid-cols-3">
                         {details.breedCandidates.map((candidate, index) => (
                             <article key={candidate.label} className="rounded-xl border border-indigo-100 bg-indigo-50/60 p-3">
-                                <p className="text-[10px] font-black text-indigo-500">후보 {index + 1}</p>
+                                <p className="text-[10px] font-black text-indigo-500">{labelText("후보")} {index + 1}</p>
                                 <p className="mt-1 text-sm font-black text-neutral-950">{candidate.label}</p>
                                 <span className="mt-2 inline-flex rounded-full bg-white px-2 py-1 text-[10px] font-black text-indigo-700">
                                     {candidate.confidenceLabel}
@@ -130,7 +132,7 @@ export default function PetLensAnalysisSummary({ profile, details }: Props) {
 
             {(details.profileCandidates.length > 0 || details.ownerChecks.length > 0) && (
                 <section className="rounded-2xl border border-neutral-200 bg-white p-4" data-petlens-result-owner-checks>
-                    <p className="mb-3 text-xs font-black text-neutral-500">보호자가 확인해 주세요</p>
+                    <p className="mb-3 text-xs font-black text-neutral-500">{labelText("보호자가 확인해 주세요")}</p>
                     {details.profileCandidates.length > 0 && (
                         <div className="mb-3 flex flex-wrap gap-2">
                             {details.profileCandidates.map((item) => (
@@ -147,14 +149,14 @@ export default function PetLensAnalysisSummary({ profile, details }: Props) {
 
             {details.retakeReasons.length > 0 && (
                 <section className="rounded-2xl border border-sky-200 bg-sky-50 p-4" data-petlens-result-retake>
-                    <p className="mb-3 text-xs font-black text-sky-800">다음 촬영에서 보완할 점</p>
+                    <p className="mb-3 text-xs font-black text-sky-800">{labelText("다음 촬영에서 보완할 점")}</p>
                     <InsightList items={details.retakeReasons} icon="fa-camera" />
                 </section>
             )}
 
             {details.careActions.length > 0 && (
                 <section className="rounded-2xl border border-emerald-200 bg-emerald-50/70 p-4" data-petlens-result-care>
-                    <p className="mb-3 text-xs font-black text-emerald-800">지금 도움이 되는 케어</p>
+                    <p className="mb-3 text-xs font-black text-emerald-800">{labelText("지금 도움이 되는 케어")}</p>
                     <InsightList items={details.careActions} icon="fa-heart" />
                 </section>
             )}
@@ -162,7 +164,7 @@ export default function PetLensAnalysisSummary({ profile, details }: Props) {
             <div className="contents" data-app-more>
             {details.recommendationSignals.length > 0 && (
                 <section className="rounded-2xl border border-indigo-100 bg-indigo-50/50 p-4" data-petlens-result-signals>
-                    <p className="mb-3 text-xs font-black text-indigo-700">상품을 고른 기준</p>
+                    <p className="mb-3 text-xs font-black text-indigo-700">{labelText("상품을 고른 기준")}</p>
                     <InsightList items={details.recommendationSignals} icon="fa-paw" />
                 </section>
             )}
@@ -174,7 +176,7 @@ export default function PetLensAnalysisSummary({ profile, details }: Props) {
                     aria-expanded={webMoreOpen}
                     onClick={() => setWebMoreOpen((value) => !value)}
                 >
-                    <span>{webMoreOpen ? "자세히 접기" : "보호자가 확인할 점 · 상품 고른 기준 자세히 보기"}</span>
+                    <span>{labelText(webMoreOpen ? "자세히 접기" : "보호자가 확인할 점 · 상품 고른 기준 자세히 보기")}</span>
                     <i className={`fa-solid ${webMoreOpen ? "fa-chevron-up" : "fa-chevron-down"}`} aria-hidden="true" />
                 </button>
             )}
@@ -186,7 +188,7 @@ export default function PetLensAnalysisSummary({ profile, details }: Props) {
                     aria-expanded={appMoreOpen}
                     onClick={() => setAppMoreOpen((value) => !value)}
                 >
-                    <span>{appMoreOpen ? "자세히 접기" : "견종 후보 · 확인할 점 자세히 보기"}</span>
+                    <span>{labelText(appMoreOpen ? "자세히 접기" : "견종 후보 · 확인할 점 자세히 보기")}</span>
                     <i className={`fa-solid ${appMoreOpen ? "fa-chevron-up" : "fa-chevron-down"}`} aria-hidden="true" />
                 </button>
             )}

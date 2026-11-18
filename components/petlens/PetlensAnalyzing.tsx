@@ -5,10 +5,12 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { useEffect, useState } from "react";
 import { ANALYSIS_STEPS } from "./petlens-data";
 
 export default function PetlensAnalyzing({ onComplete }: { onComplete: () => void }) {
+    const { menuLabel: labelText } = useI18n();
     const [idx, setIdx] = useState(0);
     const [progress, setProgress] = useState(0);
     const [text, setText] = useState(ANALYSIS_STEPS[0].text);
@@ -44,7 +46,7 @@ export default function PetlensAnalyzing({ onComplete }: { onComplete: () => voi
             <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-aurora-blue to-aurora-indigo flex items-center justify-center text-white text-4xl animate-pulse">
                 <i className="fa-solid fa-magnifying-glass-chart" />
             </div>
-            <h3 className="text-lg font-extrabold mb-1.5">분석 중이에요</h3>
+            <h3 className="text-lg font-extrabold mb-1.5">{labelText("분석 중이에요")}</h3>
             <p key={idx} className="text-xs text-neutral-600 mb-6 animate-in fade-in duration-300">
                 {text}
             </p>

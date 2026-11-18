@@ -70,7 +70,7 @@ export default function SearchModal({ open, onClose, placeholder }: Props) {
     const results = useMemo(() => {
         const q = term.trim();
         if (!q) return [];
-        return searchCatalog(q);
+        return searchCatalog(q, productName);
     }, [term]);
     const previewResults = results.slice(0, PREVIEW_LIMIT);
     const hasQuery = term.trim().length > 0;
@@ -193,7 +193,7 @@ export default function SearchModal({ open, onClose, placeholder }: Props) {
                                             <li key={p.id}>
                                                 <button
                                                     type="button"
-                                                    onClick={() => goSearch(p.name)}
+                                                    onClick={() => goSearch(productName(p))}
                                                     data-pet-product="true"
                                                     data-pet-name={productName(p)}
                                                     data-pet-category={p.category}

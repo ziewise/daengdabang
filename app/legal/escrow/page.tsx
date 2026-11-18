@@ -1,3 +1,4 @@
+import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
 import type { Metadata } from "next";
 import LegalWebHero from "@/components/legal/LegalWebHero";
 import { BUSINESS_INFO, ESCROW_INFO, LEGAL_UPDATED_AT } from "@/lib/legal";
@@ -35,10 +36,9 @@ export default function EscrowPage() {
             {/* 웹 머리 판 · 문서 탭 · 한눈에 보기(2026-10-25, 앱은 숨김) — 아래 법률 문구는 그대로 */}
             <LegalWebHero kind="escrow" updatedAt={LEGAL_UPDATED_AT} />
             <p className="text-sm font-black text-indigo-700">Purchase Safety Service</p>
-            <h1 className="mt-2 text-3xl font-black tracking-tight text-neutral-950">구매안전서비스</h1>
+            <h1 className="mt-2 text-3xl font-black tracking-tight text-neutral-950"><LocalizedMenuLabel label={"구매안전서비스"} /></h1>
             <p className="mt-3 text-sm font-bold leading-6 text-neutral-600">
-                댕다방은 현금성 결제 이용자를 보호하기 위해 KB국민은행 구매안전서비스 등록 정보를 공개합니다.
-                최종 업데이트: {LEGAL_UPDATED_AT}.
+                <LocalizedMenuLabel label={"댕다방은 현금성 결제 이용자를 보호하기 위해 KB국민은행 구매안전서비스 등록 정보를 공개합니다.\n                최종 업데이트:"} /> {LEGAL_UPDATED_AT}.
             </p>
 
             <nav
@@ -47,28 +47,26 @@ export default function EscrowPage() {
             >
                 {toc.map(([id, label]) => (
                     <a key={id} href={`#${id}`} className="hover:text-indigo-700">
-                        {label}
+                        <LocalizedMenuLabel label={label} />
                     </a>
                 ))}
             </nav>
 
             <section id="summary" className="mt-8 scroll-mt-24 border-t border-neutral-200 pt-5">
-                <h2 className="text-lg font-black text-neutral-950">1. 구매안전서비스 안내</h2>
+                <h2 className="text-lg font-black text-neutral-950"><LocalizedMenuLabel label={"1. 구매안전서비스 안내"} /></h2>
                 <p className="mt-2 text-sm font-bold leading-7 text-neutral-600">
-                    {ESCROW_INFO.serviceName}는 구매자가 결제한 대금이 구매 확인 절차를 거쳐 판매자에게 지급되도록
-                    하는 매매보호 서비스입니다. 댕다방은 이용자가 안전하게 거래할 수 있도록 구매안전서비스 이용확인증과
-                    판매자 확인정보를 함께 공개합니다.
+                    {ESCROW_INFO.serviceName}<LocalizedMenuLabel label={"는 구매자가 결제한 대금이 구매 확인 절차를 거쳐 판매자에게 지급되도록\n                    하는 매매보호 서비스입니다. 댕다방은 이용자가 안전하게 거래할 수 있도록 구매안전서비스 이용확인증과\n                    판매자 확인정보를 함께 공개합니다."} />
                 </p>
             </section>
 
             <section id="details" className="mt-8 scroll-mt-24 border-t border-neutral-200 pt-5">
-                <h2 className="text-lg font-black text-neutral-950">2. KB에스크로 등록 정보</h2>
+                <h2 className="text-lg font-black text-neutral-950"><LocalizedMenuLabel label={"2. KB에스크로 등록 정보"} /></h2>
                 <div className="mt-4 overflow-x-auto">
                     <table className="w-full min-w-[760px] border-collapse text-left text-sm">
                         <tbody>
                             {rows.map(([label, value]) => (
                                 <tr key={label} className="border-b border-neutral-100 align-top">
-                                    <th className="w-56 py-4 pr-4 font-black text-neutral-950">{label}</th>
+                                    <th className="w-56 py-4 pr-4 font-black text-neutral-950"><LocalizedMenuLabel label={label} /></th>
                                     <td className="py-4 font-bold leading-6 text-neutral-600">{value}</td>
                                 </tr>
                             ))}
@@ -78,16 +76,15 @@ export default function EscrowPage() {
             </section>
 
             <section id="how-to-check" className="mt-8 scroll-mt-24 border-t border-neutral-200 pt-5">
-                <h2 className="text-lg font-black text-neutral-950">3. 이용 확인 방법</h2>
+                <h2 className="text-lg font-black text-neutral-950"><LocalizedMenuLabel label={"3. 이용 확인 방법"} /></h2>
                 <p className="mt-2 text-sm font-bold leading-7 text-neutral-600">
-                    구매안전서비스 이용 여부는 첨부된 이용확인증과 KB에스크로 판매자 확인정보에서 확인할 수 있습니다.
-                    문의가 필요한 경우 KB국민은행 고객센터 {ESCROW_INFO.domesticCallCenter}, 국내
-                    {` ${ESCROW_INFO.servicePhone}`}, 해외 {ESCROW_INFO.overseasCallCenter}로 확인할 수 있습니다.
+                    <LocalizedMenuLabel label={"구매안전서비스 이용 여부는 첨부된 이용확인증과 KB에스크로 판매자 확인정보에서 확인할 수 있습니다.\n                    문의가 필요한 경우 KB국민은행 고객센터"} /> {ESCROW_INFO.domesticCallCenter}<LocalizedMenuLabel label={", 국내"} />
+                    {` ${ESCROW_INFO.servicePhone}`}<LocalizedMenuLabel label={", 해외"} /> {ESCROW_INFO.overseasCallCenter}<LocalizedMenuLabel label={"로 확인할 수 있습니다."} />
                 </p>
             </section>
 
             <section id="documents" className="mt-8 scroll-mt-24 border-t border-neutral-200 pt-5">
-                <h2 className="text-lg font-black text-neutral-950">4. 증빙 문서</h2>
+                <h2 className="text-lg font-black text-neutral-950"><LocalizedMenuLabel label={"4. 증빙 문서"} /></h2>
                 <div className="mt-4 flex flex-wrap gap-3 text-sm font-bold">
                     <a
                         href="/docs/legal/purchase-safety-confirmation.pdf"
@@ -95,7 +92,7 @@ export default function EscrowPage() {
                         rel="noopener noreferrer"
                         className="text-indigo-700 hover:text-indigo-900"
                     >
-                        구매안전서비스 이용확인증 PDF
+                        <LocalizedMenuLabel label={"구매안전서비스 이용확인증 PDF"} />
                     </a>
                     <a
                         href="/docs/legal/kb-escrow-seller-info.pdf"
@@ -103,7 +100,7 @@ export default function EscrowPage() {
                         rel="noopener noreferrer"
                         className="text-neutral-600 hover:text-neutral-950"
                     >
-                        KB에스크로 이체 판매자 확인정보 PDF
+                        <LocalizedMenuLabel label={"KB에스크로 이체 판매자 확인정보 PDF"} />
                     </a>
                 </div>
             </section>

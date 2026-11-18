@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
@@ -103,6 +104,7 @@ function inquirySubject(mode: BusinessInquiryMode, values: InquiryValues) {
 }
 
 export default function BusinessInquiryPanel({ mode }: { mode: BusinessInquiryMode }) {
+    const { menuLabel: labelText } = useI18n();
     const config = MODE_CONFIG[mode];
     const { user } = useAuth();
     const [values, setValues] = useState<InquiryValues>(() => initialValues(mode));
@@ -168,11 +170,11 @@ export default function BusinessInquiryPanel({ mode }: { mode: BusinessInquiryMo
                     <i className="fa-solid fa-check" aria-hidden="true" />
                 </span>
                 <p className="mt-5 text-xs font-black tracking-[0.2em] text-emerald-700">RECEIVED</p>
-                <h2 ref={receiptHeadingRef} tabIndex={-1} className="mt-2 text-2xl font-black text-emerald-950 outline-none">문의가 안전하게 접수됐습니다.</h2>
-                <p className="mt-3 text-sm font-bold leading-7 text-emerald-900">접수번호: <b>{receipt.id}</b></p>
+                <h2 ref={receiptHeadingRef} tabIndex={-1} className="mt-2 text-2xl font-black text-emerald-950 outline-none">{labelText("문의가 안전하게 접수됐습니다.")}</h2>
+                <p className="mt-3 text-sm font-bold leading-7 text-emerald-900">{labelText("접수번호:")} <b>{receipt.id}</b></p>
                 <p className="mt-1 text-sm font-bold leading-7 text-neutral-700">{receipt.message}</p>
                 <p className="mt-4 rounded-2xl border border-emerald-200 bg-white/80 px-4 py-3 text-sm font-bold leading-6 text-neutral-600">
-                    담당자가 내용을 확인한 뒤 입력하신 이메일로 답변드립니다. 추가 내용은 접수 안내 메일에 회신해 주세요.
+                    {labelText("담당자가 내용을 확인한 뒤 입력하신 이메일로 답변드립니다. 추가 내용은 접수 안내 메일에 회신해 주세요.")}
                 </p>
                 <button
                     type="button"
@@ -187,7 +189,7 @@ export default function BusinessInquiryPanel({ mode }: { mode: BusinessInquiryMo
                     }}
                     className="mt-5 inline-flex min-h-11 items-center gap-2 rounded-full border border-emerald-300 bg-white px-5 py-2 text-sm font-extrabold text-emerald-900 transition hover:bg-emerald-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700"
                 >
-                    새 문의 작성 <i className="fa-solid fa-pencil text-xs" aria-hidden="true" />
+                    {labelText("새 문의 작성")} <i className="fa-solid fa-pencil text-xs" aria-hidden="true" />
                 </button>
             </section>
         );
@@ -208,18 +210,18 @@ export default function BusinessInquiryPanel({ mode }: { mode: BusinessInquiryMo
                         <input required value={values.organization} onChange={(event) => update("organization", event.target.value)} maxLength={160} autoComplete="organization" className="h-12 rounded-xl border border-neutral-200 bg-white px-3 text-base font-bold text-neutral-900 outline-none transition focus:border-aurora-indigo focus:ring-2 focus:ring-aurora-indigo/15" />
                     </label>
                     <label className="grid gap-1.5 text-sm font-extrabold text-neutral-800">
-                        담당자 이름
+                        {labelText("담당자 이름")}
                         <input required value={contactName} onChange={(event) => update("contactName", event.target.value)} maxLength={100} autoComplete="name" className="h-12 rounded-xl border border-neutral-200 bg-white px-3 text-base font-bold text-neutral-900 outline-none transition focus:border-aurora-indigo focus:ring-2 focus:ring-aurora-indigo/15" />
                     </label>
                 </div>
 
                 <div className="grid gap-4 sm:grid-cols-2">
                     <label className="grid gap-1.5 text-sm font-extrabold text-neutral-800">
-                        답변 받을 이메일
+                        {labelText("답변 받을 이메일")}
                         <input required type="email" value={email} onChange={(event) => update("email", event.target.value)} maxLength={180} autoComplete="email" className="h-12 rounded-xl border border-neutral-200 bg-white px-3 text-base font-bold text-neutral-900 outline-none transition focus:border-aurora-indigo focus:ring-2 focus:ring-aurora-indigo/15" />
                     </label>
                     <label className="grid gap-1.5 text-sm font-extrabold text-neutral-800">
-                                연락처 <span className="font-bold text-neutral-600">(선택)</span>
+                                {labelText("연락처")} <span className="font-bold text-neutral-600">{labelText("(선택)")}</span>
                         <input type="tel" value={phone} onChange={(event) => update("phone", event.target.value)} maxLength={40} autoComplete="tel" className="h-12 rounded-xl border border-neutral-200 bg-white px-3 text-base font-bold text-neutral-900 outline-none transition focus:border-aurora-indigo focus:ring-2 focus:ring-aurora-indigo/15" placeholder="010-0000-0000" />
                     </label>
                 </div>
@@ -228,22 +230,22 @@ export default function BusinessInquiryPanel({ mode }: { mode: BusinessInquiryMo
                     <>
                         <div className="grid gap-4 sm:grid-cols-2">
                             <label className="grid gap-1.5 text-sm font-extrabold text-neutral-800">
-                                제안 구분
+                                {labelText("제안 구분")}
                                 <select value={values.inquiryType} onChange={(event) => update("inquiryType", event.target.value)} className="h-12 rounded-xl border border-neutral-200 bg-white px-3 text-base font-bold text-neutral-900 outline-none transition focus:border-aurora-indigo focus:ring-2 focus:ring-aurora-indigo/15">
-                                    <option>브랜드·상품 입점</option>
-                                    <option>공급·유통 제휴</option>
-                                    <option>공동 기획·프로모션</option>
-                                    <option>기타 사업 제안</option>
+                                    <option>{labelText("브랜드·상품 입점")}</option>
+                                    <option>{labelText("공급·유통 제휴")}</option>
+                                    <option>{labelText("공동 기획·프로모션")}</option>
+                                    <option>{labelText("기타 사업 제안")}</option>
                                 </select>
                             </label>
                             <label className="grid gap-1.5 text-sm font-extrabold text-neutral-800">
-                                공식 홈페이지·소개 주소 <span className="font-bold text-neutral-600">(선택)</span>
+                                {labelText("공식 홈페이지·소개 주소")} <span className="font-bold text-neutral-600">{labelText("(선택)")}</span>
                                 <input type="url" value={values.companyWebsite} onChange={(event) => update("companyWebsite", event.target.value)} maxLength={500} autoComplete="url" className="h-12 rounded-xl border border-neutral-200 bg-white px-3 text-base font-bold text-neutral-900 outline-none transition focus:border-aurora-indigo focus:ring-2 focus:ring-aurora-indigo/15" placeholder="https://" />
                             </label>
                         </div>
                         <label className="grid gap-1.5 text-sm font-extrabold text-neutral-800">
                             {config.productLabel}
-                            <input required value={values.productName} onChange={(event) => update("productName", event.target.value)} maxLength={240} className="h-12 rounded-xl border border-neutral-200 bg-white px-3 text-base font-bold text-neutral-900 outline-none transition focus:border-aurora-indigo focus:ring-2 focus:ring-aurora-indigo/15" placeholder="브랜드명과 대표 상품을 적어 주세요" />
+                            <input required value={values.productName} onChange={(event) => update("productName", event.target.value)} maxLength={240} className="h-12 rounded-xl border border-neutral-200 bg-white px-3 text-base font-bold text-neutral-900 outline-none transition focus:border-aurora-indigo focus:ring-2 focus:ring-aurora-indigo/15" placeholder={labelText("브랜드명과 대표 상품을 적어 주세요")} />
                         </label>
                     </>
                 ) : (
@@ -251,32 +253,32 @@ export default function BusinessInquiryPanel({ mode }: { mode: BusinessInquiryMo
                         <div className="grid gap-4 sm:grid-cols-2">
                             <label className="grid gap-1.5 text-sm font-extrabold text-neutral-800">
                                 {config.productLabel}
-                                <input required value={values.productName} onChange={(event) => update("productName", event.target.value)} maxLength={240} className="h-12 rounded-xl border border-neutral-200 bg-white px-3 text-base font-bold text-neutral-900 outline-none transition focus:border-aurora-indigo focus:ring-2 focus:ring-aurora-indigo/15" placeholder="상품명·규격·옵션" />
+                                <input required value={values.productName} onChange={(event) => update("productName", event.target.value)} maxLength={240} className="h-12 rounded-xl border border-neutral-200 bg-white px-3 text-base font-bold text-neutral-900 outline-none transition focus:border-aurora-indigo focus:ring-2 focus:ring-aurora-indigo/15" placeholder={labelText("상품명·규격·옵션")} />
                             </label>
                             <label className="grid gap-1.5 text-sm font-extrabold text-neutral-800">
-                                예상 수량
-                                <input required value={values.quantity} onChange={(event) => update("quantity", event.target.value)} maxLength={120} className="h-12 rounded-xl border border-neutral-200 bg-white px-3 text-base font-bold text-neutral-900 outline-none transition focus:border-aurora-indigo focus:ring-2 focus:ring-aurora-indigo/15" placeholder="예: 100개, 월 50개 정기 구매" />
+                                {labelText("예상 수량")}
+                                <input required value={values.quantity} onChange={(event) => update("quantity", event.target.value)} maxLength={120} className="h-12 rounded-xl border border-neutral-200 bg-white px-3 text-base font-bold text-neutral-900 outline-none transition focus:border-aurora-indigo focus:ring-2 focus:ring-aurora-indigo/15" placeholder={labelText("예: 100개, 월 50개 정기 구매")} />
                             </label>
                         </div>
                         <div className="grid gap-4 sm:grid-cols-3">
                             <label className="grid gap-1.5 text-sm font-extrabold text-neutral-800">
-                                예산 범위 <span className="font-bold text-neutral-600">(선택)</span>
-                                <input value={values.budget} onChange={(event) => update("budget", event.target.value)} maxLength={120} className="h-12 rounded-xl border border-neutral-200 bg-white px-3 text-base font-bold text-neutral-900 outline-none transition focus:border-aurora-indigo focus:ring-2 focus:ring-aurora-indigo/15" placeholder="예: 300만원 내외" />
+                                {labelText("예산 범위")} <span className="font-bold text-neutral-600">{labelText("(선택)")}</span>
+                                <input value={values.budget} onChange={(event) => update("budget", event.target.value)} maxLength={120} className="h-12 rounded-xl border border-neutral-200 bg-white px-3 text-base font-bold text-neutral-900 outline-none transition focus:border-aurora-indigo focus:ring-2 focus:ring-aurora-indigo/15" placeholder={labelText("예: 300만원 내외")} />
                             </label>
                             <label className="grid gap-1.5 text-sm font-extrabold text-neutral-800">
-                                희망 납품일 <span className="font-bold text-neutral-600">(선택)</span>
+                                {labelText("희망 납품일")} <span className="font-bold text-neutral-600">{labelText("(선택)")}</span>
                                 <input type="date" value={values.desiredDate} onChange={(event) => update("desiredDate", event.target.value)} className="h-12 rounded-xl border border-neutral-200 bg-white px-3 text-base font-bold text-neutral-900 outline-none transition focus:border-aurora-indigo focus:ring-2 focus:ring-aurora-indigo/15" />
                             </label>
                             <label className="grid gap-1.5 text-sm font-extrabold text-neutral-800">
-                                배송 지역 <span className="font-bold text-neutral-600">(선택)</span>
-                                <input value={values.deliveryRegion} onChange={(event) => update("deliveryRegion", event.target.value)} maxLength={120} autoComplete="address-level1" className="h-12 rounded-xl border border-neutral-200 bg-white px-3 text-base font-bold text-neutral-900 outline-none transition focus:border-aurora-indigo focus:ring-2 focus:ring-aurora-indigo/15" placeholder="예: 서울, 전국 3개 지점" />
+                                {labelText("배송 지역")} <span className="font-bold text-neutral-600">{labelText("(선택)")}</span>
+                                <input value={values.deliveryRegion} onChange={(event) => update("deliveryRegion", event.target.value)} maxLength={120} autoComplete="address-level1" className="h-12 rounded-xl border border-neutral-200 bg-white px-3 text-base font-bold text-neutral-900 outline-none transition focus:border-aurora-indigo focus:ring-2 focus:ring-aurora-indigo/15" placeholder={labelText("예: 서울, 전국 3개 지점")} />
                             </label>
                         </div>
                     </>
                 )}
 
                 <label className="grid gap-1.5 text-sm font-extrabold text-neutral-800">
-                    상세 내용
+                    {labelText("상세 내용")}
                     <textarea required value={values.message} onChange={(event) => update("message", event.target.value)} minLength={5} maxLength={3500} rows={7} className="rounded-xl border border-neutral-200 bg-white px-3 py-3 text-base font-bold leading-7 text-neutral-900 outline-none transition focus:border-aurora-indigo focus:ring-2 focus:ring-aurora-indigo/15" placeholder={mode === "partnership" ? "상품의 차별점, 공급 조건, 인증·허가 자료 보유 여부와 제안 내용을 적어 주세요." : "용도, 포장·배송 조건, 세금계산서 필요 여부 등 상담에 필요한 내용을 적어 주세요."} />
                 </label>
 
@@ -288,8 +290,8 @@ export default function BusinessInquiryPanel({ mode }: { mode: BusinessInquiryMo
                 <label className="flex items-start gap-3 rounded-2xl border border-neutral-200 bg-neutral-50/80 px-4 py-3 text-sm font-bold leading-6 text-neutral-700">
                     <input required type="checkbox" checked={values.privacyConsent} onChange={(event) => update("privacyConsent", event.target.checked)} className="mt-1 h-4 w-4 shrink-0 accent-indigo-700" />
                     <span>
-                        <b className="text-neutral-900">(필수)</b> 문의 응대에 필요한 이름·연락처·이메일과 제출 내용을 수집·이용하는 데 동의합니다. 자세한 내용은 {" "}
-                        <Link href="/privacy" className="font-black text-aurora-indigo underline underline-offset-2">개인정보처리방침</Link>에서 확인할 수 있습니다.
+                        <b className="text-neutral-900">{labelText("(필수)")}</b> {labelText("문의 응대에 필요한 이름·연락처·이메일과 제출 내용을 수집·이용하는 데 동의합니다. 자세한 내용은")} {" "}
+                        <Link href="/privacy" className="font-black text-aurora-indigo underline underline-offset-2">{labelText("개인정보처리방침")}</Link>{labelText("에서 확인할 수 있습니다.")}
                     </span>
                 </label>
 
@@ -297,12 +299,12 @@ export default function BusinessInquiryPanel({ mode }: { mode: BusinessInquiryMo
 
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <p className="text-xs font-bold leading-5 text-neutral-500">
-                        {mode === "partnership"
+                        {labelText(mode === "partnership"
                             ? "제출만으로 입점이나 거래 조건이 확정되지는 않습니다. 담당자 검토 후 이메일로 안내드립니다."
-                            : "제출만으로 가격·재고·납품 일정이 확정되지는 않습니다. 담당자 검토 후 이메일로 안내드립니다."}
+                            : "제출만으로 가격·재고·납품 일정이 확정되지는 않습니다. 담당자 검토 후 이메일로 안내드립니다.")}
                     </p>
                     <button disabled={submitting} type="submit" className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-gradient-to-r from-aurora-indigo to-violet-600 px-6 py-3 text-sm font-black text-white shadow-card transition hover:-translate-y-0.5 hover:shadow-hover disabled:cursor-not-allowed disabled:opacity-60">
-                        {submitting ? <><i className="fa-solid fa-spinner animate-spin" aria-hidden="true" /> 접수 중…</> : <><i className="fa-solid fa-paper-plane" aria-hidden="true" /> 문의 접수하기</>}
+                        {submitting ? <><i className="fa-solid fa-spinner animate-spin" aria-hidden="true" /> {labelText("접수 중…")}</> : <><i className="fa-solid fa-paper-plane" aria-hidden="true" /> {labelText("문의 접수하기")}</>}
                     </button>
                 </div>
             </form>

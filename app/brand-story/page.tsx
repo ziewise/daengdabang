@@ -1,3 +1,4 @@
+import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -72,16 +73,16 @@ export default function BrandStoryPage() {
                 <div className={styles.heroContent}>
                     <p className={styles.eyebrow}>DAENGDABANG BRAND STORY</p>
                     <h1 id="brand-story-title">
-                        <span className={styles.heroTitleLine}>좋은 하루는,</span>
-                        <span className={styles.heroTitleLine}>함께 고르는</span>
-                        <span className={styles.heroTitleLine}>순간부터.</span>
+                        <span className={styles.heroTitleLine}><LocalizedMenuLabel label={"좋은 하루는,"} /></span>
+                        <span className={styles.heroTitleLine}><LocalizedMenuLabel label={"함께 고르는"} /></span>
+                        <span className={styles.heroTitleLine}><LocalizedMenuLabel label={"순간부터."} /></span>
                     </h1>
                     <p className={styles.heroLead}>
-                        댕다방은 반려견의 하루를 먼저 바라보고, 보호자가 이유 있게 고를 수 있도록 돕는 큐레이션 펫 쇼핑몰입니다.
+                        <LocalizedMenuLabel label={"댕다방은 반려견의 하루를 먼저 바라보고, 보호자가 이유 있게 고를 수 있도록 돕는 큐레이션 펫 쇼핑몰입니다."} />
                     </p>
                     <div className={styles.heroActions}>
-                        <Link href="/products" className={styles.primaryAction}>댕다방 셀렉션 보기 <i className="fa-solid fa-arrow-right" aria-hidden="true" /></Link>
-                        <a href="#our-standard" className={styles.secondaryAction}>우리의 선택 기준</a>
+                        <Link href="/products" className={styles.primaryAction}><LocalizedMenuLabel label={"댕다방 셀렉션 보기"} /> <i className="fa-solid fa-arrow-right" aria-hidden="true" /></Link>
+                        <a href="#our-standard" className={styles.secondaryAction}><LocalizedMenuLabel label={"우리의 선택 기준"} /></a>
                     </div>
                 </div>
                 <p className={styles.heroCaption}>Everyday choices, made with care.</p>
@@ -90,17 +91,17 @@ export default function BrandStoryPage() {
             <section className={styles.opening} aria-labelledby="brand-beginning-title">
                 <div>
                     <p className={styles.sectionKicker}>THE FIRST QUESTION</p>
-                    <h2 id="brand-beginning-title">무엇을 더 팔까보다,<br />무엇이 정말 필요할까.</h2>
+                    <h2 id="brand-beginning-title"><LocalizedMenuLabel label={"무엇을 더 팔까보다,"} /><br /><LocalizedMenuLabel label={"무엇이 정말 필요할까."} /></h2>
                 </div>
                 <div className={styles.openingCopy}>
                     <p className={styles.openingLead}>
-                        반려견을 위한 선택지는 많아졌지만, 선택은 오히려 어려워졌습니다. 비슷해 보이는 상품과 흩어진 정보 사이에서 보호자는 매번 다시 묻습니다. “우리 아이에게도 맞을까?”
+                        <LocalizedMenuLabel label={"반려견을 위한 선택지는 많아졌지만, 선택은 오히려 어려워졌습니다. 비슷해 보이는 상품과 흩어진 정보 사이에서 보호자는 매번 다시 묻습니다. “우리 아이에게도 맞을까?”"} />
                     </p>
                     <p>
-                        댕다방은 그 질문을 장바구니 앞에서 혼자 남겨두지 않으려 시작합니다. 가장 많은 상품을 진열하기보다, 산책과 식사, 휴식과 놀이처럼 매일 반복되는 장면에서 이유가 분명한 상품을 찾습니다.
+                        <LocalizedMenuLabel label={"댕다방은 그 질문을 장바구니 앞에서 혼자 남겨두지 않으려 시작합니다. 가장 많은 상품을 진열하기보다, 산책과 식사, 휴식과 놀이처럼 매일 반복되는 장면에서 이유가 분명한 상품을 찾습니다."} />
                     </p>
                     <p>
-                        이름처럼 잠시 머물러 비교하고 물어볼 수 있는 곳. 빠르게 사는 것보다 잘 고르는 경험이 쌓이는 곳. 그것이 우리가 만들고 싶은 댕다방입니다.
+                        <LocalizedMenuLabel label={"이름처럼 잠시 머물러 비교하고 물어볼 수 있는 곳. 빠르게 사는 것보다 잘 고르는 경험이 쌓이는 곳. 그것이 우리가 만들고 싶은 댕다방입니다."} />
                     </p>
                 </div>
             </section>
@@ -113,9 +114,9 @@ export default function BrandStoryPage() {
                 <div className={styles.sectionHeading}>
                     <div>
                         <p className={styles.sectionKicker}>OUR STANDARD</p>
-                        <h2 id="brand-standard-title">댕다방이 상품을 바라보는 네 가지 기준</h2>
+                        <h2 id="brand-standard-title"><LocalizedMenuLabel label={"댕다방이 상품을 바라보는 네 가지 기준"} /></h2>
                     </div>
-                    <p>좋아 보이는 상품을 모으는 데서 멈추지 않고, 고객에게 왜 권할 수 있는지 설명 가능한지를 확인합니다.</p>
+                    <p><LocalizedMenuLabel label={"좋아 보이는 상품을 모으는 데서 멈추지 않고, 고객에게 왜 권할 수 있는지 설명 가능한지를 확인합니다."} /></p>
                 </div>
                 <div className={styles.principleGrid}>
                     {principles.map((principle) => (
@@ -124,8 +125,8 @@ export default function BrandStoryPage() {
                                 <span>{principle.number}</span>
                                 <i className={`fa-solid ${principle.icon}`} aria-hidden="true" />
                             </div>
-                            <h3>{principle.title}</h3>
-                            <p>{principle.body}</p>
+                            <h3><LocalizedMenuLabel label={principle.title} /></h3>
+                            <p><LocalizedMenuLabel label={principle.body} /></p>
                         </article>
                     ))}
                 </div>
@@ -134,9 +135,9 @@ export default function BrandStoryPage() {
             <section className={styles.curationSection} aria-labelledby="curation-flow-title">
                 <div className={styles.curationIntro}>
                     <p className={styles.darkKicker}>CURATION, NOT A SHORTCUT</p>
-                    <h2 id="curation-flow-title">시장의 움직임과<br />우리 아이의 하루 사이.</h2>
+                    <h2 id="curation-flow-title"><LocalizedMenuLabel label={"시장의 움직임과"} /><br /><LocalizedMenuLabel label={"우리 아이의 하루 사이."} /></h2>
                     <p>
-                        외부 시장의 변화는 새로운 필요를 발견하는 중요한 신호입니다. 다만 검색량이나 인기만으로 입점을 결정하지 않습니다. 보호자가 실제로 찾는 이유와 자사몰에 비어 있는 선택지를 함께 봅니다.
+                        <LocalizedMenuLabel label={"외부 시장의 변화는 새로운 필요를 발견하는 중요한 신호입니다. 다만 검색량이나 인기만으로 입점을 결정하지 않습니다. 보호자가 실제로 찾는 이유와 자사몰에 비어 있는 선택지를 함께 봅니다."} />
                     </p>
                 </div>
                 <ol className={styles.flowList}>
@@ -161,23 +162,23 @@ export default function BrandStoryPage() {
                 </div>
                 <div className={styles.technologyCopy}>
                     <p className={styles.sectionKicker}>TECHNOLOGY WITH HUMILITY</p>
-                    <h2 id="technology-title">기술은 정답이 아니라,<br />더 좋은 질문을 위한 도구입니다.</h2>
+                    <h2 id="technology-title"><LocalizedMenuLabel label={"기술은 정답이 아니라,"} /><br /><LocalizedMenuLabel label={"더 좋은 질문을 위한 도구입니다."} /></h2>
                     <p>
-                        펫렌즈와 케어톡은 사진과 보호자가 확인한 정보를 바탕으로 선택지를 정리합니다. 기술이 우리 아이를 단정하거나 의료적 판단을 대신하지 않습니다.
+                        <LocalizedMenuLabel label={"펫렌즈와 케어톡은 사진과 보호자가 확인한 정보를 바탕으로 선택지를 정리합니다. 기술이 우리 아이를 단정하거나 의료적 판단을 대신하지 않습니다."} />
                     </p>
                     <p>
-                        추천보다 확인을 먼저, 자동화보다 보호자의 결정을 우선합니다. 기술은 복잡한 정보를 줄이고 놓치기 쉬운 질문을 꺼내는 데 쓰여야 한다고 믿습니다.
+                        <LocalizedMenuLabel label={"추천보다 확인을 먼저, 자동화보다 보호자의 결정을 우선합니다. 기술은 복잡한 정보를 줄이고 놓치기 쉬운 질문을 꺼내는 데 쓰여야 한다고 믿습니다."} />
                     </p>
                     <div className={styles.technologyLinks}>
-                        <Link href="/pet-lens">펫렌즈 알아보기 <i className="fa-solid fa-arrow-right" aria-hidden="true" /></Link>
-                        <Link href="/chat">케어톡 열기 <i className="fa-solid fa-arrow-right" aria-hidden="true" /></Link>
+                        <Link href="/pet-lens"><LocalizedMenuLabel label={"펫렌즈 알아보기"} /> <i className="fa-solid fa-arrow-right" aria-hidden="true" /></Link>
+                        <Link href="/chat"><LocalizedMenuLabel label={"케어톡 열기"} /> <i className="fa-solid fa-arrow-right" aria-hidden="true" /></Link>
                     </div>
                 </div>
             </section>
 
             <section className={styles.promiseSection} aria-labelledby="promise-title">
                 <p className={styles.sectionKicker}>OUR PROMISE</p>
-                <h2 id="promise-title">잘 고른다는 말에<br />책임을 더하겠습니다.</h2>
+                <h2 id="promise-title"><LocalizedMenuLabel label={"잘 고른다는 말에"} /><br /><LocalizedMenuLabel label={"책임을 더하겠습니다."} /></h2>
                 <div className={styles.promiseGrid}>
                     {promises.map(([title, body], index) => (
                         <article key={title}>
@@ -191,12 +192,12 @@ export default function BrandStoryPage() {
 
             <section className={styles.closing}>
                 <div>
-                    <p>오늘도 우리 아이를 한 번 더 바라보는 마음으로.</p>
-                    <h2>댕다방은 더 나은 선택을<br />함께 만들어갑니다.</h2>
+                    <p><LocalizedMenuLabel label={"오늘도 우리 아이를 한 번 더 바라보는 마음으로."} /></p>
+                    <h2><LocalizedMenuLabel label={"댕다방은 더 나은 선택을"} /><br /><LocalizedMenuLabel label={"함께 만들어갑니다."} /></h2>
                 </div>
                 <div className={styles.closingActions}>
-                    <Link href="/products">상품 둘러보기</Link>
-                    <Link href="/partner">입점·제휴 제안하기</Link>
+                    <Link href="/products"><LocalizedMenuLabel label={"상품 둘러보기"} /></Link>
+                    <Link href="/partner"><LocalizedMenuLabel label={"입점·제휴 제안하기"} /></Link>
                 </div>
             </section>
         </div>

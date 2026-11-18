@@ -30,6 +30,7 @@ function Dropdown<T extends string>({
     onChange: (v: T) => void;
     ariaLabel: string;
 }) {
+    const { menuLabel: labelText } = useI18n();
     const [open, setOpen] = useState(false);
     const ref = useRef<HTMLDivElement>(null);
 
@@ -80,7 +81,7 @@ function Dropdown<T extends string>({
                                             : "text-neutral-700 hover:bg-neutral-100"
                                     }`}
                                 >
-                                    <span>{o.label}</span>
+                                    <span>{labelText(o.label)}</span>
                                     {sel && <i className="fa-solid fa-check absolute right-3 text-xs" />}
                                 </button>
                             </li>
@@ -93,6 +94,7 @@ function Dropdown<T extends string>({
 }
 
 export default function RegionModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+    const { menuLabel: labelText } = useI18n();
     const { locale, setLocale } = useI18n();
     const { country, setCountry } = useRegion();
     const en = locale === "en";
@@ -142,7 +144,7 @@ export default function RegionModal({ open, onClose }: { open: boolean; onClose:
                         <Image src="/images/ui/lang-globe-128.webp" alt="" fill sizes="40px" className="object-contain" />
                     </span>
                     <h2 className="flex-1 text-lg font-black text-neutral-950">
-                        {en ? "Country & Language" : "국가 및 언어 선택"}
+                        {labelText(en ? "Country & Language" : "국가 및 언어 선택")}
                     </h2>
                     <button
                         type="button"
@@ -158,7 +160,7 @@ export default function RegionModal({ open, onClose }: { open: boolean; onClose:
                     {/* 국가/지역 — 드롭다운(선택 시 통화·언어 자동 적용) */}
                     <section>
                         <p className="mb-1.5 text-xs font-black uppercase tracking-wide text-neutral-400">
-                            {en ? "Country / Region" : "국가 / 지역"}
+                            {labelText(en ? "Country / Region" : "국가 / 지역")}
                         </p>
                         <Dropdown
                             value={country}
@@ -171,7 +173,7 @@ export default function RegionModal({ open, onClose }: { open: boolean; onClose:
                     {/* 통화 — 국가에 따라 자동(표시 전용) */}
                     <section>
                         <p className="mb-1.5 text-xs font-black uppercase tracking-wide text-neutral-400">
-                            {en ? "Currency (auto)" : "통화 (자동)"}
+                            {labelText(en ? "Currency (auto)" : "통화 (자동)")}
                         </p>
                         <div className="flex items-center justify-center gap-2 rounded-2xl bg-neutral-50 px-4 py-3 text-sm font-black text-neutral-800">
                             <i className="fa-solid fa-coins text-neutral-400" />
@@ -182,7 +184,7 @@ export default function RegionModal({ open, onClose }: { open: boolean; onClose:
                     {/* 언어 — 드롭다운(자동 적용 후 수동 변경 가능) */}
                     <section>
                         <p className="mb-1.5 text-xs font-black uppercase tracking-wide text-neutral-400">
-                            {en ? "Language" : "언어"}
+                            {labelText(en ? "Language" : "언어")}
                         </p>
                         <Dropdown
                             value={locale}

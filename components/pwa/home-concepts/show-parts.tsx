@@ -11,6 +11,7 @@
  * 모양: 다이어리 속지(점 모눈, 줄 없음) · 마스킹테이프 손잡이 · 폴라로이드 · 메모지 · 라벨 스티커 · 체크 스티커 · 자수 와펜 버튼.
  */
 
+import { useI18n } from "@/lib/i18n";
 import Image from "next/image";
 import { PostPhoto, AuthorDot, Sheet } from "./show-parts-base";
 export { PostPhoto, AuthorDot, Sheet, SHOW_PARTS_CSS } from "./show-parts-base";
@@ -79,6 +80,7 @@ export function ShowComposer({ open, onClose, onPublish, topicTitle, defaultTopi
     onPublish: (r: ComposerResult, onProgress: (percent: number) => void) => Promise<void>;
     topicTitle: string | null; defaultTopic: boolean; defaultName: string; pets: { id: number; name: string; breed?: string }[];
 }) {
+    const { menuLabel: labelText } = useI18n();
     const [photo, setPhoto] = useState<string>(""); // 미리보기(blob 주소)
     const [file, setFile] = useState<File | null>(null);
     const [text, setText] = useState("");
@@ -133,8 +135,8 @@ export function ShowComposer({ open, onClose, onPublish, topicTitle, defaultTopi
     };
 
     return (
-        <Sheet open={open} onClose={progress === null ? onClose : () => {}} label="오늘의 한 장 올리기"
-            title={<><p className="ah-display text-[19px]"><span className="st-marker">오늘의 한 장 올리기</span></p><p className="ah-light mt-0.5 text-[11.5px]" style={{ color: TEXT_SOFT }}>회원 공개 게시 · 사진 1장</p></>}>
+        <Sheet open={open} onClose={progress === null ? onClose : () => {}} label={labelText("오늘의 한 장 올리기")}
+            title={<><p className="ah-display text-[19px]"><span className="st-marker">{labelText("오늘의 한 장 올리기")}</span></p><p className="ah-light mt-0.5 text-[11.5px]" style={{ color: TEXT_SOFT }}>{labelText("회원 공개 게시 · 사진 1장")}</p></>}>
             {/* 사진 — 빈 폴라로이드 칸, 고르면 테이프로 붙음 */}
             <div className="flex justify-center pt-2">
                 <label className={`sp-pol relative block w-[68%] cursor-pointer bg-white p-2 pb-7 ${photo ? "is-on" : ""}`} style={{ rotate: "-1.5deg" }}>
@@ -143,35 +145,35 @@ export function ShowComposer({ open, onClose, onPublish, topicTitle, defaultTopi
                         {photo ? <PostPhoto src={photo} sizes="60vw" /> : (
                             <span className="flex flex-col items-center gap-1.5 text-center">
                                 <Image src="/images/ui/stickers/caretalk-photo.webp" alt="" width={48} height={48} className="h-12 w-12" />
-                                <span className="ah-display text-[13px] text-[#c4567a]">사진을 선택해 주세요</span>
-                                <span className="ah-light text-[11px]" style={{ color: TEXT_SOFT }}>JPG · PNG · WebP / 최대 8MB</span>
+                                <span className="ah-display text-[13px] text-[#c4567a]">{labelText("사진을 선택해 주세요")}</span>
+                                <span className="ah-light text-[11px]" style={{ color: TEXT_SOFT }}>{labelText("JPG · PNG · WebP / 최대 8MB")}</span>
                             </span>
                         )}
                     </span>
-                    <span className="ah-display absolute inset-x-0 bottom-1.5 text-center text-[12px] text-[#e0557f]">{photo ? "다른 사진 고르기" : "눌러서 고르기"}</span>
+                    <span className="ah-display absolute inset-x-0 bottom-1.5 text-center text-[12px] text-[#e0557f]">{labelText(photo ? "다른 사진 고르기" : "눌러서 고르기")}</span>
                     <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif" className="hidden" disabled={progress !== null} onChange={(e) => { void pickPhoto(e.target.files?.[0]); e.currentTarget.value = ""; }} />
                 </label>
             </div>
-            {photo ? <p className="mt-2 text-center"><button type="button" onClick={clearPhoto} disabled={progress !== null} className="ah-light text-[11.5px] text-[#a8968d] underline decoration-dashed underline-offset-2">선택한 사진 지우기</button></p> : null}
+            {photo ? <p className="mt-2 text-center"><button type="button" onClick={clearPhoto} disabled={progress !== null} className="ah-light text-[11.5px] text-[#a8968d] underline decoration-dashed underline-offset-2">{labelText("선택한 사진 지우기")}</button></p> : null}
 
             {/* 오늘의 이야기 — 메모지 */}
             <label className="sp-memo relative mt-5 block rounded-[12px] px-3.5 pb-2 pt-3" style={{ rotate: "0.4deg" }}>
-                <span className="ah-display flex items-center justify-between text-[13px] text-[#8f5e12]">오늘의 이야기<span className="ah-light text-[11px]">{text.length}/500</span></span>
+                <span className="ah-display flex items-center justify-between text-[13px] text-[#8f5e12]">{labelText("오늘의 이야기")}<span className="ah-light text-[11px]">{text.length}/500</span></span>
                 <textarea value={text} onChange={(e) => setText(e.target.value.slice(0, 500))} rows={4} maxLength={500} disabled={locked}
-                    placeholder="산책에서 만난 작은 순간, 귀여운 표정, 함께 기억하고 싶은 오늘을 적어 주세요."
+                    placeholder={labelText("산책에서 만난 작은 순간, 귀여운 표정, 함께 기억하고 싶은 오늘을 적어 주세요.")}
                     className="ah-light mt-1.5 w-full resize-none bg-transparent text-[14px] leading-relaxed outline-none placeholder:text-[#c9b48a]" />
             </label>
 
             {/* 피드에 보일 이름 — 라벨 스티커 */}
             <label className="sp-label mt-3 flex h-[48px] items-stretch">
-                <span className="sp-stub grid w-24 shrink-0 place-items-center text-[11.5px]"><span className="ah-display">피드 이름</span></span>
-                <input value={shownName} onChange={(e) => { setNameTouched(true); setName(e.target.value.slice(0, 30)); }} maxLength={30} disabled={locked} placeholder="피드에 보일 이름" className="ah-light min-w-0 flex-1 bg-transparent px-3.5 text-[14px] outline-none" />
+                <span className="sp-stub grid w-24 shrink-0 place-items-center text-[11.5px]"><span className="ah-display">{labelText("피드 이름")}</span></span>
+                <input value={shownName} onChange={(e) => { setNameTouched(true); setName(e.target.value.slice(0, 30)); }} maxLength={30} disabled={locked} placeholder={labelText("피드에 보일 이름")} className="ah-light min-w-0 flex-1 bg-transparent px-3.5 text-[14px] outline-none" />
             </label>
 
             {/* 함께 나온 반려견 — 스티커 고르기 */}
-            <p className="ah-display mt-4 text-[13px] text-[#b07a8a]">함께 나온 반려견 <span className="ah-light text-[11px]" style={{ color: TEXT_SOFT }}>선택</span></p>
+            <p className="ah-display mt-4 text-[13px] text-[#b07a8a]">{labelText("함께 나온 반려견")} <span className="ah-light text-[11px]" style={{ color: TEXT_SOFT }}>{labelText("선택")}</span></p>
             <div className="mt-2 flex flex-wrap gap-2">
-                <button type="button" onClick={() => setPet(-1)} disabled={locked} className={`sp-pet ah-display rounded-full px-3 py-1.5 text-[12.5px] ${pet === -1 ? "is-on" : ""}`}>표시하지 않기</button>
+                <button type="button" onClick={() => setPet(-1)} disabled={locked} className={`sp-pet ah-display rounded-full px-3 py-1.5 text-[12.5px] ${pet === -1 ? "is-on" : ""}`}>{labelText("표시하지 않기")}</button>
                 {pets.map((p, i) => (
                     <button key={p.id} type="button" onClick={() => { setPet(i); haptic("light"); }} disabled={locked} className={`sp-pet ah-display rounded-full px-3 py-1.5 text-[12.5px] ${pet === i ? "is-on" : ""}`}>
                         <i aria-hidden="true" className="fa-solid fa-paw mr-1 text-[10px]" />{p.name}{p.breed ? ` · ${p.breed}` : ""}
@@ -181,20 +183,20 @@ export function ShowComposer({ open, onClose, onPublish, topicTitle, defaultTopi
 
             {/* 동의 — 댕주제 참여(주제 있을 때) · 필수 공개 게시 · 선택 공식 채널 */}
             <div className="sp-paper mt-4 space-y-3 rounded-[14px] px-3.5 py-3.5">
-                {topicTitle ? <CheckSticker checked={joinTopic} onChange={setJoinTopic} disabled={locked}><b className="ah-display">오늘의 댕주제 참여</b> · &lsquo;{topicTitle}&rsquo;</CheckSticker> : null}
-                <CheckSticker checked={agree} onChange={setAgree} disabled={locked}><b className="ah-display text-[#e0557f]">필수</b> {CONSENT_PUBLIC} <a href="/privacy/" className="ah-display text-[#e0557f] underline underline-offset-2">개인정보처리방침</a></CheckSticker>
-                <CheckSticker checked={channel} onChange={setChannel} disabled={locked}><b className="ah-display">선택 · 기본 해제</b> {CONSENT_CHANNEL}</CheckSticker>
+                {topicTitle ? <CheckSticker checked={joinTopic} onChange={setJoinTopic} disabled={locked}><b className="ah-display">{labelText("오늘의 댕주제 참여")}</b> · &lsquo;{topicTitle}&rsquo;</CheckSticker> : null}
+                <CheckSticker checked={agree} onChange={setAgree} disabled={locked}><b className="ah-display text-[#e0557f]">{labelText("필수")}</b> {CONSENT_PUBLIC} <a href="/privacy/" className="ah-display text-[#e0557f] underline underline-offset-2">{labelText("개인정보처리방침")}</a></CheckSticker>
+                <CheckSticker checked={channel} onChange={setChannel} disabled={locked}><b className="ah-display">{labelText("선택 · 기본 해제")}</b> {CONSENT_CHANNEL}</CheckSticker>
             </div>
 
             {error ? <p role="alert" className="sp-err st-postit ah-light mt-4 px-3.5 py-2.5 text-[12.5px]" style={{ background: "#ffd6e2", color: "#c4456f" }}>{error}</p> : null}
             {progress !== null ? (
                 <div className="mt-4" role="status" aria-live="polite">
-                    <p className="ah-display text-[12.5px] text-[#c4567a]">댕자랑 올리는 중 · {progress}%</p>
+                    <p className="ah-display text-[12.5px] text-[#c4567a]">{labelText("댕자랑 올리는 중 ·")} {progress}%</p>
                     <span className="mt-1.5 block h-2 overflow-hidden rounded-full bg-[#fbe4ea]"><span className="block h-full rounded-full bg-[linear-gradient(90deg,#ff9cb8,#e0557f)] transition-[width] duration-100" style={{ width: `${progress}%` }} /></span>
                 </div>
             ) : null}
             <div className="mt-4">
-                <Patch onClick={() => void submit()} disabled={progress !== null}>{progress !== null ? "댕자랑 올리는 중" : "오늘의 댕자랑 공개하기"}<i aria-hidden="true" className="fa-solid fa-paw text-[14px]" /></Patch>
+                <Patch onClick={() => void submit()} disabled={progress !== null}>{labelText(progress !== null ? "댕자랑 올리는 중" : "오늘의 댕자랑 공개하기")}<i aria-hidden="true" className="fa-solid fa-paw text-[14px]" /></Patch>
             </div>
         </Sheet>
     );
@@ -205,6 +207,7 @@ export function PostDetail({ post, boned, member, confirmDelete, onBone, onFollo
     post: Post; boned: boolean; member: boolean; confirmDelete: boolean;
     onBone: () => void; onFollow: () => void; onAuthor: () => void; onShare: () => void; onReport: () => void; onDelete: () => void; onConfirmDelete: (v: boolean) => void;
 }) {
+    const { menuLabel: labelText } = useI18n();
     return (
         <div className="pk-body px-4 pb-2 pt-4" style={{ color: TEXT }}>
             {/* 작성자 줄 */}
@@ -212,12 +215,12 @@ export function PostDetail({ post, boned, member, confirmDelete, onBone, onFollo
                 <button type="button" onClick={onAuthor} className="flex min-w-0 flex-1 items-center gap-2.5 text-left" aria-label={`${post.author} 프로필 보기`}>
                     <AuthorDot name={post.author} />
                     <span className="min-w-0">
-                        <span className="ah-display flex items-center gap-1.5 text-[14.5px]">{post.author}{post.mine ? <span className="rounded-full bg-[#ffe1ea] px-1.5 py-px text-[10px] text-[#e0557f]">나</span> : null}</span>
-                        <span className="ah-light block text-[11px]" style={{ color: TEXT_SOFT }}>팔로워 {post.followers.toLocaleString("ko-KR")}명 · {post.date}</span>
+                        <span className="ah-display flex items-center gap-1.5 text-[14.5px]">{post.author}{post.mine ? <span className="rounded-full bg-[#ffe1ea] px-1.5 py-px text-[10px] text-[#e0557f]">{labelText("나")}</span> : null}</span>
+                        <span className="ah-light block text-[11px]" style={{ color: TEXT_SOFT }}>{labelText("팔로워")} {post.followers.toLocaleString("ko-KR")}{labelText("명 ·")} {post.date}</span>
                     </span>
                 </button>
                 {!post.mine ? (
-                    <button type="button" onClick={onFollow} className={`sp-follow ah-display shrink-0 rounded-full px-3 py-1.5 text-[12px] ${post.followed ? "is-on" : ""}`}>{post.followed ? "팔로잉" : "팔로우"}</button>
+                    <button type="button" onClick={onFollow} className={`sp-follow ah-display shrink-0 rounded-full px-3 py-1.5 text-[12px] ${post.followed ? "is-on" : ""}`}>{labelText(post.followed ? "팔로잉" : "팔로우")}</button>
                 ) : null}
             </div>
             {/* 사진 — 테이프로 붙인 폴라로이드 */}
@@ -229,7 +232,7 @@ export function PostDetail({ post, boned, member, confirmDelete, onBone, onFollo
             {post.pet || post.topic ? (
                 <p className="mt-3 flex flex-wrap gap-1.5">
                     {post.pet ? <span className="ah-display rounded-full bg-[#fff1c4] px-2.5 py-0.5 text-[11px] text-[#8f5e12]"><i aria-hidden="true" className="fa-solid fa-paw mr-1 text-[9px]" />{post.pet}{post.breed ? ` · ${post.breed}` : ""}</span> : null}
-                    {post.topic ? <span className="ah-display rounded-full bg-[#ffe1ea] px-2.5 py-0.5 text-[11px] text-[#e0557f]">오늘의 댕주제</span> : null}
+                    {post.topic ? <span className="ah-display rounded-full bg-[#ffe1ea] px-2.5 py-0.5 text-[11px] text-[#e0557f]">{labelText("오늘의 댕주제")}</span> : null}
                 </p>
             ) : null}
             {/* 글 전체 */}
@@ -237,26 +240,26 @@ export function PostDetail({ post, boned, member, confirmDelete, onBone, onFollo
             {/* 응원 · 공유 · 신고/삭제 */}
             <div className="mt-4 flex items-center gap-2">
                 <button type="button" aria-pressed={boned} onClick={onBone} className={`sp-bone ah-display flex items-center gap-1.5 rounded-full px-3.5 py-2 text-[13px] ${boned ? "is-on" : ""}`}>
-                    <i aria-hidden="true" className={`fa-solid fa-bone ${boned ? "hc-pop" : ""}`} />응원 {post.bones}
+                    <i aria-hidden="true" className={`fa-solid fa-bone ${boned ? "hc-pop" : ""}`} />{labelText("응원")} {post.bones}
                 </button>
-                <button type="button" onClick={onShare} className="sp-ghost ah-display flex items-center gap-1.5 rounded-full px-3.5 py-2 text-[13px]"><i aria-hidden="true" className="fa-solid fa-share-nodes text-[12px]" />공유</button>
+                <button type="button" onClick={onShare} className="sp-ghost ah-display flex items-center gap-1.5 rounded-full px-3.5 py-2 text-[13px]"><i aria-hidden="true" className="fa-solid fa-share-nodes text-[12px]" />{labelText("공유")}</button>
                 <span className="flex-1" />
                 {post.canDelete ?? post.mine ? (
-                    <button type="button" onClick={() => onConfirmDelete(true)} className="ah-light text-[12px] text-[#a8968d] underline decoration-dashed underline-offset-2">삭제</button>
+                    <button type="button" onClick={() => onConfirmDelete(true)} className="ah-light text-[12px] text-[#a8968d] underline decoration-dashed underline-offset-2">{labelText("삭제")}</button>
                 ) : (
-                    <button type="button" onClick={onReport} className="ah-light text-[12px] text-[#a8968d] underline decoration-dashed underline-offset-2">신고</button>
+                    <button type="button" onClick={onReport} className="ah-light text-[12px] text-[#a8968d] underline decoration-dashed underline-offset-2">{labelText("신고")}</button>
                 )}
             </div>
             {(post.canDelete ?? post.mine) && confirmDelete ? (
                 <div className="st-postit mt-3 px-3.5 pb-3 pt-3" style={{ background: "#ffe1ea", rotate: "-0.5deg" }}>
-                    <p className="ah-light text-[12.5px] text-[#c4456f]">이 댕자랑을 삭제할까요? 삭제하면 되돌릴 수 없습니다.</p>
+                    <p className="ah-light text-[12.5px] text-[#c4456f]">{labelText("이 댕자랑을 삭제할까요? 삭제하면 되돌릴 수 없습니다.")}</p>
                     <div className="mt-2.5 grid grid-cols-2 gap-2">
-                        <Patch tone="cream" small onClick={() => onConfirmDelete(false)}>취소</Patch>
-                        <Patch small onClick={onDelete}>삭제</Patch>
+                        <Patch tone="cream" small onClick={() => onConfirmDelete(false)}>{labelText("취소")}</Patch>
+                        <Patch small onClick={onDelete}>{labelText("삭제")}</Patch>
                     </div>
                 </div>
             ) : null}
-            {!member ? <p className="ah-light mt-3 text-[11.5px]" style={{ color: TEXT_SOFT }}>응원 · 팔로우 · 신고는 로그인 후 할 수 있어요</p> : null}
+            {!member ? <p className="ah-light mt-3 text-[11.5px]" style={{ color: TEXT_SOFT }}>{labelText("응원 · 팔로우 · 신고는 로그인 후 할 수 있어요")}</p> : null}
         </div>
     );
 }
@@ -270,10 +273,11 @@ export function ProfileSheet({ open, onClose, head, profile, error, onFollow, on
     /** 불러오기 실패 뒤 다시 — 웹 ShowcaseAuthorProfileModal "다시 불러오기"(retryKey) 와 같음 */
     onRetry: () => void;
 }) {
+    const { menuLabel: labelText } = useI18n();
     if (!head) return null;
     const stats: [string, number | null][] = [["게시물", profile?.postCount ?? null], ["팔로워", profile?.followers ?? null], ["받은 응원", profile?.received ?? null]];
     return (
-        <Sheet open={open} onClose={onClose} label="작성자 프로필"
+        <Sheet open={open} onClose={onClose} label={labelText("작성자 프로필")}
             title={<div className="flex items-center gap-2.5"><AuthorDot name={head.name} size="h-11 w-11 text-[17px]" /><p className="ah-display text-[18px]">{head.name}</p></div>}>
             <div className="mt-1 grid grid-cols-3 gap-2 text-center">
                 {stats.map(([k, v]) => (
@@ -284,19 +288,19 @@ export function ProfileSheet({ open, onClose, head, profile, error, onFollow, on
                 <>
                     <p role="alert" className="ah-light mt-3 text-center text-[12px] text-[#c4456f]">{error}</p>
                     {/* 웹 프로필 창과 같은 "다시 불러오기" */}
-                    <div className="mx-auto mt-2 w-fit"><Patch tone="cream" small onClick={onRetry}>다시 불러오기<i aria-hidden="true" className="fa-solid fa-rotate-right text-[11px]" /></Patch></div>
+                    <div className="mx-auto mt-2 w-fit"><Patch tone="cream" small onClick={onRetry}>{labelText("다시 불러오기")}<i aria-hidden="true" className="fa-solid fa-rotate-right text-[11px]" /></Patch></div>
                 </>
             ) : null}
             {profile ? (
                 <div className="mt-3">
-                    {profile.isMe ? <p className="ah-display text-center text-[13px] text-[#e0557f]">내 프로필</p> : (
-                        <Patch tone={profile.followed ? "cream" : "pink"} small onClick={onFollow}>{profile.followed ? "팔로잉" : "팔로우"}</Patch>
+                    {profile.isMe ? <p className="ah-display text-center text-[13px] text-[#e0557f]">{labelText("내 프로필")}</p> : (
+                        <Patch tone={profile.followed ? "cream" : "pink"} small onClick={onFollow}>{labelText(profile.followed ? "팔로잉" : "팔로우")}</Patch>
                     )}
                 </div>
             ) : null}
-            <p className="ah-display mt-5 text-[13px] text-[#b07a8a]">최근 댕자랑</p>
-            {profile && profile.posts.length === 0 ? <p className="ah-light mt-2 text-[12.5px]" style={{ color: TEXT_SOFT }}>아직 공개한 댕자랑이 없어요.</p> : null}
-            {!profile && !error ? <p className="ah-light mt-2 text-[12.5px]" style={{ color: TEXT_SOFT }}>프로필을 불러오고 있어요.</p> : null}
+            <p className="ah-display mt-5 text-[13px] text-[#b07a8a]">{labelText("최근 댕자랑")}</p>
+            {profile && profile.posts.length === 0 ? <p className="ah-light mt-2 text-[12.5px]" style={{ color: TEXT_SOFT }}>{labelText("아직 공개한 댕자랑이 없어요.")}</p> : null}
+            {!profile && !error ? <p className="ah-light mt-2 text-[12.5px]" style={{ color: TEXT_SOFT }}>{labelText("프로필을 불러오고 있어요.")}</p> : null}
             <ul className="mt-2 grid grid-cols-3 gap-2">
                 {(profile?.posts ?? []).slice(0, 12).map((p, i) => (
                     <li key={p.id}>
@@ -313,6 +317,7 @@ export function ProfileSheet({ open, onClose, head, profile, error, onFollow, on
 
 /* ───────── 공유 ───────── */
 export function ShareSheet({ open, onClose, target }: { open: boolean; onClose: () => void; target: ShareTarget | null }) {
+    const { menuLabel: labelText } = useI18n();
     const [notice, setNotice] = useState<{ tone: "ok" | "info" | "err"; text: string } | null>(null);
     const [busy, setBusy] = useState<"native" | "copy" | "">(""); // 웹 ShowcaseShareModal busy 와 같음 — 공유 · 복사 겹쳐 누르지 않게
     if (!target) return null;
@@ -344,8 +349,8 @@ export function ShareSheet({ open, onClose, target }: { open: boolean; onClose: 
         setBusy("");
     };
     return (
-        <Sheet open={open} onClose={() => { if (busy) return; setNotice(null); onClose(); }} label="댕자랑 공유카드"
-            title={<p className="ah-display text-[18px]"><span className="st-marker">댕자랑 공유카드</span></p>}>
+        <Sheet open={open} onClose={() => { if (busy) return; setNotice(null); onClose(); }} label={labelText("댕자랑 공유카드")}
+            title={<p className="ah-display text-[18px]"><span className="st-marker">{labelText("댕자랑 공유카드")}</span></p>}>
             {/* 미리보기 카드 */}
             <div className="sp-paper mt-1 flex items-center gap-3 rounded-[14px] p-3" style={{ rotate: "-0.5deg" }}>
                 {target.img ? <span className="relative block h-16 w-16 shrink-0 overflow-hidden rounded-[8px] bg-[#fff3e8]"><PostPhoto src={target.img} sizes="64px" thumbnail /></span>
@@ -353,11 +358,11 @@ export function ShareSheet({ open, onClose, target }: { open: boolean; onClose: 
                 <p className="ah-light line-clamp-3 text-[12.5px] leading-snug">{target.text}</p>
             </div>
             <div className="mt-4 grid grid-cols-2 gap-2.5">
-                <Patch small onClick={() => void native()} disabled={Boolean(busy)}>공유 창 열기<i aria-hidden="true" className={`fa-solid ${busy === "native" ? "fa-circle-notch fa-spin" : "fa-share-nodes"} text-[12px]`} /></Patch>
-                <Patch tone="cream" small onClick={() => void copy()} disabled={Boolean(busy)}>링크 복사<i aria-hidden="true" className={`fa-solid ${busy === "copy" ? "fa-circle-notch fa-spin" : "fa-link"} text-[12px]`} /></Patch>
+                <Patch small onClick={() => void native()} disabled={Boolean(busy)}>{labelText("공유 창 열기")}<i aria-hidden="true" className={`fa-solid ${busy === "native" ? "fa-circle-notch fa-spin" : "fa-share-nodes"} text-[12px]`} /></Patch>
+                <Patch tone="cream" small onClick={() => void copy()} disabled={Boolean(busy)}>{labelText("링크 복사")}<i aria-hidden="true" className={`fa-solid ${busy === "copy" ? "fa-circle-notch fa-spin" : "fa-link"} text-[12px]`} /></Patch>
             </div>
             {notice ? <p role="status" className={`ah-light mt-3 text-center text-[12px] ${notice.tone === "err" ? "text-[#c4456f]" : notice.tone === "ok" ? "text-[#1f7a59]" : "text-[#7a6a63]"}`}>{notice.text}</p> : null}
-            <input readOnly value={url} aria-label="공유할 정확한 댕자랑 링크" className="sp-url ah-light mt-3 w-full rounded-[10px] px-3 py-2 text-[11px]" onFocus={(e) => e.currentTarget.select()} />
+            <input readOnly value={url} aria-label={labelText("공유할 정확한 댕자랑 링크")} className="sp-url ah-light mt-3 w-full rounded-[10px] px-3 py-2 text-[11px]" onFocus={(e) => e.currentTarget.select()} />
         </Sheet>
     );
 }
@@ -365,6 +370,7 @@ export function ShareSheet({ open, onClose, target }: { open: boolean; onClose: 
 /* ───────── 신고 ───────── */
 export type ReportReason = (typeof REPORT_REASONS)[number]["value"];
 export function ReportSheet({ open, onClose, onSubmit }: { open: boolean; onClose: () => void; onSubmit: (reason: ReportReason, detail: string) => Promise<void> }) {
+    const { menuLabel: labelText } = useI18n();
     const [reason, setReason] = useState<ReportReason>("spam");
     const [detail, setDetail] = useState("");
     const [busy, setBusy] = useState(false);
@@ -380,20 +386,20 @@ export function ReportSheet({ open, onClose, onSubmit }: { open: boolean; onClos
             .finally(() => setBusy(false));
     };
     return (
-        <Sheet open={open} onClose={onClose} label="게시물 신고" title={<p className="ah-display text-[18px]"><span className="st-marker">게시물 신고</span></p>}>
-            <p className="ah-display mt-1 text-[13px] text-[#b07a8a]">신고 이유</p>
+        <Sheet open={open} onClose={onClose} label={labelText("게시물 신고")} title={<p className="ah-display text-[18px]"><span className="st-marker">{labelText("게시물 신고")}</span></p>}>
+            <p className="ah-display mt-1 text-[13px] text-[#b07a8a]">{labelText("신고 이유")}</p>
             <div className="mt-2 flex flex-wrap gap-2">
                 {REPORT_REASONS.map((r) => (
                     <button key={r.value} type="button" aria-pressed={reason === r.value} onClick={() => { setReason(r.value); haptic("light"); }} className={`sp-pet ah-display rounded-full px-3 py-1.5 text-[12.5px] ${reason === r.value ? "is-on" : ""}`}>{r.label}</button>
                 ))}
             </div>
             <label className="sp-memo mt-4 block rounded-[12px] px-3.5 pb-2 pt-3">
-                <span className="ah-display flex items-center justify-between text-[13px] text-[#8f5e12]">상세 내용 <span className="ah-light text-[11px]">선택 · {detail.length}/300</span></span>
+                <span className="ah-display flex items-center justify-between text-[13px] text-[#8f5e12]">{labelText("상세 내용")} <span className="ah-light text-[11px]">{labelText("선택 ·")} {detail.length}/300</span></span>
                 <textarea value={detail} onChange={(e) => setDetail(e.target.value.slice(0, 300))} rows={4} maxLength={300} className="ah-light mt-1.5 w-full resize-none bg-transparent text-[14px] leading-relaxed outline-none" />
             </label>
-            <p className="ah-light mt-2 text-[11.5px]" style={{ color: TEXT_SOFT }}>신고는 운영자 확인용이며 작성자에게 신고자 정보가 공개되지 않습니다.</p>
+            <p className="ah-light mt-2 text-[11.5px]" style={{ color: TEXT_SOFT }}>{labelText("신고는 운영자 확인용이며 작성자에게 신고자 정보가 공개되지 않습니다.")}</p>
             {error ? <p role="alert" className="ah-light mt-2 text-[12px] text-[#c4456f]">{error}</p> : null}
-            <div className="mt-4"><Patch onClick={send} disabled={busy}>{busy ? "접수 중" : "신고 접수"}<i aria-hidden="true" className="fa-solid fa-flag text-[12px]" /></Patch></div>
+            <div className="mt-4"><Patch onClick={send} disabled={busy}>{labelText(busy ? "접수 중" : "신고 접수")}<i aria-hidden="true" className="fa-solid fa-flag text-[12px]" /></Patch></div>
         </Sheet>
     );
 }
@@ -408,6 +414,7 @@ export function GuestPickSheet({ open, onClose, goodsName, withGoods, loginHref,
     onSendCode: (email: string) => Promise<{ verificationId: string; maskedEmail: string }>;
     onConfirm: (verificationId: string, email: string, code: string) => Promise<void>;
 }) {
+    const { menuLabel: labelText } = useI18n();
     const [stage, setStage] = useState<"email" | "code">("email");
     const [email, setEmail] = useState("");
     const [code, setCode] = useState("");
@@ -438,33 +445,33 @@ export function GuestPickSheet({ open, onClose, goodsName, withGoods, loginHref,
             .catch((failure) => { setBusy(false); setError(failure instanceof Error ? failure.message : "인증을 확인하지 못했어요."); });
     };
     return (
-        <Sheet open={open} onClose={close} label="비회원 이메일 확인"
-            title={<><p className="ah-display text-[18px]"><span className="st-marker">이 굿즈 고르기</span></p><p className="ah-light mt-0.5 text-[12px]" style={{ color: TEXT_SOFT }}>{goodsName}</p></>}>
+        <Sheet open={open} onClose={close} label={labelText("비회원 이메일 확인")}
+            title={<><p className="ah-display text-[18px]"><span className="st-marker">{labelText("이 굿즈 고르기")}</span></p><p className="ah-light mt-0.5 text-[12px]" style={{ color: TEXT_SOFT }}>{goodsName}</p></>}>
             {/* 회원 — 로그인하고 바로 고르기 */}
-            <div className="mt-1"><Patch href={loginHref}>회원이라면 로그인하고 바로 고르기<i aria-hidden="true" className="fa-solid fa-paw text-[13px]" /></Patch></div>
+            <div className="mt-1"><Patch href={loginHref}>{labelText("회원이라면 로그인하고 바로 고르기")}<i aria-hidden="true" className="fa-solid fa-paw text-[13px]" /></Patch></div>
             <p className="ah-display my-4 flex items-center justify-center gap-2 text-[12px] text-[#c4567a]">
-                <i aria-hidden="true" className="fa-solid fa-paw text-[9px] opacity-60" />비회원은 이메일 확인 후 고르기<i aria-hidden="true" className="fa-solid fa-paw text-[9px] opacity-60" />
+                <i aria-hidden="true" className="fa-solid fa-paw text-[9px] opacity-60" />{labelText("비회원은 이메일 확인 후 고르기")}<i aria-hidden="true" className="fa-solid fa-paw text-[9px] opacity-60" />
             </p>
             {/* 비회원 — 이메일 1회 확인 */}
             <div className="sp-paper rounded-[14px] px-3.5 py-3.5">
-                <p className="ah-light text-[12px] leading-relaxed" style={{ color: TEXT_SOFT }}>중복 선택을 막고 내 선택을 다시 확인하기 위한 1회 인증이에요. 주문이나 결제는 발생하지 않습니다.</p>
+                <p className="ah-light text-[12px] leading-relaxed" style={{ color: TEXT_SOFT }}>{labelText("중복 선택을 막고 내 선택을 다시 확인하기 위한 1회 인증이에요. 주문이나 결제는 발생하지 않습니다.")}</p>
                 {stage === "email" ? (
                     <>
                         <label className="sp-label mt-3 flex h-[48px] items-stretch">
-                            <span className="sp-stub grid w-14 shrink-0 place-items-center text-[11.5px]"><span className="ah-display">이메일</span></span>
+                            <span className="sp-stub grid w-14 shrink-0 place-items-center text-[11.5px]"><span className="ah-display">{labelText("이메일")}</span></span>
                             <input type="email" inputMode="email" autoComplete="email" value={email} onChange={(e) => { setEmail(e.target.value); setError(""); }} placeholder="name@example.com" className="ah-light min-w-0 flex-1 bg-transparent px-3.5 text-[14px] outline-none" />
                         </label>
-                        <div className="mt-3"><Patch tone="cream" small onClick={send} disabled={busy}>{busy ? "발송 중…" : "인증번호 받기"}<i aria-hidden="true" className="fa-solid fa-envelope text-[11px]" /></Patch></div>
+                        <div className="mt-3"><Patch tone="cream" small onClick={send} disabled={busy}>{labelText(busy ? "발송 중…" : "인증번호 받기")}<i aria-hidden="true" className="fa-solid fa-envelope text-[11px]" /></Patch></div>
                     </>
                 ) : (
                     <>
-                        <p className="ah-display mt-3 text-[12.5px]">{sent?.maskedEmail || email.trim()}<span className="ah-light">로 보낸 6자리 번호를 입력해 주세요.</span></p>
+                        <p className="ah-display mt-3 text-[12.5px]">{sent?.maskedEmail || email.trim()}<span className="ah-light">{labelText("로 보낸 6자리 번호를 입력해 주세요.")}</span></p>
                         <label className="sp-label mt-2.5 flex h-[48px] items-stretch">
-                            <span className="sp-stub grid w-16 shrink-0 place-items-center text-[11.5px]"><span className="ah-display">인증번호</span></span>
+                            <span className="sp-stub grid w-16 shrink-0 place-items-center text-[11.5px]"><span className="ah-display">{labelText("인증번호")}</span></span>
                             <input inputMode="numeric" autoComplete="one-time-code" value={code} onChange={(e) => { setCode(e.target.value.replace(/\D/g, "").slice(0, 6)); setError(""); }} placeholder="000000" className="ah-display min-w-0 flex-1 bg-transparent px-3.5 text-[16px] tracking-[0.3em] outline-none" />
                         </label>
                         <div className="mt-3"><Patch small onClick={confirm} disabled={busy}>{busy ? "확인 중…" : withGoods ? "확인하고 이 굿즈 선택" : "확인하기"}<i aria-hidden="true" className="fa-solid fa-check text-[11px]" /></Patch></div>
-                        <p className="mt-2 text-center"><button type="button" disabled={busy} onClick={() => { setStage("email"); setCode(""); setError(""); setSent(null); }} className="ah-light text-[11.5px] text-[#a8968d] underline decoration-dashed underline-offset-2">이메일 다시 입력</button></p>
+                        <p className="mt-2 text-center"><button type="button" disabled={busy} onClick={() => { setStage("email"); setCode(""); setError(""); setSent(null); }} className="ah-light text-[11.5px] text-[#a8968d] underline decoration-dashed underline-offset-2">{labelText("이메일 다시 입력")}</button></p>
                     </>
                 )}
                 {error ? <p role="alert" className="ah-light mt-2.5 text-[12px] text-[#c4456f]">{error}</p> : null}

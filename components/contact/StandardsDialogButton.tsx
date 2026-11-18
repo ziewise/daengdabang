@@ -9,12 +9,14 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { BRAND_STANDARDS } from "@/lib/brand-standards";
 
 export default function StandardsDialogButton({ className, formHref, label = "댕다방의 선택 기준 보기" }: { className?: string; formHref?: string; label?: string }) {
+    const { menuLabel: labelText } = useI18n();
     const [open, setOpen] = useState(false);
     const openerRef = useRef<HTMLButtonElement>(null);
     const closeRef = useRef<HTMLButtonElement>(null);
@@ -52,15 +54,15 @@ export default function StandardsDialogButton({ className, formHref, label = "�
                     }}
                 >
                     <div className="sdm-dialog" role="dialog" aria-modal="true" aria-labelledby="sdm-title">
-                        <button ref={closeRef} type="button" className="sdm-close" onClick={() => setOpen(false)} aria-label="선택 기준 창 닫기">
+                        <button ref={closeRef} type="button" className="sdm-close" onClick={() => setOpen(false)} aria-label={labelText("선택 기준 창 닫기")}>
                             <i className="fa-solid fa-xmark" aria-hidden="true" />
                         </button>
 
                         {/* 머리 */}
                         <header className="sdm-head">
                             <p className="sdm-kicker">OUR STANDARD</p>
-                            <h2 id="sdm-title">댕다방이 상품을 고르는 <em>네 가지 기준</em></h2>
-                            <p>좋아 보이는 상품을 소개하는 데 그치지 않고, 반려견에게 왜 필요한지, 안심하고 사용할 수 있는지까지 살핍니다.</p>
+                            <h2 id="sdm-title">{labelText("댕다방이 상품을 고르는")} <em>{labelText("네 가지 기준")}</em></h2>
+                            <p>{labelText("좋아 보이는 상품을 소개하는 데 그치지 않고, 반려견에게 왜 필요한지, 안심하고 사용할 수 있는지까지 살핍니다.")}</p>
                         </header>
 
                         {/* 네 가지 기준 */}
@@ -73,7 +75,7 @@ export default function StandardsDialogButton({ className, formHref, label = "�
                                     </span>
                                     <span className="sdm-text">
                                         <small>{String(index + 1).padStart(2, "0")}</small>
-                                        <b>{item.title}</b>
+                                        <b>{labelText(item.title)}</b>
                                         <span>{item.short}</span>
                                     </span>
                                 </li>
@@ -82,14 +84,14 @@ export default function StandardsDialogButton({ className, formHref, label = "�
 
                         {/* 아래 — 제안 안내 · 단추 */}
                         <footer className="sdm-foot">
-                            <p><i className="fa-solid fa-lightbulb" aria-hidden="true" />제안서에 이 네 가지를 담아 주시면 검토가 더 빨라져요.</p>
+                            <p><i className="fa-solid fa-lightbulb" aria-hidden="true" />{labelText("제안서에 이 네 가지를 담아 주시면 검토가 더 빨라져요.")}</p>
                             <div className="sdm-actions">
                                 {formHref && (
                                     <a href={formHref} className="sdm-pill is-pink" onClick={() => setOpen(false)}>
-                                        제안서 작성하기<i className="fa-solid fa-pen" aria-hidden="true" />
+                                        {labelText("제안서 작성하기")}<i className="fa-solid fa-pen" aria-hidden="true" />
                                     </a>
                                 )}
-                                <Link href="/brand-story#bsw-standard" className="sdm-pill">브랜드 스토리에서 더 보기</Link>
+                                <Link href="/brand-story#bsw-standard" className="sdm-pill">{labelText("브랜드 스토리에서 더 보기")}</Link>
                             </div>
                         </footer>
                     </div>

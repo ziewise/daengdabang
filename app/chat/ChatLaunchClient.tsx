@@ -8,6 +8,7 @@
  * 모든 버튼은 기존 openChatWidget(케어톡 열기) · 메인 링크 그대로. 꾸밈 CSS 는 app/daily-web.css · app/lab-web.css.
  */
 
+import { useCareTalkCopy } from "@/hooks/useCareTalkCopy";
 import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
@@ -25,6 +26,7 @@ const CARE_TALK_TOPICS = [
 
 // Compatibility entry for saved /chat links. The global widget owns the only transcript.
 export default function ChatLaunchClient() {
+    const copy = useCareTalkCopy();
     const params = useSearchParams();
     const opened = useRef(false);
     useEffect(() => {
@@ -38,13 +40,13 @@ export default function ChatLaunchClient() {
         <section className="dw-csheet is-pink dw-chero ddb-hero-band" aria-labelledby="chat-launch-title">
             <div className="min-w-0">
                 <p className="ddb-crayon-kicker dw-kicker">DAENGDABANG LAB · CARE TALK</p>
-                <h1 id="chat-launch-title" className="ddb-crayon-title dw-h1">댕다방 <span className="ddb-crayon-underline">AI 상담</span></h1>
-                <p className="dw-lead">열린 케어톡 창에서 상담을 이어가세요. 다른 메뉴를 둘러보면서도 같은 창에서 대화할 수 있어요.</p>
+                <h1 id="chat-launch-title" className="ddb-crayon-title dw-h1">댕다방 <span className="ddb-crayon-underline">{copy("AI 상담")}</span></h1>
+                <p className="dw-lead">{copy("열린 케어톡 창에서 상담을 이어가세요. 다른 메뉴를 둘러보면서도 같은 창에서 대화할 수 있어요.")}</p>
                 <div className="lab-chat-actions">
                     <button type="button" onClick={() => openChatWidget()} className="ddb-crayon-link ddb-attention-cta dw-pill dw-pill-main">
-                        <i className="fa-solid fa-comment-dots mr-2" aria-hidden="true" />케어톡 열기
+                        <i className="fa-solid fa-comment-dots mr-2" aria-hidden="true" />{copy("케어톡 열기")}
                     </button>
-                    <Link href="/" className="ddb-motion-lift dw-pill">메인으로</Link>
+                    <Link href="/" className="ddb-motion-lift dw-pill">{copy("메인으로")}</Link>
                 </div>
             </div>
             <span className="dw-rring dw-chero-ring" aria-hidden="true">
@@ -58,16 +60,16 @@ export default function ChatLaunchClient() {
         <section aria-labelledby="chat-topics-title">
             <div className="dw-rhead">
                 <p className="ddb-crayon-kicker dw-kicker">ASK CARE TALK</p>
-                <h2 id="chat-topics-title" className="ddb-crayon-title ddb-crayon-underline dw-rhead-title">케어톡에서 이렇게 물어보세요</h2>
+                <h2 id="chat-topics-title" className="ddb-crayon-title ddb-crayon-underline dw-rhead-title">{copy("케어톡에서 이렇게 물어보세요")}</h2>
             </div>
             <ul className="dw-rounds">
                 {CARE_TALK_TOPICS.map((topic) => (
                     <li key={topic.title}>
-                        <button type="button" onClick={() => openChatWidget({ initialQuestion: topic.question })} className={`dw-round ${topic.tint}`}>
+                        <button type="button" onClick={() => openChatWidget({ initialQuestion: copy(topic.question) })} className={`dw-round ${topic.tint}`}>
                             <span className="dw-round-art" aria-hidden="true"><Image src={topic.art} alt="" width={112} height={112} /></span>
-                            <strong className="dw-round-title">{topic.title}</strong>
-                            <span className="dw-round-body">{topic.body}</span>
-                            <span className="dw-round-go">이 질문으로 물어보기 <i className="fa-solid fa-arrow-right text-[10px]" aria-hidden="true" /></span>
+                            <strong className="dw-round-title">{copy(topic.title)}</strong>
+                            <span className="dw-round-body">{copy(topic.body)}</span>
+                            <span className="dw-round-go">{copy("이 질문으로 물어보기")} <i className="fa-solid fa-arrow-right text-[10px]" aria-hidden="true" /></span>
                         </button>
                     </li>
                 ))}

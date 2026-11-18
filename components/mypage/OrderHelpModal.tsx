@@ -17,6 +17,7 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import Image from "next/image";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -68,6 +69,7 @@ export type OrderHelpLine = { name: string; option?: string; image?: string };
 const LINE_RETURN_HEAD = { kicker: "RETURN REQUEST", title: "반품 신청하기", sub: "이 상품으로 접수해요. 반품 사유와 상품 상태를 적어 주시면 협의 방법을 이메일로 안내해 드려요.", art: "/images/ui/web-cs-return-160.webp" };
 
 export default function OrderHelpModal({ order, line, preset, initialMode, onClose }: { order?: OrderHelpSummary; line?: OrderHelpLine; preset?: InquiryPreset; initialMode: "inquiry" | "return" | "exchange" | "cancel"; onClose: () => void }) {
+    const { menuLabel: labelText } = useI18n();
     const [mode, setMode] = useState<Mode>(initialMode);
     const titleId = useId();
     const closeRef = useRef<HTMLButtonElement>(null);
@@ -119,7 +121,7 @@ export default function OrderHelpModal({ order, line, preset, initialMode, onClo
                 <div className="ddb-pf-body" ref={bodyRef}>
                     {/* 주문 표(주문에서 연 창만) */}
                     {order && (
-                    <section className="ddb-oh-ticket" aria-label="문의할 주문">
+                    <section className="ddb-oh-ticket" aria-label={labelText("문의할 주문")}>
                         <span className="ddb-oh-thumb" aria-hidden="true">
                             {(line?.image ?? order.image)
                                 ? <Image src={(line?.image ?? order.image) as string} alt="" width={72} height={72} />
@@ -132,7 +134,7 @@ export default function OrderHelpModal({ order, line, preset, initialMode, onClo
                         </div>
                         <div className="ddb-oh-side">
                             <span className="ddb-oh-status">{order.statusLabel}</span>
-                            <span className="ddb-oh-no"><em>주문번호</em>{order.orderId}</span>
+                            <span className="ddb-oh-no"><em>{labelText("주문번호")}</em>{order.orderId}</span>
                         </div>
                     </section>
                     )}
@@ -141,7 +143,7 @@ export default function OrderHelpModal({ order, line, preset, initialMode, onClo
                         <>
                             {/* 네 단계 */}
                             <section className="ddb-oh-sec" aria-labelledby={`${titleId}-steps`}>
-                                <h3 id={`${titleId}-steps`} className="ddb-oh-h"><span>1</span>교환·반품은 이렇게 진행돼요</h3>
+                                <h3 id={`${titleId}-steps`} className="ddb-oh-h"><span>1</span>{labelText("교환·반품은 이렇게 진행돼요")}</h3>
                                 <ol className="ddb-oh-steps">
                                     {RETURN_STEPS.map((step, index) => (
                                         <li key={step.title} className={step.tint}>
@@ -158,7 +160,7 @@ export default function OrderHelpModal({ order, line, preset, initialMode, onClo
 
                             {/* 정책 — 묶음마다 쿠션 카드 */}
                             <section className="ddb-oh-sec" aria-labelledby={`${titleId}-policy`}>
-                                <h3 id={`${titleId}-policy`} className="ddb-oh-h"><span>2</span>꼭 확인해 주세요</h3>
+                                <h3 id={`${titleId}-policy`} className="ddb-oh-h"><span>2</span>{labelText("꼭 확인해 주세요")}</h3>
                                 <div className="ddb-oh-policy">
                                     <DeliveryReturnPolicyDetails includeDelivery={false} />
                                 </div>
@@ -169,8 +171,8 @@ export default function OrderHelpModal({ order, line, preset, initialMode, onClo
                                 {/* eslint-disable-next-line @next/next/no-img-element -- 작은 3D 그림 */}
                                 <img src="/images/ui/web-cs-refund-160.webp" alt="" aria-hidden="true" />
                                 <div>
-                                    <h3>환불 처리</h3>
-                                    <p>반품 상품 회수와 검수가 완료되면 영업일 기준 3일 이내에 환불을 진행합니다. 결제 수단에 따라 카드 승인 취소 또는 계좌 환불 등의 처리 방식과 소요 시간이 다를 수 있습니다.</p>
+                                    <h3>{labelText("환불 처리")}</h3>
+                                    <p>{labelText("반품 상품 회수와 검수가 완료되면 영업일 기준 3일 이내에 환불을 진행합니다. 결제 수단에 따라 카드 승인 취소 또는 계좌 환불 등의 처리 방식과 소요 시간이 다를 수 있습니다.")}</p>
                                 </div>
                             </section>
                         </>
@@ -182,8 +184,8 @@ export default function OrderHelpModal({ order, line, preset, initialMode, onClo
                                 {/* eslint-disable-next-line @next/next/no-img-element -- 작은 3D 그림 */}
                                 <img src="/images/ui/web-cs-refund-160.webp" alt="" aria-hidden="true" />
                                 <div>
-                                    <h3>취소는 이렇게 진행돼요</h3>
-                                    <p>담당자가 주문 상태를 확인한 뒤 결제 전체를 취소해 드려요. 카드 승인 취소는 카드사에 따라 영업일 기준 3~5일 걸릴 수 있어요. 이미 출고된 주문은 취소 대신 반품으로 안내해 드려요.</p>
+                                    <h3>{labelText("취소는 이렇게 진행돼요")}</h3>
+                                    <p>{labelText("담당자가 주문 상태를 확인한 뒤 결제 전체를 취소해 드려요. 카드 승인 취소는 카드사에 따라 영업일 기준 3~5일 걸릴 수 있어요. 이미 출고된 주문은 취소 대신 반품으로 안내해 드려요.")}</p>
                                 </div>
                             </section>
                         )}
@@ -207,15 +209,15 @@ export default function OrderHelpModal({ order, line, preset, initialMode, onClo
                 <footer className="ddb-pf-foot">
                     {mode === "exchange" ? (
                         <button type="button" className="ddb-oh-back" onClick={() => go("return")}>
-                            <i className="fa-solid fa-chevron-left" aria-hidden="true" />안내 다시 보기
+                            <i className="fa-solid fa-chevron-left" aria-hidden="true" />{labelText("안내 다시 보기")}
                         </button>
                     ) : (
                         <p className="ddb-pf-hint"><i className="fa-solid fa-paw" aria-hidden="true" />{mode === "return" ? "접수하면 담당자가 이메일로 협의 방법을 안내해 드려요." : mode === "cancel" ? "접수하면 담당자가 확인 후 이메일로 결과를 알려 드려요." : preset?.hint ?? `평일 10:00~18:00 · 전화 ${CS_PHONE}`}</p>
                     )}
-                    <button type="button" className="ddb-pf-cancel" onClick={close}>닫기</button>
+                    <button type="button" className="ddb-pf-cancel" onClick={close}>{labelText("닫기")}</button>
                     {mode === "return" && (
                         <button type="button" className="ddb-pf-save" onClick={() => go("exchange")}>
-                            <i className="fa-solid fa-envelope" aria-hidden="true" />교환·반품 접수하기
+                            <i className="fa-solid fa-envelope" aria-hidden="true" />{labelText("교환·반품 접수하기")}
                         </button>
                     )}
                 </footer>

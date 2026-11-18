@@ -14,6 +14,7 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import Link from "@/components/site/IntentLink";
 import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
 import LocalizedText from "@/components/i18n/LocalizedText";
@@ -44,6 +45,7 @@ const SNS_INK: Record<string, string> = {
 };
 
 export default function FooterWeb() {
+    const { menuLabel: labelText } = useI18n();
     return (
         <footer className="fw" data-footer-web>
             <div className="fw-band">
@@ -52,19 +54,19 @@ export default function FooterWeb() {
                     {/* ① 세 기둥 */}
                     <div className="fw-grid">
                         {/* 왼쪽 — 로고 · 소개 · 회사 링크 */}
-                        <section className="fw-col is-brand" aria-label="댕다방">
-                            <Link href="/main" className="fw-logo" aria-label="댕다방 홈">
+                        <section className="fw-col is-brand" aria-label={labelText("댕다방")}>
+                            <Link href="/main" className="fw-logo" aria-label={labelText("댕다방 홈")}>
                                 {/* eslint-disable-next-line @next/next/no-img-element -- 로고 그림 */}
                                 <img src={`${UI}logo-poodle-384.webp`} alt="" aria-hidden="true" />
                                 <span className="fw-logo-word" aria-hidden="true"><b>댕</b><b>다</b><b>방</b></span>
                             </Link>
                             <p className="fw-tagline">
                                 <LocalizedText
-                                    ko={<>우리 댕댕이의 매일을 더 특별하게<br /><strong>큐레이션 펫 쇼핑몰</strong></>}
+                                    ko={<>{labelText("우리 댕댕이의 매일을 더 특별하게")}<br /><strong>{labelText("큐레이션 펫 쇼핑몰")}</strong></>}
                                     en={<>Make every day better for your dog<br /><strong>curated pet shopping</strong></>}
                                 />
                             </p>
-                            <nav className="fw-meta" aria-label="댕다방 소개 · 제휴">
+                            <nav className="fw-meta" aria-label={labelText("댕다방 소개 · 제휴")}>
                                 {FOOTER_META_LINKS.map((link) => {
                                     const look = META_LOOK[link.href];
                                     return (
@@ -77,7 +79,7 @@ export default function FooterWeb() {
                                             )}
                                             <span className="fw-meta-text">
                                                 <b><LocalizedMenuLabel label={link.label} /></b>
-                                                {look && <small>{look.sub}</small>}
+                                                {look && <small>{labelText(look.sub)}</small>}
                                             </span>
                                             <i className="fa-solid fa-arrow-right" aria-hidden="true" />
                                         </Link>
@@ -130,7 +132,7 @@ export default function FooterWeb() {
                                             href={channel.href}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            aria-label={`댕다방 공식 ${channel.label} ${channel.handle}`}
+                                            aria-label={`${labelText("댕다방 공식")} ${channel.label} ${channel.handle}`}
                                             title={channel.label}
                                             style={{ color: SNS_INK[channel.key] || "#6b51c9" }}
                                         >
@@ -143,17 +145,17 @@ export default function FooterWeb() {
                     </div>
 
                     {/* ② 사업자 정보 — 두 줄 글, PC · 휴대폰 모두 늘 펼침(전자상거래법 제10조 첫 화면 표시) */}
-                    <div className="fw-biz" aria-label="사업자 정보">
+                    <div className="fw-biz" aria-label={labelText("사업자 정보")}>
                         <p>
-                            <span><b><LocalizedText ko="상호" en="Company" /></b>{BUSINESS_INFO.companyName}</span>
-                            <span><b><LocalizedText ko="대표자" en="Representative" /></b>{BUSINESS_INFO.representative}</span>
+                            <span><b><LocalizedText ko="상호" en="Company" /></b><LocalizedMenuLabel label={labelText(BUSINESS_INFO.companyName)} /></span>
+                            <span><b><LocalizedText ko="대표자" en="Representative" /></b><LocalizedMenuLabel label={labelText(BUSINESS_INFO.representative)} /></span>
                             <span><b><LocalizedText ko="사업자등록번호" en="Business No." /></b>{BUSINESS_INFO.businessNumber}</span>
-                            <span><b><LocalizedText ko="통신판매업신고" en="Mail-order registration" /></b>{BUSINESS_INFO.mailOrderNumber}</span>
+                            <span><b><LocalizedText ko="통신판매업신고" en="Mail-order registration" /></b>{labelText(BUSINESS_INFO.mailOrderNumber)}</span>
                         </p>
                         <p>
-                            <span><b><LocalizedText ko="주소" en="Address" /></b>{BUSINESS_INFO.address}</span>
+                            <span><b><LocalizedText ko="주소" en="Address" /></b><LocalizedMenuLabel label={labelText(BUSINESS_INFO.address)} /></span>
                             <span><b><LocalizedText ko="호스팅 제공자" en="Hosting provider" /></b>{BUSINESS_INFO.hostingProvider}</span>
-                            <span><b><LocalizedText ko="개인정보 관리책임자" en="Privacy officer" /></b>{BUSINESS_INFO.privacyOfficer}</span>
+                            <span><b><LocalizedText ko="개인정보 관리책임자" en="Privacy officer" /></b><LocalizedMenuLabel label={labelText(BUSINESS_INFO.privacyOfficer)} /></span>
                             <span><b><LocalizedText ko="입점 / 제휴 문의" en="Partner inquiries" /></b><CloudflareSafeEmail email={BUSINESS_INFO.partnerEmail} /></span>
                         </p>
                     </div>
@@ -162,7 +164,7 @@ export default function FooterWeb() {
                 {/* ③ 아래 띠 — 가로 전체 */}
                 <div className="fw-bar">
                     <div className="fw-wrap fw-bar-in">
-                        <nav className="fw-legal" aria-label="약관 · 정책">
+                        <nav className="fw-legal" aria-label={labelText("약관 · 정책")}>
                             {FOOTER_LEGAL_LINKS.map((link) => (
                                 link.label === "환불·반품 정책"
                                     ? <ReturnPolicyDialogLink key={link.label} className="fw-legal-link" />

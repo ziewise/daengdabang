@@ -20,6 +20,7 @@
  * 불러오는 중 · 실패(분홍 메모) · 기록 없음을 웹 MyPetHub weeklyState 처럼 나눠 보여 줌.
  */
 
+import { useI18n } from "@/lib/i18n";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -69,6 +70,7 @@ const MORE_CARE = [
 ];
 
 export default function StickerReport() {
+    const { menuLabel: labelText } = useI18n();
     const [session, setSession] = useDemoSession();
     const member = session === "member";
     // 실제 반려견 · 주간 기록 — 웹 마이펫(MyPetHub)과 같은 불러오기(고른 반려견, 최근 8개)
@@ -144,21 +146,21 @@ export default function StickerReport() {
                             <Tape className="-top-2 left-1/2 h-4 w-16 -translate-x-1/2" color="rgba(255,226,150,.9)" style={{ rotate: "-3deg" }} />
                             <i aria-hidden="true" className="fa-solid fa-dog text-[26px] text-[#f4b9ca]" />
                             {/* 반려견은 있는데 서버 프로필이 없으면 앱 홈 웹 카드(AppAiCareOverview) 제목 */}
-                            <p className="ah-display mt-2 text-[16px] leading-snug">{allPets?.length ? "우리 아이부터 연결해 주세요" : "먼저 우리 아이를 등록해 주세요"}</p>
-                            <p className="ah-light mt-1.5 text-[12.5px] leading-relaxed" style={{ color: TEXT_SOFT }}>프로필이 생기면 주간 사진 분석과 건강 관찰 기록이 이곳에 차곡차곡 쌓입니다.</p>
-                            <Patch href={PETLENS_PROFILE_SETUP_HREF} small className="mt-4">반려견 등록하기<i aria-hidden="true" className="fa-solid fa-paw text-[12px]" /></Patch>
+                            <p className="ah-display mt-2 text-[16px] leading-snug">{labelText(allPets?.length ? "우리 아이부터 연결해 주세요" : "먼저 우리 아이를 등록해 주세요")}</p>
+                            <p className="ah-light mt-1.5 text-[12.5px] leading-relaxed" style={{ color: TEXT_SOFT }}>{labelText("프로필이 생기면 주간 사진 분석과 건강 관찰 기록이 이곳에 차곡차곡 쌓입니다.")}</p>
+                            <Patch href={PETLENS_PROFILE_SETUP_HREF} small className="mt-4">{labelText("반려견 등록하기")}<i aria-hidden="true" className="fa-solid fa-paw text-[12px]" /></Patch>
                         </section>
                     ) : (
                         <>
                             {/* ── 머리: 웹과 같은 제목 · 안내 · 새 주간 분석 시작 ── */}
-                            <p className="ah-light text-[11.5px] text-[#c4567a]">AI 주간 사진 변화 리포트</p>
-                            <h2 className="ah-display mt-1 text-[20px] leading-snug"><span className="st-marker">매주 같은 방향으로 비교해요</span></h2>
+                            <p className="ah-light text-[11.5px] text-[#c4567a]">{labelText("AI 주간 사진 변화 리포트")}</p>
+                            <h2 className="ah-display mt-1 text-[20px] leading-snug"><span className="st-marker">{labelText("매주 같은 방향으로 비교해요")}</span></h2>
                             <p className="ah-light mt-2 text-[12.5px] leading-relaxed" style={{ color: TEXT_SOFT }}>
-                                새로 촬영한 사진은 선택한 {petName}의 주간 기록으로만 저장되며, 최초 등록 사진을 덮어쓰지 않습니다.
+                                {labelText("새로 촬영한 사진은 선택한")} {petName}{labelText("의 주간 기록으로만 저장되며, 최초 등록 사진을 덮어쓰지 않습니다.")}
                             </p>
                             {/* 우리 아이 고르기 — 웹 MyPetHub 이름 버튼(setSelectedPetId)과 같음, 두 마리 이상일 때만 작은 스티커 칩 */}
                             {pets.length > 1 ? (
-                                <div className="mt-3 flex flex-wrap gap-1.5" role="group" aria-label="리포트를 볼 반려견">
+                                <div className="mt-3 flex flex-wrap gap-1.5" role="group" aria-label={labelText("리포트를 볼 반려견")}>
                                     {pets.map((p, i) => (
                                         <button key={p.apiProfileId} type="button" aria-pressed={p.apiProfileId === petProfileId}
                                             onClick={() => { haptic("light"); setSelectedPetId(p.apiProfileId); setOpenedId(undefined); }}
@@ -196,17 +198,17 @@ export default function StickerReport() {
                                     <p className="ah-display text-[12px] text-[#1f9e75]">{isRecent || !latest ? "이번 주 사진 분석" : `${ready ? formatShortDate(latest.analyzedAt) : ""} 사진 분석 · ${pageNumber(openedIndex)}쪽`}</p>
                                     {!isRecent ? (
                                         <button type="button" onClick={() => { haptic("light"); setOpenedId(undefined); }} className="rp-back ah-display shrink-0 px-2.5 text-[11px]">
-                                            <i aria-hidden="true" className="fa-solid fa-rotate-left text-[9px]" />최근 쪽
+                                            <i aria-hidden="true" className="fa-solid fa-rotate-left text-[9px]" />{labelText("최근 쪽")}
                                         </button>
                                     ) : null}
                                 </div>
                                 {/* 불러오는 동안엔 "기록 없음" 대신 웹 MyPetHub(weeklyLoading) 문구 */}
                                 {loading ? (
-                                    <p className="ah-light mt-2.5 text-[12.5px]" style={{ color: TEXT_SOFT }}>주간 사진 기록을 불러오는 중입니다.</p>
+                                    <p className="ah-light mt-2.5 text-[12.5px]" style={{ color: TEXT_SOFT }}>{labelText("주간 사진 기록을 불러오는 중입니다.")}</p>
                                 ) : latest ? (
                                     <>
                                         <p className="mt-2.5 flex flex-wrap gap-1.5">
-                                            <span className="ah-display rounded-full bg-[#dff3fb] px-2.5 py-0.5 text-[11px] text-[#1f6f8f]">{latest.viewCount}방향</span>
+                                            <span className="ah-display rounded-full bg-[#dff3fb] px-2.5 py-0.5 text-[11px] text-[#1f6f8f]">{latest.viewCount}{labelText("방향")}</span>
                                             {latest.photoQualityLabel ? <span className="ah-display rounded-full bg-[#fff0e0] px-2.5 py-0.5 text-[11px] text-[#b4632a]">{latest.photoQualityLabel}</span> : null}
                                         </p>
                                         <h3 className="ah-display mt-2.5 text-[16px] leading-snug">{latest.title || "저장된 주간 사진 분석"}</h3>
@@ -225,8 +227,8 @@ export default function StickerReport() {
                                 ) : (
                                     <div className="rp-empty mt-3 rounded-[12px] px-4 py-5 text-center">
                                         <Image src="/images/ui/stickers/caretalk-photo.webp" alt="" width={44} height={44} className="mx-auto h-11 w-11" />
-                                        <p className="ah-display mt-2 text-[13.5px]">실시간 카메라로 이번 주 첫 사진을 남겨 보세요.</p>
-                                        <p className="ah-light mt-1 text-[11.5px] leading-relaxed" style={{ color: TEXT_SOFT }}>촬영 화면, 방향별 썸네일, 업로드 진행률을 직접 확인할 수 있어요.</p>
+                                        <p className="ah-display mt-2 text-[13.5px]">{labelText("실시간 카메라로 이번 주 첫 사진을 남겨 보세요.")}</p>
+                                        <p className="ah-light mt-1 text-[11.5px] leading-relaxed" style={{ color: TEXT_SOFT }}>{labelText("촬영 화면, 방향별 썸네일, 업로드 진행률을 직접 확인할 수 있어요.")}</p>
                                     </div>
                                 )}
                             </section>
@@ -237,35 +239,35 @@ export default function StickerReport() {
                                 <p className="ah-display text-[12px] text-[#6a52c4]">{latest && ready && (previous || latest.comparison.previousAnalyzedAt) ? `지난 쪽(${formatShortDate(latest.comparison.previousAnalyzedAt || previous?.analyzedAt)})과 비교` : "이전 주와 비교"}</p>
                                 {/* 불러오는 동안엔 비교 기준 안내(기록 없음 문구)를 띄우지 않음 */}
                                 {loading ? (
-                                    <p className="ah-light mt-2 text-[12.5px]" style={{ color: TEXT_SOFT }}>주간 사진 기록을 불러오는 중입니다.</p>
+                                    <p className="ah-light mt-2 text-[12.5px]" style={{ color: TEXT_SOFT }}>{labelText("주간 사진 기록을 불러오는 중입니다.")}</p>
                                 ) : latest ? (
                                     <>
                                         <h3 className="ah-display mt-2 text-[15.5px] leading-snug">{latest.comparison.headline}</h3>
                                         <div className="mt-3 grid grid-cols-2 gap-2">
                                             <span className="rp-date rounded-[10px] px-2.5 py-2" style={{ background: "#efe9ff", rotate: "-1deg" }}>
-                                                <span className="ah-display block text-[11px] text-[#6a52c4]">{isRecent ? "최근" : "이 쪽"}</span>
+                                                <span className="ah-display block text-[11px] text-[#6a52c4]">{labelText(isRecent ? "최근" : "이 쪽")}</span>
                                                 <span className="ah-display mt-0.5 block text-[12px] leading-snug">{date(latest.analyzedAt)}</span>
                                             </span>
                                             <span className="rp-date rounded-[10px] px-2.5 py-2" style={{ background: "#f6f1ec", rotate: "1deg" }}>
-                                                <span className="ah-display block text-[11px]" style={{ color: TEXT_SOFT }}>이전</span>
+                                                <span className="ah-display block text-[11px]" style={{ color: TEXT_SOFT }}>{labelText("이전")}</span>
                                                 <span className="ah-display mt-0.5 block text-[12px] leading-snug">{date(latest.comparison.previousAnalyzedAt || previous?.analyzedAt)}</span>
                                             </span>
                                         </div>
                                         {latest.comparison.status === "ready" ? (
                                             <ul className="mt-3 space-y-1.5">
                                                 {latest.comparison.newObservations.slice(0, 2).map((item) => (
-                                                    <li key={`n-${item}`} className="ah-light flex items-start gap-2 text-[12px] leading-snug"><i aria-hidden="true" className="fa-solid fa-wand-magic-sparkles mt-0.5 text-[11px] text-[#f08a3c]" /><span>새로 확인: {item}</span></li>
+                                                    <li key={`n-${item}`} className="ah-light flex items-start gap-2 text-[12px] leading-snug"><i aria-hidden="true" className="fa-solid fa-wand-magic-sparkles mt-0.5 text-[11px] text-[#f08a3c]" /><span>{labelText("새로 확인:")} {item}</span></li>
                                                 ))}
                                                 {latest.comparison.commonObservations.slice(0, 2).map((item) => (
-                                                    <li key={`c-${item}`} className="ah-light flex items-start gap-2 text-[12px] leading-snug"><i aria-hidden="true" className="fa-solid fa-equals mt-0.5 text-[11px] text-[#1f9e8a]" /><span>공통 확인: {item}</span></li>
+                                                    <li key={`c-${item}`} className="ah-light flex items-start gap-2 text-[12px] leading-snug"><i aria-hidden="true" className="fa-solid fa-equals mt-0.5 text-[11px] text-[#1f9e8a]" /><span>{labelText("공통 확인:")} {item}</span></li>
                                                 ))}
                                             </ul>
                                         ) : (
-                                            <p className="ah-light mt-3 text-[11.5px] leading-relaxed" style={{ color: TEXT_SOFT }}>다음 주 같은 방향 사진이 쌓이면 변화 여부를 단정하지 않고 확인된 항목만 비교합니다.</p>
+                                            <p className="ah-light mt-3 text-[11.5px] leading-relaxed" style={{ color: TEXT_SOFT }}>{labelText("다음 주 같은 방향 사진이 쌓이면 변화 여부를 단정하지 않고 확인된 항목만 비교합니다.")}</p>
                                         )}
                                     </>
                                 ) : (
-                                    <p className="ah-light mt-2 text-[12.5px] leading-relaxed" style={{ color: TEXT_SOFT }}>첫 주간 분석은 비교 기준이 되고, 다음 기록부터 이전 주와 나란히 표시됩니다.</p>
+                                    <p className="ah-light mt-2 text-[12.5px] leading-relaxed" style={{ color: TEXT_SOFT }}>{labelText("첫 주간 분석은 비교 기준이 되고, 다음 기록부터 이전 주와 나란히 표시됩니다.")}</p>
                                 )}
                             </section>
 
@@ -273,10 +275,10 @@ export default function StickerReport() {
                             {list.length > 0 ? (
                                 <section className="mt-6">
                                     <div className="flex items-center justify-between gap-3">
-                                        <h3 className="ah-display st-marker text-[14.5px]">주간 사진 히스토리</h3>
-                                        <span className="ah-light text-[11px]" style={{ color: TEXT_SOFT }}>최근 {list.length}회</span>
+                                        <h3 className="ah-display st-marker text-[14.5px]">{labelText("주간 사진 히스토리")}</h3>
+                                        <span className="ah-light text-[11px]" style={{ color: TEXT_SOFT }}>{labelText("최근")} {list.length}{labelText("회")}</span>
                                     </div>
-                                    <p className="ah-light mt-1 text-[11.5px]" style={{ color: TEXT_SOFT }}>지난 쪽을 누르면 위에 펼쳐져요</p>
+                                    <p className="ah-light mt-1 text-[11.5px]" style={{ color: TEXT_SOFT }}>{labelText("지난 쪽을 누르면 위에 펼쳐져요")}</p>
                                     <ol className="mt-3 grid grid-cols-2 gap-2.5">
                                         {list.map((item, index) => {
                                             const on = index === openedIndex;
@@ -286,7 +288,7 @@ export default function StickerReport() {
                                                         className="rp-hist block h-full w-full rounded-[4px_4px_12px_4px] px-3 pb-2.5 pt-2.5 text-left"
                                                         style={{ background: PAGE_TONES[index % PAGE_TONES.length], rotate: `${[-0.8, 0.7, 0.6, -0.7][index % 4]}deg` }}>
                                                         <span className="flex items-center justify-between gap-1">
-                                                            <span className="ah-display text-[10.5px] text-[#6a52c4]">{pageNumber(index)}쪽{index === 0 ? " · 최근" : ""}</span>
+                                                            <span className="ah-display text-[10.5px] text-[#6a52c4]">{pageNumber(index)}{labelText("쪽")}{index === 0 ? " · 최근" : ""}</span>
                                                             {/* 네 방향 점(정면 · 왼쪽 · 오른쪽 · 뒷면) — 찍은 방향만 채움 */}
                                                             <span className="flex gap-[3px]" aria-label={`${item.viewCount}방향 촬영`}>
                                                                 {PETLENS_PHOTO_VIEWS.map((view) => <i key={view.id} className={`rp-dot${item.viewIds.includes(view.id) ? " is-on" : ""}`} />)}
@@ -304,15 +306,15 @@ export default function StickerReport() {
 
                             {/* ── 함께 써 보세요: 웹 부록과 같은 세 곳 — 파스텔 메모 줄(3D 그림 · 이름 · 한 줄 설명) ── */}
                             <section className="mt-7">
-                                <h3 className="ah-display text-[14.5px]"><span className="st-marker">{petName}의 기록과 함께 써 보세요</span></h3>
+                                <h3 className="ah-display text-[14.5px]"><span className="st-marker">{petName}{labelText("의 기록과 함께 써 보세요")}</span></h3>
                                 <ul className="mt-3 grid gap-2.5">
                                     {MORE_CARE.map((item, i) => (
                                         <li key={item.href}>
                                             <Link href={item.href} className="rp-more flex items-center gap-3 rounded-[4px_4px_14px_4px] px-3 py-2.5" style={{ background: item.tone, rotate: `${i % 2 ? 0.4 : -0.4}deg` }}>
                                                 <Image src={item.art} alt="" width={44} height={44} className="h-11 w-11 shrink-0 object-contain drop-shadow-[0_2px_2px_rgba(120,70,50,.2)]" />
                                                 <span className="min-w-0 flex-1">
-                                                    <span className="ah-display block text-[13.5px]" style={{ color: item.ink }}>{item.title}</span>
-                                                    <span className="ah-light block text-[11.5px] leading-snug" style={{ color: TEXT_SOFT }}>{item.body}</span>
+                                                    <span className="ah-display block text-[13.5px]" style={{ color: item.ink }}>{labelText(item.title)}</span>
+                                                    <span className="ah-light block text-[11.5px] leading-snug" style={{ color: TEXT_SOFT }}>{labelText(item.body)}</span>
                                                 </span>
                                                 <i aria-hidden="true" className="fa-solid fa-chevron-right text-[10px] text-[#c9b4a8]" />
                                             </Link>
@@ -321,12 +323,12 @@ export default function StickerReport() {
                                 </ul>
                                 {/* 웹 그림책 "프로필 고치기"와 같은 자리 — 앱 우리 아이 화면 */}
                                 <Link href={`/app/sticker/pets/`} className="ah-display mt-3 inline-flex items-center gap-1.5 text-[12px] text-[#c4456f]">
-                                    <i aria-hidden="true" className="fa-solid fa-pen text-[10px]" />{petName} 프로필 고치기
+                                    <i aria-hidden="true" className="fa-solid fa-pen text-[10px]" />{petName} {labelText("프로필 고치기")}
                                 </Link>
-                                <p className="ah-light mt-2 text-[11px] leading-relaxed" style={{ color: TEXT_SOFT }}>행동·소리 분석은 등록한 우리 아이와 별개예요. 궁금한 강아지의 영상을 관찰하는 독립 기능이며, 주간 사진 변화 기록과 섞이지 않아요.</p>
+                                <p className="ah-light mt-2 text-[11px] leading-relaxed" style={{ color: TEXT_SOFT }}>{labelText("행동·소리 분석은 등록한 우리 아이와 별개예요. 궁금한 강아지의 영상을 관찰하는 독립 기능이며, 주간 사진 변화 기록과 섞이지 않아요.")}</p>
                             </section>
 
-                            <p className="ah-light mt-5 text-[11px] leading-relaxed" style={{ color: TEXT_SOFT }}>이 리포트는 사진에서 확인된 관찰 항목을 정리하며, 촬영 조건에 따라 달라질 수 있고 수의학적 진단을 대신하지 않습니다.</p>
+                            <p className="ah-light mt-5 text-[11px] leading-relaxed" style={{ color: TEXT_SOFT }}>{labelText("이 리포트는 사진에서 확인된 관찰 항목을 정리하며, 촬영 조건에 따라 달라질 수 있고 수의학적 진단을 대신하지 않습니다.")}</p>
                         </>
                     )}
                 </DiaryBody>

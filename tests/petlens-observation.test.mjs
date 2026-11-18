@@ -1,10 +1,11 @@
+import { koreanMarkup } from "./helpers/korean-markup.mjs";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 
 async function source(path) {
-    return readFile(new URL(`../${path}`, import.meta.url), "utf8");
+    return readFile(new URL(`../${path}`, import.meta.url), "utf8").then(koreanMarkup);
 }
 
 
@@ -352,7 +353,7 @@ test("customer flow requires explicit media consent and shows emergency-first gu
     assert.match(experience, /화면 왼쪽 빨간 목줄의 갈색 푸들이 대상/);
     assert.match(experience, /구분이 불확실하면 억지 결과를 만들지 않고 코인을 돌려드려요/);
     assert.match(result, /영상에서 포착된 관찰 근거/);
-    assert.match(result, /확신 \{signal\.confidence/);
+    assert.match(result, /확신 \{labelText\(signal\.confidence/);
     assert.match(result, /signal\.evidence\.map/);
     assert.match(result, /가능한 맥락/);
     assert.match(result, /질병 진단이 아니라/);

@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { useState } from "react";
 import Link from "next/link";
 import {
@@ -50,6 +51,7 @@ export default function GrowthShareCard({
     canShareAiRecord: boolean;
     isMember: boolean;
 }) {
+    const { menuLabel: labelText } = useI18n();
     const [busy, setBusy] = useState<GrowthShareKind | null>(null);
     const [notice, setNotice] = useState<ShareNotice | null>(null);
 
@@ -132,14 +134,14 @@ export default function GrowthShareCard({
                     </span>
                     <div>
                         <p className="ddb-crayon-kicker text-[11px]">SAFE SHARE</p>
-                        <h2 id="growth-share-title" className="ddb-crayon-title mt-1 text-2xl text-neutral-950">건강 상세는 빼고, 돌봄 습관만 나눠요</h2>
+                        <h2 id="growth-share-title" className="ddb-crayon-title mt-1 text-2xl text-neutral-950">{labelText("건강 상세는 빼고, 돌봄 습관만 나눠요")}</h2>
                         <p className="mt-2 max-w-2xl text-xs font-bold leading-5 text-neutral-600 sm:text-sm">
-                            공유 문구에는 반려견 이름·사진·증상·AI 건강 결과가 들어가지 않습니다. 링크에는 유입 경로를 확인하는 캠페인 값만 붙어요.
+                            {labelText("공유 문구에는 반려견 이름·사진·증상·AI 건강 결과가 들어가지 않습니다. 링크에는 유입 경로를 확인하는 캠페인 값만 붙어요.")}
                         </p>
                     </div>
                 </div>
                 <span className="w-fit shrink-0 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-[11px] font-black text-emerald-800">
-                    개인정보 없는 공유
+                    {labelText("개인정보 없는 공유")}
                 </span>
             </div>
 
@@ -151,7 +153,7 @@ export default function GrowthShareCard({
                         onClick={() => void share("care_result")}
                         className="ddb-motion-lift flex min-h-14 items-center justify-between gap-3 rounded-2xl border border-indigo-200 bg-white px-4 py-3 text-left text-sm font-black text-indigo-900 transition hover:border-indigo-400 disabled:cursor-wait disabled:opacity-60"
                     >
-                        <span><i className="fa-solid fa-wand-magic-sparkles mr-2 text-indigo-500" aria-hidden="true" />AI 기록 안전 공유</span>
+                        <span><i className="fa-solid fa-wand-magic-sparkles mr-2 text-indigo-500" aria-hidden="true" />{labelText("AI 기록 안전 공유")}</span>
                         <i className={`fa-solid ${busy === "care_result" ? "fa-circle-notch fa-spin" : "fa-arrow-up-from-bracket"} text-xs`} aria-hidden="true" />
                     </button>
                 ) : isMember ? (
@@ -159,7 +161,7 @@ export default function GrowthShareCard({
                         href="/pet-lens/"
                         className="ddb-motion-lift flex min-h-14 items-center justify-between gap-3 rounded-2xl border border-indigo-200 bg-white px-4 py-3 text-left text-sm font-black text-indigo-900 transition hover:border-indigo-400"
                     >
-                        <span><i className="fa-solid fa-camera-retro mr-2 text-indigo-500" aria-hidden="true" />AI 기록 만들고 공유</span>
+                        <span><i className="fa-solid fa-camera-retro mr-2 text-indigo-500" aria-hidden="true" />{labelText("AI 기록 만들고 공유")}</span>
                         <i className="fa-solid fa-arrow-right text-xs" aria-hidden="true" />
                     </Link>
                 ) : (
@@ -167,7 +169,7 @@ export default function GrowthShareCard({
                         href="/auth/login/?redirect=%2Ftreasure-mine%2F"
                         className="ddb-motion-lift flex min-h-14 items-center justify-between gap-3 rounded-2xl border border-indigo-200 bg-white px-4 py-3 text-left text-sm font-black text-indigo-900 transition hover:border-indigo-400"
                     >
-                        <span><i className="fa-solid fa-lock mr-2 text-indigo-500" aria-hidden="true" />로그인 후 AI 기록 공유</span>
+                        <span><i className="fa-solid fa-lock mr-2 text-indigo-500" aria-hidden="true" />{labelText("로그인 후 AI 기록 공유")}</span>
                         <i className="fa-solid fa-arrow-right text-xs" aria-hidden="true" />
                     </Link>
                 )}
@@ -177,7 +179,7 @@ export default function GrowthShareCard({
                     onClick={() => void share("friend_invite")}
                     className="ddb-motion-lift flex min-h-14 items-center justify-between gap-3 rounded-2xl border border-orange-200 bg-white px-4 py-3 text-left text-sm font-black text-orange-900 transition hover:border-orange-400 disabled:cursor-wait disabled:opacity-60"
                 >
-                    <span><i className="fa-solid fa-user-group mr-2 text-orange-500" aria-hidden="true" />친구에게 보물광산 초대</span>
+                    <span><i className="fa-solid fa-user-group mr-2 text-orange-500" aria-hidden="true" />{labelText("친구에게 보물광산 초대")}</span>
                     <i className={`fa-solid ${busy === "friend_invite" ? "fa-circle-notch fa-spin" : "fa-paper-plane"} text-xs`} aria-hidden="true" />
                 </button>
             </div>
@@ -198,7 +200,7 @@ export default function GrowthShareCard({
                     {notice.message}
                     {notice.fallbackUrl ? (
                         <input
-                            aria-label="직접 복사할 보물광산 링크"
+                            aria-label={labelText("직접 복사할 보물광산 링크")}
                             readOnly
                             onFocus={(event) => event.currentTarget.select()}
                             value={notice.fallbackUrl}

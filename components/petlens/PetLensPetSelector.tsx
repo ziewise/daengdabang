@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import type { PetProfile } from "@/lib/store";
 
 type Props = {
@@ -21,6 +22,7 @@ export default function PetLensPetSelector({
     compact = false,
     onChange,
 }: Props) {
+    const { menuLabel: labelText } = useI18n();
     if (pets.length < 2) return null;
 
     return (
@@ -28,7 +30,7 @@ export default function PetLensPetSelector({
             className={`block rounded-2xl border border-indigo-100 bg-indigo-50/60 ${compact ? "mb-3 p-3" : "mb-5 p-4"}`}
             data-petlens-pet-selector
         >
-            <span className="mb-1.5 block text-xs font-black text-indigo-800">분석할 반려견</span>
+            <span className="mb-1.5 block text-xs font-black text-indigo-800">{labelText("분석할 반려견")}</span>
             <select
                 value={selectedPetProfileId ?? ""}
                 disabled={disabled}
@@ -38,7 +40,7 @@ export default function PetLensPetSelector({
                 }}
                 className="input min-h-11 w-full bg-white"
             >
-                <option value="" disabled>반려견을 선택해 주세요</option>
+                <option value="" disabled>{labelText("반려견을 선택해 주세요")}</option>
                 {pets.map((pet, index) => {
                     const ready = selectablePet(pet);
                     return (
@@ -54,7 +56,7 @@ export default function PetLensPetSelector({
                 })}
             </select>
             <span className="mt-1.5 block text-[10px] font-bold leading-4 text-indigo-700">
-                선택한 프로필의 사진과 분석 결과만 해당 반려견에게 연결됩니다.
+                {labelText("선택한 프로필의 사진과 분석 결과만 해당 반려견에게 연결됩니다.")}
             </span>
         </label>
     );

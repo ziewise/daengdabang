@@ -527,6 +527,7 @@ export type ShopChatHistoryTurn = {
 };
 
 export type ShopQuestionContext = {
+    locale?: "ko" | "en";
     recoveryScope?: string;
     pet?: ShopChatPetProfile | Pick<PetProfile, "name" | "size" | "coat" | "activity" | "concerns"> | null;
     history?: ShopChatHistoryTurn[];
@@ -2194,6 +2195,7 @@ function shopChatReferenceError(status: number) {
 }
 
 type ShopChatRequestPayload = {
+    locale?: "ko" | "en";
     message: string;
     limit: number;
     petProfile: ShopChatPetProfile | null;
@@ -2567,6 +2569,7 @@ export async function answerShopQuestionSmart(message: string, context?: ShopQue
         const turnstileToken = normalizeChatBotToken(context?.turnstileToken);
         const payload: ShopChatRequestPayload = {
             message,
+            ...(context?.locale ? { locale: context.locale } : {}),
             limit: 6,
             petProfile,
             history,

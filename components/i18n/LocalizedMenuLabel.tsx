@@ -2,7 +2,7 @@
 
 import { useI18n } from "@/lib/i18n";
 
-export default function LocalizedMenuLabel({ label }: { label: string }) {
+export default function LocalizedMenuLabel({ label }: { label: string | null | undefined }) {
     const { menuLabel } = useI18n();
     return <>{menuLabel(label)}</>;
 }

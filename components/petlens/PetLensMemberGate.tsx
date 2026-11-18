@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -19,6 +20,7 @@ type Props = {
 };
 
 export default function PetLensMemberGate({ compact = false, reason, service = "petlens", returnTo, onNavigate }: Props) {
+    const { menuLabel: labelText } = useI18n();
     const router = useRouter();
     const daenglab = service === "daenglab";
 
@@ -48,7 +50,7 @@ export default function PetLensMemberGate({ compact = false, reason, service = "
     if (reason === "loading") {
         return (
             <div className="grid min-h-48 place-items-center p-6 text-sm font-bold text-neutral-500">
-                <span><i className="fa-solid fa-circle-notch fa-spin mr-2 text-indigo-600" />회원 정보를 확인하고 있어요</span>
+                <span><i className="fa-solid fa-circle-notch fa-spin mr-2 text-indigo-600" />{labelText("회원 정보를 확인하고 있어요")}</span>
             </div>
         );
     }
@@ -102,14 +104,14 @@ export default function PetLensMemberGate({ compact = false, reason, service = "
                             onClick={navigateBeforeClose}
                             className="inline-flex min-h-12 items-center justify-center rounded-xl bg-indigo-600 px-4 text-sm font-black text-white shadow-sm transition hover:bg-indigo-700"
                         >
-                            회원가입하고 시작하기
+                            {labelText("회원가입하고 시작하기")}
                         </Link>
                         <Link
                             href={petLensAuthHref("login", returnTo)}
                             onClick={navigateBeforeClose}
                             className="inline-flex min-h-12 items-center justify-center rounded-xl border-2 border-indigo-200 bg-white px-4 text-sm font-black text-indigo-700 transition hover:border-indigo-300 hover:bg-indigo-50"
                         >
-                            기존 회원 로그인
+                            {labelText("기존 회원 로그인")}
                         </Link>
                     </div>
                 ) : (
@@ -118,7 +120,7 @@ export default function PetLensMemberGate({ compact = false, reason, service = "
                         onClick={navigateBeforeClose}
                         className="mt-5 inline-flex min-h-12 items-center justify-center rounded-xl bg-indigo-600 px-6 text-sm font-black text-white shadow-sm transition hover:bg-indigo-700"
                     >
-                        마이페이지에서 등록·확인하기
+                        {labelText("마이페이지에서 등록·확인하기")}
                     </Link>
                 )}
             </div>

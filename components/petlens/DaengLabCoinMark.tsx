@@ -1,3 +1,4 @@
+import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
 type Props = {
     en?: boolean;
     compact?: boolean;
@@ -27,7 +28,7 @@ export default function DaengLabCoinMark({ en = false, compact = false, classNam
                 ) : (
                     <>
                         <span className="ddb-daenglab-coin-brand--teal">댕다방</span>
-                        <span className="ddb-daenglab-coin-brand--coral">연구소</span>
+                        <span className="ddb-daenglab-coin-brand--coral"><LocalizedMenuLabel label={"연구소"} /></span>
                     </>
                 )}
             </span>

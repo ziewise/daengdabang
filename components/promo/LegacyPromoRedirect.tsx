@@ -8,10 +8,12 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { useEffect } from "react";
 import Link from "next/link";
 
 export default function LegacyPromoRedirect({ to, label }: { to: string; label: string }) {
+    const { menuLabel: labelText } = useI18n();
     // 화면이 붙자마자 새 기획전으로(뒤로 가기에 예전 주소가 남지 않게 replace)
     useEffect(() => {
         window.location.replace(to);
@@ -21,10 +23,10 @@ export default function LegacyPromoRedirect({ to, label }: { to: string; label: 
         <main className="mx-auto grid min-h-[50vh] max-w-[560px] place-items-center px-4 py-14 text-center">
             <div className="w-full rounded-[32px] bg-white px-6 py-10 shadow-[0_22px_36px_-24px_rgba(15,23,42,0.32)]">
                 <p className="text-xs font-black tracking-[0.2em] text-[#d0436d]">PROMO MOVED</p>
-                <h1 className="mt-2 text-2xl font-black text-neutral-900">기획전이 새로 바뀌었어요</h1>
-                <p className="mt-2 text-sm font-bold text-neutral-500">{label}(으)로 바로 이동하고 있어요.</p>
+                <h1 className="mt-2 text-2xl font-black text-neutral-900">{labelText("기획전이 새로 바뀌었어요")}</h1>
+                <p className="mt-2 text-sm font-bold text-neutral-500">{label}{labelText("(으)로 바로 이동하고 있어요.")}</p>
                 <Link href={to} className="mt-6 inline-flex h-12 items-center justify-center gap-2 rounded-full bg-[#e9789a] px-6 text-sm font-black text-white">
-                    {label} 보기 <i className="fa-solid fa-arrow-right" aria-hidden="true" />
+                    {label} {labelText("보기")} <i className="fa-solid fa-arrow-right" aria-hidden="true" />
                 </Link>
             </div>
         </main>

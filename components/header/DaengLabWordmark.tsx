@@ -18,7 +18,7 @@ export default function DaengLabWordmark({ label, compact = false }: Props) {
                 <span>댕</span><span>다</span><span>방</span>
             </span>
             <span className={styles.labLine} aria-hidden="true">
-                <span>연</span><span>구</span><span>소</span>
+                {label.endsWith("Lab") ? <><span>L</span><span>a</span><span>b</span></> : <><span>연</span><span>구</span><span>소</span></>}
             </span>
         </span>
     );

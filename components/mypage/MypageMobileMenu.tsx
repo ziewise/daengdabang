@@ -9,6 +9,7 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import Link from "next/link";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -37,6 +38,7 @@ function menuArt(href: string) {
 }
 
 export default function MypageMobileMenu({ groups, onLogout }: { groups: MobileMenuGroup[]; onLogout: () => void }) {
+    const { menuLabel: labelText } = useI18n();
     const [open, setOpen] = useState(false);
     const openRef = useRef<HTMLButtonElement>(null);
     const closeRef = useRef<HTMLButtonElement>(null);
@@ -73,7 +75,7 @@ export default function MypageMobileMenu({ groups, onLogout }: { groups: MobileM
                 onClick={() => setOpen(true)}
                 aria-haspopup="dialog"
                 aria-expanded={open}
-                aria-label="마이페이지 전체 메뉴 열기"
+                aria-label={labelText("마이페이지 전체 메뉴 열기")}
             >
                 {/* eslint-disable-next-line @next/next/no-img-element -- 작은 3D 그림 */}
                 <img src="/images/ui/header-mypage-128.webp" alt="" aria-hidden="true" />
@@ -87,9 +89,9 @@ export default function MypageMobileMenu({ groups, onLogout }: { groups: MobileM
                         <header className="ddb-mpm-head">
                             <div>
                                 <p className="ddb-mpm-kicker">MY PAGE</p>
-                                <h2 id={titleId}>마이페이지 메뉴</h2>
+                                <h2 id={titleId}>{labelText("마이페이지 메뉴")}</h2>
                             </div>
-                            <button ref={closeRef} type="button" className="ddb-mpm-close" onClick={close} aria-label="마이페이지 메뉴 닫기">
+                            <button ref={closeRef} type="button" className="ddb-mpm-close" onClick={close} aria-label={labelText("마이페이지 메뉴 닫기")}>
                                 <i className="fa-solid fa-xmark" aria-hidden="true" />
                             </button>
                         </header>
@@ -113,7 +115,7 @@ export default function MypageMobileMenu({ groups, onLogout }: { groups: MobileM
                         </div>
                         <footer className="ddb-mpm-foot">
                             <button type="button" onClick={() => { setOpen(false); onLogout(); }}>
-                                <i className="fa-solid fa-right-from-bracket" aria-hidden="true" />로그아웃
+                                <i className="fa-solid fa-right-from-bracket" aria-hidden="true" />{labelText("로그아웃")}
                             </button>
                         </footer>
                     </section>

@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { FormEvent, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -83,6 +84,7 @@ function ObservationDeepLinkNotice({
     message: string;
     recoveryHref?: string;
 }) {
+    const { menuLabel: labelText } = useI18n();
     const pending = state === "resolving" || state === "processing";
     const cancelled = state === "cancelled";
     return (
@@ -118,7 +120,7 @@ function ObservationDeepLinkNotice({
                         href={recoveryHref}
                         className="mt-3 inline-flex min-h-12 items-center justify-center rounded-xl border border-current bg-white px-4 text-xs font-black shadow-sm transition hover:bg-neutral-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2"
                     >
-                        다른 계정으로 다시 로그인
+                        {labelText("다른 계정으로 다시 로그인")}
                     </Link>
                 )}
             </div>
@@ -177,10 +179,11 @@ function LabHeroControls({
     mode: PetLensMode;
     onMode: (mode: PetLensMode) => void;
 }) {
+    const { menuLabel: labelText } = useI18n();
     return (
         <>
             {pets.length > 1 ? (
-                <div className="lab-pet-pills" role="group" aria-label="분석할 반려견">
+                <div className="lab-pet-pills" role="group" aria-label={labelText("분석할 반려견")}>
                     {pets.map((pet, index) => {
                         const ready = Boolean(pet.apiProfileId && pet.breed?.trim());
                         const active = pet.apiProfileId === selectedPetProfileId;
@@ -205,12 +208,12 @@ function LabHeroControls({
                     })}
                 </div>
             ) : null}
-            <div className="lab-mode-pills" role="group" aria-label="분석 종류">
+            <div className="lab-mode-pills" role="group" aria-label={labelText("분석 종류")}>
                 <button type="button" aria-pressed={mode === "photo"} onClick={() => onMode("photo")} className={mode === "photo" ? "is-on" : ""}>
-                    <Image src="/images/ui/lab-tab-photo-160.webp" alt="" width={32} height={32} aria-hidden="true" />사진 건강 분석
+                    <Image src="/images/ui/lab-tab-photo-160.webp" alt="" width={32} height={32} aria-hidden="true" />{labelText("사진 건강 분석")}
                 </button>
                 <button type="button" aria-pressed={mode === "observation"} onClick={() => onMode("observation")} className={mode === "observation" ? "is-on" : ""}>
-                    <Image src="/images/ui/lab-tab-observation-160.webp" alt="" width={32} height={32} aria-hidden="true" />행동 · 소리 분석
+                    <Image src="/images/ui/lab-tab-observation-160.webp" alt="" width={32} height={32} aria-hidden="true" />{labelText("행동 · 소리 분석")}
                 </button>
             </div>
         </>
@@ -220,6 +223,7 @@ function LabHeroControls({
 // 연구소 머리 판 — 사진 분석 = 연보라 쿠션 + 카메라 그림, 행동·소리 = 하늘 쿠션 + 연구하는 강아지 그림(무지개 고리).
 // 웹에서만 보이고 앱에서는 아래 원래 머리글(lab-legacy-head)이 보인다.
 function LabHero({ mode, controls }: { mode: PetLensMode; controls?: React.ReactNode }) {
+    const { menuLabel: labelText } = useI18n();
     const observation = mode === "observation";
     return (
         <section className={`dw-csheet ${observation ? "is-sky" : "is-lav"} dw-chero ddb-hero-band lab-hero ${controls ? "is-compact" : ""} hidden`} aria-labelledby="lab-hero-title">
@@ -227,17 +231,17 @@ function LabHero({ mode, controls }: { mode: PetLensMode; controls?: React.React
                 <p className="ddb-crayon-kicker dw-kicker">{observation ? "DAENGDABANG LAB · BEHAVIOR & SOUND" : "DAENGDABANG LAB · PETLENS"}</p>
                 <h1 id="lab-hero-title" className="ddb-crayon-title dw-h1">
                     {observation ? (
-                        <>행동 · 소리로 읽는{controls ? " " : <br />}<span className="ddb-crayon-underline">우리 아이 신호</span></>
+                        <>{labelText("행동 · 소리로 읽는")}{controls ? " " : <br />}<span className="ddb-crayon-underline">{labelText("우리 아이 신호")}</span></>
                     ) : (
-                        <>네 방향 사진으로 보는{controls ? " " : <br />}<span className="ddb-crayon-underline">우리 아이 오늘</span></>
+                        <>{labelText("네 방향 사진으로 보는")}{controls ? " " : <br />}<span className="ddb-crayon-underline">{labelText("우리 아이 오늘")}</span></>
                     )}
                 </h1>
                 {controls ? <div className="lab-hero-controls">{controls}</div> : (
                 <>
                 <p className="dw-lead">
-                    {observation
+                    {labelText(observation
                         ? "카메라·마이크로 포착한 행동과 소리를 함께 살펴 우리 아이의 관찰 포인트를 정리합니다."
-                        : "회원가입 때 확인한 견종과 생활 정보를 기준으로, 네 방향 사진에서 현재 외형·체형·털 상태와 케어 포인트를 정리해 드립니다."}
+                        : "회원가입 때 확인한 견종과 생활 정보를 기준으로, 네 방향 사진에서 현재 외형·체형·털 상태와 케어 포인트를 정리해 드립니다.")}
                 </p>
                 <ul className="lab-hero-chips">
                     {(observation
@@ -264,6 +268,7 @@ function LabHero({ mode, controls }: { mode: PetLensMode; controls?: React.React
 }
 
 export default function PetLensClient() {
+    const { menuLabel: labelText } = useI18n();
     const queryString = useSearchParams().toString();
     const { user, upsertPet } = useAuth();
     const { hydrated } = useStore();
@@ -634,15 +639,15 @@ export default function PetLensClient() {
                             </h1>
                         </div>
                         <p className="mt-3 max-w-2xl text-sm font-bold leading-6 text-neutral-600">
-                            카메라·마이크로 포착한 행동과 소리를 함께 살펴 우리 아이의 관찰 포인트를 정리합니다.
+                            {labelText("카메라·마이크로 포착한 행동과 소리를 함께 살펴 우리 아이의 관찰 포인트를 정리합니다.")}
                         </p>
                     </>
                 ) : (
                     <>
-                        <p className="text-sm font-black text-indigo-700">펫렌즈 케어</p>
-                        <h1 className="mt-2 text-3xl font-black tracking-tight text-neutral-950 md:text-4xl">펫렌즈</h1>
+                        <p className="text-sm font-black text-indigo-700">{labelText("펫렌즈 케어")}</p>
+                        <h1 className="mt-2 text-3xl font-black tracking-tight text-neutral-950 md:text-4xl">{labelText("펫렌즈")}</h1>
                         <p className="mt-3 max-w-2xl text-sm font-bold leading-6 text-neutral-600">
-                            회원가입 때 확인한 견종과 생활 정보를 기준으로, 네 방향 사진에서 현재 외형·체형·털 상태와 케어 포인트를 정리해 드립니다.
+                            {labelText("회원가입 때 확인한 견종과 생활 정보를 기준으로, 네 방향 사진에서 현재 외형·체형·털 상태와 케어 포인트를 정리해 드립니다.")}
                         </p>
                     </>
                 )}
@@ -680,8 +685,8 @@ export default function PetLensClient() {
             <div className="lab-photo-grid grid gap-6 lg:grid-cols-[420px_1fr]">
                 <form onSubmit={submit} className="surface lab-form grid h-fit gap-4 p-5">
                     <div data-petlens-page-multiview-upload>
-                        <span className="lab-pane-head hidden" aria-hidden="true"><b>1</b>네 방향 사진</span>
-                        <span className="mb-1 block text-xs font-black text-neutral-500 lab-legacy-label">사진</span>
+                        <span className="lab-pane-head hidden" aria-hidden="true"><b>1</b>{labelText("네 방향 사진")}</span>
+                        <span className="mb-1 block text-xs font-black text-neutral-500 lab-legacy-label">{labelText("사진")}</span>
                         <div className="grid grid-cols-2 gap-2">
                             {PETLENS_PHOTO_VIEWS.map((view) => {
                                 const photo = photoViews[view.id];
@@ -716,54 +721,54 @@ export default function PetLensClient() {
                             })}
                         </div>
                         <p className="mt-2 text-[11px] font-bold leading-5 text-neutral-500">
-                            모바일에서는 각 칸을 누르면 카메라가 열립니다. 네 방향 사진을 함께 올리면 얼굴·몸통·털 상태를 더 꼼꼼히 비교합니다.
+                            {labelText("모바일에서는 각 칸을 누르면 카메라가 열립니다. 네 방향 사진을 함께 올리면 얼굴·몸통·털 상태를 더 꼼꼼히 비교합니다.")}
                         </p>
-                        {photoLoading && <p className="mt-2 text-xs font-black text-indigo-700">사진 준비 중</p>}
+                        {photoLoading && <p className="mt-2 text-xs font-black text-indigo-700">{labelText("사진 준비 중")}</p>}
                     </div>
 
-                    <span className="lab-pane-head lab-pane-head-info hidden" aria-hidden="true"><b>2</b>우리 아이 정보</span>
+                    <span className="lab-pane-head lab-pane-head-info hidden" aria-hidden="true"><b>2</b>{labelText("우리 아이 정보")}</span>
                     <AppPetInfoFold name={name} age={age} size={size} coat={coat} activity={activity}>
                     <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-1">
                         <label>
-                            <span className="mb-1 block text-xs font-black text-neutral-500">이름</span>
-                            <input value={name} onChange={(event) => setName(event.target.value)} className="input" placeholder="우리 아이" />
+                            <span className="mb-1 block text-xs font-black text-neutral-500">{labelText("이름")}</span>
+                            <input value={name} onChange={(event) => setName(event.target.value)} className="input" placeholder={labelText("우리 아이")} />
                         </label>
                         <label>
-                            <span className="mb-1 block text-xs font-black text-neutral-500">나이</span>
-                            <input value={age} onChange={(event) => setAge(event.target.value)} className="input" placeholder="예: 3살" />
+                            <span className="mb-1 block text-xs font-black text-neutral-500">{labelText("나이")}</span>
+                            <input value={age} onChange={(event) => setAge(event.target.value)} className="input" placeholder={labelText("예: 3살")} />
                         </label>
                     </div>
 
                     <div className="grid gap-3 md:grid-cols-3 lg:grid-cols-1">
                         <label>
-                            <span className="mb-1 block text-xs font-black text-neutral-500">크기</span>
+                            <span className="mb-1 block text-xs font-black text-neutral-500">{labelText("크기")}</span>
                             <select value={size} onChange={(event) => setSize(event.target.value as PetProfile["size"])} className="input">
-                                <option value="small">소형</option>
-                                <option value="medium">중형</option>
-                                <option value="large">대형</option>
+                                <option value="small">{labelText("소형")}</option>
+                                <option value="medium">{labelText("중형")}</option>
+                                <option value="large">{labelText("대형")}</option>
                             </select>
                         </label>
                         <label>
-                            <span className="mb-1 block text-xs font-black text-neutral-500">모질</span>
+                            <span className="mb-1 block text-xs font-black text-neutral-500">{labelText("모질")}</span>
                             <select value={coat} onChange={(event) => setCoat(event.target.value as PetProfile["coat"])} className="input">
-                                <option value="short">단모</option>
-                                <option value="medium">보통</option>
-                                <option value="long">장모</option>
+                                <option value="short">{labelText("단모")}</option>
+                                <option value="medium">{labelText("보통")}</option>
+                                <option value="long">{labelText("장모")}</option>
                             </select>
                         </label>
                         <label>
-                            <span className="mb-1 block text-xs font-black text-neutral-500">활동량</span>
+                            <span className="mb-1 block text-xs font-black text-neutral-500">{labelText("활동량")}</span>
                             <select value={activity} onChange={(event) => setActivity(event.target.value as PetProfile["activity"])} className="input">
-                                <option value="low">낮음</option>
-                                <option value="normal">보통</option>
-                                <option value="high">높음</option>
+                                <option value="low">{labelText("낮음")}</option>
+                                <option value="normal">{labelText("보통")}</option>
+                                <option value="high">{labelText("높음")}</option>
                             </select>
                         </label>
                     </div>
                     </AppPetInfoFold>
 
                     <div>
-                        <span className="mb-2 block text-xs font-black text-neutral-500">관심 포인트</span>
+                        <span className="mb-2 block text-xs font-black text-neutral-500">{labelText("관심 포인트")}</span>
                         <div className="lab-concerns flex flex-wrap gap-2">
                             {CONCERN_OPTIONS.map((option) => (
                                 <label key={option} className={`inline-flex h-10 items-center gap-2 rounded-md border px-3 text-sm font-black ${
@@ -785,7 +790,7 @@ export default function PetLensClient() {
 
                     <button type="submit" disabled={loading || photoLoading} className="btn btn-primary w-full disabled:opacity-50">
                         <i className="fa-solid fa-wand-magic-sparkles text-xs" />
-                        {loading ? "분석 중" : "추천 받기"}
+                        {labelText(loading ? "분석 중" : "추천 받기")}
                     </button>
                     {analysisError && (
                         <p className="rounded-md border border-rose-200 bg-rose-50 p-3 text-sm font-bold leading-6 text-rose-700" data-web-notice="error">
@@ -806,14 +811,14 @@ export default function PetLensClient() {
                                     data-petlens-result-profile-cta
                                 >
                                     <i className="fa-solid fa-chart-line text-xs" />
-                                    내 아이 기록에서 결과 보기
+                                    {labelText("내 아이 기록에서 결과 보기")}
                                 </Link>
                             </div>
                             {result.products.length > 0 ? (
                                 <section className="lab-products">
                                     <div className="mb-3">
-                                        <h2 className="text-lg font-black text-neutral-950">확인된 정보로 골라본 상품</h2>
-                                        <p className="mt-1 text-xs font-bold text-neutral-500">사진 근거와 입력한 생활 정보를 함께 반영했습니다.</p>
+                                        <h2 className="text-lg font-black text-neutral-950">{labelText("확인된 정보로 골라본 상품")}</h2>
+                                        <p className="mt-1 text-xs font-bold text-neutral-500">{labelText("사진 근거와 입력한 생활 정보를 함께 반영했습니다.")}</p>
                                     </div>
                                     <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-4">
                                         {result.products.map((product) => (
@@ -823,8 +828,8 @@ export default function PetLensClient() {
                                 </section>
                             ) : (
                                 <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5">
-                                    <p className="text-sm font-black text-amber-900">견종과 체형을 확인하면 상품 추천을 이어갈게요.</p>
-                                    <p className="mt-1 text-xs font-bold leading-5 text-amber-800">불확실한 사진 결과만으로 상품을 먼저 권하지 않습니다.</p>
+                                    <p className="text-sm font-black text-amber-900">{labelText("견종과 체형을 확인하면 상품 추천을 이어갈게요.")}</p>
+                                    <p className="mt-1 text-xs font-bold leading-5 text-amber-800">{labelText("불확실한 사진 결과만으로 상품을 먼저 권하지 않습니다.")}</p>
                                 </div>
                             )}
                         </div>
@@ -832,9 +837,9 @@ export default function PetLensClient() {
                         <div className="surface lab-empty p-8 text-center">
                             <Image src="/images/ui/lab-summary-256.webp" alt="" width={120} height={120} className="lab-empty-art hidden" aria-hidden="true" />
                             <i className="fa-solid fa-camera-retro text-4xl text-neutral-300 lab-empty-icon" />
-                            <h2 className="mt-4 text-xl font-black text-neutral-950">추천 결과가 여기에 표시됩니다.</h2>
+                            <h2 className="mt-4 text-xl font-black text-neutral-950">{labelText("추천 결과가 여기에 표시됩니다.")}</h2>
                             <p className="mt-2 text-sm font-bold text-neutral-600">
-                                정보를 입력하고 추천 받기를 눌러 주세요.
+                                {labelText("정보를 입력하고 추천 받기를 눌러 주세요.")}
                             </p>
                         </div>
                     )}
@@ -897,6 +902,7 @@ function AppPetInfoFold({ name, age, size, coat, activity, children }: {
     activity: PetProfile["activity"];
     children: React.ReactNode;
 }) {
+    const { menuLabel: labelText } = useI18n();
     const [open, setOpen] = useState(false);
     // 요약 글자 — 아래 select 의 보이는 이름과 같음
     const sizeLabel = { small: "소형", medium: "중형", large: "대형" }[size];
@@ -906,10 +912,10 @@ function AppPetInfoFold({ name, age, size, coat, activity, children }: {
     return (
         <div className="contents" data-app-fold="pet-info" data-app-fold-open={open ? "true" : "false"}>
             <button type="button" className="hidden" data-app-fold-toggle aria-expanded={open} onClick={() => setOpen((value) => !value)}>
-                <span data-app-fold-title>반려견 정보</span>
+                <span data-app-fold-title>{labelText("반려견 정보")}</span>
                 <span data-app-fold-summary>{summary}</span>
                 <span data-app-fold-action>
-                    {open ? "접기" : "수정"}
+                    {labelText(open ? "접기" : "수정")}
                     <i className={`fa-solid ${open ? "fa-chevron-up" : "fa-chevron-down"}`} aria-hidden="true" />
                 </span>
             </button>

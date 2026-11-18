@@ -24,7 +24,7 @@ export default function ReviewsPage() {
                 en="Products reviewed at external stores"
                 className="mt-2 text-3xl font-black tracking-tight text-neutral-950 md:text-4xl"
             />
-            <LocalizedText as="p" ko={SOURCE_NOTE_KO} en="Source: Naver Daengdabang store (seller: Natural Labs). Shown separately from purchases made on this site. Counts reflect the collected source data." className="mt-3 text-sm leading-6 text-neutral-600" />
+            <LocalizedText as="p" ko={SOURCE_NOTE_KO} en="Source: 댕다방 on Naver, sold by Natural Labs Co., Ltd. Reviews of purchases on this site appear separately. These figures reflect the collection date. The original reviews are linked for each product." className="mt-3 text-sm leading-6 text-neutral-600" />
             <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
                 {products.map((product) => (
                     <ProductCard key={product.id} product={product} />

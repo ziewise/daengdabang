@@ -1,4 +1,6 @@
 "use client";
+import { useI18n } from "@/lib/i18n";
+import { useCareTalkCopy } from "@/hooks/useCareTalkCopy";
 import Link from "next/link";
 import { Capacitor } from "@capacitor/core";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -7,6 +9,8 @@ import { ddbApiBase } from "@/lib/ddb-api-base";
 import { chatSubmissionDecision, loadChatSecurityPolicy, normalizeChatBotToken, type ChatSecurityPolicy } from "@/lib/shop-chat-security";
 
 export function useChatBotProtection(open: boolean, accessToken?: string) {
+    const copy = useCareTalkCopy();
+    const { locale } = useI18n();
     const [policy, setPolicy] = useState<ChatSecurityPolicy | null>(null);
     const [unavailable, setUnavailable] = useState(false);
     const [revision, setRevision] = useState(0);
@@ -34,15 +38,15 @@ export function useChatBotProtection(open: boolean, accessToken?: string) {
     const consume = () => { const value = decision(); if (value.allowed && value.token) clearToken(); return { allowed: value.allowed, proof: value.token, message: value.message }; };
     const challenge = !authenticated && open && (unavailable ? (
         <section role="status" className="mb-2 rounded-lg border border-amber-200 bg-amber-50 p-2 text-xs">
-            보안 설정을 확인하지 못했어요. <button type="button" className="underline" onClick={refresh}>다시 확인</button>
+            {copy("보안 설정을 확인하지 못했어요.")} <button type="button" className="underline" onClick={refresh}>{copy("다시 확인")}</button>
         </section>
     ) : policy?.guestChallengeRequired ? native ? (
         <section role="status" className="mb-2 rounded-lg border border-amber-200 bg-amber-50 p-2 text-xs">
-            이 앱의 보안 확인 연결을 준비 중이에요. <Link href="/auth/login/?redirect=%2Fchat%2F" className="underline">로그인 후 상담</Link>을 이용해 주세요.
+            {locale === "en" ? "To start a secure chat in the app, " : "이 앱의 보안 확인 연결을 준비 중이에요. "}<Link href="/auth/login/?redirect=%2Fchat%2F" className="underline">{copy("로그인 후 상담")}</Link>{locale === "en" ? "." : "을 이용해 주세요."}
         </section>
     ) : <SignupBotChallenge action="shop_chat" headingId="shop-chat-bot-challenge-title"
-        title="상담 보안 확인" description="자동으로 반복되는 요청을 막기 위한 확인이에요."
-        unavailableMessage="상담 보안 확인을 준비 중입니다. 잠시 후 다시 이용해 주세요."
+        title={copy("상담 보안 확인")} description={copy("자동으로 반복되는 요청을 막기 위한 확인이에요.")}
+        unavailableMessage={copy("상담 보안 확인을 준비 중입니다. 잠시 후 다시 이용해 주세요.")}
         onTokenChange={onTokenChange} resetKey={resetKey} /> : null);
     return { consume, refresh, clearToken, challenge, ready: authenticated || policy !== null || unavailable };
 }

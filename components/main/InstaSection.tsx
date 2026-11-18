@@ -4,6 +4,7 @@
  * 8장 정사각 타일. hover 및 키보드 focus 시 실제 프로필 이동 안내.
  * 모바일 2열, sm 3열, lg 4열.
  */
+import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
 import Image from "next/image";
 import { PUBLIC_SOCIAL_CHANNELS } from "@/lib/social-channels";
 
@@ -38,7 +39,7 @@ export default function InstaSection() {
                             <span>{INSTA_HANDLE}</span>
                         </h2>
                         <p className="text-sm text-neutral-500">
-                            댕다방의 일상을 인스타에서 만나보세요
+                            <LocalizedMenuLabel label={"댕다방의 일상을 인스타에서 만나보세요"} />
                         </p>
                     </div>
                     <a
@@ -48,7 +49,7 @@ export default function InstaSection() {
                         aria-label={`${INSTA_HANDLE} 인스타그램 프로필 열기 (새 창)`}
                         className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 text-white text-xs md:text-sm font-bold hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-purple-600 transition motion-reduce:transition-none self-start sm:self-auto"
                     >
-                        팔로우 하러가기
+                        <LocalizedMenuLabel label={"팔로우 하러가기"} />
                         <i aria-hidden="true" className="fa-solid fa-arrow-up-right-from-square text-[10px]" />
                     </a>
                 </div>
@@ -74,7 +75,7 @@ export default function InstaSection() {
                             {/* 포인터와 키보드 모두 프로필 이동 안내 표시 */}
                             <div aria-hidden="true" className="absolute inset-0 bg-black/55 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity motion-reduce:transition-none flex items-center justify-center text-white text-sm font-bold">
                                 <span className="inline-flex items-center gap-1.5 px-3 text-center">
-                                    <i className="fa-brands fa-instagram" /> 인스타그램에서 만나기
+                                    <i className="fa-brands fa-instagram" /> <LocalizedMenuLabel label={"인스타그램에서 만나기"} />
                                 </span>
                             </div>
                         </a>

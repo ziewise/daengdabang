@@ -10,6 +10,7 @@
  * 대상견을 구분하지 못한 결과는 그래프 · 카드를 그리지 않는다(원래 보류 리포트가 그대로 보임).
  * 기본은 hidden — app/lab-web.css(웹 연구소 페이지)에서만 보이고, 앱 · 펫렌즈 창은 원래 결과 화면 그대로.
  */
+import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
 import type { CSSProperties } from "react";
 import Image from "next/image";
 import type { PetObservationCandidate, PetObservationResult, PetObservationUrgencyLevel } from "@/lib/petlens-observation";
@@ -118,7 +119,7 @@ export default function PetLensObservationReport({ result }: { result: PetObserv
             {/* 머리 — 요약 한 줄 · 상태 칩 · 그림 고리 */}
             <div className="lab-obs-report-head">
                 <div>
-                    <p className="ddb-crayon-kicker dw-kicker">{durationLabel}초 관찰 리포트</p>
+                    <p className="ddb-crayon-kicker dw-kicker">{durationLabel}<LocalizedMenuLabel label={"초 관찰 리포트"} /></p>
                     <h2 id="lab-obs-report-title">{result.summary}</h2>
                     <ul className="lab-obs-report-chips">
                         <li className={urgencyHigh ? "is-alert" : "is-calm"}>
@@ -144,9 +145,9 @@ export default function PetLensObservationReport({ result }: { result: PetObserv
                 <figure className="lab-obs-chart lab-obs-report-chart">
                     <figcaption className="lab-obs-legend">
                         {series.map((group) => (
-                            <span key={group.kind}><i style={{ background: group.color }} aria-hidden="true" />{group.top.label}<small>{group.label}</small></span>
+                            <span key={group.kind}><i style={{ background: group.color }} aria-hidden="true" />{group.top.label}<small><LocalizedMenuLabel label={group.label} /></small></span>
                         ))}
-                        <em>가로 시간 · 세로 지지도</em>
+                        <em><LocalizedMenuLabel label={"가로 시간 · 세로 지지도"} /></em>
                     </figcaption>
                     <div className="lab-obs-plot">
                         <svg
@@ -185,14 +186,14 @@ export default function PetLensObservationReport({ result }: { result: PetObserv
                             })}
                         </div>
                     </div>
-                    <div className="lab-obs-axis" aria-hidden="true"><span>0초</span><span>{(duration / 2).toFixed(duration % 2 ? 1 : 0)}초</span><span>{durationLabel}초</span></div>
+                    <div className="lab-obs-axis" aria-hidden="true"><span><LocalizedMenuLabel label={"0초"} /></span><span>{(duration / 2).toFixed(duration % 2 ? 1 : 0)}<LocalizedMenuLabel label={"초"} /></span><span>{durationLabel}<LocalizedMenuLabel label={"초"} /></span></div>
                     {momentIndexes.length > 0 && (
                         <ol className="lab-obs-moments" aria-label="근거가 된 순간">
                             {momentIndexes.map((index, order) => {
                                 const fact = result.observations[index];
                                 return (
                                     <li key={index} className={order % 2 ? "is-low" : ""} style={{ left: `${(x(fact.timeSeconds) / W) * 100}%` }} title={fact.description}>
-                                        {fact.timeSeconds.toFixed(1)}초 {MODALITY_LABEL[fact.modality]}
+                                        {fact.timeSeconds.toFixed(1)}<LocalizedMenuLabel label={"초"} /> {MODALITY_LABEL[fact.modality]}
                                     </li>
                                 );
                             })}
@@ -212,7 +213,7 @@ export default function PetLensObservationReport({ result }: { result: PetObserv
                             <li key={group.kind} style={{ "--c": group.color } as CSSProperties}>
                                 <div className="lab-obs-group-top">
                                     <Image src={group.art} alt="" width={44} height={44} aria-hidden="true" />
-                                    <div><small>{group.label}</small><b>{group.top.label}</b></div>
+                                    <div><small><LocalizedMenuLabel label={group.label} /></small><b>{group.top.label}</b></div>
                                 </div>
                                 {pct !== null && <div className="lab-obs-meter" aria-hidden="true"><i style={{ width: `${pct}%` }} /></div>}
                                 <p className="lab-obs-group-foot">

@@ -12,6 +12,7 @@
  * 꾸밈 CSS 는 app/daily-web.css 의 "하루 원판" 묶음(.dw-dial*).
  */
 
+import { useI18n } from "@/lib/i18n";
 import Image from "next/image";
 import { useRef, useState, type CSSProperties, type ReactNode } from "react";
 
@@ -36,6 +37,7 @@ type Props = {
 };
 
 export default function TreasureDial({ slices, selected, onSelect, score, center, burst }: Props) {
+    const { menuLabel: labelText } = useI18n();
     const count = Math.max(1, slices.length);
     const span = 360 / count; // 조각 하나의 각도
     // 누적 회전 — 고른 조각이 맨 위로 오도록, 늘 가까운 쪽으로 돈다(고른 조각이 바뀐 그 렌더에서 바로 계산)
@@ -65,7 +67,7 @@ export default function TreasureDial({ slices, selected, onSelect, score, center
     };
 
     return (
-        <div className="dw-dial" role="group" aria-label="오늘 할 일 원판 — 조각을 누르면 그 할 일이 옆에 보여요" onPointerDown={onPointerDown} onPointerUp={onPointerUp}>
+        <div className="dw-dial" role="group" aria-label={labelText("오늘 할 일 원판 — 조각을 누르면 그 할 일이 옆에 보여요")} onPointerDown={onPointerDown} onPointerUp={onPointerUp}>
             {/* 바깥 테두리 — 오늘 루틴 점수만큼 무지개 */}
             <span className="dw-dial-ring" style={{ "--dw-score": score ?? 0 } as CSSProperties} aria-hidden="true" />
             <span className="dw-dial-ring-in" aria-hidden="true" />

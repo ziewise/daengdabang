@@ -7,6 +7,7 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { useMemo, useSyncExternalStore } from "react";
 import { CATALOG } from "@/lib/catalog";
 import { SEASONS, seasonOf, seasonProducts, type SeasonKey } from "@/lib/promo-season";
@@ -22,6 +23,7 @@ type Props = {
 };
 
 export default function SeasonPromoClient({ builtSeason, others }: Props) {
+    const { menuLabel: labelText } = useI18n();
     const season = useSyncExternalStore(noopSubscribe, () => seasonOf(), () => builtSeason);
     const look = SEASONS[season];
     const products = useMemo(() => seasonProducts(CATALOG, season), [season]);
@@ -29,7 +31,7 @@ export default function SeasonPromoClient({ builtSeason, others }: Props) {
     return (
         <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6" data-collection-web="promo" data-season={season}>
             <p className="text-sm font-black text-indigo-700">PROMO</p>
-            <h1 className="mt-2 text-3xl font-black tracking-tight text-neutral-950 md:text-4xl">{look.title}</h1>
+            <h1 className="mt-2 text-3xl font-black tracking-tight text-neutral-950 md:text-4xl">{labelText(look.title)}</h1>
             <div className="mt-6">
                 <PaginatedProductGrid key={season} products={products} />
             </div>

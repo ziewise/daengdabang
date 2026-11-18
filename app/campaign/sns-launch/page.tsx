@@ -1,3 +1,4 @@
+import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
 import type { Metadata } from "next";
 import { CATALOG, getBestProducts, getNewProducts } from "@/lib/catalog";
 import { productHref } from "@/lib/shop";
@@ -39,22 +40,22 @@ export default function SnsLaunchCampaignPage() {
                     <div className="flex flex-col justify-center">
                         <p className="text-sm font-black text-indigo-700">PetLens Shopping</p>
                         <h1 className="mt-3 text-4xl font-black leading-tight tracking-tight text-neutral-950 md:text-5xl">
-                            우리 아이에게 맞는 상품을 먼저 골라보세요
+                            <LocalizedMenuLabel label={"우리 아이에게 맞는 상품을 먼저 골라보세요"} />
                         </h1>
                         <p className="mt-4 max-w-xl text-base font-bold leading-7 text-neutral-600">
-                            사진과 생활 정보를 넣으면 펫렌즈, 챗봇, 자동 피팅이 같은 프로필을 기준으로 이어집니다.
+                            <LocalizedMenuLabel label={"사진과 생활 정보를 넣으면 펫렌즈, 챗봇, 자동 피팅이 같은 프로필을 기준으로 이어집니다."} />
                         </p>
                         <div className="mt-6 flex flex-wrap gap-2">
                             <a href="/auth/signup?utm_source=social&utm_medium=profile&utm_campaign=sns_launch" className="btn btn-primary">
                                 <i className="fa-solid fa-user-plus text-xs" />
-                                프로필 만들기
+                                <LocalizedMenuLabel label={"프로필 만들기"} />
                             </a>
                             <a href="/pet-lens?utm_source=social&utm_medium=profile&utm_campaign=sns_launch" className="btn btn-secondary">
                                 <i className="fa-solid fa-camera text-xs" />
-                                펫렌즈 보기
+                                <LocalizedMenuLabel label={"펫렌즈 보기"} />
                             </a>
                             <a href="/products?utm_source=social&utm_medium=profile&utm_campaign=sns_launch" className="btn btn-secondary">
-                                전체상품
+                                <LocalizedMenuLabel label={"전체상품"} />
                             </a>
                         </div>
                     </div>

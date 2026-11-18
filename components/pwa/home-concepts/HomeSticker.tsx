@@ -1,5 +1,7 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
+import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
 import "./home-shared.generated.css";
 import "./home-sticker.css";
 
@@ -34,7 +36,7 @@ import { ConceptBar, WEATHER_KO, WEEK, flyCoin, greeting, todayIndex, useDemoSes
 import { hasVerifiedPetPhoto } from "@/lib/store";
 
 const SectionNow = dynamic(() => import("./SectionNow"), {
-    loading: () => <p role="status" className="ah-light p-4 text-center">미리보기를 불러오는 중…</p>,
+    loading: () => <p role="status" className="ah-light p-4 text-center"><LocalizedMenuLabel label={"미리보기를 불러오는 중…"} /></p>,
 });
 const toneBg = (c: Cover) => `linear-gradient(180deg, ${c.tone.from} 0%, ${c.tone.to} 100%)`;
 const NOTE_COLORS = ["#fff3a6", "#ffd6e2", "#d9ecff"];
@@ -65,6 +67,7 @@ function StickerCard({ cover, i, note, onTap, onLongPress }: { cover: Cover; i: 
 }
 
 export default function HomeSticker() {
+    const { menuLabel: labelText } = useI18n();
     const [session, setSession] = useDemoSession();
     const member = session === "member";
     const today = useTodayDemo(session);
@@ -126,7 +129,7 @@ export default function HomeSticker() {
                                     // 실제 우리 아이 사진(서버가 확인한 사진만 — 웹 마이페이지와 같은 기준)
                                     // eslint-disable-next-line @next/next/no-img-element
                                     ? <img src={pet.photoDataUrl} alt={`${petName} 사진`} className="absolute inset-0 h-full w-full object-cover" />
-                                    : <Image src="/images/ui/logo-poodle-384.webp" alt="댕다방 검정 푸들" fill sizes="120px" loading="eager" className="object-cover" />}
+                                    : <Image src="/images/ui/logo-poodle-384.webp" alt={labelText("댕다방 검정 푸들")} fill sizes="120px" loading="eager" className="object-cover" />}
                             </span>
                             <span className="ah-display absolute inset-x-0 bottom-1 text-center text-[13px]" style={{ color: "#ea4c7c" }}>{member ? petName : "댕다방"}</span>
                         </span>
@@ -145,8 +148,8 @@ export default function HomeSticker() {
                         // 날씨 스티커(오른쪽 위)와 붙지 않게 아래로 띄움
                         <div className="st-place mt-11 flex items-center gap-2.5" style={{ ["--r" as string]: "0deg", ["--d" as string]: "380ms" }}>
                             <Link href="/app/sticker/daily/" className="hm-note relative flex-1 rounded-[4px_4px_14px_4px] px-3.5 py-2.5 active:scale-[.98]" style={{ rotate: "-1deg" }}>
-                                <span className="ah-display block text-[13.5px]">오늘 출근 스티커는 매일 댕생활에서!</span>
-                                <span className="ah-light block text-[11.5px]" style={{ color: TEXT_SOFT }}>출근하고 코인 받기 · 연속 출근 확인 <i aria-hidden="true" className="fa-solid fa-arrow-right text-[9px]" /></span>
+                                <span className="ah-display block text-[13.5px]">{labelText("오늘 출근 스티커는 매일 댕생활에서!")}</span>
+                                <span className="ah-light block text-[11.5px]" style={{ color: TEXT_SOFT }}>{labelText("출근하고 코인 받기 · 연속 출근 확인")} <i aria-hidden="true" className="fa-solid fa-arrow-right text-[9px]" /></span>
                             </Link>
                             <CoinChip ref={coinRef} coins={today.coins} />
                         </div>
@@ -156,7 +159,7 @@ export default function HomeSticker() {
                     <Link href="/app/sticker/shop/" className="hm-short hm-shop st-place relative mt-14 block" style={{ ["--r" as string]: "-1deg", ["--d" as string]: "520ms", rotate: "-1deg" }}>
                         <span className="hm-card relative flex items-center gap-3 rounded-[20px] py-3.5 pl-[5.6rem] pr-3.5" style={{ background: "linear-gradient(165deg, #fff3e8 0%, #ffe0c7 100%)", color: "#a8480f" }}>
                             <span className="min-w-0 flex-1">
-                                <span className="ah-display block text-[16px]">쇼핑하러 가기</span>
+                                <span className="ah-display block text-[16px]">{labelText("쇼핑하러 가기")}</span>
                                 <span className="ah-light mt-0.5 block text-[11.5px] leading-snug opacity-80">{member ? `${petName}에게 맞는 용품 · 먹거리` : "산책 · 먹거리 · 생활 · 장난감 · 케어"}</span>
                             </span>
                             <span className="hm-go grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white/85 text-[11px] text-[#cf5f19]"><i aria-hidden="true" className="fa-solid fa-arrow-right" /></span>
@@ -166,7 +169,7 @@ export default function HomeSticker() {
 
                     {/* ── 댕다방 즐기기: 테이프로 붙인 카드 스티커 ── */}
                     <div className="mt-6 flex items-center gap-2">
-                        <span className="ah-display st-marker text-[15px]">댕다방 즐기기</span>
+                        <span className="ah-display st-marker text-[15px]">{labelText("댕다방 즐기기")}</span>
                         <span className="h-px flex-1 border-t-2 border-dashed border-[#f0d9cf]" />
                         <i aria-hidden="true" className="fa-solid fa-paw text-[12px] text-[#ff8fae]" />
                     </div>
@@ -183,7 +186,7 @@ export default function HomeSticker() {
                     <div className={`mb-2 mt-[4.5rem] grid gap-3 ${visibility.localCare ? "grid-cols-2" : "grid-cols-1"}`}> {/* 동네 돌봄을 숨기면 케어톡 한 장이 한 줄 전체 */}
                         <Link href="/chat/" className="hm-short st-place relative block" style={{ ["--r" as string]: "-2deg", ["--d" as string]: "820ms", rotate: "-2deg" }}>
                             <span className="hm-card relative flex h-full flex-col rounded-[20px] px-3.5 pb-3 pt-9" style={{ background: "#ece4ff", color: "#563fa8" }}>
-                                <span className="ah-display text-[14.5px]">케어톡에 물어보기</span>
+                                <span className="ah-display text-[14.5px]">{labelText("케어톡에 물어보기")}</span>
                                 <span className="ah-light mt-0.5 text-[11.5px] leading-snug opacity-80">{member ? `${petName} 산책 몇 분이 좋을까?` : "무엇이든 편하게 물어보세요"}</span>
                                 <span className="hm-go mt-2 grid h-7 w-7 place-items-center self-end rounded-full bg-white/85 text-[10px] text-[#7457d8]"><i aria-hidden="true" className="fa-solid fa-chevron-right" /></span>
                             </span>
@@ -193,8 +196,8 @@ export default function HomeSticker() {
                         {visibility.localCare ? (
                             <Link href="/app/sticker/care/" className="hm-short st-place relative block" style={{ ["--r" as string]: "2deg", ["--d" as string]: "900ms", rotate: "2deg" }}>
                                 <span className="hm-card hm-fold relative flex h-full flex-col rounded-[20px] px-3.5 pb-3 pt-9" style={{ background: "#d9f2e4", color: "#1f7a59" }}>
-                                    <span className="ah-display text-[14.5px]">동네 돌봄 찾기</span>
-                                    <span className="ah-light mt-0.5 text-[11.5px] leading-snug opacity-80">근처 병원 · 미용<br />호텔 · 데이케어</span>
+                                    <span className="ah-display text-[14.5px]">{labelText("동네 돌봄 찾기")}</span>
+                                    <span className="ah-light mt-0.5 text-[11.5px] leading-snug opacity-80">{labelText("근처 병원 · 미용")}<br />{labelText("호텔 · 데이케어")}</span>
                                     {/* 지도 위 발자국 점선 */}
                                     <svg aria-hidden="true" viewBox="0 0 60 22" className="absolute bottom-3 left-3.5 h-[22px] w-[60px]"><path d="M2 18 C 16 4, 30 22, 46 8" fill="none" stroke="#7cc9a2" strokeWidth="2" strokeDasharray="3 4" strokeLinecap="round" /><circle cx="52" cy="6" r="3.2" fill="#3fb381" /></svg>
                                     <span className="hm-go mt-2 grid h-7 w-7 place-items-center self-end rounded-full bg-white/85 text-[10px] text-[#1f9e75]"><i aria-hidden="true" className="fa-solid fa-chevron-right" /></span>

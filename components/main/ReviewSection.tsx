@@ -8,6 +8,7 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -25,6 +26,7 @@ const PHOTO_TEXT_THRESHOLD = 60;
 const SIMPLE_TEXT_THRESHOLD = 80;
 
 export default function ReviewSection() {
+    const { menuLabel: labelText } = useI18n();
     return (
         <section id="review" className="py-8 md:py-12">
             <div className="max-w-[1400px] mx-auto px-6">
@@ -32,9 +34,9 @@ export default function ReviewSection() {
                 <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-5 mb-8">
                     <div>
                         <h2 className="text-2xl md:text-3xl font-black tracking-tight mb-1.5">
-                            리뷰
+                            {labelText("리뷰")}
                         </h2>
-                        <p className="text-sm text-neutral-500">댕다방을 사랑해주신 분들</p>
+                        <p className="text-sm text-neutral-500">{labelText("댕다방을 사랑해주신 분들")}</p>
                     </div>
                     <div className="flex items-center gap-3 md:gap-6 px-4 py-3 md:py-0 bg-white/70 md:bg-transparent backdrop-blur-md md:backdrop-blur-none rounded-xl md:rounded-none shadow-card md:shadow-none">
                         <Stat strong="4.9" sub={<span className="text-amber-400 text-sm">{stars(REVIEW_STATS.avg)}</span>} />
@@ -65,7 +67,7 @@ export default function ReviewSection() {
                         href="/reviews"
                         className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-neutral-300 hover:border-aurora-indigo hover:text-aurora-indigo text-sm font-bold transition"
                     >
-                        전체 리뷰 보기
+                        {labelText("전체 리뷰 보기")}
                         <i className="fa-solid fa-arrow-right text-xs" />
                     </Link>
                 </div>
@@ -89,6 +91,7 @@ function Divider() {
 
 /* ============ 포토 리뷰 카드 ============ */
 function PhotoReviewCard({ review, priority }: { review: PhotoReview; priority: boolean }) {
+    const { menuLabel: labelText } = useI18n();
     const [expanded, setExpanded] = useState(false);
     const isLong = review.text.length > PHOTO_TEXT_THRESHOLD;
     return (
@@ -118,7 +121,7 @@ function PhotoReviewCard({ review, priority }: { review: PhotoReview; priority: 
                         onClick={() => setExpanded((e) => !e)}
                         className="mt-1 text-[10px] md:text-[11px] font-bold text-aurora-indigo hover:underline"
                     >
-                        {expanded ? "접기" : "더보기"}
+                        {labelText(expanded ? "접기" : "더보기")}
                     </button>
                 )}
                 <p className="text-[10px] md:text-[11px] text-neutral-400 mt-2 md:mt-3 truncate">
@@ -131,6 +134,7 @@ function PhotoReviewCard({ review, priority }: { review: PhotoReview; priority: 
 
 /* ============ 간단 리뷰 카드 ============ */
 function SimpleReviewCard({ review }: { review: SimpleReview }) {
+    const { menuLabel: labelText } = useI18n();
     const [expanded, setExpanded] = useState(false);
     const isLong = review.text.length > SIMPLE_TEXT_THRESHOLD;
     return (
@@ -149,7 +153,7 @@ function SimpleReviewCard({ review }: { review: SimpleReview }) {
                     onClick={() => setExpanded((e) => !e)}
                     className="mt-1 text-[10px] md:text-[11px] font-bold text-aurora-indigo hover:underline"
                 >
-                    {expanded ? "접기" : "더보기"}
+                    {labelText(expanded ? "접기" : "더보기")}
                 </button>
             )}
             <p className="text-[10px] md:text-[11px] text-neutral-400 mt-2 md:mt-3 truncate">

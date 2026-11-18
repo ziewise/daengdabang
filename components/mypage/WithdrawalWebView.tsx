@@ -10,6 +10,7 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import Link from "next/link";
 import type { FormEvent } from "react";
 
@@ -45,6 +46,7 @@ const HANDLING = [
 ];
 
 export default function WithdrawalWebView(props: Props) {
+    const { menuLabel: labelText } = useI18n();
     const { isPasswordAccount, acknowledged, currentPassword, confirmation, ready, submitting, error } = props;
     const typedOk = confirmation === "회원 탈퇴";
     const steps = [
@@ -60,14 +62,14 @@ export default function WithdrawalWebView(props: Props) {
             <section className="wd-hero" aria-labelledby="wd-hero-title">
                 <div className="wd-hero-text">
                     <p className="wd-kicker">BEFORE YOU GO</p>
-                    <h2 id="wd-hero-title">떠나시기 전에 <span>꼭 확인해 주세요</span></h2>
-                    <p>탈퇴하면 되돌릴 수 없어요. 아래 내용을 확인하고, 마지막 단계에서 탈퇴를 확정할 수 있어요.</p>
+                    <h2 id="wd-hero-title">{labelText("떠나시기 전에")} <span>{labelText("꼭 확인해 주세요")}</span></h2>
+                    <p>{labelText("탈퇴하면 되돌릴 수 없어요. 아래 내용을 확인하고, 마지막 단계에서 탈퇴를 확정할 수 있어요.")}</p>
                 </div>
-                <div className="wd-account" aria-label="탈퇴 대상 계정">
+                <div className="wd-account" aria-label={labelText("탈퇴 대상 계정")}>
                     {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                     <img src="/images/ui/stickers/my-profile.webp" alt="" aria-hidden="true" />
                     <span className="wd-account-text">
-                        <small>탈퇴 대상 계정</small>
+                        <small>{labelText("탈퇴 대상 계정")}</small>
                         <b>{props.name}</b>
                         <em>{props.account}</em>
                     </span>
@@ -77,9 +79,9 @@ export default function WithdrawalWebView(props: Props) {
 
             {/* 2) 탈퇴하면 이렇게 돼요 */}
             <section className="wd-sec" aria-labelledby="wd-what-title">
-                <h2 id="wd-what-title" className="wd-h"><span><i className="fa-solid fa-circle-exclamation" aria-hidden="true" /></span>탈퇴하면 이렇게 돼요</h2>
+                <h2 id="wd-what-title" className="wd-h"><span><i className="fa-solid fa-circle-exclamation" aria-hidden="true" /></span>{labelText("탈퇴하면 이렇게 돼요")}</h2>
                 <div className="wd-lost">
-                    <p>다시 볼 수 없어요</p>
+                    <p>{labelText("다시 볼 수 없어요")}</p>
                     <ul>
                         {LOST.map((item) => <li key={item.label}><i className={`fa-solid ${item.icon}`} aria-hidden="true" />{item.label}</li>)}
                     </ul>
@@ -98,22 +100,22 @@ export default function WithdrawalWebView(props: Props) {
 
             {/* 3) 혹시 이런 이유라면 */}
             <section className="wd-sec wd-alt" aria-labelledby="wd-alt-title">
-                <h2 id="wd-alt-title" className="wd-h"><span><i className="fa-solid fa-lightbulb" aria-hidden="true" /></span>혹시 이런 이유라면, 탈퇴 대신</h2>
+                <h2 id="wd-alt-title" className="wd-h"><span><i className="fa-solid fa-lightbulb" aria-hidden="true" /></span>{labelText("혹시 이런 이유라면, 탈퇴 대신")}</h2>
                 <div className="wd-alt-links">
                     <Link href="/mypage/profile/" data-tone="mint">
                         {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                         <img src="/images/ui/stickers/my-profile.webp" alt="" aria-hidden="true" />
-                        <span><b>정보를 바꾸고 싶어요</b><small>개인정보 확인/수정</small></span>
+                        <span><b>{labelText("정보를 바꾸고 싶어요")}</b><small>{labelText("개인정보 확인/수정")}</small></span>
                     </Link>
                     <Link href="/mypage/recommendations/" data-tone="lav">
                         {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                         <img src="/images/ui/stickers/my-recommend.webp" alt="" aria-hidden="true" />
-                        <span><b>맞춤 추천이 부담돼요</b><small>추천 데이터 끄기</small></span>
+                        <span><b>{labelText("맞춤 추천이 부담돼요")}</b><small>{labelText("추천 데이터 끄기")}</small></span>
                     </Link>
                     <Link href="/inquiry/?category=other#inquiry-form" data-tone="sky">
                         {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                         <img src="/images/ui/web-cs-inquiry-160.webp" alt="" aria-hidden="true" />
-                        <span><b>불편한 점이 있었어요</b><small>1:1 문의 남기기</small></span>
+                        <span><b>{labelText("불편한 점이 있었어요")}</b><small>{labelText("1:1 문의 남기기")}</small></span>
                     </Link>
                 </div>
             </section>
@@ -121,8 +123,8 @@ export default function WithdrawalWebView(props: Props) {
             {/* 4) 마지막 확인 */}
             <form className="wd-sec wd-final" onSubmit={props.onSubmit} aria-labelledby="wd-final-title">
                 <div className="wd-final-head">
-                    <h2 id="wd-final-title" className="wd-h"><span><i className="fa-solid fa-lock" aria-hidden="true" /></span>마지막 확인</h2>
-                    <span className="wd-progress" aria-live="polite">{doneCount}/{steps.length} 완료</span>
+                    <h2 id="wd-final-title" className="wd-h"><span><i className="fa-solid fa-lock" aria-hidden="true" /></span>{labelText("마지막 확인")}</h2>
+                    <span className="wd-progress" aria-live="polite">{doneCount}/{steps.length} {labelText("완료")}</span>
                 </div>
 
                 <ol className="wd-steps">
@@ -130,21 +132,21 @@ export default function WithdrawalWebView(props: Props) {
                         <span className="wd-no" aria-hidden="true">{acknowledged ? <i className="fa-solid fa-check" /> : 1}</span>
                         <label className="wd-check">
                             <input type="checkbox" checked={acknowledged} onChange={(event) => props.onAcknowledged(event.target.checked)} />
-                            <span>위 내용을 확인했으며 법정 보존 대상 정보가 정해진 기간 동안 분리 보관되는 데 동의합니다.</span>
+                            <span>{labelText("위 내용을 확인했으며 법정 보존 대상 정보가 정해진 기간 동안 분리 보관되는 데 동의합니다.")}</span>
                         </label>
                     </li>
                     {isPasswordAccount && (
                         <li className={currentPassword ? "is-done" : ""}>
                             <span className="wd-no" aria-hidden="true">{currentPassword ? <i className="fa-solid fa-check" /> : 2}</span>
                             <label className="wd-field">
-                                <span>현재 비밀번호</span>
+                                <span>{labelText("현재 비밀번호")}</span>
                                 <input
                                     type="password"
                                     value={currentPassword}
                                     onChange={(event) => props.onCurrentPassword(event.target.value)}
                                     autoComplete="current-password"
                                     className="input"
-                                    placeholder="본인 확인을 위해 입력"
+                                    placeholder={labelText("본인 확인을 위해 입력")}
                                 />
                             </label>
                         </li>
@@ -152,17 +154,17 @@ export default function WithdrawalWebView(props: Props) {
                     <li className={typedOk ? "is-done" : ""}>
                         <span className="wd-no" aria-hidden="true">{typedOk ? <i className="fa-solid fa-check" /> : isPasswordAccount ? 3 : 2}</span>
                         <label className="wd-field">
-                            <span>확인 문구 — <b>회원 탈퇴</b> 를 그대로 입력해 주세요</span>
+                            <span>{labelText("확인 문구 —")} <b>{labelText("회원 탈퇴")}</b> {labelText("를 그대로 입력해 주세요")}</span>
                             <span className="wd-type">
                                 <input
                                     value={confirmation}
                                     onChange={(event) => props.onConfirmation(event.target.value)}
                                     className="input"
-                                    placeholder="회원 탈퇴"
+                                    placeholder={labelText("회원 탈퇴")}
                                     autoComplete="off"
                                     aria-invalid={Boolean(confirmation) && !typedOk}
                                 />
-                                {confirmation && <em className={typedOk ? "is-ok" : ""}>{typedOk ? "일치해요" : "문구가 달라요"}</em>}
+                                {confirmation && <em className={typedOk ? "is-ok" : ""}>{labelText(typedOk ? "일치해요" : "문구가 달라요")}</em>}
                             </span>
                         </label>
                     </li>
@@ -171,12 +173,12 @@ export default function WithdrawalWebView(props: Props) {
                 {error && <p className="wd-error" role="alert">{error}</p>}
 
                 <div className="wd-actions">
-                    <Link href="/mypage/" className="wd-stay"><i className="fa-solid fa-heart" aria-hidden="true" />계속 이용하기</Link>
+                    <Link href="/mypage/" className="wd-stay"><i className="fa-solid fa-heart" aria-hidden="true" />{labelText("계속 이용하기")}</Link>
                     <button type="submit" className="wd-leave" disabled={!ready || submitting}>
-                        {submitting ? "탈퇴 처리 중…" : "회원 탈퇴 확정"}
+                        {labelText(submitting ? "탈퇴 처리 중…" : "회원 탈퇴 확정")}
                     </button>
                 </div>
-                <p className="wd-foot">탈퇴 처리 기준은 <Link href="/privacy">개인정보처리방침</Link>에서 확인할 수 있어요.</p>
+                <p className="wd-foot">{labelText("탈퇴 처리 기준은")} <Link href="/privacy">{labelText("개인정보처리방침")}</Link>{labelText("에서 확인할 수 있어요.")}</p>
             </form>
         </div>
     );

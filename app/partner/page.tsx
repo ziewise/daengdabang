@@ -1,3 +1,4 @@
+import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
 import type { Metadata } from "next";
 import Link from "next/link";
 import BusinessInquiryPanel from "@/components/contact/BusinessInquiryPanel";
@@ -37,18 +38,17 @@ export default function PartnerInquiryPage() {
                 <div className="relative max-w-3xl">
                     <p className="text-xs font-black tracking-[0.24em] text-aurora-indigo">PARTNER WITH DAENGDABANG</p>
                     <h1 className="mt-4 text-3xl font-black leading-tight tracking-[-0.035em] text-foreground sm:text-5xl">
-                        좋은 상품이 보호자에게<br className="hidden sm:block" /> 제대로 닿도록.
+                        <LocalizedMenuLabel label={"좋은 상품이 보호자에게"} /><br className="hidden sm:block" /> <LocalizedMenuLabel label={"제대로 닿도록."} />
                     </h1>
                     <p className="mt-5 max-w-2xl text-sm font-bold leading-7 text-neutral-600 sm:text-base sm:leading-8">
-                        댕다방은 상품 수를 늘리기 위한 입점보다, 반려견의 실제 생활에 분명한 쓰임이 있는 상품을 찾습니다.
-                        브랜드가 지켜온 기준과 상품의 이유를 들려주세요.
+                        <LocalizedMenuLabel label={"댕다방은 상품 수를 늘리기 위한 입점보다, 반려견의 실제 생활에 분명한 쓰임이 있는 상품을 찾습니다.\n                        브랜드가 지켜온 기준과 상품의 이유를 들려주세요."} />
                     </p>
                     <div className="mt-7 flex flex-wrap gap-3">
                         <a href="#partner-form" className="inline-flex min-h-11 items-center gap-2 rounded-full bg-neutral-950 px-5 py-2.5 text-sm font-black text-white transition hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-950">
-                            제안서 작성하기 <i className="fa-solid fa-arrow-down text-xs" aria-hidden="true" />
+                            <LocalizedMenuLabel label={"제안서 작성하기"} /> <i className="fa-solid fa-arrow-down text-xs" aria-hidden="true" />
                         </a>
                         <Link href="/brand-story" className="inline-flex min-h-11 items-center gap-2 rounded-full border border-neutral-300 bg-white/80 px-5 py-2.5 text-sm font-black text-neutral-800 transition hover:-translate-y-0.5 hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aurora-indigo">
-                            댕다방의 선택 기준 보기
+                            <LocalizedMenuLabel label={"댕다방의 선택 기준 보기"} />
                         </Link>
                     </div>
                 </div>
@@ -59,7 +59,7 @@ export default function PartnerInquiryPage() {
 
             <section className="mt-12" aria-labelledby="partner-types-title">
                 <p className="text-xs font-black tracking-[0.2em] text-orange-800">WHAT WE REVIEW</p>
-                <h2 id="partner-types-title" className="mt-2 text-2xl font-black tracking-tight text-foreground sm:text-3xl">이런 제안을 기다립니다</h2>
+                <h2 id="partner-types-title" className="mt-2 text-2xl font-black tracking-tight text-foreground sm:text-3xl"><LocalizedMenuLabel label={"이런 제안을 기다립니다"} /></h2>
                 <div className="mt-6 grid gap-4 md:grid-cols-3">
                     {proposalTypes.map(([icon, title, body]) => (
                         <article key={title} className="rounded-3xl border border-white/70 bg-white/75 p-6 shadow-card backdrop-blur">
@@ -74,12 +74,12 @@ export default function PartnerInquiryPage() {
             <section className="mt-12 grid gap-8 rounded-[30px] border border-neutral-200/80 bg-white/65 p-6 sm:p-8 lg:grid-cols-[0.8fr_1.2fr]" aria-labelledby="partner-review-title">
                 <div>
                     <p className="text-xs font-black tracking-[0.2em] text-aurora-indigo">REVIEW FLOW</p>
-                    <h2 id="partner-review-title" className="mt-2 text-2xl font-black tracking-tight text-foreground">한 번 더 살펴보고 답합니다</h2>
+                    <h2 id="partner-review-title" className="mt-2 text-2xl font-black tracking-tight text-foreground"><LocalizedMenuLabel label={"한 번 더 살펴보고 답합니다"} /></h2>
                     <p className="mt-3 text-sm font-bold leading-7 text-neutral-600">
-                        접수 순서만으로 입점을 결정하지 않습니다. 상품의 쓰임, 정보의 충실도, 공급 안정성과 고객 경험을 함께 검토합니다.
+                        <LocalizedMenuLabel label={"접수 순서만으로 입점을 결정하지 않습니다. 상품의 쓰임, 정보의 충실도, 공급 안정성과 고객 경험을 함께 검토합니다."} />
                     </p>
                     <div className="mt-5 rounded-2xl border border-amber-200 bg-amber-50/85 p-4 text-sm font-bold leading-6 text-amber-950">
-                        가격표만 있는 제안보다 공식 소개 자료, 공급 주체, 상품 표시·인증 자료의 준비 여부를 함께 알려주시면 검토에 도움이 됩니다.
+                        <LocalizedMenuLabel label={"가격표만 있는 제안보다 공식 소개 자료, 공급 주체, 상품 표시·인증 자료의 준비 여부를 함께 알려주시면 검토에 도움이 됩니다."} />
                     </div>
                 </div>
                 <ol className="grid gap-3 sm:grid-cols-2">

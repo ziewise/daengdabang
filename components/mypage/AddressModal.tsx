@@ -14,6 +14,7 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { useCallback, useEffect, useId, useRef, useState, type FormEvent } from "react";
 import { createPortal } from "react-dom";
 import type { CustomerAddressInput } from "@/lib/customer-api";
@@ -75,6 +76,7 @@ export type PickedAddress = { postalCode: string; address: string; other: string
 
 /** 주소 검색 전용 창 — 검색 · 고르기 · 적용(마이페이지 배송지 창 · 주문/결제 배송지 칸 같이 씀) */
 export function AddressSearchModal({ onApply, onClose, onFailed }: { onApply: (picked: PickedAddress) => void; onClose: () => void; onFailed: () => void }) {
+    const { menuLabel: labelText } = useI18n();
     const titleId = useId();
     const boxRef = useRef<HTMLDivElement>(null);
     const closeRef = useRef<HTMLButtonElement>(null);
@@ -144,10 +146,10 @@ export function AddressSearchModal({ onApply, onClose, onFailed }: { onApply: (p
                     </span>
                     <div className="ddb-pf-titles">
                         <p className="ddb-pf-kicker">ADDRESS SEARCH</p>
-                        <h2 id={titleId}><span className="ddb-pf-name">주소 검색</span></h2>
-                        <p className="ddb-pf-sub">도로명 · 건물명 · 지번으로 찾고, 고른 뒤 적용을 눌러 주세요.</p>
+                        <h2 id={titleId}><span className="ddb-pf-name">{labelText("주소 검색")}</span></h2>
+                        <p className="ddb-pf-sub">{labelText("도로명 · 건물명 · 지번으로 찾고, 고른 뒤 적용을 눌러 주세요.")}</p>
                     </div>
-                    <button ref={closeRef} type="button" className="ddb-pf-close" onClick={onClose} aria-label="주소 검색 닫기">
+                    <button ref={closeRef} type="button" className="ddb-pf-close" onClick={onClose} aria-label={labelText("주소 검색 닫기")}>
                         <i className="fa-solid fa-xmark" aria-hidden="true" />
                     </button>
                 </header>
@@ -155,25 +157,25 @@ export function AddressSearchModal({ onApply, onClose, onFailed }: { onApply: (p
                     <div className="ddb-as-box" aria-live="polite">
                         {/* 우편번호 검색을 심는 빈 상자 — React 가 안을 그리지 않음 */}
                         <div ref={boxRef} className="ddb-addr-embed" />
-                        {state === "loading" && <p className="ddb-addr-loading"><i className="fa-solid fa-paw fa-bounce" aria-hidden="true" />주소 검색을 준비하고 있어요</p>}
-                        {state === "failed" && <p className="ddb-addr-loading">주소 검색을 불러오지 못했어요. 창을 닫고 주소를 직접 적어 주세요.</p>}
+                        {state === "loading" && <p className="ddb-addr-loading"><i className="fa-solid fa-paw fa-bounce" aria-hidden="true" />{labelText("주소 검색을 준비하고 있어요")}</p>}
+                        {state === "failed" && <p className="ddb-addr-loading">{labelText("주소 검색을 불러오지 못했어요. 창을 닫고 주소를 직접 적어 주세요.")}</p>}
                     </div>
                 </div>
                 {/* 고른 주소 + 적용 */}
                 <footer className="ddb-as-foot" data-picked={picked ? "" : undefined}>
                     {picked ? (
                         <div className="ddb-as-picked">
-                            <span className="ddb-addr-zip"><em>우편번호</em>{picked.postalCode}</span>
+                            <span className="ddb-addr-zip"><em>{labelText("우편번호")}</em>{picked.postalCode}</span>
                             <strong>{picked.address}</strong>
                             {picked.other && <small>{picked.other}</small>}
                         </div>
                     ) : (
-                        <p className="ddb-as-hint"><i className="fa-solid fa-hand-pointer" aria-hidden="true" />검색 결과에서 주소를 누르면 여기에 보여요.</p>
+                        <p className="ddb-as-hint"><i className="fa-solid fa-hand-pointer" aria-hidden="true" />{labelText("검색 결과에서 주소를 누르면 여기에 보여요.")}</p>
                     )}
                     <div className="ddb-as-actions">
-                        <button type="button" className="ddb-pf-cancel" onClick={onClose}>닫기</button>
+                        <button type="button" className="ddb-pf-cancel" onClick={onClose}>{labelText("닫기")}</button>
                         <button ref={applyRef} type="button" className="ddb-pf-save" disabled={!picked} onClick={() => { if (picked) onApply(picked); }}>
-                            <i className="fa-solid fa-check" aria-hidden="true" />적용
+                            <i className="fa-solid fa-check" aria-hidden="true" />{labelText("적용")}
                         </button>
                     </div>
                 </footer>
@@ -202,6 +204,7 @@ type Props = {
 };
 
 export default function AddressModal({ host, editing, form, onField, onSubmit, onClose, pending, error, saveDisabled }: Props) {
+    const { menuLabel: labelText } = useI18n();
     const titleId = useId();
     const closeRef = useRef<HTMLButtonElement>(null);
     const detailRef = useRef<HTMLInputElement>(null);
@@ -247,10 +250,10 @@ export default function AddressModal({ host, editing, form, onField, onSubmit, o
                     </span>
                     <div className="ddb-pf-titles">
                         <p className="ddb-pf-kicker">{editing ? "EDIT ADDRESS" : "NEW ADDRESS"}</p>
-                        <h2 id={titleId}><span className="ddb-pf-name">{editing ? "배송지 수정" : "새 배송지 추가"}</span></h2>
-                        <p className="ddb-pf-sub">주소는 검색으로 찾고, 동 · 호수 같은 상세 주소만 적어 주세요.</p>
+                        <h2 id={titleId}><span className="ddb-pf-name">{labelText(editing ? "배송지 수정" : "새 배송지 추가")}</span></h2>
+                        <p className="ddb-pf-sub">{labelText("주소는 검색으로 찾고, 동 · 호수 같은 상세 주소만 적어 주세요.")}</p>
                     </div>
-                    <button ref={closeRef} type="button" className="ddb-pf-close" onClick={onClose} disabled={pending} aria-label="배송지 창 닫기">
+                    <button ref={closeRef} type="button" className="ddb-pf-close" onClick={onClose} disabled={pending} aria-label={labelText("배송지 창 닫기")}>
                         <i className="fa-solid fa-xmark" aria-hidden="true" />
                     </button>
                 </header>
@@ -262,11 +265,11 @@ export default function AddressModal({ host, editing, form, onField, onSubmit, o
                             {/* eslint-disable-next-line @next/next/no-img-element -- 작은 3D 그림 */}
                             <img src="/images/ui/stickers/checkout-address.webp" alt="" aria-hidden="true" />
                             <div>
-                                <h3>누구에게 보낼까요?</h3>
-                                <p>자주 쓰는 이름은 눌러서 고를 수 있어요.</p>
+                                <h3>{labelText("누구에게 보낼까요?")}</h3>
+                                <p>{labelText("자주 쓰는 이름은 눌러서 고를 수 있어요.")}</p>
                             </div>
                         </header>
-                        <div className="ddb-addr-presets" role="group" aria-label="배송지 이름 고르기">
+                        <div className="ddb-addr-presets" role="group" aria-label={labelText("배송지 이름 고르기")}>
                             {LABEL_PRESETS.map((preset) => (
                                 <button key={preset.label} type="button" className={form.label === preset.label ? "is-on" : ""} aria-pressed={form.label === preset.label} onClick={() => onField("label", preset.label)} disabled={pending}>
                                     <i className={`fa-solid ${preset.icon}`} aria-hidden="true" />{preset.label}
@@ -275,15 +278,15 @@ export default function AddressModal({ host, editing, form, onField, onSubmit, o
                         </div>
                         <div className="ddb-pf-grid">
                             <label className="ddb-pf-field">
-                                <span className="ddb-pf-label">배송지 이름 {!presetActive && form.label ? <b className="ddb-addr-own">직접 입력</b> : null}</span>
-                                <input className="input" value={form.label} onChange={(event) => onField("label", event.target.value)} required maxLength={40} placeholder="집, 회사" />
+                                <span className="ddb-pf-label">{labelText("배송지 이름")} {!presetActive && form.label ? <b className="ddb-addr-own">{labelText("직접 입력")}</b> : null}</span>
+                                <input className="input" value={form.label} onChange={(event) => onField("label", event.target.value)} required maxLength={40} placeholder={labelText("집, 회사")} />
                             </label>
                             <label className="ddb-pf-field">
-                                <span className="ddb-pf-label">받는 분</span>
-                                <input className="input" value={form.recipientName} onChange={(event) => onField("recipientName", event.target.value)} required maxLength={50} autoComplete="shipping name" placeholder="이름" />
+                                <span className="ddb-pf-label">{labelText("받는 분")}</span>
+                                <input className="input" value={form.recipientName} onChange={(event) => onField("recipientName", event.target.value)} required maxLength={50} autoComplete="shipping name" placeholder={labelText("이름")} />
                             </label>
                             <label className="ddb-pf-field ddb-pf-wide">
-                                <span className="ddb-pf-label">연락처</span>
+                                <span className="ddb-pf-label">{labelText("연락처")}</span>
                                 <input className="input" value={form.phone} onChange={(event) => onField("phone", event.target.value)} required maxLength={20} autoComplete="shipping tel" inputMode="tel" placeholder="010-0000-0000" />
                             </label>
                         </div>
@@ -295,13 +298,13 @@ export default function AddressModal({ host, editing, form, onField, onSubmit, o
                             {/* eslint-disable-next-line @next/next/no-img-element -- 작은 3D 그림 */}
                             <img src="/images/ui/stickers/my-address.webp" alt="" aria-hidden="true" />
                             <div>
-                                <h3>어디로 보낼까요?</h3>
-                                <p>주소 검색으로 우편번호와 기본 주소를 채우고, 상세 주소를 적어 주세요.</p>
+                                <h3>{labelText("어디로 보낼까요?")}</h3>
+                                <p>{labelText("주소 검색으로 우편번호와 기본 주소를 채우고, 상세 주소를 적어 주세요.")}</p>
                             </div>
                         </header>
                         <div className="ddb-addr-fields">
                             <label className="ddb-pf-field ddb-addr-zipfield">
-                                <span className="ddb-pf-label">우편번호</span>
+                                <span className="ddb-pf-label">{labelText("우편번호")}</span>
                                 <span className="ddb-addr-ziprow">
                                     <input
                                         className="input"
@@ -313,15 +316,15 @@ export default function AddressModal({ host, editing, form, onField, onSubmit, o
                                         maxLength={10}
                                         autoComplete="shipping postal-code"
                                         inputMode="numeric"
-                                        placeholder="우편번호"
+                                        placeholder={labelText("우편번호")}
                                     />
                                     <button type="button" className="ddb-addr-searchbtn" onClick={openSearch} disabled={pending}>
-                                        <i className="fa-solid fa-magnifying-glass" aria-hidden="true" />주소 검색
+                                        <i className="fa-solid fa-magnifying-glass" aria-hidden="true" />{labelText("주소 검색")}
                                     </button>
                                 </span>
                             </label>
                             <label className="ddb-pf-field">
-                                <span className="ddb-pf-label">기본 주소</span>
+                                <span className="ddb-pf-label">{labelText("기본 주소")}</span>
                                 <input
                                     className="input"
                                     value={form.addressLine1}
@@ -331,30 +334,30 @@ export default function AddressModal({ host, editing, form, onField, onSubmit, o
                                     required
                                     maxLength={200}
                                     autoComplete="shipping address-line1"
-                                    placeholder="주소 검색을 누르면 채워져요"
+                                    placeholder={labelText("주소 검색을 누르면 채워져요")}
                                 />
                             </label>
                             <label className="ddb-pf-field">
-                                <span className="ddb-pf-label">상세 주소 <b className="ddb-addr-own">선택</b></span>
-                                <input ref={detailRef} className="input" value={form.addressLine2} onChange={(event) => onField("addressLine2", event.target.value)} maxLength={200} autoComplete="shipping address-line2" placeholder="동 · 호수 · 층 등" />
+                                <span className="ddb-pf-label">{labelText("상세 주소")} <b className="ddb-addr-own">{labelText("선택")}</b></span>
+                                <input ref={detailRef} className="input" value={form.addressLine2} onChange={(event) => onField("addressLine2", event.target.value)} maxLength={200} autoComplete="shipping address-line2" placeholder={labelText("동 · 호수 · 층 등")} />
                             </label>
                         </div>
-                        {!manual && <button type="button" className="ddb-addr-manual-link" onClick={() => setManual(true)}>검색이 안 되면 직접 적기</button>}
+                        {!manual && <button type="button" className="ddb-addr-manual-link" onClick={() => setManual(true)}>{labelText("검색이 안 되면 직접 적기")}</button>}
                     </section>
 
                     {/* 기본 배송지 */}
                     <label className="ddb-addr-default">
                         <input type="checkbox" checked={form.isDefault} onChange={(event) => onField("isDefault", event.target.checked)} />
                         <span className="ddb-addr-switch" aria-hidden="true" />
-                        <span><b>기본 배송지로 설정</b><small>주문할 때 이 주소가 먼저 채워져요.</small></span>
+                        <span><b>{labelText("기본 배송지로 설정")}</b><small>{labelText("주문할 때 이 주소가 먼저 채워져요.")}</small></span>
                     </label>
 
                     {error && <p role="alert" className="ddb-pf-msg">{error}</p>}
                 </div>
 
                 <footer className="ddb-pf-foot">
-                    <p className="ddb-pf-hint"><i className="fa-solid fa-lock" aria-hidden="true" />주소와 연락처는 암호화해 보관해요.</p>
-                    <button type="button" className="ddb-pf-cancel" onClick={onClose} disabled={pending}>닫기</button>
+                    <p className="ddb-pf-hint"><i className="fa-solid fa-lock" aria-hidden="true" />{labelText("주소와 연락처는 암호화해 보관해요.")}</p>
+                    <button type="button" className="ddb-pf-cancel" onClick={onClose} disabled={pending}>{labelText("닫기")}</button>
                     <button type="submit" className="ddb-pf-save" disabled={pending || saveDisabled || !form.postalCode || !form.addressLine1}>
                         <i className="fa-solid fa-check" aria-hidden="true" />{pending ? "저장 중…" : editing ? "수정 저장" : "배송지 저장"}
                     </button>

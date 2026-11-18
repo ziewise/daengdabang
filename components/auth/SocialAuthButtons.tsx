@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { loadSocialProviders, socialLoginHref, startSocialLogin, type SocialProvider } from "@/lib/customer-api";
 import { PRODUCTION_DDB_API_BASE } from "@/lib/ddb-api-base";
@@ -143,6 +144,7 @@ export default function SocialAuthButtons({
         privacyVersion: string;
     };
 }) {
+    const { menuLabel: labelText } = useI18n();
     const { apiReady, enabledByProvider, statusChecked, retryProviders } = useSocialProviderStatus();
 
     const disabledCount = useMemo(() => {
@@ -165,9 +167,9 @@ export default function SocialAuthButtons({
     const connectionError = mode === "signup" && apiReady === true && statusChecked && !enabledByProvider;
     const connectionNotice = connectionError ? (
         <div role="status" className="flex flex-wrap items-center justify-center gap-2 text-xs font-bold text-amber-800">
-            <span>로그인 연결을 확인하지 못했어요.</span>
+            <span>{labelText("로그인 연결을 확인하지 못했어요.")}</span>
             <button type="button" onClick={retryProviders} className="rounded-md border border-amber-300 bg-white px-3 py-2 font-black">
-                연결 다시 확인
+                {labelText("연결 다시 확인")}
             </button>
         </div>
     ) : null;
@@ -224,17 +226,17 @@ export default function SocialAuthButtons({
         <section className="surface mt-6 grid gap-3 p-5">
             <div className="flex items-center justify-between gap-3">
                 <h2 className="text-sm font-black text-neutral-950">
-                    {mode === "signup" ? "간편가입" : "간편로그인"}
+                    {labelText(mode === "signup" ? "간편가입" : "간편로그인")}
                 </h2>
-                {apiReady === false && <span className="text-xs font-black text-amber-700">서비스 준비 중</span>}
-                {mode === "signup" && apiReady === true && !statusChecked && <span className="text-xs font-black text-neutral-500">확인 중</span>}
+                {apiReady === false && <span className="text-xs font-black text-amber-700">{labelText("서비스 준비 중")}</span>}
+                {mode === "signup" && apiReady === true && !statusChecked && <span className="text-xs font-black text-neutral-500">{labelText("확인 중")}</span>}
                 {apiReady === true && statusChecked && enabledByProvider && disabledCount > 0 && (
-                    <span className="text-xs font-black text-amber-700">준비 중</span>
+                    <span className="text-xs font-black text-amber-700">{labelText("준비 중")}</span>
                 )}
             </div>
             {mode === "signup" && !signupSecurityReady && (
                 <p className="rounded-md bg-amber-50 px-3 py-2 text-xs font-bold leading-5 text-amber-800">
-                    바로 위의 필수 동의와 보안 확인을 완료해 주세요. 간편가입은 아래 이메일·반려견 정보를 입력하지 않아도 됩니다.
+                    {labelText("바로 위의 필수 동의와 보안 확인을 완료해 주세요. 간편가입은 아래 이메일·반려견 정보를 입력하지 않아도 됩니다.")}
                 </p>
             )}
             {connectionNotice}

@@ -10,11 +10,13 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import Link from "next/link";
 import { useState, type MouseEvent } from "react";
 import type { BrandHubItem } from "./BrandsWebHub";
 
 export default function BrandFeaturedDeck({ brands }: { brands: BrandHubItem[] }) {
+    const { menuLabel: labelText } = useI18n();
     const [front, setFront] = useState(0);
     const total = brands.length;
     const next = () => setFront((value) => (value + 1) % total);
@@ -27,7 +29,7 @@ export default function BrandFeaturedDeck({ brands }: { brands: BrandHubItem[] }
     };
 
     return (
-        <section className="bwh-deck" aria-label="대표 브랜드">
+        <section className="bwh-deck" aria-label={labelText("대표 브랜드")}>
             <div className="bwh-featured" aria-live="polite">
                 {brands.map((brand, index) => {
                     // 맨 앞에서 몇 번째 뒤에 있는가(0 = 맨 앞) — 휴대폰 겹침 순서
@@ -50,10 +52,10 @@ export default function BrandFeaturedDeck({ brands }: { brands: BrandHubItem[] }
                                 {brand.tagline ? <span>{brand.tagline}</span> : null}
                             </span>
                             <span className="bwh-feature-foot">
-                                <span className="bwh-count">상품 <b>{brand.count}</b></span>
+                                <span className="bwh-count">{labelText("상품")} <b>{brand.count}</b></span>
                                 {/* PC: 동그란 화살표(카드 전체를 덮는 링크) · 휴대폰: "브랜드 보기" 알약 */}
                                 <Link href={`/brand/${brand.slug}`} className="bwh-feature-go" aria-label={`${brand.ko || brand.en} 브랜드 보기`}>
-                                    <span className="bwh-feature-go-text">브랜드 보기</span>
+                                    <span className="bwh-feature-go-text">{labelText("브랜드 보기")}</span>
                                     <i className="fa-solid fa-arrow-right" aria-hidden="true" />
                                 </Link>
                             </span>
@@ -63,14 +65,14 @@ export default function BrandFeaturedDeck({ brands }: { brands: BrandHubItem[] }
             </div>
             {/* 휴대폰 — 지금 몇 번째 · 점 · 이전/다음 */}
             <div className="bwh-deck-nav">
-                <button type="button" onClick={prev} aria-label="이전 브랜드"><i className="fa-solid fa-chevron-left" aria-hidden="true" /></button>
+                <button type="button" onClick={prev} aria-label={labelText("이전 브랜드")}><i className="fa-solid fa-chevron-left" aria-hidden="true" /></button>
                 <span className="bwh-deck-dots" aria-label={`${front + 1}번째 브랜드 / 전체 ${total}`}>
                     {brands.map((brand, index) => (
                         <i key={brand.slug} className={index === front ? "is-on" : ""} />
                     ))}
                 </span>
-                <button type="button" onClick={next} aria-label="다음 브랜드"><i className="fa-solid fa-chevron-right" aria-hidden="true" /></button>
-                <span className="bwh-deck-tap" aria-hidden="true"><i className="fa-solid fa-hand-pointer" />카드를 누르면 다음 브랜드</span>
+                <button type="button" onClick={next} aria-label={labelText("다음 브랜드")}><i className="fa-solid fa-chevron-right" aria-hidden="true" /></button>
+                <span className="bwh-deck-tap" aria-hidden="true"><i className="fa-solid fa-hand-pointer" />{labelText("카드를 누르면 다음 브랜드")}</span>
             </div>
         </section>
     );

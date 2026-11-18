@@ -51,7 +51,7 @@ function optionSheet(p, draft = [0,0,3,[]], mode='cart') {
     const mod=loadModule('components/products/detail/OptionSheet.tsx',{
         react:React,'./RestockButton':'restock-button','@/components/products/ProductColorImage':'color-image','next/navigation':{useRouter:()=>({push:url=>routes.push(url)})},
         '@/lib/store':{useAuth:()=>({user:{}}),useCart:()=>({addToCart:(...args)=>added.push(args)})},
-        '@/lib/i18n':{useI18n:()=>({locale:'ko',t:x=>x,formatPrice:String,productName:p=>p.name})},
+        '@/lib/i18n':{useI18n:()=>({locale:'ko',t:x=>x,formatPrice:String,productName:p=>p.name,optionName:(_,name)=>name})},
         '@/lib/daenglab-rewards':{daengLabCoinsForLine:()=>0,daengLabCoinsForLines:()=>0},
         '@/components/petlens/DaengLabCoinMark':()=>null,'@/components/shop/SimplePayButtons':()=>null,
         '@/lib/payment-methods':{checkoutHref:()=>'/checkout'},

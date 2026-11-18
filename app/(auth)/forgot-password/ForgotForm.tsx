@@ -10,6 +10,7 @@
  *   웹 ForgotWebView 와 같은 값 · 함수를 넘겨 그리기만 바꿈. 앱 주소 /app/sticker/forgot 도 이 파일을 그대로 씀.
  */
 
+import { useI18n } from "@/lib/i18n";
 import Link from "next/link";
 import { FormEvent, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import SignupBotChallenge, {
@@ -125,6 +126,7 @@ function formatSeconds(seconds: number) {
 }
 
 export default function ForgotPasswordPage() {
+    const { menuLabel: labelText } = useI18n();
     const apiReady = useDdbApiReady();
     const webScreen = useWebScreen();
     const appScreen = useSyncExternalStore(subscribeHtmlClass, isAppScreen, () => false);
@@ -370,7 +372,7 @@ export default function ForgotPasswordPage() {
                 <i className={`fa-solid ${step === "done" ? "fa-check" : "fa-key"}`} aria-hidden="true" />
             </div>
             <h1 className="text-center text-2xl font-black tracking-tight text-neutral-950 md:text-3xl">
-                {step === "done" ? "비밀번호 재설정 완료" : "비밀번호 재설정"}
+                {labelText(step === "done" ? "비밀번호 재설정 완료" : "비밀번호 재설정")}
             </h1>
             <p className="mt-3 text-center text-sm font-bold leading-6 text-neutral-600">
                 {step === "email" && "자사몰 가입 이메일로 본인 확인을 시작합니다."}
@@ -381,7 +383,7 @@ export default function ForgotPasswordPage() {
 
             {apiReady === false && (
                 <p className="mt-5 rounded-md bg-amber-50 px-3 py-2 text-xs font-bold leading-5 text-amber-800" role="status">
-                    지금은 본인 확인 서비스를 준비 중입니다. 잠시 후 다시 이용해 주세요.
+                    {labelText("지금은 본인 확인 서비스를 준비 중입니다. 잠시 후 다시 이용해 주세요.")}
                 </p>
             )}
             {notice && (
@@ -398,7 +400,7 @@ export default function ForgotPasswordPage() {
             {step === "email" && (
                 <form onSubmit={sendCode} className="mt-6 grid gap-4">
                     <label className="grid gap-2 text-sm font-black text-neutral-800">
-                        가입 이메일
+                        {labelText("가입 이메일")}
                         <input
                             type="email"
                             value={email}
@@ -411,8 +413,8 @@ export default function ForgotPasswordPage() {
                     </label>
                     <SignupBotChallenge
                         action="password_reset"
-                        title="본인 확인 보호"
-                        description="자동 요청을 막기 위한 확인을 완료해 주세요."
+                        title={labelText("본인 확인 보호")}
+                        description={labelText("자동 요청을 막기 위한 확인을 완료해 주세요.")}
                         unavailableMessage="본인 확인 보호 기능을 준비 중입니다. 잠시 후 다시 이용해 주세요."
                         onTokenChange={setBotToken}
                         resetKey={challengeResetKey}
@@ -422,7 +424,7 @@ export default function ForgotPasswordPage() {
                         disabled={loading || apiReady !== true || !challengeConfigured || !botToken}
                         className="h-12 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 text-sm font-black text-white shadow-[0_8px_20px_rgba(245,158,11,0.25)] disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                        {loading ? "확인 중..." : "인증번호 받기"}
+                        {labelText(loading ? "확인 중..." : "인증번호 받기")}
                     </button>
                 </form>
             )}
@@ -430,10 +432,10 @@ export default function ForgotPasswordPage() {
             {step === "code" && (
                 <form onSubmit={verifyCode} className="mt-6 grid gap-4">
                     <div className="rounded-xl bg-neutral-50 px-4 py-3 text-xs font-bold leading-5 text-neutral-600">
-                        인증 유효시간 <strong className="text-neutral-950">{formatSeconds(expirySeconds)}</strong>
+                        {labelText("인증 유효시간")} <strong className="text-neutral-950">{formatSeconds(expirySeconds)}</strong>
                     </div>
                     <label className="grid gap-2 text-sm font-black text-neutral-800">
-                        인증번호 6자리
+                        {labelText("인증번호 6자리")}
                         <input
                             ref={codeRef}
                             type="text"
@@ -452,13 +454,13 @@ export default function ForgotPasswordPage() {
                         disabled={loading || code.length !== 6}
                         className="h-12 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 text-sm font-black text-white disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                        {loading ? "확인 중..." : "이메일 확인"}
+                        {labelText(loading ? "확인 중..." : "이메일 확인")}
                     </button>
                     {resendSeconds === 0 && (
                         <SignupBotChallenge
                             action="password_reset"
-                            title="재전송 보호"
-                            description="인증번호를 다시 받을 때 필요한 확인입니다."
+                            title={labelText("재전송 보호")}
+                            description={labelText("인증번호를 다시 받을 때 필요한 확인입니다.")}
                             unavailableMessage="재전송 보호 기능을 준비 중입니다. 잠시 후 다시 이용해 주세요."
                             onTokenChange={setBotToken}
                             resetKey={challengeResetKey}
@@ -473,7 +475,7 @@ export default function ForgotPasswordPage() {
                         {resendSeconds > 0 ? `${resendSeconds}초 후 다시 받기` : "인증번호 다시 받기"}
                     </button>
                     <button type="button" onClick={restart} className="text-xs font-bold text-neutral-500 underline">
-                        이메일 다시 입력하기
+                        {labelText("이메일 다시 입력하기")}
                     </button>
                 </form>
             )}
@@ -481,7 +483,7 @@ export default function ForgotPasswordPage() {
             {step === "password" && (
                 <form onSubmit={setPassword} className="mt-6 grid gap-4">
                     <label className="grid gap-2 text-sm font-black text-neutral-800">
-                        새 비밀번호
+                        {labelText("새 비밀번호")}
                         <input
                             type="password"
                             value={newPassword}
@@ -490,12 +492,12 @@ export default function ForgotPasswordPage() {
                             maxLength={72}
                             autoComplete="new-password"
                             required
-                            placeholder="8자 이상·최대 72바이트"
+                            placeholder={labelText("8자 이상·최대 72바이트")}
                             className="h-12 rounded-xl border border-neutral-200 bg-neutral-50 px-4 text-sm font-bold outline-none focus:border-amber-400 focus:bg-white focus:ring-2 focus:ring-amber-100"
                         />
                     </label>
                     <label className="grid gap-2 text-sm font-black text-neutral-800">
-                        새 비밀번호 확인
+                        {labelText("새 비밀번호 확인")}
                         <input
                             type="password"
                             value={confirmPassword}
@@ -512,20 +514,20 @@ export default function ForgotPasswordPage() {
                         disabled={loading}
                         className="h-12 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 text-sm font-black text-white disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                        {loading ? "변경 중..." : "새 비밀번호 저장"}
+                        {labelText(loading ? "변경 중..." : "새 비밀번호 저장")}
                     </button>
                 </form>
             )}
 
             {step === "done" && (
                 <Link href="/auth/login" className="btn btn-primary mt-7 w-full">
-                    로그인하기
+                    {labelText("로그인하기")}
                 </Link>
             )}
 
             {step !== "done" && (
                 <Link href="/auth/login" className="mt-6 block text-center text-xs font-bold text-neutral-500 hover:text-amber-700">
-                    로그인으로 돌아가기
+                    {labelText("로그인으로 돌아가기")}
                 </Link>
             )}
         </div>

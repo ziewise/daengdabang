@@ -1,5 +1,7 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
+import { walkingBuddyCopy, walkingBuddyGuide, walkingBuddyName } from "@/lib/pet-companion-copy";
 import Link from "next/link";
 import AppSkin from "@/components/app-shell/AppSkin";
 import { createPortal } from "react-dom";
@@ -246,6 +248,9 @@ export default function PetCompanionLayer({
     onPanelOpenChange,
     onSettingsChange,
 }: Props) {
+    const { locale, englishProduct } = useI18n();
+    const english = locale === "en";
+    const petCopy = (text: string) => walkingBuddyCopy(text, english);
     const { state, upsertPet } = useStore();
     const registeredPets = state.user?.pets || EMPTY_PET_PROFILES;
     const rotationEntries = useMemo(() => {
@@ -271,6 +276,7 @@ export default function PetCompanionLayer({
         () => companionDisplaySettingsForPet(settings, rotationPet),
         [rotationPet, settings],
     );
+    const buddyName = walkingBuddyName(runtimeSettings.activePetName, locale);
     const runtimePetKey = rotationPet
         ? companionPetProfileKey(rotationPet, registeredPets.indexOf(rotationPet))
         : "single";
@@ -282,6 +288,7 @@ export default function PetCompanionLayer({
     const [bubbleSide, setBubbleSide] = useState<"left" | "right">("right");
     const [recommendation, setRecommendation] = useState<Recommendation | null>(null);
     const [guidePrompt, setGuidePrompt] = useState<PetGuidePrompt | null>(null);
+    const guideText = guidePrompt && walkingBuddyGuide(guidePrompt, english);
     const [quickActionsOpen, setQuickActionsOpen] = useState(false);
     const [saveStatus, setSaveStatus] = useState("");
     const [placementReady, setPlacementReady] = useState(false);
@@ -2645,41 +2652,41 @@ export default function PetCompanionLayer({
                 >
                     {recommendation && (
                         <div className={styles.speech} aria-live="polite" data-pet-companion-speech>
-                            <span className={styles.speechName}>{recommendation.name}</span>
-                            <span>{recommendation.message}</span>
-                            <Link href={recommendation.href} className={styles.speechLink} onClick={closePrompt}>보러 가기</Link>
+                            <span className={styles.speechName}>{(english && englishProduct(recommendation.href.split("/").filter(Boolean).pop() || "")?.name) || petCopy(recommendation.name)}</span>
+                            <span>{petCopy(recommendation.message)}</span>
+                            <Link href={recommendation.href} className={styles.speechLink} onClick={closePrompt}>{petCopy("보러 가기")}</Link>
                             <button
                                 type="button"
                                 onClick={closePrompt}
                                 className={styles.speechClose}
-                                aria-label="추천 닫기"
+                                aria-label={petCopy("추천 닫기")}
                             >×</button>
                         </div>
                     )}
-                    {guidePrompt && (
+                    {guidePrompt && guideText && (
                         <div
                             className={styles.speech}
                             aria-live="polite"
                             data-pet-companion-speech
                             data-pet-guide-bubble={guidePrompt.id}
                         >
-                            <span className={styles.speechName}>{guidePrompt.name}</span>
-                            <span>{guidePrompt.message}</span>
+                            <span className={styles.speechName}>{guideText.name}</span>
+                            <span>{guideText.message}</span>
                             {guidePrompt.href && guidePrompt.actionLabel && (
                                 <Link href={guidePrompt.href} className={styles.speechLink} onClick={closePrompt}>
-                                    {guidePrompt.actionLabel}
+                                    {guideText.actionLabel}
                                 </Link>
                             )}
                             {guidePrompt.activatesTarget && guidePrompt.actionLabel && (
                                 <button type="button" className={styles.speechAction} onClick={activateGuideTarget}>
-                                    {guidePrompt.actionLabel}
+                                    {guideText.actionLabel}
                                 </button>
                             )}
                             <button
                                 type="button"
                                 onClick={closePrompt}
                                 className={styles.speechClose}
-                                aria-label="안내 닫기"
+                                aria-label={petCopy("안내 닫기")}
                             >×</button>
                         </div>
                     )}
@@ -2692,11 +2699,11 @@ export default function PetCompanionLayer({
                         onPointerCancel={endCompanionDrag}
                         onLostPointerCapture={endCompanionDrag}
                         onClick={openQuickActions}
-                        aria-label={`${runtimeSettings.activePetName} 산책 친구. 드래그해서 옮기거나 클릭해서 빠른 메뉴 열기`}
+                        aria-label={english ? buddyName + ", your walking buddy. Drag to move or tap for the menu." : `${runtimeSettings.activePetName} 산책 친구. 드래그해서 옮기거나 클릭해서 빠른 메뉴 열기`}
                         aria-haspopup="dialog"
                         aria-expanded={quickActionsOpen}
                         aria-controls="pet-companion-quick-actions"
-                        title="드래그해서 옮기고, 클릭하면 빠른 메뉴가 열려요"
+                        title={petCopy("드래그해서 옮기고, 클릭하면 빠른 메뉴가 열려요")}
                     >
                         <PetCompanionCharacter
                             key={runtimePetKey}
@@ -2711,7 +2718,7 @@ export default function PetCompanionLayer({
                             travelDirection={displayTravelDirection}
                             forceMotion={forceMotionPreview}
                         />
-                        <span className={styles.nameTag}>{runtimeSettings.activePetName}</span>
+                        <span className={styles.nameTag}>{buddyName}</span>
                     </button>
                 </div>
             )}
@@ -2734,13 +2741,13 @@ export default function PetCompanionLayer({
                         aria-labelledby="pet-companion-quick-actions-title"
                     >
                         <h2 id="pet-companion-quick-actions-title" className={styles.quickActionsTitle}>
-                            {runtimeSettings.activePetName}에게 무엇을 할까요?
+                            {english ? "What’s next for " + buddyName + "?" : runtimeSettings.activePetName + "에게 무엇을 할까요?"}
                         </h2>
                         <button
                             type="button"
                             className={styles.quickActionsClose}
                             onClick={() => closeQuickActions({ restoreFocus: true })}
-                            aria-label="빠른 메뉴 닫기"
+                            aria-label={petCopy("빠른 메뉴 닫기")}
                         >×</button>
                         <div className={styles.quickActionsGrid}>
                             <button
@@ -2751,7 +2758,7 @@ export default function PetCompanionLayer({
                                 data-pet-quick-action="home"
                             >
                                 <span className={styles.quickActionIcon} aria-hidden="true">🏠</span>
-                                <span>집으로 보내기</span>
+                                <span>{petCopy("집으로 보내기")}</span>
                             </button>
                             <button
                                 type="button"
@@ -2760,7 +2767,7 @@ export default function PetCompanionLayer({
                                 data-pet-quick-action="settings"
                             >
                                 <span className={styles.quickActionIcon} aria-hidden="true">🐾</span>
-                                <span>설정하기</span>
+                                <span>{petCopy("설정하기")}</span>
                             </button>
                         </div>
                     </section>
@@ -2784,15 +2791,15 @@ export default function PetCompanionLayer({
                         <header className={styles.dialogHeader}>
                             <div>
                                 <span className={styles.eyebrow}>DDB WALKING FRIEND</span>
-                                <h2 id="pet-companion-title">산책 친구 설정</h2>
-                                <p>{PET_BREEDS.length}개 견종 이름을 검색하고 우리 아이와 가까운 치비 모션 캐릭터를 골라 주세요.</p>
+                                <h2 id="pet-companion-title">{petCopy("산책 친구 설정")}</h2>
+                                <p>{english ? "Explore " + PET_BREEDS.length + " breeds to find a walking buddy who looks like your dog." : <>{PET_BREEDS.length}개 견종 이름을 검색하고 우리 아이와 가까운 치비 모션 캐릭터를 골라 주세요.</>}</p>
                             </div>
                             <button
                                 ref={closeRef}
                                 type="button"
                                 className={styles.closeButton}
                                 onClick={() => onPanelOpenChange(false)}
-                                aria-label="설정 닫기"
+                                aria-label={petCopy("설정 닫기")}
                             >×</button>
                         </header>
 
@@ -2807,14 +2814,14 @@ export default function PetCompanionLayer({
                                     variant="preview"
                                 />
                                 <div>
-                                    <strong>{draft.activePetName || "몽이"}</strong>
-                                    <span>{selectedBreed.ko} · {selectedBreed.en}</span>
+                                    <strong>{walkingBuddyName(draft.activePetName || "몽이", locale)}</strong>
+                                    <span>{english ? selectedBreed.en : selectedBreed.ko + " · " + selectedBreed.en}</span>
                                 </div>
                             </div>
 
                             <div className={styles.settingsGrid}>
                                 <label className={styles.field}>
-                                    <span>{state.user?.pets.length ? "활성 반려견" : "친구 이름"}</span>
+                                    <span>{petCopy(state.user?.pets.length ? "활성 반려견" : "친구 이름")}</span>
                                     {state.user?.pets.length ? (
                                         <select value={draftPetOptionValue} onChange={choosePet}>
                                             {petOptions.map(({ pet, value }) => (
@@ -2828,23 +2835,23 @@ export default function PetCompanionLayer({
                                             value={draft.activePetName}
                                             maxLength={12}
                                             onChange={(event) => setDraft((current) => ({ ...current, activePetName: event.target.value }))}
-                                            placeholder="예: 몽이"
+                                            placeholder={petCopy("예: 몽이")}
                                         />
                                     )}
                                 </label>
 
                                 <div className={styles.field} data-pet-companion-breed-search>
-                                    <label htmlFor="pet-companion-breed-search">견종 캐릭터 검색</label>
+                                    <label htmlFor="pet-companion-breed-search">{petCopy("견종 캐릭터 검색")}</label>
                                     <input
                                         id="pet-companion-breed-search"
                                         type="search"
                                         value={breedSearch}
                                         onChange={(event) => setBreedSearch(event.target.value)}
-                                        placeholder="예: 닥스훈트, 비숑, 진돗개"
+                                        placeholder={petCopy("예: 닥스훈트, 비숑, 진돗개")}
                                         autoComplete="off"
                                     />
                                     {breedSearch.trim() && filteredBreeds.length > 0 && (
-                                        <div className={styles.breedSearchResults} role="listbox" aria-label="견종 검색 결과">
+                                        <div className={styles.breedSearchResults} role="listbox" aria-label={petCopy("견종 검색 결과")}>
                                             {filteredBreeds.slice(0, 6).map((breed) => (
                                                 <button
                                                     key={breed.id}
@@ -2854,40 +2861,40 @@ export default function PetCompanionLayer({
                                                     data-selected={selectedBreedId === breed.id}
                                                     onClick={() => setDraft((current) => ({ ...current, breedId: breed.id }))}
                                                 >
-                                                    <strong>{breed.ko}</strong>
-                                                    <span>{breed.en}</span>
+                                                    <strong>{english ? breed.en : breed.ko}</strong>
+                                                    {!english && <span>{breed.en}</span>}
                                                 </button>
                                             ))}
                                         </div>
                                     )}
-                                    <label htmlFor="pet-companion-breed-select" className="sr-only">견종 캐릭터 선택</label>
+                                    <label htmlFor="pet-companion-breed-select" className="sr-only">{petCopy("견종 캐릭터 선택")}</label>
                                     <select
                                         id="pet-companion-breed-select"
                                         value={selectedBreedId}
                                         onChange={(event) => setDraft((current) => ({ ...current, breedId: event.target.value }))}
                                     >
                                         {(Object.keys(PET_BREED_FAMILY_LABELS) as PetBreedFamily[]).map((family) => (
-                                            <optgroup key={family} label={PET_BREED_FAMILY_LABELS[family]}>
+                                            <optgroup key={family} label={english ? family : PET_BREED_FAMILY_LABELS[family]}>
                                                 {visibleBreeds.filter((breed) => breed.family === family).map((breed) => (
-                                                    <option key={breed.id} value={breed.id}>{breed.ko} · {breed.en}</option>
+                                                    <option key={breed.id} value={breed.id}>{english ? breed.en : breed.ko + " · " + breed.en}</option>
                                                 ))}
                                             </optgroup>
                                         ))}
                                     </select>
                                     <small className={styles.breedSearchStatus} role="status">
-                                        {breedSearch.trim()
+                                        {english ? (breedSearch.trim() ? filteredBreeds.length + " breeds found" : PET_BREEDS.length + " breeds") : breedSearch.trim()
                                             ? filteredBreeds.length
                                                 ? `${filteredBreeds.length}개 검색 결과${filteredBreeds.length > 6 ? " · 상위 6개 바로 선택" : ""}`
                                                 : "일치하는 견종이 없어요. 다른 이름이나 영문명으로 검색해 주세요."
                                             : `전체 ${PET_BREEDS.length}개 견종`}
                                     </small>
                                     <small className={styles.breedHint}>
-                                        {`${selectedBreed.ko} 전용 치비 캐릭터 · 걷기·달리기·냄새 맡기·상하 이동 32프레임`}
+                                        {english ? selectedBreed.en + " walking, running and sniffing animations" : `${selectedBreed.ko} 전용 치비 캐릭터 · 걷기·달리기·냄새 맡기·상하 이동 32프레임`}
                                     </small>
                                 </div>
 
                                 <fieldset className={styles.fieldset}>
-                                    <legend>털 색상</legend>
+                                    <legend>{petCopy("털 색상")}</legend>
                                     <div className={styles.swatches}>
                                         {COMPANION_TONES.map((tone) => (
                                             <button
@@ -2899,7 +2906,7 @@ export default function PetCompanionLayer({
                                                 onClick={() => setDraft((current) => ({ ...current, toneId: tone.id as CompanionToneId }))}
                                             >
                                                 <span style={{ background: tone.color }} />
-                                                {tone.label}
+                                                {petCopy(tone.label)}
                                             </button>
                                         ))}
                                     </div>
@@ -2907,7 +2914,7 @@ export default function PetCompanionLayer({
 
                                 <div className={styles.twoColumn}>
                                     <label className={styles.field}>
-                                        <span>산책 속도</span>
+                                        <span>{petCopy("산책 속도")}</span>
                                         <select
                                             value={draft.motion}
                                             onChange={(event) => setDraft((current) => ({
@@ -2915,8 +2922,8 @@ export default function PetCompanionLayer({
                                                 motion: event.target.value as CompanionMotionId,
                                             }))}
                                         >
-                                            <option value="calm">차분하게</option>
-                                            <option value="lively">활발하게</option>
+                                            <option value="calm">{petCopy("차분하게")}</option>
+                                            <option value="lively">{petCopy("활발하게")}</option>
                                         </select>
                                     </label>
                                     <div className={styles.toggleStack}>
@@ -2926,7 +2933,7 @@ export default function PetCompanionLayer({
                                                 checked={draft.speechEnabled}
                                                 onChange={(event) => setDraft((current) => ({ ...current, speechEnabled: event.target.checked }))}
                                             />
-                                            <span>상품 추천 말풍선</span>
+                                            <span>{petCopy("상품 추천 말풍선")}</span>
                                         </label>
                                         <label className={styles.toggleRow}>
                                             <input
@@ -2934,7 +2941,7 @@ export default function PetCompanionLayer({
                                                 checked={draft.enabled}
                                                 onChange={(event) => setDraft((current) => ({ ...current, enabled: event.target.checked }))}
                                             />
-                                            <span>쇼핑몰에서 함께 산책</span>
+                                            <span>{petCopy("쇼핑몰에서 함께 산책")}</span>
                                         </label>
                                     </div>
                                 </div>
@@ -2942,9 +2949,9 @@ export default function PetCompanionLayer({
                         </div>
 
                         <footer className={styles.dialogFooter}>
-                            <span className={styles.saveStatus} role="status">{saveStatus}</span>
-                            <button type="button" className={styles.cancelButton} onClick={() => onPanelOpenChange(false)}>취소</button>
-                            <button type="button" className={styles.saveButton} onClick={save}>저장하고 산책하기</button>
+                            <span className={styles.saveStatus} role="status">{petCopy(saveStatus)}</span>
+                            <button type="button" className={styles.cancelButton} onClick={() => onPanelOpenChange(false)}>{petCopy("취소")}</button>
+                            <button type="button" className={styles.saveButton} onClick={save}>{petCopy("저장하고 산책하기")}</button>
                         </footer>
                         {guestSavePromptOpen && !saveAccess.allowed && (
                             <div
@@ -2962,15 +2969,15 @@ export default function PetCompanionLayer({
                                     data-pet-companion-guest-save-alert
                                 >
                                     <span className={styles.guestSaveIcon} aria-hidden="true">🐾</span>
-                                    <h3 id="pet-companion-guest-save-title">{saveAccess.title}</h3>
-                                    <p id="pet-companion-guest-save-message">{saveAccess.message}</p>
+                                    <h3 id="pet-companion-guest-save-title">{petCopy(saveAccess.title)}</h3>
+                                    <p id="pet-companion-guest-save-message">{petCopy(saveAccess.message)}</p>
                                     <div className={styles.guestSaveActions}>
                                         <button
                                             type="button"
                                             className={styles.guestSaveSecondary}
                                             onClick={() => setSaveStatus("")}
                                         >
-                                            계속 둘러보기
+                                            {petCopy("계속 둘러보기")}
                                         </button>
                                         <Link
                                             ref={guestSignupRef}
@@ -2979,7 +2986,7 @@ export default function PetCompanionLayer({
                                             data-pet-companion-signup-cta
                                             onClick={() => onPanelOpenChange(false)}
                                         >
-                                            {saveAccess.actionLabel}
+                                            {petCopy(saveAccess.actionLabel)}
                                         </Link>
                                     </div>
                                 </div>

@@ -20,16 +20,18 @@
  *  상품을 누르면 웹 상품 상세 · 장바구니 · 결제 그대로. 산책 친구는 AppShell 이 쇼핑 화면에서만 띄움.
  */
 
+import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
+import { useI18n } from "@/lib/i18n";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import DeferredShopContent from "../shop/DeferredShopContent";
 const ShopRecommend = dynamic(() => import("../shop/ShopRecommend"), {
     ssr: false,
-    loading: () => <div style={{ minHeight: 180 }} role="status" className="ah-light pt-8 text-center text-[12px]">맞춤 상품을 불러오고 있어요.</div>,
+    loading: () => <div style={{ minHeight: 180 }} role="status" className="ah-light pt-8 text-center text-[12px]"><LocalizedMenuLabel label={"맞춤 상품을 불러오고 있어요."} /></div>,
 });
 const ShopShelf = dynamic(() => import("../shop/ShopShelf"), {
     ssr: false,
-    loading: () => <div style={{ minHeight: 900 }} role="status" className="ah-light pt-8 text-center text-[12px]">상품을 불러오고 있어요.</div>,
+    loading: () => <div style={{ minHeight: 900 }} role="status" className="ah-light pt-8 text-center text-[12px]"><LocalizedMenuLabel label={"상품을 불러오고 있어요."} /></div>,
 });
 import Link from "@/components/app-shell/AppLink";
 import { useMemo, useSyncExternalStore } from "react";
@@ -75,6 +77,8 @@ const CAT_IMAGES: Record<CategorySlug, string> = {
 };
 
 export default function StickerShop() {
+    const { menuLabel: labelText } = useI18n();
+    const { menuLabel } = useI18n();
     const [session, setSession] = useDemoSession();
     // 상품군 스티커 — 웹 메뉴 순서 · 이름 그대로 + 3D 그림
     const cats = useMemo(() => CATEGORY_GROUPS.map((g, i) => {
@@ -94,13 +98,13 @@ export default function StickerShop() {
                     <ShopHero />
 
                     {/* ② 상품군 5개 */}
-                    <nav aria-label="상품군" className="mt-6 flex justify-between gap-1">
+                    <nav aria-label={menuLabel("상품군")} className="mt-6 flex justify-between gap-1">
                         {cats.map((c, i) => (
                             <Link key={c.href} href={c.href} onClick={() => haptic("light")} className="shp-cat flex w-[19%] flex-col items-center text-center">
                                 <span className="shp-cat-sticker relative block aspect-square w-full max-w-[3.6rem] overflow-hidden rounded-full" style={{ background: c.tone, rotate: `${[-4, 3, -2, 4, -3][i]}deg` }}>
                                     <Image src={c.image} alt="" fill sizes="64px" className="object-contain p-1" />
                                 </span>
-                                <span className="ah-light mt-1.5 text-[12px] leading-tight">{c.title.split("/").map((t, k) => <span key={k} className="block">{t}</span>)}</span>
+                                <span className="ah-light mt-1.5 text-[12px] leading-tight">{menuLabel(c.title).split(/\s*(?:\/|&)\s*/).map((t, k) => <span key={k} className="block">{t}</span>)}</span>
                             </Link>
                         ))}
                     </nav>
@@ -115,9 +119,9 @@ export default function StickerShop() {
                 {/* 속지 3 — ⑤ 기획전 · 대표 브랜드 · ⑥ 인스타 */}
                 <DeferredShopContent minHeight={1100}>
                 <DiaryBody pageKey="shop-3" dir={1} className="mt-7 !pl-8 !pr-3">
-                    <section aria-label="기획전">
-                        <SectionLabel icon="fa-scissors">기획전</SectionLabel>
-                        <p className="ah-light mt-1 text-[12px]" style={{ color: TEXT_SOFT }}>우리 댕댕이에게 딱 맞는 큐레이션</p>
+                    <section aria-label={menuLabel("기획전")}>
+                        <SectionLabel icon="fa-scissors">{menuLabel("기획전")}</SectionLabel>
+                        <p className="ah-light mt-1 text-[12px]" style={{ color: TEXT_SOFT }}>{menuLabel("우리 댕댕이에게 딱 맞는 큐레이션")}</p>
                         <div className="mt-4 grid grid-cols-2 gap-x-3 gap-y-4">
                             {/* 2026-10-26 사용자: 앱 기획전도 웹과 같은 5칸(시즌 · 산책용 · 눈·청력 보호 · 프리미엄 푸드 · 세트) — AppPromoCards */}
                             <AppPromoCards />
@@ -125,15 +129,15 @@ export default function StickerShop() {
                     </section>
 
                     {/* 대표 브랜드 — 기획전과 같은 제목 줄(형광펜 + 점선 + 아이콘) */}
-                    <section aria-label="대표 브랜드">
-                        <SectionLabel className="mt-9" icon="fa-tag">대표 브랜드</SectionLabel>
-                        <p className="ah-light mt-1 text-[12px]" style={{ color: TEXT_SOFT }}>댕다방이 자신있게 큐레이션하는 정식 수입 브랜드</p>
+                    <section aria-label={menuLabel("대표 브랜드")}>
+                        <SectionLabel className="mt-9" icon="fa-tag">{menuLabel("대표 브랜드")}</SectionLabel>
+                        <p className="ah-light mt-1 text-[12px]" style={{ color: TEXT_SOFT }}>{menuLabel("댕다방이 자신있게 큐레이션하는 정식 수입 브랜드")}</p>
                         <div className="mt-3.5 grid grid-cols-2 gap-3">
                         {BRANDS.map((b, i) => <BrandSticker key={b.name} brand={b} i={i} />)}
                         </div>
                         {/* 브랜드 전체 보기 — 웹 상단바 메뉴 · 푸터의 "브랜드"와 같은 기존 브랜드 목록(/brands/)으로 (앱엔 그 메뉴가 없어서) */}
                         <div className="mx-auto mt-4 w-[190px]">
-                            <Patch href="/brands/" small tone="cream">브랜드 전체 보기<i aria-hidden="true" className="fa-solid fa-arrow-right text-[11px]" /></Patch>
+                            <Patch href="/brands/" small tone="cream">{menuLabel("브랜드 전체 보기")}<i aria-hidden="true" className="fa-solid fa-arrow-right text-[11px]" /></Patch>
                         </div>
                     </section>
 
@@ -141,7 +145,7 @@ export default function StickerShop() {
                     <a href={INSTA_URL} target="_blank" rel="noopener noreferrer" aria-label={`${INSTA_HANDLE} 인스타그램 프로필 열기 (새 창)`}
                         className="shp-insta mx-auto mt-10 flex w-fit items-center gap-2.5 rounded-full py-2 pl-2.5 pr-4">
                         <span className="grid h-8 w-8 place-items-center rounded-full bg-[#ffe1ea] text-[15px] text-[#d6457a]"><i aria-hidden="true" className="fa-brands fa-instagram" /></span>
-                        <span className="ah-display text-[12.5px]">{INSTA_HANDLE} · 팔로우 하러가기</span>
+                        <span className="ah-display text-[12.5px]">{INSTA_HANDLE} {labelText("· 팔로우 하러가기")}</span>
                     </a>
                 </DiaryBody>
                 </DeferredShopContent>

@@ -21,6 +21,7 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -68,6 +69,7 @@ type Props = {
 };
 
 export default function PetLensModalContent({ initialMode = "photo", onNavigate }: Props) {
+    const { menuLabel: labelText } = useI18n();
     const { user, upsertPet } = useAuth();
     const { hydrated } = useStore();
 
@@ -289,7 +291,7 @@ export default function PetLensModalContent({ initialMode = "photo", onNavigate 
                         className="justify-center"
                         suffixClassName="text-lg font-black leading-tight text-neutral-950"
                     />
-                    <p className="mt-1 text-[11px] font-bold text-neutral-500">카메라와 마이크로 행동과 소리를 함께 살펴봐요</p>
+                    <p className="mt-1 text-[11px] font-bold text-neutral-500">{labelText("카메라와 마이크로 행동과 소리를 함께 살펴봐요")}</p>
                 </header>
                 <PetLensPetSelector
                     compact
@@ -319,9 +321,9 @@ export default function PetLensModalContent({ initialMode = "photo", onNavigate 
                 {/* 헤더 + 다시 분석 */}
                 <div className="mb-4 flex items-center justify-between gap-3">
                     <div>
-                        <p className="text-[11px] font-black text-aurora-indigo">펫렌즈 케어 · 분석 결과</p>
+                        <p className="text-[11px] font-black text-aurora-indigo">{labelText("펫렌즈 케어 · 분석 결과")}</p>
                         <h2 className="mt-0.5 text-lg font-black text-neutral-950">
-                            {result.profile.name || "우리 아이"} 추천
+                            {result.profile.name || "우리 아이"} {labelText("추천")}
                         </h2>
                     </div>
                     <button
@@ -330,7 +332,7 @@ export default function PetLensModalContent({ initialMode = "photo", onNavigate 
                         className="shrink-0 inline-flex items-center gap-1.5 rounded-full border border-neutral-200 px-4 py-2 text-xs font-bold text-neutral-600 hover:border-aurora-indigo hover:text-aurora-indigo transition-colors"
                     >
                         <i className="fa-solid fa-rotate-left text-[10px]" />
-                        다시 분석
+                        {labelText("다시 분석")}
                     </button>
                 </div>
 
@@ -353,13 +355,13 @@ export default function PetLensModalContent({ initialMode = "photo", onNavigate 
                         data-petlens-result-profile-cta
                     >
                         <i className="fa-solid fa-chart-line text-xs" />
-                        내 아이 기록에서 결과 보기
+                        {labelText("내 아이 기록에서 결과 보기")}
                     </Link>
                 </div>
 
                 {/* 추천 상품 (협업자 products[] = recommendForPet 결과) */}
                 <h3 className="mb-2.5 mt-5 text-[13px] font-black text-neutral-900">
-                    {result.products.length > 0 ? "확인된 정보로 골라본 상품" : "상품 추천 전 확인이 필요해요"}{" "}
+                    {labelText(result.products.length > 0 ? "확인된 정보로 골라본 상품" : "상품 추천 전 확인이 필요해요")}{" "}
                     {result.products.length > 0 && <span className="text-neutral-400">({result.products.length})</span>}
                 </h3>
                 {result.products.length > 0 ? (
@@ -370,7 +372,7 @@ export default function PetLensModalContent({ initialMode = "photo", onNavigate 
                     </div>
                 ) : (
                     <p className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-4 text-center text-xs font-bold leading-5 text-amber-800">
-                        견종과 체형을 확인하면 상품 추천을 이어갈게요. 불확실한 사진 결과만으로 상품을 먼저 권하지 않습니다.
+                        {labelText("견종과 체형을 확인하면 상품 추천을 이어갈게요. 불확실한 사진 결과만으로 상품을 먼저 권하지 않습니다.")}
                     </p>
                 )}
             </div>
@@ -383,10 +385,10 @@ export default function PetLensModalContent({ initialMode = "photo", onNavigate 
     return (
         <div className="p-3 sm:p-5">
             <header className="mb-3 text-center">
-                <p className="text-[11px] font-black text-aurora-indigo">펫렌즈 케어</p>
-                <h2 className="mt-0.5 text-lg font-black text-neutral-950">우리 아이 분석하기</h2>
+                <p className="text-[11px] font-black text-aurora-indigo">{labelText("펫렌즈 케어")}</p>
+                <h2 className="mt-0.5 text-lg font-black text-neutral-950">{labelText("우리 아이 분석하기")}</h2>
                 <p className="mt-0.5 text-[11px] font-bold text-neutral-500">
-                    네 방향 사진과 생활 정보를 함께 보고 케어 포인트와 맞춤 추천을 정리해드려요
+                    {labelText("네 방향 사진과 생활 정보를 함께 보고 케어 포인트와 맞춤 추천을 정리해드려요")}
                 </p>
             </header>
 
@@ -403,7 +405,7 @@ export default function PetLensModalContent({ initialMode = "photo", onNavigate 
             <form onSubmit={submit} className="grid gap-2 sm:gap-2.5">
                 {/* 사진 — 모바일에서는 각 슬롯 터치 시 카메라 실행 */}
                 <div data-petlens-modal-multiview-upload>
-                    <span className="mb-1.5 block text-xs font-black text-neutral-500">사진</span>
+                    <span className="mb-1.5 block text-xs font-black text-neutral-500">{labelText("사진")}</span>
                     <div className="grid grid-cols-4 gap-1.5 sm:gap-2">
                         {PETLENS_PHOTO_VIEWS.map((view) => {
                             const photo = photoViews[view.id];
@@ -437,54 +439,54 @@ export default function PetLensModalContent({ initialMode = "photo", onNavigate 
                         })}
                     </div>
                     <p className="mt-1.5 text-[10px] font-bold leading-4 text-neutral-500">
-                        모바일에서는 카메라가 열립니다. 네 방향 사진을 함께 올리면 얼굴·몸통·털 상태를 더 꼼꼼히 비교합니다.
+                        {labelText("모바일에서는 카메라가 열립니다. 네 방향 사진을 함께 올리면 얼굴·몸통·털 상태를 더 꼼꼼히 비교합니다.")}
                     </p>
-                    {photoLoading && <p className="mt-1.5 text-[11px] font-black text-aurora-indigo">사진 준비 중</p>}
+                    {photoLoading && <p className="mt-1.5 text-[11px] font-black text-aurora-indigo">{labelText("사진 준비 중")}</p>}
                 </div>
 
                 {/* 이름 / 나이 */}
                 <div className="grid grid-cols-2 gap-2.5">
                     <label className="block">
-                        <span className="mb-1.5 block text-xs font-black text-neutral-500">이름</span>
-                        <input value={name} onChange={(e) => setName(e.target.value)} className="input" placeholder="우리 아이" />
+                        <span className="mb-1.5 block text-xs font-black text-neutral-500">{labelText("이름")}</span>
+                        <input value={name} onChange={(e) => setName(e.target.value)} className="input" placeholder={labelText("우리 아이")} />
                     </label>
                     <label className="block">
-                        <span className="mb-1.5 block text-xs font-black text-neutral-500">나이</span>
-                        <input value={age} onChange={(e) => setAge(e.target.value)} className="input" placeholder="예: 3살" />
+                        <span className="mb-1.5 block text-xs font-black text-neutral-500">{labelText("나이")}</span>
+                        <input value={age} onChange={(e) => setAge(e.target.value)} className="input" placeholder={labelText("예: 3살")} />
                     </label>
                 </div>
 
                 {/* 크기 / 모질 / 활동량 — 협업자와 동일 option 값 */}
                 <div className="grid grid-cols-3 gap-2.5">
                     <label className="block">
-                        <span className="mb-1.5 block text-xs font-black text-neutral-500">크기</span>
+                        <span className="mb-1.5 block text-xs font-black text-neutral-500">{labelText("크기")}</span>
                         <select value={size} onChange={(e) => setSize(e.target.value as PetProfile["size"])} className="input">
-                            <option value="small">소형</option>
-                            <option value="medium">중형</option>
-                            <option value="large">대형</option>
+                            <option value="small">{labelText("소형")}</option>
+                            <option value="medium">{labelText("중형")}</option>
+                            <option value="large">{labelText("대형")}</option>
                         </select>
                     </label>
                     <label className="block">
-                        <span className="mb-1.5 block text-xs font-black text-neutral-500">모질</span>
+                        <span className="mb-1.5 block text-xs font-black text-neutral-500">{labelText("모질")}</span>
                         <select value={coat} onChange={(e) => setCoat(e.target.value as PetProfile["coat"])} className="input">
-                            <option value="short">단모</option>
-                            <option value="medium">보통</option>
-                            <option value="long">장모</option>
+                            <option value="short">{labelText("단모")}</option>
+                            <option value="medium">{labelText("보통")}</option>
+                            <option value="long">{labelText("장모")}</option>
                         </select>
                     </label>
                     <label className="block">
-                        <span className="mb-1.5 block text-xs font-black text-neutral-500">활동량</span>
+                        <span className="mb-1.5 block text-xs font-black text-neutral-500">{labelText("활동량")}</span>
                         <select value={activity} onChange={(e) => setActivity(e.target.value as PetProfile["activity"])} className="input">
-                            <option value="low">낮음</option>
-                            <option value="normal">보통</option>
-                            <option value="high">높음</option>
+                            <option value="low">{labelText("낮음")}</option>
+                            <option value="normal">{labelText("보통")}</option>
+                            <option value="high">{labelText("높음")}</option>
                         </select>
                     </label>
                 </div>
 
                 {/* 관심 포인트 — pill 토글 (concerns 배열은 협업자 분석 입력과 동일) */}
                 <div>
-                    <span className="mb-1.5 block text-xs font-black text-neutral-500">관심 포인트</span>
+                    <span className="mb-1.5 block text-xs font-black text-neutral-500">{labelText("관심 포인트")}</span>
                     <div className="flex flex-wrap gap-2">
                         {CONCERN_OPTIONS.map((option) => {
                             const active = concerns.includes(option);
@@ -515,7 +517,7 @@ export default function PetLensModalContent({ initialMode = "photo", onNavigate 
 
                 {loading && (
                     <p role="status" aria-live="polite" className="rounded-lg border border-sky-100 bg-sky-50 px-3 py-2 text-xs font-bold leading-5 text-sky-900">
-                        사진을 댕다방 로컬 분석 환경에서 꼼꼼히 살펴보고 있어요. 보통 20~30초 정도 걸리며, 요청이 몰리면 조금 더 걸릴 수 있습니다.
+                        {labelText("사진을 댕다방 로컬 분석 환경에서 꼼꼼히 살펴보고 있어요. 보통 20~30초 정도 걸리며, 요청이 몰리면 조금 더 걸릴 수 있습니다.")}
                     </p>
                 )}
 
@@ -523,11 +525,11 @@ export default function PetLensModalContent({ initialMode = "photo", onNavigate 
                 <button type="submit" disabled={loading || photoLoading} className="btn btn-primary mt-1 w-full justify-center disabled:opacity-60">
                     {loading ? (
                         <>
-                            <i className="fa-solid fa-circle-notch fa-spin mr-2" /> 분석 중…
+                            <i className="fa-solid fa-circle-notch fa-spin mr-2" /> {labelText("분석 중…")}
                         </>
                     ) : (
                         <>
-                            <i className="fa-solid fa-wand-magic-sparkles mr-2" /> 분석하기
+                            <i className="fa-solid fa-wand-magic-sparkles mr-2" /> {labelText("분석하기")}
                         </>
                     )}
                 </button>

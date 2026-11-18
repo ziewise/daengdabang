@@ -8,6 +8,7 @@
  * 양식을 처음부터 펼치며, 문의 유형 · 주문번호 · 상품명을 미리 채움. 접수(submitCustomerSupportInquiry) · 검사 · 문구는 그대로.
  * embedded 를 넘기지 않는 1:1 문의 페이지는 그대로.
  */
+import { useI18n } from "@/lib/i18n";
 import { FormEvent, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import CloudflareSafeEmail from "@/components/footer/CloudflareSafeEmail";
@@ -95,6 +96,7 @@ function getInquiryLocationServerSnapshot() {
 type EmbeddedInquiry = { category: CustomerSupportCategory; orderNumber?: string; productName?: string; subject?: string };
 
 export default function CustomerInquiryPanel({ email, phone, embedded }: { email: string; phone: string; embedded?: EmbeddedInquiry }) {
+    const { menuLabel: labelText } = useI18n();
     const { user } = useAuth();
     const store = useStore();
     const locationSnapshot = useSyncExternalStore(
@@ -211,8 +213,8 @@ export default function CustomerInquiryPanel({ email, phone, embedded }: { email
                     <img src="/images/ui/web-cs-inquiry-160.webp" alt="" aria-hidden="true" className="csq-main-art" />
                     <div className="csq-main-text">
                         <p className="ddb-crayon-kicker csq-kicker">1:1 INQUIRY</p>
-                        <h2>1:1 문의 남기기</h2>
-                        <p>궁금한 점을 남겨 주시면 확인 후 이메일로 답변드려요.</p>
+                        <h2>{labelText("1:1 문의 남기기")}</h2>
+                        <p>{labelText("궁금한 점을 남겨 주시면 확인 후 이메일로 답변드려요.")}</p>
                     </div>
                     <button
                         type="button"
@@ -221,7 +223,7 @@ export default function CustomerInquiryPanel({ email, phone, embedded }: { email
                         aria-controls="inquiry-form"
                         className="csq-main-btn"
                     >
-                        <i className="fa-solid fa-pen" aria-hidden="true" />문의 작성하기
+                        <i className="fa-solid fa-pen" aria-hidden="true" />{labelText("문의 작성하기")}
                     </button>
                 </div>
                 <div className="csq-contacts">
@@ -229,9 +231,9 @@ export default function CustomerInquiryPanel({ email, phone, embedded }: { email
                         {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                         <img src="/images/ui/web-cs-mail-256.webp" alt="" aria-hidden="true" />
                         <span className="csq-contact-text">
-                            <small>이메일 문의</small>
+                            <small>{labelText("이메일 문의")}</small>
                             <b><CloudflareSafeEmail email={email} /></b>
-                            <span>메일로 보내 주셔도 답변드려요</span>
+                            <span>{labelText("메일로 보내 주셔도 답변드려요")}</span>
                         </span>
                         <i className="fa-solid fa-arrow-right csq-contact-go" aria-hidden="true" />
                     </a>
@@ -239,9 +241,9 @@ export default function CustomerInquiryPanel({ email, phone, embedded }: { email
                         {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                         <img src="/images/ui/web-cs-phone-256.webp" alt="" aria-hidden="true" />
                         <span className="csq-contact-text">
-                            <small>전화 문의</small>
+                            <small>{labelText("전화 문의")}</small>
                             <b>{phone}</b>
-                            <span>평일 10:00 ~ 18:00 (주말·공휴일 휴무)</span>
+                            <span>{labelText("평일 10:00 ~ 18:00 (주말·공휴일 휴무)")}</span>
                         </span>
                         <i className="fa-solid fa-phone csq-contact-go" aria-hidden="true" />
                     </a>
@@ -262,12 +264,12 @@ export default function CustomerInquiryPanel({ email, phone, embedded }: { email
                     <span className="cs-contact-icon mb-3 flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-aurora-blue to-aurora-indigo text-white">
                         <i className="fa-solid fa-envelope" aria-hidden="true" />
                     </span>
-                    <span className="block text-base font-black text-foreground">이메일 문의</span>
+                    <span className="block text-base font-black text-foreground">{labelText("이메일 문의")}</span>
                     <span className="mt-1 block text-sm font-bold text-neutral-500">
-                        이 페이지에서 바로 작성하고 접수할 수 있어요.
+                        {labelText("이 페이지에서 바로 작성하고 접수할 수 있어요.")}
                     </span>
                     <span className="cs-contact-go mt-3 inline-flex items-center gap-1.5 rounded-full border border-aurora-indigo/20 bg-aurora-indigo/5 px-3 py-1.5 text-sm font-extrabold text-aurora-indigo transition group-hover:border-aurora-indigo/40 group-hover:bg-aurora-indigo/10">
-                        문의 작성하기 <i className="fa-solid fa-arrow-down text-[10px]" aria-hidden="true" />
+                        {labelText("문의 작성하기")} <i className="fa-solid fa-arrow-down text-[10px]" aria-hidden="true" />
                     </span>
                     <span className="cs-contact-mail mt-2 block text-xs font-bold text-neutral-500">
                         <CloudflareSafeEmail email={email} />
@@ -281,9 +283,9 @@ export default function CustomerInquiryPanel({ email, phone, embedded }: { email
                     <span className="cs-contact-icon mb-3 flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-aurora-indigo to-aurora-pink text-white">
                         <i className="fa-solid fa-headset" aria-hidden="true" />
                     </span>
-                    <span className="block text-base font-black text-foreground">전화 문의</span>
+                    <span className="block text-base font-black text-foreground">{labelText("전화 문의")}</span>
                     <span className="mt-1 block text-sm font-bold text-neutral-500">
-                        평일 10:00 ~ 18:00 (주말·공휴일 휴무)
+                        {labelText("평일 10:00 ~ 18:00 (주말·공휴일 휴무)")}
                     </span>
                     <span className="cs-contact-go mt-3 inline-flex items-center gap-1.5 rounded-full border border-aurora-indigo/20 bg-white px-3 py-1.5 text-sm font-extrabold text-aurora-indigo transition group-hover:border-aurora-indigo/40 group-hover:bg-aurora-indigo/5">
                         {phone} <i className="fa-solid fa-phone text-[10px]" aria-hidden="true" />
@@ -305,16 +307,16 @@ export default function CustomerInquiryPanel({ email, phone, embedded }: { email
                         <p className="text-xs font-black tracking-[0.18em] text-aurora-indigo">{webScreen ? "1:1 INQUIRY" : "CRAYON CONTACT NOTE"}</p>
                         <div className="mt-1 flex items-start justify-between gap-4">
                             <div>
-                                <h2 className="text-xl font-black text-foreground">1:1 문의 바로 접수</h2>
+                                <h2 className="text-xl font-black text-foreground">{labelText("1:1 문의 바로 접수")}</h2>
                                 <p className="mt-1 text-sm font-bold leading-6 text-neutral-600">
-                                    접수 후 정보가 더 필요하면 입력하신 이메일로 다시 안내드려요.
+                                    {labelText("접수 후 정보가 더 필요하면 입력하신 이메일로 다시 안내드려요.")}
                                 </p>
                             </div>
                             <button
                                 type="button"
                                 onClick={() => setVisibility("closed")}
                                 className="cs-form-close flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-aurora-indigo/20 bg-white text-neutral-600 transition hover:bg-indigo-50 hover:text-aurora-indigo"
-                                aria-label="문의 작성 접기"
+                                aria-label={labelText("문의 작성 접기")}
                             >
                                 <i className="fa-solid fa-chevron-up text-xs" aria-hidden="true" />
                             </button>
@@ -328,8 +330,8 @@ export default function CustomerInquiryPanel({ email, phone, embedded }: { email
                                 <span className="flex h-11 w-11 items-center justify-center rounded-full bg-emerald-600 text-white">
                                     <i className="fa-solid fa-check" aria-hidden="true" />
                                 </span>
-                                <h3 className="mt-3 text-lg font-black text-emerald-950">{webScreen ? "문의가 접수됐어요." : "문의가 접수됐습니다."}</h3>
-                                <p className="mt-2 text-sm font-bold leading-6 text-emerald-900">접수번호: <b>{receipt.id}</b></p>
+                                <h3 className="mt-3 text-lg font-black text-emerald-950">{labelText(webScreen ? "문의가 접수됐어요." : "문의가 접수됐습니다.")}</h3>
+                                <p className="mt-2 text-sm font-bold leading-6 text-emerald-900">{labelText("접수번호:")} <b>{receipt.id}</b></p>
                                 <p className="mt-1 text-sm font-bold leading-6 text-neutral-700">{receipt.message}</p>
                                 {missingLabels.length > 0 ? (
                                     <p className="mt-3 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-sm font-bold leading-6 text-amber-950" data-web-notice="warn">
@@ -360,7 +362,7 @@ export default function CustomerInquiryPanel({ email, phone, embedded }: { email
                                     }}
                                     className="mt-4 inline-flex items-center gap-2 rounded-full border border-emerald-300 bg-white px-4 py-2 text-sm font-extrabold text-emerald-900 transition hover:bg-emerald-100"
                                 >
-                                    새 문의 작성 <i className="fa-solid fa-pencil text-xs" aria-hidden="true" />
+                                    {labelText("새 문의 작성")} <i className="fa-solid fa-pencil text-xs" aria-hidden="true" />
                                 </button>
                             </div>
                         </div>
@@ -368,7 +370,7 @@ export default function CustomerInquiryPanel({ email, phone, embedded }: { email
                         <form onSubmit={submit} className="cs-form-body grid gap-5 p-5 sm:p-6">
                             <div className="grid gap-4 sm:grid-cols-2">
                                 <label className="grid gap-1.5 text-sm font-extrabold text-neutral-800">
-                                    문의 유형
+                                    {labelText("문의 유형")}
                                     <select
                                         ref={categoryRef}
                                         value={category}
@@ -388,7 +390,7 @@ export default function CustomerInquiryPanel({ email, phone, embedded }: { email
                                     </select>
                                 </label>
                                 <label className="grid gap-1.5 text-sm font-extrabold text-neutral-800">
-                                    주문번호 <span className="font-bold text-neutral-400">(알면 입력)</span>
+                                    {labelText("주문번호")} <span className="font-bold text-neutral-400">{labelText("(알면 입력)")}</span>
                                     <input
                                         value={values.orderNumber}
                                         onChange={(event) => setValues((current) => ({ ...current, orderNumber: event.target.value }))}
@@ -396,7 +398,7 @@ export default function CustomerInquiryPanel({ email, phone, embedded }: { email
                                         maxLength={80}
                                         autoComplete="off"
                                         className="h-11 rounded-xl border border-neutral-200 bg-white px-3 text-base font-bold text-neutral-900 outline-none transition focus:border-aurora-indigo focus:ring-2 focus:ring-aurora-indigo/15"
-                                        placeholder="예: DDB-20260719-001"
+                                        placeholder={labelText("예: DDB-20260719-001")}
                                     />
                                     <datalist id="customer-order-numbers">
                                         {store.state.orders.map((order) => <option key={order.id} value={order.id} />)}
@@ -406,7 +408,7 @@ export default function CustomerInquiryPanel({ email, phone, embedded }: { email
 
                             <div className="grid gap-4 sm:grid-cols-2">
                                 <label className="grid gap-1.5 text-sm font-extrabold text-neutral-800">
-                                    이름
+                                    {labelText("이름")}
                                     <input
                                         required
                                         value={name}
@@ -417,7 +419,7 @@ export default function CustomerInquiryPanel({ email, phone, embedded }: { email
                                     />
                                 </label>
                                 <label className="grid gap-1.5 text-sm font-extrabold text-neutral-800">
-                                    답변 받을 이메일
+                                    {labelText("답변 받을 이메일")}
                                     <input
                                         required
                                         type="email"
@@ -432,7 +434,7 @@ export default function CustomerInquiryPanel({ email, phone, embedded }: { email
 
                             <div className="grid gap-4 sm:grid-cols-2">
                                 <label className="grid gap-1.5 text-sm font-extrabold text-neutral-800">
-                                    연락처 <span className="font-bold text-neutral-400">(선택)</span>
+                                    {labelText("연락처")} <span className="font-bold text-neutral-400">{labelText("(선택)")}</span>
                                     <input
                                         value={customerPhone}
                                         onChange={(event) => setValues((current) => ({ ...current, phone: event.target.value }))}
@@ -443,31 +445,31 @@ export default function CustomerInquiryPanel({ email, phone, embedded }: { email
                                     />
                                 </label>
                                 <label className="grid gap-1.5 text-sm font-extrabold text-neutral-800">
-                                    상품명 <span className="font-bold text-neutral-400">(선택)</span>
+                                    {labelText("상품명")} <span className="font-bold text-neutral-400">{labelText("(선택)")}</span>
                                     <input
                                         value={values.productName}
                                         onChange={(event) => setValues((current) => ({ ...current, productName: event.target.value }))}
                                         maxLength={180}
                                         className="h-11 rounded-xl border border-neutral-200 bg-white px-3 text-base font-bold text-neutral-900 outline-none transition focus:border-aurora-indigo focus:ring-2 focus:ring-aurora-indigo/15"
-                                        placeholder="제품 이상 문의라면 적어 주세요"
+                                        placeholder={labelText("제품 이상 문의라면 적어 주세요")}
                                     />
                                 </label>
                             </div>
 
                             <label className="grid gap-1.5 text-sm font-extrabold text-neutral-800">
-                                제목
+                                {labelText("제목")}
                                 <input
                                     required
                                     value={subject}
                                     onChange={(event) => setValues((current) => ({ ...current, subject: event.target.value }))}
                                     maxLength={180}
                                     className="h-11 rounded-xl border border-neutral-200 bg-white px-3 text-base font-bold text-neutral-900 outline-none transition focus:border-aurora-indigo focus:ring-2 focus:ring-aurora-indigo/15"
-                                    placeholder="문의 내용을 짧게 적어 주세요"
+                                    placeholder={labelText("문의 내용을 짧게 적어 주세요")}
                                 />
                             </label>
 
                             <label className="grid gap-1.5 text-sm font-extrabold text-neutral-800">
-                                문의 내용
+                                {labelText("문의 내용")}
                                 <textarea
                                     required
                                     minLength={5}
@@ -476,12 +478,12 @@ export default function CustomerInquiryPanel({ email, phone, embedded }: { email
                                     onChange={(event) => setValues((current) => ({ ...current, message: event.target.value }))}
                                     maxLength={4000}
                                     className="resize-y rounded-xl border border-neutral-200 bg-white px-3 py-3 text-base font-bold leading-7 text-neutral-900 outline-none transition focus:border-aurora-indigo focus:ring-2 focus:ring-aurora-indigo/15"
-                                    placeholder="교환·반품 사유나 제품 이상 상태를 자세히 적어 주세요. 정보가 부족하면 이메일로 추가 확인을 안내드려요."
+                                    placeholder={labelText("교환·반품 사유나 제품 이상 상태를 자세히 적어 주세요. 정보가 부족하면 이메일로 추가 확인을 안내드려요.")}
                                 />
                             </label>
 
                             <label className="sr-only" aria-hidden="true">
-                                웹사이트
+                                {labelText("웹사이트")}
                                 <input
                                     tabIndex={-1}
                                     autoComplete="off"
@@ -499,9 +501,9 @@ export default function CustomerInquiryPanel({ email, phone, embedded }: { email
                                     className="mt-1 h-4 w-4 shrink-0 accent-aurora-indigo"
                                 />
                                 <span>
-                                    문의 응대에 필요한 개인정보 수집·이용에 동의합니다. 상담 기록은 분쟁 대응을 위해 3년간 보관될 수 있습니다.{" "}
+                                    {labelText("문의 응대에 필요한 개인정보 수집·이용에 동의합니다. 상담 기록은 분쟁 대응을 위해 3년간 보관될 수 있습니다.")}{" "}
                                     <Link href="/privacy" className="inline-flex items-center gap-1 rounded-full border border-indigo-200 bg-white px-2 py-0.5 font-extrabold text-aurora-indigo underline underline-offset-2">
-                                        개인정보처리방침 <i className="fa-solid fa-arrow-up-right-from-square text-[9px]" aria-hidden="true" />
+                                        {labelText("개인정보처리방침")} <i className="fa-solid fa-arrow-up-right-from-square text-[9px]" aria-hidden="true" />
                                     </Link>
                                 </span>
                             </label>
@@ -518,9 +520,9 @@ export default function CustomerInquiryPanel({ email, phone, embedded }: { email
                                 className="cs-submit inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-aurora-blue to-aurora-indigo px-5 py-3 text-base font-black text-white shadow-card transition hover:-translate-y-0.5 hover:shadow-hover disabled:cursor-not-allowed disabled:opacity-60"
                             >
                                 {submitting ? (
-                                    <><i className="fa-solid fa-spinner animate-spin" aria-hidden="true" /> 접수하고 있어요…</>
+                                    <><i className="fa-solid fa-spinner animate-spin" aria-hidden="true" /> {labelText("접수하고 있어요…")}</>
                                 ) : (
-                                    <><i className="fa-solid fa-paper-plane" aria-hidden="true" /> 문의 접수하기</>
+                                    <><i className="fa-solid fa-paper-plane" aria-hidden="true" /> {labelText("문의 접수하기")}</>
                                 )}
                             </button>
                         </form>
