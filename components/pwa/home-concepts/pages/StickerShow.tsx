@@ -24,6 +24,7 @@
  * 데이터: 댕자랑 · 굿즈 공모전 모두 실제 서버.
  */
 
+import ShowcaseCaption from "@/components/daeng-showcase/ShowcaseCaption";
 import { useI18n } from "@/lib/i18n";
 import { showcaseDisplayName } from "@/lib/daeng-showcase";
 import { appLoginHref } from "@/components/app-shell/appTabs";
@@ -726,7 +727,7 @@ export default function StickerShow() {
                                                 <span className="min-w-0 flex-1">
                                                     <span className="ah-display inline-flex items-center gap-1 rounded-full bg-[#fff1c4] px-2 py-0.5 text-[10.5px] text-[#a8720f]"><i aria-hidden="true" className="fa-solid fa-crown text-[9px]" />{labelText("대표 댕자랑")}</span>
                                                     <span className="ah-display mt-1 block truncate text-[13px]">{featured.author}{featured.pet ? ` · ${featured.pet}` : ""}</span>
-                                                    <span className="ah-light line-clamp-2 block text-[11.5px] leading-snug" style={{ color: TEXT_SOFT }}>{featured.text}</span>
+                                                    <span className="ah-light line-clamp-2 block text-[11.5px] leading-snug" style={{ color: TEXT_SOFT }}><ShowcaseCaption authorId={featured.authorId} text={featured.text} /></span>
                                                 </span>
                                                 <i aria-hidden="true" className="fa-solid fa-chevron-right shrink-0 text-[10px] text-[#d3a3b4]" />
                                             </button>
@@ -985,7 +986,7 @@ export default function StickerShow() {
                         onBone={() => (member ? (haptic("light"), cheer(open.id, !open.boned)) : goLogin())}
                         onFollow={() => (member ? toggleFollow(open.authorId, open) : goLogin())}
                         onAuthor={() => openProfile(open)}
-                        onShare={() => { haptic("light"); setShareOf({ kind: "post", id: open.id, img: open.img, text: open.text, topicId: open.topicId, topicTitle: open.topicTitle }); }}
+                        onShare={() => { haptic("light"); setShareOf({ kind: "post", id: open.id, authorId: open.authorId, img: open.img, text: open.text, topicId: open.topicId, topicTitle: open.topicTitle }); }}
                         onReport={() => (member ? (open.mine ? undefined : setReportOf(open.id)) : goLogin())}
                         onDelete={() => remove(open.id)} onConfirmDelete={setConfirmDelete} />
                 </Peek>

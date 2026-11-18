@@ -50,6 +50,7 @@ const bundledDirectories = [
 ];
 
 const bundledFiles = [
+    "data/showcase-official-captions.en.json",
     "apple-icon.png",
     "icon.png",
     "manifest.webmanifest",

@@ -1,4 +1,6 @@
 "use client";
+import { showcaseDisplayName } from "@/lib/daeng-showcase";
+import ShowcaseCaption from "@/components/daeng-showcase/ShowcaseCaption";
 import { useI18n } from "@/lib/i18n";
 import ShowcaseThumbnail from "./ShowcaseThumbnail";
 
@@ -54,7 +56,7 @@ export default function ShowcaseTopicCard({
     onShare: () => void;
     onViewFeatured: (post: ShowcasePost) => void;
 }) {
-    const { menuLabel: labelText } = useI18n();
+    const { locale, menuLabel: labelText } = useI18n();
     if (loading) {
         return (
             <section id="showcase-topic" className="dw-sc-wrap scroll-mt-28" aria-label={labelText("오늘의 댕주제 불러오는 중")} aria-busy="true">
@@ -127,7 +129,7 @@ export default function ShowcaseTopicCard({
                             <button type="button" onClick={() => onViewFeatured(featured)} className="dw-sc-frame is-rainbow" aria-label={labelText("대표 댕자랑 정확히 보기")}>
                                 <ShowcaseThumbnail
                                     src={featured.imageUrl}
-                                    alt={`${featured.author.displayName}의 대표 댕자랑 사진`}
+                                    alt={locale === "en" ? `Featured showcase photo by ${showcaseDisplayName(featured.author.displayName, labelText)}` : `${featured.author.displayName}의 대표 댕자랑 사진`}
                                     width={featured.imageWidth}
                                     height={featured.imageHeight}
                                     className="aspect-square w-full object-cover"
@@ -137,8 +139,8 @@ export default function ShowcaseTopicCard({
                         {/* 오른쪽 — 대표 댕자랑 한 줄 */}
                         <aside className="dw-csheet is-lav dw-sc-stage-info" aria-label={labelText("운영자 선정 대표 댕자랑")}>
                             <p className="ddb-crayon-kicker dw-kicker">FEATURED SHOWCASE</p>
-                            <p className="dw-tlogin-title">{featured.pet ? `${featured.pet.name}${featured.pet.breed ? ` · ${featured.pet.breed}` : ""}` : featured.author.displayName}</p>
-                            <p className="dw-tlogin-body line-clamp-3">“{featured.caption}”</p>
+                            <p className="dw-tlogin-title">{featured.pet ? `${featured.pet.name}${featured.pet.breed ? ` · ${featured.pet.breed}` : ""}` : showcaseDisplayName(featured.author.displayName, labelText)}</p>
+                            <p className="dw-tlogin-body line-clamp-3">“<ShowcaseCaption authorId={featured.author.authorId} text={featured.caption} />”</p>
                             <button type="button" onClick={() => onViewFeatured(featured)} className="ddb-motion-lift dw-pill dw-pill-sm mt-4">
                                 {labelText("대표 댕자랑 정확히 보기")}
                             </button>

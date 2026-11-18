@@ -11,6 +11,7 @@
  * 모양: 다이어리 속지(점 모눈, 줄 없음) · 마스킹테이프 손잡이 · 폴라로이드 · 메모지 · 라벨 스티커 · 체크 스티커 · 자수 와펜 버튼.
  */
 
+import ShowcaseCaption from "@/components/daeng-showcase/ShowcaseCaption";
 import { formatShowcaseDate } from "@/lib/display-format";
 import { useI18n } from "@/lib/i18n";
 import { showcaseDisplayName } from "@/lib/daeng-showcase";
@@ -41,7 +42,7 @@ export const REPORT_REASONS = [
 
 /** 공유할 것 — 게시물(주제 id · 이름 포함) 또는 오늘의 댕주제(서버 공유 주소 · 안내 글 포함) */
 export type ShareTarget = {
-    kind: "post" | "topic"; id: string; img?: string; text: string;
+    kind: "post" | "topic"; id: string; img?: string; text: string; authorId?: string;
     topicId?: string; topicTitle?: string; // 게시물: 연결된 주제 · 댕주제: 주제 이름
     prompt?: string; shareUrl?: string; // 댕주제만: 안내 글 · 서버가 준 공유 주소(topic.shareUrl)
 };
@@ -238,7 +239,7 @@ export function PostDetail({ post, boned, member, confirmDelete, onBone, onFollo
                 </p>
             ) : null}
             {/* 글 전체 */}
-            <p className="ah-light mt-2.5 whitespace-pre-line text-[14px] leading-relaxed">{post.text}</p>
+            <p className="ah-light mt-2.5 whitespace-pre-line text-[14px] leading-relaxed"><ShowcaseCaption authorId={post.authorId} text={post.text} fullPost /></p>
             {/* 응원 · 공유 · 신고/삭제 */}
             <div className="mt-4 flex items-center gap-2">
                 <button type="button" aria-pressed={boned} onClick={onBone} className={`sp-bone ah-display flex items-center gap-1.5 rounded-full px-3.5 py-2 text-[13px] ${boned ? "is-on" : ""}`}>
@@ -357,7 +358,7 @@ export function ShareSheet({ open, onClose, target }: { open: boolean; onClose: 
             <div className="sp-paper mt-1 flex items-center gap-3 rounded-[14px] p-3" style={{ rotate: "-0.5deg" }}>
                 {target.img ? <span className="relative block h-16 w-16 shrink-0 overflow-hidden rounded-[8px] bg-[#fff3e8]"><PostPhoto src={target.img} sizes="64px" thumbnail /></span>
                     : <span className="grid h-16 w-16 shrink-0 place-items-center rounded-[8px] bg-[#ffe1ea] text-[22px] text-[#e0557f]"><i aria-hidden="true" className="fa-solid fa-paw" /></span>}
-                <p className="ah-light line-clamp-3 text-[12.5px] leading-snug">{target.text}</p>
+                <p className="ah-light line-clamp-3 text-[12.5px] leading-snug">{target.kind === "post" ? <ShowcaseCaption authorId={target.authorId || ""} text={target.text} /> : labelText(target.text)}</p>
             </div>
             <div className="mt-4 grid grid-cols-2 gap-2.5">
                 <Patch small onClick={() => void native()} disabled={Boolean(busy)}>{labelText("공유 창 열기")}<i aria-hidden="true" className={`fa-solid ${busy === "native" ? "fa-circle-notch fa-spin" : "fa-share-nodes"} text-[12px]`} /></Patch>

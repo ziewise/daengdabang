@@ -7,6 +7,7 @@
  * → 뼈다귀 응원 · 공유 · 신고/삭제 → 보호자(프로필 · 팔로우). 기능 · 문구는 그대로, 꾸밈은 app/daily-web.css "댕자랑" 묶음.
  */
 
+import ShowcaseCaption from "@/components/daeng-showcase/ShowcaseCaption";
 import { useI18n } from "@/lib/i18n";
 import { useCallback, useEffect, useRef, useState } from "react";
 // 카드를 누르면 크게 보기 창(2026-10-25 웹)
@@ -68,6 +69,8 @@ export default function ShowcaseCard({
     onNotice,
 }: ShowcaseCardProps) {
     const { locale, menuLabel: labelText } = useI18n();
+    const authorName = showcaseDisplayName(post.author.displayName, labelText);
+    const photoName = post.pet?.name || authorName;
     const [busy, setBusy] = useState<"follow" | "bone" | "delete" | "report" | "">("");
     const [reportOpen, setReportOpen] = useState(false);
     const [reportReason, setReportReason] = useState<ShowcaseReportReason>("spam");
@@ -237,10 +240,10 @@ export default function ShowcaseCard({
             {/* 사진 — 카드 위를 꽉 채우는 둥근 사각(얇은 흰 테), 주제 참여 글은 사진 위에 주제 표시 */}
             <div className="dw-sc-photo">
                 {/* 사진을 누르면 크게 보기 창 */}
-                <button type="button" className="dw-sc-frame dw-sc-open" onClick={() => setDetailOpen(true)} aria-haspopup="dialog" aria-label={`${post.pet?.name || post.author.displayName}의 댕자랑 크게 보기`}>
+                <button type="button" className="dw-sc-frame dw-sc-open" onClick={() => setDetailOpen(true)} aria-haspopup="dialog" aria-label={locale === "en" ? `Open showcase photo by ${photoName}` : `${post.pet?.name || post.author.displayName}의 댕자랑 크게 보기`}>
                     <ShowcaseThumbnail
                         src={post.imageUrl}
-                        alt={`${post.pet?.name || post.author.displayName}의 댕자랑 사진`}
+                        alt={locale === "en" ? `Showcase photo by ${photoName}` : `${post.pet?.name || post.author.displayName}의 댕자랑 사진`}
                         width={post.imageWidth}
                         height={post.imageHeight}
                         loading="lazy"
@@ -269,7 +272,7 @@ export default function ShowcaseCard({
                         if (!window.getSelection()?.toString()) setDetailOpen(true);
                     }}
                 >
-                    {post.caption}
+                    <ShowcaseCaption authorId={post.author.authorId} text={post.caption} />
                 </p>
                 {captionOverflows ? (
                     <button
@@ -297,7 +300,7 @@ export default function ShowcaseCard({
                     <i className="fa-solid fa-bone" aria-hidden="true" />
                     {labelText("응원")} {post.boneCount.toLocaleString("ko-KR")}
                 </button>
-                <button type="button" onClick={() => onShare(post)} className="dw-sc-mini" aria-label={`${post.author.displayName}의 댕자랑 공유`}>
+                <button type="button" onClick={() => onShare(post)} className="dw-sc-mini" aria-label={locale === "en" ? `Share the showcase post by ${authorName}` : `${post.author.displayName}의 댕자랑 공유`}>
                     <i className="fa-solid fa-share-nodes" aria-hidden="true" />
                 </button>
                 {post.canDelete ? (
@@ -313,11 +316,11 @@ export default function ShowcaseCard({
 
             {/* 보호자 — 누르면 프로필, 오른쪽 팔로우 */}
             <div className="dw-sc-author">
-                <button type="button" onClick={() => onOpenAuthor(post.author.authorId)} className="dw-sc-author-btn" aria-label={`${post.author.displayName} 프로필 보기`}>
+                <button type="button" onClick={() => onOpenAuthor(post.author.authorId)} className="dw-sc-author-btn" aria-label={locale === "en" ? `View the profile of ${authorName}` : `${post.author.displayName} 프로필 보기`}>
                     <span className="dw-sc-avatar" aria-hidden="true">{post.author.displayName.slice(0, 1)}</span>
                     <span className="min-w-0">
                         <h3 className="dw-sc-author-name">
-                            {showcaseDisplayName(post.author.displayName, labelText)}
+                            {authorName}
                             {post.author.isMe ? <span className="dw-sc-me">{labelText("나")}</span> : null}
                         </h3>
                         <span className="dw-sc-author-meta">{locale === "en" ? `${post.author.followerCount.toLocaleString("en-US")} ${post.author.followerCount === 1 ? "follower" : "followers"} ·` : `팔로워 ${post.author.followerCount.toLocaleString("ko-KR")}명 ·`} {formatShowcaseDate(post.createdAt, locale)}</span>

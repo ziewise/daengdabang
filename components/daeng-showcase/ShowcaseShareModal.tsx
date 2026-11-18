@@ -1,5 +1,6 @@
 "use client";
 
+import ShowcaseCaption from "@/components/daeng-showcase/ShowcaseCaption";
 import { useI18n } from "@/lib/i18n";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ShowcasePost, ShowcaseTopic } from "@/lib/daeng-showcase";
@@ -203,7 +204,7 @@ export default function ShowcaseShareModal({
                         <h3 className="ddb-crayon-title mt-1 break-keep text-2xl text-neutral-950">{copy.title}</h3>
                         {/* 없는 색 이름(text-neutral-650) 대신 같은 결과인 text-inherit(앱 그대로) · 웹 색은 showcase-compose-web.css */}
                         <p className="mt-2 line-clamp-3 whitespace-pre-wrap break-words text-xs font-bold leading-5 text-inherit" data-web-soft-text>
-                            {target.kind === "post" ? target.post.caption : target.topic.prompt}
+                            {target.kind === "post" ? <ShowcaseCaption authorId={target.post.author.authorId} text={target.post.caption} /> : target.topic.prompt}
                         </p>
                     </div>
                 </div>

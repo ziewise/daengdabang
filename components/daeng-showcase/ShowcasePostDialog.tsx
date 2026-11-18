@@ -13,6 +13,8 @@
  */
 "use client";
 
+import { showcaseDisplayName } from "@/lib/daeng-showcase";
+import ShowcaseCaption from "@/components/daeng-showcase/ShowcaseCaption";
 import { useI18n } from "@/lib/i18n";
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
@@ -35,7 +37,7 @@ type Props = {
 };
 
 export default function ShowcasePostDialog({ post, tint, open, onClose, busy, createdLabel, onBone, onFollow, onShare, onOpenAuthor, onReport, onDelete }: Props) {
-    const { menuLabel: labelText } = useI18n();
+    const { locale, menuLabel: labelText } = useI18n();
     const closeRef = useRef<HTMLButtonElement>(null);
 
     // 열려 있는 동안: 뒤 화면 스크롤 막기 · Esc 닫기 · 닫기 단추 초점
@@ -55,7 +57,8 @@ export default function ShowcasePostDialog({ post, tint, open, onClose, busy, cr
     }, [open, onClose]);
 
     if (!open) return null;
-    const who = post.pet?.name || post.author.displayName;
+    const authorName = showcaseDisplayName(post.author.displayName, labelText);
+    const who = post.pet?.name || authorName;
 
     return createPortal(
         <div
@@ -64,7 +67,7 @@ export default function ShowcasePostDialog({ post, tint, open, onClose, busy, cr
                 if (event.currentTarget === event.target) onClose();
             }}
         >
-            <div className={`spd ${tint}`} role="dialog" aria-modal="true" aria-label={`${who}의 댕자랑`}>
+            <div className={`spd ${tint}`} role="dialog" aria-modal="true" aria-label={locale === "en" ? `Showcase post by ${who}` : `${who}의 댕자랑`}>
                 <button ref={closeRef} type="button" className="spd-close" onClick={onClose} aria-label={labelText("댕자랑 크게 보기 닫기")}>
                     <i className="fa-solid fa-xmark" aria-hidden="true" />
                 </button>
@@ -73,7 +76,7 @@ export default function ShowcasePostDialog({ post, tint, open, onClose, busy, cr
                 <div className="spd-photo">
                     <span className="spd-frame">
                         {/* eslint-disable-next-line @next/next/no-img-element -- API provides canonical dimensions and deletion-aware public media URLs. */}
-                        <img src={post.imageUrl} alt={`${who}의 댕자랑 사진`} width={post.imageWidth} height={post.imageHeight} decoding="async" />
+                        <img src={post.imageUrl} alt={locale === "en" ? `Showcase photo by ${who}` : `${who}의 댕자랑 사진`} width={post.imageWidth} height={post.imageHeight} decoding="async" />
                     </span>
                     {post.topic ? <span className="spd-topic"><i className="fa-solid fa-hashtag" aria-hidden="true" />{post.topic.title}</span> : null}
                 </div>
@@ -93,15 +96,15 @@ export default function ShowcasePostDialog({ post, tint, open, onClose, busy, cr
                     {/* 이야기 — 흰 말풍선 쿠션 */}
                     <div className="spd-bubble">
                         <span className="spd-quote" aria-hidden="true">“</span>
-                        <p className="spd-caption">{post.caption}</p>
+                        <p className="spd-caption"><ShowcaseCaption authorId={post.author.authorId} text={post.caption} fullPost /></p>
                     </div>
 
                     {/* 보호자 */}
                     <div className="spd-author">
-                        <button type="button" className="spd-author-btn" onClick={onOpenAuthor} aria-label={`${post.author.displayName} 프로필 보기`}>
+                        <button type="button" className="spd-author-btn" onClick={onOpenAuthor} aria-label={locale === "en" ? `View the profile of ${authorName}` : `${post.author.displayName} 프로필 보기`}>
                             <span className="spd-avatar" aria-hidden="true">{post.author.displayName.slice(0, 1)}</span>
                             <span className="spd-author-text">
-                                <b>{post.author.displayName}{post.author.isMe ? <small>{labelText("나")}</small> : null}</b>
+                                <b>{authorName}{post.author.isMe ? <small>{labelText("나")}</small> : null}</b>
                                 <span>{labelText("팔로워")} {post.author.followerCount.toLocaleString("ko-KR")}{labelText("명")}</span>
                             </span>
                         </button>
@@ -130,7 +133,7 @@ export default function ShowcasePostDialog({ post, tint, open, onClose, busy, cr
                             <i className="fa-solid fa-bone" aria-hidden="true" />{labelText(post.bonedByMe ? "응원했어요" : "응원하기")}
                             <b>{post.boneCount.toLocaleString("ko-KR")}</b>
                         </button>
-                        <button type="button" onClick={onShare} className="spd-mini" aria-label={`${post.author.displayName}의 댕자랑 공유`}>
+                        <button type="button" onClick={onShare} className="spd-mini" aria-label={locale === "en" ? `Share the showcase post by ${authorName}` : `${post.author.displayName}의 댕자랑 공유`}>
                             <i className="fa-solid fa-share-nodes" aria-hidden="true" />
                         </button>
                         {post.canDelete ? (
