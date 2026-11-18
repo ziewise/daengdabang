@@ -239,7 +239,7 @@ export default function BrandStoryWeb() {
                         <Link href="/chat" className="bsw-tool" data-tone="pink">
                             {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                             <img src={`${UI}caretalk-web-128.webp`} alt="" aria-hidden="true" />
-                            <span><b>케어톡</b><small><LocalizedMenuLabel label={"우리 아이에 대한 궁금증을 편하게 물어보기"} /></small></span>
+                            <span><b><LocalizedMenuLabel label={"케어톡"} english="AI Chat" /></b><small><LocalizedMenuLabel label={"우리 아이에 대한 궁금증을 편하게 물어보기"} /></small></span>
                             <i className="fa-solid fa-arrow-right" aria-hidden="true" />
                         </Link>
                     </div>
