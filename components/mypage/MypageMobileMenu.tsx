@@ -98,14 +98,14 @@ export default function MypageMobileMenu({ groups, onLogout }: { groups: MobileM
                         <div className="ddb-mpm-body">
                             {groups.map((group) => (
                                 <section key={group.id} className="ddb-mpm-group" data-group={group.id} aria-label={group.label}>
-                                    <p className="ddb-mpm-glabel"><span>{GROUP_KICKER[group.id] ?? ""}</span>{group.label}</p>
+                                    <p className="ddb-mpm-glabel"><span>{GROUP_KICKER[group.id] ?? ""}</span>{labelText(group.label)}</p>
                                     <ul>
                                         {group.items.map((item) => (
                                             <li key={item.href}>
                                                 <Link href={item.href} aria-current={item.active ? "page" : undefined} onClick={() => setOpen(false)}>
                                                     {/* eslint-disable-next-line @next/next/no-img-element -- 작은 3D 그림 */}
                                                     <img src={menuArt(item.href)} alt="" aria-hidden="true" />
-                                                    <span>{item.label}</span>
+                                                    <span>{labelText(item.label)}</span>
                                                 </Link>
                                             </li>
                                         ))}

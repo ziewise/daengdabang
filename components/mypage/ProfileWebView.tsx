@@ -364,7 +364,7 @@ function VerifiedView({ user, token, provider, providerLabel, accountDisplay, is
                         onClick={() => setTab(item.id)}
                     >
                         <span className="pf-tab-i" aria-hidden="true"><i className={`fa-solid ${item.icon}`} /></span>
-                        <span><b>{item.label}</b><small>{item.sub}</small></span>
+                        <span><b>{labelText(item.label)}</b><small>{labelText(item.sub)}</small></span>
                     </button>
                 ))}
             </div>
@@ -391,7 +391,7 @@ function VerifiedView({ user, token, provider, providerLabel, accountDisplay, is
                     <Link key={item.href} href={item.href}>
                         {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                         <img src={`${UI}${item.art}`} alt="" aria-hidden="true" />
-                        {item.title}
+                        {labelText(item.title)}
                         <i className="fa-solid fa-chevron-right" aria-hidden="true" />
                     </Link>
                 ))}

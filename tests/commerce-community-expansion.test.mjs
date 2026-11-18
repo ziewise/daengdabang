@@ -32,7 +32,7 @@ test("indie brand route is an inquiry, not an admission or launch promise", () =
 });
 
 test("PB and membership remain an unpaid, unconfirmed proposal", () => {
-    assert.match(source, /댕다방 스탠다드|DAENGDABANG STANDARD/);
+    assert.match(source, /댕다방 (?:스탠다드|STANDARD)/);
     assert.match(source, /월 4,900원은 제안 단계의 검토안이며 가격·혜택 모두 미확정/);
     assert.match(source, /이 화면에서는 신청비나 결제를 받지 않아요/);
     assert.match(source, /href: "#growth-programs"/);

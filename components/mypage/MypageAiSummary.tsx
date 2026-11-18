@@ -80,14 +80,15 @@ function PetPicker({ pets, value, onChange }: { pets: PetProfile[]; value?: numb
 
 // 아직 볼 수 없을 때(반려견 없음 · 기록 없음 · 오류) — 그림 + 제목 + 안내 + 버튼
 function SumEmpty({ art, title, text, action }: { art: string; title: string; text: string; action?: { href: string; label: string } | { onClick: () => void; label: string } }) {
+    const { menuLabel: labelText } = useI18n();
     return (
         <div className="mp-sum-empty surface p-8 text-center" data-mp-sum-art={art}>
             <p className="text-lg font-black text-neutral-950">{title}</p>
             <p className="mt-2 text-sm font-bold leading-6 text-neutral-600">{text}</p>
             {action && ("href" in action ? (
-                <Link href={action.href} className="btn btn-primary mt-5">{action.label}</Link>
+                <Link href={action.href} className="btn btn-primary mt-5">{labelText(action.label)}</Link>
             ) : (
-                <button type="button" onClick={action.onClick} className="btn btn-secondary mt-5">{action.label}</button>
+                <button type="button" onClick={action.onClick} className="btn btn-secondary mt-5">{labelText(action.label)}</button>
             ))}
         </div>
     );
@@ -220,7 +221,7 @@ export function HealthSummary() {
                                             { tone: "gray", label: "이번엔 안 보인 것", lines: latest.comparison.notObservedNow },
                                         ].filter((group) => group.lines.length > 0).map((group) => (
                                             <div key={group.label} className="rounded-xl bg-neutral-50 p-3" data-tone={group.tone}>
-                                                <dt className="text-xs font-black text-neutral-500">{group.label}</dt>
+                                                <dt className="text-xs font-black text-neutral-500">{labelText(group.label)}</dt>
                                                 {group.lines.slice(0, 3).map((line) => <dd key={line} className="mt-1 font-bold text-neutral-800">{line}</dd>)}
                                             </div>
                                         ))}

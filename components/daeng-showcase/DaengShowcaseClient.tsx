@@ -371,7 +371,7 @@ export default function DaengShowcaseClient() {
                 <div className="dw-csheet is-pink dw-chero ddb-hero-band">
                     <div className="min-w-0">
                         <div className="flex flex-wrap items-center gap-2">
-                            <p className="ddb-crayon-kicker dw-kicker">DAENGDABANG SHOWCASE</p>
+                            <p className="ddb-crayon-kicker dw-kicker">댕다방 SHOWCASE</p>
                             <span className="dw-chip dw-sc-chip-live">{labelText("지금 참여 가능")}</span>
                         </div>
                         <h1 id="daeng-showcase-title" className="ddb-crayon-title dw-h1">
@@ -492,7 +492,7 @@ export default function DaengShowcaseClient() {
                     {loading ? <FeedSkeleton /> : feedError && posts.length === 0 ? (
                         <div className="dw-csheet is-pink dw-sc-empty">
                             <i className="fa-solid fa-cloud-arrow-down text-2xl text-rose-400" aria-hidden="true" />
-                            <p className="dw-tlogin-title">{feedError}</p>
+                            <p className="dw-tlogin-title">{labelText(feedError)}</p>
                             <div className="dw-sc-actions justify-center">
                                 <button type="button" onClick={() => setRefreshKey((value) => value + 1)} className="ddb-motion-lift dw-pill dw-pill-sm">{labelText("다시 불러오기")}</button>
                                 {scope === "following" ? <button type="button" onClick={requireAuth} className="ddb-crayon-link dw-pill dw-pill-main dw-pill-sm">{labelText("로그인")}</button> : null}

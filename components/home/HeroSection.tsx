@@ -297,7 +297,7 @@ export default function HeroSection({ featuredProducts: _featuredProducts }: Pro
                     <div className="-mb-8 mt-auto md:mb-0 md:mt-4">
                         {/* 컬렉션 라벨 */}
                         <p className="text-xs font-black uppercase tracking-[0.25em] text-white md:text-sm [text-shadow:0_1px_3px_rgb(0_0_0_/_75%),0_2px_12px_rgb(0_0_0_/_55%)]">
-                            DAENGDABANG · COLLECTION
+                            댕다방 · COLLECTION
                         </p>
                         {/* 메인 카피 — 첨부 이미지 색상: 윗줄 흰색, 아랫줄 핑크. 밝은 배경 가독성 위해 다중 text-shadow */}
                         <h1

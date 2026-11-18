@@ -71,7 +71,7 @@ export default function BrandStoryPage() {
                 <BrandStoryHeroVideo />
                 <div className={styles.heroShade} />
                 <div className={styles.heroContent}>
-                    <p className={styles.eyebrow}>DAENGDABANG BRAND STORY</p>
+                    <p className={styles.eyebrow}>댕다방 BRAND STORY</p>
                     <h1 id="brand-story-title">
                         <span className={styles.heroTitleLine}><LocalizedMenuLabel label={"좋은 하루는,"} /></span>
                         <span className={styles.heroTitleLine}><LocalizedMenuLabel label={"함께 고르는"} /></span>

@@ -55,7 +55,7 @@ export default function EscrowPage() {
             <section id="summary" className="mt-8 scroll-mt-24 border-t border-neutral-200 pt-5">
                 <h2 className="text-lg font-black text-neutral-950"><LocalizedMenuLabel label={"1. 구매안전서비스 안내"} /></h2>
                 <p className="mt-2 text-sm font-bold leading-7 text-neutral-600">
-                    {ESCROW_INFO.serviceName}<LocalizedMenuLabel label={"는 구매자가 결제한 대금이 구매 확인 절차를 거쳐 판매자에게 지급되도록\n                    하는 매매보호 서비스입니다. 댕다방은 이용자가 안전하게 거래할 수 있도록 구매안전서비스 이용확인증과\n                    판매자 확인정보를 함께 공개합니다."} />
+                    <LocalizedMenuLabel label={ESCROW_INFO.serviceName} />{" "}<LocalizedMenuLabel label={"는 구매자가 결제한 대금이 구매 확인 절차를 거쳐 판매자에게 지급되도록\n                    하는 매매보호 서비스입니다. 댕다방은 이용자가 안전하게 거래할 수 있도록 구매안전서비스 이용확인증과\n                    판매자 확인정보를 함께 공개합니다."} />
                 </p>
             </section>
 
@@ -67,7 +67,7 @@ export default function EscrowPage() {
                             {rows.map(([label, value]) => (
                                 <tr key={label} className="border-b border-neutral-100 align-top">
                                     <th className="w-56 py-4 pr-4 font-black text-neutral-950"><LocalizedMenuLabel label={label} /></th>
-                                    <td className="py-4 font-bold leading-6 text-neutral-600">{value}</td>
+                                    <td className="py-4 font-bold leading-6 text-neutral-600"><LocalizedMenuLabel label={value} /></td>
                                 </tr>
                             ))}
                         </tbody>

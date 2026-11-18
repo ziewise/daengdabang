@@ -16,6 +16,7 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CatalogProduct } from "@/lib/catalog";
 import {
@@ -57,6 +58,7 @@ const shortDate = (date: string) => {
 };
 
 export default function ProductOwnReviews({ product, empty = false }: { product: CatalogProduct; empty?: boolean }) {
+    const { menuLabel: labelText } = useI18n();
     const summary = empty ? EMPTY_SUMMARY : PREVIEW_SUMMARY;
     const fitQ = fitQuestionFor(product.category);
     const ctx = PREVIEW_WRITE_CONTEXT;
@@ -162,18 +164,18 @@ export default function ProductOwnReviews({ product, empty = false }: { product:
     return (
         <div className="rvw" data-own-reviews>
             {/* ① 후기 보드 */}
-            <section className="rvb" aria-label="댕다방 구매 후기 요약" data-empty={totalCount ? undefined : ""}>
+            <section className="rvb" aria-label={labelText("댕다방 구매 후기 요약")} data-empty={totalCount ? undefined : ""}>
                 <header className="rvb-head">
                     <div>
                         <p className="rvw-kicker">OUR REVIEWS</p>
                         {totalCount ? (
-                            <h3>보호자 <em>{totalCount.toLocaleString()}명</em>의 이야기</h3>
+                            <h3>{labelText("보호자")} <em>{totalCount.toLocaleString()}{labelText("명")}</em>{labelText("의 이야기")}</h3>
                         ) : (
-                            <h3>아직 <em>첫 이야기</em>를 기다리고 있어요</h3>
+                            <h3>{labelText("아직")} <em>{labelText("첫 이야기")}</em>{labelText("를 기다리고 있어요")}</h3>
                         )}
                     </div>
                     <p className="rvb-verified">
-                        <i className="fa-solid fa-circle-check" aria-hidden="true" /> 댕다방에서 구매한 분의 후기만 모았어요
+                        <i className="fa-solid fa-circle-check" aria-hidden="true" /> {labelText("댕다방에서 구매한 분의 후기만 모았어요")}
                     </p>
                 </header>
 
@@ -193,7 +195,7 @@ export default function ProductOwnReviews({ product, empty = false }: { product:
                             </div>
 
                             {/* 별점 크레파스 막대 */}
-                            <div className="rvb-dist" aria-label="별점 분포">
+                            <div className="rvb-dist" aria-label={labelText("별점 분포")}>
                                 {([5, 4, 3, 2, 1] as const).map((star) => {
                                     const percent = Math.round((100 * distribution[star]) / distTotal);
                                     return (
@@ -211,7 +213,7 @@ export default function ProductOwnReviews({ product, empty = false }: { product:
                                 <div className="rvb-fit">
                                     <p className="rvb-fit-q">{fitQ.question}</p>
                                     <p className="rvb-fit-top">
-                                        <b>{Math.round((100 * fit[fitTop.value]) / fitTotal)}%</b>가 &ldquo;{fitTop.label}&rdquo;
+                                        <b>{Math.round((100 * fit[fitTop.value]) / fitTotal)}%</b>{labelText("가 &ldquo;")}{fitTop.label}&rdquo;
                                     </p>
                                     <div className="rvb-gauge" aria-hidden="true">
                                         <span className="rvb-gauge-track">
@@ -234,7 +236,7 @@ export default function ProductOwnReviews({ product, empty = false }: { product:
                             <div className="rvb-keywords">
                                 <p>
                                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                                    <img src={`${UI}menu-daily-community-128.webp`} alt="" width={28} height={28} /> 자주 나온 이야기
+                                    <img src={`${UI}menu-daily-community-128.webp`} alt="" width={28} height={28} /> {labelText("자주 나온 이야기")}
                                 </p>
                                 <ul>
                                     {summary.keywords.map((keyword, index) => (
@@ -250,7 +252,7 @@ export default function ProductOwnReviews({ product, empty = false }: { product:
                     <div className="rvb-first">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={`${UI}find-showcase-256.webp`} alt="" width={120} height={120} />
-                        <p>이 상품을 받아 보셨다면 <b>첫 후기</b>를 남겨 주세요.<br />사진 한 장, 한 줄 이야기도 다른 보호자에게 큰 힘이 돼요.</p>
+                        <p>{labelText("이 상품을 받아 보셨다면")} <b>{labelText("첫 후기")}</b>{labelText("를 남겨 주세요.")}<br />{labelText("사진 한 장, 한 줄 이야기도 다른 보호자에게 큰 힘이 돼요.")}</p>
                     </div>
                 )}
 
@@ -264,20 +266,20 @@ export default function ProductOwnReviews({ product, empty = false }: { product:
                         </p>
                         <ul className="rvb-write-meta">
                             <li><i className="fa-solid fa-tag" aria-hidden="true" /> {ctx.option}</li>
-                            <li><i className="fa-regular fa-calendar" aria-hidden="true" /> {shortDate(ctx.deadline)}까지</li>
+                            <li><i className="fa-regular fa-calendar" aria-hidden="true" /> {shortDate(ctx.deadline)}{labelText("까지")}</li>
                             <li data-point="">
                                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                                <img src={`${UI}policy-reward-192.webp`} alt="" width={16} height={16} /> {alreadyWrote ? "적립 예정" : "적립"} +{ctx.rewardPoints.toLocaleString()}원 <em>2배</em>
+                                <img src={`${UI}policy-reward-192.webp`} alt="" width={16} height={16} /> {labelText(alreadyWrote ? "적립 예정" : "적립")} +{ctx.rewardPoints.toLocaleString()}{labelText("원")} <em>{labelText("2배")}</em>
                             </li>
                         </ul>
                     </div>
                     {alreadyWrote ? (
                         <button type="button" className="rvb-write-btn" data-ghost="" onClick={() => document.querySelector("[data-own-reviews] .rvc")?.scrollIntoView({ behavior: "smooth", block: "center" })}>
-                            내 후기 보기 <i className="fa-solid fa-arrow-down" aria-hidden="true" />
+                            {labelText("내 후기 보기")} <i className="fa-solid fa-arrow-down" aria-hidden="true" />
                         </button>
                     ) : (
                         <button type="button" className="rvb-write-btn" onClick={() => setWriteOpen(true)}>
-                            <i className="fa-solid fa-pen" aria-hidden="true" /> 후기 쓰기
+                            <i className="fa-solid fa-pen" aria-hidden="true" /> {labelText("후기 쓰기")}
                         </button>
                     )}
                 </div>
@@ -285,15 +287,15 @@ export default function ProductOwnReviews({ product, empty = false }: { product:
 
             {/* ② 포토 모자이크 */}
             {photoItems.length > 0 && (
-                <section className="rvp" aria-label="포토 후기 모아보기">
+                <section className="rvp" aria-label={labelText("포토 후기 모아보기")}>
                     <div className="rvw-row-head">
                         <h3>
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img src={`${UI}find-showcase-256.webp`} alt="" width={36} height={36} />
-                            포토 후기 <b>{photoCount.toLocaleString()}</b>
+                            {labelText("포토 후기")} <b>{photoCount.toLocaleString()}</b>
                         </h3>
                         <button type="button" className="rvw-link" onClick={() => { setFilter("photo"); setShown(PAGE); }}>
-                            포토 후기만 보기 <i className="fa-solid fa-chevron-right" aria-hidden="true" />
+                            {labelText("포토 후기만 보기")} <i className="fa-solid fa-chevron-right" aria-hidden="true" />
                         </button>
                     </div>
                     <div className="rvp-mosaic" data-count={Math.min(photoItems.length, 5)}>
@@ -315,7 +317,7 @@ export default function ProductOwnReviews({ product, empty = false }: { product:
                                             <span>{item.review.pet ? `${item.review.pet.name} · ${item.review.pet.breed}` : item.review.maskedName}</span>
                                         </span>
                                     )}
-                                    {more > 0 && <span className="rvp-more"><b>+{more}</b>전체 보기</span>}
+                                    {more > 0 && <span className="rvp-more"><b>+{more}</b>{labelText("전체 보기")}</span>}
                                 </button>
                             );
                         })}
@@ -326,7 +328,7 @@ export default function ProductOwnReviews({ product, empty = false }: { product:
             {/* ③ 고르기 · 정렬 */}
             {all.length > 0 && (
                 <div className="rvw-tools">
-                    <div className="rvw-seg" role="tablist" aria-label="후기 고르기" style={{ ["--seg-i" as string]: filterIndex, ["--seg-n" as string]: filters.length }}>
+                    <div className="rvw-seg" role="tablist" aria-label={labelText("후기 고르기")} style={{ ["--seg-i" as string]: filterIndex, ["--seg-n" as string]: filters.length }}>
                         <span className="rvw-seg-pill" aria-hidden="true" />
                         {filters.map((item) => (
                             <button
@@ -337,7 +339,7 @@ export default function ProductOwnReviews({ product, empty = false }: { product:
                                 onClick={() => { setFilter(item.key); setShown(PAGE); }}
                             >
                                 {item.icon && <i className={item.icon} aria-hidden="true" />}
-                                {item.label}
+                                {labelText(item.label)}
                                 <b>{item.count.toLocaleString()}</b>
                             </button>
                         ))}
@@ -349,7 +351,7 @@ export default function ProductOwnReviews({ product, empty = false }: { product:
                             <i className="fa-solid fa-chevron-down rvw-sort-caret" aria-hidden="true" />
                         </button>
                         {sortOpen && (
-                            <ul className="rvw-sort-menu" role="listbox" aria-label="정렬">
+                            <ul className="rvw-sort-menu" role="listbox" aria-label={labelText("정렬")}>
                                 {SORTS.map((item) => (
                                     <li key={item.key}>
                                         <button
@@ -358,7 +360,7 @@ export default function ProductOwnReviews({ product, empty = false }: { product:
                                             aria-selected={sort === item.key}
                                             onClick={() => { setSort(item.key); setSortOpen(false); }}
                                         >
-                                            {item.label}
+                                            {labelText(item.label)}
                                             {sort === item.key && <i className="fa-solid fa-check" aria-hidden="true" />}
                                         </button>
                                     </li>
@@ -391,8 +393,8 @@ export default function ProductOwnReviews({ product, empty = false }: { product:
                         <li className="rvw-none">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img src={`${UI}web-no-match-192.webp`} alt="" width={80} height={80} />
-                            <p>조건에 맞는 후기가 아직 없어요.</p>
-                            <button type="button" className="rvw-link" onClick={() => setFilter("all")}>전체 후기 보기</button>
+                            <p>{labelText("조건에 맞는 후기가 아직 없어요.")}</p>
+                            <button type="button" className="rvw-link" onClick={() => setFilter("all")}>{labelText("전체 후기 보기")}</button>
                         </li>
                     )}
                 </ul>
@@ -400,7 +402,7 @@ export default function ProductOwnReviews({ product, empty = false }: { product:
 
             {list.length > shown && (
                 <button type="button" className="rvw-more" onClick={() => setShown((value) => value + PAGE)}>
-                    후기 더 보기
+                    {labelText("후기 더 보기")}
                     <span className="rvw-more-bar" aria-hidden="true"><i style={{ width: `${(100 * shown) / list.length}%` }} /></span>
                     <span className="rvw-more-num">{shown} / {list.length}</span>
                 </button>
@@ -408,7 +410,7 @@ export default function ProductOwnReviews({ product, empty = false }: { product:
 
             {all.length > 0 && (
                 <p className="rvw-foot">
-                    후기는 댕다방에서 구매하신 분이 작성했고, 작성하신 분께는 적립금이 지급돼요. 운영 기준에 어긋나는 후기만 신고 확인 후 가려져요.
+                    {labelText("후기는 댕다방에서 구매하신 분이 작성했고, 작성하신 분께는 적립금이 지급돼요. 운영 기준에 어긋나는 후기만 신고 확인 후 가려져요.")}
                 </p>
             )}
 
@@ -450,6 +452,7 @@ function ReviewCard({
     onReport: () => void;
     onPhoto: (index: number) => void;
 }) {
+    const { menuLabel: labelText } = useI18n();
     const [open, setOpen] = useState(false);
     // 3줄을 넘는지 실제 그려진 높이로 판단(PC는 길게, 휴대폰은 짧게 넘침) — 넘칠 때만 "더 보기"
     const bodyRef = useRef<HTMLParagraphElement>(null);
@@ -476,15 +479,15 @@ function ReviewCard({
                 <div className="rvc-who-text">
                     <p className="rvc-name">
                         <b>{review.maskedName}</b>
-                        {mine && <span className="rvc-mine">내 후기</span>}
+                        {mine && <span className="rvc-mine">{labelText("내 후기")}</span>}
                     </p>
-                    <p className="rvc-verified"><i className="fa-solid fa-bag-shopping" aria-hidden="true" /> 구매 확인</p>
+                    <p className="rvc-verified"><i className="fa-solid fa-bag-shopping" aria-hidden="true" /> {labelText("구매 확인")}</p>
                 </div>
                 {review.pet && (
                     <dl className="rvc-pet">
-                        <div><dt>아이</dt><dd>{review.pet.name}</dd></div>
-                        <div><dt>견종</dt><dd>{review.pet.breed}</dd></div>
-                        <div><dt>몸무게</dt><dd>{review.pet.weightKg}kg</dd></div>
+                        <div><dt>{labelText("아이")}</dt><dd>{review.pet.name}</dd></div>
+                        <div><dt>{labelText("견종")}</dt><dd>{review.pet.breed}</dd></div>
+                        <div><dt>{labelText("몸무게")}</dt><dd>{review.pet.weightKg}kg</dd></div>
                     </dl>
                 )}
             </div>
@@ -494,19 +497,19 @@ function ReviewCard({
                 <header className="rvc-head">
                     <CrayonStars value={review.rating} size={18} />
                     <span className="rvc-word">{RATING_WORDS[review.rating]}</span>
-                    {best && <span className="rvc-best"><i className="fa-solid fa-crown" aria-hidden="true" /> 도움 많이 받은 후기</span>}
+                    {best && <span className="rvc-best"><i className="fa-solid fa-crown" aria-hidden="true" /> {labelText("도움 많이 받은 후기")}</span>}
                     <span className="rvc-date">{dot(review.createdAt)}</span>
                 </header>
 
                 <ul className="rvc-tags">
-                    {review.option && <li data-tag="option"><span>구매</span>{review.option}</li>}
-                    {fitLabel && <li data-tag="fit" data-fit={review.fit} title={fitQuestion}><span>사이즈</span>{fitLabel}</li>}
+                    {review.option && <li data-tag="option"><span>{labelText("구매")}</span>{review.option}</li>}
+                    {fitLabel && <li data-tag="fit" data-fit={review.fit} title={fitQuestion}><span>{labelText("사이즈")}</span>{fitLabel}</li>}
                 </ul>
 
                 <p ref={bodyRef} className="rvc-body" data-clamp={open ? undefined : ""}>{review.body}</p>
                 {(overflow || open) && (
                     <button type="button" className="rvw-link rvc-body-more" aria-expanded={open} onClick={() => setOpen((value) => !value)}>
-                        {open ? "접기" : "더 보기"} <i className={`fa-solid ${open ? "fa-chevron-up" : "fa-chevron-down"}`} aria-hidden="true" />
+                        {labelText(open ? "접기" : "더 보기")} <i className={`fa-solid ${open ? "fa-chevron-up" : "fa-chevron-down"}`} aria-hidden="true" />
                     </button>
                 )}
 
@@ -524,10 +527,10 @@ function ReviewCard({
                 <footer className="rvc-foot">
                     <button type="button" className="rvc-helpful" aria-pressed={helpfulOn} onClick={onHelpful}>
                         <i className={`${helpfulOn ? "fa-solid" : "fa-regular"} fa-thumbs-up`} aria-hidden="true" />
-                        도움돼요 <b>{helpfulCount}</b>
+                        {labelText("도움돼요")} <b>{helpfulCount}</b>
                     </button>
-                    {helpfulCount > 0 && <span className="rvc-helpful-note">{helpfulCount}명에게 도움이 됐어요</span>}
-                    <button type="button" className="rvc-report" onClick={onReport}>신고</button>
+                    {helpfulCount > 0 && <span className="rvc-helpful-note">{helpfulCount}{labelText("명에게 도움이 됐어요")}</span>}
+                    <button type="button" className="rvc-report" onClick={onReport}>{labelText("신고")}</button>
                 </footer>
 
                 {review.sellerReply && (
@@ -535,7 +538,7 @@ function ReviewCard({
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={`${UI}logo-poodle-384.webp`} alt="" width={40} height={40} />
                         <div>
-                            <p className="rvc-reply-head"><b>댕다방</b> 답글 <span>{dot(review.sellerReply.createdAt)}</span></p>
+                            <p className="rvc-reply-head"><b>댕다방</b> {labelText("답글")} <span>{dot(review.sellerReply.createdAt)}</span></p>
                             <p>{review.sellerReply.body}</p>
                         </div>
                     </div>

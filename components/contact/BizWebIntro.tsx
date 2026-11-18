@@ -64,7 +64,7 @@ export function PartnerWebIntro() {
             {/* 머리 판 */}
             <section className="bzw-hero" data-tone="peach" aria-labelledby="bzw-partner-title">
                 <div className="bzw-hero-text">
-                    <p className="bzw-kicker">PARTNER WITH DAENGDABANG</p>
+                    <p className="bzw-kicker">PARTNER WITH 댕다방</p>
                     {/* 2026-10-25 머리 판 문구 · 그림 교체(사용자 문안 · 웹파트너 그림) */}
                     <h1 id="bzw-partner-title" className="bzw-title"><LocalizedMenuLabel label={"좋은 상품의 가치가,"} /><br /><em className="bzw-hl"><LocalizedMenuLabel label={"반려견의 일상"} /></em><LocalizedMenuLabel label={"에 닿도록."} /></h1>
                     <p className="bzw-lead"><LocalizedMenuLabel label={"댕다방은 단순히 입점 브랜드를 늘리기보다, 반려견의 일상에 실질적인 도움이 되는 제품을 찾습니다."} /></p>

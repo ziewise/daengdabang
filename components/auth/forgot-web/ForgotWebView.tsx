@@ -216,7 +216,7 @@ function EmailCard(props: ForgotWebProps) {
                 </Link>
             </div>
 
-            <SxFoot hint={waitReason || undefined}>
+            <SxFoot hint={waitReason ? labelText(waitReason) : undefined}>
                 <button type="submit" className="sxw-next" disabled={!canSend}>
                     {loading ? <><i className="fa-solid fa-circle-notch fa-spin" aria-hidden="true" />{labelText("보내는 중")}</> : <>{labelText("인증번호 받기")}<i className="fa-solid fa-paper-plane" aria-hidden="true" /></>}
                 </button>

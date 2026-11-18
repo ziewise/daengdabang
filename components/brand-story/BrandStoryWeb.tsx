@@ -61,7 +61,7 @@ export default function BrandStoryWeb() {
             {/* ① 머리 판 */}
             <section className="bsw-hero" aria-labelledby="bsw-title">
                 <div className="bsw-hero-text">
-                    <p className="bsw-kicker">DAENGDABANG BRAND STORY</p>
+                    <p className="bsw-kicker">댕다방 BRAND STORY</p>
                     <h1 id="bsw-title" className="bsw-hero-title">
                         {/* 2026-10-25 문구 교체(사용자 제공 문안) */}
                         <span><LocalizedMenuLabel label={"좋은 하루는,"} /></span>

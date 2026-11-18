@@ -8,6 +8,7 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { useEffect, useId, useRef } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
@@ -27,6 +28,7 @@ type Props = {
 };
 
 export default function SavedAddressPickerModal({ addresses, state, selectedId, onPick, onRetry, onClose }: Props) {
+    const { menuLabel: labelText } = useI18n();
     const titleId = useId();
     const closeRef = useRef<HTMLButtonElement>(null);
 
@@ -58,30 +60,30 @@ export default function SavedAddressPickerModal({ addresses, state, selectedId, 
                     </span>
                     <div className="ddb-pf-titles">
                         <p className="ddb-pf-kicker">MY ADDRESS</p>
-                        <h2 id={titleId}><span className="ddb-pf-name">저장된 배송지</span></h2>
-                        <p className="ddb-pf-sub">배송지 관리에 저장한 주소를 고르면 받는 분 · 연락처 · 주소가 바로 채워져요.</p>
+                        <h2 id={titleId}><span className="ddb-pf-name">{labelText("저장된 배송지")}</span></h2>
+                        <p className="ddb-pf-sub">{labelText("배송지 관리에 저장한 주소를 고르면 받는 분 · 연락처 · 주소가 바로 채워져요.")}</p>
                     </div>
-                    <button ref={closeRef} type="button" className="ddb-pf-close" onClick={onClose} aria-label="저장된 배송지 창 닫기">
+                    <button ref={closeRef} type="button" className="ddb-pf-close" onClick={onClose} aria-label={labelText("저장된 배송지 창 닫기")}>
                         <i className="fa-solid fa-xmark" aria-hidden="true" />
                     </button>
                 </header>
 
                 <div className="ddb-as-body ddb-sa-body" aria-live="polite">
                     {state === "loading" && addresses.length === 0 ? (
-                        <p className="ddb-as-hint"><i className="fa-solid fa-paw fa-bounce" aria-hidden="true" />저장된 배송지를 불러오고 있어요.</p>
+                        <p className="ddb-as-hint"><i className="fa-solid fa-paw fa-bounce" aria-hidden="true" />{labelText("저장된 배송지를 불러오고 있어요.")}</p>
                     ) : state === "failed" && addresses.length === 0 ? (
                         <div className="ddb-sa-empty">
-                            <p className="ddb-as-hint"><i className="fa-solid fa-circle-exclamation" aria-hidden="true" />저장된 배송지를 불러오지 못했어요. 잠시 뒤 다시 불러와 주세요.</p>
+                            <p className="ddb-as-hint"><i className="fa-solid fa-circle-exclamation" aria-hidden="true" />{labelText("저장된 배송지를 불러오지 못했어요. 잠시 뒤 다시 불러와 주세요.")}</p>
                             <button type="button" className="ddb-pf-cancel" onClick={onRetry}>
-                                <i className="fa-solid fa-rotate-right" aria-hidden="true" />다시 불러오기
+                                <i className="fa-solid fa-rotate-right" aria-hidden="true" />{labelText("다시 불러오기")}
                             </button>
                         </div>
                     ) : ordered.length === 0 ? (
                         <div className="ddb-sa-empty">
                             {/* eslint-disable-next-line @next/next/no-img-element -- 작은 3D 그림 */}
                             <img src="/images/ui/pet-home-96.webp" alt="" aria-hidden="true" />
-                            <strong>아직 저장된 배송지가 없어요</strong>
-                            <span>배송지 관리에서 주소 검색으로 한 번 저장해 두면, 다음 주문부터 바로 불러와요.</span>
+                            <strong>{labelText("아직 저장된 배송지가 없어요")}</strong>
+                            <span>{labelText("배송지 관리에서 주소 검색으로 한 번 저장해 두면, 다음 주문부터 바로 불러와요.")}</span>
                         </div>
                     ) : (
                         <ul className="ddb-sa-list">
@@ -91,11 +93,11 @@ export default function SavedAddressPickerModal({ addresses, state, selectedId, 
                                     <strong>{address.addressLine1}{address.addressLine2 ? ` ${address.addressLine2}` : ""}</strong>
                                     <small>
                                         {address.recipientName} · {address.phone}
-                                        {address.isDefault && <b className="ddb-sa-badge">기본 배송지</b>}
+                                        {address.isDefault && <b className="ddb-sa-badge">{labelText("기본 배송지")}</b>}
                                     </small>
                                     <button type="button" onClick={() => onPick(address.id)}>
                                         <i className="fa-solid fa-check" aria-hidden="true" />
-                                        {address.id === selectedId ? "지금 채운 주소" : "이 주소로"}
+                                        {labelText(address.id === selectedId ? "지금 채운 주소" : "이 주소로")}
                                     </button>
                                 </li>
                             ))}
@@ -107,9 +109,9 @@ export default function SavedAddressPickerModal({ addresses, state, selectedId, 
                     <div className="ddb-as-actions">
                         {/* 배송지 추가 · 수정은 마이페이지 배송지 관리에서(기존 화면) */}
                         <Link href="/mypage/address/" className="ddb-pf-cancel ddb-sa-manage">
-                            <i className="fa-solid fa-gear" aria-hidden="true" />배송지 관리
+                            <i className="fa-solid fa-gear" aria-hidden="true" />{labelText("배송지 관리")}
                         </Link>
-                        <button type="button" className="ddb-pf-cancel" onClick={onClose}>닫기</button>
+                        <button type="button" className="ddb-pf-cancel" onClick={onClose}>{labelText("닫기")}</button>
                     </div>
                 </footer>
             </div>

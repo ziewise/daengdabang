@@ -43,7 +43,7 @@ test("the active behavior and sound launcher opens the real observation camera i
     assert.match(modal, /initialMode\?: PetLensMode/);
     assert.match(modal, /useState<PetLensMode>\(initialMode\)/);
     assert.match(brand, /댕다방 연구소/);
-    assert.match(brand, /DaengDaBang Research Lab/);
+    assert.match(brand, /댕다방 Research Lab/);
     assert.match(brand, /신규서비스/);
     assert.match(launcher, /댕다방 연구소 행동·소리 분석 신규 서비스 열기/);
     assert.match(tabs, /DaengLabServiceTitle/);

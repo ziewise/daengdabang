@@ -43,7 +43,7 @@ export default function BestPage() {
             <header className="ddb-hotpick-head">
                 <div className="ddb-pl-head">
                     <div className="ddb-pl-titlebox">
-                        <LocalizedText as="h1" ko="댕다방 핫픽" en="DaengDaBang Hot Picks" className="ddb-pl-title" />
+                        <LocalizedText as="h1" ko="댕다방 핫픽" en="댕다방 Hot Picks" className="ddb-pl-title" />
                         <span className="ddb-pl-count"><LocalizedMenuLabel label={"제품군"} /> {groups.length}<LocalizedMenuLabel label={"곳 · 1~3위 + 추천"} /></span>
                     </div>
                 </div>

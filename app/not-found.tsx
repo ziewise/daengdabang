@@ -5,6 +5,7 @@
  * app/notfound-web.css 가 웹(html:not(.ddb-app-mode))에서만 보이게 · 꾸밈. 앱은 기존 화면(나침반 · 제목 · 두 단추) 그대로.
  * 2026-10-26 탭 제목(metadata) 추가 · 웹 제목은 해요체(nf-web-text, 앱은 원래 문구 nf-app-text).
  */
+import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
 import type { Metadata } from "next";
 import Link from "next/link";
 import "./notfound-web.css";
@@ -32,13 +33,13 @@ export default function NotFound() {
             <i className="fa-regular fa-compass text-5xl text-neutral-300" />
             <h1 className="mt-4 text-3xl font-black text-neutral-950">
                 {/* 앱은 원래 문구, 웹은 해요체(notfound-web.css 가 바꿔 보여 줌) */}
-                <span className="nf-app-text">페이지를 찾을 수 없습니다.</span>
-                <span className="hidden nf-web-text">페이지를 찾을 수 없어요</span>
+                <span className="nf-app-text"><LocalizedMenuLabel label={"페이지를 찾을 수 없습니다."} /></span>
+                <span className="hidden nf-web-text"><LocalizedMenuLabel label={"페이지를 찾을 수 없어요"} /></span>
             </h1>
-            <p className="hidden nf-lead">주소가 바뀌었거나 없어진 페이지예요. 아래에서 가고 싶은 곳을 골라 주세요.</p>
+            <p className="hidden nf-lead"><LocalizedMenuLabel label={"주소가 바뀌었거나 없어진 페이지예요. 아래에서 가고 싶은 곳을 골라 주세요."} /></p>
             <div className="mt-6 flex justify-center gap-2">
-                <Link href="/" className="btn btn-primary">홈</Link>
-                <Link href="/products" className="btn btn-secondary">전체상품</Link>
+                <Link href="/" className="btn btn-primary"><LocalizedMenuLabel label={"홈"} /></Link>
+                <Link href="/products" className="btn btn-secondary"><LocalizedMenuLabel label={"전체상품"} /></Link>
             </div>
             {/* 웹 전용 바로가기 네 칸 */}
             <nav className="hidden nf-quick" aria-label="바로가기">
@@ -46,8 +47,8 @@ export default function NotFound() {
                     <Link key={item.href} href={item.href}>
                         {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                         <img src={item.art} loading="lazy" alt="" aria-hidden="true" />
-                        <b>{item.title}</b>
-                        <small>{item.text}</small>
+                        <b><LocalizedMenuLabel label={item.title} /></b>
+                        <small><LocalizedMenuLabel label={item.text} /></small>
                     </Link>
                 ))}
             </nav>

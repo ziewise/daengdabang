@@ -574,7 +574,7 @@ export function unitSummary(product: ExternalProductResult, locale: "ko" | "en")
 export function statusLabel(product: ExternalProductResult, locale: "ko" | "en"): string {
     const status = comparisonStatus(product);
     const labels: Record<ProductComparisonStatus, [string, string]> = {
-        anchor: ["댕다방 판매 상품", "DaengDaBang offer"],
+        anchor: ["댕다방 판매 상품", "댕다방 offer"],
         exact_match: ["같은 상품 · 같은 구성", "Same product & pack"],
         unit_match: ["같은 상품 · 구성 다름", "Same product · different pack"],
         variant_mismatch: ["구성·수량 다름", "Different size/quantity"],

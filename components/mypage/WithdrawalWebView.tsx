@@ -83,7 +83,7 @@ export default function WithdrawalWebView(props: Props) {
                 <div className="wd-lost">
                     <p>{labelText("다시 볼 수 없어요")}</p>
                     <ul>
-                        {LOST.map((item) => <li key={item.label}><i className={`fa-solid ${item.icon}`} aria-hidden="true" />{item.label}</li>)}
+                        {LOST.map((item) => <li key={item.label}><i className={`fa-solid ${item.icon}`} aria-hidden="true" />{labelText(item.label)}</li>)}
                     </ul>
                 </div>
                 <ul className="wd-handling">
@@ -91,8 +91,8 @@ export default function WithdrawalWebView(props: Props) {
                         <li key={item.title} data-tone={item.tone}>
                             {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                             <img src={item.art} alt="" aria-hidden="true" />
-                            <b>{item.title}</b>
-                            <small>{item.text}</small>
+                            <b>{labelText(item.title)}</b>
+                            <small>{labelText(item.text)}</small>
                         </li>
                     ))}
                 </ul>

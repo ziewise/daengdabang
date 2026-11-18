@@ -40,6 +40,8 @@ test("site-selected language covers the first chat prompt, navigation and walkin
     assert.equal(labels["댕자랑"], "Dog Showcase");
     assert.equal(labels["커뮤니티"], "Community");
     assert.equal(labels["댕다방 연구소"], "댕다방 Lab");
+    assert.equal(labels["댕다방 핫픽"], "댕다방 Hot Picks");
+    assert.equal(labels["댕다방 추천 셀렉트"], "댕다방 Curated Picks");
     assert.equal(walkingBuddyName("몽이", "en"), "Mongi");
     assert.equal(walkingBuddyName("몽이", "ko"), "몽이");
     assert.equal(walkingBuddyName("Coco", "en"), "Coco");

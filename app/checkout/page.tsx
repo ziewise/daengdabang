@@ -810,7 +810,7 @@ export default function CheckoutPage() {
                                 </p>
                                 <p className="mt-1 text-sky-800">
                                     {locale === "en"
-                                        ? "Choose a supported issuer, including KB Kookmin, in the Toss window. Depending on the issuer and device, an app-card or issuer authentication screen may open instead of direct card-number entry. Daengdabang does not directly collect or store card details."
+                                        ? "Choose a supported issuer, including KB Kookmin, in the Toss window. Depending on the issuer and device, an app-card or issuer authentication screen may open instead of direct card-number entry. 댕다방 does not directly collect or store card details."
                                         : "토스 결제창에서 KB국민카드(국민)를 포함한 카드사를 선택해 인증합니다. 카드사와 기기에 따라 앱카드·ISP/안심클릭 등이 열리며 카드번호 직접 입력 화면이 항상 나오지는 않습니다. 댕다방은 카드정보를 직접 수집하거나 저장하지 않습니다."}
                                 </p>
                             </div>

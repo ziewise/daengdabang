@@ -51,8 +51,8 @@ export default function MypagePaymentsPage() {
                         ].map((step, index) => (
                             <li key={step.title}>
                                 <span className="pw-step-icon"><i className={`fa-solid ${step.icon}`} aria-hidden="true" /><b>{index + 1}</b></span>
-                                <strong>{step.title}</strong>
-                                <small>{step.text}</small>
+                                <strong>{labelText(step.title)}</strong>
+                                <small>{labelText(step.text)}</small>
                             </li>
                         ))}
                     </ol>

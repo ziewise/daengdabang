@@ -125,7 +125,7 @@ export default function RecommendationWebView({ preferences, disabled, saving, p
                                     {/* eslint-disable-next-line @next/next/no-img-element -- 작은 3D 그림 */}
                                     <img src={item.art} alt="" aria-hidden="true" />
                                 </span>
-                                <small>{item.title}</small>
+                                <small>{labelText(item.title)}</small>
                                 <em>{used[item.key] ? "쓰는 중" : item.key === "behavior" ? "준비 중" : "안 씀"}</em>
                             </li>
                         ))}
@@ -159,8 +159,8 @@ export default function RecommendationWebView({ preferences, disabled, saving, p
                                     {item.key === "behavior" && <span className="rw-soon">{labelText("준비 중")}</span>}
                                 </div>
                                 <p className="rw-card-kicker">{item.kicker}</p>
-                                <h3>{item.title}</h3>
-                                <p className="rw-card-desc">{item.desc}</p>
+                                <h3>{labelText(item.title)}</h3>
+                                <p className="rw-card-desc">{labelText(item.desc)}</p>
                                 <ul className="rw-chips" aria-label={labelText("쓰는 정보")}>
                                     {item.chips.map((chip) => <li key={chip}>{chip}</li>)}
                                 </ul>

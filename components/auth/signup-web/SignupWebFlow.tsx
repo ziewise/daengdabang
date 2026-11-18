@@ -158,7 +158,7 @@ function passwordScore(value: string) {
 }
 
 export default function SignupWebFlow(props: Props) {
-    const { menuLabel: labelText } = useI18n();
+    const { locale, menuLabel: labelText } = useI18n();
     const { pet } = props;
     const [features] = useState(readSignupFlowFeatures);
     const providers = useSocialProviderStatus();
@@ -348,7 +348,7 @@ export default function SignupWebFlow(props: Props) {
                             <small>{labelText("이메일 · 비밀번호로 로그인해요")}</small>
                             <span className="sxw-way-flow" aria-label={labelText("가입 순서")}>
                                 {emailFlow.map((label, index) => (
-                                    <span key={label}>{index > 0 && <i className="fa-solid fa-chevron-right" aria-hidden="true" />}{label}</span>
+                                    <span key={label}>{index > 0 && <i className="fa-solid fa-chevron-right" aria-hidden="true" />}{labelText(label)}</span>
                                 ))}
                             </span>
                         </span>
@@ -371,11 +371,11 @@ export default function SignupWebFlow(props: Props) {
                                         setSocialError("");
                                         go("terms");
                                     }}
-                                    aria-label={`${provider.label}로 간편 가입`}
+                                    aria-label={locale === "en" ? `Sign up with ${labelText(provider.label)}` : `${provider.label}로 간편 가입`}
                                     data-signup-start={provider.id}
                                 >
                                     <ProviderMark provider={provider.id} />
-                                    <span>{provider.label}{labelText("로 시작")}</span>
+                                    <span>{locale === "en" ? `Continue with ${labelText(provider.label)}` : `${provider.label}로 시작`}</span>
                                     {state === "checking" && <em>{labelText("확인 중")}</em>}
                                     {state === "off" && props.apiReady === true && <em>{labelText("준비 중")}</em>}
                                 </button>
@@ -425,7 +425,7 @@ export default function SignupWebFlow(props: Props) {
                         <div className="sxw-provider" data-provider={provider.id}>
                             <span className="sxw-provider-mark" aria-hidden="true"><ProviderMark provider={provider.id} /></span>
                             <span>
-                                <b>{provider.label}{labelText("에서 받는 정보")}</b>
+                                <b>{locale === "en" ? `Information shared by ${labelText(provider.label)}` : `${provider.label}에서 받는 정보`}</b>
                                 <small>{provider.gives} {labelText("· 비밀번호는 받지 않아요")}</small>
                             </span>
                         </div>

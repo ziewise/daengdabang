@@ -200,7 +200,7 @@ export default function PetLensModalProvider({ children }: { children: ReactNode
                                             <Image src="/images/ui/header-petlens-128.webp" alt="" fill sizes="92px" loading="eager" className="pl-head-web hidden object-contain" />
                                         </span>
                                         {/* 웹 전용 — 영문 손글씨 꼬리표 */}
-                                        <p className="pl-kicker hidden" aria-hidden="true">DAENGDABANG LAB · PETLENS</p>
+                                        <p className="pl-kicker hidden" aria-hidden="true">댕다방 LAB · PETLENS</p>
                                         <h2 className="pl-title text-xl font-black text-neutral-950">
                                             {labelText(en ? "PetLens Analysis" : "펫렌즈 분석")}
                                         </h2>
@@ -240,7 +240,7 @@ export default function PetLensModalProvider({ children }: { children: ReactNode
                                             type="button"
                                             onClick={startObservation}
                                             aria-label={en
-                                                ? "Open DaengDaBang Research Lab Behavior and Sound Analysis, new service"
+                                                ? "Open 댕다방 Research Lab Behavior and Sound Analysis, new service"
                                                 : "댕다방 연구소 행동·소리 분석 신규 서비스 열기"}
                                             className="pl-choice is-obs group relative grid w-full grid-cols-[3.25rem_minmax(0,1fr)_auto] items-center gap-3 overflow-hidden rounded-2xl border-2 border-cyan-100 bg-gradient-to-br from-cyan-50/70 via-white to-rose-50/70 p-3 text-left transition hover:-translate-y-0.5 hover:border-pink-300 hover:shadow-card focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-pink-200 motion-reduce:transform-none motion-reduce:transition-none sm:grid-cols-[4rem_minmax(0,1fr)_auto] sm:gap-4 sm:p-4"
                                             data-petlens-observation-launcher

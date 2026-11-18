@@ -188,7 +188,7 @@ export default function HealthDiaryModal({ pet, petId, token, openRecordId, onCl
                                                                     <div className="ddb-dy-groups">
                                                                         {groups.map((group) => (
                                                                             <div key={group.label} data-tone={group.tone}>
-                                                                                <p>{group.label}</p>
+                                                                                <p>{labelText(group.label)}</p>
                                                                                 {group.items.slice(0, 3).map((item) => <span key={item}>{item}</span>)}
                                                                             </div>
                                                                         ))}

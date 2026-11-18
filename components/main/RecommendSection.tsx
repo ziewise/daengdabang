@@ -16,7 +16,7 @@ import { editorialRecommendationItems, runMemberRecommendation } from "@/lib/cat
 import { useAuth } from "@/lib/store";
 
 export default function RecommendSection() {
-    const { menuLabel: labelText } = useI18n();
+    const { locale, menuLabel: labelText } = useI18n();
     const { user, hydrated } = useAuth();
     const personalizationEnabled = recommendationPersonalizationEnabled(
         RECOMMENDATION_FEATURE_FLAGS,
@@ -52,7 +52,7 @@ export default function RecommendSection() {
             : preferences.enabled
                 ? personalizedResult?.mode ?? "editorial_fallback"
                 : "disabled";
-    const petName = selectedPet?.name?.trim() || "우리 아이";
+    const petName = selectedPet?.name?.trim() || (locale === "en" ? "your dog" : "우리 아이");
     const analyticsMode = preferences?.enabled
         ? personalizedResult?.mode ?? "editorial_fallback"
         : preferences ? "disabled" : "editorial_fallback";
@@ -90,8 +90,8 @@ export default function RecommendSection() {
                         {/* 제목 — 다른 메인 구역(핫픽 · 대표 브랜드 · 신상품)과 같은 모양: 짧은 이름 + 아래 회색 한 줄(2026-10-23 사용자) */}
                         <h2 className="mb-1.5 text-2xl font-black tracking-tight md:text-3xl">
                             {personalizationEnabled && selectedPet && preferences?.enabled
-                                ? `${petName}를 위한 추천`
-                                : "댕다방 추천 셀렉트"}
+                                ? (locale === "en" ? `Picks for ${petName}` : `${petName}를 위한 추천`)
+                                : labelText("댕다방 추천 셀렉트")}
                         </h2>
                         {!personalizationEnabled ? (
                             <p className="text-sm text-neutral-500">

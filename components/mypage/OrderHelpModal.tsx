@@ -151,8 +151,8 @@ export default function OrderHelpModal({ order, line, preset, initialMode, onClo
                                                 <Image src={step.art} alt="" width={64} height={64} />
                                                 <b>{index + 1}</b>
                                             </span>
-                                            <strong>{step.title}</strong>
-                                            <small>{step.body}</small>
+                                            <strong>{labelText(step.title)}</strong>
+                                            <small>{labelText(step.body)}</small>
                                         </li>
                                     ))}
                                 </ol>

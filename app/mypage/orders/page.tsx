@@ -369,9 +369,9 @@ function LoginGate({ orderId, expired = false }: { orderId: string; expired?: bo
         <main className="mx-auto max-w-[680px] px-4 py-16 text-center" data-mypage-web="gate">
             <i className="fa-solid fa-lock text-5xl text-amber-500" aria-hidden="true" />
             <h1 className="mt-4 text-2xl font-black text-neutral-950">
-                {webScreen
+                {labelText(webScreen
                     ? (expired ? "로그인이 만료되었어요" : "로그인이 필요해요")
-                    : (expired ? "로그인이 만료되었습니다." : "로그인이 필요합니다.")}
+                    : (expired ? "로그인이 만료되었습니다." : "로그인이 필요합니다."))}
             </h1>
             <p className="mt-3 text-sm font-bold leading-6 text-neutral-600">
                 {labelText(webScreen ? "주문과 배송 정보는 본인 확인 후에 볼 수 있어요." : "주문과 배송정보는 본인 확인 후에만 볼 수 있습니다.")}

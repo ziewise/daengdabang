@@ -48,9 +48,9 @@ test("customer-facing research lab name replaces the legacy wordmark without ren
         assert.match(surface, /댕다방 연구소/);
         assert.doesNotMatch(surface, /댕랩/);
     }
-    assert.match(title, /DaengDaBang Research Lab/);
+    assert.match(title, /댕다방 Research Lab/);
     assert.doesNotMatch(title, /"DaengLab"/);
-    assert.match(launcher, /Open DaengDaBang Research Lab Behavior and Sound Analysis/);
+    assert.match(launcher, /Open 댕다방 Research Lab Behavior and Sound Analysis/);
     assert.match(wallet, /data-daenglab-wallet/);
     assert.match(privacy, /daenglab-observation-privacy-20260806-v3/);
 });

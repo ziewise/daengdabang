@@ -54,7 +54,7 @@ function InfoTable({ rows }: { rows: Array<[string, ReactNode]> }) {
                     {rows.map(([label, value]) => (
                         <tr key={label} className="border-b border-neutral-100 align-top">
                             <th className="w-56 py-4 pr-4 font-black text-neutral-950"><LocalizedMenuLabel label={label} /></th>
-                            <td className="py-4 font-bold leading-6 text-neutral-600">{value}</td>
+                            <td className="py-4 font-bold leading-6 text-neutral-600">{typeof value === "string" ? <LocalizedMenuLabel label={value} /> : value}</td>
                         </tr>
                     ))}
                 </tbody>
@@ -71,7 +71,7 @@ export default function BusinessInfoPage() {
             <p className="text-sm font-black text-indigo-700">Business Information</p>
             <h1 className="mt-2 text-3xl font-black tracking-tight text-neutral-950"><LocalizedMenuLabel label={"사업자 정보 확인"} /></h1>
             <p className="mt-3 text-sm font-bold leading-6 text-neutral-600">
-                <LocalizedMenuLabel label={"댕다방 운영사"} /> {BUSINESS_INFO.companyName}<LocalizedMenuLabel label={"의 사업자등록, 통신판매업 신고, 공정위 공개 확인 경로를\n                안내합니다. 최종 업데이트:"} /> {LEGAL_UPDATED_AT}.
+                <LocalizedMenuLabel label={"댕다방 운영사"} /> <LocalizedMenuLabel label={BUSINESS_INFO.companyName} />{" "}<LocalizedMenuLabel label={"의 사업자등록, 통신판매업 신고, 공정위 공개 확인 경로를\n                안내합니다. 최종 업데이트:"} /> {LEGAL_UPDATED_AT}.
             </p>
 
             <nav
@@ -99,7 +99,7 @@ export default function BusinessInfoPage() {
                 <h2 className="text-lg font-black text-neutral-950"><LocalizedMenuLabel label={"3. 공정위 공식 확인 경로"} /></h2>
                 <p className="mt-2 text-sm font-bold leading-7 text-neutral-600">
                     <LocalizedMenuLabel label={"공정거래위원회 통신판매사업자 조회에서 사업자등록번호"} /> {BUSINESS_INFO.businessNumber} <LocalizedMenuLabel label={"또는 상호"} />
-                    {` ${BUSINESS_INFO.companyName}`}<LocalizedMenuLabel label={"로 검색하면 신고 정보를 확인할 수 있습니다. 아래 첫 번째 링크는\n                    공정위의 댕다방 운영사 상세 조회 결과로 직접 연결됩니다."} />
+                    {" "}<LocalizedMenuLabel label={BUSINESS_INFO.companyName} />{" "}<LocalizedMenuLabel label={"로 검색하면 신고 정보를 확인할 수 있습니다. 아래 첫 번째 링크는\n                    공정위의 댕다방 운영사 상세 조회 결과로 직접 연결됩니다."} />
                 </p>
                 <div className="mt-4 flex flex-wrap gap-3 text-sm font-bold">
                     <a

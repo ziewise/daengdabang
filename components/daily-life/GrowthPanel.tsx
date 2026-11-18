@@ -90,7 +90,7 @@ function GrowthCard() {
                         <span className="pv-metal-sheen" aria-hidden="true" />
                         <span className="relative flex h-full flex-col justify-between p-5 text-left text-white">
                             <span className="flex items-start justify-between">
-                                <span className="pv-kicker text-white/55">DAENGDABANG · GROWTH</span>
+                                <span className="pv-kicker text-white/55">댕다방 · GROWTH</span>
                                 <span className="rounded-full px-2 py-1 text-[10.5px] font-bold text-white/80 shadow-[inset_0_0_0_1px_rgba(255,255,255,.25)]">{labelText("미리보기")}</span>
                             </span>
                             <span>

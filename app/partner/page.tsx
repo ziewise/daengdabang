@@ -36,7 +36,7 @@ export default function PartnerInquiryPage() {
                 <div aria-hidden="true" className="absolute -right-14 -top-16 h-48 w-48 rounded-full bg-orange-200/50 blur-3xl" />
                 <div aria-hidden="true" className="absolute -bottom-24 left-1/3 h-56 w-56 rounded-full bg-indigo-200/50 blur-3xl" />
                 <div className="relative max-w-3xl">
-                    <p className="text-xs font-black tracking-[0.24em] text-aurora-indigo">PARTNER WITH DAENGDABANG</p>
+                    <p className="text-xs font-black tracking-[0.24em] text-aurora-indigo">PARTNER WITH 댕다방</p>
                     <h1 className="mt-4 text-3xl font-black leading-tight tracking-[-0.035em] text-foreground sm:text-5xl">
                         <LocalizedMenuLabel label={"좋은 상품이 보호자에게"} /><br className="hidden sm:block" /> <LocalizedMenuLabel label={"제대로 닿도록."} />
                     </h1>

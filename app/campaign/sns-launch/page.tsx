@@ -1,7 +1,7 @@
 import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
 import type { Metadata } from "next";
 import { CATALOG, getBestProducts, getNewProducts } from "@/lib/catalog";
-import { productHref } from "@/lib/shop";
+import CampaignProductCard from "@/components/products/CampaignProductCard";
 // 웹 겉모양(2026-10-25) — data-campaign-web 이름표만, 꾸밈은 app/biz-web.css(앱은 그대로)
 import "../../biz-web.css";
 
@@ -61,13 +61,7 @@ export default function SnsLaunchCampaignPage() {
                     </div>
                     <div className="grid gap-3 sm:grid-cols-2">
                         {products.slice(0, 4).map((product) => (
-                            <a key={product.id} href={`${productHref(product)}?utm_source=social&utm_medium=profile&utm_campaign=sns_launch`} className="rounded-lg border border-neutral-200 bg-neutral-50 p-3">
-                                <div className="aspect-square overflow-hidden rounded-md bg-white">
-                                    <img src={product.image} alt={product.name} className="h-full w-full object-contain p-3" />
-                                </div>
-                                <p className="mt-3 line-clamp-2 text-sm font-black text-neutral-950">{product.name}</p>
-                                <p className="mt-1 text-xs font-bold text-neutral-500">{product.priceText}</p>
-                            </a>
+                            <CampaignProductCard key={product.id} product={product} />
                         ))}
                     </div>
                 </div>
@@ -81,8 +75,8 @@ export default function SnsLaunchCampaignPage() {
                 ].map(([step, title, body]) => (
                     <article key={step} className="rounded-lg border border-neutral-200 bg-white p-5">
                         <span className="grid h-8 w-8 place-items-center rounded-full bg-indigo-600 text-sm font-black text-white">{step}</span>
-                        <h2 className="mt-4 text-lg font-black text-neutral-950">{title}</h2>
-                        <p className="mt-2 text-sm font-bold leading-6 text-neutral-600">{body}</p>
+                        <h2 className="mt-4 text-lg font-black text-neutral-950"><LocalizedMenuLabel label={title} /></h2>
+                        <p className="mt-2 text-sm font-bold leading-6 text-neutral-600"><LocalizedMenuLabel label={body} /></p>
                     </article>
                 ))}
             </section>

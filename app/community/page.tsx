@@ -49,7 +49,7 @@ export default function CommunityPage() {
             <CrayonGrainFilter />
             <section className="dw-csheet is-pink dw-chero ddb-hero-band">
                 <div className="min-w-0">
-                    <p className="ddb-crayon-kicker dw-kicker">DAENGDABANG COMMUNITY</p>
+                    <p className="ddb-crayon-kicker dw-kicker">댕다방 COMMUNITY</p>
                     <h1 className="ddb-crayon-title dw-h1">
                         <LocalizedMenuLabel label="함께 기록할수록" /><br /><span className="ddb-crayon-underline"><LocalizedMenuLabel label="돌봄은 더 쉬워져요" /></span>
                     </h1>

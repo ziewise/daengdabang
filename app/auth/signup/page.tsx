@@ -983,7 +983,7 @@ export default function SignupPage() {
             <span className="hidden su-ring dw-rring" aria-hidden="true">
                 <span><NextImage src="/images/ui/logo-poodle-384.webp" alt="" width={120} height={120} priority /></span>
             </span>
-            <p className="hidden su-kicker">JOIN DAENGDABANG</p>
+            <p className="hidden su-kicker">JOIN 댕다방</p>
             <h1 className="su-title text-3xl font-black tracking-tight text-neutral-950">{labelText("회원가입")}</h1>
             <p className="hidden su-lead">{labelText("우리 아이 정보를 함께 등록하면 꼭 맞는 상품과 돌봄을 추천해 드려요.")}</p>
             <section

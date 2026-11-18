@@ -10,6 +10,7 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import Link from "next/link";
 import { useEffect, useId, useRef } from "react";
 import { createPortal } from "react-dom";
@@ -18,6 +19,7 @@ import "@/app/prelaunch-notice.css";
 export const PRELAUNCH_NOTICE_TITLE = "현재는 정식오픈전입니다.";
 
 export default function PrelaunchNoticeModal({ onClose }: { onClose: () => void }) {
+    const { menuLabel: labelText } = useI18n();
     const titleId = useId();
     const descriptionId = useId();
     const cardRef = useRef<HTMLDivElement>(null);
@@ -69,25 +71,25 @@ export default function PrelaunchNoticeModal({ onClose }: { onClose: () => void 
                     </span>
                     <div className="ddb-pf-titles">
                         <p className="ddb-pf-kicker">COMING SOON</p>
-                        <h2 id={titleId}><span className="ddb-pf-name">{PRELAUNCH_NOTICE_TITLE}</span></h2>
-                        <p id={descriptionId} className="ddb-pf-sub">정식 오픈을 준비하고 있어요. 오픈하면 바로 결제할 수 있어요.</p>
+                        <h2 id={titleId}><span className="ddb-pf-name">{labelText(PRELAUNCH_NOTICE_TITLE)}</span></h2>
+                        <p id={descriptionId} className="ddb-pf-sub">{labelText("정식 오픈을 준비하고 있어요. 오픈하면 바로 결제할 수 있어요.")}</p>
                     </div>
-                    <button type="button" className="ddb-pf-close" onClick={onClose} aria-label="안내 닫기">
+                    <button type="button" className="ddb-pf-close" onClick={onClose} aria-label={labelText("안내 닫기")}>
                         <i className="fa-solid fa-xmark" aria-hidden="true" />
                     </button>
                 </header>
 
                 <div className="ddb-pf-body">
                     <ul className="ddb-prelaunch-list">
-                        <li><i className="fa-solid fa-shield-heart" aria-hidden="true" /><span>결제창은 열리지 않았고, 결제된 금액은 없어요.</span></li>
-                        <li><i className="fa-solid fa-cart-shopping" aria-hidden="true" /><span>담아 두신 상품과 입력한 배송지는 그대로 남아 있어요.</span></li>
+                        <li><i className="fa-solid fa-shield-heart" aria-hidden="true" /><span>{labelText("결제창은 열리지 않았고, 결제된 금액은 없어요.")}</span></li>
+                        <li><i className="fa-solid fa-cart-shopping" aria-hidden="true" /><span>{labelText("담아 두신 상품과 입력한 배송지는 그대로 남아 있어요.")}</span></li>
                     </ul>
                 </div>
 
                 <footer className="ddb-pf-foot">
-                    <p className="ddb-pf-hint"><i className="fa-solid fa-paw" aria-hidden="true" />조금만 기다려 주세요!</p>
-                    <Link href="/products" className="ddb-pf-cancel" onClick={onClose}>쇼핑 계속하기</Link>
-                    <button ref={confirmRef} type="button" className="ddb-pf-save" onClick={onClose}>확인</button>
+                    <p className="ddb-pf-hint"><i className="fa-solid fa-paw" aria-hidden="true" />{labelText("조금만 기다려 주세요!")}</p>
+                    <Link href="/products" className="ddb-pf-cancel" onClick={onClose}>{labelText("쇼핑 계속하기")}</Link>
+                    <button ref={confirmRef} type="button" className="ddb-pf-save" onClick={onClose}>{labelText("확인")}</button>
                 </footer>
             </div>
         </div>,

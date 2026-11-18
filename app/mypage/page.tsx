@@ -172,7 +172,7 @@ export default function MyPage() {
                         data-mp-tabbtn={tab.id}
                         onClick={() => setDashTab(tab.id)}
                     >
-                        <span>{tab.label}</span>
+                        <span>{labelText(tab.label)}</span>
                         {/* 숫자 배지 — 값이 있는 탭(우리 아이 · 최근 결제 · 찜한 상품)만 */}
                         {tab.value !== null && <b>{tab.value}{tab.unit}</b>}
                     </button>

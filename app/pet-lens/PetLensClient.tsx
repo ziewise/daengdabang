@@ -228,7 +228,7 @@ function LabHero({ mode, controls }: { mode: PetLensMode; controls?: React.React
     return (
         <section className={`dw-csheet ${observation ? "is-sky" : "is-lav"} dw-chero ddb-hero-band lab-hero ${controls ? "is-compact" : ""} hidden`} aria-labelledby="lab-hero-title">
             <div className="min-w-0">
-                <p className="ddb-crayon-kicker dw-kicker">{observation ? "DAENGDABANG LAB · BEHAVIOR & SOUND" : "DAENGDABANG LAB · PETLENS"}</p>
+                <p className="ddb-crayon-kicker dw-kicker">{observation ? "댕다방 LAB · BEHAVIOR & SOUND" : "댕다방 LAB · PETLENS"}</p>
                 <h1 id="lab-hero-title" className="ddb-crayon-title dw-h1">
                     {observation ? (
                         <>{labelText("행동 · 소리로 읽는")}{controls ? " " : <br />}<span className="ddb-crayon-underline">{labelText("우리 아이 신호")}</span></>

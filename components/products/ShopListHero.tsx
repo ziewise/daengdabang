@@ -21,7 +21,7 @@ const UI = "/images/ui/";
 
 /** 제품군별 머리 판 — 꼬리표 · 소개 · 색 · 그림 */
 const LOOK: Record<CategorySlug | "all", { kicker: string; lead: string; tone: string; art: string }> = {
-    all: { kicker: "DAENGDABANG SHOP", lead: "산책부터 간식 · 장난감 · 케어까지, 우리 아이 하루에 꼭 맞는 상품을 모았어요.", tone: "pink", art: "shop-menu-all-128.webp" },
+    all: { kicker: "댕다방 SHOP", lead: "산책부터 간식 · 장난감 · 케어까지, 우리 아이 하루에 꼭 맞는 상품을 모았어요.", tone: "pink", art: "shop-menu-all-128.webp" },
     outdoor: { kicker: "WALK & OUTDOOR", lead: "매일 걷는 길이 더 즐겁고 안전하게. 하네스 · 리드줄 · 산책 용품이에요.", tone: "mint", art: "hotpick-outdoor-128.webp" },
     food: { kicker: "FOOD & TREATS", lead: "건강하게 먹고 맛있게 씹는 시간. 사료 · 간식 · 영양 보조제를 모았어요.", tone: "yellow", art: "hotpick-food-128.webp" },
     life: { kicker: "HOME & LIFE", lead: "집에서 보내는 시간이 포근하도록. 쿠션 · 식기 · 생활용품이에요.", tone: "sky", art: "hotpick-life-128.webp" },

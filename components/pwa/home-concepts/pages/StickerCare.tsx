@@ -41,7 +41,7 @@ const CARE_ICONS: Record<LocalCareCategory, string> = {
 };
 
 export default function StickerCare() {
-    const { menuLabel: labelText } = useI18n();
+    const { locale, menuLabel: labelText } = useI18n();
     const [session, setSession] = useDemoSession();
     const sp = useSearchParams();
     const [cat, setCat] = useState<LocalCareCategory>(() => CATEGORIES.find((c) => c.id === sp.get("cat"))?.id ?? CATEGORIES[0].id);
@@ -123,14 +123,14 @@ export default function StickerCare() {
                                     <span className={`relative block h-[3.9rem] w-[3.9rem] rounded-full transition-[filter,opacity] duration-300 ${on ? "ring-4 ring-[#c4ecd6]" : "opacity-80 saturate-[.8]"}`}>
                                         <Image src={CARE_ICONS[c.id]} alt="" fill sizes="64px" className="object-contain" />
                                     </span>
-                                    <span className={`ah-display text-[12.5px] ${on ? "" : "text-[#9c8f88]"}`}>{c.shortLabel}</span>
+                                    <span className={`ah-display text-[12.5px] ${on ? "" : "text-[#9c8f88]"}`}>{labelText(c.shortLabel)}</span>
                                 </button>
                             );
                         })}
                     </div>
-                    <p className="ah-light mt-3 text-center text-[12px]" style={{ color: TEXT_SOFT }}>{catOpt.label} · {catOpt.helper}</p>
+                    <p className="ah-light mt-3 text-center text-[12px]" style={{ color: TEXT_SOFT }}>{labelText(catOpt.label)} · {labelText(catOpt.helper)}</p>
 
-                    <Patch onClick={find} disabled={state.status === "loading"} className="mt-4"><span className="relative">{state.status === "loading" ? "주변 후보 찾는 중" : `현재 위치로 ${catOpt.shortLabel} 찾기`}</span><i aria-hidden="true" className={`fa-solid ${state.status === "loading" ? "fa-circle-notch fa-spin" : "fa-location-crosshairs"} relative text-[14px]`} /></Patch>
+                    <Patch onClick={find} disabled={state.status === "loading"} className="mt-4"><span className="relative">{state.status === "loading" ? labelText("주변 후보 찾는 중") : locale === "en" ? `Find nearby ${labelText(catOpt.shortLabel).toLowerCase()}` : `현재 위치로 ${catOpt.shortLabel} 찾기`}</span><i aria-hidden="true" className={`fa-solid ${state.status === "loading" ? "fa-circle-notch fa-spin" : "fa-location-crosshairs"} relative text-[14px]`} /></Patch>
                     <p className="mt-2 text-center"><a href={mapUrl} target="_blank" rel="noopener noreferrer" className="ah-display inline-flex items-center gap-1 text-[12.5px] text-[#1f7a59] underline decoration-dashed underline-offset-4">{labelText("네이버지도에서 바로 보기")}<i aria-hidden="true" className="fa-solid fa-arrow-up-right-from-square text-[9px]" /></a></p>
 
                     <div aria-live="polite">
@@ -143,21 +143,21 @@ export default function StickerCare() {
                                 <Tape className="-top-2 left-1/2 h-3.5 w-14 -translate-x-1/2" color="rgba(255,214,140,.95)" />
                                 <p className="ah-light text-[12.5px] leading-relaxed text-[#6b5420]"><i aria-hidden="true" className="fa-solid fa-location-dot mr-1 text-[#d9822b]" />{state.message}</p>
                                 <LocationRecoveryActions recovery={state.recovery} onRetry={find} />
-                                <a href={state.fallbackUrl} target="_blank" rel="noopener noreferrer" className="ah-display mt-2.5 inline-flex items-center gap-1 rounded-full bg-white px-3 py-1 text-[12px] text-[#a8560f]">{labelText("네이버지도에서")} {catOpt.shortLabel} {labelText("보기")}</a>
+                                <a href={state.fallbackUrl} target="_blank" rel="noopener noreferrer" className="ah-display mt-2.5 inline-flex items-center gap-1 rounded-full bg-white px-3 py-1 text-[12px] text-[#a8560f]">{labelText("네이버지도에서")} {labelText(catOpt.shortLabel)} {labelText("보기")}</a>
                             </div>
                         ) : null}
                         {state.status === "done" && state.places.length === 0 ? (
                             <div className="st-postit relative mt-5 px-4 pb-3.5 pt-3.5 text-center" style={{ background: "#e6f2ff", rotate: "0.6deg" }}>
                                 <Tape className="-top-2 left-1/2 h-3.5 w-14 -translate-x-1/2" color="rgba(190,224,255,.9)" />
                                 <p className="ah-display text-[14px]">{labelText("지도 검색은 계속할 수 있어요")}</p>
-                                <p className="ah-light mt-1 text-[12px] leading-relaxed" style={{ color: TEXT_SOFT }}>{labelText("확인된 업체명을 바로 불러오지 못했어요. 네이버지도에서 현재 위치 주변")} {catOpt.shortLabel}{labelText("을 확인해 주세요.")}</p>
-                                <a href={state.fallbackUrl} target="_blank" rel="noopener noreferrer" className="ah-display mt-2.5 inline-flex items-center gap-1 rounded-full bg-white px-3 py-1 text-[12px] text-[#3b63b8]">{labelText("네이버지도에서")} {catOpt.shortLabel} {labelText("보기")}</a>
+                                <p className="ah-light mt-1 text-[12px] leading-relaxed" style={{ color: TEXT_SOFT }}>{labelText("확인된 업체명을 바로 불러오지 못했어요. 네이버지도에서 현재 위치 주변")} {labelText(catOpt.shortLabel)}{labelText("을 확인해 주세요.")}</p>
+                                <a href={state.fallbackUrl} target="_blank" rel="noopener noreferrer" className="ah-display mt-2.5 inline-flex items-center gap-1 rounded-full bg-white px-3 py-1 text-[12px] text-[#3b63b8]">{labelText("네이버지도에서")} {labelText(catOpt.shortLabel)} {labelText("보기")}</a>
                             </div>
                         ) : null}
                         {/* 가까운 순 명함 — 거리 · 주소(카카오맵 검색) · 전화 · 지도 4종 */}
                         {state.status === "done" && state.places.length > 0 ? (
                             <>
-                                <p className="ah-display mt-5 flex items-center justify-between text-[14px]">{labelText("가까운")} {catOpt.shortLabel} {labelText("후보")} {state.places.length}{labelText("곳")}<span className="ah-light text-[11px]" style={{ color: TEXT_SOFT }}>{labelText("가까운 순")}</span></p>
+                                <p className="ah-display mt-5 flex items-center justify-between text-[14px]">{labelText("가까운")} {labelText(catOpt.shortLabel)} {labelText("후보")} {state.places.length}{labelText("곳")}<span className="ah-light text-[11px]" style={{ color: TEXT_SOFT }}>{labelText("가까운 순")}</span></p>
                                 <ul className="mt-3 space-y-3">
                                     {state.places.map((p, i) => {
                                         const links = placeMapLinks(p);

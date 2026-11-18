@@ -166,10 +166,10 @@ export default function SignupBotChallenge({
                     status === "verified" ? "text-emerald-700" : "text-neutral-500",
                     status === "error" || status === "expired" ? "text-amber-700" : "",
                 ].join(" ")}>
-                    {status === "verified" && "보안 확인이 완료되었습니다."}
-                    {(status === "loading" || status === "checking") && "보안 확인을 불러오는 중입니다."}
-                    {status === "expired" && "보안 확인 시간이 지났습니다. 다시 확인해 주세요."}
-                    {status === "error" && "보안 확인을 완료하지 못했습니다. 다시 시도해 주세요."}
+                    {status === "verified" && labelText("보안 확인이 완료되었습니다.")}
+                    {(status === "loading" || status === "checking") && labelText("보안 확인을 불러오는 중입니다.")}
+                    {status === "expired" && labelText("보안 확인 시간이 지났습니다. 다시 확인해 주세요.")}
+                    {status === "error" && labelText("보안 확인을 완료하지 못했습니다. 다시 시도해 주세요.")}
                 </p>
                 {(status === "error" || status === "expired") && (
                     <button

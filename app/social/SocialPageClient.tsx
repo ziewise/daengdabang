@@ -128,7 +128,7 @@ export default function SocialPageClient() {
         <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6">
             <header className="grid gap-5 border-b border-neutral-200 pb-8 md:grid-cols-[1fr_auto] md:items-end">
                 <div>
-                    <p className="text-sm font-black text-indigo-700">DaengDaBang Social</p>
+                    <p className="text-sm font-black text-indigo-700">댕다방 Social</p>
                     <h1 className="mt-2 text-3xl font-black tracking-tight text-neutral-950 md:text-4xl">콘텐츠룸</h1>
                     <p className="mt-3 max-w-2xl text-sm font-bold leading-6 text-neutral-600">
                         공식 채널 오픈 전에도 상품, 펫렌즈, 후기 콘텐츠를 바로 게시 가능한 소재로 정리합니다.

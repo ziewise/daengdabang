@@ -69,10 +69,10 @@ export default function RecommendationsWeb(props: RecommendationsWebProps) {
             <header className="rc-hero">
                 <span className="rc-hero-text">
                     <span className="rc-kicker">PICKED FOR YOU</span>
-                    <h1 className="rc-title">{props.title}</h1>
-                    <p className="rc-lead">{props.lead}</p>
+                    <h1 className="rc-title">{labelText(props.title)}</h1>
+                    <p className="rc-lead">{labelText(props.lead)}</p>
                     <span className="rc-chips">
-                        <span><i className="fa-solid fa-wand-magic-sparkles" aria-hidden="true" />{props.modeLabel}</span>
+                        <span><i className="fa-solid fa-wand-magic-sparkles" aria-hidden="true" />{labelText(props.modeLabel)}</span>
                         <span className="is-mint"><i className="fa-solid fa-shield-heart" aria-hidden="true" />{labelText("질환·치료 효능을 추천 이유로 사용하지 않음")}</span>
                     </span>
                 </span>
@@ -112,10 +112,10 @@ export default function RecommendationsWeb(props: RecommendationsWebProps) {
                         <img src={`${UI}${props.action.art}`} alt="" />
                     </span>
                     <span className="rc-action-text">
-                        <h2>{props.action.title}</h2>
-                        <p>{props.action.description}</p>
+                        <h2>{labelText(props.action.title)}</h2>
+                        <p>{labelText(props.action.description)}</p>
                     </span>
-                    <Link href={props.action.href} className="rc-pill is-pink">{props.action.label}<i className="fa-solid fa-arrow-right" aria-hidden="true" /></Link>
+                    <Link href={props.action.href} className="rc-pill is-pink">{labelText(props.action.label)}<i className="fa-solid fa-arrow-right" aria-hidden="true" /></Link>
                 </section>
             )}
 
@@ -123,7 +123,7 @@ export default function RecommendationsWeb(props: RecommendationsWebProps) {
                 <section className="rc-action is-amber" role="status">
                     <span className="rc-action-art" aria-hidden="true"><i className="fa-solid fa-hourglass-half" /></span>
                     <span className="rc-action-text">
-                        <h2>{props.checking.message}</h2>
+                        <h2>{labelText(props.checking.message)}</h2>
                         <p>{labelText("확인 전에는 회원 정보를 사용하지 않고 편집 추천만 표시합니다.")}</p>
                     </span>
                     {props.checking.canRetry && <button type="button" className="rc-pill" onClick={props.checking.onRetry}>{labelText("다시 확인")}</button>}
@@ -131,7 +131,7 @@ export default function RecommendationsWeb(props: RecommendationsWebProps) {
             )}
 
             {props.notices.map((notice) => (
-                <p key={notice} className="rc-notice"><i className="fa-solid fa-circle-info" aria-hidden="true" />{notice}</p>
+                <p key={labelText(notice)} className="rc-notice"><i className="fa-solid fa-circle-info" aria-hidden="true" />{labelText(notice)}</p>
             ))}
 
             {total > 0 ? (
@@ -175,22 +175,24 @@ export default function RecommendationsWeb(props: RecommendationsWebProps) {
 }
 
 function HowItem({ tone, icon, title, text }: { tone: string; icon: string; title: string; text: string }) {
+    const { menuLabel: labelText } = useI18n();
     return (
         <li data-tone={tone}>
             <span aria-hidden="true"><i className={`fa-solid ${icon}`} /></span>
-            <b>{title}</b>
-            <small>{text}</small>
+            <b>{labelText(title)}</b>
+            <small>{labelText(text)}</small>
         </li>
     );
 }
 
 function Empty({ art, title, text, children }: { art: string; title: string; text: string; children: ReactNode }) {
+    const { menuLabel: labelText } = useI18n();
     return (
         <section className="rc-empty">
             {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
             <img src={`${UI}${art}`} alt="" aria-hidden="true" />
-            <h2>{title}</h2>
-            <p>{text}</p>
+            <h2>{labelText(title)}</h2>
+            <p>{labelText(text)}</p>
             <div>{children}</div>
         </section>
     );

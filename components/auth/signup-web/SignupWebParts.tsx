@@ -81,7 +81,7 @@ export function SxShell({
     route,
     lead,
     children,
-    kicker = "JOIN DAENGDABANG",
+    kicker = "JOIN 댕다방",
     title = "회원가입",
     art = "logo-poodle-384.webp",
     stepsLabel = "가입 단계",
@@ -103,7 +103,7 @@ export function SxShell({
     /** 아래 안내 줄. 없으면 회원가입 기본(이미 회원이신가요? 로그인), null 이면 숨김 */
     footer?: ReactNode | null;
 }) {
-    const { menuLabel: labelText } = useI18n();
+    const { locale, menuLabel: labelText } = useI18n();
     const current = steps[Math.min(now, steps.length - 1)];
     const routeLabel = route ? PROVIDER_NAME[route] : "";
     // 마지막 단계(가입 완료)면 로그인 안내를 숨기고 "가입했어요"로
@@ -115,12 +115,12 @@ export function SxShell({
             <header className="sxw-hero">
                 <span className="sxw-hero-text">
                     <span className="sxw-kicker">{kicker}</span>
-                    <h1 className="sxw-title">{title}</h1>
-                    <p className="sxw-lead">{lead}</p>
+                    <h1 className="sxw-title">{labelText(title)}</h1>
+                    <p className="sxw-lead">{labelText(lead)}</p>
                     {routeLabel && (
                         <span className="sxw-route" data-route={route}>
                             <ProviderMark provider={route || "email"} />
-                            {routeLabel}{labelText("로")} {labelText(finished ? "가입했어요" : "가입하고 있어요")}
+                            {locale === "en" ? `${finished ? "Signed up" : "Signing up"} with ${labelText(routeLabel)}` : `${routeLabel}로 ${finished ? "가입했어요" : "가입하고 있어요"}`}
                         </span>
                     )}
                 </span>
@@ -129,7 +129,7 @@ export function SxShell({
             </header>
 
             {/* 단계 줄 — 파스텔 동그라미 · 아이콘 · 번호 배지 · 세 색 크레파스 줄 */}
-            <nav className="sxw-hsteps" aria-label={`${stepsLabel} ${steps.length}단계 중 ${now + 1}단계 · ${current?.label || ""}`}>
+            <nav className="sxw-hsteps" aria-label={locale === "en" ? `${labelText(stepsLabel)} · Step ${now + 1} of ${steps.length} · ${labelText(current?.label)}` : `${stepsLabel} ${steps.length}단계 중 ${now + 1}단계 · ${current?.label || ""}`}>
                 <ol style={{ gridTemplateColumns: `repeat(${steps.length}, minmax(0, 1fr))` }}>
                     {steps.map((step, index) => {
                         const state = index < now ? "done" : index === now ? "now" : "next";
@@ -148,8 +148,8 @@ export function SxShell({
                 {/* 모바일 — 지금 단계 이름 한 줄 */}
                 <p className="sxw-hsteps-now" aria-hidden="true">
                     <span className="sxw-hsteps-n"><b>{Math.min(now + 1, steps.length)}</b>/{steps.length}</span>
-                    <strong>{current?.label}</strong>
-                    <small>{current?.desc}</small>
+                    <strong>{labelText(current?.label)}</strong>
+                    <small>{labelText(current?.desc)}</small>
                 </p>
             </nav>
 
@@ -183,14 +183,15 @@ export function SxCard({ children, labelledBy, className = "", as = "section", o
 
 /** 카드 머리 — 테두리 없는 큰 3D 그림 · 손글씨 꼬리표 · 제목(강조 단어는 Hl) · 한 줄 */
 export function SxHead({ id, art, kicker, title, sub, aside }: { id: string; art: string; kicker: string; title: ReactNode; sub: ReactNode; aside?: ReactNode }) {
+    const { menuLabel: labelText } = useI18n();
     return (
         <header className="sxw-head">
             {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
             <img className="sxw-head-art" src={art.startsWith("/") ? art : `${UI}${art}`} alt="" aria-hidden="true" />
             <span className="sxw-head-text">
                 <span className="sxw-kicker">{kicker}</span>
-                <h2 id={id}>{title}</h2>
-                <p>{sub}</p>
+                <h2 id={id}>{typeof title === "string" ? labelText(title) : title}</h2>
+                <p>{typeof sub === "string" ? labelText(sub) : sub}</p>
             </span>
             {aside}
         </header>
@@ -685,7 +686,7 @@ export function SignupWebDone({ name, pet, providerLabel, emailNeedsSetup, marke
             {/* 축하 그림 — 머리 판의 댕다방 강아지와 겹치지 않게 보물 상자(가입 혜택) 3D 그림 */}
             {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
             <img className="sxw-done-art" src={`${UI}daily-hero-treasure-384.webp`} alt="" aria-hidden="true" />
-            <span className="sxw-kicker">WELCOME TO DAENGDABANG</span>
+            <span className="sxw-kicker">WELCOME TO 댕다방</span>
             <h2 id="sxw-done-title">{labelText("가입을 환영해요,")} <span className="sxw-u">{name}</span>{labelText("님!")}</h2>
             <p className="sxw-done-sub">
                 {providerLabel ? `다음부터는 ${providerLabel} 버튼 하나로 로그인해요.` : "다음부터는 이메일과 비밀번호로 로그인해요."}

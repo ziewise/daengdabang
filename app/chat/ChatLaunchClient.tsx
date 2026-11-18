@@ -39,7 +39,7 @@ export default function ChatLaunchClient() {
         {/* 머리 판 — 분홍 쿠션 + 케어톡 그림 무지개 고리 */}
         <section className="dw-csheet is-pink dw-chero ddb-hero-band" aria-labelledby="chat-launch-title">
             <div className="min-w-0">
-                <p className="ddb-crayon-kicker dw-kicker">DAENGDABANG LAB · CARE TALK</p>
+                <p className="ddb-crayon-kicker dw-kicker">댕다방 LAB · CARE TALK</p>
                 <h1 id="chat-launch-title" className="ddb-crayon-title dw-h1">댕다방 <span className="ddb-crayon-underline">{copy("AI 상담")}</span></h1>
                 <p className="dw-lead">{copy("열린 케어톡 창에서 상담을 이어가세요. 다른 메뉴를 둘러보면서도 같은 창에서 대화할 수 있어요.")}</p>
                 <div className="lab-chat-actions">

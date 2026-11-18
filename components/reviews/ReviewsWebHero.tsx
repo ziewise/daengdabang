@@ -26,6 +26,7 @@ function splitTheme(theme: string): [string, string] {
 }
 
 export default function ReviewsWebHero({ products, sourceNote }: { products: CatalogProduct[]; sourceNote: string }) {
+    const { menuLabel: labelText } = useI18n();
     const { menuLabel, productName, locale } = useI18n();
     const en = locale === "en";
     const totalReviews = products.reduce((sum, product) => sum + (product.externalReviewCount ?? 0), 0);
@@ -58,8 +59,8 @@ export default function ReviewsWebHero({ products, sourceNote }: { products: Cat
                     <h1 className="rv-title"><small>{menuLabel("네이버 댕다방 스토어")}</small>{menuLabel("후기 많은 상품")}</h1>
                     <p className="rv-lead">{menuLabel("다른 판매점에서 먼저 써 본 보호자들의 이야기가 많은 상품을 모았어요.")}</p>
                     <span className="rv-stats">
-                        <span><i className="fa-solid fa-box-open" aria-hidden="true" />{menuLabel("상품")} <b>{products.length}</b>{en ? "" : "개"}</span>
-                        <span><i className="fa-solid fa-comment-dots" aria-hidden="true" />{menuLabel("후기")} <b>{totalReviews.toLocaleString("ko-KR")}</b>{en ? "" : "개"}</span>
+                        <span><i className="fa-solid fa-box-open" aria-hidden="true" />{menuLabel("상품")} <b>{products.length}</b>{labelText(en ? "" : "개")}</span>
+                        <span><i className="fa-solid fa-comment-dots" aria-hidden="true" />{menuLabel("후기")} <b>{totalReviews.toLocaleString("ko-KR")}</b>{labelText(en ? "" : "개")}</span>
                         {average !== null && <span><i className="fa-solid fa-star" aria-hidden="true" />{menuLabel("평균")} <b>{average.toFixed(1)}</b></span>}
                     </span>
                 </span>
@@ -79,7 +80,7 @@ export default function ReviewsWebHero({ products, sourceNote }: { products: Cat
                         {themes.map(([theme, count]) => {
                             const [head, value] = splitTheme(theme);
                             return (
-                                <span key={theme}>{head && <em>{head}</em>}{value}<small>{count}</small></span>
+                                <span key={theme}>{head && <em>{menuLabel(head)}</em>}{menuLabel(value)}<small>{count}</small></span>
                             );
                         })}
                     </div>
@@ -96,7 +97,7 @@ export default function ReviewsWebHero({ products, sourceNote }: { products: Cat
                                     <span className="rv-stars" aria-label={`${menuLabel("별점")} ${snippet.rating ?? product.externalReviewAverage ?? ""}`}>
                                         {Array.from({ length: 5 }, (_, star) => <i key={star} className={`fa-solid fa-star${star < Math.round(Number(snippet.rating ?? product.externalReviewAverage ?? 5)) ? "" : " is-off"}`} aria-hidden="true" />)}
                                     </span>
-                                    <small>{menuLabel("후기")} {product.externalReviewCount}{en ? "" : "개"}</small>
+                                    <small>{menuLabel("후기")} {product.externalReviewCount}{labelText(en ? "" : "개")}</small>
                                 </span>
                                 <q>{snippet.text}</q>
                                 <span className="rv-quote-p">
@@ -115,7 +116,7 @@ export default function ReviewsWebHero({ products, sourceNote }: { products: Cat
             <div className="rv-list-h">
                 <span aria-hidden="true"><i className="fa-solid fa-ranking-star" /></span>
                 <h2>{menuLabel("후기 많은 순")}</h2>
-                <em>{products.length}{en ? "" : "개"}</em>
+                <em>{products.length}{labelText(en ? "" : "개")}</em>
             </div>
         </div>
     );

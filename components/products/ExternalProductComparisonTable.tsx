@@ -186,7 +186,7 @@ export default function ExternalProductComparisonTable({ products, query = "" }:
                 </div>
 
                 {anchors.length > 1 && (
-                    <div className="xcmp-anchors mt-4 flex gap-2 overflow-x-auto pb-1" aria-label={locale === "en" ? "Choose a DaengDaBang reference product" : "댕다방 기준상품 선택"}>
+                    <div className="xcmp-anchors mt-4 flex gap-2 overflow-x-auto pb-1" aria-label={locale === "en" ? "Choose a 댕다방 reference product" : "댕다방 기준상품 선택"}>
                         {anchors.map((anchor) => (
                             <button
                                 key={anchor.id}
@@ -223,7 +223,7 @@ export default function ExternalProductComparisonTable({ products, query = "" }:
                     <div className="flex flex-wrap items-start justify-between gap-3">
                         <div>
                             <p className="text-xs font-black text-emerald-800">
-                                {locale === "en" ? "Confirmed strengths of the DaengDaBang reference" : "댕다방 기준상품의 확인된 강점"}
+                                {locale === "en" ? "Confirmed strengths of the 댕다방 reference" : "댕다방 기준상품의 확인된 강점"}
                             </p>
                             <p className="mt-1 text-sm font-black text-neutral-950">{activeAnchor.title}</p>
                         </div>
@@ -256,7 +256,7 @@ export default function ExternalProductComparisonTable({ products, query = "" }:
             <div className="xcmp-table hidden overflow-x-auto bg-white md:block">
                 <table className="w-full min-w-[980px] border-collapse text-left">
                     <caption className="sr-only">
-                        {locale === "en" ? `Evidence comparison of the selected DaengDaBang ${comparisonSubject} and similar external products` : `선택한 댕다방 ${comparisonSubject} 및 외부 유사 상품의 확인 근거 비교`}
+                        {locale === "en" ? `Evidence comparison of the selected 댕다방 ${comparisonSubject} and similar external products` : `선택한 댕다방 ${comparisonSubject} 및 외부 유사 상품의 확인 근거 비교`}
                     </caption>
                     <thead className="bg-neutral-50 text-[11px] font-black uppercase text-neutral-500">
                         <tr>
@@ -360,7 +360,7 @@ export default function ExternalProductComparisonTable({ products, query = "" }:
                                         <strong className="text-base text-neutral-950">{row.assessment.score}<span className="text-[10px] text-neutral-500">/100</span></strong>
                                     </div>
                                     <h4 className="mt-2 line-clamp-2 text-sm font-black leading-5 text-neutral-950">{product.title}</h4>
-                                    <p className="mt-1 text-[11px] font-bold text-neutral-500">{isAnchor ? (locale === "en" ? "DaengDaBang reference" : "댕다방 기준상품") : product.sellerName || product.sourceName}</p>
+                                    <p className="mt-1 text-[11px] font-bold text-neutral-500">{isAnchor ? (locale === "en" ? "댕다방 reference" : "댕다방 기준상품") : product.sellerName || product.sourceName}</p>
                                 </div>
                             </div>
                             <div className="mt-3 grid grid-cols-2 gap-2">

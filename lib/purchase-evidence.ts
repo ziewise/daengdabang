@@ -290,10 +290,10 @@ export function productSelectCopy(product: CatalogProduct, locale: Locale): Prod
     if (registeredOptions) points.push(registeredOptions);
     return {
         eyebrow: isRuffwear
-            ? (en ? "DaengDaBang Premium Select" : "댕다방 프리미엄 셀렉트")
+            ? (en ? "댕다방 Premium Select" : "댕다방 프리미엄 셀렉트")
             : isRexSpecs
-              ? (en ? "DaengDaBang Specialist Gear Select" : "댕다방 전문 기어 셀렉트")
-              : (en ? "Why DaengDaBang selected it" : "댕다방 셀렉트 포인트"),
+              ? (en ? "댕다방 Specialist Gear Select" : "댕다방 전문 기어 셀렉트")
+              : (en ? "Why 댕다방 selected it" : "댕다방 셀렉트 포인트"),
         brand,
         points: [...new Set(points)].slice(0, 3),
     };

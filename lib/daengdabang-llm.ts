@@ -826,7 +826,7 @@ function scopeGuardFallback(message: string, recentCanineHealthContext = false):
         return {
             answer: "이 질문은 강아지가 아닌 다른 반려동물에 대한 내용으로 보여요. 댕다방 케어톡은 강아지 건강/생활/상품 기준으로 제한되어 있어서 다른 동물에게 강아지 기준 답변이나 상품을 억지로 붙이지 않겠습니다. 해당 종을 진료하는 동물병원이나 종별 전문 자료를 확인하는 편이 안전합니다.",
             products: [],
-            medical: { mode: false, triage: "unsupported_pet", topic: "non_dog_pet", disclaimer: "DaengDaBang chatbot is dog-focused." },
+            medical: { mode: false, triage: "unsupported_pet", topic: "non_dog_pet", disclaimer: "댕다방 chatbot is dog-focused." },
             sources: [],
             actions: completedActions("강아지 외 반려동물 질문"),
             research: { mode: "scope-guard", sourceCount: 0 },

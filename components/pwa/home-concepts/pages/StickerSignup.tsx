@@ -1476,7 +1476,7 @@ export function SignupDone({ name, pet, providerLabel, emailNeedsSetup = false, 
                     <Image src="/images/ui/stickers/sticker-mon.webp" alt="" width={44} height={44} aria-hidden="true" className="su-confetti st-diecut-img absolute -left-1 top-0 h-11 w-11" style={{ rotate: "-14deg" }} />
                     <Image src="/images/ui/stickers/sticker-fri.webp" alt="" width={40} height={40} aria-hidden="true" className="su-confetti st-diecut-img absolute right-0 top-6 h-10 w-10" style={{ rotate: "12deg", animationDelay: "120ms" }} />
                     <Image src="/images/ui/daily-hero-treasure-384.webp" alt="" width={132} height={132} aria-hidden="true" className="su-done-art st-diecut-img h-[8.2rem] w-[8.2rem]" />
-                    <p className="ah-light mt-1 text-[10.5px] tracking-[.18em] text-[#c4567a]">WELCOME TO DAENGDABANG</p>
+                    <p className="ah-light mt-1 text-[10.5px] tracking-[.18em] text-[#c4567a]">WELCOME TO 댕다방</p>
                     <h1 className="ah-display mt-1 text-[21px] leading-snug">{labelText("가입을 환영해요,")}<br /><span className="st-marker">{name}</span>{labelText("님!")}</h1>
                     <p className="ah-light mt-2 text-[12.5px]" style={{ color: TEXT_SOFT }}>{providerLabel ? `다음부터는 ${providerLabel} 버튼 하나로 로그인해요.` : "다음부터는 이메일과 비밀번호로 로그인해요."}</p>
                 </div>

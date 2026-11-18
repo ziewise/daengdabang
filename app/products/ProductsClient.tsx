@@ -328,9 +328,9 @@ export default function ProductsClient({ initialCategory, title, variant }: Prop
                             <div className="sr-head">
                                 <span className="sr-head-art" aria-hidden="true"><Image src="/images/ui/header-cart-128.webp" alt="" width={48} height={48} /></span>
                                 <div className="sr-head-text">
-                                    <p className="sr-head-kicker">DAENGDABANG PRODUCTS</p>
+                                    <p className="sr-head-kicker">댕다방 PRODUCTS</p>
                                     <h2 id="sr-own-title" className="sr-head-title">
-                                        {locale === "en" ? "DaengDaBang products" : "댕다방 상품"} <b>{countText(products.length)}</b>
+                                        {locale === "en" ? "댕다방 products" : "댕다방 상품"} <b>{countText(products.length)}</b>
                                     </h2>
                                 </div>
                                 <div className="sr-tools">
@@ -385,7 +385,7 @@ export default function ProductsClient({ initialCategory, title, variant }: Prop
                             <p className="sr-note">
                                 <i className="fa-solid fa-circle-info" aria-hidden="true" />
                                 {locale === "en"
-                                    ? "These are not DaengDaBang products. Tapping one opens the seller in a new tab. Final totals can change with options and shipping."
+                                    ? "These are not 댕다방 products. Tapping one opens the seller in a new tab. Final totals can change with options and shipping."
                                     : "댕다방 상품이 아니에요. 누르면 판매처가 새 창으로 열리고, 옵션과 배송비에 따라 결제금액은 달라질 수 있어요."}
                             </p>
                             {externalSection}

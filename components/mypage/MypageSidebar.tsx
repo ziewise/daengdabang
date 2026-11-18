@@ -65,7 +65,7 @@ export default function MypageSidebar({ className = "" }: { className?: string }
                                 id={headingId}
                                 className="mb-2 px-1 text-xs font-black tracking-[0.12em] text-neutral-950 sm:px-2 lg:px-4"
                             >
-                                {group.label}
+                                {labelText(group.label)}
                             </h2>
                             <ul className="grid grid-cols-2 gap-2 lg:grid-cols-1 lg:gap-1">
                                 {group.items.map((item) => {
@@ -86,7 +86,7 @@ export default function MypageSidebar({ className = "" }: { className?: string }
                                                     className={`fa-solid ${item.icon} w-4 shrink-0 text-center text-xs lg:text-sm`}
                                                     aria-hidden="true"
                                                 />
-                                                <span className="break-keep">{item.label}</span>
+                                                <span className="break-keep">{labelText(item.label)}</span>
                                             </Link>
                                         </li>
                                     );

@@ -107,7 +107,7 @@ export default function PrelaunchNotice() {
                         {english ? <>A little more care.<br /><em>Then, a big hello.</em></> : <>설레는 첫 만남을 위해,<br /><em>조금만 더 준비할게요.</em></>}
                     </h2>
                     <p id="prelaunch-description" className={styles.description}>
-                        {english ? <>We’re getting DaengDaBang ready for you.<br />Enjoy a first look at our collection.<br />Orders will open with our official launch.</> : <>댕댕이의 일상을 채울 댕다방을 준비하고 있어요.<br />마음에 드는 상품을 먼저 둘러보세요.<br /><strong>주문은 정식 오픈 후에 만나요.</strong></>}
+                        {english ? <>We’re getting 댕다방 ready for you.<br />Enjoy a first look at our collection.<br />Orders will open with our official launch.</> : <>댕댕이의 일상을 채울 댕다방을 준비하고 있어요.<br />마음에 드는 상품을 먼저 둘러보세요.<br /><strong>주문은 정식 오픈 후에 만나요.</strong></>}
                     </p>
                     <button type="button" className={styles.explore} onClick={close}>
                         {english ? "Take a first look" : "댕다방 먼저 둘러보기"}

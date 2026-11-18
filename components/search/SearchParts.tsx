@@ -79,7 +79,7 @@ export function SearchHero({ query, ownCount, externalCount, externalLoading }: 
     return (
         <section className="sr-hero dw-csheet is-sky ddb-hero-band" aria-labelledby="sr-title">
             <div className="sr-hero-main">
-                <p className="sr-kicker">DAENGDABANG SEARCH</p>
+                <p className="sr-kicker">댕다방 SEARCH</p>
                 <h1 id="sr-title" className="sr-title">
                     {hasQuery ? (
                         <>
@@ -92,8 +92,8 @@ export function SearchHero({ query, ownCount, externalCount, externalLoading }: 
                 </h1>
                 <p className="sr-lead">
                     {hasQuery
-                        ? (en ? "DaengDaBang products first, then prices from other sellers." : "댕다방 상품을 먼저 보여 드리고, 다른 판매처 가격도 함께 비교해 드려요.")
-                        : (en ? "Search DaengDaBang products and compare prices from other sellers." : "댕다방 상품을 찾고, 다른 판매처 가격도 함께 비교해 드려요.")}
+                        ? (en ? "댕다방 products first, then prices from other sellers." : "댕다방 상품을 먼저 보여 드리고, 다른 판매처 가격도 함께 비교해 드려요.")
+                        : (en ? "Search 댕다방 products and compare prices from other sellers." : "댕다방 상품을 찾고, 다른 판매처 가격도 함께 비교해 드려요.")}
                 </p>
 
                 {/* 큰 검색칸 — 헤더 검색 3D 그림 · 분홍 "검색" 알약 */}
@@ -123,7 +123,7 @@ export function SearchHero({ query, ownCount, externalCount, externalLoading }: 
                 <nav className="sr-glance" aria-label={en ? "Results at a glance" : "결과 한눈에"}>
                     <a href="#sr-own" className="sr-glance-item is-own">
                         <span className="sr-glance-art" aria-hidden="true"><Image src="/images/ui/header-cart-128.webp" alt="" width={64} height={64} /></span>
-                        <span className="sr-glance-label">{labelText(en ? "DaengDaBang" : "댕다방 상품")}</span>
+                        <span className="sr-glance-label">{labelText(en ? "댕다방" : "댕다방 상품")}</span>
                         <b className="sr-glance-count">{ownCount.toLocaleString("ko-KR")}</b>
                     </a>
                     <a href="#sr-ext" className="sr-glance-item is-ext">
@@ -163,7 +163,7 @@ export function SearchOwnEmpty({ query, hiddenByCategory, onShowAll }: EmptyProp
                 <p className="sr-empty-title">
                     {hiddenByCategory > 0
                         ? (en ? "No results in this category" : "이 카테고리에는 결과가 없어요")
-                        : (en ? `No DaengDaBang products for “${query}” yet` : `댕다방에는 아직 ‘${query}’ 상품이 없어요`)}
+                        : (en ? `No 댕다방 products for “${query}” yet` : `댕다방에는 아직 ‘${query}’ 상품이 없어요`)}
                 </p>
                 <p className="sr-empty-body">
                     {hiddenByCategory > 0

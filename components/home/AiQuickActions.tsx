@@ -58,7 +58,7 @@ export default function AiQuickActions() {
             <div className="mx-auto max-w-[1400px] px-4 sm:px-6">
                 <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
                     <div>
-                        <p className="ddb-crayon-kicker text-xs">DAENGDABANG AI</p>
+                        <p className="ddb-crayon-kicker text-xs">댕다방 AI</p>
                         <h2 id="ai-quick-actions-title" className="ddb-crayon-title mt-2 text-3xl md:text-4xl">
                             <span className="ddb-crayon-underline"><LocalizedMenuLabel label={"우리 아이를 위한 AI 바로가기"} /></span>
                         </h2>
