@@ -72,7 +72,7 @@ export default function ShowcaseTopicCard({
             <section id="showcase-topic" className="dw-sc-wrap scroll-mt-28" aria-labelledby="showcase-topic-title">
                 <TopicHead />
                 <div className="dw-csheet is-yellow dw-sc-topic-note">
-                    <p className="dw-tlogin-body" role="status">{error}</p>
+                    <p className="dw-tlogin-body" role="status">{labelText(error)}</p>
                     <button type="button" onClick={onRetry} className="ddb-motion-lift dw-pill dw-pill-sm mt-3">{labelText("주제 다시 불러오기")}</button>
                 </div>
             </section>
