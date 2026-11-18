@@ -378,8 +378,8 @@ export default function PrivacyPage() {
                         <tbody>
                             {complaintRows.map(([name, phone, href]) => (
                                 <tr key={name} className="border-b border-neutral-100 align-top">
-                                    <th className="w-64 py-4 pr-4 font-black text-neutral-950">{name}</th>
-                                    <td className="py-4 pr-4 font-bold leading-6 text-neutral-600">{phone}</td>
+                                    <th className="w-64 py-4 pr-4 font-black text-neutral-950"><LocalizedMenuLabel label={name} /></th>
+                                    <td className="py-4 pr-4 font-bold leading-6 text-neutral-600"><LocalizedMenuLabel label={phone} /></td>
                                     <td className="py-4 font-bold leading-6">
                                         <a
                                             href={href}

@@ -42,7 +42,8 @@ const NOTICES = [
 // 왼쪽 날짜("6월 16일" + 연도) — 날짜 글자(YYYY-MM-DD)를 그대로 나눔
 function noticeWhen(date: string) {
     const [year, month, day] = date.split("-");
-    return { year, monthDay: `${Number(month)}월 ${Number(day)}일` };
+    const monthDayEnglish = new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", timeZone: "UTC" }).format(new Date(Date.UTC(Number(year), Number(month) - 1, Number(day))));
+    return { year, monthDayEnglish, monthDay: `${Number(month)}월 ${Number(day)}일` };
 }
 
 export default function NoticePage() {
@@ -59,7 +60,7 @@ export default function NoticePage() {
                         className="rounded-2xl bg-white/70 backdrop-blur border border-white/60 shadow-card p-5 md:p-6 hover:shadow-hover transition cs-notice"
                     >
                         {/* 웹 전용 — 왼쪽 날짜 · 가운데 점 줄 */}
-                        <p className="hidden cs-when"><b>{noticeWhen(n.date).monthDay}</b><span>{noticeWhen(n.date).year}</span></p>
+                        <p className="hidden cs-when"><b><LocalizedMenuLabel label={noticeWhen(n.date).monthDay} english={noticeWhen(n.date).monthDayEnglish} /></b><span>{noticeWhen(n.date).year}</span></p>
                         <span className="hidden cs-rail" aria-hidden="true"><i /></span>
                         <div className="cs-notice-card">
                         <div className="flex items-center gap-2 mb-2">

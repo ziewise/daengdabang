@@ -6,14 +6,18 @@ function won(value: number) {
     return `${value.toLocaleString("ko-KR")}원`;
 }
 
+function englishWon(value: number) {
+    return `₩${value.toLocaleString("en-US")}`;
+}
+
 export default function DeliveryReturnPolicyDetails({ includeDelivery = true }: { includeDelivery?: boolean }) {
     return (
         <div className="grid gap-7 text-sm font-bold leading-7 text-neutral-700">
             {includeDelivery && (
                 <PolicySection title="배송 안내">
                     <PolicyRows rows={[
-                        ["배송비", `${won(DELIVERY_POLICY.baseFeeKrw)} (${won(DELIVERY_POLICY.freeThresholdKrw)} 이상 무료배송)`],
-                        ["지역 추가비", `제주도 ${won(DELIVERY_POLICY.jejuSurchargeKrw)} 추가 · 그 외 도서지역 ${won(DELIVERY_POLICY.islandSurchargeKrw)} 추가`],
+                        ["배송비", `${won(DELIVERY_POLICY.baseFeeKrw)} (${won(DELIVERY_POLICY.freeThresholdKrw)} 이상 무료배송)`, `${englishWon(DELIVERY_POLICY.baseFeeKrw)} (free on orders of ${englishWon(DELIVERY_POLICY.freeThresholdKrw)} or more)`],
+                        ["지역 추가비", `제주도 ${won(DELIVERY_POLICY.jejuSurchargeKrw)} 추가 · 그 외 도서지역 ${won(DELIVERY_POLICY.islandSurchargeKrw)} 추가`, `Jeju: an additional ${englishWon(DELIVERY_POLICY.jejuSurchargeKrw)}. Other islands: an additional ${englishWon(DELIVERY_POLICY.islandSurchargeKrw)}.`],
                         ["일반 배송/출고", `${DELIVERY_POLICY.dispatch} · ${DELIVERY_POLICY.arrival}`],
                         ["택배사", DELIVERY_POLICY.carriers],
                     ]} />
@@ -28,8 +32,8 @@ export default function DeliveryReturnPolicyDetails({ includeDelivery = true }: 
                 <p><LocalizedMenuLabel label={"반품/교환에 관한 일반적인 사항은 판매자 제시사항보다 관계법령이 우선합니다."} /></p>
                 <PolicyRows rows={[
                     ["판매자 지정 택배사", RETURN_POLICY.designatedCarrier],
-                    ["반품배송비", `편도 ${won(RETURN_POLICY.oneWayFeeKrw)} (최초 배송비 무료인 경우 ${won(RETURN_POLICY.freeInitialShippingReturnFeeKrw)} 부과)`],
-                    ["교환배송비", won(RETURN_POLICY.exchangeFeeKrw)],
+                    ["반품배송비", `편도 ${won(RETURN_POLICY.oneWayFeeKrw)} (최초 배송비 무료인 경우 ${won(RETURN_POLICY.freeInitialShippingReturnFeeKrw)} 부과)`, `${englishWon(RETURN_POLICY.oneWayFeeKrw)} one way (${englishWon(RETURN_POLICY.freeInitialShippingReturnFeeKrw)} if the initial delivery was free)`],
+                    ["교환배송비", won(RETURN_POLICY.exchangeFeeKrw), englishWon(RETURN_POLICY.exchangeFeeKrw)],
                     ["보내실 곳", RETURN_POLICY.address],
                 ]} />
             </PolicySection>
@@ -49,7 +53,7 @@ export default function DeliveryReturnPolicyDetails({ includeDelivery = true }: 
             <PolicySection title="반품/교환 불가능 사유">
                 <p className="mb-2"><LocalizedMenuLabel label={"아래와 같은 경우 반품/교환이 불가능합니다."} /></p>
                 <ol className="list-decimal space-y-2 pl-5 text-neutral-600">
-                    {RETURN_EXCLUSION_REASONS.map((reason) => <li key={reason}>{reason}</li>)}
+                    {RETURN_EXCLUSION_REASONS.map((reason) => <li key={reason}><LocalizedMenuLabel label={reason} /></li>)}
                 </ol>
             </PolicySection>
         </div>
@@ -59,19 +63,19 @@ export default function DeliveryReturnPolicyDetails({ includeDelivery = true }: 
 function PolicySection({ title, children }: { title: string; children: ReactNode }) {
     return (
         <section className="border-t border-neutral-200 pt-5 first:border-t-0 first:pt-0">
-            <h3 className="text-base font-black text-neutral-950">{title}</h3>
+            <h3 className="text-base font-black text-neutral-950"><LocalizedMenuLabel label={title} /></h3>
             <div className="mt-2">{children}</div>
         </section>
     );
 }
 
-function PolicyRows({ rows }: { rows: Array<[string, string]> }) {
+function PolicyRows({ rows }: { rows: Array<[string, string, string?]> }) {
     return (
         <dl className="mt-3 grid gap-2">
-            {rows.map(([label, value]) => (
+            {rows.map(([label, value, english]) => (
                 <div key={label} className="grid gap-1 sm:grid-cols-[150px_1fr]">
-                    <dt className="font-black text-neutral-950">{label}</dt>
-                    <dd className="text-neutral-600">{value}</dd>
+                    <dt className="font-black text-neutral-950"><LocalizedMenuLabel label={label} /></dt>
+                    <dd className="text-neutral-600"><LocalizedMenuLabel label={value} english={english} /></dd>
                 </div>
             ))}
         </dl>

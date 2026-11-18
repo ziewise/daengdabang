@@ -340,7 +340,10 @@ export default function TermsPage() {
                                                 <span className="sr-only"><LocalizedMenuLabel label={marker.spoken} english={marker.kind === "clause" ? `Paragraph ${marker.spoken.match(/\d+/)?.[0]}` : `Item ${marker.spoken.match(/\d+/)?.[0]}`} /></span>
                                             </span>
                                         ) : null}
-                                        <span><LocalizedMenuLabel label={line} /></span>
+                                        <span>{section.title === "사업자 정보" && line.includes(": ") ? <>
+                                                    <LocalizedMenuLabel label={line.slice(0, line.indexOf(": "))} />{": "}
+                                                    <LocalizedMenuLabel label={line.slice(line.indexOf(": ") + 2)} />
+                                                </> : <LocalizedMenuLabel label={line} />}</span>
                                     </p>
                                 );
                             })}

@@ -78,7 +78,7 @@ export default function BrandStoryWeb() {
                             <li key={scene.slug} data-tone={scene.tone}>
                                 {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                                 <img src={`${UI}${scene.art}`} alt="" aria-hidden="true" />
-                                {CATEGORY_LABEL[scene.slug].split("/")[0]}
+                                <LocalizedMenuLabel label={CATEGORY_LABEL[scene.slug].split("/")[0]} />
                             </li>
                         ))}
                     </ul>

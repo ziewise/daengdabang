@@ -60,8 +60,8 @@ export default function SceneDeck({ scenes }: { scenes: DeckScene[] }) {
                                 <img src={`/images/ui/${scene.art}`} alt="" />
                             </span>
                             <span className="bsw-scene-text">
-                                <b>{scene.label}</b>
-                                <small>{scene.line}</small>
+                                <b>{labelText(scene.label)}</b>
+                                <small>{labelText(scene.line)}</small>
                                 <Link href={`/category/${scene.slug}`} className="bsw-scene-go" tabIndex={pos === 0 ? 0 : -1}>
                                     {labelText("상품")} {scene.count}{labelText("개 보기")}<i className="fa-solid fa-arrow-right" aria-hidden="true" />
                                 </Link>

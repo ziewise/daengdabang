@@ -562,7 +562,7 @@ export default function GoodsContest({
                         className={`mt-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border px-4 py-3 text-xs font-bold leading-5 ${notice.tone === "success" ? "border-emerald-200 bg-emerald-50 text-emerald-900" : "border-rose-200 bg-rose-50 text-rose-900"}`}
                         data-web-notice={notice.tone === "success" ? "ok" : "error"} // 웹 부드러운 안내 쿠션(daily-web.css)
                     >
-                        <span>{notice.message}</span>
+                        <span>{labelText(notice.message)}</span>
                         {notice.tone === "error" && summaryState === "error" ? (
                             <button
                                 type="button"
@@ -881,7 +881,7 @@ export default function GoodsContest({
                                     placeholder="name@example.com"
                                     className="mt-2 h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-sm font-bold outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
                                 />
-                                {guestVerification.error ? <p role="alert" className="mt-2 text-xs font-bold text-rose-700">{guestVerification.error}</p> : null}
+                                {guestVerification.error ? <p role="alert" className="mt-2 text-xs font-bold text-rose-700">{labelText(guestVerification.error)}</p> : null}
                                 <button type="submit" disabled={guestVerification.submitting} className="ddb-crayon-link mt-4 inline-flex min-h-12 w-full items-center justify-center rounded-full px-5 text-xs disabled:opacity-60">
                                     {guestVerification.submitting ? <><i className="fa-solid fa-circle-notch fa-spin mr-2" aria-hidden="true" />{labelText("발송 중…")}</> : "인증번호 받기"}
                                 </button>
@@ -903,7 +903,7 @@ export default function GoodsContest({
                                     placeholder="000000"
                                     className="mt-2 h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-center text-lg font-black tracking-[0.35em] outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
                                 />
-                                {guestVerification.error ? <p role="alert" className="mt-2 text-xs font-bold text-rose-700">{guestVerification.error}</p> : null}
+                                {guestVerification.error ? <p role="alert" className="mt-2 text-xs font-bold text-rose-700">{labelText(guestVerification.error)}</p> : null}
                                 <button type="submit" disabled={guestVerification.submitting} className="ddb-crayon-link mt-4 inline-flex min-h-12 w-full items-center justify-center rounded-full px-5 text-xs disabled:opacity-60">
                                     {guestVerification.submitting ? <><i className="fa-solid fa-circle-notch fa-spin mr-2" aria-hidden="true" />{labelText("확인 중…")}</> : labelText("확인하고 이 굿즈 선택")}
                                 </button>
