@@ -116,7 +116,7 @@ export default function LegalWebHero({ kind, updatedAt }: { kind: LegalKind; upd
                     <span className="lw-kicker">{look.kicker}</span>
                     <span className="lw-title" role="heading" aria-level={1}><LocalizedMenuLabel label={look.title} /></span>
                     <span className="lw-lead"><LocalizedMenuLabel label={look.lead} /></span>
-                    <span className="lw-date"><i className="fa-regular fa-calendar" aria-hidden="true" />{look.dateLabel} {updatedAt}</span>
+                    <span className="lw-date"><i className="fa-regular fa-calendar" aria-hidden="true" /><LocalizedMenuLabel label={look.dateLabel} /> {updatedAt}</span>
                 </span>
                 <span className="lw-hero-art" aria-hidden="true">
                     {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}

@@ -224,11 +224,11 @@ export default function StickerLab() {
                             <div className="lb-compare relative mt-5 rounded-[16px] bg-white px-4 pb-4 pt-5">
                                 <Tape className="-top-2 left-1/2 h-4 w-16 -translate-x-1/2" color="rgba(255,226,150,.9)" style={{ rotate: "-3deg" }} />
                                 <InkStamp rot={12} color="#5a7fe0" className="absolute -right-2 -top-3 z-[1] bg-white/90 text-[11px]">{labelText("예시")}</InkStamp>
-                                <span className="st-tape ah-display inline-block px-2 py-0.5 text-[11px] text-[#563fa8]" style={{ background: "rgba(220,205,255,.92)", rotate: "-2deg" }}>{WEEKLY_RECORDS[0].week} {labelText("기록")}</span>
-                                <p className="ah-display mt-2.5 text-[15px] leading-snug">{LAB_EXAMPLE.headline}</p>
+                                <span className="st-tape ah-display inline-block px-2 py-0.5 text-[11px] text-[#563fa8]" style={{ background: "rgba(220,205,255,.92)", rotate: "-2deg" }}>{labelText(WEEKLY_RECORDS[0].week)} {labelText("기록")}</span>
+                                <p className="ah-display mt-2.5 text-[15px] leading-snug">{labelText(LAB_EXAMPLE.headline)}</p>
                                 <p className="mt-2.5 flex flex-wrap gap-1.5">
-                                    <span className="ah-display rounded-full bg-[#ddf5ea] px-2.5 py-0.5 text-[11px] text-[#1f7a59]">{labelText("새로 보임 ·")} {LAB_EXAMPLE.added[0]}</span>
-                                    <span className="ah-display rounded-full bg-[#f1ece9] px-2.5 py-0.5 text-[11px] text-[#7a6a63]">{labelText("이번엔 안 보임 ·")} {LAB_EXAMPLE.gone[0]}</span>
+                                    <span className="ah-display rounded-full bg-[#ddf5ea] px-2.5 py-0.5 text-[11px] text-[#1f7a59]">{labelText("새로 보임 ·")} {labelText(LAB_EXAMPLE.added[0])}</span>
+                                    <span className="ah-display rounded-full bg-[#f1ece9] px-2.5 py-0.5 text-[11px] text-[#7a6a63]">{labelText("이번엔 안 보임 ·")} {labelText(LAB_EXAMPLE.gone[0])}</span>
                                 </p>
                                 <p className="ah-light mt-3 text-[11px] leading-relaxed" style={{ color: TEXT_SOFT }}>{labelText("찍은 사진은 분석에만 쓰이고, 기록에는 달라진 점만 글로 남아요.")}</p>
                             </div>

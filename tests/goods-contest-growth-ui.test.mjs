@@ -118,7 +118,7 @@ test("progress and payment copy keep selection distinct from an order", async ()
     const contest = await source("components/growth/GoodsContest.tsx");
 
     assert.match(contest, /selectionCount\.toLocaleString\("ko-KR"\).*goal\.toLocaleString\("ko-KR"\)/s);
-    assert.match(contest, /productionEligible \? "500명 달성"/);
+    assert.match(contest, /productionEligible \? labelText\("500명 달성"\)/);
     assert.match(contest, /role="progressbar"/);
     assert.match(contest, /aria-valuemax=\{itemSummary\.goal\}/);
     assert.match(contest, /style=\{\{ width: `\$\{progress\}%` \}\}/);

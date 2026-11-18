@@ -70,7 +70,7 @@ export const INVITE = [
     { icon: "fa-heart", text: "댕자랑에서 응원 주고받기" },
 ];
 export function LoginInvite({ redirect = "/app/home-1/", title = ["로그인하고", "오늘부터 출근해요!"], items = INVITE, cta = "로그인하고 출근하기" }: { redirect?: string; title?: [string, string]; items?: { icon: string; text: string }[]; cta?: string }) {
-    const { menuLabel: labelText } = useI18n();
+    const { locale, menuLabel: labelText } = useI18n();
     return (
         <div className="st-place st-invite relative mt-4 rounded-[1.2rem] pb-4 pl-6 pr-4 pt-6" style={{ ["--r" as string]: "-1deg", ["--d" as string]: "380ms", rotate: "-1deg" }}>
             <Tape className="-top-2 left-1/2 h-5 w-20 -translate-x-1/2" color="repeating-linear-gradient(90deg, rgba(255,200,215,.85) 0 8px, rgba(255,226,234,.85) 8px 16px)" style={{ rotate: "2deg" }} />
@@ -79,7 +79,7 @@ export function LoginInvite({ redirect = "/app/home-1/", title = ["로그인하�
             {/* 제목 + 오른쪽 우리 아이 기록 보관함(출근 · 돌봄 · 기록, 둥실) — 작게, 제목보다 살짝 아래에. 체크리스트는 그 아래 */}
             <div className="flex items-start justify-between gap-2">
                 <p className="ah-display text-[17px] leading-snug">
-                    <span className="st-marker">{title[0]}</span><br />{title[1]}
+                    <span className="st-marker">{labelText(title[0])}</span><br />{labelText(title[1])}
                 </p>
                 <span aria-hidden="true" className="st-box relative -mr-1 mt-4 block h-[4.2rem] w-[4.2rem] shrink-0">
                     <Image src="/images/ui/stickers/record-box.webp" alt="" fill sizes="90px" loading="eager" className="object-contain drop-shadow-[0_10px_10px_rgba(120,80,140,.28)]" />
@@ -99,7 +99,7 @@ export function LoginInvite({ redirect = "/app/home-1/", title = ["로그인하�
             </ul>
             <Patch href={appLoginHref(redirect)} className="mt-4">{labelText(cta)}<i aria-hidden="true" className="fa-solid fa-paw text-[14px]" /></Patch>
             <Link href={appSignupHref(redirect)} className="ah-display mt-3 block text-center text-[13px]" style={{ color: "#ea4c7c" }}>
-                {labelText("처음이에요 · 가입하면")} {SIGNUP_BONUS_COINS}{labelText("코인 선물")}
+                {locale === "en" ? `New here? Sign up for ${SIGNUP_BONUS_COINS} coins` : <>{labelText("처음이에요 · 가입하면")} {SIGNUP_BONUS_COINS}{labelText("코인 선물")}</>}
             </Link>
         </div>
     );

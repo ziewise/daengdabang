@@ -100,7 +100,7 @@ const CONTEST_STEPS = [
     { n: "04", title: "제작·배송", desc: "최종 동의를 마친 주문만 제작과 배송을 시작해요." },
 ];
 /** "M월 D일" (한국 시간) */
-const fmtDay = (iso: string) => new Intl.DateTimeFormat("ko-KR", { month: "long", day: "numeric", timeZone: "Asia/Seoul" }).format(new Date(iso));
+const fmtDay = (iso: string, locale: "ko" | "en") => new Intl.DateTimeFormat(locale === "en" ? "en-US" : "ko-KR", { month: "long", day: "numeric", timeZone: "Asia/Seoul" }).format(new Date(iso));
 /** 굿즈 공모전 오류 문구 — 협업자 GoodsContest.contestErrorMessage 와 같음 */
 function contestErrorMessage(error: unknown, action: "load" | "select" | "cancel") {
     if (error instanceof DdbApiError) {
@@ -127,7 +127,7 @@ function replaceSummaryItem(current: GoodsContestSummary | null, next: GoodsCont
 }
 
 export default function StickerShow() {
-    const { menuLabel: labelText } = useI18n();
+    const { locale, menuLabel: labelText } = useI18n();
     const [session, setSession] = useDemoSession();
     const media = useShopMedia(); // 굿즈 공모전 영상 · 포스터 주소(네이티브 앱은 운영 사이트 파일)
     const initialTab = useInitialTab(TABS.length);
@@ -695,7 +695,7 @@ export default function StickerShow() {
                                 ) : topicState.error ? (
                                     <>
                                         <span className="ah-light text-[12px] text-[#b03a63]">{labelText("오늘의 댕주제")}</span>
-                                        <p role="status" className="ah-light mt-1 text-[12.5px] leading-relaxed" style={{ color: TEXT_SOFT }}>{topicState.error}</p>
+                                        <p role="status" className="ah-light mt-1 text-[12.5px] leading-relaxed" style={{ color: TEXT_SOFT }}>{labelText(topicState.error)}</p>
                                         <div className="mt-3"><Patch tone="cream" small onClick={() => { haptic("light"); setTopicKey((k) => k + 1); }}>{labelText("주제 다시 불러오기")}<i aria-hidden="true" className="fa-solid fa-rotate-right text-[11px]" /></Patch></div>
                                     </>
                                 ) : topic ? (
@@ -833,17 +833,17 @@ export default function StickerShow() {
                             {/* 굿즈 공모전 머리 티켓 — 위: 기간 안내 · 가운데: 공모전 영상(글자 없이 깨끗하게, 웹 공모전과 같은 모바일 영상, 소리 없이 반복)
                                 · 아래: 제목 → 절취선 너머 안내. D-day 도장은 영상 오른쪽 위 모서리에 살짝 걸쳐 찍힘. 양옆 반달 홈은 절취선 높이에 맞춰 붙임 */}
                             <div className="st-ticket sh-vticket px-2.5 pt-3" style={{ rotate: "-1deg" }}>
-                                <p className="ah-light px-1.5 pb-2.5 pr-16 text-[12px] text-[#8f5e12]">{fmtDay(summary?.startsAt || goodsContent.campaign.startsAt)} – {fmtDay(summary?.endsAt || goodsContent.campaign.endsAt)} {labelText("· 회원·비회원 모두 참여")}</p>
+                                <p className="ah-light px-1.5 pb-2.5 pr-16 text-[12px] text-[#8f5e12]">{fmtDay(summary?.startsAt || goodsContent.campaign.startsAt, locale)} – {fmtDay(summary?.endsAt || goodsContent.campaign.endsAt, locale)} {labelText("· 회원·비회원 모두 참여")}</p>
                                 <div className="relative">
                                     <div className="sh-vwin relative aspect-video overflow-hidden rounded-[13px] bg-[#f3e2b8]">
                                         {media ? <InViewVideo muted loop playsInline preload="auto" poster={media("/images/goods/goods-hero-lifestyle.webp")} aria-label={labelText("댕다방 굿즈 공모전 상품 미리보기 영상")} className="absolute inset-0 h-full w-full object-cover">
                                             <source src={media("/videos/goods-contest-hero-mobile.mp4")} type="video/mp4" />
                                         </InViewVideo> : null}
                                     </div>
-                                    <InkStamp rot={10} color={campaignClosed ? "#9c8a80" : "#d9822b"} className="absolute -top-5 right-1 z-[1] bg-[#fff8e6] !py-1 text-[12px]">{campaignStatusLabel}</InkStamp>
+                                    <InkStamp rot={10} color={campaignClosed ? "#9c8a80" : "#d9822b"} className="absolute -top-5 right-1 z-[1] bg-[#fff8e6] !py-1 text-[12px]">{labelText(campaignStatusLabel)}</InkStamp>
                                 </div>
-                                <p className="ah-display mt-2.5 break-keep px-1.5 text-[18px] leading-snug">{goodsContent.title}</p>
-                                <p className="ah-light mt-1 break-keep px-1.5 text-[12.5px] leading-relaxed" style={{ color: TEXT_SOFT }}>{goodsContent.description}</p>
+                                <p className="ah-display mt-2.5 break-keep px-1.5 text-[18px] leading-snug">{labelText(goodsContent.title)}</p>
+                                <p className="ah-light mt-1 break-keep px-1.5 text-[12.5px] leading-relaxed" style={{ color: TEXT_SOFT }}>{labelText(goodsContent.description)}</p>
                                 <span className="st-ticket-cut sh-vcut relative mt-3 block px-1.5 pb-3 pt-2.5 text-[12px]">
                                     <span aria-hidden="true" className="sh-notch left-[-21px]" /><span aria-hidden="true" className="sh-notch right-[-21px]" />
                                     <span className="ah-display flex items-start gap-1.5 text-[#a8560f]"><i aria-hidden="true" className="fa-solid fa-circle-info mt-0.5 text-[11px]" />{labelText("선택은 주문·예약·결제가 아니며, 이 단계에서는 결제가 없습니다.")}</span>
@@ -858,9 +858,9 @@ export default function StickerShow() {
                                         {i === 0 ? <span className="st-tape ah-display absolute -top-2 right-2.5 px-2 py-px text-[10px] text-[#c4456f]" style={{ background: "rgba(255,200,215,.9)", rotate: "4deg" }}>{labelText("지금")}</span> : null}
                                         <span className="flex items-center gap-1.5">
                                             <span className="sh-step-no ah-display grid h-6 w-6 shrink-0 place-items-center rounded-full text-[10.5px]">{st.n}</span>
-                                            <span className="ah-display text-[13.5px] leading-tight">{st.title}</span>
+                                            <span className="ah-display text-[13.5px] leading-tight">{labelText(st.title)}</span>
                                         </span>
-                                        <span className="ah-light mt-1.5 block text-[11.5px] leading-snug" style={{ color: TEXT_SOFT }}>{st.desc}</span>
+                                        <span className="ah-light mt-1.5 block text-[11.5px] leading-snug" style={{ color: TEXT_SOFT }}>{labelText(st.desc)}</span>
                                     </li>
                                 ))}
                             </ol>
@@ -910,11 +910,11 @@ export default function StickerShow() {
                                             {/* 가격표 태그 — 사진 오른쪽 위 모서리에 걸침 */}
                                             <span className="sh-tag absolute right-0.5 top-4 z-10 py-1 pl-4 pr-2 text-right leading-tight">
                                                 {/* 기준 단위(1개 · 1세트) — 웹 굿즈 공모전과 같게(협업자 2026-10-18 가격 조정) */}
-                                                <span className="ah-light block text-[9.5px]">{labelText("예상 펀딩가 ·")} {g.priceUnit}</span>
+                                                <span className="ah-light block text-[9.5px]">{labelText("예상 펀딩가 ·")} {labelText(g.priceUnit)}</span>
                                                 <span className="ah-display block text-[12px]">{item.expectedPriceKrw.toLocaleString("ko-KR")}{labelText("원")}</span>
                                             </span>
-                                            <p className="ah-display mt-2 truncate px-0.5 text-[13.5px]">{item.name}</p>
-                                            <p className="ah-light line-clamp-2 min-h-[2.4em] px-0.5 text-[11px] leading-snug" style={{ color: TEXT_SOFT }}>{item.summary}</p>
+                                            <p className="ah-display mt-2 truncate px-0.5 text-[13.5px]">{labelText(item.name)}</p>
+                                            <p className="ah-light line-clamp-2 min-h-[2.4em] px-0.5 text-[11px] leading-snug" style={{ color: TEXT_SOFT }}>{labelText(item.summary)}</p>
                                             {/* 발도장 스탬프판 — 모인 만큼 찍힘 */}
                                             <span className="sh-stamps mt-1.5 grid grid-cols-5 gap-x-1 gap-y-0.5 rounded-[8px] px-1.5 py-1.5" aria-label={sum ? `${joined}/${goal}명 선택` : "선택 수 확인 중"}>
                                                 {Array.from({ length: 10 }, (_, k) => (
@@ -922,8 +922,8 @@ export default function StickerShow() {
                                                 ))}
                                             </span>
                                             <p className="ah-light mt-1 px-0.5 text-[11px]" style={{ color: TEXT_SOFT }}>
-                                                {sum ? <><b className="ah-display text-[#c98a12]">{joined.toLocaleString("ko-KR")}</b>/{goal.toLocaleString("ko-KR")}{labelText("명 ·")} {sum.productionEligible ? <b className="ah-display text-[#1f9e75]">{labelText("500명 달성")}</b> : `${sum.remainingCount.toLocaleString("ko-KR")}명 남음`}</>
-                                                    : summaryState === "error" ? "집계를 연결한 뒤 선택할 수 있어요" : "정확한 선택 수 확인 중"}
+                                                {sum ? <><b className="ah-display text-[#c98a12]">{joined.toLocaleString("ko-KR")}</b>/{goal.toLocaleString("ko-KR")}{labelText("명 ·")} {sum.productionEligible ? <b className="ah-display text-[#1f9e75]">{labelText("500명 달성")}</b> : (locale === "en" ? `${sum.remainingCount.toLocaleString("en-US")} votes to go` : `${sum.remainingCount.toLocaleString("ko-KR")}명 남음`)}</>
+                                                    : labelText(summaryState === "error" ? "집계를 연결한 뒤 선택할 수 있어요" : "정확한 선택 수 확인 중")}
                                             </p>
                                             {/* 고르기 버튼 — 협업자와 같은 상태 순서(설정 확인 중 → 공모 종료 → 선택 안 받음 → 비회원 → 회원) */}
                                             <div className="mt-2">
@@ -931,7 +931,7 @@ export default function StickerShow() {
                                                     : campaignClosed ? <Patch tone="cream" small disabled>{labelText(on ? "최종 선택 완료" : "공모 종료")}</Patch>
                                                     : !item.active && !on ? <Patch tone="cream" small disabled>{labelText("현재 선택을 받지 않아요")}</Patch>
                                                     : <Patch tone={on ? "pink" : "cream"} small disabled={selectionState !== "anonymous" && (pendingItem !== null || summaryState !== "ready" || selectionState !== "ready")} onClick={() => tryPick(g.id)}>
-                                                        {pending ? "처리 중…" : on ? "선택 취소" : "이 굿즈 선택"}<i aria-hidden="true" className={`fa-solid ${pending ? "fa-circle-notch fa-spin" : on ? "fa-rotate-left" : "fa-hand-pointer"} text-[11px]`} />
+                                                        {labelText(pending ? "처리 중…" : on ? "선택 취소" : "이 굿즈 선택")}<i aria-hidden="true" className={`fa-solid ${pending ? "fa-circle-notch fa-spin" : on ? "fa-rotate-left" : "fa-hand-pointer"} text-[11px]`} />
                                                     </Patch>}
                                             </div>
                                         </li>
@@ -954,10 +954,10 @@ export default function StickerShow() {
                                 <div className="sh-fold space-y-2 text-[12px] leading-relaxed" data-open={safetyOpen} style={{ color: TEXT_SOFT }}>
                                     <p className="ah-light">{labelText("상품별 500명 달성 후 최종 사양·가격·배송·제작일을 다시 알리고, 조건에 동의한 분만 별도 결제 단계로 진행합니다.")}</p>
                                     <p className="flex flex-wrap gap-1.5">
-                                        {["현금 결제", "적립금 + 댕코인 일부 사용", "적립금·댕코인 전액 결제"].map((m) => <span key={m} className="ah-display rounded-full bg-white px-2.5 py-0.5 text-[11px] text-[#4a6bc4]">{m}</span>)}
+                                        {["현금 결제", "적립금 + 댕코인 일부 사용", "적립금·댕코인 전액 결제"].map((m) => <span key={m} className="ah-display rounded-full bg-white px-2.5 py-0.5 text-[11px] text-[#4a6bc4]">{labelText(m)}</span>)}
                                     </p>
                                     <p className="ah-light">{labelText("최종 결제 기준은 1P=1원, 1댕코인=100원이며 현금·적립금·댕코인을 원하는 만큼 섞어 사용할 수 있도록 준비 중입니다.")}</p>
-                                    <p className="ah-light">{goodsContent.escrowNotice}</p>
+                                    <p className="ah-light">{labelText(goodsContent.escrowNotice)}</p>
                                     {/* 웹 GoodsContest 안전 안내와 같은 에스크로 안내 링크 · 문구 */}
                                     <p className="ah-light"><Link href="/legal/escrow/" className="ah-display text-[#4a6bc4] underline decoration-dashed underline-offset-4">{labelText("에스크로 안내 보기")}</Link> {labelText("· 현금이 포함된 주문은 에스크로 계약과 배송 연동 준비가 확인된 뒤에만 결제를 열며, 현재 선택 단계에는 결제나 에스크로가 적용되지 않습니다.")}</p>
                                     <p className="ah-light">{labelText("표시 가격은 부가세 포함 예상 펀딩가이며 배송비는 별도입니다. 시제품·제조사 견적과 최종 사양에 따라 결제 전 달라질 수 있습니다.")}</p>

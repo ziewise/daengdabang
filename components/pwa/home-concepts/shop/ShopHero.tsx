@@ -134,7 +134,7 @@ export default function ShopHero() {
     // 견종 얼굴 배지(지름 약 70px) — 1280×720 원본(장당 1.9MB) 대신 가운데를 자른 240px 배지 영상(장당 약 100KB, 2026-10-26 앱 묶음 줄이기).
     // 원본은 웹 홈(HeroSection)이 그대로 씀. 새 파일: public/images/breeds/badge/<견종>-240.mp4
     const breedVideo = context ? media?.(pickHeroBreedVideo(context.weather, context.timeBucket).replace(/^\/images\/breeds\/([\w-]+)\.mp4$/, "/images/breeds/badge/$1-240.mp4")) : undefined;
-    const summary = heroWeatherSummary(report, "ko");
+    const summary = heroWeatherSummary(report, locale);
     const selectedRegion = KR_REGIONS.find((r) => r.id === region);
     const regionName = selectedRegion ? (locale === "en" ? selectedRegion.nameEn : selectedRegion.name) : labelText("현재 위치");
 

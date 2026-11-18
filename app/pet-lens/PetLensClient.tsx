@@ -114,7 +114,7 @@ function ObservationDeepLinkNotice({
                                 ? "취소된 분석"
                                 : "분석 기록 안내"}
                 </p>
-                <p className="mt-1 break-keep text-xs font-bold leading-5 opacity-80">{message}</p>
+                <p className="mt-1 break-keep text-xs font-bold leading-5 opacity-80">{labelText(message)}</p>
                 {recoveryHref && (
                     <Link
                         href={recoveryHref}
@@ -247,7 +247,7 @@ function LabHero({ mode, controls }: { mode: PetLensMode; controls?: React.React
                     {(observation
                         ? ["카메라 + 마이크", "아이별 개별 분석", "행동 · 소리 · 건강 신호"]
                         : ["정면 · 왼쪽 · 오른쪽 · 뒷면", "회원 견종 기준", "외형 · 체형 · 털 상태"]
-                    ).map((chip) => <li key={chip} className="dw-chip">{chip}</li>)}
+                    ).map((chip) => <li key={chip} className="dw-chip">{labelText(chip)}</li>)}
                 </ul>
                 </>
                 )}

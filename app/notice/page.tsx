@@ -66,7 +66,7 @@ export default function NoticePage() {
                             <span className="px-2 py-0.5 rounded-full bg-aurora-indigo/10 text-aurora-indigo text-[11px] font-extrabold">
                                 <LocalizedMenuLabel label={n.tag} />
                             </span>
-                            <span className="text-[11px] font-bold text-neutral-400">{n.date}</span>
+                            <span className="text-[11px] font-bold text-neutral-400"><LocalizedMenuLabel label={n.date} /></span>
                         </div>
                         <h2 className="text-lg font-black text-foreground"><LocalizedMenuLabel label={n.title} /></h2>
                         <p className="mt-2 text-sm font-bold leading-7 text-neutral-600"><LocalizedMenuLabel label={n.body} /></p>

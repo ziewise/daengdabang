@@ -1,5 +1,7 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
+
 /**
  * PC 헤더 "앱 설치" 아이콘 + QR 창 (PC 웹 전용 · 2026-10-26 사용자: "PC에서도 같은 버튼, QR 로 아이폰 · 안드로이드 설치")
  * ---------------------------------------------------------------------
@@ -25,6 +27,7 @@ import { usePwaInstall } from "./PwaInstallProvider";
 const INSTALL_PAGE_URL = "https://www.daengdabang.com/app/"; // QR 이 가리키는 주소(그림과 같아야 함)
 
 export default function DesktopAppInstallQr() {
+    const { locale, menuLabel: labelText } = useI18n();
     const { isNativeApp, isStandalone } = usePwaInstall();
     const [open, setOpen] = useState(false);
     // PC(768px 이상)에서만 말풍선 — 모바일 아이콘과 같은 규칙
@@ -46,7 +49,7 @@ export default function DesktopAppInstallQr() {
                 type="button"
                 onClick={openQr}
                 className="ddb-header-tip group relative inline-flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-full transition-all hover:-translate-y-px"
-                aria-label="댕다방 앱 설치 QR 열기"
+                aria-label={labelText("댕다방 앱 설치 QR 열기")}
                 aria-haspopup="dialog"
                 data-header-tip="앱 설치"
                 data-desktop-app-qr
@@ -58,10 +61,10 @@ export default function DesktopAppInstallQr() {
             {bubble ? (
                 <span role="status" className={`ddb-aib ${bubble === "out" ? "is-out" : ""}`}>
                     <button type="button" onClick={openQr} className="ddb-aib-text">
-                        <b>댕다방,</b> 앱에서 더 편하게 즐겨보세요 🐾
+                        <b>댕다방</b>{locale === "en" ? " is even handier in the app 🐾" : ", 앱에서 더 편하게 즐겨보세요 🐾"}
                     </button>
                     <button type="button" onClick={hideToday} className="ddb-aib-hide">
-                        오늘 안 보기 <span aria-hidden="true">×</span>
+                        {labelText("오늘 안 보기")} <span aria-hidden="true">×</span>
                     </button>
                 </span>
             ) : null}
@@ -72,6 +75,7 @@ export default function DesktopAppInstallQr() {
 
 /** QR 창 — 머리(그림 · 꼬리표 · 주아 제목 · 설명 · 닫기) / 본문(QR 액자 + 아이폰 · 안드로이드 순서) / 아래(안내 페이지 · 확인) */
 function AppInstallQrDialog({ onClose }: { onClose: () => void }) {
+    const { locale, menuLabel: labelText } = useI18n();
     const titleId = useId();
     const closeRef = useRef<HTMLButtonElement>(null);
     const close = useCallback(() => onClose(), [onClose]);
@@ -102,9 +106,9 @@ function AppInstallQrDialog({ onClose }: { onClose: () => void }) {
                     <div className="ddb-pf-titles">
                         <p className="ddb-pf-kicker">APP INSTALL</p>
                         <h2 id={titleId}><span className="ddb-pf-name">휴대폰</span>으로 댕다방 앱 받기</h2>
-                        <p className="ddb-pf-sub">휴대폰 카메라로 QR 코드를 찍으면 설치 안내가 열려요.</p>
+                        <p className="ddb-pf-sub">{labelText("휴대폰 카메라로 QR 코드를 찍으면 설치 안내가 열려요.")}</p>
                     </div>
-                    <button ref={closeRef} type="button" className="ddb-pf-close" onClick={close} aria-label="앱 설치 QR 닫기">
+                    <button ref={closeRef} type="button" className="ddb-pf-close" onClick={close} aria-label={labelText("앱 설치 QR 닫기")}>
                         <i className="fa-solid fa-xmark" aria-hidden="true" />
                     </button>
                 </header>
@@ -128,28 +132,28 @@ function AppInstallQrDialog({ onClose }: { onClose: () => void }) {
 
                         {/* 휴대폰별 순서 — 설치 안내 페이지(/app/)의 순서를 짧게 */}
                         <div className="ddb-aq-steps">
-                            <section className="ddb-pf-sec" data-tone="sky" aria-label="아이폰 설치 순서">
+                            <section className="ddb-pf-sec" data-tone="sky" aria-label={labelText("아이폰 설치 순서")}>
                                 <div className="ddb-aq-sec-head">
                                     <span className="ddb-aq-os" aria-hidden="true"><i className="fa-brands fa-apple" /></span>
-                                    <h3>아이폰</h3>
-                                    <em>홈 화면에 추가</em>
+                                    <h3>{labelText("아이폰")}</h3>
+                                    <em>{labelText("홈 화면에 추가")}</em>
                                 </div>
                                 <ol>
-                                    <li>QR을 찍고 <b>Safari</b>로 열어요</li>
-                                    <li>아래쪽 <b>공유</b> 버튼 → <b>홈 화면에 추가</b></li>
-                                    <li>홈 화면의 <b>댕다방</b> 아이콘으로 바로 열어요</li>
+                                    <li>{locale === "en" ? <>Scan the QR code and open it in <b>Safari</b></> : <>QR을 찍고 <b>Safari</b>로 열어요</>}</li>
+                                    <li>{locale === "en" ? <>Tap <b>Share</b>, then <b>Add to Home Screen</b></> : <>아래쪽 <b>공유</b> 버튼 → <b>{labelText("홈 화면에 추가")}</b></>}</li>
+                                    <li>{locale === "en" ? <>Tap the <b>댕다방</b> icon on your home screen</> : <>홈 화면의 <b>댕다방</b> 아이콘으로 바로 열어요</>}</li>
                                 </ol>
                             </section>
-                            <section className="ddb-pf-sec" aria-label="안드로이드 설치 순서">
+                            <section className="ddb-pf-sec" aria-label={labelText("안드로이드 설치 순서")}>
                                 <div className="ddb-aq-sec-head">
                                     <span className="ddb-aq-os" aria-hidden="true"><i className="fa-brands fa-android" /></span>
-                                    <h3>안드로이드</h3>
-                                    <em>앱 설치</em>
+                                    <h3>{labelText("안드로이드")}</h3>
+                                    <em>{labelText("앱 설치")}</em>
                                 </div>
                                 <ol>
-                                    <li>QR을 찍고 <b>삼성 인터넷</b>이나 <b>Chrome</b>으로 열어요</li>
-                                    <li>안내 페이지의 <b>앱 설치·업데이트</b>를 눌러요</li>
-                                    <li>받은 파일을 열고 <b>설치</b> 또는 <b>업데이트</b>를 눌러요</li>
+                                    <li>{locale === "en" ? <>Scan the QR code and open it in <b>Samsung Internet</b> or <b>Chrome</b></> : <>QR을 찍고 <b>삼성 인터넷</b>이나 <b>Chrome</b>으로 열어요</>}</li>
+                                    <li>{locale === "en" ? <>Tap <b>Install or update app</b> on the download page</> : <>안내 페이지의 <b>앱 설치·업데이트</b>를 눌러요</>}</li>
+                                    <li>{locale === "en" ? <>Open the downloaded file and tap <b>Install</b> or <b>Update</b></> : <>받은 파일을 열고 <b>설치</b> 또는 <b>업데이트</b>를 눌러요</>}</li>
                                 </ol>
                             </section>
                         </div>
@@ -157,10 +161,10 @@ function AppInstallQrDialog({ onClose }: { onClose: () => void }) {
                 </div>
 
                 <footer className="ddb-pf-foot">
-                    <p className="ddb-pf-hint"><i className="fa-solid fa-paw" aria-hidden="true" />설치하면 주소창 없이 앱처럼 열려요.</p>
+                    <p className="ddb-pf-hint"><i className="fa-solid fa-paw" aria-hidden="true" />{labelText("설치하면 주소창 없이 앱처럼 열려요.")}</p>
                     {/* 이 컴퓨터에서 설치 안내 페이지 보기 — 기존 /app/ 페이지 */}
-                    <Link href="/app/" className="ddb-pf-cancel" onClick={close}>설치 안내 페이지</Link>
-                    <button type="button" className="ddb-pf-save" onClick={close}>확인</button>
+                    <Link href="/app/" className="ddb-pf-cancel" onClick={close}>{labelText("설치 안내 페이지")}</Link>
+                    <button type="button" className="ddb-pf-save" onClick={close}>{labelText("확인")}</button>
                 </footer>
             </div>
         </div>,

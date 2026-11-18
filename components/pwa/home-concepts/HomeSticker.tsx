@@ -51,17 +51,18 @@ const HOME_INVITE = [
 
 /** 테이프로 붙인 카드 스티커 — 누르면 테이프째 들림 · 톡 = 이동 · 꾹 = 미리보기 */
 function StickerCard({ cover, i, note, onTap, onLongPress }: { cover: Cover; i: number; note: string; onTap: (el: HTMLElement) => void; onLongPress: (el: HTMLElement) => void }) {
+    const { locale, menuLabel: labelText } = useI18n();
     const rot = [-3, 2, -2][i];
     const { pressed, handlers } = usePressable({ onTap, onLongPress });
     return (
-        <div role="link" tabIndex={0} aria-label={`${cover.title} — ${note} (꾹 누르면 미리보기)`} {...handlers}
+        <div role="link" tabIndex={0} aria-label={locale === "en" ? `${labelText(cover.title)} — ${labelText(note)} (hold to preview)` : `${cover.title} — ${note} (꾹 누르면 미리보기)`} {...handlers}
             className={`st-place st-card relative block select-none ${pressed ? "is-pressed" : ""}`} style={{ ["--r" as string]: `${rot}deg`, ["--d" as string]: `${540 + i * 90}ms`, rotate: `${rot}deg` }}>
             <Tape className="st-card-tape -top-2.5 left-1/2 z-10 h-4 w-14 -translate-x-1/2" color={TAPE_COLORS[i]} style={{ rotate: `${-rot * 2}deg` }} />
             <span className="st-diecut-card block rounded-[11%/5.6%] bg-white p-[4px]">
                 <CoverArt cover={cover} sizes="33vw" className="rounded-[9.5%/4.9%]" />
             </span>
             {/* 메모 — 사진보다 조금 넓게까지(112%) 한 줄, 그래도 길면 두 줄(한 줄 고정이면 "10008C · 분석 1000회"처럼 긴 값이 메모 밖으로 넘침, 2026-10-17 화면 점검) */}
-            <PostIt color={NOTE_COLORS[i]} rot={i === 1 ? 5 : -5} className="-bottom-5 left-1/2 w-max max-w-[112%] -translate-x-1/2">{note}</PostIt>
+            <PostIt color={NOTE_COLORS[i]} rot={i === 1 ? 5 : -5} className="-bottom-5 left-1/2 w-max max-w-[112%] -translate-x-1/2">{labelText(note)}</PostIt>
         </div>
     );
 }
@@ -87,10 +88,12 @@ export default function HomeSticker() {
     const pastDays = today.recentDays.filter((d) => d.businessDate !== today.businessDate).slice(-6).map((d) => d.claimed);
     const past = member ? [...Array(Math.max(0, 6 - pastDays.length)).fill(false), ...pastDays] : Array(6).fill(false);
 
-    const date = now ? `${now.getMonth() + 1}월 ${now.getDate()}일 ${WEEK[wd].ko}요일` : "";
+    const date = now ? (locale === "en" ? now.toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric" }) : `${now.getMonth() + 1}월 ${now.getDate()}일 ${WEEK[wd].ko}요일`) : "";
     // 카드 스티커 위 포스트잇
     const notes = member
-        ? [`${today.streak}일 연속!`, `이번 주 출근 ${today.weeklyAttendanceProgress}/${today.weeklyAttendanceTarget}`, `${today.coins}C · 분석 ${Math.floor(today.coins / Math.max(1, today.analysisCoinCost))}회`]
+        ? locale === "en"
+            ? [`${today.streak}-day streak!`, `Weekly check-ins ${today.weeklyAttendanceProgress}/${today.weeklyAttendanceTarget}`, `${today.coins}C · ${Math.floor(today.coins / Math.max(1, today.analysisCoinCost))} scans`]
+            : [`${today.streak}일 연속!`, `이번 주 출근 ${today.weeklyAttendanceProgress}/${today.weeklyAttendanceTarget}`, `${today.coins}C · 분석 ${Math.floor(today.coins / Math.max(1, today.analysisCoinCost))}회`]
         : ["매일 출근 스티커", "누구나 구경 OK", "예시 결과 보기"];
 
     return (
@@ -116,10 +119,10 @@ export default function HomeSticker() {
                     <div className="relative flex min-h-[8.2rem] items-start">
                         <div className="relative z-[1] w-[60%] pt-2">
                             <span className="st-place block" style={{ ["--r" as string]: "-1deg", ["--d" as string]: "140ms" }}>
-                                <TriTitle text={member ? `${petName}, 안녕!` : "어서 와요!"} className="text-[1.6rem]" />
+                                <TriTitle text={member ? (locale === "en" ? `Hi, ${petName}!` : `${petName}, 안녕!`) : labelText("어서 와요!")} className="text-[1.6rem]" />
                             </span>
-                            <p className="ah-display mt-2 whitespace-nowrap text-[14px]">{member ? `${guardian}님, ${greeting(w.bucket)}` : "댕다방에 오신 걸 환영해요"}</p>
-                            <p className="ah-light mt-1 text-[12px]" style={{ color: TEXT_SOFT }}>{walkAdvice(w)}</p>
+                            <p className="ah-display mt-2 whitespace-nowrap text-[14px]">{member ? (locale === "en" ? `${labelText(greeting(w.bucket))}, ${guardian}!` : `${guardian}님, ${greeting(w.bucket)}`) : labelText("댕다방에 오신 걸 환영해요")}</p>
+                            <p className="ah-light mt-1 text-[12px]" style={{ color: TEXT_SOFT }}>{labelText(walkAdvice(w))}</p>
                         </div>
                         {/* 폴라로이드: 우리 아이(회원) / 검정 푸들(비회원) */}
                         <span className="st-place st-polaroid absolute right-0 top-0 block w-[7.4rem] bg-white p-1.5 pb-6" style={{ ["--r" as string]: "5deg", ["--d" as string]: "220ms", rotate: "5deg" }}>
@@ -136,7 +139,7 @@ export default function HomeSticker() {
                         {/* 동그란 날씨 스티커 */}
                         <span className="st-place st-diecut ah-display absolute -right-1.5 top-[7rem] z-[2] grid h-[3.3rem] w-[3.3rem] place-items-center rounded-full text-center text-[11px] leading-[1.05]"
                             style={{ ["--r" as string]: "-8deg", ["--d" as string]: "300ms", rotate: "-8deg", background: "linear-gradient(160deg,#fff6c9,#ffe08a)", color: "#8f5e12" }}>
-                            <span>{WEATHER_KO[w.weather]}<br />{w.temp === null ? "" : w.temp}<span className="ah-deg">°</span></span>
+                            <span>{locale === "en" && w.weather === "snow" ? "Snow" : labelText(WEATHER_KO[w.weather])}<br />{w.temp === null ? "" : w.temp}<span className="ah-deg">°</span></span>
                         </span>
                     </div>
 

@@ -93,6 +93,7 @@ export function BoneBurst({ x, y }: { x: number; y: number }) {
 
 /** 포스트잇 알림 — 탭바 위에 잠깐 */
 export function NoteToast({ text, onDone }: { text: string; onDone: () => void }) {
+    const { menuLabel: labelText } = useI18n();
     useEffect(() => {
         const id = window.setTimeout(onDone, 2200);
         return () => window.clearTimeout(id);
@@ -100,7 +101,7 @@ export function NoteToast({ text, onDone }: { text: string; onDone: () => void }
     return (
         <div role="status" className="note-toast st-postit ah-display fixed left-1/2 z-[2300] max-w-[86vw] -translate-x-1/2 px-4 py-2.5 text-[13.5px]"
             style={{ bottom: "calc(var(--app-tabbar-h, 88px) + 10px)", background: "#fff3a6" }}>
-            {text}
+            {labelText(text)}
         </div>
     );
 }

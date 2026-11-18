@@ -4,5 +4,5 @@ export function koreanMarkup(source) {
         .replace(/=\{labelText\(("(?:\\.|[^"\\])*")\)\}/g, "=$1")
         .replace(/\{labelText\(("(?:\\.|[^"\\])*")\)\}/g, (_, label) => JSON.parse(label))
         .replace(/<LocalizedMenuLabel label=\{("(?:\\.|[^"\\])*")\} \/>/g, (_, label) => JSON.parse(label))
-        .replace(/<LocalizedMenuLabel label=\{([\w.]+)\} \/>/g, "{$1}");
+        .replace(/<LocalizedMenuLabel label=\{([\w.]+)\}(?: english="[^"]*")? \/>/g, "{$1}");
 }

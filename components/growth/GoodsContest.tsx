@@ -81,9 +81,9 @@ function titleParts(title: string): string[] {
     return match ? [match[1], match[2]] : [title];
 }
 
-function formattedCampaignDate(value: string | null): string {
-    if (!value || !Number.isFinite(Date.parse(value))) return "기간 확인 중";
-    return new Intl.DateTimeFormat("ko-KR", {
+function formattedCampaignDate(value: string | null, locale: "ko" | "en"): string {
+    if (!value || !Number.isFinite(Date.parse(value))) return locale === "en" ? "Checking dates" : "기간 확인 중";
+    return new Intl.DateTimeFormat(locale === "en" ? "en-US" : "ko-KR", {
         timeZone: "Asia/Seoul",
         year: "numeric",
         month: "long",
@@ -153,7 +153,7 @@ export default function GoodsContest({
     content: GrowthGoodsContent;
     contentReady: boolean;
 }) {
-    const { menuLabel: labelText } = useI18n();
+    const { locale, menuLabel: labelText } = useI18n();
     const { hydrated, user } = useAuth();
     const accessToken = user?.apiAccessToken || "";
     // 휴대폰에서는 굿즈 카드를 8개씩 보여 주고 "굿즈 더보기"로 8개씩 더(2026-10-22 사용자) — 보이기만 바꿈, 선택 · 집계 동작은 그대로
@@ -524,8 +524,8 @@ export default function GoodsContest({
                                     <span className="dw-ichip dw-gcover-date">
                                         <i className="fa-regular fa-calendar" aria-hidden="true" />
                                         {/* 시작 · 끝을 덩이로 묶어 좁은 휴대폰에서는 "시작 ~ / 끝" 두 줄로만 꺾이게 */}
-                                        <span className="dw-gcover-when"><span className="sr-only">{labelText("공모 시작")} </span>{formattedCampaignDate(campaignStartsAt)} ~</span>{" "}
-                                        <span className="dw-gcover-when"><span className="sr-only">{labelText("공모 종료 예정")} </span>{formattedCampaignDate(campaignEndsAt)}</span>
+                                        <span className="dw-gcover-when"><span className="sr-only">{labelText("공모 시작")} </span>{formattedCampaignDate(campaignStartsAt, locale)} ~</span>{" "}
+                                        <span className="dw-gcover-when"><span className="sr-only">{labelText("공모 종료 예정")} </span>{formattedCampaignDate(campaignEndsAt, locale)}</span>
                                     </span>
                                     <span className={`dw-ichip ${campaignClosed ? "is-closed" : "is-open"}`}>
                                         <i className="fa-solid fa-circle-check" aria-hidden="true" />{labelText(campaignStatusLabel)}
@@ -657,7 +657,7 @@ export default function GoodsContest({
                                                 <div className="flex items-center justify-between gap-2 text-xs font-black">
                                                     <span className="text-neutral-950">{itemSummary.selectionCount.toLocaleString("ko-KR")}/{itemSummary.goal.toLocaleString("ko-KR")}{labelText("명")}</span>
                                                     <span className={itemSummary.productionEligible ? "text-emerald-700" : "text-neutral-500"}>
-                                                        {itemSummary.productionEligible ? "500명 달성" : `${itemSummary.remainingCount.toLocaleString("ko-KR")}명 남음`}
+                                                        {itemSummary.productionEligible ? labelText("500명 달성") : locale === "en" ? `${itemSummary.remainingCount.toLocaleString("en-US")} votes to go` : `${itemSummary.remainingCount.toLocaleString("ko-KR")}명 남음`}
                                                     </span>
                                                 </div>
                                                 <div
@@ -676,7 +676,7 @@ export default function GoodsContest({
                                                         ? "목표를 달성했어요. 최종 조건 안내 전에는 주문이 아닙니다."
                                                         : selectionOpen
                                                             ? "선택 수는 상품별로 집계되며 공모 기간 안에는 취소할 수 있어요."
-                                                            : "공모가 종료되어 최종 선택 수를 보존하고 있어요."}
+                                                            : labelText("공모가 종료되어 최종 선택 수를 보존하고 있어요.")}
                                                 </p>
                                             </>
                                         ) : (

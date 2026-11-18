@@ -337,7 +337,7 @@ export default function TermsPage() {
                                         {marker ? (
                                             <span className="font-black text-indigo-700">
                                                 <span aria-hidden="true">{marker.visible}</span>
-                                                <span className="sr-only">{marker.spoken}</span>
+                                                <span className="sr-only"><LocalizedMenuLabel label={marker.spoken} english={marker.kind === "clause" ? `Paragraph ${marker.spoken.match(/\d+/)?.[0]}` : `Item ${marker.spoken.match(/\d+/)?.[0]}`} /></span>
                                             </span>
                                         ) : null}
                                         <span><LocalizedMenuLabel label={line} /></span>
