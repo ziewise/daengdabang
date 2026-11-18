@@ -53,6 +53,7 @@ const MENU_IMG: Record<string, string> = {
 
 /** 메뉴 목록 (흰 메모 카드 · 줄 없음) */
 function LinedMenu({ items }: { items: readonly { icon: string; title: string; href: string }[] }) {
+    const { menuLabel: labelText } = useI18n();
     return (
         <ul className="st-lined mt-2">
             {items.map((m) => (
@@ -63,7 +64,7 @@ function LinedMenu({ items }: { items: readonly { icon: string; title: string; h
                         ) : (
                             <i aria-hidden="true" className={`fa-solid ${m.icon} w-5 text-center text-[14px] text-[#f48fac]`} />
                         )}
-                        <span className="ah-display flex-1 text-[14.5px]">{m.title}</span>
+                        <span className="ah-display flex-1 text-[14.5px]">{labelText(m.title)}</span>
                         <i aria-hidden="true" className="fa-solid fa-chevron-right text-[10px] text-[#c9b4a8]" />
                     </Link>
                 </li>
@@ -194,7 +195,7 @@ export default function StickerMy() {
                                 <p className="ah-light mt-1 text-[11.5px]" style={{ color: TEXT_SOFT }}>{memberAccountDisplay(user?.email, user?.authProvider)}</p>
                                 {/* 회원 등급 도장 — 협업자 등급 정의(lib/grades) 첫 단계 이름. 실제 등급 산정(서버 결제액 · 활동 점수)이 아직 연결되지 않아
                                     모두 첫 등급으로 통일(사용자 결정 2026-10-16). 연결되면 그 회원의 등급으로 바꾼다 */}
-                                <InkStamp rot={-10} color={FIRST_GRADE.color} className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 text-[13px]">{FIRST_GRADE.name}</InkStamp>
+                                <InkStamp rot={-10} color={FIRST_GRADE.color} className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 text-[13px]">{labelText(FIRST_GRADE.name)}</InkStamp>
                             </div>
 
                             {/* 이메일 인증하고 20C 받기 — 웹 지갑 카드(DaengLabWalletCard)와 같은 협업자 부품 · 같은 값(accessToken · accountEmail · hideWhenSettled).

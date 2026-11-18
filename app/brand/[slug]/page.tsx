@@ -1,3 +1,4 @@
+import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { byBrand, listBrands } from "@/lib/catalog";
@@ -32,7 +33,7 @@ export default async function BrandPage({ params }: PageProps) {
     return (
         <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6" data-collection-web="brand">
             <p className="text-sm font-black uppercase text-indigo-700">{brand.en}</p>
-            <h1 className="mt-2 text-3xl font-black tracking-tight text-neutral-950 md:text-4xl">{brand.ko || brand.en}</h1>
+            <h1 className="mt-2 text-3xl font-black tracking-tight text-neutral-950 md:text-4xl"><LocalizedMenuLabel label={brand.ko || brand.en} english={brand.en} /></h1>
             <div className="mt-6">
                 {/* 브랜드 상품 30개씩 페이지네이션 (30 넘으면 자동) */}
                 <PaginatedProductGrid products={products} />
@@ -46,7 +47,7 @@ export default async function BrandPage({ params }: PageProps) {
                 brand={{ visual: brandStyle(brand.slug, brand.en), en: brand.en }}
                 others={{
                     title: "다른 브랜드",
-                    items: listBrands().filter((item) => item.slug !== brand.slug).slice(0, 8).map((item) => ({ href: `/brand/${item.slug}`, label: item.ko || item.en, count: item.count })),
+                    items: listBrands().filter((item) => item.slug !== brand.slug).slice(0, 8).map((item) => ({ href: `/brand/${item.slug}`, label: item.ko || item.en, englishLabel: item.en, count: item.count })),
                     allHref: "/brands",
                     allLabel: "전체 브랜드",
                 }}

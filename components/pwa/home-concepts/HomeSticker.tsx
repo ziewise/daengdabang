@@ -67,7 +67,7 @@ function StickerCard({ cover, i, note, onTap, onLongPress }: { cover: Cover; i: 
 }
 
 export default function HomeSticker() {
-    const { menuLabel: labelText } = useI18n();
+    const { locale, menuLabel: labelText } = useI18n();
     const [session, setSession] = useDemoSession();
     const member = session === "member";
     const today = useTodayDemo(session);
@@ -160,7 +160,7 @@ export default function HomeSticker() {
                         <span className="hm-card relative flex items-center gap-3 rounded-[20px] py-3.5 pl-[5.6rem] pr-3.5" style={{ background: "linear-gradient(165deg, #fff3e8 0%, #ffe0c7 100%)", color: "#a8480f" }}>
                             <span className="min-w-0 flex-1">
                                 <span className="ah-display block text-[16px]">{labelText("쇼핑하러 가기")}</span>
-                                <span className="ah-light mt-0.5 block text-[11.5px] leading-snug opacity-80">{member ? `${petName}에게 맞는 용품 · 먹거리` : "산책 · 먹거리 · 생활 · 장난감 · 케어"}</span>
+                                <span className="ah-light mt-0.5 block text-[11.5px] leading-snug opacity-80">{member ? (locale === "en" ? `Supplies and treats for ${petName}` : `${petName}에게 맞는 용품 · 먹거리`) : labelText("산책 · 먹거리 · 생활 · 장난감 · 케어")}</span>
                             </span>
                             <span className="hm-go grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white/85 text-[11px] text-[#cf5f19]"><i aria-hidden="true" className="fa-solid fa-arrow-right" /></span>
                         </span>
@@ -187,7 +187,7 @@ export default function HomeSticker() {
                         <Link href="/chat/" className="hm-short st-place relative block" style={{ ["--r" as string]: "-2deg", ["--d" as string]: "820ms", rotate: "-2deg" }}>
                             <span className="hm-card relative flex h-full flex-col rounded-[20px] px-3.5 pb-3 pt-9" style={{ background: "#ece4ff", color: "#563fa8" }}>
                                 <span className="ah-display text-[14.5px]">{labelText("케어톡에 물어보기")}</span>
-                                <span className="ah-light mt-0.5 text-[11.5px] leading-snug opacity-80">{member ? `${petName} 산책 몇 분이 좋을까?` : "무엇이든 편하게 물어보세요"}</span>
+                                <span className="ah-light mt-0.5 text-[11.5px] leading-snug opacity-80">{member ? (locale === "en" ? `How long should I walk ${petName}?` : `${petName} 산책 몇 분이 좋을까?`) : labelText("무엇이든 편하게 물어보세요")}</span>
                                 <span className="hm-go mt-2 grid h-7 w-7 place-items-center self-end rounded-full bg-white/85 text-[10px] text-[#7457d8]"><i aria-hidden="true" className="fa-solid fa-chevron-right" /></span>
                             </span>
                             <Image src="/images/ui/stickers/home-caretalk.webp" alt="" width={140} height={140} className="hm-icon absolute -top-9 left-1.5 h-[4.4rem] w-[4.4rem]" style={{ ["--ir" as string]: "-8deg" }} />

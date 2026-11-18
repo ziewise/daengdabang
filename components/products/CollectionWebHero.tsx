@@ -9,6 +9,9 @@
  *  - 아래 목록 머리(상품 · 개수)
  * 서버에서 그림(상태 없음). 상품 목록 · 페이지 넘김은 각 페이지 그대로.
  */
+"use client";
+
+import { useI18n } from "@/lib/i18n";
 import Link from "next/link";
 import type { CatalogProduct, CategorySlug } from "@/lib/catalog";
 import { CATEGORY_LABEL } from "@/lib/catalog";
@@ -39,10 +42,11 @@ type Props = {
     /** 사진 · 로고가 없을 때 3D 그림 */
     art?: string;
     /** 다른 묶음 알약 */
-    others: { title: string; items: Array<{ href: string; label: string; count?: number }>; allHref: string; allLabel: string };
+    others: { title: string; items: Array<{ href: string; label: string; englishLabel?: string; count?: number }>; allHref: string; allLabel: string };
 };
 
 export default function CollectionWebHero({ kicker, title, lead, tone, products, brand, photo, art, others }: Props) {
+    const { locale, menuLabel: labelText } = useI18n();
     // 제품군별 개수
     const byCategory = CATEGORY_ORDER
         .map((slug) => ({ slug, count: products.filter((product) => product.category === slug).length }))
@@ -53,11 +57,11 @@ export default function CollectionWebHero({ kicker, title, lead, tone, products,
             <header className="cw-hero ddb-hero-band" data-tone={tone}>
                 <span className="cw-hero-text">
                     <span className="cw-kicker">{kicker}</span>
-                    <h1 className="cw-title">{title}</h1>
-                    <p className="cw-lead">{lead}</p>
+                    <h1 className="cw-title">{locale === "en" && brand ? brand.en : labelText(title)}</h1>
+                    <p className="cw-lead">{locale === "en" && brand ? `Explore ${products.length} products from ${brand.en}. Select an item for a closer look.` : labelText(lead)}</p>
                     <span className="cw-stats">
-                        <span><i className="fa-solid fa-box-open" aria-hidden="true" />상품 <b>{products.length}</b>개</span>
-                        {byCategory.length > 1 && <span><i className="fa-solid fa-layer-group" aria-hidden="true" />제품군 <b>{byCategory.length}</b>가지</span>}
+                        <span><i className="fa-solid fa-box-open" aria-hidden="true" />{labelText("상품")} <b>{products.length}</b>{locale === "ko" && "개"}</span>
+                        {byCategory.length > 1 && <span><i className="fa-solid fa-layer-group" aria-hidden="true" />{labelText("상품군")} <b>{byCategory.length}</b>{locale === "ko" && "가지"}</span>}
                     </span>
                 </span>
                 {brand ? (
@@ -79,31 +83,31 @@ export default function CollectionWebHero({ kicker, title, lead, tone, products,
             </header>
 
             {byCategory.length > 0 && (
-                <nav className="cw-cats" aria-label="구성">
+                <nav className="cw-cats" aria-label={labelText("구성")}>
                     {byCategory.map(({ slug, count }) => (
                         <Link key={slug} href={`/category/${slug}`}>
                             {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                             <img src={`${UI}${CAT_ART[slug]}`} alt="" aria-hidden="true" />
-                            {CATEGORY_LABEL[slug]}<small>{count}</small>
+                            {labelText(CATEGORY_LABEL[slug])}<small>{count}</small>
                         </Link>
                     ))}
                 </nav>
             )}
 
             {others.items.length > 0 && (
-                <nav className="cw-others" aria-label={others.title}>
-                    <span className="cw-others-t">{others.title}</span>
+                <nav className="cw-others" aria-label={labelText(others.title)}>
+                    <span className="cw-others-t">{labelText(others.title)}</span>
                     {others.items.map((item) => (
-                        <Link key={item.href} href={item.href}>{item.label}{typeof item.count === "number" && <small>{item.count}</small>}</Link>
+                        <Link key={item.href} href={item.href}>{locale === "en" && item.englishLabel ? item.englishLabel : labelText(item.label)}{typeof item.count === "number" && <small>{item.count}</small>}</Link>
                     ))}
-                    <Link href={others.allHref} className="is-all">{others.allLabel}<i className="fa-solid fa-arrow-right" aria-hidden="true" /></Link>
+                    <Link href={others.allHref} className="is-all">{labelText(others.allLabel)}<i className="fa-solid fa-arrow-right" aria-hidden="true" /></Link>
                 </nav>
             )}
 
             <div className="cw-list-h">
                 <span aria-hidden="true"><i className="fa-solid fa-paw" /></span>
-                <h2>상품</h2>
-                <em>{products.length}개</em>
+                <h2>{labelText("상품")}</h2>
+                <em>{products.length}{locale === "ko" && "개"}</em>
             </div>
         </div>
     );

@@ -4,7 +4,7 @@ import { writeFileSync } from "node:fs";
 const devtoolsEndpoint = "http://127.0.0.1:9222/json";
 // 2026-10-18: 앱은 /app/index.html 로 시작한 뒤 앱 틀(AppShell)이 새 앱 홈(/app/home-1/)으로 보낸다.
 // 예전 "댕다방 앱 홈"(/app/) 화면은 브라우저 설치 안내 페이지가 되어, 확인 기준을 새 앱 홈(비회원 인사 문구)으로 바꿈.
-const expectedText = "댕다방에 오신 걸 환영해요";
+const homeGreetings = { ko: "댕다방에 오신 걸 환영해요", en: "Welcome to 댕다방" };
 const expectedPath = "/app/home-1/";
 const maximumAttempts = 20;
 
@@ -36,6 +36,7 @@ function evaluateDocument(socket, expression = `(() => ({
     title: document.title,
     readyState: document.readyState,
     text: document.body?.innerText || "",
+    locale: document.documentElement.lang,
     nativeInteractiveMs: performance.getEntriesByName("ddb-native-interactive")[0]?.startTime ?? null,
     tabInteractive: typeof document.querySelector('.app-tabbar a[href="/app/sticker/shop/"]')?.onclick === "function",
 }))()`, timeoutMs = 5_000) {
@@ -161,7 +162,7 @@ async function verifyShoppingMedia(socket) {
     }
     screenshot("shelf-media");
     await evaluateDocument(socket, `window.scrollTo({top:0,behavior:'instant'})`);
-    await evaluateDocument(socket, `document.querySelector('nav[aria-label="상품군"] a').click()`);
+    await evaluateDocument(socket, `document.querySelector('nav a.shp-cat').click()`);
     let products;
     for (let attempt = 0; attempt < maximumAttempts; attempt++) {
         products = await evaluateDocument(socket, `(() => {
@@ -206,7 +207,7 @@ async function verifyShoppingMedia(socket) {
             if (photos.length && window.scrollY < 100) photos[0].scrollIntoView({block:'center'});
             return {photos:photos.map(image => ({src:image.currentSrc, width:image.naturalWidth, height:image.naturalHeight,
                 ready:image.complete && image.naturalWidth > 0 && !image.closest('.sh-photo')?.querySelector('[role="status"]')})),
-                retry:document.body.innerText.includes('사진 다시 불러오기')};
+                retry:/사진 다시 불러오기|Reload photo|Retry photo|Try.*photo again/i.test(document.body.innerText)};
         })()`);
         if (community.photos.length >= 2 && community.photos.every(photo => photo.ready)) break;
         await delay(1_000);
@@ -297,7 +298,7 @@ for (let attempt = 1; attempt <= maximumAttempts; attempt += 1) {
             // 끝에 index.html 이 붙은 시작 주소(/app/home-1/index.html)도 같은 앱 홈으로 본다(2026-10-18)
             && new URL(lastState.url).pathname.replace(/index\.html$/, "") === expectedPath
             && lastState.title.includes("댕다방")
-            && lastState.text.includes(expectedText)
+            && homeGreetings[lastState.locale] && lastState.text.includes(homeGreetings[lastState.locale])
             && lastState.tabInteractive
             && Number.isFinite(lastState.nativeInteractiveMs)
         ) {

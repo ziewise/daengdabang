@@ -95,8 +95,8 @@ export default function PetLensMemberGate({ compact = false, reason, service = "
                         suffixClassName="text-base font-black leading-tight text-neutral-950"
                     />
                 )}
-                <h2 className={`${daenglab ? "mt-2" : "mt-4"} text-xl font-black text-neutral-950`}>{title}</h2>
-                <p className="mt-3 text-sm font-bold leading-6 text-neutral-600">{message}</p>
+                <h2 className={`${daenglab ? "mt-2" : "mt-4"} text-xl font-black text-neutral-950`}>{labelText(title)}</h2>
+                <p className="mt-3 text-sm font-bold leading-6 text-neutral-600">{labelText(message)}</p>
                 {needsLogin ? (
                     <div className="mt-5 grid gap-2 sm:grid-cols-2">
                         <Link

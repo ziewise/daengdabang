@@ -97,7 +97,7 @@ export function PartnerWebIntro() {
                             <span className="bzw-card-art"><Art src={item.art} /></span>
                             <h3><LocalizedMenuLabel label={item.title} /></h3>
                             <p><LocalizedMenuLabel label={item.body} /></p>
-                            <span className="bzw-tags">{item.tags.map((tag) => <small key={tag}>{tag}</small>)}</span>
+                            <span className="bzw-tags">{item.tags.map((tag) => <small key={tag}><LocalizedMenuLabel label={tag} /></small>)}</span>
                         </article>
                     ))}
                 </div>
@@ -191,7 +191,7 @@ export function BulkWebIntro() {
                     <p className="bzw-kicker">QUICK CHECK</p>
                     <h2 id="bzw-memo-title"><LocalizedMenuLabel label={"상담 전에 알려주세요"} /></h2>
                     <ul>
-                        {CHECK_ITEMS.map((item) => <li key={item}><i className="fa-solid fa-check" aria-hidden="true" />{item}</li>)}
+                        {CHECK_ITEMS.map((item) => <li key={item}><i className="fa-solid fa-check" aria-hidden="true" /><LocalizedMenuLabel label={item} /></li>)}
                     </ul>
                 </aside>
             </section>
@@ -207,7 +207,7 @@ export function BulkWebIntro() {
                             <span className="bzw-card-art"><Art src={item.art} /></span>
                             <h3><LocalizedMenuLabel label={item.title} /></h3>
                             <p><LocalizedMenuLabel label={item.body} /></p>
-                            <span className="bzw-tags">{item.tags.map((tag) => <small key={tag}>{tag}</small>)}</span>
+                            <span className="bzw-tags">{item.tags.map((tag) => <small key={tag}><LocalizedMenuLabel label={tag} /></small>)}</span>
                         </article>
                     ))}
                 </div>

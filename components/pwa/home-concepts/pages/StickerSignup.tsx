@@ -247,7 +247,7 @@ export function Note({ tone, children }: { tone: "warn" | "error" | "info"; chil
 }
 
 export default function StickerSignup() {
-    const { menuLabel: labelText } = useI18n();
+    const { locale, menuLabel: labelText } = useI18n();
     const router = useRouter();
     const { login, updateMemberEmail, user } = useAuth();
     const redirect = useSyncExternalStore(subscribeToLocation, getClientRedirect, getServerRedirect);
@@ -825,7 +825,7 @@ export default function StickerSignup() {
                             <span className="mt-1.5 flex flex-wrap items-center gap-1" aria-label={labelText("가입 순서")}>
                                 {["약관", "계정 정보", "우리 아이"].map((label, i) => (
                                     <span key={label} className="ah-light inline-flex items-center gap-1 text-[10.5px] text-[#a8968d]">
-                                        {i > 0 ? <i aria-hidden="true" className="fa-solid fa-chevron-right text-[7px]" /> : null}{label}
+                                        {i > 0 ? <i aria-hidden="true" className="fa-solid fa-chevron-right text-[7px]" /> : null}{labelText(label)}
                                     </span>
                                 ))}
                             </span>
@@ -840,11 +840,11 @@ export default function StickerSignup() {
                         {SOCIAL.map((provider, i) => {
                             const state = providerState(provider.id);
                             return (
-                                <button key={provider.id} type="button" disabled={state !== "ready"} aria-label={`${provider.label}로 간편 가입`}
+                                <button key={provider.id} type="button" disabled={state !== "ready"} aria-label={locale === "en" ? `Sign up with ${labelText(provider.label)}` : `${provider.label}로 간편 가입`}
                                     onClick={() => { haptic("light"); setRoute(provider.id); setSocialError(""); setError(""); goTo("terms"); }}
                                     className="su-social-way flex flex-col items-center rounded-[14px] bg-white px-1 pb-2.5 pt-3 disabled:opacity-55" style={{ rotate: `${[-1.2, 0.8, -0.6][i]}deg` }}>
                                     <ProviderMark provider={provider} />
-                                    <span className="ah-display mt-1.5 text-[12.5px]">{provider.label}{labelText("로 시작")}</span>
+                                    <span className="ah-display mt-1.5 text-[12.5px]">{locale === "en" ? `Continue with ${labelText(provider.label)}` : `${provider.label}로 시작`}</span>
                                     {state === "checking" ? <span className="ah-light text-[10px] text-[#a8968d]">{labelText("확인 중")}</span> : null}
                                     {state === "off" && apiReady === true ? <span className="ah-light text-[10px] text-[#a8968d]">{labelText("준비 중")}</span> : null}
                                 </button>
@@ -880,8 +880,8 @@ export default function StickerSignup() {
                         <div className="su-paper mt-4 flex items-center gap-3 rounded-[16px] px-3.5 py-3">
                             <ProviderMark provider={socialInfo} small />
                             <span className="min-w-0 flex-1">
-                                <span className="ah-display block text-[13.5px]">{socialInfo.label}{labelText("에서 받는 정보")}</span>
-                                <span className="ah-light block text-[11px] leading-snug" style={{ color: TEXT_SOFT }}>{socialInfo.gives} {labelText("· 비밀번호는 받지 않아요")}</span>
+                                <span className="ah-display block text-[13.5px]">{labelText(socialInfo.label)}{labelText("에서 받는 정보")}</span>
+                                <span className="ah-light block text-[11px] leading-snug" style={{ color: TEXT_SOFT }}>{labelText(socialInfo.gives)} {labelText("· 비밀번호는 받지 않아요")}</span>
                             </span>
                         </div>
                     ) : null}
@@ -910,7 +910,7 @@ export default function StickerSignup() {
                                     {([["email", "이메일"], ["sms", "문자(SMS)"]] as const).map(([key, label]) => (
                                         <button key={key} type="button" aria-pressed={marketing[key]} onClick={() => { haptic("light"); setMarketing({ ...marketing, [key]: !marketing[key] }); }}
                                             className={`su-chip ah-display rounded-full px-3 py-1 text-[11.5px] ${marketing[key] ? "is-on" : ""}`}>
-                                            {marketing[key] ? <i aria-hidden="true" className="fa-solid fa-check mr-1 text-[9px]" /> : null}{label}
+                                            {marketing[key] ? <i aria-hidden="true" className="fa-solid fa-check mr-1 text-[9px]" /> : null}{labelText(label)}
                                         </button>
                                     ))}
                                 </div>

@@ -42,7 +42,7 @@ export default function StandardsDialogButton({ className, formHref, label = "ëŒ
     return (
         <>
             <button ref={openerRef} type="button" className={className} onClick={() => setOpen(true)} aria-haspopup="dialog" aria-expanded={open}>
-                {label}
+                {labelText(label)}
                 <i className="fa-solid fa-list-check" aria-hidden="true" />
             </button>
 
@@ -76,7 +76,7 @@ export default function StandardsDialogButton({ className, formHref, label = "ëŒ
                                     <span className="sdm-text">
                                         <small>{String(index + 1).padStart(2, "0")}</small>
                                         <b>{labelText(item.title)}</b>
-                                        <span>{item.short}</span>
+                                        <span>{labelText(item.short)}</span>
                                     </span>
                                 </li>
                             ))}

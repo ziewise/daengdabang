@@ -50,8 +50,8 @@ export default function GrowthPolicySummary() {
                             {POLICIES.map((policy, index) => (
                                 <article key={policy.title} className="p-5 sm:p-6">
                                     <Image src={POLICY_ART[index]} alt="" width={56} height={56} className="dw-policy-art" aria-hidden="true" />
-                                    <h3 className="mt-3 text-sm font-black text-neutral-950">{policy.title}</h3>
-                                    <p className="mt-2 text-xs font-bold leading-5 text-neutral-600">{policy.body}</p>
+                                    <h3 className="mt-3 text-sm font-black text-neutral-950">{labelText(policy.title)}</h3>
+                                    <p className="mt-2 text-xs font-bold leading-5 text-neutral-600">{labelText(policy.body)}</p>
                                 </article>
                             ))}
                         </div>

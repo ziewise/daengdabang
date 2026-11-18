@@ -129,12 +129,12 @@ export default function GrowthHub() {
                 <div className="dw-ccover is-yellow dw-thero mx-auto max-w-[1200px]">
                     <div className="dw-ccover-in dw-thero-in">
                         <div className="min-w-0">
-                            <span className="dw-chip dw-chip-mint"><i className="fa-solid fa-circle-check mr-1.5" aria-hidden="true" />{content.hero.badge}</span>
+                            <span className="dw-chip dw-chip-mint"><i className="fa-solid fa-circle-check mr-1.5" aria-hidden="true" />{labelText(content.hero.badge)}</span>
                             <p className="ddb-crayon-kicker dw-kicker mt-4">{content.hero.kicker}</p>
                             <h1 id="treasure-mine-title" className="ddb-crayon-title dw-h1">
-                                {content.hero.titlePrefix} <span className="ddb-crayon-underline">{content.hero.titleHighlight}</span>{content.hero.titleSuffix}
+                                {labelText(content.hero.titlePrefix)} <span className="ddb-crayon-underline">{labelText(content.hero.titleHighlight)}</span>{labelText(content.hero.titleSuffix)}
                             </h1>
-                            <p className="dw-lead">{content.hero.description}</p>
+                            <p className="dw-lead">{labelText(content.hero.description)}</p>
 
                             {/* 그림 탭 넷 — 고른 탭만 아래에 보임. 탭인 줄 알게 위에 안내 한 줄 + 손글씨 화살표(2026-10-22 사용자 선택 K3) */}
                             <div ref={tabBarRef} className="dw-thero-tabs">
@@ -161,7 +161,7 @@ export default function GrowthHub() {
                                             <Image src={tab.art} alt="" width={42} height={42} aria-hidden="true" />
                                             <span>
                                                 <b>{labelText(tab.label)}</b>
-                                                <small>{tab.helper}</small>
+                                                <small>{labelText(tab.helper)}</small>
                                             </span>
                                         </button>
                                     ))}
@@ -183,8 +183,8 @@ export default function GrowthHub() {
                 <section id="today-treasure" className="scroll-mt-40" aria-labelledby="today-treasure-title">
                     <div className="dw-section-head mx-auto max-w-[1200px] px-4 sm:px-6">
                         <p className="ddb-crayon-kicker dw-kicker">{content.today.kicker}</p>
-                        <h2 id="today-treasure-title" className="ddb-crayon-title ddb-crayon-underline dw-h2">{content.today.title}</h2>
-                        <p className="dw-sub">{content.today.description}</p>
+                        <h2 id="today-treasure-title" className="ddb-crayon-title ddb-crayon-underline dw-h2">{labelText(content.today.title)}</h2>
+                        <p className="dw-sub">{labelText(content.today.description)}</p>
                     </div>
 
                     {!hydrated ? (
@@ -328,20 +328,20 @@ function CommerceBridge({
             {/* 웹 쇼핑 메뉴와 같은 3D 그림(꾸밈) */}
             <Image src="/images/ui/shop-menu-all-128.webp" alt="" width={72} height={72} className="dw-bridge-art" aria-hidden="true" />
             <p className="dw-card-title">
-                {hasAiRecord
+                {labelText(hasAiRecord
                     ? content.aiRecordTitle
                     : hasPet
                         ? content.profileTitle
                         : isMember
                         ? content.memberTitle
-                        : content.guestTitle}
+                        : content.guestTitle)}
             </p>
-            <p className="dw-card-body">{content.description}</p>
+            <p className="dw-card-body">{labelText(content.description)}</p>
             <div className="mt-auto flex flex-wrap justify-center gap-2 pt-4">
                 <Link href={primaryHref} className="ddb-crayon-link ddb-attention-cta dw-pill dw-pill-main dw-pill-sm">
-                    {primaryLabel}
+                    {labelText(primaryLabel)}
                 </Link>
-                <Link href={content.secondaryCtaHref} className="ddb-motion-lift dw-pill dw-pill-sm">{content.secondaryCtaLabel}</Link>
+                <Link href={content.secondaryCtaHref} className="ddb-motion-lift dw-pill dw-pill-sm">{labelText(content.secondaryCtaLabel)}</Link>
             </div>
         </aside>
     );

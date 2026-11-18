@@ -11,6 +11,7 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import Link from "next/link";
 import { useMemo } from "react";
 import { CATALOG, CATEGORY_LABEL, SUBCAT_TO_CAT, SUBCATEGORY_LABEL, type CategorySlug, type SubcategorySlug } from "@/lib/catalog";
@@ -54,6 +55,7 @@ type Props = {
 };
 
 export default function ShopListHero({ pageCategory, category, subcategory, title, visibleCount, categoryLabel, subcategoryLabel, onCategory, onSubcategory }: Props) {
+    const { locale, menuLabel: labelText } = useI18n();
     const look = LOOK[pageCategory ?? category];
     // 제품군 · 세부별 상품 수, 브랜드 수(카탈로그 기준)
     const counts = useMemo(() => {
@@ -82,11 +84,11 @@ export default function ShopListHero({ pageCategory, category, subcategory, titl
             <section className="pl-hero ddb-hero-band" data-tone={look.tone} aria-labelledby="pl-hero-title">
                 <span className="pl-hero-text">
                     <span className="pl-kicker">{look.kicker}</span>
-                    <h1 id="pl-hero-title" className="pl-title">{displayTitle}</h1>
-                    <p className="pl-lead">{look.lead}</p>
+                    <h1 id="pl-hero-title" className="pl-title">{labelText(displayTitle)}</h1>
+                    <p className="pl-lead">{labelText(look.lead)}</p>
                     <span className="pl-stats">
-                        <span><i className="fa-solid fa-box-open" aria-hidden="true" />상품 <b>{visibleCount.toLocaleString("ko-KR")}</b>개</span>
-                        {brandCount > 0 && <span><i className="fa-solid fa-tag" aria-hidden="true" />브랜드 <b>{brandCount}</b>곳</span>}
+                        <span><i className="fa-solid fa-box-open" aria-hidden="true" />{labelText("상품")} <b>{visibleCount.toLocaleString("ko-KR")}</b>{locale === "ko" && "개"}</span>
+                        {brandCount > 0 && <span><i className="fa-solid fa-tag" aria-hidden="true" />{labelText("브랜드")} <b>{brandCount}</b>{locale === "ko" && "곳"}</span>}
                     </span>
                 </span>
                 <span className="pl-hero-art" aria-hidden="true">
@@ -96,10 +98,10 @@ export default function ShopListHero({ pageCategory, category, subcategory, titl
             </section>
 
             {/* ② 카테고리 칸 — 전체 + 제품군 다섯 */}
-            <nav className="pl-cats" aria-label="카테고리">
+            <nav className="pl-cats" aria-label={labelText("카테고리")}>
                 {(["all", ...CATEGORY_ORDER] as Array<CategorySlug | "all">).map((slug) => {
                     const on = pageCategory ? slug === pageCategory : slug === category;
-                    const label = slug === "all" ? "전체" : categoryLabel(slug, CATEGORY_LABEL[slug]);
+                    const label = slug === "all" ? labelText("전체") : categoryLabel(slug, CATEGORY_LABEL[slug]);
                     const inner = (
                         <>
                             <span className="pl-cat-art" aria-hidden="true">
@@ -107,7 +109,7 @@ export default function ShopListHero({ pageCategory, category, subcategory, titl
                                 <img src={`${UI}${TILE_ART[slug]}`} alt="" />
                             </span>
                             <b>{label}</b>
-                            <small>{(counts.byCategory[slug] ?? 0).toLocaleString("ko-KR")}개</small>
+                            <small>{(counts.byCategory[slug] ?? 0).toLocaleString("ko-KR")}{locale === "ko" && "개"}</small>
                         </>
                     );
                     // 제품군 페이지 — 다른 제품군 페이지로(전체는 전체상품)
@@ -129,9 +131,9 @@ export default function ShopListHero({ pageCategory, category, subcategory, titl
 
             {/* ③ 세부 알약 — 제품군을 골랐을 때 */}
             {subs.length > 0 && (
-                <div className="pl-subs" role="group" aria-label="세부 카테고리">
+                <div className="pl-subs" role="group" aria-label={labelText("세부 카테고리")}>
                     <button type="button" className={subcategory === "all" ? "is-on" : ""} aria-pressed={subcategory === "all"} onClick={() => onSubcategory("all")}>
-                        전체<small>{(counts.byCategory[scope] ?? 0).toLocaleString("ko-KR")}</small>
+                        {labelText("전체")}<small>{(counts.byCategory[scope] ?? 0).toLocaleString("ko-KR")}</small>
                     </button>
                     {subs.map((slug) => (
                         <button key={slug} type="button" className={subcategory === slug ? "is-on" : ""} aria-pressed={subcategory === slug} onClick={() => onSubcategory(slug)}>

@@ -149,7 +149,7 @@ export default function BizFormModal({ mode, formId, children }: { mode: Busines
                     <p>{labelText(look.body)}</p>
                 </div>
                 <button ref={openerRef} type="button" className="bzm-launch-btn" onClick={() => setOpen(true)} aria-haspopup="dialog" aria-expanded={open}>
-                    {look.button}
+                    {labelText(look.button)}
                     <i className="fa-solid fa-pen" aria-hidden="true" />
                 </button>
             </section>

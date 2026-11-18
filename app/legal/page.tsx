@@ -60,7 +60,7 @@ export default function LegalNoticePage() {
             >
                 {toc.map(([id, label]) => (
                     <a key={id} href={`#${id}`} className="hover:text-indigo-700">
-                        {label}
+                        <LocalizedMenuLabel label={label} />
                     </a>
                 ))}
             </nav>
@@ -72,8 +72,8 @@ export default function LegalNoticePage() {
                         <tbody>
                             {businessRows.map(([label, value]) => (
                                 <tr key={label} className="border-b border-neutral-100 align-top">
-                                    <th className="w-56 py-4 pr-4 font-black text-neutral-950">{label}</th>
-                                    <td className="py-4 font-bold leading-6 text-neutral-600">{value}</td>
+                                    <th className="w-56 py-4 pr-4 font-black text-neutral-950"><LocalizedMenuLabel label={label} /></th>
+                                    <td className="py-4 font-bold leading-6 text-neutral-600">{typeof value === "string" ? <LocalizedMenuLabel label={value} /> : value}</td>
                                 </tr>
                             ))}
                         </tbody>
@@ -113,7 +113,7 @@ export default function LegalNoticePage() {
             <section id="escrow" className="mt-8 scroll-mt-24 border-t border-neutral-200 pt-5">
                 <h2 className="text-lg font-black text-neutral-950"><LocalizedMenuLabel label={"3. 구매안전서비스"} /></h2>
                 <p className="mt-2 text-sm font-bold leading-7 text-neutral-600">
-                    <LocalizedMenuLabel label={"댕다방은 현금성 결제 이용자를 보호하기 위해"} /> {ESCROW_INFO.provider}<LocalizedMenuLabel label={"의"} /> {ESCROW_INFO.serviceName}
+                    <LocalizedMenuLabel label={"댕다방은 현금성 결제 이용자를 보호하기 위해"} /> <LocalizedMenuLabel label={ESCROW_INFO.provider} /><LocalizedMenuLabel label={"의"} /> <LocalizedMenuLabel label={ESCROW_INFO.serviceName} />
                     <LocalizedMenuLabel label={"서비스에 등록되어 있습니다. 구매안전서비스는 이용자의 결제대금이 정해진 확인 절차를 거쳐 판매자에게\n                    지급되도록 하는 매매보호 방식입니다."} />
                 </p>
                 <div className="mt-4 flex flex-wrap gap-3 text-sm font-bold">
@@ -186,7 +186,7 @@ export default function LegalNoticePage() {
                             rel="noopener noreferrer"
                             className="hover:text-neutral-950"
                         >
-                            {document.label}
+                            <LocalizedMenuLabel label={document.label} />
                         </a>
                     ))}
                 </div>

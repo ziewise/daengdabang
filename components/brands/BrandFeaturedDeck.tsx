@@ -16,7 +16,7 @@ import { useState, type MouseEvent } from "react";
 import type { BrandHubItem } from "./BrandsWebHub";
 
 export default function BrandFeaturedDeck({ brands }: { brands: BrandHubItem[] }) {
-    const { menuLabel: labelText } = useI18n();
+    const { locale, menuLabel: labelText } = useI18n();
     const [front, setFront] = useState(0);
     const total = brands.length;
     const next = () => setFront((value) => (value + 1) % total);
@@ -48,8 +48,8 @@ export default function BrandFeaturedDeck({ brands }: { brands: BrandHubItem[] }
                             <span className="bwh-feature-rank">BEST {index + 1}</span>
                             <span className="bwh-wordmark">{brand.visual.label ?? brand.en}</span>
                             <span className="bwh-feature-body">
-                                <b>{brand.ko || brand.en}</b>
-                                {brand.tagline ? <span>{brand.tagline}</span> : null}
+                                <b>{locale === "en" ? brand.en : brand.ko || brand.en}</b>
+                                {brand.tagline ? <span>{labelText(brand.tagline)}</span> : null}
                             </span>
                             <span className="bwh-feature-foot">
                                 <span className="bwh-count">{labelText("상품")} <b>{brand.count}</b></span>

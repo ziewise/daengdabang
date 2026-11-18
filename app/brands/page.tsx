@@ -62,7 +62,7 @@ export default function BrandsPage() {
                                     </span>
                                 </div>
                                 <div className="min-w-0 flex-1">
-                                    <h2 className="truncate text-lg font-black text-neutral-950">{brand.ko || brand.en}</h2>
+                                    <h2 className="truncate text-lg font-black text-neutral-950"><LocalizedMenuLabel label={brand.ko || brand.en} english={brand.en} /></h2>
                                     <p className="mt-1 truncate text-xs font-black uppercase text-neutral-500">{brand.en}</p>
                                 </div>
                                 <span className="flex h-9 min-w-9 shrink-0 items-center justify-center rounded-full bg-neutral-100 px-2 text-sm font-black text-neutral-700 transition group-hover:bg-neutral-950 group-hover:text-white">

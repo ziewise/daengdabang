@@ -19,7 +19,7 @@ export const coverHref = (c: Concept, key: "daily" | "show" | "lab") => pageHref
 /* ── 댕자랑 ── */
 // 댕자랑 게시물 — 서버 응답(ShowcasePost)을 폴라로이드 벽 모양으로 바꾼 것(show-feed.ts toPost)
 export type Post = {
-    id: string; authorId: string; author: string; official?: boolean; followers: number; date: string;
+    id: string; authorId: string; author: string; official?: boolean; followers: number; date: string; createdAt?: string;
     pet?: string; breed?: string; img: string; text: string; bones: number; followed: boolean; mine?: boolean; topic?: boolean;
     boned?: boolean; canDelete?: boolean; // 실제 피드: 내가 응원했는지 · 내가 지울 수 있는지(서버 값)
 };

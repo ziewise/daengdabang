@@ -394,9 +394,9 @@ export default function StickerDaily() {
                                         { label: "오늘 산책", value: today.done.walk_20 ? "20분 완료" : "기록 전", helper: today.done.walk_20 ? "오늘의 산책 XP가 반영됐어요" : "무리하지 않는 범위에서 시작하세요", icon: "fa-person-walking", tone: "#e3efff", ink: "#3d74c9" },
                                     ].map((m, i) => (
                                         <div key={m.label} className="dl-metric rounded-[12px] px-3 pb-2.5 pt-2.5" style={{ background: m.tone, rotate: `${[-0.6, 0.5, 0.5, -0.6][i]}deg` }}>
-                                            <span className="ah-light flex items-center gap-1.5 text-[11px]" style={{ color: m.ink }}><i aria-hidden="true" className={`fa-solid ${m.icon} text-[10px]`} />{m.label}</span>
+                                            <span className="ah-light flex items-center gap-1.5 text-[11px]" style={{ color: m.ink }}><i aria-hidden="true" className={`fa-solid ${m.icon} text-[10px]`} />{labelText(m.label)}</span>
                                             <span className="ah-display mt-0.5 block text-[18px] leading-tight">{m.value}</span>
-                                            <span className="ah-light block text-[10.5px] leading-snug" style={{ color: TEXT_SOFT }}>{m.helper}</span>
+                                            <span className="ah-light block text-[10.5px] leading-snug" style={{ color: TEXT_SOFT }}>{labelText(m.helper)}</span>
                                         </div>
                                     ))}
                                 </div>
@@ -439,7 +439,7 @@ export default function StickerDaily() {
                                             className={`st-postit dl-todo relative block px-2 pb-2.5 pt-2 text-center ${x.done ? "is-done" : ""}`}
                                             style={{ background: ["#fff3a6", "#ffd6e2", "#d9ecff"][i], rotate: `${[-1, 0.8, 0.8][i]}deg` }}>
                                             <i aria-hidden="true" className={`fa-solid ${x.icon} text-[15px] text-[#e0557f]`} />
-                                            <span className={`ah-display mt-1 block text-[12.5px] ${x.done ? "st-strike" : ""}`}>{x.title}</span>
+                                            <span className={`ah-display mt-1 block text-[12.5px] ${x.done ? "st-strike" : ""}`}>{labelText(x.title)}</span>
                                             <span className="ah-light block text-[10.5px] leading-tight">{x.done ? "완료했어요" : x.body}</span>
                                             {!x.done ? <span className="ah-display mt-1.5 inline-block rounded-full bg-white/85 px-2 py-0.5 text-[10.5px] text-[#e0557f]">{labelText("톡 해서 완료")}</span> : null}
                                             {x.done ? <InkStamp rot={-14} className="hc-slam absolute -right-1 -top-2 bg-white/70 text-[10.5px]">{labelText("완료")}</InkStamp> : null}
@@ -519,7 +519,7 @@ export default function StickerDaily() {
                                                     {/* 혜택 그림 스티커 — 누르면 카드와 함께 살짝 통통 */}
                                                     <Image src={CARD_IMAGES[c.id]} alt="" width={80} height={80} className="dl-art -ml-0.5 h-[2.5rem] w-[2.5rem]" style={{ rotate: `${[-6, 5, -4, 6][i]}deg` }} />
                                                     <span className="ah-display mt-2.5 block text-[13px] leading-snug">{labelText(c.title)}</span>
-                                                    <span className="ah-light block text-[11px]">{c.status}</span>
+                                                    <span className="ah-light block text-[11px]">{labelText(c.status)}</span>
                                                     <span className="ah-display mt-2 inline-flex items-center gap-1 text-[11px] text-[#e0557f]">{labelText("톡 해서 자세히")} <i aria-hidden="true" className="fa-solid fa-chevron-right text-[8px]" /></span>
                                                     {on ? <InkStamp rot={-14} className="hc-slam absolute -right-1 top-1 text-[11px]">{labelText("신청")}<br />{labelText("완료")}</InkStamp> : null}
                                                 </button>
@@ -576,12 +576,12 @@ export default function StickerDaily() {
                                             <div className={`gd-card relative mb-5 rounded-[14px] bg-white px-3.5 pb-3 pt-4 ${live ? "is-live" : ""}`} style={{ rotate: `${[-0.6, 0.5, -0.4, 0.6][i]}deg` }}>
                                                 <span className={`st-tape ah-display absolute -top-2.5 left-3 px-2.5 py-0.5 text-[10.5px] ${live ? "text-[#1f7a59]" : "text-[#8a6a58]"}`}
                                                     style={{ background: live ? "rgba(170,230,200,.9)" : "rgba(255,226,170,.85)", rotate: `${[-3, 2, -2, 3][i]}deg` }}>
-                                                    {c.status}
+                                                    {labelText(c.status)}
                                                 </span>
                                                 <p className="ah-display text-[15px] leading-snug">{labelText(c.title)}</p>
-                                                <p className="ah-light mt-1 line-clamp-2 text-[12.5px] leading-relaxed" style={{ color: TEXT_SOFT }}>{c.description}</p>
+                                                <p className="ah-light mt-1 line-clamp-2 text-[12.5px] leading-relaxed" style={{ color: TEXT_SOFT }}>{labelText(c.description)}</p>
                                                 <Link href={href} className="gd-go ah-display mt-2 inline-flex items-center gap-1 rounded-full bg-[#fff0f4] px-3 py-1 text-[11.5px] text-[#e0557f]">
-                                                    {c.cta} <i aria-hidden="true" className="fa-solid fa-chevron-right text-[8px]" />
+                                                    {labelText(c.cta)} <i aria-hidden="true" className="fa-solid fa-chevron-right text-[8px]" />
                                                 </Link>
                                             </div>
                                         </li>
@@ -605,10 +605,10 @@ export default function StickerDaily() {
                                                         className={`gd-row w-full rounded-[14px] px-2.5 py-2 text-left ${on ? "is-open" : ""}`} style={{ ["--seal" as string]: seal }}>
                                                         <span className="flex items-center gap-3">
                                                             <Image src={POLICY_IMAGES[i]} alt="" width={88} height={88} className="gd-seal h-10 w-10 shrink-0" />
-                                                            <span className="ah-display flex-1 text-[14px] leading-snug">{p.title}</span>
+                                                            <span className="ah-display flex-1 text-[14px] leading-snug">{labelText(p.title)}</span>
                                                             <i aria-hidden="true" className={`fa-solid fa-chevron-down text-[11px] text-[#c9a99c] transition-transform ${on ? "rotate-180" : ""}`} />
                                                         </span>
-                                                        <span className="dt-fold ah-light block pl-12 text-[12.5px] leading-relaxed" style={{ color: TEXT_SOFT }} data-open={on}>{p.body}</span>
+                                                        <span className="dt-fold ah-light block pl-12 text-[12.5px] leading-relaxed" style={{ color: TEXT_SOFT }} data-open={on}>{labelText(p.body)}</span>
                                                     </button>
                                                 </li>
                                             );
@@ -657,16 +657,16 @@ export default function StickerDaily() {
                                 <div className="bn-paper relative px-5 pb-2 pt-4">
                                     {/* 상태 도장 — 머리와 종이 경계에 걸쳐 찍힘(물결 가장자리에 잘리지 않게 종이 쪽에) */}
                                     <div className="relative z-[1] -mt-9 mb-1 flex justify-end pr-1">
-                                        <InkStamp rot={8} color={ink} className="bn-stamp bg-white/80 text-[10.5px] leading-tight">{c.status}</InkStamp>
+                                        <InkStamp rot={8} color={ink} className="bn-stamp bg-white/80 text-[10.5px] leading-tight">{labelText(c.status)}</InkStamp>
                                     </div>
-                                    <p className="bn-in ah-light text-[14px] leading-[1.75]" style={{ ["--d" as string]: "260ms" }}>{c.description}</p>
+                                    <p className="bn-in ah-light text-[14px] leading-[1.75]" style={{ ["--d" as string]: "260ms" }}>{labelText(c.description)}</p>
                                     <ul className="mt-2">
                                         {c.details.map((d, k) => (
                                             <li key={d} className="bn-in flex items-start gap-2 py-1.5" style={{ ["--d" as string]: `${320 + k * 90}ms` }}>
                                                 <svg viewBox="0 0 28 28" className="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true">
                                                     <path d="M7 14 L12 19 L23 6" fill="none" stroke="#ea4c7c" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="st-check" style={{ animationDelay: `${520 + k * 160}ms` }} />
                                                 </svg>
-                                                <span className="ah-light text-[13px] leading-snug">{d}</span>
+                                                <span className="ah-light text-[13px] leading-snug">{labelText(d)}</span>
                                             </li>
                                         ))}
                                     </ul>

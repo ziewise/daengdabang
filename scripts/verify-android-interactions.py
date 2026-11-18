@@ -22,9 +22,10 @@ def screen():
     return root
 
 def visible_node(root, label, exact=False):
+    labels = (label,) if isinstance(label, str) else label
     for n in root.iter('node'):
         values = (n.get('text', ''), n.get('content-desc', ''))
-        matches = label in values if exact else any(label in value for value in values)
+        matches = any(item in values for item in labels) if exact else any(item in value for item in labels for value in values)
         if not matches:
             continue
         bounds = list(map(int, re.findall(r'\d+', n.get('bounds', ''))))
@@ -59,18 +60,18 @@ try:
         start = time.monotonic()
         launch = adb('shell', 'am', 'start', '-W', '-n', PACKAGE+'/.MainActivity')
         assert 'GrantPermissionsActivity' not in launch, 'Startup must not open an unsolicited permission activity'
-        root = wait_for('댕다방에 오신 걸 환영해요')
+        root = wait_for(('댕다방에 오신 걸 환영해요', 'Welcome to 댕다방'))
         home_ms = round((time.monotonic()-start)*1000)
         start = time.monotonic()
-        tap(root, '쇼핑')
-        wait_for('댕댕이의 일상')
+        tap(root, ('쇼핑', 'Shop'))
+        wait_for(('댕댕이의 일상', 'for your dog'))
         shop_ms = round((time.monotonic()-start)*1000)
         adb('shell', 'input', 'swipe', '360', '1150', '360', '600', '350')
         time.sleep(2)
         (OUT/f'interaction-{run+1}.png').write_bytes(adb('exec-out', 'screencap', '-p', binary=True))
         root = screen()
-        tap(root, '홈')
-        wait_for('댕다방에 오신 걸 환영해요')
+        tap(root, ('홈', 'Home'))
+        wait_for(('댕다방에 오신 걸 환영해요', 'Welcome to 댕다방'))
         subprocess.run(['sh','scripts/assert-android-responsive.sh',str(OUT/f'interaction-{run+1}-logcat.txt')], check=True)
         timings.append({'run':run+1,'homeVisibleMs':home_ms,'shopVisibleMs':shop_ms,'launch':launch})
         print(json.dumps(timings[-1]), flush=True)

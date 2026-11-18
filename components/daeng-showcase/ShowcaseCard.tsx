@@ -52,9 +52,6 @@ type ShowcaseCardProps = {
     onNotice: (message: string, error?: boolean) => void;
 };
 
-function formatCreatedAt(value: string) {
-    return formatShowcaseDate(value);
-}
 
 export default function ShowcaseCard({
     post,
@@ -69,7 +66,7 @@ export default function ShowcaseCard({
     onDeleted,
     onNotice,
 }: ShowcaseCardProps) {
-    const { menuLabel: labelText } = useI18n();
+    const { locale, menuLabel: labelText } = useI18n();
     const [busy, setBusy] = useState<"follow" | "bone" | "delete" | "report" | "">("");
     const [reportOpen, setReportOpen] = useState(false);
     const [reportReason, setReportReason] = useState<ShowcaseReportReason>("spam");
@@ -319,10 +316,10 @@ export default function ShowcaseCard({
                     <span className="dw-sc-avatar" aria-hidden="true">{post.author.displayName.slice(0, 1)}</span>
                     <span className="min-w-0">
                         <h3 className="dw-sc-author-name">
-                            {post.author.displayName}
+                            {labelText(post.author.displayName)}
                             {post.author.isMe ? <span className="dw-sc-me">{labelText("나")}</span> : null}
                         </h3>
-                        <span className="dw-sc-author-meta">{labelText("팔로워")} {post.author.followerCount.toLocaleString("ko-KR")}{labelText("명 ·")} {formatCreatedAt(post.createdAt)}</span>
+                        <span className="dw-sc-author-meta">{locale === "en" ? `${post.author.followerCount.toLocaleString("en-US")} ${post.author.followerCount === 1 ? "follower" : "followers"} ·` : `팔로워 ${post.author.followerCount.toLocaleString("ko-KR")}명 ·`} {formatShowcaseDate(post.createdAt, locale)}</span>
                     </span>
                 </button>
                 {!post.author.isMe ? (
@@ -333,7 +330,7 @@ export default function ShowcaseCard({
                         aria-pressed={post.author.followedByMe}
                         className={`dw-sc-follow ${post.author.followedByMe ? "is-on" : ""}`}
                     >
-                        {busy === "follow" ? "처리 중" : post.author.followedByMe ? "팔로잉" : "팔로우"}
+                        {labelText(busy === "follow" ? "처리 중" : post.author.followedByMe ? "팔로잉" : "팔로우")}
                     </button>
                 ) : null}
             </div>
@@ -345,7 +342,7 @@ export default function ShowcaseCard({
                 open={detailOpen}
                 onClose={closeDetail}
                 busy={busy}
-                createdLabel={formatCreatedAt(post.createdAt)}
+                createdLabel={formatShowcaseDate(post.createdAt, locale)}
                 onBone={toggleBone}
                 onFollow={toggleFollow}
                 onShare={() => {

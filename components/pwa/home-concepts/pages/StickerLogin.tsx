@@ -187,7 +187,7 @@ export default function StickerLogin() {
                             </button>
                         </label>
                         <div className="pt-1">
-                            <Patch type="submit" disabled={loading}>{loading ? "로그인 중…" : checkoutRedirect ? "로그인하고 주문하기" : "로그인"}<i aria-hidden="true" className={`fa-solid ${checkoutRedirect ? "fa-arrow-right" : "fa-paw"} text-[14px]`} /></Patch>
+                            <Patch type="submit" disabled={loading}>{labelText(loading ? "로그인 중…" : checkoutRedirect ? "로그인하고 주문하기" : "로그인")}<i aria-hidden="true" className={`fa-solid ${checkoutRedirect ? "fa-arrow-right" : "fa-paw"} text-[14px]`} /></Patch>
                         </div>
                     </form>
                     <p className="mt-3 text-right">
@@ -217,7 +217,7 @@ export default function StickerLogin() {
                             </button>
                         </label>
                         <div className="pt-1">
-                            <Patch type="submit" disabled={loading}>{loading ? "로그인 중…" : checkoutRedirect ? "로그인하고 주문하기" : "로그인"}<i aria-hidden="true" className={`fa-solid ${checkoutRedirect ? "fa-arrow-right" : "fa-paw"} text-[14px]`} /></Patch>
+                            <Patch type="submit" disabled={loading}>{labelText(loading ? "로그인 중…" : checkoutRedirect ? "로그인하고 주문하기" : "로그인")}<i aria-hidden="true" className={`fa-solid ${checkoutRedirect ? "fa-arrow-right" : "fa-paw"} text-[14px]`} /></Patch>
                         </div>
                     </form>
                     <p className="mt-3 text-right">
@@ -326,7 +326,7 @@ function CheckoutWays({ checkoutRedirect, signupHref, form }: { checkoutRedirect
                 <div className="lg-social"><SocialAuthButtons mode="login" variant="compact" returnTo={checkoutRedirect} /></div>
                 <ul className="mt-4 flex flex-wrap justify-center gap-1.5" aria-label={labelText("회원 혜택")}>
                     {perks.map(([icon, label], k) => (
-                        <li key={label} className="lg-perk ah-light inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px]" style={{ rotate: `${[-1.5, 1, -0.8][k]}deg` }}><i aria-hidden="true" className={`fa-solid ${icon} text-[9.5px]`} />{label}</li>
+                        <li key={label} className="lg-perk ah-light inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px]" style={{ rotate: `${[-1.5, 1, -0.8][k]}deg` }}><i aria-hidden="true" className={`fa-solid ${icon} text-[9.5px]`} />{labelText(label)}</li>
                     ))}
                 </ul>
             </section>
@@ -346,7 +346,7 @@ function CheckoutWays({ checkoutRedirect, signupHref, form }: { checkoutRedirect
                     {flow.map(([title, sub], k) => (
                         <li key={title} className="flex items-start gap-1.5 rounded-[10px] bg-white/70 px-2 py-1.5">
                             <span className="ah-display grid h-5 w-5 shrink-0 place-items-center rounded-full bg-[#f5b445] text-[11px] text-white">{k + 1}</span>
-                            <span className="min-w-0"><span className="ah-display block text-[11.5px] leading-tight text-[#5a4038]">{title}</span><span className="ah-light block text-[10px] leading-tight text-[#8f5e12]">{sub}</span></span>
+                            <span className="min-w-0"><span className="ah-display block text-[11.5px] leading-tight text-[#5a4038]">{labelText(title)}</span><span className="ah-light block text-[10px] leading-tight text-[#8f5e12]">{labelText(sub)}</span></span>
                         </li>
                     ))}
                 </ol>

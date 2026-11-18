@@ -50,27 +50,27 @@ export default function CommerceCommunityExpansion() {
                                         <p className="dw-eyebrow">{card.eyebrow}</p>
                                         <h3 className="ddb-crayon-title dw-h3 break-keep"><LocalizedMenuLabel label={card.title} /></h3>
                                         <div className="mt-2 flex flex-wrap gap-1.5">
-                                            <span className={`rounded-full border px-2.5 py-1 text-[11px] font-black ${card.statusTone}`}>{card.status}</span>
+                                            <span className={`rounded-full border px-2.5 py-1 text-[11px] font-black ${card.statusTone}`}><LocalizedMenuLabel label={card.status} /></span>
                                             {card.activeFeature ? (
                                                 <span className="rounded-full border border-emerald-200 bg-white px-2.5 py-1 text-[11px] font-black text-emerald-800">
-                                                    {card.activeFeature}
+                                                    <LocalizedMenuLabel label={card.activeFeature} />
                                                 </span>
                                             ) : null}
                                         </div>
                                     </div>
                                 </div>
 
-                                <p className="dw-card-body break-keep">{card.description}</p>
+                                <p className="dw-card-body break-keep"><LocalizedMenuLabel label={card.description} /></p>
                                 <p className="dw-note break-keep">
                                     <i className="fa-solid fa-circle-info mr-1.5" aria-hidden="true" />
-                                    {card.guardrail}
+                                    <LocalizedMenuLabel label={card.guardrail} />
                                 </p>
 
                                 <Link
                                     href={card.href}
                                     className="ddb-motion-lift dw-pill dw-pill-sm dw-xcard-cta motion-reduce:transform-none motion-reduce:transition-none"
                                 >
-                                    {card.cta}
+                                    <LocalizedMenuLabel label={card.cta} />
                                     <i className="fa-solid fa-arrow-right ml-2 text-[10px] transition group-hover:translate-x-0.5 motion-reduce:transform-none motion-reduce:transition-none" aria-hidden="true" />
                                 </Link>
                             </article>

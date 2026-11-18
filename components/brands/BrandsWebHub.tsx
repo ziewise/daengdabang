@@ -86,8 +86,8 @@ export default function BrandsWebHub({ brands, productTotal, categoryTabs }: Pro
                         <header className="bwh-shelf-head">
                             <Image src={`/images/ui/${look.art}`} alt="" width={64} height={64} />
                             <span>
-                                <h2 id={`bwh-shelf-${shelf.slug}`}>{shelf.label}</h2>
-                                <small>{look.line}</small>
+                                <h2 id={`bwh-shelf-${shelf.slug}`}><LocalizedMenuLabel label={shelf.label} /></h2>
+                                <small><LocalizedMenuLabel label={look.line} /></small>
                             </span>
                             <b className="bwh-shelf-count">{shelf.brands.length}</b>
                         </header>
@@ -96,7 +96,7 @@ export default function BrandsWebHub({ brands, productTotal, categoryTabs }: Pro
                                 <li key={brand.slug}>
                                     <Link href={`/brand/${brand.slug}`} className="bwh-card" style={{ ["--b-bg" as string]: brand.visual.bg, ["--b-fg" as string]: brand.visual.fg, ["--b-line" as string]: brand.visual.line }}>
                                         <span className="bwh-card-plate">{brand.visual.label ?? brand.en}</span>
-                                        <span className="bwh-card-name">{brand.ko || brand.en}</span>
+                                        <span className="bwh-card-name"><LocalizedMenuLabel label={brand.ko || brand.en} english={brand.en} /></span>
                                         <span className="bwh-card-count">{brand.count}</span>
                                     </Link>
                                 </li>

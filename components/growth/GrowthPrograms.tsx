@@ -232,15 +232,15 @@ export default function GrowthPrograms() {
                                 <Image src={PROGRAM_ART[program.id]} alt="" width={104} height={104} aria-hidden="true" />
                             </span>
                             <p className="ddb-crayon-kicker dw-kicker mt-3">{program.eyebrow}</p>
-                            <h3 className="ddb-crayon-title dw-h3 mt-1">{program.title}</h3>
-                            <p className="mt-1.5 text-[12.5px] font-black text-[#5b45b0]">{program.status}</p>
+                            <h3 className="ddb-crayon-title dw-h3 mt-1">{labelText(program.title)}</h3>
+                            <p className="mt-1.5 text-[12.5px] font-black text-[#5b45b0]">{labelText(program.status)}</p>
 
-                            <p className="dw-card-body min-h-[44px]">{program.description}</p>
+                            <p className="dw-card-body min-h-[44px]">{labelText(program.description)}</p>
                             <ul className="dw-checks">
                                 {program.details.map((detail) => (
                                     <li key={detail}>
                                         <i className="fa-solid fa-check" aria-hidden="true" />
-                                        <span>{detail}</span>
+                                        <span>{labelText(detail)}</span>
                                     </li>
                                 ))}
                             </ul>
@@ -249,9 +249,9 @@ export default function GrowthPrograms() {
                                 <div className="dw-note mt-4">
                                     <Link href={program.existingFeature.href} className="inline-flex min-h-10 items-center gap-2 text-xs font-black text-sky-900 underline decoration-sky-300 underline-offset-4">
                                         <i className="fa-solid fa-location-crosshairs" aria-hidden="true" />
-                                        {program.existingFeature.label}
+                                        {labelText(program.existingFeature.label)}
                                     </Link>
-                                    <p className="mt-1 text-[10px] font-bold leading-4 text-sky-800">{program.existingFeature.helper}</p>
+                                    <p className="mt-1 text-[10px] font-bold leading-4 text-sky-800">{labelText(program.existingFeature.helper)}</p>
                                 </div>
                             ) : null}
 
@@ -297,7 +297,7 @@ export default function GrowthPrograms() {
                                             onClick={() => selectProgram(option.programId)}
                                             className="ddb-crayon-link inline-flex min-h-11 items-center justify-center rounded-full px-4 text-xs"
                                         >
-                                            {option.label}
+                                            {labelText(option.label)}
                                         </button>
                                     );
                                 })}
@@ -350,7 +350,7 @@ export default function GrowthPrograms() {
                                 <div>
                                     <p className="ddb-crayon-kicker text-xs">INTEREST CONSENT</p>
                                     <h3 ref={formHeadingRef} tabIndex={-1} className="ddb-crayon-title mt-1 text-2xl text-neutral-950 outline-none">
-                                        {growthInterestLabel(selectedProgram)}
+                                        {labelText(growthInterestLabel(selectedProgram))}
                                     </h3>
                                     <p className="mt-2 text-xs font-bold leading-5 text-neutral-600">
                                         {labelText("회원 계정으로만 접수합니다. 이름·이메일·건강정보·자유입력 메모는 이 화면에서 받지 않아요.")}

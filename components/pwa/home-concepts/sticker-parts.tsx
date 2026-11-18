@@ -24,7 +24,7 @@ export function DiaryTabs({ tabs, active, onPick, compact = false }: { tabs: { l
             {tabs.map((t, i) => (
                 <button key={t.label} type="button" role="tab" aria-selected={active === i} onClick={() => { if (i !== active) { haptic("light"); onPick(i); } }}
                     className={`dt-tab ah-display whitespace-nowrap ${active === i ? "is-on" : ""} ${compact ? "is-compact" : ""}`} style={{ ["--c" as string]: t.color }}>
-                    {t.label}
+                    {labelText(t.label)}
                 </button>
             ))}
         </div>

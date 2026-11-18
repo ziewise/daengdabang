@@ -17,9 +17,15 @@ export function formatPriceAmount(value: number, locale: "ko" | "en", currency: 
     return `${wonKorean.format(value)}원`;
 }
 
-export function formatShowcaseDate(value: string) {
+let showcaseEnglish: Intl.DateTimeFormat | undefined;
+
+export function formatShowcaseDate(value: string, locale: "ko" | "en" = "ko") {
     const date = new Date(value);
-    if (!Number.isFinite(date.getTime())) return "방금 전";
+    if (!Number.isFinite(date.getTime())) return locale === "en" ? "Just now" : "방금 전";
+    if (locale === "en") {
+        showcaseEnglish ??= new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+        return showcaseEnglish.format(date);
+    }
     // This feed has a fixed Korean label. Starting ICU's date formatter here
     // blocks the first photo cards, even when their images have already arrived.
     // Local Date getters retain the viewer's time zone and daylight-saving rules.

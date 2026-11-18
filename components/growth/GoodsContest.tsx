@@ -509,7 +509,7 @@ export default function GoodsContest({
                                 <p className="ddb-crayon-kicker dw-kicker">{content.kicker}</p>
                                 <h2 id="goods-contest-title" className="ddb-crayon-title ddb-crayon-underline dw-h2 break-keep">
                                     {/* 덩이마다 한 줄로 묶어(dw-gcover-title-part) 줄이 바뀔 때 뜻 단위로 꺾이게 */}
-                                    {titleParts(content.title).map((part, index) => (
+                                    {titleParts(labelText(content.title)).map((part, index) => (
                                         <Fragment key={part}>
                                             {index > 0 ? " " : null}
                                             <span className="dw-gcover-title-part">{part}</span>
@@ -517,7 +517,7 @@ export default function GoodsContest({
                                     ))}
                                 </h2>
                                 <p className="dw-sub">
-                                    {content.description}
+                                    {labelText(content.description)}
                                 </p>
                                 {/* 칩 — 위 줄 기간(두 칸 가득), 아래 줄 진행 상태 · 참여 대상(반씩) — 두 줄 양 끝이 맞게(2026-10-26 사용자) */}
                                 <div className="dw-intro-chips dw-gcover-chips">
@@ -528,7 +528,7 @@ export default function GoodsContest({
                                         <span className="dw-gcover-when"><span className="sr-only">{labelText("공모 종료 예정")} </span>{formattedCampaignDate(campaignEndsAt)}</span>
                                     </span>
                                     <span className={`dw-ichip ${campaignClosed ? "is-closed" : "is-open"}`}>
-                                        <i className="fa-solid fa-circle-check" aria-hidden="true" />{campaignStatusLabel}
+                                        <i className="fa-solid fa-circle-check" aria-hidden="true" />{labelText(campaignStatusLabel)}
                                     </span>
                                     <span className="dw-ichip is-violet"><i className="fa-solid fa-user-group" aria-hidden="true" />{labelText("회원·비회원 모두 참여")}</span>
                                 </div>
@@ -548,7 +548,7 @@ export default function GoodsContest({
                                     </span>
                                     <span className="sr-only">STEP {Number(step.number)} ({step.number})</span>
                                     <strong className="dw-dstep-title">{labelText(step.title)}</strong>
-                                    <p className="dw-dstep-body">{step.description}</p>
+                                    <p className="dw-dstep-body">{labelText(step.description)}</p>
                                 </li>
                             ))}
                         </ol>
@@ -643,12 +643,12 @@ export default function GoodsContest({
                                 </button>
 
                                 <div className="dw-goods-body flex flex-1 flex-col p-4 sm:p-5">
-                                    <h3 className="ddb-crayon-title dw-h3">{itemContent.name}</h3>
-                                    <p className="mt-2 min-h-10 text-xs font-bold leading-5 text-neutral-600">{itemContent.summary}</p>
+                                    <h3 className="ddb-crayon-title dw-h3">{labelText(itemContent.name)}</h3>
+                                    <p className="mt-2 min-h-10 text-xs font-bold leading-5 text-neutral-600">{labelText(itemContent.summary)}</p>
                                     {/* 예상 펀딩가 — 설명 아래 크게(폭신한 쿠션 카드 G8, 2026-10-22 사용자 선택) */}
                                     <p className="dw-goods-price">
                                         <span className="sr-only">{labelText("예상 펀딩가")} </span>{itemContent.expectedPriceKrw.toLocaleString("ko-KR")}{labelText("원")}
-                                        <small> · {catalogItem.priceUnit}</small>
+                                        <small> · {labelText(catalogItem.priceUnit)}</small>
                                     </p>
 
                                     <div className="mt-5">
@@ -722,7 +722,7 @@ export default function GoodsContest({
                                                 onClick={() => void toggleSelection(catalogItem.id, itemContent.active)}
                                                 className={`inline-flex min-h-11 w-full items-center justify-center rounded-full border px-4 text-xs font-black transition disabled:cursor-wait disabled:opacity-55 ${selected ? "dw-select-on" : "dw-select"}`}
                                             >
-                                                {pending ? <><i className="fa-solid fa-circle-notch fa-spin mr-2" aria-hidden="true" />{labelText("처리 중…")}</> : selected ? "선택 취소" : "이 굿즈 선택"}
+                                                {pending ? <><i className="fa-solid fa-circle-notch fa-spin mr-2" aria-hidden="true" />{labelText("처리 중…")}</> : labelText(selected ? "선택 취소" : "이 굿즈 선택")}
                                             </button>
                                         )}
                                     </div>
@@ -785,7 +785,7 @@ export default function GoodsContest({
                                 <span className="dw-round-title">{labelText("에스크로로 지켜요")}</span>
                             </button>
                             <div className="dw-round-body">
-                                <p>{content.escrowNotice}</p>
+                                <p>{labelText(content.escrowNotice)}</p>
                                 <p>{labelText("현금이 포함된 주문은 에스크로 계약과 배송 연동 준비가 확인된 뒤에만 결제를 열며, 현재 선택 단계에는 결제나 에스크로가 적용되지 않습니다.")}</p>
                             </div>
                             <Link href="/legal/escrow/" className="dw-round-go">{labelText("에스크로 안내 보기")} <i className="fa-solid fa-arrow-right text-[10px]" aria-hidden="true" /></Link>
@@ -834,9 +834,9 @@ export default function GoodsContest({
                             </div>
                             <figcaption className="dw-zoom-caption">
                                 <span className="dw-zoom-count">{zoomIndex + 1} / {total}</span>
-                                <strong>{zoomContent.name}</strong>
-                                <span className="dw-zoom-summary">{zoomContent.summary}</span>
-                                <span className="dw-zoom-price"><span className="sr-only">{labelText("예상 펀딩가")} </span>{zoomContent.expectedPriceKrw.toLocaleString("ko-KR")}{labelText("원")}<small> · {zoomItem.priceUnit}</small></span>
+                                <strong>{labelText(zoomContent.name)}</strong>
+                                <span className="dw-zoom-summary">{labelText(zoomContent.summary)}</span>
+                                <span className="dw-zoom-price"><span className="sr-only">{labelText("예상 펀딩가")} </span>{zoomContent.expectedPriceKrw.toLocaleString("ko-KR")}{labelText("원")}<small> · {labelText(zoomItem.priceUnit)}</small></span>
                             </figcaption>
                         </figure>
                     </div>
@@ -905,7 +905,7 @@ export default function GoodsContest({
                                 />
                                 {guestVerification.error ? <p role="alert" className="mt-2 text-xs font-bold text-rose-700">{guestVerification.error}</p> : null}
                                 <button type="submit" disabled={guestVerification.submitting} className="ddb-crayon-link mt-4 inline-flex min-h-12 w-full items-center justify-center rounded-full px-5 text-xs disabled:opacity-60">
-                                    {guestVerification.submitting ? <><i className="fa-solid fa-circle-notch fa-spin mr-2" aria-hidden="true" />{labelText("확인 중…")}</> : "확인하고 이 굿즈 선택"}
+                                    {guestVerification.submitting ? <><i className="fa-solid fa-circle-notch fa-spin mr-2" aria-hidden="true" />{labelText("확인 중…")}</> : labelText("확인하고 이 굿즈 선택")}
                                 </button>
                                 <button
                                     type="button"

@@ -174,8 +174,8 @@ export default function LocalCareFinder() {
                                         <Image src={CATEGORY_ART[category.id]} alt="" width={48} height={48} />
                                     </span>
                                     <span className="min-w-0">
-                                        <strong className="block text-sm font-black">{category.shortLabel}</strong>
-                                        <small className="mt-0.5 block truncate text-[10px] font-bold text-neutral-500">{category.helper}</small>
+                                        <strong className="block text-sm font-black">{labelText(category.shortLabel)}</strong>
+                                        <small className="mt-0.5 block truncate text-[10px] font-bold text-neutral-500">{labelText(category.helper)}</small>
                                     </span>
                                 </button>
                             );
@@ -188,7 +188,7 @@ export default function LocalCareFinder() {
                                 <Image src={CATEGORY_ART[selected.id]} alt="" width={120} height={120} />
                             </span>
                             <p className="ddb-crayon-kicker mt-4 text-[10px]">CURRENT LOCATION</p>
-                            <h3 className="ddb-crayon-title mt-1 text-2xl text-neutral-950">{labelText("내 주변")} {selected.label}</h3>
+                            <h3 className="ddb-crayon-title mt-1 text-2xl text-neutral-950">{labelText("내 주변")} {labelText(selected.label)}</h3>
                             <p className="mt-2 text-xs font-bold leading-5 text-neutral-600">{labelText("위치는 이 검색에만 사용하며 계정에 저장하지 않아요.")}</p>
                             <button
                                 type="button"
@@ -211,7 +211,7 @@ export default function LocalCareFinder() {
                             {stateForSelection.status === "idle" ? (
                                 <div className="grid min-h-64 place-items-center rounded-[26px] border-2 border-dashed border-cyan-200 bg-white/65 px-5 text-center">
                                     <div>
-                                        <h3 className="ddb-crayon-title text-2xl text-neutral-950">{selected.label} {labelText("후보를 준비할게요")}</h3>
+                                        <h3 className="ddb-crayon-title text-2xl text-neutral-950">{labelText(selected.label)} {labelText("후보를 준비할게요")}</h3>
                                         <p className="mt-2 text-xs font-bold leading-5 text-neutral-500">{labelText("현재 위치 버튼을 누르면 가까운 순으로 최대 5곳을 보여드려요.")}</p>
                                         <span className="dw-five" aria-hidden="true">{[1, 2, 3, 4, 5].map((n) => <span key={n}>{n}</span>)}</span>
                                     </div>
@@ -230,7 +230,7 @@ export default function LocalCareFinder() {
                                         <i className="fa-solid fa-location-dot text-3xl text-amber-600" aria-hidden="true" />
                                         <p className="mt-3 text-sm font-black leading-6 text-neutral-800">{stateForSelection.message}</p>
                                         <LocationRecoveryActions recovery={stateForSelection.recovery} onRetry={() => void search(selected.id, null)} />
-                                        <a href={stateForSelection.fallbackUrl} target="_blank" rel="noopener noreferrer" className="ddb-motion-lift mt-4 inline-flex min-h-11 items-center rounded-full border border-amber-300 bg-white px-5 text-xs font-black text-amber-900">{labelText("네이버지도에서")} {selected.shortLabel} {labelText("보기")}</a>
+                                        <a href={stateForSelection.fallbackUrl} target="_blank" rel="noopener noreferrer" className="ddb-motion-lift mt-4 inline-flex min-h-11 items-center rounded-full border border-amber-300 bg-white px-5 text-xs font-black text-amber-900">{labelText("네이버지도에서")} {labelText(selected.shortLabel)} {labelText("보기")}</a>
                                     </div>
                                 </div>
                             ) : stateForSelection.places.length ? (
@@ -238,7 +238,7 @@ export default function LocalCareFinder() {
                                     <div className="flex flex-wrap items-end justify-between gap-2">
                                         <div>
                                             <p className="ddb-crayon-kicker text-[10px]">NEARBY CANDIDATES</p>
-                                            <h3 className="ddb-crayon-title mt-1 text-2xl text-neutral-950">{labelText("가까운")} {selected.shortLabel} {labelText("후보")} {stateForSelection.places.length}{labelText("곳")}</h3>
+                                            <h3 className="ddb-crayon-title mt-1 text-2xl text-neutral-950">{labelText("가까운")} {labelText(selected.shortLabel)} {labelText("후보")} {stateForSelection.places.length}{labelText("곳")}</h3>
                                         </div>
                                         <span className="dw-place-sort"><i className="fa-solid fa-person-walking mr-1" aria-hidden="true" />{labelText("가까운 순")}</span>
                                     </div>
@@ -267,8 +267,8 @@ export default function LocalCareFinder() {
                                     <div>
                                         <i className="fa-solid fa-map text-3xl text-sky-700" aria-hidden="true" />
                                         <h3 className="ddb-crayon-title mt-3 text-2xl text-neutral-950">{labelText("지도 검색은 계속할 수 있어요")}</h3>
-                                        <p className="mt-2 text-xs font-bold leading-5 text-neutral-600">{labelText("확인된 업체명을 바로 불러오지 못했어요. 네이버지도에서 현재 위치 주변")} {selected.shortLabel}{labelText("을 확인해 주세요.")}</p>
-                                        <a href={stateForSelection.fallbackUrl} target="_blank" rel="noopener noreferrer" className="ddb-motion-lift mt-4 inline-flex min-h-11 items-center rounded-full bg-indigo-700 px-5 text-xs font-black text-white">{labelText("네이버지도에서")} {selected.shortLabel} {labelText("보기")}</a>
+                                        <p className="mt-2 text-xs font-bold leading-5 text-neutral-600">{labelText("확인된 업체명을 바로 불러오지 못했어요. 네이버지도에서 현재 위치 주변")} {labelText(selected.shortLabel)}{labelText("을 확인해 주세요.")}</p>
+                                        <a href={stateForSelection.fallbackUrl} target="_blank" rel="noopener noreferrer" className="ddb-motion-lift mt-4 inline-flex min-h-11 items-center rounded-full bg-indigo-700 px-5 text-xs font-black text-white">{labelText("네이버지도에서")} {labelText(selected.shortLabel)} {labelText("보기")}</a>
                                     </div>
                                 </div>
                             )}

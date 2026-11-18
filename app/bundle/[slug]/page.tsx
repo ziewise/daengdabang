@@ -50,13 +50,13 @@ export default async function BundleDetailPage({ params }: PageProps) {
                 <div className="relative z-10 mx-auto grid min-h-[520px] max-w-[1280px] items-end gap-8 px-4 pb-10 pt-16 md:grid-cols-[minmax(0,1fr)_360px] md:px-6">
                     <div>
                         <div className="flex flex-wrap gap-2">
-                            <span className="rounded-full bg-white px-3 py-1 text-xs font-black text-neutral-950">{bundleCustomerBadge(bundle)}</span>
+                            <span className="rounded-full bg-white px-3 py-1 text-xs font-black text-neutral-950"><LocalizedMenuLabel label={bundleCustomerBadge(bundle)} /></span>
                             <span className="rounded-full bg-white/14 px-3 py-1 text-xs font-black text-white ring-1 ring-white/24">
                                 {bundle.products.length}<LocalizedMenuLabel label={"종 세트"} />
                             </span>
                         </div>
-                        <h1 className="mt-4 max-w-3xl text-4xl font-black leading-tight md:text-6xl">{bundle.title}</h1>
-                        <p className="mt-5 max-w-2xl text-base font-bold leading-7 text-white/86 md:text-lg">{bundle.story}</p>
+                        <h1 className="mt-4 max-w-3xl text-4xl font-black leading-tight md:text-6xl"><LocalizedMenuLabel label={bundle.title} /></h1>
+                        <p className="mt-5 max-w-2xl text-base font-bold leading-7 text-white/86 md:text-lg"><LocalizedMenuLabel label={bundle.story} /></p>
                     </div>
                     <aside className="rounded-lg border border-white/16 bg-white/94 p-5 text-neutral-950 shadow-card backdrop-blur">
                         <p className="ddb-sale-label ddb-sale-label--compact"><LocalizedMenuLabel label={"세트가"} /></p>
@@ -67,7 +67,7 @@ export default async function BundleDetailPage({ params }: PageProps) {
                             </div>
                             <span className="rounded-full bg-rose-600 px-3 py-1 text-sm font-black text-white">{bundle.discountRate}%</span>
                         </div>
-                        <p className="mt-3 text-sm font-bold leading-6 text-neutral-600">{bundle.subtitle}</p>
+                        <p className="mt-3 text-sm font-bold leading-6 text-neutral-600"><LocalizedMenuLabel label={bundle.subtitle} /></p>
                         <div className="mt-5 flex flex-wrap gap-2">
                             <BundleAddButton productIds={bundle.products.map((product) => product.id)} />
                             <Link href="/bundles" className="btn btn-secondary"><LocalizedMenuLabel label={"다른 세트 보기"} /></Link>
@@ -81,7 +81,7 @@ export default async function BundleDetailPage({ params }: PageProps) {
                     <aside className="surface h-fit p-5">
                         <p className="text-xs font-black text-indigo-700"><LocalizedMenuLabel label={"추천 이유"} /></p>
                         <h2 className="mt-2 text-2xl font-black text-neutral-950"><LocalizedMenuLabel label={"함께 쓰는 흐름까지 맞췄어요"} /></h2>
-                        <p className="mt-3 text-sm font-bold leading-6 text-neutral-600">{bundle.reason}</p>
+                        <p className="mt-3 text-sm font-bold leading-6 text-neutral-600"><LocalizedMenuLabel label={bundle.reason} /></p>
                         <div className="mt-5 grid gap-2">
                             <div className="flex items-center justify-between text-sm font-bold text-neutral-600">
                                 <span><LocalizedMenuLabel label={"포함 상품"} /></span>

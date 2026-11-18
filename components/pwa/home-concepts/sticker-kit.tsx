@@ -97,7 +97,7 @@ export function LoginInvite({ redirect = "/app/home-1/", title = ["로그인하�
                     </li>
                 ))}
             </ul>
-            <Patch href={appLoginHref(redirect)} className="mt-4">{cta}<i aria-hidden="true" className="fa-solid fa-paw text-[14px]" /></Patch>
+            <Patch href={appLoginHref(redirect)} className="mt-4">{labelText(cta)}<i aria-hidden="true" className="fa-solid fa-paw text-[14px]" /></Patch>
             <Link href={appSignupHref(redirect)} className="ah-display mt-3 block text-center text-[13px]" style={{ color: "#ea4c7c" }}>
                 {labelText("처음이에요 · 가입하면")} {SIGNUP_BONUS_COINS}{labelText("코인 선물")}
             </Link>

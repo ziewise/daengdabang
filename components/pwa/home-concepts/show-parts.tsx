@@ -11,6 +11,7 @@
  * 모양: 다이어리 속지(점 모눈, 줄 없음) · 마스킹테이프 손잡이 · 폴라로이드 · 메모지 · 라벨 스티커 · 체크 스티커 · 자수 와펜 버튼.
  */
 
+import { formatShowcaseDate } from "@/lib/display-format";
 import { useI18n } from "@/lib/i18n";
 import Image from "next/image";
 import { PostPhoto, AuthorDot, Sheet } from "./show-parts-base";
@@ -207,7 +208,7 @@ export function PostDetail({ post, boned, member, confirmDelete, onBone, onFollo
     post: Post; boned: boolean; member: boolean; confirmDelete: boolean;
     onBone: () => void; onFollow: () => void; onAuthor: () => void; onShare: () => void; onReport: () => void; onDelete: () => void; onConfirmDelete: (v: boolean) => void;
 }) {
-    const { menuLabel: labelText } = useI18n();
+    const { menuLabel: labelText, locale } = useI18n();
     return (
         <div className="pk-body px-4 pb-2 pt-4" style={{ color: TEXT }}>
             {/* 작성자 줄 */}
@@ -215,8 +216,8 @@ export function PostDetail({ post, boned, member, confirmDelete, onBone, onFollo
                 <button type="button" onClick={onAuthor} className="flex min-w-0 flex-1 items-center gap-2.5 text-left" aria-label={`${post.author} 프로필 보기`}>
                     <AuthorDot name={post.author} />
                     <span className="min-w-0">
-                        <span className="ah-display flex items-center gap-1.5 text-[14.5px]">{post.author}{post.mine ? <span className="rounded-full bg-[#ffe1ea] px-1.5 py-px text-[10px] text-[#e0557f]">{labelText("나")}</span> : null}</span>
-                        <span className="ah-light block text-[11px]" style={{ color: TEXT_SOFT }}>{labelText("팔로워")} {post.followers.toLocaleString("ko-KR")}{labelText("명 ·")} {post.date}</span>
+                        <span className="ah-display flex items-center gap-1.5 text-[14.5px]">{labelText(post.author)}{post.mine ? <span className="rounded-full bg-[#ffe1ea] px-1.5 py-px text-[10px] text-[#e0557f]">{labelText("나")}</span> : null}</span>
+                        <span className="ah-light block text-[11px]" style={{ color: TEXT_SOFT }}>{locale === "en" ? `${post.followers} ${post.followers === 1 ? "follower" : "followers"} ·` : `팔로워 ${post.followers.toLocaleString("ko-KR")}명 ·`} {post.createdAt ? formatShowcaseDate(post.createdAt, locale) : labelText(post.date)}</span>
                     </span>
                 </button>
                 {!post.mine ? (
