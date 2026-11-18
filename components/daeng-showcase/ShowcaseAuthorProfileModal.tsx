@@ -12,6 +12,7 @@ import ShowcaseThumbnail from "./ShowcaseThumbnail";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import {
+    showcaseDisplayName,
     loadShowcaseAuthorProfile,
     setShowcaseFollow,
     ShowcaseApiError,
@@ -151,7 +152,7 @@ export default function ShowcaseAuthorProfileModal({
                                 {profile.author.displayName.slice(0, 1)}
                             </span>
                             <div className="min-w-0 flex-1">
-                                <h3 className="truncate text-xl font-black text-neutral-950">{profile.author.displayName}</h3>
+                                <h3 className="truncate text-xl font-black text-neutral-950">{showcaseDisplayName(profile.author.displayName, labelText)}</h3>
                                 <dl className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-xs font-bold text-neutral-600">
                                     <div><dt className="inline">{labelText("게시물")} </dt><dd className="inline font-black text-neutral-950">{profile.postCount.toLocaleString("ko-KR")}</dd></div>
                                     <div><dt className="inline">{labelText("팔로워")} </dt><dd className="inline font-black text-neutral-950">{profile.author.followerCount.toLocaleString("ko-KR")}</dd></div>

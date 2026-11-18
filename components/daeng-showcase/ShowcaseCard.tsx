@@ -17,6 +17,7 @@ import { useWebConfirm } from "@/components/site/useWebConfirm";
 // 웹/앱 문구 갈림(웹은 해요체, 2026-10-26)
 import { useWebScreen } from "@/hooks/useWebScreen";
 import {
+    showcaseDisplayName,
     deleteShowcasePost,
     reportShowcasePost,
     setShowcaseBone,
@@ -316,7 +317,7 @@ export default function ShowcaseCard({
                     <span className="dw-sc-avatar" aria-hidden="true">{post.author.displayName.slice(0, 1)}</span>
                     <span className="min-w-0">
                         <h3 className="dw-sc-author-name">
-                            {labelText(post.author.displayName)}
+                            {showcaseDisplayName(post.author.displayName, labelText)}
                             {post.author.isMe ? <span className="dw-sc-me">{labelText("나")}</span> : null}
                         </h3>
                         <span className="dw-sc-author-meta">{locale === "en" ? `${post.author.followerCount.toLocaleString("en-US")} ${post.author.followerCount === 1 ? "follower" : "followers"} ·` : `팔로워 ${post.author.followerCount.toLocaleString("ko-KR")}명 ·`} {formatShowcaseDate(post.createdAt, locale)}</span>

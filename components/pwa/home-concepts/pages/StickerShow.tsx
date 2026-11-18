@@ -25,6 +25,7 @@
  */
 
 import { useI18n } from "@/lib/i18n";
+import { showcaseDisplayName } from "@/lib/daeng-showcase";
 import { appLoginHref } from "@/components/app-shell/appTabs";
 import Image from "next/image";
 import Link from "next/link";
@@ -782,7 +783,7 @@ export default function StickerShow() {
                                             </div>
                                             <div className="mt-1.5 flex items-center gap-1.5 px-0.5">
                                                 <AuthorDot name={p.author} size="h-6 w-6 text-[10.5px]" />
-                                                <span className="ah-display min-w-0 flex-1 truncate text-[12.5px]">{p.author}</span>
+                                                <span className="ah-display min-w-0 flex-1 truncate text-[12.5px]">{showcaseDisplayName(p.author, labelText)}</span>
                                                 <button type="button" aria-pressed={on} aria-label={`응원 ${p.bones}`} onClick={() => (member ? (haptic("light"), cheer(p.id, !on)) : goLogin())}
                                                     className={`ah-display flex shrink-0 items-center gap-1 text-[12px] ${on ? "text-[#e0557f]" : "text-[#9c8f88]"}`}>
                                                     <i aria-hidden="true" className={`fa-solid fa-bone ${on ? "hc-pop" : ""}`} />{p.bones}

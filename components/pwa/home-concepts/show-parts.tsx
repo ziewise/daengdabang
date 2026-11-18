@@ -13,6 +13,7 @@
 
 import { formatShowcaseDate } from "@/lib/display-format";
 import { useI18n } from "@/lib/i18n";
+import { showcaseDisplayName } from "@/lib/daeng-showcase";
 import Image from "next/image";
 import { PostPhoto, AuthorDot, Sheet } from "./show-parts-base";
 export { PostPhoto, AuthorDot, Sheet, SHOW_PARTS_CSS } from "./show-parts-base";
@@ -216,7 +217,7 @@ export function PostDetail({ post, boned, member, confirmDelete, onBone, onFollo
                 <button type="button" onClick={onAuthor} className="flex min-w-0 flex-1 items-center gap-2.5 text-left" aria-label={`${post.author} 프로필 보기`}>
                     <AuthorDot name={post.author} />
                     <span className="min-w-0">
-                        <span className="ah-display flex items-center gap-1.5 text-[14.5px]">{labelText(post.author)}{post.mine ? <span className="rounded-full bg-[#ffe1ea] px-1.5 py-px text-[10px] text-[#e0557f]">{labelText("나")}</span> : null}</span>
+                        <span className="ah-display flex items-center gap-1.5 text-[14.5px]">{showcaseDisplayName(post.author, labelText)}{post.mine ? <span className="rounded-full bg-[#ffe1ea] px-1.5 py-px text-[10px] text-[#e0557f]">{labelText("나")}</span> : null}</span>
                         <span className="ah-light block text-[11px]" style={{ color: TEXT_SOFT }}>{locale === "en" ? `${post.followers} ${post.followers === 1 ? "follower" : "followers"} ·` : `팔로워 ${post.followers.toLocaleString("ko-KR")}명 ·`} {post.createdAt ? formatShowcaseDate(post.createdAt, locale) : labelText(post.date)}</span>
                     </span>
                 </button>
@@ -279,10 +280,10 @@ export function ProfileSheet({ open, onClose, head, profile, error, onFollow, on
     const stats: [string, number | null][] = [["게시물", profile?.postCount ?? null], ["팔로워", profile?.followers ?? null], ["받은 응원", profile?.received ?? null]];
     return (
         <Sheet open={open} onClose={onClose} label={labelText("작성자 프로필")}
-            title={<div className="flex items-center gap-2.5"><AuthorDot name={head.name} size="h-11 w-11 text-[17px]" /><p className="ah-display text-[18px]">{head.name}</p></div>}>
+            title={<div className="flex items-center gap-2.5"><AuthorDot name={head.name} size="h-11 w-11 text-[17px]" /><p className="ah-display text-[18px]">{showcaseDisplayName(head.name, labelText)}</p></div>}>
             <div className="mt-1 grid grid-cols-3 gap-2 text-center">
                 {stats.map(([k, v]) => (
-                    <span key={k} className="sp-stat rounded-[12px] px-2 py-2.5"><span className="ah-display block text-[17px]">{v === null ? "·" : v.toLocaleString("ko-KR")}</span><span className="ah-light text-[11px]" style={{ color: TEXT_SOFT }}>{k}</span></span>
+                    <span key={k} className="sp-stat rounded-[12px] px-2 py-2.5"><span className="ah-display block text-[17px]">{v === null ? "·" : v.toLocaleString("ko-KR")}</span><span className="ah-light text-[11px]" style={{ color: TEXT_SOFT }}>{labelText(k)}</span></span>
                 ))}
             </div>
             {error ? (
