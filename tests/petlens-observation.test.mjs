@@ -1,10 +1,11 @@
+import { koreanMarkup } from "./helpers/korean-markup.mjs";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 
 async function source(path) {
-    return readFile(new URL(`../${path}`, import.meta.url), "utf8");
+    return readFile(new URL(`../${path}`, import.meta.url), "utf8").then(koreanMarkup);
 }
 
 
@@ -42,7 +43,7 @@ test("the active behavior and sound launcher opens the real observation camera i
     assert.match(modal, /initialMode\?: PetLensMode/);
     assert.match(modal, /useState<PetLensMode>\(initialMode\)/);
     assert.match(brand, /댕다방 연구소/);
-    assert.match(brand, /DaengDaBang Research Lab/);
+    assert.match(brand, /댕다방 Research Lab/);
     assert.match(brand, /신규서비스/);
     assert.match(launcher, /댕다방 연구소 행동·소리 분석 신규 서비스 열기/);
     assert.match(tabs, /DaengLabServiceTitle/);
@@ -108,7 +109,7 @@ test("live capture uses the 15-second contract, adapts camera orientation, and c
         source("app/globals.css"),
         source("lib/petlens-on-device-scan.ts"),
     ]);
-    assert.match(hook, /navigator\.mediaDevices\.getUserMedia/);
+    assert.match(hook, /requestMediaStream\(\{/);
     assert.match(hook, /video:\s*\{/);
     assert.match(hook, /audio:\s*\{/);
     assert.match(hook, /MediaRecorder\.isTypeSupported/);
@@ -352,7 +353,7 @@ test("customer flow requires explicit media consent and shows emergency-first gu
     assert.match(experience, /화면 왼쪽 빨간 목줄의 갈색 푸들이 대상/);
     assert.match(experience, /구분이 불확실하면 억지 결과를 만들지 않고 코인을 돌려드려요/);
     assert.match(result, /영상에서 포착된 관찰 근거/);
-    assert.match(result, /확신 \{signal\.confidence/);
+    assert.match(result, /확신 \{labelText\(signal\.confidence/);
     assert.match(result, /signal\.evidence\.map/);
     assert.match(result, /가능한 맥락/);
     assert.match(result, /질병 진단이 아니라/);

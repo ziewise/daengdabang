@@ -9,6 +9,7 @@
  * 웹 가입 "이메일 확인 후 계정 열기"(2026-10-26): 계정 열기 모드 설명 · 도움말만 웹에서 해요체(useWebScreen), 앱 글 그대로.
  *   이름표(data-sev-request · data-sev-resend)만 더함 — 꾸밈은 app/auth-web.css "이메일 확인 화면". 동작 그대로.
  */
+import { useI18n } from "@/lib/i18n";
 import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
@@ -139,6 +140,7 @@ export default function SignupEmailVerification({
     onContinueWithoutBonus,
     hideWhenSettled = false,
 }: Props) {
+    const { menuLabel: labelText } = useI18n();
     const visibleAccountEmail = isSyntheticSocialEmail(accountEmail) ? "" : accountEmail.trim();
     const [status, setStatus] = useState<SignupBonusStatus | null>(null);
     const [statusLoading, setStatusLoading] = useState(!accountActivationRequired);
@@ -354,7 +356,7 @@ export default function SignupEmailVerification({
         >
             {/* 웹 전용 — 세 단계(이메일 확인 → 인증번호 입력 → 20C 받기) */}
             {!accountActivationRequired && (
-                <ol className="hidden" data-sev-steps aria-label="이메일 인증 단계">
+                <ol className="hidden" data-sev-steps aria-label={labelText("이메일 인증 단계")}>
                     {["이메일 확인", "인증번호 입력", "20C 받기"].map((label, index) => {
                         const current = completed ? 2 : verificationId ? 1 : 0;
                         return (
@@ -368,10 +370,10 @@ export default function SignupEmailVerification({
             <div className="flex flex-wrap items-center gap-2">
                 <DaengLabCoinMark compact />
                 <h2 id="signup-email-verification-title" className="text-base font-black text-neutral-950">
-                    {accountActivationRequired ? "이메일 확인 후 계정 이용 시작" : "이메일 인증하고 20C 받기"}
+                    {labelText(accountActivationRequired ? "이메일 확인 후 계정 이용 시작" : "이메일 인증하고 20C 받기")}
                 </h2>
                 <span className="rounded-full bg-white px-2.5 py-1 text-[10px] font-black text-indigo-700 shadow-sm">
-                    행동·소리 분석 2회
+                    {labelText("행동·소리 분석 2회")}
                 </span>
             </div>
             <p className="mt-2 text-xs font-bold leading-5 text-neutral-600">
@@ -385,7 +387,7 @@ export default function SignupEmailVerification({
 
             {statusLoading ? (
                 <p role="status" className="mt-4 text-sm font-bold text-neutral-500">
-                    <i className="fa-solid fa-circle-notch fa-spin mr-2" />가입 혜택을 확인하는 중입니다.
+                    <i className="fa-solid fa-circle-notch fa-spin mr-2" />{labelText("가입 혜택을 확인하는 중입니다.")}
                 </p>
             ) : completed ? (
                 <>
@@ -394,24 +396,24 @@ export default function SignupEmailVerification({
                     <div className="hidden" data-sev-done role="status">
                         <div className="sev-done-burst" aria-hidden="true"><span>+{completed.awardedDaengLabCoins}C</span></div>
                         <p className="sev-done-kicker">WELCOME COIN</p>
-                        <h3>이메일 인증 완료! {completed.awardedDaengLabCoins}C가 적립됐어요</h3>
+                        <h3>{labelText("이메일 인증 완료!")} {completed.awardedDaengLabCoins}{labelText("C가 적립됐어요")}</h3>
                         <p className="sev-done-sub">
-                            지갑에 바로 들어갔어요 · 지금 코인 <b>{completed.wallet.daengLabCoins.toLocaleString("ko-KR")}C</b> · 인증 이메일 {completed.maskedEmail}
+                            {labelText("지갑에 바로 들어갔어요 · 지금 코인")} <b>{completed.wallet.daengLabCoins.toLocaleString("ko-KR")}C</b> {labelText("· 인증 이메일")} {completed.maskedEmail}
                         </p>
                         <div className="sev-done-use">
-                            <p>이렇게 쓸 수 있어요</p>
+                            <p>{labelText("이렇게 쓸 수 있어요")}</p>
                             <ul>
                                 <li>
                                     <i className="fa-solid fa-wave-square" aria-hidden="true" />
-                                    <span><b>행동·소리 분석</b> 1회 {completed.wallet.analysisCoinCost}C · 지금 {completed.wallet.analysesAvailable}회 분석할 수 있어요</span>
+                                    <span><b>{labelText("행동·소리 분석")}</b> {labelText("1회")} {completed.wallet.analysisCoinCost}{labelText("C · 지금")} {completed.wallet.analysesAvailable}{labelText("회 분석할 수 있어요")}</span>
                                 </li>
                                 <li>
                                     <i className="fa-solid fa-coins" aria-hidden="true" />
-                                    <span><b>적립금 전환</b> 적립금 {completed.wallet.pointConversionUnit.toLocaleString("ko-KR")}P를 {completed.wallet.coinConversionUnit}C로 바꿔 더 쓸 수 있어요</span>
+                                    <span><b>{labelText("적립금 전환")}</b> {labelText("적립금")} {completed.wallet.pointConversionUnit.toLocaleString("ko-KR")}{labelText("P를")} {completed.wallet.coinConversionUnit}{labelText("C로 바꿔 더 쓸 수 있어요")}</span>
                                 </li>
                             </ul>
                             <Link href="/pet-lens/?mode=observation" className="sev-done-go">
-                                <i className="fa-solid fa-paw" aria-hidden="true" />행동·소리 분석 하러 가기
+                                <i className="fa-solid fa-paw" aria-hidden="true" />{labelText("행동·소리 분석 하러 가기")}
                             </Link>
                         </div>
                     </div>
@@ -426,13 +428,13 @@ export default function SignupEmailVerification({
                             ? `이메일 인증이 완료되어 ${completed.awardedDaengLabCoins}C가 지급되었습니다.`
                             : "이메일 인증은 완료되었습니다. 가입 혜택 지급 이력을 확인해 추가 코인은 지급되지 않았습니다."}
                     </p>
-                    <p className="mt-1 text-xs font-bold text-emerald-800">인증 이메일: {completed.maskedEmail}</p>
+                    <p className="mt-1 text-xs font-bold text-emerald-800">{labelText("인증 이메일:")} {completed.maskedEmail}</p>
                     <p className="mt-1 text-[11px] font-bold leading-4 text-emerald-700">
-                        인증 완료 후에는 이 화면에서 이메일을 변경할 수 없습니다.
+                        {labelText("인증 완료 후에는 이 화면에서 이메일을 변경할 수 없습니다.")}
                     </p>
                     {onContinueWithoutBonus && (
                         <button type="button" onClick={onContinueWithoutBonus} className="btn btn-primary mt-3 w-full sm:w-auto">
-                            계속하기
+                            {labelText("계속하기")}
                         </button>
                     )}
                 </div>
@@ -444,18 +446,17 @@ export default function SignupEmailVerification({
                     </p>
                     {onContinueWithoutBonus && (
                         <button type="button" onClick={onContinueWithoutBonus} className="btn btn-primary mt-3 w-full sm:w-auto">
-                            계속하기
+                            {labelText("계속하기")}
                         </button>
                     )}
                 </div>
             ) : !accountActivationRequired && status && !status.providerReady ? (
                 <p role="status" className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-3 py-3 text-sm font-bold leading-6 text-amber-900">
-                    이메일 인증 서비스를 준비하고 있어요. 계정 가입과 기본 서비스 이용은 정상적으로 가능하며,
-                    20C는 인증 서비스가 준비된 뒤 이메일 인증을 완료하면 지급됩니다.
+                    {labelText("이메일 인증 서비스를 준비하고 있어요. 계정 가입과 기본 서비스 이용은 정상적으로 가능하며,\n                    20C는 인증 서비스가 준비된 뒤 이메일 인증을 완료하면 지급됩니다.")}
                 </p>
             ) : !accountActivationRequired && status && !status.emailVerificationRequired ? (
                 <p role="status" className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-3 py-3 text-sm font-bold leading-6 text-amber-900">
-                    가입 혜택 지급 상태를 서버에서 확인하고 있습니다. 잠시 후 다시 시도해 주세요.
+                    {labelText("가입 혜택 지급 상태를 서버에서 확인하고 있습니다. 잠시 후 다시 시도해 주세요.")}
                 </p>
             ) : accountActivationRequired || status ? (
                 <div className="mt-4 grid gap-3">
@@ -466,7 +467,7 @@ export default function SignupEmailVerification({
                             : "",
                     ].join(" ")}>
                         <label htmlFor="signup-bonus-email" className="min-w-0">
-                            <span className="mb-1 block text-xs font-black text-neutral-700">인증받을 이메일</span>
+                            <span className="mb-1 block text-xs font-black text-neutral-700">{labelText("인증받을 이메일")}</span>
                             <input
                                 ref={emailRef}
                                 id="signup-bonus-email"
@@ -485,9 +486,9 @@ export default function SignupEmailVerification({
                         {verificationId ? (
                             !accountActivationRequired && (
                                 <button type="button" onClick={changeEmail} className="btn mt-auto h-11 border border-neutral-200 bg-white px-4 text-neutral-700" data-sev-change>
-                                    <span data-sev-app-label>이메일 오타 수정</span>
+                                    <span data-sev-app-label>{labelText("이메일 오타 수정")}</span>
                                     {/* 웹 전용 이름 */}
-                                    <span className="hidden" data-sev-web-label><i className="fa-solid fa-pen" aria-hidden="true" />주소 변경</span>
+                                    <span className="hidden" data-sev-web-label><i className="fa-solid fa-pen" aria-hidden="true" />{labelText("주소 변경")}</span>
                                 </button>
                             )
                         ) : (
@@ -498,7 +499,7 @@ export default function SignupEmailVerification({
                                 className="btn btn-primary mt-auto h-11 px-4 disabled:cursor-not-allowed disabled:opacity-50"
                                 data-sev-request
                             >
-                                {requesting ? "전송 중" : "인증번호 받기"}
+                                {labelText(requesting ? "전송 중" : "인증번호 받기")}
                             </button>
                         )}
                     </div>
@@ -515,7 +516,7 @@ export default function SignupEmailVerification({
                         <form onSubmit={confirmCode} className="grid gap-2 rounded-xl border border-indigo-100 bg-white p-3">
                             <div className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto]">
                                 <label htmlFor="signup-bonus-code" className="min-w-0">
-                                    <span className="mb-1 block text-xs font-black text-neutral-700">이메일 인증번호</span>
+                                    <span className="mb-1 block text-xs font-black text-neutral-700">{labelText("이메일 인증번호")}</span>
                                     <input
                                         ref={codeRef}
                                         id="signup-bonus-code"
@@ -526,7 +527,7 @@ export default function SignupEmailVerification({
                                         autoComplete="one-time-code"
                                         pattern="[0-9]{6}"
                                         maxLength={6}
-                                        placeholder="6자리 입력"
+                                        placeholder={labelText("6자리 입력")}
                                         aria-invalid={Boolean(code) && !/^\d{6}$/.test(code)}
                                     />
                                 </label>
@@ -535,7 +536,7 @@ export default function SignupEmailVerification({
                                     disabled={confirming || !/^\d{6}$/.test(code) || expirySeconds <= 0}
                                     className="btn btn-primary mt-auto h-11 px-5 disabled:cursor-not-allowed disabled:opacity-50"
                                 >
-                                    {confirming ? "확인 중" : "인증 완료"}
+                                    {labelText(confirming ? "확인 중" : "인증 완료")}
                                 </button>
                             </div>
                             <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] font-bold">
@@ -560,10 +561,10 @@ export default function SignupEmailVerification({
                     {/* 웹 전용 — 메일이 안 왔을 때: 스팸함 · 주소 확인 + 다시 받기 · 주소 변경(같은 함수) */}
                     {verificationId && !accountActivationRequired && (
                         <div className="hidden" data-sev-help>
-                            <p className="sev-help-title"><i className="fa-solid fa-envelope-open-text" aria-hidden="true" />메일이 안 왔나요?</p>
+                            <p className="sev-help-title"><i className="fa-solid fa-envelope-open-text" aria-hidden="true" />{labelText("메일이 안 왔나요?")}</p>
                             <ul>
-                                <li>스팸함 · 프로모션함을 먼저 확인해 주세요.</li>
-                                <li>받는 주소가 <b>{maskedEmail}</b> 맞는지 확인해 주세요. 다르면 주소를 바꿔 다시 받을 수 있어요.</li>
+                                <li>{labelText("스팸함 · 프로모션함을 먼저 확인해 주세요.")}</li>
+                                <li>{labelText("받는 주소가")} <b>{maskedEmail}</b> {labelText("맞는지 확인해 주세요. 다르면 주소를 바꿔 다시 받을 수 있어요.")}</li>
                             </ul>
                             <div className="sev-help-actions">
                                 <button type="button" onClick={() => void requestCode()} disabled={requesting || resendSeconds > 0}>
@@ -571,7 +572,7 @@ export default function SignupEmailVerification({
                                     {requesting ? "보내는 중" : resendSeconds > 0 ? `${resendSeconds}초 후 다시 받기` : "인증번호 다시 받기"}
                                 </button>
                                 <button type="button" onClick={changeEmail}>
-                                    <i className="fa-solid fa-pen" aria-hidden="true" />이메일 주소 변경
+                                    <i className="fa-solid fa-pen" aria-hidden="true" />{labelText("이메일 주소 변경")}
                                 </button>
                             </div>
                         </div>
@@ -583,7 +584,7 @@ export default function SignupEmailVerification({
             {error && <p role="alert" className="mt-3 rounded-xl bg-rose-50 px-3 py-2 text-xs font-bold leading-5 text-rose-800">{error}</p>}
             {!accountActivationRequired && onContinueWithoutBonus && !completed && (!status || status.welcomeBonus.status === "pending") && (
                 <button type="button" onClick={onContinueWithoutBonus} className="mt-4 w-full text-center text-xs font-black text-neutral-500 underline underline-offset-4">
-                    20C 혜택 없이 계속하기
+                    {labelText("20C 혜택 없이 계속하기")}
                 </button>
             )}
         </section>

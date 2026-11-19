@@ -1,8 +1,9 @@
+import { koreanMarkup } from "./helpers/korean-markup.mjs";
 import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import test from "node:test";
 
-const read = (path) => readFileSync(new URL(path, import.meta.url), "utf8");
+const read = (path) => koreanMarkup(readFileSync(new URL(path, import.meta.url), "utf8"));
 
 test("member profile create and edit forms expose the same four-view photo registration", () => {
     const fields = read("../components/petlens/PetLensPhotoViewFields.tsx");
@@ -102,9 +103,9 @@ test("navigator gives every searchable breed an independent 32-frame atlas set",
 
     assert.match(layer, /data-pet-companion-breed-search/);
     assert.match(layer, /type="search"/);
-    assert.match(layer, /placeholder="예: 닥스훈트, 비숑, 진돗개"/);
+    assert.match(layer, /placeholder=\{petCopy\("예: 닥스훈트, 비숑, 진돗개"\)\}/);
     assert.match(layer, /filteredBreeds/);
-    assert.match(layer, /role="listbox" aria-label="견종 검색 결과"/);
+    assert.match(layer, /role="listbox" aria-label=\{petCopy\("견종 검색 결과"\)\}/);
     assert.match(layer, /filteredBreeds\.slice\(0, 6\)\.map/);
     assert.match(layer, /걷기·달리기·냄새 맡기·상하 이동 32프레임/);
     assert.match(character, /\$\{breed\.assetId\}-core\.webp/);

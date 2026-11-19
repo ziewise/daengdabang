@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { FormEvent, useState } from "react";
 // 웹: 이메일·계정 변경 문의를 마이페이지 안 문의 창으로(2026-10-24, 앱 · 새 탭은 원래대로 문의 페이지)
 import MypageInquiryLink from "@/components/mypage/MypageInquiryLink";
@@ -31,6 +32,7 @@ function ProfileEditor({
     user: User;
     onSaved: (name: string) => void;
 }) {
+    const { menuLabel: labelText } = useI18n();
     const [name, setName] = useState(user.name);
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState("");
@@ -75,16 +77,16 @@ function ProfileEditor({
     return (
         <section className="surface overflow-hidden" aria-labelledby="profile-basic-heading" data-mp-card="split">
             <div className="border-b border-neutral-200 bg-neutral-50/80 px-5 py-4" data-mp-band="sky" data-mp-art="me">
-                <h2 id="profile-basic-heading" className="text-lg font-black text-neutral-950" data-mp-kicker="MY INFO">기본 정보</h2>
+                <h2 id="profile-basic-heading" className="text-lg font-black text-neutral-950" data-mp-kicker="MY INFO">{labelText("기본 정보")}</h2>
                 <p className="mt-1 text-xs font-bold leading-5 text-neutral-500">
-                    이름과 휴대폰 번호, 이메일 소식 수신 여부를 관리할 수 있어요.
+                    {labelText("이름과 휴대폰 번호, 이메일 소식 수신 여부를 관리할 수 있어요.")}
                 </p>
             </div>
-            <form className="grid gap-5 p-5 sm:p-6" aria-label="회원 기본 정보" onSubmit={submit}>
+            <form className="grid gap-5 p-5 sm:p-6" aria-label={labelText("회원 기본 정보")} onSubmit={submit}>
                 <div className="grid gap-4 sm:grid-cols-2">
                     <div>
                         <label htmlFor="mypage-profile-name" className="mb-1.5 block text-xs font-black text-neutral-600">
-                            이름
+                            {labelText("이름")}
                         </label>
                         <input
                             id="mypage-profile-name"
@@ -105,7 +107,7 @@ function ProfileEditor({
                     </div>
                     <div>
                         <label htmlFor="mypage-profile-email" className="mb-1.5 block text-xs font-black text-neutral-600">
-                            이메일·가입 계정
+                            {labelText("이메일·가입 계정")}
                         </label>
                         <input
                             id="mypage-profile-email"
@@ -135,7 +137,7 @@ function ProfileEditor({
                         disabled={submitting || !candidateName || candidateName === user.name}
                         className="btn btn-primary disabled:cursor-not-allowed disabled:opacity-45"
                     >
-                        {submitting ? "저장 중…" : "이름 변경 저장"}
+                        {labelText(submitting ? "저장 중…" : "이름 변경 저장")}
                     </button>
                     <MypageInquiryLink
                         href="/inquiry?category=other#inquiry-form"
@@ -150,7 +152,7 @@ function ProfileEditor({
                             hint: "본인 확인을 위해 답변은 입력한 이메일로 보내 드려요.",
                         }}
                     >
-                        이메일·계정 변경 문의
+                        {labelText("이메일·계정 변경 문의")}
                     </MypageInquiryLink>
                     {user.authProvider === "email" ? (
                         <button
@@ -158,11 +160,11 @@ function ProfileEditor({
                             className="btn btn-secondary"
                             onClick={() => setPasswordModalOpen(true)}
                         >
-                            비밀번호 변경
+                            {labelText("비밀번호 변경")}
                         </button>
                     ) : (
                         <span className="self-center text-xs font-bold text-neutral-500">
-                            비밀번호는 {user.authProvider === "naver" ? "네이버" : user.authProvider === "kakao" ? "카카오" : "구글"}에서 관리합니다.
+                            {labelText("비밀번호는")} {user.authProvider === "naver" ? "네이버" : user.authProvider === "kakao" ? "카카오" : "구글"}{labelText("에서 관리합니다.")}
                         </span>
                     )}
                 </div>
@@ -176,6 +178,7 @@ function ProfileEditor({
 }
 
 export default function MypageProfilePage() {
+    const { menuLabel: labelText } = useI18n();
     const { user, updateMemberName } = useAuth();
     // 웹은 화면이 넓어진 만큼 설명도 바꿈(앱 설명은 그대로)
     const webScreen = useWebScreen();
@@ -183,8 +186,8 @@ export default function MypageProfilePage() {
 
     return (
         <MypageSectionLayout
-            eyebrow="MY 정보"
-            title="개인정보 확인/수정"
+            eyebrow={labelText("MY 정보")}
+            title={labelText("개인정보 확인/수정")}
             description={webScreen
                 ? "내 정보 · 로그인 보안 · 알림 수신을 한곳에서 확인하고 바꿀 수 있어요. 보호를 위해 들어올 때 한 번 더 확인해요."
                 : "내 정보와 휴대폰 번호, 이메일 소식 수신 설정을 확인하고 바꿀 수 있어요."}
@@ -201,7 +204,7 @@ export default function MypageProfilePage() {
             {/* 앱 전용(로컬 시안): 앱에서는 마이페이지 메뉴를 숨기므로 회원 탈퇴를 정보 수정 맨 아래 작은 글씨로 둔다.
                 웹은 기존처럼 메뉴에 있으니 hidden — 앱 겉모양 CSS(appShopSkin.ts)에서만 보임. 기존 탈퇴 화면으로 연결 */}
             <p className="mt-6 hidden text-center" data-app-only-withdrawal="">
-                <Link href="/mypage/withdrawal/" className="text-xs font-bold text-neutral-400 underline underline-offset-2">회원 탈퇴</Link>
+                <Link href="/mypage/withdrawal/" className="text-xs font-bold text-neutral-400 underline underline-offset-2">{labelText("회원 탈퇴")}</Link>
             </p>
         </MypageSectionLayout>
     );

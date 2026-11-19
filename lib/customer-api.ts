@@ -471,6 +471,7 @@ export type TossTestOrder = {
 };
 
 export type TossTestPaymentConfirmation = {
+    cashReceipt?: import("./toss-cash-receipt").CashReceipt;
     orderId: string;
     paymentKey: string;
     totalAmount: number;

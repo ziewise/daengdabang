@@ -11,6 +11,8 @@
  * 글꼴은 앱과 같은 두 가지(카페24 써라운드 · 나눔스퀘어라운드, KIT_CSS).
  */
 
+import { useI18n } from "@/lib/i18n";
+import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
 import Image from "next/image";
 import type { ReactNode } from "react";
 import { useShopMedia } from "@/components/pwa/home-concepts/shop/useShopMedia";
@@ -29,23 +31,24 @@ export function InstallLabel({ children, icon }: { children: ReactNode; icon?: s
 
 // 앱 화면 미리보기 — 로그아웃 상태로 찍은 실제 앱 화면(개인 정보 없음, 2026-10-18)
 export const PREVIEWS = [
-    { src: "/images/app-install/app-home.webp", label: "홈", tape: "rgba(255,200,215,.9)", rot: -1 },
-    { src: "/images/app-install/app-lab.webp", label: "연구소", tape: "rgba(255,232,170,.9)", rot: 0.8 },
-    { src: "/images/app-install/app-shop.webp", label: "쇼핑", tape: "rgba(200,240,215,.9)", rot: -0.6 },
+    { src: "/images/app-install/app-home.webp", enSrc: "/images/app-install/app-home-en.webp", label: "홈", tape: "rgba(255,200,215,.9)", rot: -1 },
+    { src: "/images/app-install/app-lab.webp", enSrc: "/images/app-install/app-lab-en.webp", label: "연구소", tape: "rgba(255,232,170,.9)", rot: 0.8 },
+    { src: "/images/app-install/app-shop.webp", enSrc: "/images/app-install/app-shop-en.webp", label: "쇼핑", tape: "rgba(200,240,215,.9)", rot: -0.6 },
 ] as const;
 
 /** 앱 화면 미리보기 — 폴라로이드 3장, 옆으로 밀어 보기(휴대폰), 넓은 화면은 한 줄 */
 export function InstallPreview() {
+    const { locale, menuLabel: labelText } = useI18n();
     const media = useShopMedia();
     return (
-        <div className="ig-shots -mx-5 flex snap-x snap-mandatory gap-3.5 overflow-x-auto px-5 pb-3 pt-4" aria-label="앱 화면 미리보기">
+        <div className="ig-shots -mx-5 flex snap-x snap-mandatory gap-3.5 overflow-x-auto px-5 pb-3 pt-4" aria-label={labelText("앱 화면 미리보기")}>
             {PREVIEWS.map((p) => (
                 <figure key={p.label} className="ig-polaroid relative shrink-0 snap-center bg-white p-1.5 pb-2" style={{ rotate: `${p.rot}deg` }}>
                     <Tape className="-top-2 left-1/2 z-10 h-3.5 w-11 -translate-x-1/2" color={p.tape} />
                     <span className="relative block aspect-[475/1028] w-[138px] overflow-hidden rounded-[4px] bg-[#f6efe8]">
-                        {media ? <Image src={media(p.src) ?? p.src} alt={`앱 ${p.label} 화면`} fill sizes="138px" className="object-cover object-top" /> : null}
+                        {media ? <Image src={media(locale === "en" ? p.enSrc : p.src) ?? (locale === "en" ? p.enSrc : p.src)} alt={locale === "en" ? `${labelText(p.label)} app screen` : `앱 ${p.label} 화면`} fill sizes="138px" className="object-cover object-top" /> : null}
                     </span>
-                    <figcaption className="ah-display pt-1.5 text-center text-[13px] text-[#3a2f2c]">{p.label}</figcaption>
+                    <figcaption className="ah-display pt-1.5 text-center text-[13px] text-[#3a2f2c]">{labelText(p.label)}</figcaption>
                 </figure>
             ))}
         </div>
@@ -53,40 +56,41 @@ export function InstallPreview() {
 }
 
 type Platform = "ios" | "android" | "other";
-type Step = { icon: string; text: ReactNode };
+type Step = { icon: string; text: ReactNode; en: ReactNode };
 
 // 휴대폰별 설치 순서 — 협업자 설치 안내 창(PwaInstallProvider)과 같은 내용, 아이폰은 iOS 26 사파리(··· 메뉴 안 공유)까지
 // 웹 설치 안내(AppInstallWeb.tsx)도 같은 순서를 씀
 export const STEPS: Record<Platform, Step[]> = {
     ios: [
-        { icon: "fa-compass", text: <><b>Safari</b>로 daengdabang.com 을 열어요</> },
-        { icon: "fa-arrow-up-from-bracket", text: <>아래쪽 <b>공유</b> 버튼을 눌러요 <span className="ig-soft">(안 보이면 <b>···</b> 메뉴 안의 공유)</span></> },
-        { icon: "fa-square-plus", text: <><b>홈 화면에 추가</b>를 골라요</> },
-        { icon: "fa-check", text: <>오른쪽 위 <b>추가</b>를 누르면 홈 화면에 댕다방이 생겨요</> },
+        { icon: "fa-compass", text: <><b>Safari</b>로 daengdabang.com 을 열어요</>, en: <>Open daengdabang.com in <b>Safari</b>.</> },
+        { icon: "fa-arrow-up-from-bracket", text: <>아래쪽 <b>공유</b> 버튼을 눌러요 <span className="ig-soft">(안 보이면 <b>···</b> 메뉴 안의 공유)</span></>, en: <>Tap <b>Share</b> at the bottom. <span className="ig-soft">If it is hidden, open the <b>···</b> menu and tap Share.</span></> },
+        { icon: "fa-square-plus", text: <><b>홈 화면에 추가</b>를 골라요</>, en: <>Select <b>Add to Home Screen</b>.</> },
+        { icon: "fa-check", text: <>오른쪽 위 <b>추가</b>를 누르면 홈 화면에 댕다방이 생겨요</>, en: <>Tap <b>Add</b> in the top right. 댕다방 will appear on your Home Screen.</> },
     ],
     android: [
-        { icon: "fa-globe", text: <><b>삼성 인터넷</b>이나 <b>Chrome</b>으로 이 페이지를 열어요</> },
-        { icon: "fa-download", text: <><b>앱 설치·업데이트</b>를 눌러 최신 파일을 받아요</> },
-        { icon: "fa-file-arrow-down", text: <>다운로드한 파일을 열어요. 설치 허용을 요청하면 이 브라우저의 설치를 허용해 주세요</> },
-        { icon: "fa-check", text: <>처음이면 <b>설치</b>, 1.0.2 이상이 설치돼 있으면 <b>업데이트</b>를 눌러요. 업데이트할 때 기존 앱을 삭제하지 마세요</> },
+        { icon: "fa-globe", text: <><b>삼성 인터넷</b>이나 <b>Chrome</b>으로 이 페이지를 열어요</>, en: <>Open this page in <b>Samsung Internet</b> or <b>Chrome</b>.</> },
+        { icon: "fa-download", text: <><b>앱 설치·업데이트</b>를 눌러 최신 파일을 받아요</>, en: <>Tap <b>Install or update the app</b> to download the latest version.</> },
+        { icon: "fa-file-arrow-down", text: <>다운로드한 파일을 열어요. 설치 허용을 요청하면 이 브라우저의 설치를 허용해 주세요</>, en: <>Open the downloaded file. If prompted, allow this browser to install the app.</> },
+        { icon: "fa-check", text: <>처음이면 <b>설치</b>, 1.0.2 이상이 설치돼 있으면 <b>업데이트</b>를 눌러요. 업데이트할 때 기존 앱을 삭제하지 마세요</>, en: <>Tap <b>Install</b> the first time, or <b>Update</b> for version 1.0.2 or later. Keep your existing app installed when updating.</> },
     ],
     other: [
-        { icon: "fa-window-maximize", text: <>브라우저 주소창의 <b>설치 아이콘</b>이나 메뉴를 열어요</> },
-        { icon: "fa-square-plus", text: <><b>댕다방 설치</b>를 골라요</> },
-        { icon: "fa-check", text: <>설치 후 앱 목록이나 홈 화면에서 바로 열 수 있어요</> },
+        { icon: "fa-window-maximize", text: <>브라우저 주소창의 <b>설치 아이콘</b>이나 메뉴를 열어요</>, en: <>Open the <b>install icon</b> in the address bar or open the browser menu.</> },
+        { icon: "fa-square-plus", text: <><b>댕다방 설치</b>를 골라요</>, en: <>Choose <b>Install 댕다방</b>.</> },
+        { icon: "fa-check", text: <>설치 후 앱 목록이나 홈 화면에서 바로 열 수 있어요</>, en: <>Open the app from your apps list or Home Screen.</> },
     ],
 };
 
 /** 설치 순서 — 번호 스티커 + 메모 한 줄씩. 카카오톡 · 네이버 안이면 기본 브라우저 안내를 먼저 */
 export function InstallSteps({ platform, isInAppBrowser }: { platform: Platform; isInAppBrowser: boolean }) {
+    const { locale, menuLabel: labelText } = useI18n();
     return (
         <div className="mt-4">
             {isInAppBrowser ? (
                 <p className="ig-note ah-light relative mb-4 px-3.5 py-3 text-[13px] leading-relaxed text-[#5a4038]" style={{ rotate: "-0.6deg" }}>
                     <Tape className="-top-2 left-4 h-3.5 w-10" color="rgba(255,200,215,.9)" />
-                    <b className="ah-display block text-[14px] font-normal text-[#c4456f]">먼저 기본 브라우저로 열어 주세요</b>
-                    카카오톡 · 네이버 · 인스타그램 안에서는 설치 메뉴가 보이지 않을 수 있어요. 메뉴에서
-                    {platform === "ios" ? " Safari로 열기" : " 삼성 인터넷 또는 Chrome으로 열기"}를 골라 주세요.
+                    <b className="ah-display block text-[14px] font-normal text-[#c4456f]">{labelText("먼저 기본 브라우저로 열어 주세요")}</b>
+                    {labelText("카카오톡 · 네이버 · 인스타그램 안에서는 설치 메뉴가 보이지 않을 수 있어요. 메뉴에서")}
+                    {platform === "ios" ? " Safari로 열기" : " 삼성 인터넷 또는 Chrome으로 열기"}{labelText("를 골라 주세요.")}
                 </p>
             ) : null}
             <ol className="space-y-3">
@@ -95,7 +99,7 @@ export function InstallSteps({ platform, isInAppBrowser }: { platform: Platform;
                         <span className="ig-num ah-display grid h-8 w-8 shrink-0 place-items-center rounded-full text-[15px]" style={{ rotate: `${[-6, 4, -3, 5][i % 4]}deg` }}>{i + 1}</span>
                         <span className="ah-light flex min-w-0 flex-1 items-start gap-2 pt-1.5 text-[14px] leading-snug text-[#4f413c]">
                             <i aria-hidden="true" className={`fa-solid ${s.icon} mt-0.5 w-4 shrink-0 text-center text-[13px] text-[#ef5f8f]`} />
-                            <span className="min-w-0">{s.text}</span>
+                            <span className="min-w-0">{locale === "en" ? s.en : s.text}</span>
                         </span>
                     </li>
                 ))}
@@ -114,13 +118,14 @@ export const BENEFITS = [
 
 /** 앱에서 좋은 점 — 2×2 스티커 카드 */
 export function InstallBenefits() {
+    const { menuLabel: labelText } = useI18n();
     return (
         <ul className="mt-4 grid grid-cols-2 gap-3">
             {BENEFITS.map((b, i) => (
                 <li key={b.title} className="ig-card relative flex flex-col items-center px-2 pb-3 pt-2.5 text-center" style={{ rotate: `${[-0.8, 0.7, 0.6, -0.7][i]}deg` }}>
                     <Image src={b.icon} alt="" width={56} height={56} className="h-14 w-14 object-contain" />
-                    <strong className="ah-display mt-1 text-[14.5px] font-normal text-[#3a2f2c]">{b.title}</strong>
-                    <span className="ah-light mt-0.5 text-[11.5px] leading-snug text-[#7a6a63]">{b.desc}</span>
+                    <strong className="ah-display mt-1 text-[14.5px] font-normal text-[#3a2f2c]">{labelText(b.title)}</strong>
+                    <span className="ah-light mt-0.5 text-[11.5px] leading-snug text-[#7a6a63]">{labelText(b.desc)}</span>
                 </li>
             ))}
         </ul>

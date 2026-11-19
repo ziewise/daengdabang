@@ -1,3 +1,4 @@
+import * as englishDetail from "../lib/catalog/english-detail-sections.ts";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
@@ -128,7 +129,8 @@ test("all approved JSK details bypass legacy editorial indices and render every 
             if (id === "next/image") return "source-image";
             if (id === "next/link") return "a";
             if (id === "./ProductReviewPanel") return () => null;
-            if (id === "@/lib/i18n") return { useI18n: () => ({ t: (value) => value, productName: (p) => p.name }) };
+            if (id === "@/lib/catalog/english-detail-sections") return englishDetail;
+            if (id === "@/lib/i18n") return { useI18n: () => ({ locale: "ko", menuLabel: text => text, englishProduct: () => undefined, optionName: (_folder, value) => value, t: (value) => value, productName: (p) => p.name }) };
             if (id === "@/lib/catalog/product-detail-content") return {
                 getProductDetailContent: () => { throw new Error("JSK source detail must not use legacy editorial content"); },
             };

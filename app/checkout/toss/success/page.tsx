@@ -8,6 +8,7 @@
  *  화면 문구는 두 모드 모두 보통 "결제" 문구(사장님 결정 — 테스트 안내 없음). 결제 확인은 정식 오픈 전 잠금과 상관없이 늘 함.
  */
 
+import { useI18n } from "@/lib/i18n";
 import { useEffect, useRef, useState } from "react";
 // 2026-10-25 비회원 결제 확인(서버가 연결됐을 때만 · lib/guest-order) → 비회원 주문 완료 화면
 import GuestOrderDone from "@/components/guest/GuestOrderDone";
@@ -15,6 +16,7 @@ import { clearGuestPending, confirmGuestTossPayment, guestOrderEnabled, loadGues
 import Link from "next/link";
 // 2026-10-25 웹 결제 결과 화면(회원) — 웹에서만 새 겉모양, 확인 · 장바구니 정리 · 주문 저장은 이 파일 그대로
 import { PaymentDoneWeb, PaymentStateWeb } from "@/components/checkout/PaymentResultWeb";
+import CashReceiptCard from "@/components/checkout/CashReceiptCard";
 import { useWebScreen } from "@/hooks/useWebScreen";
 import {
     confirmTossTestPayment,
@@ -47,6 +49,7 @@ type ViewState =
     | { kind: "guest_complete"; orderId: string; amount: number; buyerName: string; email: string };
 
 export default function TossTestSuccessPage() {
+    const { menuLabel: labelText } = useI18n();
     const { user } = useAuth();
     const cart = useCart();
     const startedRef = useRef(false);
@@ -204,8 +207,8 @@ export default function TossTestSuccessPage() {
         return (
             <main className="mx-auto max-w-[680px] px-4 py-16 text-center" aria-live="polite" data-pay-app-view>
                 <i className="fa-solid fa-spinner fa-spin text-4xl text-indigo-600" />
-                <h1 className="mt-4 text-2xl font-black text-neutral-950">결제 확인 중</h1>
-                <p className="mt-2 text-sm font-bold text-neutral-600">서버가 주문번호와 금액을 다시 검증하고 있습니다.</p>
+                <h1 className="mt-4 text-2xl font-black text-neutral-950">{labelText("결제 확인 중")}</h1>
+                <p className="mt-2 text-sm font-bold text-neutral-600">{labelText("서버가 주문번호와 금액을 다시 검증하고 있습니다.")}</p>
             </main>
         );
     }
@@ -218,17 +221,18 @@ export default function TossTestSuccessPage() {
         return (
             <main className="mx-auto max-w-[680px] px-4 py-14 text-center" data-payment-status={view.confirmation.status} data-pay-app-view>
                 <i className="fa-solid fa-circle-check text-5xl text-emerald-600" />
-                <h1 className="mt-4 text-3xl font-black text-neutral-950">결제가 완료되었습니다.</h1>
-                <p className="mt-2 text-sm font-bold text-neutral-600">주문번호 {view.orderId}</p>
+                <h1 className="mt-4 text-3xl font-black text-neutral-950">{labelText("결제가 완료되었습니다.")}</h1>
+                <p className="mt-2 text-sm font-bold text-neutral-600">{labelText("주문번호")} {view.orderId}</p>
+                <CashReceiptCard receipt={view.confirmation.cashReceipt} />
                 <div className="mx-auto mt-5 max-w-md rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-4 text-left">
-                    <p className="text-sm font-black text-emerald-950">결제 승인 · {view.amount.toLocaleString("ko-KR")}원</p>
+                    <p className="text-sm font-black text-emerald-950">{labelText("결제 승인 ·")} {view.amount.toLocaleString("ko-KR")}{labelText("원")}</p>
                     <p className="mt-2 text-xs font-bold leading-5 text-emerald-800">
-                        주문이 접수되었습니다. 상품 준비와 배송 진행은 주문 상세에서 확인할 수 있습니다.
+                        {labelText("주문이 접수되었습니다. 상품 준비와 배송 진행은 주문 상세에서 확인할 수 있습니다.")}
                     </p>
                 </div>
                 <div className="mt-6 flex flex-wrap justify-center gap-2">
-                    <Link href={`/mypage/orders/?orderId=${encodeURIComponent(view.orderId)}`} className="btn btn-primary">주문 상세보기</Link>
-                    <Link href="/products" className="btn btn-secondary">쇼핑 계속하기</Link>
+                    <Link href={`/mypage/orders/?orderId=${encodeURIComponent(view.orderId)}`} className="btn btn-primary">{labelText("주문 상세보기")}</Link>
+                    <Link href="/products" className="btn btn-secondary">{labelText("쇼핑 계속하기")}</Link>
                 </div>
             </main>
         );
@@ -239,11 +243,11 @@ export default function TossTestSuccessPage() {
             // data-login-gate — 웹 공통 로그인 안내 카드(app/globals.css), 앱은 그대로
             <main className="mx-auto max-w-[680px] px-4 py-14 text-center" data-login-gate data-pay-app-view>
                 <i className="fa-solid fa-lock text-5xl text-amber-600" />
-                <h1 className="mt-4 text-2xl font-black text-neutral-950">로그인이 필요합니다.</h1>
+                <h1 className="mt-4 text-2xl font-black text-neutral-950">{labelText("로그인이 필요합니다.")}</h1>
                 <p className="mt-2 text-sm font-bold leading-6 text-neutral-600">
-                    API 세션이 없어 아직 서버 확인을 요청하지 않았습니다. 로그인하면 이 결제 결과로 돌아옵니다.
+                    {labelText("API 세션이 없어 아직 서버 확인을 요청하지 않았습니다. 로그인하면 이 결제 결과로 돌아옵니다.")}
                 </p>
-                <Link href={view.loginHref} className="btn btn-primary mt-6">로그인 후 결제 확인</Link>
+                <Link href={view.loginHref} className="btn btn-primary mt-6">{labelText("로그인 후 결제 확인")}</Link>
             </main>
         );
     }
@@ -257,12 +261,12 @@ export default function TossTestSuccessPage() {
                 data-pay-app-view
             >
                 <i className="fa-solid fa-clock-rotate-left text-5xl text-amber-600" />
-                <h1 className="mt-4 text-2xl font-black text-neutral-950">결제 상태 확인 중</h1>
+                <h1 className="mt-4 text-2xl font-black text-neutral-950">{labelText("결제 상태 확인 중")}</h1>
                 <p className="mt-3 text-sm font-bold leading-6 text-neutral-600">
-                    결제사 응답이 아직 확정되지 않았습니다. 새 결제를 시작하지 말고 동일한 결제 결과를 다시 확인해 주세요.
+                    {labelText("결제사 응답이 아직 확정되지 않았습니다. 새 결제를 시작하지 말고 동일한 결제 결과를 다시 확인해 주세요.")}
                 </p>
-                <p className="mt-2 text-xs font-bold text-neutral-500">장바구니와 주문 정보는 변경하지 않았습니다.</p>
-                <a href={view.retryHref} className="btn btn-primary mt-6">동일 결제 다시 확인</a>
+                <p className="mt-2 text-xs font-bold text-neutral-500">{labelText("장바구니와 주문 정보는 변경하지 않았습니다.")}</p>
+                <a href={view.retryHref} className="btn btn-primary mt-6">{labelText("동일 결제 다시 확인")}</a>
             </main>
         );
     }
@@ -271,19 +275,19 @@ export default function TossTestSuccessPage() {
         <main className="mx-auto max-w-[680px] px-4 py-14 text-center" data-payment-status={view.kind} data-pay-app-view>
             <i className="fa-solid fa-triangle-exclamation text-5xl text-red-600" />
             <h1 className="mt-4 text-2xl font-black text-neutral-950">
-                {view.kind === "invalid" ? "결제 결과를 확인할 수 없습니다." : "결제 확인에 실패했습니다."}
+                {labelText(view.kind === "invalid" ? "결제 결과를 확인할 수 없습니다." : "결제 확인에 실패했습니다.")}
             </h1>
             <p className="mt-3 text-sm font-bold leading-6 text-neutral-600">{view.message}</p>
             <p className="mt-2 text-xs font-bold text-neutral-500">
-                {view.kind === "failed" && view.retryHref
+                {labelText(view.kind === "failed" && view.retryHref
                     ? "새 결제를 시작하지 말고 동일한 결제 결과를 다시 확인해 주세요."
-                    : "선택한 장바구니 상품은 삭제하지 않았습니다."}
+                    : "선택한 장바구니 상품은 삭제하지 않았습니다.")}
             </p>
             <div className="mt-6 flex flex-wrap justify-center gap-2">
                 {view.kind === "failed" && view.retryHref
-                    ? <a href={view.retryHref} className="btn btn-primary">동일 결제 다시 확인</a>
-                    : <Link href="/checkout" className="btn btn-primary">결제 다시 시도</Link>}
-                <Link href="/cart" className="btn btn-secondary">장바구니 확인</Link>
+                    ? <a href={view.retryHref} className="btn btn-primary">{labelText("동일 결제 다시 확인")}</a>
+                    : <Link href="/checkout" className="btn btn-primary">{labelText("결제 다시 시도")}</Link>}
+                <Link href="/cart" className="btn btn-secondary">{labelText("장바구니 확인")}</Link>
             </div>
         </main>
     );

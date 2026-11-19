@@ -12,10 +12,13 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { prepareUploadImage } from "@/lib/upload-image";
 import { useRef, useState, useEffect } from "react";
 import type { PetlensInputMode, PetlensSlot } from "@/lib/types";
 import { compressDataUrl } from "@/lib/image-compress";
+import { mediaAccessFailure, requestMediaStream, type MediaAccessFailure } from "@/lib/media-permissions";
+import MediaPermissionActions from "@/components/media/MediaPermissionActions";
 import { SLOT_CONFIG } from "./petlens-data";
 import styles from "./petlens.module.css";
 
@@ -36,13 +39,15 @@ const clamp = (v: number, min: number, max: number) =>
 export default function PetlensUpload({
     inputMode, photos, setPhotos, onChangeMode, onAnalyze,
 }: Props) {
+    const { menuLabel: labelText } = useI18n();
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [step, setStep] = useState<PetlensSlot>(0);   // 현재 단계 (0=얼굴, 1=측면, 2=정면)
     const [cameraOpen, setCameraOpen] = useState(false);
-    const [cameraError, setCameraError] = useState(false);
+    const [cameraError, setCameraError] = useState<MediaAccessFailure | null>(null);
 
     const videoRef = useRef<HTMLVideoElement>(null);
     const streamRef = useRef<MediaStream | null>(null);
+    const cameraRequestRef = useRef(0);
     const guideRef = useRef<HTMLDivElement>(null);
 
     /** 파일 업로드 후 조정(crop) 모드 — null 이면 미진입.
@@ -56,29 +61,33 @@ export default function PetlensUpload({
 
     /** 카메라 정지 — 리소스 해제 */
     const stopCamera = () => {
+        cameraRequestRef.current += 1;
         streamRef.current?.getTracks().forEach((t) => t.stop());
         streamRef.current = null;
+        if (videoRef.current) videoRef.current.srcObject = null;
         setCameraOpen(false);
     };
 
     /** 카메라 시작 — 현재 단계 슬롯에 대해 */
     const startCamera = async () => {
-        setCameraError(false);
+        stopCamera();
+        const requestId = cameraRequestRef.current;
+        setCameraError(null);
         setCameraOpen(true);
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({
+            const stream = await requestMediaStream({
                 video: {
                     facingMode: { ideal: "environment" },
                     width: { ideal: 1280 },
                     height: { ideal: 720 },
                 },
                 audio: false,
-            });
+            }, () => cameraRequestRef.current === requestId);
             streamRef.current = stream;
             if (videoRef.current) videoRef.current.srcObject = stream;
         } catch (err) {
-            console.warn("Camera access failed:", err);
-            setCameraError(true);
+            if (cameraRequestRef.current !== requestId) return;
+            setCameraError(mediaAccessFailure(err, ["camera"]));
             setCameraOpen(false);
         }
     };
@@ -345,7 +354,10 @@ export default function PetlensUpload({
     };
 
     // 언마운트 시 카메라 끄기
-    useEffect(() => () => stopCamera(), []);
+    useEffect(() => () => {
+        cameraRequestRef.current += 1;
+        streamRef.current?.getTracks().forEach(track => track.stop());
+    }, []);
 
     const cfg = SLOT_CONFIG[step];
     const photoForStep = photos[step];
@@ -386,10 +398,10 @@ export default function PetlensUpload({
             <p className="text-xs text-neutral-500 mb-4">{cfg.hint} · {cfg.cameraHint}</p>
 
             {cameraError && (
-                <div className="mb-4 p-3.5 rounded-xl border border-amber-300 bg-amber-50 text-amber-900 text-xs leading-relaxed">
-                    <strong className="font-extrabold block mb-1">📷 카메라 사용 불가</strong>
-                    카메라 권한이 거부됐거나 HTTPS 환경이 아니에요.<br />
-                    <span className="text-neutral-500">모바일에서 LAN IP 로 접속하면 카메라가 차단돼요. &ldquo;불러오기&rdquo;로 진행해주세요.</span>
+                <div role="alert" className="mb-4 p-3.5 rounded-xl border border-amber-300 bg-amber-50 text-amber-900 text-xs leading-relaxed">
+                    <strong className="font-extrabold block mb-1">{labelText("📷 카메라 사용 불가")}</strong>
+                    {cameraError.message}
+                    {cameraError.permission && <MediaPermissionActions permissions={["camera"]} onRetry={startCamera} />}
                 </div>
             )}
 
@@ -410,7 +422,7 @@ export default function PetlensUpload({
                             <img
                                 ref={editImgRef}
                                 src={editingImage}
-                                alt="조정 중"
+                                alt={labelText("조정 중")}
                                 draggable={false}
                                 onPointerDown={handleDragStart}
                                 onPointerMove={handleDragMove}
@@ -429,7 +441,7 @@ export default function PetlensUpload({
                             />
                             {/* 안내 라벨 */}
                             <div className="absolute top-3 left-3 z-10 px-2.5 py-1 rounded-full bg-black/65 text-white text-[10px] font-extrabold backdrop-blur-sm pointer-events-none">
-                                드래그·핀치(줌)로 가이드 안에 맞춰주세요
+                                {labelText("드래그·핀치(줌)로 가이드 안에 맞춰주세요")}
                             </div>
                         </div>
                         </div>
@@ -440,7 +452,7 @@ export default function PetlensUpload({
                                 type="button"
                                 onClick={() => setTransform((t) => ({ ...t, scale: clamp(t.scale - 0.15, 0.3, 5) }))}
                                 className="w-7 h-7 rounded-full bg-neutral-100 hover:bg-neutral-200 flex items-center justify-center"
-                                aria-label="축소"
+                                aria-label={labelText("축소")}
                             >
                                 <i className="fa-solid fa-magnifying-glass-minus text-xs text-neutral-600" />
                             </button>
@@ -457,7 +469,7 @@ export default function PetlensUpload({
                                 type="button"
                                 onClick={() => setTransform((t) => ({ ...t, scale: clamp(t.scale + 0.15, 0.3, 5) }))}
                                 className="w-7 h-7 rounded-full bg-neutral-100 hover:bg-neutral-200 flex items-center justify-center"
-                                aria-label="확대"
+                                aria-label={labelText("확대")}
                             >
                                 <i className="fa-solid fa-magnifying-glass-plus text-xs text-neutral-600" />
                             </button>
@@ -470,7 +482,7 @@ export default function PetlensUpload({
                                 onClick={cancelAdjust}
                                 className="flex-1 px-4 py-2.5 rounded-xl border border-neutral-200 bg-white text-xs font-bold hover:bg-neutral-50"
                             >
-                                취소
+                                {labelText("취소")}
                             </button>
                             <button
                                 type="button"
@@ -478,7 +490,7 @@ export default function PetlensUpload({
                                 className="flex-1 px-4 py-2.5 rounded-xl bg-gradient-to-r from-aurora-blue to-aurora-indigo text-white text-xs font-extrabold hover:opacity-90"
                             >
                                 <i className="fa-solid fa-check mr-1.5" />
-                                맞춤 완료
+                                {labelText("맞춤 완료")}
                             </button>
                         </div>
                     </div>
@@ -494,7 +506,7 @@ export default function PetlensUpload({
                         />
                         <span className="absolute top-2.5 left-2.5 px-2.5 py-1 rounded-full bg-success text-white text-[10px] font-extrabold flex items-center gap-1">
                             <i className="fa-solid fa-circle-check" />
-                            {cfg.label} {inputMode === "camera" ? "촬영 완료" : "선택 완료"}
+                            {cfg.label} {labelText(inputMode === "camera" ? "촬영 완료" : "선택 완료")}
                         </span>
                     </div>
                     </div>
@@ -509,7 +521,7 @@ export default function PetlensUpload({
                             <div className="flex flex-col items-center justify-center text-center px-2">
                                 <i className={`fa-solid ${inputMode === "camera" ? "fa-camera" : "fa-image"} text-xl md:text-2xl mb-1`} />
                                 <div className="text-xs md:text-sm font-extrabold leading-tight">
-                                    {cfg.label} {inputMode === "camera" ? "찍기" : "선택"}
+                                    {cfg.label} {labelText(inputMode === "camera" ? "찍기" : "선택")}
                                 </div>
                                 <div className="text-[9px] md:text-[10px] opacity-70 mt-0.5 leading-tight">
                                     {cfg.ratioLabel}
@@ -541,7 +553,7 @@ export default function PetlensUpload({
                                 className="flex-1 px-4 py-3 rounded-xl border border-neutral-200 bg-white text-xs font-bold hover:bg-neutral-50"
                             >
                                 <i className="fa-solid fa-rotate-left mr-1.5" />
-                                다시 {inputMode === "camera" ? "찍기" : "선택"}
+                                {labelText("다시")} {labelText(inputMode === "camera" ? "찍기" : "선택")}
                             </button>
                             <button
                                 type="button"
@@ -549,9 +561,9 @@ export default function PetlensUpload({
                                 className="flex-1 px-4 py-3 rounded-xl bg-gradient-to-r from-aurora-blue to-aurora-indigo text-white text-sm font-extrabold hover:opacity-90"
                             >
                                 {isLastStep ? (
-                                    <>분석 시작 <i className="fa-solid fa-wand-magic-sparkles ml-1.5" /></>
+                                    <>{labelText("분석 시작")} <i className="fa-solid fa-wand-magic-sparkles ml-1.5" /></>
                                 ) : (
-                                    <>다음 <i className="fa-solid fa-arrow-right ml-1.5" /></>
+                                    <>{labelText("다음")} <i className="fa-solid fa-arrow-right ml-1.5" /></>
                                 )}
                             </button>
                         </div>
@@ -563,7 +575,7 @@ export default function PetlensUpload({
                             className="w-full mb-2 px-4 py-3 rounded-xl bg-gradient-to-r from-aurora-blue to-aurora-indigo text-white text-sm font-extrabold hover:opacity-90"
                         >
                             <i className={`fa-solid ${inputMode === "camera" ? "fa-camera" : "fa-upload"} mr-1.5`} />
-                            {cfg.label} {inputMode === "camera" ? "촬영하기" : "사진 선택"}
+                            {cfg.label} {labelText(inputMode === "camera" ? "촬영하기" : "사진 선택")}
                         </button>
                     )}
 
@@ -576,7 +588,7 @@ export default function PetlensUpload({
                             className="text-[11px] font-bold text-neutral-500 hover:text-foreground disabled:opacity-30 disabled:cursor-not-allowed px-2 py-1"
                         >
                             <i className="fa-solid fa-chevron-left mr-1 text-[10px]" />
-                            이전 단계
+                            {labelText("이전 단계")}
                         </button>
                         <button
                             type="button"
@@ -584,7 +596,7 @@ export default function PetlensUpload({
                             className="text-[11px] font-bold text-neutral-500 hover:text-foreground px-2 py-1"
                         >
                             <i className="fa-solid fa-rotate-left mr-1 text-[10px]" />
-                            입력 방식 변경
+                            {labelText("입력 방식 변경")}
                         </button>
                     </div>
                 </>
@@ -595,7 +607,7 @@ export default function PetlensUpload({
                 <div className={`${styles.cameraView} ${styles.active}`}>
                     <video ref={videoRef} autoPlay playsInline muted />
                     <div className="absolute top-4 left-4 z-[2] px-3 py-1.5 rounded-full bg-black/60 text-white text-xs font-bold backdrop-blur-md">
-                        {cfg.label} 촬영 중
+                        {cfg.label} {labelText("촬영 중")}
                     </div>
                     <div
                         ref={guideRef}
@@ -613,13 +625,13 @@ export default function PetlensUpload({
                             onClick={stopCamera}
                             className="px-5 py-3 rounded-full bg-white/95 text-neutral-900 font-bold text-sm"
                         >
-                            취소
+                            {labelText("취소")}
                         </button>
                         <button
                             type="button"
                             onClick={capture}
                             className="w-16 h-16 rounded-full bg-danger border-4 border-white shadow-2xl hover:scale-105 transition"
-                            aria-label="촬영"
+                            aria-label={labelText("촬영")}
                         />
                     </div>
                 </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import type { PetObservationHistoryItem } from "@/lib/petlens-observation";
 
 type Props = {
@@ -28,18 +29,19 @@ function historyDate(value: string) {
 }
 
 export default function PetLensObservationHistory({ items, loading = false, onOpen }: Props) {
+    const { menuLabel: labelText } = useI18n();
     return (
         <section className="rounded-2xl border border-neutral-200 bg-white p-4" data-petlens-observation-history>
             <div className="flex items-center justify-between gap-3">
                 <div>
-                    <p className="text-xs font-black text-neutral-950">최근 행동·소리·건강 신호 분석</p>
-                    <p className="mt-1 text-[10px] font-bold text-neutral-500">원본 영상 없이 분석 결과만 다시 확인합니다.</p>
+                    <p className="text-xs font-black text-neutral-950">{labelText("최근 행동·소리·건강 신호 분석")}</p>
+                    <p className="mt-1 text-[10px] font-bold text-neutral-500">{labelText("원본 영상 없이 분석 결과만 다시 확인합니다.")}</p>
                 </div>
-                {loading && <i className="fa-solid fa-circle-notch fa-spin text-xs text-indigo-600" aria-label="분석 기록 불러오는 중" />}
+                {loading && <i className="fa-solid fa-circle-notch fa-spin text-xs text-indigo-600" aria-label={labelText("분석 기록 불러오는 중")} />}
             </div>
             {!loading && items.length === 0 ? (
                 <p className="mt-3 rounded-xl bg-neutral-50 px-3 py-3 text-[11px] font-bold text-neutral-500">
-                    아직 저장된 분석 결과가 없습니다.
+                    {labelText("아직 저장된 분석 결과가 없습니다.")}
                 </p>
             ) : (
                 <div className="mt-3 grid gap-2">

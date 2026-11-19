@@ -42,10 +42,10 @@ export default function ProductReviewPanel({ product: p }: { product: CatalogPro
 
     return (
         <div className="mx-auto max-w-3xl space-y-6" data-review-panel>
-            <p className="rounded-xl bg-neutral-50 p-4 text-sm leading-6 text-neutral-600">{en ? "Source" : "출처"}: {[...new Set(sources.map(source => reviewSellerLabel(source.url)))].join(' / ')}. {en ? "These are purchase reviews from the Naver Daengdabang store, shown separately from purchases made on this site." : "네이버 댕다방 스토어의 구매 후기이며, 이 사이트에서 직접 구매한 후기와는 따로 보여 드립니다."}</p>
+            <p className="rounded-xl bg-neutral-50 p-4 text-sm leading-6 text-neutral-600">{en ? "Source" : "출처"}: {[...new Set(sources.map(source => reviewSellerLabel(source.url, en)))].join(' / ')}. {en ? "These are purchase reviews from the 댕다방 store on Naver, shown separately from purchases made on this site." : "네이버 댕다방 스토어의 구매 후기이며, 이 사이트에서 직접 구매한 후기와는 따로 보여 드립니다."}</p>
             {summary && (
                 <section aria-label={en ? "AI review summary" : "AI 리뷰 요약"} className="rounded-2xl border border-indigo-100 bg-indigo-50/60 p-5 md:p-7">
-                    <h3 className="flex items-center gap-2 text-lg font-black text-neutral-950"><span aria-hidden="true">✦</span>{en ? "AI summary of Naver Daengdabang store reviews" : "네이버 댕다방 스토어 후기 AI 요약"}</h3>
+                    <h3 className="flex items-center gap-2 text-lg font-black text-neutral-950"><span aria-hidden="true">✦</span>{en ? "AI summary of 댕다방 store on Naver reviews" : "네이버 댕다방 스토어 후기 AI 요약"}</h3>
                     <p className="mt-4 font-bold leading-7 text-neutral-950">{summary.headline}</p>
                     <p className="mt-2 text-sm leading-7 text-neutral-700">{summary.body}</p>
                     <div className="mt-4 flex flex-wrap gap-2">{summary.tags.map(tag => <span key={tag} className="rounded-md bg-white px-2.5 py-1 text-xs text-indigo-700">{tag}</span>)}</div>
@@ -54,8 +54,8 @@ export default function ProductReviewPanel({ product: p }: { product: CatalogPro
                 </section>
             )}
             <section className="rounded-xl border border-neutral-200 bg-white p-5 md:p-7" aria-label={en ? "Review ratings" : "리뷰 평점"}>
-                <p className="text-xs font-bold text-indigo-600">{en ? "Naver Daengdabang store purchase reviews" : "네이버 댕다방 스토어 구매 후기"}</p>
-                <p className="mt-2 text-xs leading-5 text-neutral-500">{en ? "These reviews were written by customers who bought the linked products at the Naver Daengdabang store." : "네이버 댕다방 스토어에서 해당 상품을 구매한 고객의 후기입니다."}</p>
+                <p className="text-xs font-bold text-indigo-600">{en ? "댕다방 store on Naver purchase reviews" : "네이버 댕다방 스토어 구매 후기"}</p>
+                <p className="mt-2 text-xs leading-5 text-neutral-500">{en ? "These reviews were written by customers who bought the linked products at the 댕다방 store on Naver." : "네이버 댕다방 스토어에서 해당 상품을 구매한 고객의 후기입니다."}</p>
                 <p className="mt-2 text-xs leading-5 text-neutral-500">{en ? "Only the original product linked below is counted. Reviews for other seasons or models are kept separately." : "아래 원문 상품의 후기만 집계합니다. 다른 시즌·모델의 후기는 합산하지 않습니다."}</p>
                 <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2">
                     <span className="text-3xl font-black text-neutral-950"><span aria-hidden="true" className="mr-2 text-amber-500">★</span>{typeof average === "number" && Number.isFinite(average) ? average.toFixed(1) : "—"}<span className="ml-1 text-sm font-normal text-neutral-500">/ 5</span></span>
@@ -82,7 +82,7 @@ export default function ProductReviewPanel({ product: p }: { product: CatalogPro
             {sources.length > 0 && <section className="rounded-xl bg-neutral-50 p-5" aria-label={en ? "Review sources" : "리뷰 출처"}>
                 <h3 className="text-sm font-bold">{en ? "Read all original reviews" : "전체 원문 리뷰 보기"}</h3>
                 <p className="mt-2 text-xs leading-5 text-neutral-500">{en ? "Counts and averages reflect the collected source data and can differ from current values." : "리뷰 수·평점은 수집 당시 원문 기준이며 현재 수치와 다를 수 있어요. 같은 원문 상품은 한 번만 집계합니다."}</p>
-                <div className="mt-3 flex flex-wrap gap-2">{sources.map(source => <a key={source.url} href={source.url} target="_blank" rel="noopener noreferrer" className="rounded-lg border border-neutral-200 bg-white px-3 py-2 text-xs font-semibold hover:border-indigo-400">{reviewSellerLabel(source.url)} · {source.count.toLocaleString()}{en ? " reviews ↗" : "개 후기 ↗"}</a>)}</div>
+                <div className="mt-3 flex flex-wrap gap-2">{sources.map(source => <a key={source.url} href={source.url} target="_blank" rel="noopener noreferrer" className="rounded-lg border border-neutral-200 bg-white px-3 py-2 text-xs font-semibold hover:border-indigo-400">{reviewSellerLabel(source.url, en)} · {source.count.toLocaleString()}{en ? " reviews ↗" : "개 후기 ↗"}</a>)}</div>
             </section>}
         </div>
     );

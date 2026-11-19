@@ -237,7 +237,7 @@ test("the pre-launch notice is an accessible dialog in the shared site modal she
     const modal = await source("components/checkout/PrelaunchNoticeModal.tsx");
     assert.match(modal, /export const PRELAUNCH_NOTICE_TITLE = "현재는 정식오픈전입니다\."/);
     assert.match(modal, /className="ddb-petform" data-mode="prelaunch" role="dialog" aria-modal="true" aria-labelledby=\{titleId\} aria-describedby=\{descriptionId\}/);
-    assert.match(modal, /aria-label="안내 닫기"/);
+    assert.match(modal, /aria-label=\{labelText\("안내 닫기"\)\}/);
     assert.match(modal, /event\.key === "Escape"/);
     assert.match(modal, /event\.key !== "Tab"/);
     assert.match(modal, /confirmRef\.current\?\.focus\(\)/);

@@ -11,10 +11,12 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import type { TossTestPaymentConfirmation } from "@/lib/customer-api";
+import CashReceiptCard from "./CashReceiptCard";
 import { findProduct } from "@/lib/shop";
 import { CHECKOUT_DELIVERY_REQUEST_PRESETS } from "@/lib/checkout-shipping";
 import type { CheckoutPaymentMethod } from "@/lib/payment-methods";
@@ -71,6 +73,7 @@ export function PaymentDoneWeb({ confirmation, orderId, amount, userName }: {
     amount: number;
     userName?: string;
 }) {
+    const { menuLabel: labelText } = useI18n();
     const [copied, setCopied] = useState(false);
     const method = METHOD[confirmation.paymentMethod] ?? METHOD.card;
     const delivery = confirmation.delivery;
@@ -114,18 +117,18 @@ export function PaymentDoneWeb({ confirmation, orderId, amount, userName }: {
                 {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                 <img src={`${UI}daily-hero-treasure-384.webp`} alt="" aria-hidden="true" />
                 <span className="gw-kicker">THANK YOU</span>
-                <h1 id="pw-done-title">주문이 완료됐어요{userName ? <>, <span className="gw-hl">{userName}</span>님</> : ""}!</h1>
-                <p>{won(amount)} 결제가 확인됐어요. 주문 내역은 마이페이지에서 언제든 볼 수 있어요.</p>
+                <h1 id="pw-done-title">{labelText("주문이 완료됐어요")}{userName ? <>, <span className="gw-hl">{userName}</span>{labelText("님")}</> : ""}!</h1>
+                <p>{won(amount)} {labelText("결제가 확인됐어요. 주문 내역은 마이페이지에서 언제든 볼 수 있어요.")}</p>
 
                 <div className="gw-ticket">
-                    <small>주문번호</small>
+                    <small>{labelText("주문번호")}</small>
                     <b>{orderId}</b>
                     <span className="pw-ticket-meta">
                         <span><i className={`fa-solid ${method.icon}`} aria-hidden="true" />{method.label}</span>
                         {confirmation.approvedAt && <span><i className="fa-regular fa-clock" aria-hidden="true" />{dateTime(confirmation.approvedAt)}</span>}
                     </span>
                     <button type="button" className="gw-pill" onClick={() => void copy()}>
-                        <i className={copied ? "fa-solid fa-check" : "fa-regular fa-copy"} aria-hidden="true" />{copied ? "복사했어요" : "주문번호 복사"}
+                        <i className={copied ? "fa-solid fa-check" : "fa-regular fa-copy"} aria-hidden="true" />{labelText(copied ? "복사했어요" : "주문번호 복사")}
                     </button>
                 </div>
             </section>
@@ -134,15 +137,15 @@ export function PaymentDoneWeb({ confirmation, orderId, amount, userName }: {
             <section className="gw-card" aria-labelledby="pw-order-title">
                 <h2 className="gw-card-h" id="pw-order-title" data-tone="sky">
                     <span aria-hidden="true"><i className="fa-solid fa-receipt" /></span>
-                    주문 내용
-                    <em className="pw-count">{totalQty}개</em>
+                    {labelText("주문 내용")}
+                    <em className="pw-count">{totalQty}{labelText("개")}</em>
                 </h2>
 
-                <ol className="gw-track" aria-label="진행 상황 · 결제 완료">
+                <ol className="gw-track" aria-label={labelText("진행 상황 · 결제 완료")}>
                     {TRACK.map((step, index) => (
                         <li key={step.label} className={index === 0 ? "is-now" : "is-next"} aria-current={index === 0 ? "step" : undefined}>
                             <b aria-hidden="true"><i className={`fa-solid ${step.icon}`} /></b>
-                            <span>{step.label}</span>
+                            <span>{labelText(step.label)}</span>
                         </li>
                     ))}
                 </ol>
@@ -151,13 +154,13 @@ export function PaymentDoneWeb({ confirmation, orderId, amount, userName }: {
                     <p className="pw-eta">
                         <i className="fa-solid fa-calendar-check" aria-hidden="true" />
                         <span>
-                            <b>예상 도착 {dayLabel(quote.estimatedStartDate)}{quote.estimatedEndDate && quote.estimatedEndDate !== quote.estimatedStartDate ? ` ~ ${dayLabel(quote.estimatedEndDate)}` : ""}</b>
-                            택배사 사정에 따라 조금 달라질 수 있어요.
+                            <b>{labelText("예상 도착")} {dayLabel(quote.estimatedStartDate)}{quote.estimatedEndDate && quote.estimatedEndDate !== quote.estimatedStartDate ? ` ~ ${dayLabel(quote.estimatedEndDate)}` : ""}</b>
+                            {labelText("택배사 사정에 따라 조금 달라질 수 있어요.")}
                         </span>
                     </p>
                 )}
 
-                <ul className="gw-items" aria-label="주문 상품">
+                <ul className="gw-items" aria-label={labelText("주문 상품")}>
                     {lines.map((line) => (
                         <li key={line.key}>
                             <span className="gw-thumb" aria-hidden="true">
@@ -171,53 +174,54 @@ export function PaymentDoneWeb({ confirmation, orderId, amount, userName }: {
 
                 <div className="gw-two">
                     <div className="gw-box" data-tone="lav">
-                        <h3><i className="fa-solid fa-credit-card" aria-hidden="true" />결제 정보</h3>
+                        <h3><i className="fa-solid fa-credit-card" aria-hidden="true" />{labelText("결제 정보")}</h3>
                         <dl>
-                            <div><dt>상품 금액</dt><dd>{won(itemsTotal)}</dd></div>
-                            <div><dt>배송비</dt><dd>{shippingFee ? won(shippingFee) : "무료"}</dd></div>
-                            <div><dt>결제 수단</dt><dd>{method.label}</dd></div>
-                            <div className="is-total"><dt>총 결제</dt><dd>{won(confirmation.totalAmount)}</dd></div>
+                            <div><dt>{labelText("상품 금액")}</dt><dd>{won(itemsTotal)}</dd></div>
+                            <div><dt>{labelText("배송비")}</dt><dd>{shippingFee ? won(shippingFee) : "무료"}</dd></div>
+                            <div><dt>{labelText("결제 수단")}</dt><dd>{method.label}</dd></div>
+                            <div className="is-total"><dt>{labelText("총 결제")}</dt><dd>{won(confirmation.totalAmount)}</dd></div>
                         </dl>
+                        <CashReceiptCard receipt={confirmation.cashReceipt} />
                     </div>
                     <div className="gw-box" data-tone="mint">
-                        <h3><i className="fa-solid fa-location-dot" aria-hidden="true" />배송 정보</h3>
+                        <h3><i className="fa-solid fa-location-dot" aria-hidden="true" />{labelText("배송 정보")}</h3>
                         {delivery ? (
                             <dl>
-                                <div><dt>받는 분</dt><dd>{delivery.recipientName}</dd></div>
-                                <div><dt>연락처</dt><dd>{maskPhone(delivery.phone)}</dd></div>
-                                <div><dt>주소</dt><dd>{[delivery.addressLine1, delivery.addressLine2].filter(Boolean).join(" ")}</dd></div>
-                                {request && <div><dt>요청</dt><dd>{request}</dd></div>}
+                                <div><dt>{labelText("받는 분")}</dt><dd>{delivery.recipientName}</dd></div>
+                                <div><dt>{labelText("연락처")}</dt><dd>{maskPhone(delivery.phone)}</dd></div>
+                                <div><dt>{labelText("주소")}</dt><dd>{[delivery.addressLine1, delivery.addressLine2].filter(Boolean).join(" ")}</dd></div>
+                                {request && <div><dt>{labelText("요청")}</dt><dd>{request}</dd></div>}
                             </dl>
                         ) : (
-                            <p className="gw-hint">배송 정보는 주문 상세에서 확인할 수 있어요.</p>
+                            <p className="gw-hint">{labelText("배송 정보는 주문 상세에서 확인할 수 있어요.")}</p>
                         )}
                     </div>
                 </div>
 
                 <div className="pw-go">
                     <Link href={`/mypage/orders/?orderId=${encodeURIComponent(orderId)}`} className="gw-go">
-                        <i className="fa-solid fa-receipt" aria-hidden="true" />주문 상세보기
+                        <i className="fa-solid fa-receipt" aria-hidden="true" />{labelText("주문 상세보기")}
                     </Link>
-                    <Link href="/products" className="gw-go is-soft">쇼핑 계속하기</Link>
+                    <Link href="/products" className="gw-go is-soft">{labelText("쇼핑 계속하기")}</Link>
                 </div>
             </section>
 
             {/* 이어서 해 보세요 — 기존 화면으로만 연결 */}
-            <section className="pw-next" aria-label="이어서 해 보세요">
+            <section className="pw-next" aria-label={labelText("이어서 해 보세요")}>
                 <Link href="/mypage/orders/" data-tone="sky">
                     {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                     <img src={`${UI}web-cs-orders-160.webp`} alt="" aria-hidden="true" />
-                    <span><b>주문 · 배송 내역</b><small>지난 주문까지 한눈에</small></span>
+                    <span><b>{labelText("주문 · 배송 내역")}</b><small>{labelText("지난 주문까지 한눈에")}</small></span>
                 </Link>
                 <Link href="/recommendations/" data-tone="pink">
                     {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                     <img src={`${UI}hotpick-outdoor-128.webp`} alt="" aria-hidden="true" />
-                    <span><b>우리 아이 맞춤 상품</b><small>함께 쓰기 좋은 것들</small></span>
+                    <span><b>{labelText("우리 아이 맞춤 상품")}</b><small>{labelText("함께 쓰기 좋은 것들")}</small></span>
                 </Link>
                 <Link href="/mypage/daily/" data-tone="yellow">
                     {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                     <img src={`${UI}daily-checkin-256.webp`} alt="" aria-hidden="true" />
-                    <span><b>오늘의 출석 도장</b><small>코인 쌓기</small></span>
+                    <span><b>{labelText("오늘의 출석 도장")}</b><small>{labelText("코인 쌓기")}</small></span>
                 </Link>
             </section>
         </main>
@@ -233,6 +237,7 @@ export type PaymentStateView =
     | { kind: "failed"; message: string; retryHref?: string };
 
 export function PaymentStateWeb({ view }: { view: PaymentStateView }) {
+    const { menuLabel: labelText } = useI18n();
     if (view.kind === "checking") {
         return (
             <main className="gw-lookup pw-page" data-guest-web="pay-state" aria-live="polite">
@@ -242,12 +247,12 @@ export function PaymentStateWeb({ view }: { view: PaymentStateView }) {
                         <img src={`${UI}goods-escrow-256.webp`} alt="" />
                     </span>
                     <span className="gw-kicker">CHECKING</span>
-                    <h1 id="pw-state-title">결제를 <span className="gw-hl">확인</span>하고 있어요</h1>
-                    <p>주문번호와 금액을 서버에서 한 번 더 확인하는 중이에요. 이 화면을 닫지 말아 주세요.</p>
-                    <ol className="pw-steps" aria-label="확인 순서">
-                        <li className="is-done"><b aria-hidden="true"><i className="fa-solid fa-check" /></b><span>결제창 완료</span></li>
-                        <li className="is-now"><b aria-hidden="true"><i className="fa-solid fa-circle-notch fa-spin" /></b><span>금액 · 주문 확인</span></li>
-                        <li><b aria-hidden="true"><i className="fa-solid fa-box" /></b><span>주문 저장</span></li>
+                    <h1 id="pw-state-title">{labelText("결제를")} <span className="gw-hl">{labelText("확인")}</span>{labelText("하고 있어요")}</h1>
+                    <p>{labelText("주문번호와 금액을 서버에서 한 번 더 확인하는 중이에요. 이 화면을 닫지 말아 주세요.")}</p>
+                    <ol className="pw-steps" aria-label={labelText("확인 순서")}>
+                        <li className="is-done"><b aria-hidden="true"><i className="fa-solid fa-check" /></b><span>{labelText("결제창 완료")}</span></li>
+                        <li className="is-now"><b aria-hidden="true"><i className="fa-solid fa-circle-notch fa-spin" /></b><span>{labelText("금액 · 주문 확인")}</span></li>
+                        <li><b aria-hidden="true"><i className="fa-solid fa-box" /></b><span>{labelText("주문 저장")}</span></li>
                     </ol>
                 </section>
             </main>
@@ -261,10 +266,10 @@ export function PaymentStateWeb({ view }: { view: PaymentStateView }) {
                     {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                     <img src={`${UI}stickers/login-lock.webp`} alt="" aria-hidden="true" />
                     <span className="gw-kicker">SIGN IN</span>
-                    <h1 id="pw-state-title"><span className="gw-hl">로그인</span>하면 결제를 확인할 수 있어요</h1>
-                    <p>결제한 계정으로 로그인하면 이 화면으로 돌아와 결제를 마저 확인해요. 결제는 그대로 안전하게 남아 있어요.</p>
+                    <h1 id="pw-state-title"><span className="gw-hl">{labelText("로그인")}</span>{labelText("하면 결제를 확인할 수 있어요")}</h1>
+                    <p>{labelText("결제한 계정으로 로그인하면 이 화면으로 돌아와 결제를 마저 확인해요. 결제는 그대로 안전하게 남아 있어요.")}</p>
                     <div className="gw-done-go">
-                        <Link href={view.loginHref} className="gw-go"><i className="fa-solid fa-right-to-bracket" aria-hidden="true" />로그인하고 결제 확인</Link>
+                        <Link href={view.loginHref} className="gw-go"><i className="fa-solid fa-right-to-bracket" aria-hidden="true" />{labelText("로그인하고 결제 확인")}</Link>
                     </div>
                 </section>
             </main>
@@ -278,15 +283,15 @@ export function PaymentStateWeb({ view }: { view: PaymentStateView }) {
                     {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                     <img src={`${UI}web-cs-step-inspect-256.webp`} alt="" aria-hidden="true" />
                     <span className="gw-kicker">PLEASE WAIT</span>
-                    <h1 id="pw-state-title">결제 상태를 <span className="gw-hl">확인하는 중</span>이에요</h1>
-                    <p>카드사 · 결제사의 응답이 아직 오지 않았어요. 잠시 뒤 다시 확인해 주세요.</p>
+                    <h1 id="pw-state-title">{labelText("결제 상태를")} <span className="gw-hl">{labelText("확인하는 중")}</span>{labelText("이에요")}</h1>
+                    <p>{labelText("카드사 · 결제사의 응답이 아직 오지 않았어요. 잠시 뒤 다시 확인해 주세요.")}</p>
                     <ul>
-                        <li><i className="fa-solid fa-cart-shopping" aria-hidden="true" /><span>장바구니와 주문 정보는 바꾸지 않았어요.</span></li>
-                        <li><i className="fa-solid fa-rotate" aria-hidden="true" /><span>같은 결제를 한 번 더 확인하는 거라 새로 결제되지 않아요.</span></li>
+                        <li><i className="fa-solid fa-cart-shopping" aria-hidden="true" /><span>{labelText("장바구니와 주문 정보는 바꾸지 않았어요.")}</span></li>
+                        <li><i className="fa-solid fa-rotate" aria-hidden="true" /><span>{labelText("같은 결제를 한 번 더 확인하는 거라 새로 결제되지 않아요.")}</span></li>
                     </ul>
                     <div className="gw-done-go">
-                        <a href={view.retryHref} className="gw-go"><i className="fa-solid fa-rotate-right" aria-hidden="true" />같은 결제 다시 확인</a>
-                        <Link href="/inquiry" className="gw-go is-soft">1:1 문의</Link>
+                        <a href={view.retryHref} className="gw-go"><i className="fa-solid fa-rotate-right" aria-hidden="true" />{labelText("같은 결제 다시 확인")}</a>
+                        <Link href="/inquiry" className="gw-go is-soft">{labelText("1:1 문의")}</Link>
                     </div>
                 </section>
             </main>
@@ -300,25 +305,25 @@ export function PaymentStateWeb({ view }: { view: PaymentStateView }) {
                 {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                 <img src={`${UI}goods-pay-none-256.webp`} alt="" aria-hidden="true" />
                 <span className="gw-kicker">SOMETHING WENT WRONG</span>
-                <h1 id="pw-state-title">{failed ? <>결제 확인에 <span className="gw-hl">실패</span>했어요</> : <>결제 결과를 <span className="gw-hl">확인할 수 없어요</span></>}</h1>
+                <h1 id="pw-state-title">{failed ? <>{labelText("결제 확인에")} <span className="gw-hl">{labelText("실패")}</span>{labelText("했어요")}</> : <>{labelText("결제 결과를")} <span className="gw-hl">{labelText("확인할 수 없어요")}</span></>}</h1>
                 {/* 서버가 보낸 원문 대신 쉬운 고정 문장(2026-10-26), 원문은 문의할 때 쓰도록 작은 흐린 줄로 */}
                 <p className="pw-reason">
-                    {failed
+                    {labelText(failed
                         ? "결제 내용을 확인하는 중에 문제가 생겼어요. 잠시 뒤 다시 확인해 주세요."
-                        : "결제 결과 정보가 올바르지 않아 확인할 수 없었어요."}
-                    {view.message && <small className="pw-reason-raw">자세한 내용 · {view.message}</small>}
+                        : "결제 결과 정보가 올바르지 않아 확인할 수 없었어요.")}
+                    {view.message && <small className="pw-reason-raw">{labelText("자세한 내용 ·")} {view.message}</small>}
                 </p>
                 <ul>
-                    <li><i className="fa-solid fa-cart-shopping" aria-hidden="true" /><span>{failed && view.retryHref ? "같은 결제를 한 번 더 확인할 수 있어요. 새로 결제되지 않아요." : "장바구니는 그대로예요. 주문서에서 다시 결제할 수 있어요."}</span></li>
-                    <li><i className="fa-solid fa-headset" aria-hidden="true" /><span>돈이 빠져나갔는데 이 화면이 보이면 1:1 문의에 주문번호를 남겨 주세요.</span></li>
+                    <li><i className="fa-solid fa-cart-shopping" aria-hidden="true" /><span>{labelText(failed && view.retryHref ? "같은 결제를 한 번 더 확인할 수 있어요. 새로 결제되지 않아요." : "장바구니는 그대로예요. 주문서에서 다시 결제할 수 있어요.")}</span></li>
+                    <li><i className="fa-solid fa-headset" aria-hidden="true" /><span>{labelText("돈이 빠져나갔는데 이 화면이 보이면 1:1 문의에 주문번호를 남겨 주세요.")}</span></li>
                 </ul>
                 <div className="gw-done-go">
                     {failed && view.retryHref
-                        ? <a href={view.retryHref} className="gw-go"><i className="fa-solid fa-rotate-right" aria-hidden="true" />같은 결제 다시 확인</a>
-                        : <Link href="/checkout" className="gw-go"><i className="fa-solid fa-credit-card" aria-hidden="true" />결제 다시 시도</Link>}
-                    <Link href="/cart" className="gw-go is-soft">장바구니 확인</Link>
+                        ? <a href={view.retryHref} className="gw-go"><i className="fa-solid fa-rotate-right" aria-hidden="true" />{labelText("같은 결제 다시 확인")}</a>
+                        : <Link href="/checkout" className="gw-go"><i className="fa-solid fa-credit-card" aria-hidden="true" />{labelText("결제 다시 시도")}</Link>}
+                    <Link href="/cart" className="gw-go is-soft">{labelText("장바구니 확인")}</Link>
                 </div>
-                <Link href="/inquiry" className="gw-link pw-help">1:1 문의하기</Link>
+                <Link href="/inquiry" className="gw-link pw-help">{labelText("1:1 문의하기")}</Link>
             </section>
         </main>
     );
@@ -336,6 +341,7 @@ const FAIL_REASON: Record<string, { title: string; tip: string; icon: string }> 
 };
 
 export function PaymentFailWeb({ code, message, orderId }: { code: string; message: string; orderId: string }) {
+    const { menuLabel: labelText } = useI18n();
     const reason = FAIL_REASON[code];
     return (
         <main className="gw-lookup pw-page" data-guest-web="pay-fail" data-payment-status="failed">
@@ -343,8 +349,8 @@ export function PaymentFailWeb({ code, message, orderId }: { code: string; messa
                 {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                 <img src={`${UI}goods-pay-none-256.webp`} alt="" aria-hidden="true" />
                 <span className="gw-kicker">PAYMENT NOT COMPLETED</span>
-                <h1 id="pw-fail-title">결제가 <span className="gw-hl">완료되지 않았어요</span></h1>
-                <p>장바구니 상품은 그대로예요. 결제 알림을 받았다면 주문 내역에서 승인 상태를 먼저 확인해 주세요.</p>
+                <h1 id="pw-fail-title">{labelText("결제가")} <span className="gw-hl">{labelText("완료되지 않았어요")}</span></h1>
+                <p>{labelText("장바구니 상품은 그대로예요. 결제 알림을 받았다면 주문 내역에서 승인 상태를 먼저 확인해 주세요.")}</p>
 
                 {/* 까닭 — 아는 코드는 쉬운 말, 모르는 코드는 받은 메시지 */}
                 <div className="pw-why">
@@ -352,22 +358,22 @@ export function PaymentFailWeb({ code, message, orderId }: { code: string; messa
                     <span>
                         <b>{reason?.title ?? "결제가 끝나지 않았어요"}</b>
                         <small>{reason?.tip ?? message}</small>
-                        {reason && message && <small className="pw-why-raw">결제사 메시지 · {message}</small>}
+                        {reason && message && <small className="pw-why-raw">{labelText("결제사 메시지 ·")} {message}</small>}
                     </span>
                 </div>
                 <dl className="pw-codes">
-                    <div><dt>오류 코드</dt><dd>{code}</dd></div>
-                    {orderId && <div><dt>주문번호</dt><dd>{orderId}</dd></div>}
+                    <div><dt>{labelText("오류 코드")}</dt><dd>{code}</dd></div>
+                    {orderId && <div><dt>{labelText("주문번호")}</dt><dd>{orderId}</dd></div>}
                 </dl>
 
                 <ul>
-                    <li><i className="fa-solid fa-arrows-rotate" aria-hidden="true" /><span>주문 내역에 결제된 주문이 없다면 장바구니 상품으로 다시 시도해 주세요.</span></li>
+                    <li><i className="fa-solid fa-arrows-rotate" aria-hidden="true" /><span>{labelText("주문 내역에 결제된 주문이 없다면 장바구니 상품으로 다시 시도해 주세요.")}</span></li>
                 </ul>
                 <div className="gw-done-go">
-                    <Link href="/checkout" className="gw-go"><i className="fa-solid fa-credit-card" aria-hidden="true" />다시 결제하기</Link>
-                    <Link href="/cart" className="gw-go is-soft">장바구니 확인</Link>
+                    <Link href="/checkout" className="gw-go"><i className="fa-solid fa-credit-card" aria-hidden="true" />{labelText("다시 결제하기")}</Link>
+                    <Link href="/cart" className="gw-go is-soft">{labelText("장바구니 확인")}</Link>
                 </div>
-                <Link href="/inquiry" className="gw-link pw-help">결제가 계속 안 되면 1:1 문의</Link>
+                <Link href="/inquiry" className="gw-link pw-help">{labelText("결제가 계속 안 되면 1:1 문의")}</Link>
             </section>
         </main>
     );

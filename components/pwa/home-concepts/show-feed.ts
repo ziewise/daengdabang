@@ -31,6 +31,7 @@ export function toPost(p: ShowcasePost): ShowPost {
         author: p.author.displayName,
         followers: p.author.followerCount,
         date: formatCreatedAt(p.createdAt),
+        createdAt: p.createdAt,
         pet: p.pet?.name || undefined,
         breed: p.pet?.breed || undefined,
         img: p.imageUrl,

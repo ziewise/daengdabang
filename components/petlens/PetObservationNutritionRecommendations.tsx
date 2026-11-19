@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import Image from "next/image";
 import Link from "next/link";
 import type {
@@ -46,6 +47,7 @@ export default function PetObservationNutritionRecommendations({
 }: {
     result: PetObservationResult;
 }) {
+    const { menuLabel: labelText } = useI18n();
     if (
         result.status !== "ready"
         || result.quality.level !== "good"
@@ -63,18 +65,18 @@ export default function PetObservationNutritionRecommendations({
             <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                     <p className="text-[11px] font-black tracking-[0.12em] text-emerald-700">
-                        프로필 기반 영양 관리
+                        {labelText("프로필 기반 영양 관리")}
                     </p>
                     <h3 className="mt-1 text-lg font-black text-neutral-950">
-                        우리 아이 영양식 비교 제안
+                        {labelText("우리 아이 영양식 비교 제안")}
                     </h3>
                 </div>
                 <span className="rounded-full border border-emerald-100 bg-white px-3 py-1.5 text-[10px] font-black text-emerald-800">
-                    자사몰 상품 연결
+                    {labelText("자사몰 상품 연결")}
                 </span>
             </div>
             <p className="mt-2 max-w-3xl text-[11px] font-bold leading-5 text-neutral-600">
-                등록 프로필과 보호자가 선택한 활동 맥락을 바탕으로, 생활 단계가 맞는 자사몰 주식 상품만 비교하기 쉽게 보여드려요.
+                {labelText("등록 프로필과 보호자가 선택한 활동 맥락을 바탕으로, 생활 단계가 맞는 자사몰 주식 상품만 비교하기 쉽게 보여드려요.")}
             </p>
 
             <div className="mt-4 grid gap-3 lg:grid-cols-2">
@@ -90,7 +92,7 @@ export default function PetObservationNutritionRecommendations({
                                         key={basis}
                                         className="rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-black text-emerald-800"
                                     >
-                                        {PROFILE_BASIS_LABEL[basis]} 기준
+                                        {PROFILE_BASIS_LABEL[basis]} {labelText("기준")}
                                     </span>
                                 ))}
                             </div>
@@ -122,13 +124,13 @@ export default function PetObservationNutritionRecommendations({
                                     </p>
                                     <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
                                         <span className="text-sm font-black text-neutral-950">
-                                            {product.price.toLocaleString("ko-KR")}원
+                                            {product.price.toLocaleString("ko-KR")}{labelText("원")}
                                         </span>
                                         <Link
                                             href={petObservationNutritionProductHref(product)}
                                             className="inline-flex min-h-9 items-center rounded-xl bg-emerald-700 px-3 text-[11px] font-black text-white hover:bg-emerald-800"
                                         >
-                                            상품 비교하기
+                                            {labelText("상품 비교하기")}
                                         </Link>
                                     </div>
                                 </div>
@@ -138,7 +140,7 @@ export default function PetObservationNutritionRecommendations({
                                 href="/category/food"
                                 className="inline-flex min-h-11 items-center justify-center rounded-xl border border-emerald-200 bg-emerald-50 px-4 text-xs font-black text-emerald-800 hover:bg-emerald-100"
                             >
-                                영양식 전체 보기
+                                {labelText("영양식 전체 보기")}
                             </Link>
                         )}
                     </article>
@@ -146,7 +148,7 @@ export default function PetObservationNutritionRecommendations({
             </div>
 
             <p className="mt-3 rounded-xl border border-emerald-100 bg-white/80 px-3 py-2.5 text-[10px] font-bold leading-5 text-emerald-900">
-                기존 식단과 알레르기, 상품 원재료를 먼저 확인하고 천천히 비교해 주세요.
+                {labelText("기존 식단과 알레르기, 상품 원재료를 먼저 확인하고 천천히 비교해 주세요.")}
             </p>
         </section>
     );

@@ -11,6 +11,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useWebScreen } from "@/hooks/useWebScreen";
 import DeliveryReturnPolicyDetails from "@/components/policy/DeliveryReturnPolicyDetails";
+import { useI18n } from "@/lib/i18n";
 import { BUSINESS_INFO } from "@/lib/legal";
 
 export default function ReturnPolicyDialogLink({
@@ -20,6 +21,8 @@ export default function ReturnPolicyDialogLink({
     label?: string;
     className?: string;
 }) {
+    const { menuLabel: labelText } = useI18n();
+    const { menuLabel } = useI18n();
     const [open, setOpen] = useState(false);
     const openerRef = useRef<HTMLAnchorElement>(null);
     const closeRef = useRef<HTMLButtonElement>(null);
@@ -55,7 +58,7 @@ export default function ReturnPolicyDialogLink({
                 aria-haspopup="dialog"
                 aria-expanded={open}
             >
-                {label}
+                {menuLabel(label)}
             </a>
 
             {open && (webScreen ? (node: React.ReactNode) => createPortal(node, document.body) : (node: React.ReactNode) => node)(
@@ -78,14 +81,14 @@ export default function ReturnPolicyDialogLink({
                             <img src="/images/ui/web-cs-return-160.webp" alt="" aria-hidden="true" className="hidden" data-modal-art />
                             <div>
                                 <p className="text-xs font-black uppercase tracking-[0.18em] text-indigo-600">DDB SHOPPING POLICY</p>
-                                <h2 id="return-policy-dialog-title" className="mt-1 text-xl font-black text-neutral-950">반품/교환 안내</h2>
+                                <h2 id="return-policy-dialog-title" className="mt-1 text-xl font-black text-neutral-950">{labelText("반품/교환 안내")}</h2>
                             </div>
                             <button
                                 ref={closeRef}
                                 type="button"
                                 onClick={() => setOpen(false)}
                                 className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-neutral-100 text-neutral-600 transition hover:bg-neutral-200 hover:text-neutral-950"
-                                aria-label="반품/교환 안내 닫기"
+                                aria-label={labelText("반품/교환 안내 닫기")}
                             >
                                 <i className="fa-solid fa-xmark text-lg" aria-hidden="true" />
                             </button>
@@ -97,29 +100,29 @@ export default function ReturnPolicyDialogLink({
                                     <div>
                                         <p className="text-base font-black text-neutral-950">댕다방</p>
                                         <p className="mt-1 text-xs font-bold leading-5 text-neutral-600">
-                                            상호명 {BUSINESS_INFO.companyName} · 대표자 {BUSINESS_INFO.representative}
+                                            {labelText("상호명")} {BUSINESS_INFO.companyName} {labelText("· 대표자")} {BUSINESS_INFO.representative}
                                         </p>
                                     </div>
                                     <Link href="/return" className="text-xs font-black text-indigo-700 underline underline-offset-2">
-                                        전체 정책 보기 <i className="fa-solid fa-chevron-right ml-1 text-[9px]" aria-hidden="true" />
+                                        {labelText("전체 정책 보기")} <i className="fa-solid fa-chevron-right ml-1 text-[9px]" aria-hidden="true" />
                                     </Link>
                                 </div>
                                 <p className="mt-3 text-xs font-bold leading-5 text-rose-600">
-                                    반품 상품을 보내기 전에 1:1 문의로 반품사유·택배사·배송비·반품지를 먼저 협의해 주세요.
+                                    {labelText("반품 상품을 보내기 전에 1:1 문의로 반품사유·택배사·배송비·반품지를 먼저 협의해 주세요.")}
                                 </p>
                                 <Link
                                     href="/inquiry?category=exchange#inquiry-form"
                                     className="mt-3 inline-flex min-h-10 items-center gap-2 rounded-lg border border-indigo-200 bg-white px-4 py-2 text-sm font-black text-indigo-700"
                                 >
-                                    <i className="fa-regular fa-message" aria-hidden="true" /> 1:1 문의하기
+                                    <i className="fa-regular fa-message" aria-hidden="true" /> {labelText("1:1 문의하기")}
                                 </Link>
                             </div>
                             <DeliveryReturnPolicyDetails />
                         </div>
 
                         <footer className="grid gap-2 border-t border-neutral-200 bg-neutral-50 px-5 py-4 sm:grid-cols-2 sm:px-6">
-                            <Link href="/return" className="btn btn-secondary w-full text-center">전체 정책 보기</Link>
-                            <Link href="/inquiry?category=exchange#inquiry-form" className="btn btn-primary w-full text-center">교환·반품 접수</Link>
+                            <Link href="/return" className="btn btn-secondary w-full text-center">{labelText("전체 정책 보기")}</Link>
+                            <Link href="/inquiry?category=exchange#inquiry-form" className="btn btn-primary w-full text-center">{labelText("교환·반품 접수")}</Link>
                         </footer>
                     </section>
                 </div>

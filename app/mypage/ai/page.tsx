@@ -5,19 +5,21 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import MypageSectionLayout, { MypageLoginGate } from "@/components/mypage/MypageSectionLayout";
 import { AiSummary } from "@/components/mypage/MypageAiSummary";
 import { useAuth } from "@/lib/store";
 
 export default function MypageAiSummaryPage() {
+    const { menuLabel: labelText } = useI18n();
     const { user } = useAuth();
     if (!user) return <MypageLoginGate redirect="/mypage/ai/" />;
 
     return (
         <MypageSectionLayout
-            eyebrow="우리 아이 AI"
-            title="AI 분석"
-            description="행동 · 소리 분석 결과와 주의 단계, 지난 분석 기록을 한곳에 모았어요."
+            eyebrow={labelText("우리 아이 AI")}
+            title={labelText("AI 분석")}
+            description={labelText("행동 · 소리 분석 결과와 주의 단계, 지난 분석 기록을 한곳에 모았어요.")}
         >
             <AiSummary />
         </MypageSectionLayout>

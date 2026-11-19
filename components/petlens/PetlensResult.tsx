@@ -6,6 +6,7 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import gsap from "gsap";
@@ -23,6 +24,7 @@ interface Props {
 }
 
 export default function PetlensResult({ photos, linkedPetName, onNameChange, onRetry }: Props) {
+    const { menuLabel: labelText } = useI18n();
     const { isLoggedIn } = useAuth();
     const { close: closePetlens } = usePetlens();
     const [name, setName] = useState("");
@@ -65,14 +67,14 @@ export default function PetlensResult({ photos, linkedPetName, onNameChange, onR
                 <div className="w-16 h-16 rounded-full bg-gradient-to-br from-aurora-blue to-aurora-indigo flex items-center justify-center text-white text-2xl overflow-hidden">
                     {photos[0] ? (
                         /* eslint-disable-next-line @next/next/no-img-element */
-                        <img src={photos[0]} alt="댕댕이" className="w-full h-full object-cover" />
+                        <img src={photos[0]} alt={labelText("댕댕이")} className="w-full h-full object-cover" />
                     ) : (
                         <i className="fa-solid fa-dog" />
                     )}
                 </div>
                 <div>
                     <p className="text-[10px] tracking-[0.2em] font-black text-aurora-indigo mb-0.5">
-                        사진 분석 결과
+                        {labelText("사진 분석 결과")}
                     </p>
                     <h3 className="text-xl font-black tracking-tight">
                         {MOCK_RESULT.breed.primary}
@@ -83,7 +85,7 @@ export default function PetlensResult({ photos, linkedPetName, onNameChange, onR
             {/* 업로드한 사진 3장 — 얼굴 / 측면 / 정면 */}
             <div className="mb-4">
                 <p className="text-[10px] font-extrabold text-neutral-500 tracking-wider mb-1.5 uppercase">
-                    업로드한 사진
+                    {labelText("업로드한 사진")}
                 </p>
                 <div className="grid grid-cols-3 gap-2">
                     {photos.map((src, i) => (
@@ -113,7 +115,7 @@ export default function PetlensResult({ photos, linkedPetName, onNameChange, onR
 
             {/* 견종 평균 특성 — 라벨은 박스 외부 상단, 박스 안엔 값만 */}
             <p className="text-[10px] font-extrabold text-neutral-500 tracking-wider mb-2 uppercase">
-                견종 평균 특성
+                {labelText("견종 평균 특성")}
             </p>
             <div ref={statsRef} className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
                 {[
@@ -139,7 +141,7 @@ export default function PetlensResult({ photos, linkedPetName, onNameChange, onR
                 견종 평균과 톤 구분 위해 aurora 컬러 + 박스 외부 라벨도 인디고 */}
             <p className="text-[10px] font-extrabold text-aurora-indigo tracking-wider mb-2 uppercase flex items-center gap-1">
                 <i className="fa-solid fa-camera-retro text-[10px]" />
-                사진 분석 결과
+                {labelText("사진 분석 결과")}
             </p>
             <div className="grid grid-cols-2 gap-2 mb-4">
                 {[
@@ -164,13 +166,13 @@ export default function PetlensResult({ photos, linkedPetName, onNameChange, onR
                 <div className="mb-4 flex items-center gap-2 p-3 rounded-xl bg-aurora-indigo/[0.06] border border-aurora-indigo/20">
                     <i className="fa-solid fa-link text-aurora-indigo text-sm" />
                     <span className="text-xs font-bold text-foreground">
-                        <strong className="text-aurora-indigo">{linkedPetName}</strong> 의 펫렌즈 기록으로 연결됐어요
+                        <strong className="text-aurora-indigo">{linkedPetName}</strong> {labelText("의 펫렌즈 기록으로 연결됐어요")}
                     </span>
                 </div>
             ) : (
                 <div className="mb-4">
                     <label className="block text-xs font-extrabold mb-1.5" htmlFor="modal-pet-name">
-                        이름을 지어주세요 <span className="text-neutral-400 font-medium">(선택)</span>
+                        {labelText("이름을 지어주세요")} <span className="text-neutral-400 font-medium">{labelText("(선택)")}</span>
                     </label>
                     <input
                         id="modal-pet-name"
@@ -178,7 +180,7 @@ export default function PetlensResult({ photos, linkedPetName, onNameChange, onR
                         maxLength={20}
                         value={name}
                         onChange={(e) => handleName(e.target.value)}
-                        placeholder="예) 초코, 콩이, 보리…"
+                        placeholder={labelText("예) 초코, 콩이, 보리…")}
                         className="w-full px-3.5 py-2.5 rounded-xl border-2 border-neutral-200 focus:border-aurora-indigo focus:outline-none text-sm"
                     />
                 </div>
@@ -191,10 +193,10 @@ export default function PetlensResult({ photos, linkedPetName, onNameChange, onR
                     <i className="fa-solid fa-circle-check text-success text-lg flex-shrink-0" />
                     <div className="text-xs">
                         <strong className="block font-extrabold text-foreground">
-                            펫렌즈 기록에 저장됐어요
+                            {labelText("펫렌즈 기록에 저장됐어요")}
                         </strong>
                         <span className="text-neutral-500 text-[11px]">
-                            마이페이지 → 펫렌즈 기록에서 다시 볼 수 있어요.
+                            {labelText("마이페이지 → 펫렌즈 기록에서 다시 볼 수 있어요.")}
                         </span>
                     </div>
                 </div>
@@ -203,10 +205,10 @@ export default function PetlensResult({ photos, linkedPetName, onNameChange, onR
                     <i className="fa-solid fa-right-to-bracket text-aurora-indigo text-lg flex-shrink-0" />
                     <div className="flex-1 text-xs min-w-0">
                         <strong className="block font-extrabold text-foreground">
-                            로그인하여 마이페이지에 업데이트하세요
+                            {labelText("로그인하여 마이페이지에 업데이트하세요")}
                         </strong>
                         <span className="text-neutral-500 text-[11px]">
-                            저장하면 펫 프로필로 등록돼 언제든 다시 볼 수 있어요.
+                            {labelText("저장하면 펫 프로필로 등록돼 언제든 다시 볼 수 있어요.")}
                         </span>
                     </div>
                     {/* 페이지 이동 X — 모달 로그인. 로그인 성공 시 pendingPet 이 자동으로 회원 펫 목록으로 이관됨
@@ -217,7 +219,7 @@ export default function PetlensResult({ photos, linkedPetName, onNameChange, onR
                         className="flex-shrink-0 inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-gradient-to-r from-aurora-blue to-aurora-indigo text-white text-[11px] font-extrabold hover:opacity-90"
                     >
                         <i className="fa-solid fa-right-to-bracket text-[10px]" />
-                        로그인
+                        {labelText("로그인")}
                     </button>
                 </div>
             )}
@@ -229,7 +231,7 @@ export default function PetlensResult({ photos, linkedPetName, onNameChange, onR
                 className="block w-full px-4 py-3 rounded-xl bg-gradient-to-r from-aurora-blue to-aurora-indigo text-white text-sm font-extrabold text-center hover:opacity-90 transition"
             >
                 <i className="fa-solid fa-wand-magic-sparkles mr-1.5" />
-                상세 분석 결과 보기
+                {labelText("상세 분석 결과 보기")}
                 <i className="fa-solid fa-arrow-right ml-1.5 text-xs" />
             </Link>
 
@@ -240,14 +242,14 @@ export default function PetlensResult({ photos, linkedPetName, onNameChange, onR
                 className="block w-full mt-2 px-4 py-2.5 rounded-xl border border-neutral-200 bg-white text-xs font-bold hover:bg-neutral-50"
             >
                 <i className="fa-solid fa-rotate-left mr-1.5" />
-                다시 분석
+                {labelText("다시 분석")}
             </button>
 
             {/* 로그인 모달 — 비회원 클릭 시 노출. 로그인 성공 시 자동 닫힘 + 결과 회원 펫으로 이관 */}
             <LoginModal
                 open={loginOpen}
                 onClose={() => setLoginOpen(false)}
-                subtitle="로그인하면 방금 분석한 결과가 자동으로 마이페이지에 저장됩니다."
+                subtitle={labelText("로그인하면 방금 분석한 결과가 자동으로 마이페이지에 저장됩니다.")}
             />
         </>
     );

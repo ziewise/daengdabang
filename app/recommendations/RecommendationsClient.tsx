@@ -7,6 +7,7 @@
  *  준비 중 글(loading)은 웹 쿠션으로 칠함(app/recommend-web.css). 앱은 그대로.
  */
 
+import { useI18n } from "@/lib/i18n";
 import Link from "next/link";
 import RecommendationsWeb from "@/components/recommendation/RecommendationsWeb";
 import { useWebScreen } from "@/hooks/useWebScreen";
@@ -56,6 +57,7 @@ function groupItems(items: RecommendationItem[]) {
 }
 
 export default function RecommendationsClient() {
+    const { locale, menuLabel: labelText } = useI18n();
     const { hydrated, user } = useAuth();
     const webScreen = useWebScreen();
     const personalizationEnabled = recommendationPersonalizationEnabled(
@@ -131,9 +133,9 @@ export default function RecommendationsClient() {
         ];
         return (
             <RecommendationsWeb
-                title={personalizedAvailable ? `${selectedPet?.name || "우리 아이"} 맞춤 추천` : "댕다방 추천 셀렉트"}
+                title={personalizedAvailable ? (locale === "en" ? `Picks for ${selectedPet?.name || "your dog"}` : `${selectedPet?.name || "우리 아이"} 맞춤 추천`) : "댕다방 추천 셀렉트"}
                 lead={lead}
-                modeLabel={MODE_LABEL[mode]}
+                modeLabel={labelText(MODE_LABEL[mode])}
                 mode={mode}
                 personalizedAvailable={personalizedAvailable}
                 showPreferencesLink={RECOMMENDATION_FEATURE_FLAGS.preferences}
@@ -167,7 +169,7 @@ export default function RecommendationsClient() {
         return (
             <main className="mx-auto max-w-[1280px] px-4 py-12 md:px-6" aria-busy="true" data-rc-app-view="loading">
                 <p className="rounded-2xl bg-neutral-50 px-5 py-8 text-center text-sm font-black text-neutral-500">
-                    추천 화면을 준비하고 있어요.
+                    {labelText("추천 화면을 준비하고 있어요.")}
                 </p>
             </main>
         );
@@ -186,7 +188,7 @@ export default function RecommendationsClient() {
                     <div className="max-w-3xl">
                         <p className="text-sm font-black text-indigo-700">RECOMMENDATIONS</p>
                         <h1 className="mt-2 text-3xl font-black tracking-tight text-neutral-950 md:text-4xl">
-                            {personalizedAvailable ? `${selectedPet?.name || "우리 아이"} 맞춤 추천` : "댕다방 추천 셀렉트"}
+                            {personalizedAvailable ? (locale === "en" ? `Picks for ${selectedPet?.name || "your dog"}` : `${selectedPet?.name || "우리 아이"} 맞춤 추천`) : "댕다방 추천 셀렉트"}
                         </h1>
                         <p className="mt-3 text-sm font-bold leading-6 text-neutral-600">
                             {!personalizationEnabled
@@ -205,10 +207,10 @@ export default function RecommendationsClient() {
                         </p>
                         <div className="mt-4 flex flex-wrap gap-2">
                             <span className="rounded-full border border-indigo-200 bg-white px-3 py-1.5 text-[11px] font-black text-indigo-800">
-                                {MODE_LABEL[mode]}
+                                {labelText(MODE_LABEL[mode])}
                             </span>
                             <span className="rounded-full border border-emerald-200 bg-white px-3 py-1.5 text-[11px] font-black text-emerald-800">
-                                질환·치료 효능을 추천 이유로 사용하지 않음
+                                {labelText("질환·치료 효능을 추천 이유로 사용하지 않음")}
                             </span>
                         </div>
                     </div>
@@ -223,7 +225,7 @@ export default function RecommendationsClient() {
                         ) : null}
                         {RECOMMENDATION_FEATURE_FLAGS.preferences ? (
                             <Link href="/mypage/recommendations/" className="text-sm font-black text-indigo-700 hover:underline">
-                                추천 데이터 관리
+                                {labelText("추천 데이터 관리")}
                             </Link>
                         ) : null}
                     </div>
@@ -232,36 +234,36 @@ export default function RecommendationsClient() {
 
             {!personalizationEnabled ? null : !user ? (
                 <ActionNotice
-                    title="로그인 후 맞춤 추천을 켤 수 있어요"
-                    description="비회원에게는 회원·반려견 정보를 사용하지 않는 편집 추천만 표시합니다."
+                    title={labelText("로그인 후 맞춤 추천을 켤 수 있어요")}
+                    description={labelText("비회원에게는 회원·반려견 정보를 사용하지 않는 편집 추천만 표시합니다.")}
                     href="/auth/login/?redirect=%2Frecommendations%2F"
-                    label="로그인"
+                    label={labelText("로그인")}
                 />
             ) : !selectedPet ? (
                 <ActionNotice
-                    title="반려견 프로필을 먼저 등록해 주세요"
-                    description="프로필이 없어도 아래 편집 추천과 일반 쇼핑은 계속 이용할 수 있어요."
+                    title={labelText("반려견 프로필을 먼저 등록해 주세요")}
+                    description={labelText("프로필이 없어도 아래 편집 추천과 일반 쇼핑은 계속 이용할 수 있어요.")}
                     href="/mypage/#pet-profiles"
-                    label="프로필 등록"
+                    label={labelText("프로필 등록")}
                 />
             ) : !preferences ? (
                 <section className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-5" role="status">
                     <p className="font-black text-amber-950">{preferenceState.errorMessage || "추천 설정 확인 중"}</p>
                     <p className="mt-1 text-sm font-bold leading-6 text-amber-900">
-                        확인 전에는 회원 정보를 사용하지 않고 편집 추천만 표시합니다.
+                        {labelText("확인 전에는 회원 정보를 사용하지 않고 편집 추천만 표시합니다.")}
                     </p>
                     {preferenceState.status === "error" ? (
                         <button type="button" onClick={() => void preferenceState.refresh()} className="btn btn-secondary mt-3">
-                            다시 확인
+                            {labelText("다시 확인")}
                         </button>
                     ) : null}
                 </section>
             ) : !preferences.enabled ? (
                 <ActionNotice
-                    title="맞춤 추천이 꺼져 있어요"
-                    description="설정을 켜기 전에는 회원 정보를 사용하지 않는 편집 추천만 표시합니다."
+                    title={labelText("맞춤 추천이 꺼져 있어요")}
+                    description={labelText("설정을 켜기 전에는 회원 정보를 사용하지 않는 편집 추천만 표시합니다.")}
                     href="/mypage/recommendations/"
-                    label="설정 확인"
+                    label={labelText("설정 확인")}
                 />
             ) : null}
 
@@ -284,7 +286,7 @@ export default function RecommendationsClient() {
                                 <h2 id={`recommendation-group-${reason}`} className="text-xl font-black text-neutral-950">
                                     {GROUP_TITLE[reason]}
                                 </h2>
-                                <span className="text-xs font-black text-neutral-400">{groupedItems.length}개</span>
+                                <span className="text-xs font-black text-neutral-400">{groupedItems.length}{labelText("개")}</span>
                             </div>
                             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4 lg:grid-cols-4 xl:grid-cols-6">
                                 {groupedItems.map((item) => (
@@ -302,18 +304,18 @@ export default function RecommendationsClient() {
                 </div>
             ) : baseItems.length > 0 ? (
                 <section className="mt-8 rounded-3xl border border-dashed border-neutral-300 bg-neutral-50 px-6 py-12 text-center">
-                    <h2 className="text-xl font-black text-neutral-950">이 추천 묶음의 상품을 모두 숨겼어요.</h2>
+                    <h2 className="text-xl font-black text-neutral-950">{labelText("이 추천 묶음의 상품을 모두 숨겼어요.")}</h2>
                     <button type="button" className="mt-4 btn btn-secondary" onClick={recommendationAnalytics.resetHidden}>
-                        숨긴 상품 다시 보기
+                        {labelText("숨긴 상품 다시 보기")}
                     </button>
                 </section>
             ) : (
                 <section className="mt-8 rounded-3xl border border-dashed border-neutral-300 bg-neutral-50 px-6 py-12 text-center">
-                    <h2 className="text-xl font-black text-neutral-950">현재 안전 기준을 통과한 추천 상품이 없어요.</h2>
-                    <p className="mt-2 text-sm font-bold text-neutral-600">프로필을 수정하거나 전체 상품을 직접 둘러볼 수 있어요.</p>
+                    <h2 className="text-xl font-black text-neutral-950">{labelText("현재 안전 기준을 통과한 추천 상품이 없어요.")}</h2>
+                    <p className="mt-2 text-sm font-bold text-neutral-600">{labelText("프로필을 수정하거나 전체 상품을 직접 둘러볼 수 있어요.")}</p>
                     <div className="mt-5 flex flex-wrap justify-center gap-2">
-                        <Link href="/mypage/#pet-profiles" className="btn btn-secondary">프로필 수정</Link>
-                        <Link href="/products/" className="btn btn-primary">전체 상품 보기</Link>
+                        <Link href="/mypage/#pet-profiles" className="btn btn-secondary">{labelText("프로필 수정")}</Link>
+                        <Link href="/products/" className="btn btn-primary">{labelText("전체 상품 보기")}</Link>
                     </div>
                 </section>
             )}

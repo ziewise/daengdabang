@@ -7,6 +7,7 @@
  * 2026-10-28 화면 문구는 테스트 · 실결제 모두 보통 "결제" 문구(사장님 결정 — 테스트 안내 없음).
  */
 
+import { useI18n } from "@/lib/i18n";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { PaymentFailWeb } from "@/components/checkout/PaymentResultWeb";
@@ -20,6 +21,7 @@ import {
 type FailureDetail = { code: string; message: string; orderId: string };
 
 export default function TossTestFailPage() {
+    const { menuLabel: labelText } = useI18n();
     const [detail, setDetail] = useState<FailureDetail>({
         code: "PAYMENT_FAILED",
         message: "결제가 완료되지 않았습니다.",
@@ -49,18 +51,18 @@ export default function TossTestFailPage() {
     return (
         <main className="mx-auto max-w-[680px] px-4 py-14 text-center" data-payment-status="failed" data-pay-app-view>
             <i className="fa-solid fa-circle-xmark text-5xl text-red-600" />
-            <h1 className="mt-4 text-3xl font-black text-neutral-950">결제가 완료되지 않았습니다.</h1>
+            <h1 className="mt-4 text-3xl font-black text-neutral-950">{labelText("결제가 완료되지 않았습니다.")}</h1>
             <div className="mx-auto mt-5 max-w-md rounded-xl border border-red-200 bg-red-50 px-4 py-4 text-left">
                 <p className="text-sm font-black text-red-900">{detail.message}</p>
-                <p className="mt-2 break-all text-xs font-bold text-red-700">오류 코드: {detail.code}</p>
-                {detail.orderId && <p className="mt-1 break-all text-xs font-bold text-red-700">주문번호: {detail.orderId}</p>}
+                <p className="mt-2 break-all text-xs font-bold text-red-700">{labelText("오류 코드:")} {detail.code}</p>
+                {detail.orderId && <p className="mt-1 break-all text-xs font-bold text-red-700">{labelText("주문번호:")} {detail.orderId}</p>}
             </div>
             <p className="mt-4 text-sm font-bold leading-6 text-neutral-600">
-                장바구니 상품은 그대로 유지됩니다. 결제 알림을 받았다면 주문 내역에서 승인 상태를 확인한 뒤 다시 시도해 주세요.
+                {labelText("장바구니 상품은 그대로 유지됩니다. 결제 알림을 받았다면 주문 내역에서 승인 상태를 확인한 뒤 다시 시도해 주세요.")}
             </p>
             <div className="mt-6 flex flex-wrap justify-center gap-2">
-                <Link href="/checkout" className="btn btn-primary">결제 다시 시도</Link>
-                <Link href="/cart" className="btn btn-secondary">장바구니 확인</Link>
+                <Link href="/checkout" className="btn btn-primary">{labelText("결제 다시 시도")}</Link>
+                <Link href="/cart" className="btn btn-secondary">{labelText("장바구니 확인")}</Link>
             </div>
         </main>
     );

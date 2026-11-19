@@ -8,6 +8,7 @@
  *  - 모든 값은 고정된 예시(서버 · 데이터 연결 없음, 누르는 버튼 없음). "예시 화면" 표시를 늘 붙인다.
  * 기본은 hidden — app/lab-web.css(웹 연구소 페이지)에서만 보이고, 앱 · 펫렌즈 창에서는 나오지 않는다.
  */
+import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
 import Image from "next/image";
 
 // 예시 선 — 판단 이름 · 무리(행동/소리/건강) · 색 · 15초 동안의 근거 세기(0~1, 1.5초 간격 11점)
@@ -81,10 +82,10 @@ export default function PetLensObservationSample() {
             <div className="lab-obs-sample-top">
                 <div>
                     <p className="ddb-crayon-kicker dw-kicker">SAMPLE REPORT</p>
-                    <h2 id="lab-obs-sample-title">이렇게 결과가 나와요</h2>
+                    <h2 id="lab-obs-sample-title"><LocalizedMenuLabel label={"이렇게 결과가 나와요"} /></h2>
                 </div>
                 <span className="lab-obs-sample-tag">
-                    <i className="fa-solid fa-eye" aria-hidden="true" />예시 화면 · 실제 결과는 영상마다 달라요
+                    <i className="fa-solid fa-eye" aria-hidden="true" /><LocalizedMenuLabel label={"예시 화면 · 실제 결과는 영상마다 달라요"} />
                 </span>
             </div>
 
@@ -94,7 +95,7 @@ export default function PetLensObservationSample() {
                     {SAMPLE_LINES.map((line) => (
                         <span key={line.label}><i style={{ background: line.color }} aria-hidden="true" />{line.label}<small>{line.group}</small></span>
                     ))}
-                    <em>가로 시간 · 세로 지지도</em>
+                    <em><LocalizedMenuLabel label={"가로 시간 · 세로 지지도"} /></em>
                 </figcaption>
                 <div className="lab-obs-plot">
                 <svg
@@ -118,7 +119,7 @@ export default function PetLensObservationSample() {
                     })}
                 </div>
                 </div>
-                <div className="lab-obs-axis" aria-hidden="true"><span>0초</span><span>7.5초</span><span>15초</span></div>
+                <div className="lab-obs-axis" aria-hidden="true"><span><LocalizedMenuLabel label={"0초"} /></span><span><LocalizedMenuLabel label={"7.5초"} /></span><span><LocalizedMenuLabel label={"15초"} /></span></div>
             </figure>
 
             {/* 결과 카드 3장(예시) */}
@@ -128,7 +129,7 @@ export default function PetLensObservationSample() {
                         <Image src={card.art} alt="" width={52} height={52} aria-hidden="true" />
                         <div>
                             <small>{card.group}</small>
-                            <b>{card.title}</b>
+                            <b><LocalizedMenuLabel label={card.title} /></b>
                             <em>{card.note}</em>
                         </div>
                     </li>

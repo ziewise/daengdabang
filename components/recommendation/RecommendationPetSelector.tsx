@@ -6,6 +6,7 @@
  * 웹(2026-10-24 사용자 "비주얼 · 디테일"): 아이 사진 동그라미 + 이름 + 견종 칩을 누르는 고르기(같은 onSelect) — 웹 전용 요소는 hidden,
  *   꾸밈과 드롭다운 숨김은 app/globals.css "추천할 반려견 고르기".
  */
+import { useI18n } from "@/lib/i18n";
 import type { PetProfile } from "@/lib/store";
 
 export default function RecommendationPetSelector({
@@ -19,6 +20,7 @@ export default function RecommendationPetSelector({
     disabled?: boolean;
     onSelect: (profileId: number) => void;
 }) {
+    const { menuLabel: labelText } = useI18n();
     const selectablePets = pets.filter(
         (pet): pet is PetProfile & { apiProfileId: number } => (
             Number.isInteger(pet.apiProfileId) && Number(pet.apiProfileId) > 0
@@ -32,8 +34,8 @@ export default function RecommendationPetSelector({
     return (
         <>
         {/* 웹 전용 — 사진 칩 고르기 */}
-        <div className="hidden" data-pet-chooser role="radiogroup" aria-label="추천할 반려견">
-            <span className="pc-label">누구를 위한 추천일까요?</span>
+        <div className="hidden" data-pet-chooser role="radiogroup" aria-label={labelText("추천할 반려견")}>
+            <span className="pc-label">{labelText("누구를 위한 추천일까요?")}</span>
             <span className="pc-list">
                 {selectablePets.map((pet) => {
                     const active = pet.apiProfileId === selected;
@@ -62,13 +64,13 @@ export default function RecommendationPetSelector({
             </span>
         </div>
         <label className="inline-flex min-w-[210px] flex-col gap-1 text-xs font-black text-neutral-600" data-pet-select-legacy>
-            추천할 반려견
+            {labelText("추천할 반려견")}
             <select
                 value={selected}
                 disabled={disabled}
                 onChange={(event) => onSelect(Number(event.target.value))}
                 className="min-h-11 rounded-xl border border-neutral-200 bg-white px-3 text-sm font-black text-neutral-950 disabled:cursor-wait disabled:opacity-60"
-                aria-label="추천할 반려견 선택"
+                aria-label={labelText("추천할 반려견 선택")}
             >
                 {selectablePets.map((pet) => (
                     <option key={pet.apiProfileId} value={pet.apiProfileId}>

@@ -19,6 +19,7 @@
  */
 "use client";
 
+import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
 import {
     createContext,
     useCallback,
@@ -44,7 +45,7 @@ const PetLensModalContent = dynamic(() => import("./PetLensModalContent"), {
     loading: () => (
         <div className="flex items-center justify-center py-24 text-sm font-bold text-neutral-500">
             <i className="fa-solid fa-circle-notch fa-spin mr-2 text-aurora-indigo" />
-            펫렌즈를 불러오는 중…
+            <LocalizedMenuLabel label={"펫렌즈를 불러오는 중…"} />
         </div>
     ),
 });
@@ -70,6 +71,7 @@ export function usePetLensModal() {
 }
 
 export default function PetLensModalProvider({ children }: { children: ReactNode }) {
+    const { menuLabel: labelText } = useI18n();
     const { locale } = useI18n();
     const pathname = usePathname();
     const router = useRouter();
@@ -198,12 +200,12 @@ export default function PetLensModalProvider({ children }: { children: ReactNode
                                             <Image src="/images/ui/header-petlens-128.webp" alt="" fill sizes="92px" loading="eager" className="pl-head-web hidden object-contain" />
                                         </span>
                                         {/* 웹 전용 — 영문 손글씨 꼬리표 */}
-                                        <p className="pl-kicker hidden" aria-hidden="true">DAENGDABANG LAB · PETLENS</p>
+                                        <p className="pl-kicker hidden" aria-hidden="true">댕다방 LAB · PETLENS</p>
                                         <h2 className="pl-title text-xl font-black text-neutral-950">
-                                            {en ? "PetLens Analysis" : "펫렌즈 분석"}
+                                            {labelText(en ? "PetLens Analysis" : "펫렌즈 분석")}
                                         </h2>
                                         <p className="pl-sub mt-1 text-sm font-medium text-neutral-500">
-                                            {en ? "How would you like to analyze your dog?" : "우리 아이를 어떻게 분석할까요?"}
+                                            {labelText(en ? "How would you like to analyze your dog?" : "우리 아이를 어떻게 분석할까요?")}
                                         </p>
                                     </div>
 
@@ -224,10 +226,10 @@ export default function PetLensModalProvider({ children }: { children: ReactNode
                                             </span>
                                             <span className="min-w-0 flex-1">
                                                 <span className="pl-choice-title block text-[15px] font-black text-neutral-950">
-                                                    {en ? "Photo analysis" : "댕댕이 사진 분석"}
+                                                    {labelText(en ? "Photo analysis" : "댕댕이 사진 분석")}
                                                 </span>
                                                 <span className="pl-choice-body mt-0.5 block text-xs font-medium leading-relaxed text-neutral-500">
-                                                    {en ? "Analyze breed & body from a photo for tailored picks" : "사진으로 견종·체형을 분석해 맞춤 추천"}
+                                                    {labelText(en ? "Analyze breed & body from a photo for tailored picks" : "사진으로 견종·체형을 분석해 맞춤 추천")}
                                                 </span>
                                             </span>
                                             <i className="pl-go fa-solid fa-chevron-right text-neutral-300 transition group-hover:translate-x-0.5 group-hover:text-aurora-indigo" />
@@ -238,7 +240,7 @@ export default function PetLensModalProvider({ children }: { children: ReactNode
                                             type="button"
                                             onClick={startObservation}
                                             aria-label={en
-                                                ? "Open DaengDaBang Research Lab Behavior and Sound Analysis, new service"
+                                                ? "Open 댕다방 Research Lab Behavior and Sound Analysis, new service"
                                                 : "댕다방 연구소 행동·소리 분석 신규 서비스 열기"}
                                             className="pl-choice is-obs group relative grid w-full grid-cols-[3.25rem_minmax(0,1fr)_auto] items-center gap-3 overflow-hidden rounded-2xl border-2 border-cyan-100 bg-gradient-to-br from-cyan-50/70 via-white to-rose-50/70 p-3 text-left transition hover:-translate-y-0.5 hover:border-pink-300 hover:shadow-card focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-pink-200 motion-reduce:transform-none motion-reduce:transition-none sm:grid-cols-[4rem_minmax(0,1fr)_auto] sm:gap-4 sm:p-4"
                                             data-petlens-observation-launcher
@@ -258,9 +260,9 @@ export default function PetLensModalProvider({ children }: { children: ReactNode
                                                     suffixClassName="break-keep text-[14px] font-black leading-[1.25] text-neutral-950 sm:text-[15px]"
                                                 />
                                                 <span className="pl-choice-body mt-0.5 block text-xs font-medium leading-relaxed text-neutral-500">
-                                                    {en
+                                                    {labelText(en
                                                         ? "Camera and microphone signals become a tailored observation"
-                                                        : "행동·소리 신호를 함께 살펴 맞춤형 관찰 결과를 제공해요"}
+                                                        : "행동·소리 신호를 함께 살펴 맞춤형 관찰 결과를 제공해요")}
                                                 </span>
                                             </span>
                                             <i className="pl-go fa-solid fa-chevron-right shrink-0 text-neutral-300 transition group-hover:translate-x-0.5 group-hover:text-pink-500" aria-hidden="true" />

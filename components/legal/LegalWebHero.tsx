@@ -9,6 +9,7 @@
  * 법률 문구 · 조항 · 표는 각 페이지 그대로 두고, 웹 겉모양은 app/legal-web.css 가 main[data-legal-web] 안에서만 바꿈.
  * 앱(ddb-app-mode)은 이 머리 판을 숨기고 기존 화면 그대로.
  */
+import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
 import Link from "next/link";
 import LegalScrollSpy from "@/components/legal/LegalScrollSpy";
 import "@/app/legal-web.css";
@@ -104,7 +105,7 @@ export default function LegalWebHero({ kind, updatedAt }: { kind: LegalKind; upd
             <nav className="lw-docs" aria-label="약관 · 정책 문서">
                 {DOCS.map((doc) => (
                     <Link key={doc.kind} href={doc.href} className={doc.kind === kind ? "is-on" : ""} aria-current={doc.kind === kind ? "page" : undefined}>
-                        <i className={`fa-solid ${doc.icon}`} aria-hidden="true" />{doc.label}
+                        <i className={`fa-solid ${doc.icon}`} aria-hidden="true" /><LocalizedMenuLabel label={doc.label} />
                     </Link>
                 ))}
             </nav>
@@ -113,9 +114,9 @@ export default function LegalWebHero({ kind, updatedAt }: { kind: LegalKind; upd
             <header className="lw-hero ddb-hero-band" data-tone={look.tone}>
                 <span className="lw-hero-text">
                     <span className="lw-kicker">{look.kicker}</span>
-                    <span className="lw-title" role="heading" aria-level={1}>{look.title}</span>
-                    <span className="lw-lead">{look.lead}</span>
-                    <span className="lw-date"><i className="fa-regular fa-calendar" aria-hidden="true" />{look.dateLabel} {updatedAt}</span>
+                    <span className="lw-title" role="heading" aria-level={1}><LocalizedMenuLabel label={look.title} /></span>
+                    <span className="lw-lead"><LocalizedMenuLabel label={look.lead} /></span>
+                    <span className="lw-date"><i className="fa-regular fa-calendar" aria-hidden="true" /><LocalizedMenuLabel label={look.dateLabel} /> {updatedAt}</span>
                 </span>
                 <span className="lw-hero-art" aria-hidden="true">
                     {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
@@ -126,13 +127,13 @@ export default function LegalWebHero({ kind, updatedAt }: { kind: LegalKind; upd
             {/* 한눈에 보기 — 본문 조항 바로가기 */}
             {look.glance && (
                 <section className="lw-glance" aria-label="한눈에 보기">
-                    <p className="lw-glance-t"><span aria-hidden="true">✦</span>한눈에 보기</p>
+                    <p className="lw-glance-t"><span aria-hidden="true">✦</span><LocalizedMenuLabel label={"한눈에 보기"} /></p>
                     <div>
                         {look.glance.map((item) => (
                             <a key={item.href} href={item.href} data-tone={item.tone}>
                                 <span className="lw-glance-i" aria-hidden="true"><i className={`fa-solid ${item.icon}`} /></span>
-                                <b>{item.title}</b>
-                                <small>{item.text}</small>
+                                <b><LocalizedMenuLabel label={item.title} /></b>
+                                <small><LocalizedMenuLabel label={item.text} /></small>
                                 <i className="fa-solid fa-arrow-down lw-glance-go" aria-hidden="true" />
                             </a>
                         ))}

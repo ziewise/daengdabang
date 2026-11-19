@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { useEffect, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -7,6 +8,7 @@ const HISTORY_KEY = "ddbProductNavigation";
 
 /** Keep the back destination on the site, including after a detail-page reload. */
 export default function ProductBackButton() {
+    const { menuLabel: labelText } = useI18n();
     const pathname = usePathname();
     const router = useRouter();
     const previousPath = useRef<string | null>(null);
@@ -44,8 +46,8 @@ export default function ProductBackButton() {
         <button
             type="button"
             onClick={goBack}
-            aria-label="뒤로가기"
-            title="뒤로가기"
+            aria-label={labelText("뒤로가기")}
+            title={labelText("뒤로가기")}
             data-product-back
             className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-neutral-200 bg-white/90 text-neutral-900 transition hover:bg-neutral-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 md:hidden"
         >

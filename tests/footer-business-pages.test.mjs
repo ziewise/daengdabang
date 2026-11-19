@@ -1,9 +1,10 @@
+import { koreanMarkup } from "./helpers/korean-markup.mjs";
 import assert from "node:assert/strict";
 import { readFile, stat } from "node:fs/promises";
 import test from "node:test";
 
 const root = new URL("../", import.meta.url);
-const source = (path) => readFile(new URL(path, root), "utf8");
+const source = (path) => readFile(new URL(path, root), "utf8").then(koreanMarkup);
 
 test("footer company links point to real static routes", async () => {
     const [menu, footer, sitemap] = await Promise.all([

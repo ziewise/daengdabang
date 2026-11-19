@@ -7,6 +7,7 @@
  *  - PartnerWebIntro : 입점 · 공급 · 공동 기획 세 카드, 댕다방이 먼저 보는 네 가지, 검토 네 단계, 제안 전 준비물
  *  - BulkWebIntro    : 빠른 확인 메모, 목적 세 카드, 진행 세 단계, 상담 때 알려 주시면 좋은 것
  */
+import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
 import Link from "next/link";
 import { CATALOG, listBrands } from "@/lib/catalog";
 import StandardsDialogButton from "./StandardsDialogButton";
@@ -26,8 +27,8 @@ function Steps({ steps }: { steps: Array<{ title: string; body: string; art: str
             {steps.map((step, index) => (
                 <li key={step.title}>
                     <span className="bzw-step-art"><Art src={step.art} /><b>{index + 1}</b></span>
-                    <h3>{step.title}</h3>
-                    <p>{step.body}</p>
+                    <h3><LocalizedMenuLabel label={step.title} /></h3>
+                    <p><LocalizedMenuLabel label={step.body} /></p>
                 </li>
             ))}
         </ol>
@@ -63,19 +64,19 @@ export function PartnerWebIntro() {
             {/* 머리 판 */}
             <section className="bzw-hero" data-tone="peach" aria-labelledby="bzw-partner-title">
                 <div className="bzw-hero-text">
-                    <p className="bzw-kicker">PARTNER WITH DAENGDABANG</p>
+                    <p className="bzw-kicker">PARTNER WITH 댕다방</p>
                     {/* 2026-10-25 머리 판 문구 · 그림 교체(사용자 문안 · 웹파트너 그림) */}
-                    <h1 id="bzw-partner-title" className="bzw-title">좋은 상품의 가치가,<br /><em className="bzw-hl">반려견의 일상</em>에 닿도록.</h1>
-                    <p className="bzw-lead">댕다방은 단순히 입점 브랜드를 늘리기보다, 반려견의 일상에 실질적인 도움이 되는 제품을 찾습니다.</p>
-                    <p className="bzw-lead">제품에 담긴 고민과 브랜드가 지켜온 기준을 들려주세요. 그 가치를 보호자가 이해하고 믿고 선택할 수 있도록, 댕다방이 함께하겠습니다.</p>
+                    <h1 id="bzw-partner-title" className="bzw-title"><LocalizedMenuLabel label={"좋은 상품의 가치가,"} /><br /><em className="bzw-hl"><LocalizedMenuLabel label={"반려견의 일상"} /></em><LocalizedMenuLabel label={"에 닿도록."} /></h1>
+                    <p className="bzw-lead"><LocalizedMenuLabel label={"댕다방은 단순히 입점 브랜드를 늘리기보다, 반려견의 일상에 실질적인 도움이 되는 제품을 찾습니다."} /></p>
+                    <p className="bzw-lead"><LocalizedMenuLabel label={"제품에 담긴 고민과 브랜드가 지켜온 기준을 들려주세요. 그 가치를 보호자가 이해하고 믿고 선택할 수 있도록, 댕다방이 함께하겠습니다."} /></p>
                     <div className="bzw-actions">
                         {/* 2026-10-25 "제안서 작성하기" 뺌(아래 카드 단추로 충분) · 선택 기준은 브랜드 스토리로 가지 않고 요약 창(사용자 요청) */}
                         <StandardsDialogButton className="bzw-pill is-pink" formHref="#partner-form" label="댕다방의 선택 기준" />
                     </div>
                     <ul className="bzw-chips" aria-label="댕다방 한눈에">
-                        <li><i className="fa-solid fa-tag" aria-hidden="true" />함께하는 브랜드 <b>{brandCount}</b>곳</li>
-                        <li><i className="fa-solid fa-box-open" aria-hidden="true" />엄선한 상품 <b>{CATALOG.length}</b>개</li>
-                        <li><i className="fa-solid fa-envelope" aria-hidden="true" />제안 결과는 <b className="is-text">이메일로 안내</b></li>
+                        <li><i className="fa-solid fa-tag" aria-hidden="true" /><LocalizedMenuLabel label={"함께하는 브랜드"} /> <b>{brandCount}</b><LocalizedMenuLabel label={"곳"} /></li>
+                        <li><i className="fa-solid fa-box-open" aria-hidden="true" /><LocalizedMenuLabel label={"엄선한 상품"} /> <b>{CATALOG.length}</b><LocalizedMenuLabel label={"개"} /></li>
+                        <li><i className="fa-solid fa-envelope" aria-hidden="true" /><LocalizedMenuLabel label={"제안 결과는"} /> <b className="is-text"><LocalizedMenuLabel label={"이메일로 안내"} /></b></li>
                     </ul>
                 </div>
                 <div className="bzw-hero-art" aria-hidden="true">
@@ -88,15 +89,15 @@ export function PartnerWebIntro() {
             <section className="bzw-section" aria-labelledby="bzw-types-title">
                 <div className="bzw-head">
                     <p className="bzw-kicker">PARTNERSHIP PROPOSALS</p>
-                    <h2 id="bzw-types-title" className="bzw-h2">댕다방과 <em className="bzw-hl">함께할 제안</em>을 기다립니다</h2>
+                    <h2 id="bzw-types-title" className="bzw-h2"><LocalizedMenuLabel label={"댕다방과"} /> <em className="bzw-hl"><LocalizedMenuLabel label={"함께할 제안"} /></em><LocalizedMenuLabel label={"을 기다립니다"} /></h2>
                 </div>
                 <div className="bzw-cards">
                     {PROPOSALS.map((item) => (
                         <article key={item.title} className="bzw-card" data-tone={item.tone}>
                             <span className="bzw-card-art"><Art src={item.art} /></span>
-                            <h3>{item.title}</h3>
-                            <p>{item.body}</p>
-                            <span className="bzw-tags">{item.tags.map((tag) => <small key={tag}>{tag}</small>)}</span>
+                            <h3><LocalizedMenuLabel label={item.title} /></h3>
+                            <p><LocalizedMenuLabel label={item.body} /></p>
+                            <span className="bzw-tags">{item.tags.map((tag) => <small key={tag}><LocalizedMenuLabel label={tag} /></small>)}</span>
                         </article>
                     ))}
                 </div>
@@ -106,16 +107,16 @@ export function PartnerWebIntro() {
             <section className="bzw-looks" aria-labelledby="bzw-looks-title">
                 <div className="bzw-looks-text">
                     <p className="bzw-kicker">OUR STANDARDS</p>
-                    <h2 id="bzw-looks-title" className="bzw-h2">좋은 상품을 고르는 <em className="bzw-hl">네 가지 질문</em></h2>
-                    <p>댕다방은 모든 상품을 네 가지 관점에서 살펴봅니다. 제안서에 각 질문에 대한 답을 담아 주시면, 상품의 가치를 더 정확하게 이해하고 검토하는 데 도움이 됩니다.</p>
-                    <Link href="/brand-story#bsw-standard" className="bzw-link">댕다방의 선택 기준 자세히 보기<i className="fa-solid fa-arrow-right" aria-hidden="true" /></Link>
+                    <h2 id="bzw-looks-title" className="bzw-h2"><LocalizedMenuLabel label={"좋은 상품을 고르는"} /> <em className="bzw-hl"><LocalizedMenuLabel label={"네 가지 질문"} /></em></h2>
+                    <p><LocalizedMenuLabel label={"댕다방은 모든 상품을 네 가지 관점에서 살펴봅니다. 제안서에 각 질문에 대한 답을 담아 주시면, 상품의 가치를 더 정확하게 이해하고 검토하는 데 도움이 됩니다."} /></p>
+                    <Link href="/brand-story#bsw-standard" className="bzw-link"><LocalizedMenuLabel label={"댕다방의 선택 기준 자세히 보기"} /><i className="fa-solid fa-arrow-right" aria-hidden="true" /></Link>
                 </div>
                 <ul className="bzw-look-list">
                     {LOOKS.map((item, index) => (
                         <li key={item.title} data-tone={item.tone}>
                             <span className="bzw-look-art"><Art src={item.art} /></span>
                             <small>{String(index + 1).padStart(2, "0")}</small>
-                            <b>{item.title}</b>
+                            <b><LocalizedMenuLabel label={item.title} /></b>
                         </li>
                     ))}
                 </ul>
@@ -125,8 +126,8 @@ export function PartnerWebIntro() {
             <section className="bzw-flow" aria-labelledby="bzw-flow-title">
                 <div className="bzw-head">
                     <p className="bzw-kicker">REVIEW PROCESS</p>
-                    <h2 id="bzw-flow-title" className="bzw-h2">한 번 더 살피고, <em className="bzw-hl">신중하게</em> 소개합니다</h2>
-                    <p>댕다방은 접수 순서만으로 입점을 결정하지 않습니다. 상품의 실용성과 정보의 정확성, 공급 안정성, 고객 경험까지 꼼꼼하게 살펴봅니다.</p>
+                    <h2 id="bzw-flow-title" className="bzw-h2"><LocalizedMenuLabel label={"한 번 더 살피고,"} /> <em className="bzw-hl"><LocalizedMenuLabel label={"신중하게"} /></em> <LocalizedMenuLabel label={"소개합니다"} /></h2>
+                    <p><LocalizedMenuLabel label={"댕다방은 접수 순서만으로 입점을 결정하지 않습니다. 상품의 실용성과 정보의 정확성, 공급 안정성, 고객 경험까지 꼼꼼하게 살펴봅니다."} /></p>
                 </div>
                 <Steps steps={REVIEW_STEPS} />
             </section>
@@ -136,13 +137,13 @@ export function PartnerWebIntro() {
                 {/* 2026-10-25 문구 · 그림 교체(사용자 문안 · 웹제안준비) */}
                 <span className="bzw-prep-art"><Art src="partner-proposal-prep-256.webp" /></span>
                 <div>
-                    <h2 id="bzw-prep-title">제안 전, 이런 자료를 준비해 주세요</h2>
-                    <p>가격 정보와 함께 아래 자료의 준비 여부를 알려주시면, 상품을 더욱 정확하게 검토하는 데 도움이 됩니다.</p>
+                    <h2 id="bzw-prep-title"><LocalizedMenuLabel label={"제안 전, 이런 자료를 준비해 주세요"} /></h2>
+                    <p><LocalizedMenuLabel label={"가격 정보와 함께 아래 자료의 준비 여부를 알려주시면, 상품을 더욱 정확하게 검토하는 데 도움이 됩니다."} /></p>
                 </div>
                 <ul>
-                    <li><i className="fa-solid fa-circle-check" aria-hidden="true" />브랜드·상품 소개 자료</li>
-                    <li><i className="fa-solid fa-circle-check" aria-hidden="true" />제조·공급사 정보</li>
-                    <li><i className="fa-solid fa-circle-check" aria-hidden="true" />상품 표시·인증 자료</li>
+                    <li><i className="fa-solid fa-circle-check" aria-hidden="true" /><LocalizedMenuLabel label={"브랜드·상품 소개 자료"} /></li>
+                    <li><i className="fa-solid fa-circle-check" aria-hidden="true" /><LocalizedMenuLabel label={"제조·공급사 정보"} /></li>
+                    <li><i className="fa-solid fa-circle-check" aria-hidden="true" /><LocalizedMenuLabel label={"상품 표시·인증 자료"} /></li>
                 </ul>
             </section>
 
@@ -177,20 +178,20 @@ export function BulkWebIntro() {
                 <div className="bzw-hero-text">
                     <p className="bzw-kicker">BULK ORDER</p>
                     {/* 2026-10-25 머리 판 문구 교체(사용자 문안) */}
-                    <h1 id="bzw-bulk-title" className="bzw-title">단체·대량 주문도,<br /><em className="bzw-hl">필요에 맞게</em> 세심하게.</h1>
-                    <p className="bzw-lead">기업·기관·단체의 대량 구매도 목적과 예산에 맞춰 도와드립니다. 희망 수량부터 납품 일정, 배송 조건까지 꼼꼼히 살펴 가능한 상품과 진행 방법을 안내해 드립니다.</p>
+                    <h1 id="bzw-bulk-title" className="bzw-title"><LocalizedMenuLabel label={"단체·대량 주문도,"} /><br /><em className="bzw-hl"><LocalizedMenuLabel label={"필요에 맞게"} /></em> <LocalizedMenuLabel label={"세심하게."} /></h1>
+                    <p className="bzw-lead"><LocalizedMenuLabel label={"기업·기관·단체의 대량 구매도 목적과 예산에 맞춰 도와드립니다. 희망 수량부터 납품 일정, 배송 조건까지 꼼꼼히 살펴 가능한 상품과 진행 방법을 안내해 드립니다."} /></p>
                     <div className="bzw-actions">
                         {/* 2026-10-25 "상담 내용 작성하기" 뺌(아래 카드 단추 → 상담 신청 창, 입점과 같은 방식 · 사용자 요청) */}
-                        <Link href="/products" className="bzw-pill is-pink">상품 둘러보기<i className="fa-solid fa-arrow-right" aria-hidden="true" /></Link>
+                        <Link href="/products" className="bzw-pill is-pink"><LocalizedMenuLabel label={"상품 둘러보기"} /><i className="fa-solid fa-arrow-right" aria-hidden="true" /></Link>
                     </div>
                 </div>
                 {/* 빠른 확인 메모 */}
                 <aside className="bzw-memo" aria-labelledby="bzw-memo-title">
                     <span className="bzw-memo-art"><Art src="bulk-memo-256.webp" /></span>
                     <p className="bzw-kicker">QUICK CHECK</p>
-                    <h2 id="bzw-memo-title">상담 전에 알려주세요</h2>
+                    <h2 id="bzw-memo-title"><LocalizedMenuLabel label={"상담 전에 알려주세요"} /></h2>
                     <ul>
-                        {CHECK_ITEMS.map((item) => <li key={item}><i className="fa-solid fa-check" aria-hidden="true" />{item}</li>)}
+                        {CHECK_ITEMS.map((item) => <li key={item}><i className="fa-solid fa-check" aria-hidden="true" /><LocalizedMenuLabel label={item} /></li>)}
                     </ul>
                 </aside>
             </section>
@@ -198,15 +199,15 @@ export function BulkWebIntro() {
             <section className="bzw-section" aria-labelledby="bzw-use-title">
                 <div className="bzw-head">
                     <p className="bzw-kicker">FOR TEAMS &amp; GROUPS</p>
-                    <h2 id="bzw-use-title" className="bzw-h2"><em className="bzw-hl">목적에 맞는 구매</em>, 함께 준비합니다</h2>
+                    <h2 id="bzw-use-title" className="bzw-h2"><em className="bzw-hl"><LocalizedMenuLabel label={"목적에 맞는 구매"} /></em><LocalizedMenuLabel label={", 함께 준비합니다"} /></h2>
                 </div>
                 <div className="bzw-cards">
                     {USE_CASES.map((item) => (
                         <article key={item.title} className="bzw-card" data-tone={item.tone}>
                             <span className="bzw-card-art"><Art src={item.art} /></span>
-                            <h3>{item.title}</h3>
-                            <p>{item.body}</p>
-                            <span className="bzw-tags">{item.tags.map((tag) => <small key={tag}>{tag}</small>)}</span>
+                            <h3><LocalizedMenuLabel label={item.title} /></h3>
+                            <p><LocalizedMenuLabel label={item.body} /></p>
+                            <span className="bzw-tags">{item.tags.map((tag) => <small key={tag}><LocalizedMenuLabel label={tag} /></small>)}</span>
                         </article>
                     ))}
                 </div>
@@ -215,8 +216,8 @@ export function BulkWebIntro() {
             <section className="bzw-flow" data-tone="sky" aria-labelledby="bzw-bulk-flow-title">
                 <div className="bzw-head">
                     <p className="bzw-kicker">HOW IT WORKS</p>
-                    <h2 id="bzw-bulk-flow-title" className="bzw-h2">단체·대량 주문, 이렇게 <em className="bzw-hl">진행</em>돼요</h2>
-                    <p>요청 내용을 바탕으로 재고와 공급·배송 조건을 검토한 후 이메일로 안내드립니다. 최종 가격과 납품 일정은 별도 협의 후 확정됩니다.</p>
+                    <h2 id="bzw-bulk-flow-title" className="bzw-h2"><LocalizedMenuLabel label={"단체·대량 주문, 이렇게"} /> <em className="bzw-hl"><LocalizedMenuLabel label={"진행"} /></em><LocalizedMenuLabel label={"돼요"} /></h2>
+                    <p><LocalizedMenuLabel label={"요청 내용을 바탕으로 재고와 공급·배송 조건을 검토한 후 이메일로 안내드립니다. 최종 가격과 납품 일정은 별도 협의 후 확정됩니다."} /></p>
                 </div>
                 <Steps steps={BULK_STEPS} />
             </section>

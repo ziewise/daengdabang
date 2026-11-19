@@ -12,6 +12,7 @@
  *  - 고른 분류는 주소 ?cat= 으로도 열 수 있음(예: ?cat=grooming).
  */
 
+import { useI18n } from "@/lib/i18n";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -26,6 +27,10 @@ import { placeAddress, placeMapLinks } from "@/lib/place-map-links";
 import { ConceptBar, HC_CSS, useDemoSession } from "../shared";
 import { DiaryBody, PARTS_CSS } from "../sticker-parts";
 import { PostIt, STICKER_CSS, Tape, Patch } from "../sticker-kit";
+import { locationError } from "@/lib/current-location";
+import { locationFailureMessage } from "@/lib/location-feedback";
+import { isNativeAppRuntime } from "@/lib/native-runtime";
+import LocationRecoveryActions from "@/components/location/LocationRecoveryActions";
 
 /* 분류 그림 — 사용자가 만든 3D 배지(public/images/병원 · 미용 · 호텔 · 데이케어.png → ui/stickers/care-*.webp) */
 const CARE_ICONS: Record<LocalCareCategory, string> = {
@@ -36,6 +41,7 @@ const CARE_ICONS: Record<LocalCareCategory, string> = {
 };
 
 export default function StickerCare() {
+    const { locale, menuLabel: labelText } = useI18n();
     const [session, setSession] = useDemoSession();
     const sp = useSearchParams();
     const [cat, setCat] = useState<LocalCareCategory>(() => CATEGORIES.find((c) => c.id === sp.get("cat"))?.id ?? CATEGORIES[0].id);
@@ -74,11 +80,10 @@ export default function StickerCare() {
             haptic("medium");
         } catch (caught) {
             if (controller.signal.aborted) return;
-            const code = typeof caught === "object" && caught !== null && "code" in caught ? Number((caught as { code?: unknown }).code) : 0;
-            const message = code === 1
-                ? "위치 권한이 꺼져 있어요. 권한을 허용한 뒤 다시 찾거나 네이버지도에서 바로 확인해 주세요."
-                : "주변 후보를 바로 불러오지 못했어요. 잠시 후 다시 찾거나 네이버지도에서 확인할 수 있어요.";
-            setSearchState({ status: "error", category: category.id, message, fallbackUrl });
+            const failure = locationError(caught);
+            const code = failure.code;
+            const message = locationFailureMessage(code, isNativeAppRuntime(), failure.recovery);
+            setSearchState({ status: "error", category: category.id, message, fallbackUrl, recovery: failure.recovery });
             // 찾기 실패 기록 — 협업자 LocalCareFinder 와 같음(위치 권한 거부 · 그 밖은 제공처 문제)
             trackStorefrontEvent("local_care_search_failed", {
                 surface: "treasure_mine",
@@ -105,8 +110,8 @@ export default function StickerCare() {
             <div className="mx-auto w-full max-w-md">
                 <ConceptBar session={session} onSession={setSession} />
                 <DiaryBody pageKey="care" dir={1}>
-                    <p className="ah-display text-[18px] leading-snug">우리 동네에서<br /><span className="st-marker">돌봄 장소를 찾아요</span></p>
-                    <p className="ah-light mt-1 text-[12.5px]" style={{ color: TEXT_SOFT }}>내 위치 근처 5곳 · 로그인 없이 쓸 수 있어요</p>
+                    <p className="ah-display text-[18px] leading-snug">{labelText("우리 동네에서")}<br /><span className="st-marker">{labelText("돌봄 장소를 찾아요")}</span></p>
+                    <p className="ah-light mt-1 text-[12.5px]" style={{ color: TEXT_SOFT }}>{labelText("내 위치 근처 5곳 · 로그인 없이 쓸 수 있어요")}</p>
 
                     {/* 분류 스티커 — 3D 배지 그림, 고른 스티커는 들려 있고 초록 테두리 · 안 고른 건 살짝 흐리게 */}
                     <div className="mt-5 grid grid-cols-4 gap-2">
@@ -118,40 +123,41 @@ export default function StickerCare() {
                                     <span className={`relative block h-[3.9rem] w-[3.9rem] rounded-full transition-[filter,opacity] duration-300 ${on ? "ring-4 ring-[#c4ecd6]" : "opacity-80 saturate-[.8]"}`}>
                                         <Image src={CARE_ICONS[c.id]} alt="" fill sizes="64px" className="object-contain" />
                                     </span>
-                                    <span className={`ah-display text-[12.5px] ${on ? "" : "text-[#9c8f88]"}`}>{c.shortLabel}</span>
+                                    <span className={`ah-display text-[12.5px] ${on ? "" : "text-[#9c8f88]"}`}>{labelText(c.shortLabel)}</span>
                                 </button>
                             );
                         })}
                     </div>
-                    <p className="ah-light mt-3 text-center text-[12px]" style={{ color: TEXT_SOFT }}>{catOpt.label} · {catOpt.helper}</p>
+                    <p className="ah-light mt-3 text-center text-[12px]" style={{ color: TEXT_SOFT }}>{labelText(catOpt.label)} · {labelText(catOpt.helper)}</p>
 
-                    <Patch onClick={find} disabled={state.status === "loading"} className="mt-4"><span className="relative">{state.status === "loading" ? "주변 후보 찾는 중" : `현재 위치로 ${catOpt.shortLabel} 찾기`}</span><i aria-hidden="true" className={`fa-solid ${state.status === "loading" ? "fa-circle-notch fa-spin" : "fa-location-crosshairs"} relative text-[14px]`} /></Patch>
-                    <p className="mt-2 text-center"><a href={mapUrl} target="_blank" rel="noopener noreferrer" className="ah-display inline-flex items-center gap-1 text-[12.5px] text-[#1f7a59] underline decoration-dashed underline-offset-4">네이버지도에서 바로 보기<i aria-hidden="true" className="fa-solid fa-arrow-up-right-from-square text-[9px]" /></a></p>
+                    <Patch onClick={find} disabled={state.status === "loading"} className="mt-4"><span className="relative">{state.status === "loading" ? labelText("주변 후보 찾는 중") : locale === "en" ? `Find nearby ${labelText(catOpt.shortLabel).toLowerCase()}` : `현재 위치로 ${catOpt.shortLabel} 찾기`}</span><i aria-hidden="true" className={`fa-solid ${state.status === "loading" ? "fa-circle-notch fa-spin" : "fa-location-crosshairs"} relative text-[14px]`} /></Patch>
+                    <p className="mt-2 text-center"><a href={mapUrl} target="_blank" rel="noopener noreferrer" className="ah-display inline-flex items-center gap-1 text-[12.5px] text-[#1f7a59] underline decoration-dashed underline-offset-4">{labelText("네이버지도에서 바로 보기")}<i aria-hidden="true" className="fa-solid fa-arrow-up-right-from-square text-[9px]" /></a></p>
 
                     <div aria-live="polite">
                         {state.status === "loading" ? (
-                            <p className="ah-display mt-5 flex items-center justify-center gap-2 text-[13px] text-[#1f7a59]"><i aria-hidden="true" className="fa-solid fa-paw fa-bounce" />현재 위치 주변을 확인하고 있어요</p>
+                            <p className="ah-display mt-5 flex items-center justify-center gap-2 text-[13px] text-[#1f7a59]"><i aria-hidden="true" className="fa-solid fa-paw fa-bounce" />{labelText("현재 위치 주변을 확인하고 있어요")}</p>
                         ) : null}
                         {/* 못 찾음 — 위치 권한 · 서버 문제(협업자 문구) + 네이버지도로 */}
                         {state.status === "error" ? (
                             <div className="st-postit relative mt-5 px-4 pb-3.5 pt-3.5 text-center" style={{ background: "#fff3c9", rotate: "-0.6deg" }}>
                                 <Tape className="-top-2 left-1/2 h-3.5 w-14 -translate-x-1/2" color="rgba(255,214,140,.95)" />
                                 <p className="ah-light text-[12.5px] leading-relaxed text-[#6b5420]"><i aria-hidden="true" className="fa-solid fa-location-dot mr-1 text-[#d9822b]" />{state.message}</p>
-                                <a href={state.fallbackUrl} target="_blank" rel="noopener noreferrer" className="ah-display mt-2.5 inline-flex items-center gap-1 rounded-full bg-white px-3 py-1 text-[12px] text-[#a8560f]">네이버지도에서 {catOpt.shortLabel} 보기</a>
+                                <LocationRecoveryActions recovery={state.recovery} onRetry={find} />
+                                <a href={state.fallbackUrl} target="_blank" rel="noopener noreferrer" className="ah-display mt-2.5 inline-flex items-center gap-1 rounded-full bg-white px-3 py-1 text-[12px] text-[#a8560f]">{labelText("네이버지도에서")} {labelText(catOpt.shortLabel)} {labelText("보기")}</a>
                             </div>
                         ) : null}
                         {state.status === "done" && state.places.length === 0 ? (
                             <div className="st-postit relative mt-5 px-4 pb-3.5 pt-3.5 text-center" style={{ background: "#e6f2ff", rotate: "0.6deg" }}>
                                 <Tape className="-top-2 left-1/2 h-3.5 w-14 -translate-x-1/2" color="rgba(190,224,255,.9)" />
-                                <p className="ah-display text-[14px]">지도 검색은 계속할 수 있어요</p>
-                                <p className="ah-light mt-1 text-[12px] leading-relaxed" style={{ color: TEXT_SOFT }}>확인된 업체명을 바로 불러오지 못했어요. 네이버지도에서 현재 위치 주변 {catOpt.shortLabel}을 확인해 주세요.</p>
-                                <a href={state.fallbackUrl} target="_blank" rel="noopener noreferrer" className="ah-display mt-2.5 inline-flex items-center gap-1 rounded-full bg-white px-3 py-1 text-[12px] text-[#3b63b8]">네이버지도에서 {catOpt.shortLabel} 보기</a>
+                                <p className="ah-display text-[14px]">{labelText("지도 검색은 계속할 수 있어요")}</p>
+                                <p className="ah-light mt-1 text-[12px] leading-relaxed" style={{ color: TEXT_SOFT }}>{labelText("확인된 업체명을 바로 불러오지 못했어요. 네이버지도에서 현재 위치 주변")} {labelText(catOpt.shortLabel)}{labelText("을 확인해 주세요.")}</p>
+                                <a href={state.fallbackUrl} target="_blank" rel="noopener noreferrer" className="ah-display mt-2.5 inline-flex items-center gap-1 rounded-full bg-white px-3 py-1 text-[12px] text-[#3b63b8]">{labelText("네이버지도에서")} {labelText(catOpt.shortLabel)} {labelText("보기")}</a>
                             </div>
                         ) : null}
                         {/* 가까운 순 명함 — 거리 · 주소(카카오맵 검색) · 전화 · 지도 4종 */}
                         {state.status === "done" && state.places.length > 0 ? (
                             <>
-                                <p className="ah-display mt-5 flex items-center justify-between text-[14px]">가까운 {catOpt.shortLabel} 후보 {state.places.length}곳<span className="ah-light text-[11px]" style={{ color: TEXT_SOFT }}>가까운 순</span></p>
+                                <p className="ah-display mt-5 flex items-center justify-between text-[14px]">{labelText("가까운")} {labelText(catOpt.shortLabel)} {labelText("후보")} {state.places.length}{labelText("곳")}<span className="ah-light text-[11px]" style={{ color: TEXT_SOFT }}>{labelText("가까운 순")}</span></p>
                                 <ul className="mt-3 space-y-3">
                                     {state.places.map((p, i) => {
                                         const links = placeMapLinks(p);
@@ -166,7 +172,7 @@ export default function StickerCare() {
                                                 </p>
                                                 <a href={links.kakao} target="_blank" rel="noopener noreferrer" aria-label={`${p.name} 주소와 장소 검색`} className="ah-light mt-1 block break-words pl-8 text-[12px] underline decoration-dashed underline-offset-2" style={{ color: TEXT_SOFT }}>{placeAddress(p) || "주소·상세 정보 찾기"}</a>
                                                 <span className="mt-2 flex flex-wrap gap-1.5 pl-8">
-                                                    {p.phone ? <a href={`tel:${p.phone}`} className="ah-display inline-flex items-center gap-1 rounded-full bg-[#ffe1ea] px-2.5 py-1 text-[11.5px] text-[#c4456f]"><i aria-hidden="true" className="fa-solid fa-phone text-[10px]" />전화</a> : null}
+                                                    {p.phone ? <a href={`tel:${p.phone}`} className="ah-display inline-flex items-center gap-1 rounded-full bg-[#ffe1ea] px-2.5 py-1 text-[11.5px] text-[#c4456f]"><i aria-hidden="true" className="fa-solid fa-phone text-[10px]" />{labelText("전화")}</a> : null}
                                                     {maps.map(([label, href]) => (
                                                         <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={`${p.name} ${label}${label === "위치 보기" ? "" : "에서 검색"}`} className="ah-display inline-flex items-center rounded-full bg-[#e6f6ec] px-2.5 py-1 text-[11.5px] text-[#1f7a59]">{label}</a>
                                                     ))}
@@ -180,10 +186,10 @@ export default function StickerCare() {
                     </div>
 
                     <PostIt color="#fff3a6" rot={-1} className="!static mt-6 !block w-full !px-3 !py-2 !text-left !text-[12px]">
-                        표시된 곳은 공개 지도에서 찾은 후보이며 댕다방 제휴·예약 가능 업체라는 뜻이 아닙니다. 영업시간, 진료·미용·숙박·등원 가능 여부와 비용은 방문 전에 업체에 직접 확인해 주세요. 위치는 이 검색에만 사용하며 계정에 저장하지 않아요.
+                        {labelText("표시된 곳은 공개 지도에서 찾은 후보이며 댕다방 제휴·예약 가능 업체라는 뜻이 아닙니다. 영업시간, 진료·미용·숙박·등원 가능 여부와 비용은 방문 전에 업체에 직접 확인해 주세요. 위치는 이 검색에만 사용하며 계정에 저장하지 않아요.")}
                     </PostIt>
                     <Link href="/chat/" className="ah-display mt-4 flex items-center justify-center gap-1.5 text-[13px] text-[#563fa8]">
-                        <i aria-hidden="true" className="fa-solid fa-comment-dots" /> 어디로 가야 할지 모르겠다면 케어톡에 물어보기
+                        <i aria-hidden="true" className="fa-solid fa-comment-dots" /> {labelText("어디로 가야 할지 모르겠다면 케어톡에 물어보기")}
                     </Link>
                 </DiaryBody>
             </div>

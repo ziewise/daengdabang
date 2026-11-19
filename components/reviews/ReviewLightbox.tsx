@@ -9,6 +9,7 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { OwnReview } from "@/lib/reviews-preview";
@@ -17,6 +18,7 @@ import CrayonStars from "./CrayonStars";
 export type LightboxItem = { src: string; review: OwnReview };
 
 export default function ReviewLightbox({ items, start, onClose }: { items: LightboxItem[]; start: number; onClose: () => void }) {
+    const { menuLabel: labelText } = useI18n();
     const [index, setIndex] = useState(start);
     const closeRef = useRef<HTMLButtonElement>(null);
     const touchX = useRef<number | null>(null);
@@ -46,8 +48,8 @@ export default function ReviewLightbox({ items, start, onClose }: { items: Light
 
     return createPortal(
         <div className="rvl-overlay" onClick={(event) => { if (event.target === event.currentTarget) onClose(); }}>
-            <div className="rvl" role="dialog" aria-modal="true" aria-label="후기 사진 크게 보기">
-                <button ref={closeRef} type="button" className="rvl-close" onClick={onClose} aria-label="닫기">
+            <div className="rvl" role="dialog" aria-modal="true" aria-label={labelText("후기 사진 크게 보기")}>
+                <button ref={closeRef} type="button" className="rvl-close" onClick={onClose} aria-label={labelText("닫기")}>
                     <i className="fa-solid fa-xmark" aria-hidden="true" />
                 </button>
                 <div
@@ -65,10 +67,10 @@ export default function ReviewLightbox({ items, start, onClose }: { items: Light
                     <img key={item.src + index} src={item.src} alt={`${review.maskedName}님의 후기 사진 ${index + 1}`} />
                     {count > 1 && (
                         <>
-                            <button type="button" className="rvl-nav" data-dir="prev" onClick={() => go(-1)} aria-label="이전 사진">
+                            <button type="button" className="rvl-nav" data-dir="prev" onClick={() => go(-1)} aria-label={labelText("이전 사진")}>
                                 <i className="fa-solid fa-chevron-left" aria-hidden="true" />
                             </button>
-                            <button type="button" className="rvl-nav" data-dir="next" onClick={() => go(1)} aria-label="다음 사진">
+                            <button type="button" className="rvl-nav" data-dir="next" onClick={() => go(1)} aria-label={labelText("다음 사진")}>
                                 <i className="fa-solid fa-chevron-right" aria-hidden="true" />
                             </button>
                         </>

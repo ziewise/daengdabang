@@ -5,6 +5,7 @@
  * 기능(피드 · 주제 · 올리기 · 팔로우 · 응원 · 공유 · 신고 · 쪽 넘김)과 문구는 그대로. 꾸밈 CSS 는 app/daily-web.css "댕자랑" 묶음.
  */
 
+import { useI18n } from "@/lib/i18n";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "@/components/site/IntentLink";
@@ -76,8 +77,9 @@ function mergeUniquePosts(primary: ShowcasePost[], secondary: ShowcasePost[]) {
 }
 
 function FeedSkeleton() {
+    const { menuLabel: labelText } = useI18n();
     return (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 dw-sc-grid" aria-label="댕자랑 피드 불러오는 중" aria-busy="true">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 dw-sc-grid" aria-label={labelText("댕자랑 피드 불러오는 중")} aria-busy="true">
             {Array.from({ length: 8 }, (_, index) => (
                 <div key={index} className="dw-csheet dw-sc-card">
                     <div className="flex items-center gap-3 p-4">
@@ -96,6 +98,7 @@ function FeedSkeleton() {
 }
 
 export default function DaengShowcaseClient() {
+    const { menuLabel: labelText } = useI18n();
     const router = useRouter();
     const { user, hydrated } = useAuth();
     const accessToken = user?.apiAccessToken || "";
@@ -368,25 +371,25 @@ export default function DaengShowcaseClient() {
                 <div className="dw-csheet is-pink dw-chero ddb-hero-band">
                     <div className="min-w-0">
                         <div className="flex flex-wrap items-center gap-2">
-                            <p className="ddb-crayon-kicker dw-kicker">DAENGDABANG SHOWCASE</p>
-                            <span className="dw-chip dw-sc-chip-live">지금 참여 가능</span>
+                            <p className="ddb-crayon-kicker dw-kicker">댕다방 SHOWCASE</p>
+                            <span className="dw-chip dw-sc-chip-live">{labelText("지금 참여 가능")}</span>
                         </div>
                         <h1 id="daeng-showcase-title" className="ddb-crayon-title dw-h1">
                             {/* 2026-10-25 머리 판 문구 · 그림 교체(사용자 문안 · 웹댕자랑카드) */}
-                            우리 아이의 반짝이는 순간,<br />
-                            <span className="ddb-crayon-underline">함께 나누는 댕자랑</span>
+                            {labelText("우리 아이의 반짝이는 순간,")}<br />
+                            <span className="ddb-crayon-underline">{labelText("함께 나누는 댕자랑")}</span>
                         </h1>
                         <p className="dw-lead">
-                            귀여운 표정부터 소소한 일상과 돌봄 이야기까지.<br />
-                            반려견과 함께한 특별한 순간을 나누고, 다른 친구들의 사랑스러운 오늘도 만나보세요.
+                            {labelText("귀여운 표정부터 소소한 일상과 돌봄 이야기까지.")}<br />
+                            {labelText("반려견과 함께한 특별한 순간을 나누고, 다른 친구들의 사랑스러운 오늘도 만나보세요.")}
                         </p>
-                        <p className="dw-lead">공개 게시물은 누구나 볼 수 있고, 회원이라면 사진을 올리고 팔로우와 응원에도 참여할 수 있어요.</p>
+                        <p className="dw-lead">{labelText("공개 게시물은 누구나 볼 수 있고, 회원이라면 사진을 올리고 팔로우와 응원에도 참여할 수 있어요.")}</p>
                         {/* 2026-10-25 "사진 올리기 · 최신 댕자랑 보기" 단추 뺌(사용자) — 바로 아래 사진 올리기 카드 · 피드 · 가입 카드가 같은 일을 함 */}
                         {/* 이용 안내 세 줄 → 칩 */}
-                        <ul className="dw-sc-rules" aria-label="댕자랑 이용 안내">
-                            <li className="dw-chip"><i className="fa-solid fa-eye mr-1.5" aria-hidden="true" />공개 게시물은 누구나 볼 수 있어요</li>
-                            <li className="dw-chip"><i className="fa-solid fa-user-group mr-1.5" aria-hidden="true" />회원은 사진 공유·팔로우·응원에 참여해요</li>
-                            <li className="dw-chip"><i className="fa-solid fa-shield-heart mr-1.5" aria-hidden="true" />문제 게시물은 신고하면 운영자가 확인해요</li>
+                        <ul className="dw-sc-rules" aria-label={labelText("댕자랑 이용 안내")}>
+                            <li className="dw-chip"><i className="fa-solid fa-eye mr-1.5" aria-hidden="true" />{labelText("공개 게시물은 누구나 볼 수 있어요")}</li>
+                            <li className="dw-chip"><i className="fa-solid fa-user-group mr-1.5" aria-hidden="true" />{labelText("회원은 사진 공유·팔로우·응원에 참여해요")}</li>
+                            <li className="dw-chip"><i className="fa-solid fa-shield-heart mr-1.5" aria-hidden="true" />{labelText("문제 게시물은 신고하면 운영자가 확인해요")}</li>
                         </ul>
                     </div>
                     <span className="dw-rring dw-chero-ring" aria-hidden="true">
@@ -420,9 +423,9 @@ export default function DaengShowcaseClient() {
 
             {/* 구역 사이는 늘 발자국 두 개(2026-10-22 사용자) */}
             <PawTrail />
-            <section id="showcase-composer" className="dw-sc-wrap scroll-mt-28" aria-label="댕자랑 작성">
+            <section id="showcase-composer" className="dw-sc-wrap scroll-mt-28" aria-label={labelText("댕자랑 작성")}>
                 {!hydrated ? (
-                    <div className="dw-csheet is-mint h-44 animate-pulse motion-reduce:animate-none" aria-label="회원 상태 확인 중" />
+                    <div className="dw-csheet is-mint h-44 animate-pulse motion-reduce:animate-none" aria-label={labelText("회원 상태 확인 중")} />
                 ) : authenticated && user ? (
                     <>
                         {/* 페이지 — "사진 올리기" 카드(누르면 작성 창) */}
@@ -445,12 +448,12 @@ export default function DaengShowcaseClient() {
                         <span className="dw-rring" aria-hidden="true"><span><Image src="/images/ui/mypet-shutter-384.webp" alt="" width={96} height={96} /></span></span>
                         <div className="min-w-0">
                             <p className="ddb-crayon-kicker dw-kicker">JOIN &amp; SHARE</p>
-                            <h2 className="dw-tlogin-title">회원가입하면 바로 올릴 수 있어요</h2>
-                            <p className="dw-tlogin-body">가입 후 사진 한 장과 오늘의 이야기를 공개하고, 마음에 드는 친구를 팔로우해 보세요.</p>
+                            <h2 className="dw-tlogin-title">{labelText("회원가입하면 바로 올릴 수 있어요")}</h2>
+                            <p className="dw-tlogin-body">{labelText("가입 후 사진 한 장과 오늘의 이야기를 공개하고, 마음에 드는 친구를 팔로우해 보세요.")}</p>
                         </div>
                         <div className="dw-sc-actions">
-                            <Link href={signupHref} className="ddb-crayon-link dw-pill dw-pill-main">회원가입</Link>
-                            <Link href={loginHref} className="ddb-motion-lift dw-pill">로그인</Link>
+                            <Link href={signupHref} className="ddb-crayon-link dw-pill dw-pill-main">{labelText("회원가입")}</Link>
+                            <Link href={loginHref} className="ddb-motion-lift dw-pill">{labelText("로그인")}</Link>
                         </div>
                     </div>
                 )}
@@ -461,9 +464,9 @@ export default function DaengShowcaseClient() {
                 <div className="dw-sc-feedhead">
                     <div>
                         <p className="ddb-crayon-kicker dw-kicker">TODAY&apos;S SHOWCASE</p>
-                        <h2 id="showcase-feed-title" className="ddb-crayon-title ddb-crayon-underline dw-rhead-title">오늘 올라온 댕자랑</h2>
+                        <h2 id="showcase-feed-title" className="ddb-crayon-title ddb-crayon-underline dw-rhead-title">{labelText("오늘 올라온 댕자랑")}</h2>
                     </div>
-                    <div className="dw-sc-tabs" role="tablist" aria-label="댕자랑 피드 범위">
+                    <div className="dw-sc-tabs" role="tablist" aria-label={labelText("댕자랑 피드 범위")}>
                         <button
                             type="button"
                             role="tab"
@@ -471,7 +474,7 @@ export default function DaengShowcaseClient() {
                             onClick={() => chooseScope("all")}
                             className={scope === "all" ? "is-on" : ""}
                         >
-                            전체
+                            {labelText("전체")}
                         </button>
                         <button
                             type="button"
@@ -480,7 +483,7 @@ export default function DaengShowcaseClient() {
                             onClick={() => chooseScope("following")}
                             className={scope === "following" ? "is-on" : ""}
                         >
-                            팔로잉
+                            {labelText("팔로잉")}
                         </button>
                     </div>
                 </div>
@@ -489,18 +492,18 @@ export default function DaengShowcaseClient() {
                     {loading ? <FeedSkeleton /> : feedError && posts.length === 0 ? (
                         <div className="dw-csheet is-pink dw-sc-empty">
                             <i className="fa-solid fa-cloud-arrow-down text-2xl text-rose-400" aria-hidden="true" />
-                            <p className="dw-tlogin-title">{feedError}</p>
+                            <p className="dw-tlogin-title">{labelText(feedError)}</p>
                             <div className="dw-sc-actions justify-center">
-                                <button type="button" onClick={() => setRefreshKey((value) => value + 1)} className="ddb-motion-lift dw-pill dw-pill-sm">다시 불러오기</button>
-                                {scope === "following" ? <button type="button" onClick={requireAuth} className="ddb-crayon-link dw-pill dw-pill-main dw-pill-sm">로그인</button> : null}
+                                <button type="button" onClick={() => setRefreshKey((value) => value + 1)} className="ddb-motion-lift dw-pill dw-pill-sm">{labelText("다시 불러오기")}</button>
+                                {scope === "following" ? <button type="button" onClick={requireAuth} className="ddb-crayon-link dw-pill dw-pill-main dw-pill-sm">{labelText("로그인")}</button> : null}
                             </div>
                         </div>
                     ) : posts.length === 0 ? (
                         <div className="dw-csheet is-mint dw-sc-empty">
                             <span className="dw-rring" aria-hidden="true"><span><Image src="/images/ui/daily-hero-community-384.webp" alt="" width={96} height={96} /></span></span>
-                            <h3 className="dw-tlogin-title">{scope === "following" ? "팔로우한 친구의 첫 소식을 기다려요" : "첫 번째 댕자랑의 주인공이 되어 주세요"}</h3>
-                            <p className="dw-tlogin-body">{scope === "following" ? "전체 피드에서 마음에 드는 친구를 팔로우하면 이곳에 새 글이 모여요." : "회원이라면 위 작성 칸에서 사진 한 장과 오늘의 이야기를 바로 공개할 수 있어요."}</p>
-                            {scope === "following" ? <button type="button" onClick={() => setScope("all")} className="ddb-crayon-link dw-pill dw-pill-main dw-pill-sm mt-4">전체 피드 보기</button> : null}
+                            <h3 className="dw-tlogin-title">{labelText(scope === "following" ? "팔로우한 친구의 첫 소식을 기다려요" : "첫 번째 댕자랑의 주인공이 되어 주세요")}</h3>
+                            <p className="dw-tlogin-body">{labelText(scope === "following" ? "전체 피드에서 마음에 드는 친구를 팔로우하면 이곳에 새 글이 모여요." : "회원이라면 위 작성 칸에서 사진 한 장과 오늘의 이야기를 바로 공개할 수 있어요.")}</p>
+                            {scope === "following" ? <button type="button" onClick={() => setScope("all")} className="ddb-crayon-link dw-pill dw-pill-main dw-pill-sm mt-4">{labelText("전체 피드 보기")}</button> : null}
                         </div>
                     ) : (
                         <div className="grid items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 dw-sc-grid">
@@ -527,7 +530,7 @@ export default function DaengShowcaseClient() {
                 {nextCursor && !loading ? (
                     <div className="dw-sc-morewrap">
                         <button type="button" onClick={showMorePosts} disabled={loadingMore} className="ddb-motion-lift dw-pill">
-                            {loadingMore ? "불러오는 중…" : "댕자랑 더보기"}
+                            {labelText(loadingMore ? "불러오는 중…" : "댕자랑 더보기")}
                             <i className={`fa-solid ${loadingMore ? "fa-circle-notch fa-spin" : "fa-chevron-down"} ml-2 text-[11px]`} aria-hidden="true" />
                         </button>
                     </div>

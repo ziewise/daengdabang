@@ -1,5 +1,6 @@
 "use client";
 
+import { useCareTalkCopy } from "@/hooks/useCareTalkCopy";
 import { useEffect, useRef, useState } from "react";
 import { resumeShopChatQuestion, type ShopChatAnswer } from "@/lib/daengdabang-llm";
 import { CHAT_VIEW_DETACHED, pendingChatKey, readPendingChat } from "@/lib/shop-chat-jobs";
@@ -11,6 +12,7 @@ import ChatResponseExtras from "@/components/site/ChatResponseExtras";
 export default function ChatPendingRecovery({ scope, accessToken, busy, onPendingChange }: {
     scope: string; accessToken?: string; busy: boolean; onPendingChange: (pending: boolean) => void;
 }) {
+    const copy = useCareTalkCopy();
     const [answer, setAnswer] = useState<ShopChatAnswer | null>(null);
     const [notice, setNotice] = useState("");
     const [pending, setPending] = useState(false);
@@ -45,9 +47,9 @@ export default function ChatPendingRecovery({ scope, accessToken, busy, onPendin
         };
     }, [scope, accessToken, busy, onPendingChange]);
     if (!notice) return null;
-    return <section aria-label="이전 요청 이어보기" className="rounded-xl border border-teal-200 bg-white p-3 text-sm leading-6">
-        <p role="status" className="whitespace-pre-line font-bold text-teal-900">{notice}</p>
-        {pending ? <button type="button" className="mt-2 rounded-lg border px-3 py-1" onClick={() => controllerRef.current?.abort()}>이전 요청 멈추기</button> : null}
+    return <section aria-label={copy("이전 요청 이어보기")} className="rounded-xl border border-teal-200 bg-white p-3 text-sm leading-6">
+        <p role="status" className="whitespace-pre-line font-bold text-teal-900">{copy(notice)}</p>
+        {pending ? <button type="button" className="mt-2 rounded-lg border px-3 py-1" onClick={() => controllerRef.current?.abort()}>{copy("이전 요청 멈추기")}</button> : null}
         {answer ? <>
             <p className="mt-3 whitespace-pre-wrap">{customerVisibleChatAnswer(answer.answer, Boolean(answer.sources?.length))}</p>
             <ChatProductCards products={answer.products} externalProducts={answer.externalProducts} />

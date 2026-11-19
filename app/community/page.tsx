@@ -1,3 +1,4 @@
+import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -48,13 +49,12 @@ export default function CommunityPage() {
             <CrayonGrainFilter />
             <section className="dw-csheet is-pink dw-chero ddb-hero-band">
                 <div className="min-w-0">
-                    <p className="ddb-crayon-kicker dw-kicker">DAENGDABANG COMMUNITY</p>
+                    <p className="ddb-crayon-kicker dw-kicker">댕다방 COMMUNITY</p>
                     <h1 className="ddb-crayon-title dw-h1">
-                        함께 기록할수록<br /><span className="ddb-crayon-underline">돌봄은 더 쉬워져요</span>
+                        <LocalizedMenuLabel label="함께 기록할수록" /><br /><span className="ddb-crayon-underline"><LocalizedMenuLabel label="돌봄은 더 쉬워져요" /></span>
                     </h1>
                     <p className="dw-lead">
-                        구매 후기, 돌봄 상담, 챌린지 기록을 한곳에서 이어가세요. 의료 진단을 대신하지 않고,
-                        보호자가 다음 행동을 정하는 데 도움이 되는 경험을 모읍니다.
+                        <LocalizedMenuLabel label="구매 후기, 돌봄 상담, 챌린지 기록을 한곳에서 이어가세요. 의료 진단을 대신하지 않고, 보호자가 다음 행동을 정하는 데 도움이 되는 경험을 모읍니다." />
                     </p>
                 </div>
                 <span className="dw-rring dw-chero-ring" aria-hidden="true">
@@ -67,16 +67,16 @@ export default function CommunityPage() {
             <section aria-labelledby="community-map-title">
                 <div className="dw-rhead">
                     <p className="ddb-crayon-kicker dw-kicker">COMMUNITY MAP</p>
-                    <h2 id="community-map-title" className="ddb-crayon-title ddb-crayon-underline">오늘은 어디로 가 볼까요?</h2>
+                    <h2 id="community-map-title" className="ddb-crayon-title ddb-crayon-underline"><LocalizedMenuLabel label="오늘은 어디로 가 볼까요?" /></h2>
                 </div>
-                <ul className="dw-rounds is-four is-flow" aria-label="커뮤니티 바로가기">
+                <ul className="dw-rounds is-four is-flow" aria-labelledby="community-map-title">
                     {COMMUNITY_LINKS.map((item) => (
                         <li key={item.href}>
                             <Link href={item.href} className={`dw-round ${item.tint}`}>
                                 <span className="dw-round-art" aria-hidden="true"><Image src={item.art} alt="" width={112} height={112} /></span>
-                                <strong className="dw-round-title">{item.title}</strong>
-                                <span className="dw-round-body">{item.copy}</span>
-                                <span className="dw-round-go">바로가기 <i className="fa-solid fa-arrow-right text-[10px]" aria-hidden="true" /></span>
+                                <strong className="dw-round-title"><LocalizedMenuLabel label={item.title} /></strong>
+                                <span className="dw-round-body"><LocalizedMenuLabel label={item.copy} /></span>
+                                <span className="dw-round-go"><LocalizedMenuLabel label="바로가기" /> <i className="fa-solid fa-arrow-right text-[10px]" aria-hidden="true" /></span>
                             </Link>
                         </li>
                     ))}

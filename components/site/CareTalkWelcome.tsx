@@ -7,6 +7,7 @@
  * CARE_TALK_STARTERS 는 AI 상담 페이지(app/chat) 카드가 같은 질문으로 창을 열 때 씀.
  * 꾸밈은 ChatWidget.module.css 의 웹 전용 구역(.welcome*). 앱은 AppShell 의 자기 첫 화면(CareEmpty)을 그대로 씀.
  */
+import { useCareTalkCopy } from "@/hooks/useCareTalkCopy";
 import Image from "next/image";
 import styles from "./ChatWidget.module.css";
 
@@ -19,14 +20,15 @@ export const CARE_TALK_STARTERS = [
 
 // ask 는 ChatWidget 첫 화면 약속(empty 부품)이라 받기만 함
 export default function CareTalkWelcome(props: { ask: (question: string) => void }) {
+    const copy = useCareTalkCopy();
     void props;
     return (
         <div className={styles.welcome}>
             <span className={styles.welcomeRing} aria-hidden="true">
                 <span><Image src="/images/ui/mypet-caretalk-256.webp" alt="" width={72} height={72} /></span>
             </span>
-            <h3 className={styles.welcomeTitle}>무엇이 궁금하세요?</h3>
-            <p className={styles.welcomeLead}>우리 아이에게 필요한 정보를 같이 알아보아요.</p>
+            <h3 className={styles.welcomeTitle}>{copy("무엇이 궁금하세요?")}</h3>
+            <p className={styles.welcomeLead}>{copy("우리 아이에게 필요한 정보를 같이 알아보아요.")}</p>
         </div>
     );
 }

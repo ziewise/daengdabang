@@ -10,6 +10,7 @@
  * 휴대폰은 아래에서 올라오는 시트, 넓은 화면은 가운데 창. 창이 열릴 때만 불러온다(next/dynamic) — 모든 페이지가 무거워지지 않게.
  */
 
+import { useI18n } from "@/lib/i18n";
 import Image from "next/image";
 import { useEffect, type RefObject } from "react";
 import { KIT_CSS } from "../home-concepts/kit";
@@ -39,6 +40,7 @@ export default function InstallHelpSheet({
     onClose: () => void;
     closeRef: RefObject<HTMLButtonElement | null>;
 }) {
+    const { menuLabel: labelText } = useI18n();
     // 창을 불러온 뒤 닫기 버튼에 초점(키보드 · 화면 읽기) — 협업자 창과 같은 동작
     useEffect(() => {
         closeRef.current?.focus();
@@ -64,7 +66,7 @@ export default function InstallHelpSheet({
     return (
         <div className="fixed inset-0 z-[1900] flex items-end justify-center sm:items-center sm:p-6">
             <style>{KIT_CSS + STICKER_CSS + APP_INSTALL_CSS + SHEET_CSS}</style>
-            <button type="button" className="ihs-dim absolute inset-0" onClick={onClose} aria-label="설치 안내 닫기" />
+            <button type="button" className="ihs-dim absolute inset-0" onClick={onClose} aria-label={labelText("설치 안내 닫기")} />
             <section
                 className="ihs-sheet st-page relative z-10 max-h-[88vh] w-full max-w-md overflow-y-auto break-keep px-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] pt-6 text-[#3a2f2c] sm:rounded-[22px] sm:pb-6"
                 role="dialog"
@@ -73,7 +75,7 @@ export default function InstallHelpSheet({
             >
                 <Tape className="-top-1.5 left-1/2 h-4 w-20 -translate-x-1/2" color="rgba(255,200,215,.9)" style={{ rotate: "-2deg" }} />
                 {/* 닫기 — 동그란 스티커 × */}
-                <button ref={closeRef} type="button" onClick={onClose} className="ihs-close absolute right-4 top-4 grid h-9 w-9 place-items-center rounded-full" aria-label="닫기">
+                <button ref={closeRef} type="button" onClick={onClose} className="ihs-close absolute right-4 top-4 grid h-9 w-9 place-items-center rounded-full" aria-label={labelText("닫기")}>
                     <i className="fa-solid fa-xmark text-[15px]" aria-hidden="true" />
                 </button>
 
@@ -81,8 +83,8 @@ export default function InstallHelpSheet({
                 <div className="flex items-center gap-3.5 pr-10">
                     <Image src="/images/pwa/icon-v2-192x192.png" alt="" width={56} height={56} className="ig-icon h-14 w-14 shrink-0" style={{ rotate: "-5deg" }} />
                     <div className="min-w-0">
-                        <p className="ah-light text-[12.5px] text-[#ef5f8f]">한 번 추가하면 바로 열려요</p>
-                        <h2 id="pwa-install-title" className="ah-display mt-0.5 text-[21px] leading-tight">{title}</h2>
+                        <p className="ah-light text-[12.5px] text-[#ef5f8f]">{labelText("한 번 추가하면 바로 열려요")}</p>
+                        <h2 id="pwa-install-title" className="ah-display mt-0.5 text-[21px] leading-tight">{labelText(title)}</h2>
                     </div>
                 </div>
 
@@ -90,8 +92,8 @@ export default function InstallHelpSheet({
                 {isInAppBrowser ? (
                     <p className="ig-note ah-light relative mt-5 px-3.5 py-3 text-[13px] leading-relaxed text-[#5a4038]" style={{ rotate: "-0.6deg" }}>
                         <Tape className="-top-2 left-4 h-3.5 w-10" color="rgba(255,232,170,.95)" />
-                        <b className="ah-display block text-[14px] font-normal text-[#c4456f]">먼저 기본 브라우저로 열어 주세요</b>
-                        카카오톡 · 네이버 · 인스타그램 안에서는 설치 메뉴가 보이지 않을 수 있어요. 브라우저 메뉴에서 <b className="font-normal text-[#c4456f]">{browserHint}</b>를 골라 주세요.
+                        <b className="ah-display block text-[14px] font-normal text-[#c4456f]">{labelText("먼저 기본 브라우저로 열어 주세요")}</b>
+                        {labelText("카카오톡 · 네이버 · 인스타그램 안에서는 설치 메뉴가 보이지 않을 수 있어요. 브라우저 메뉴에서")} <b className="font-normal text-[#c4456f]">{labelText(browserHint)}</b>{labelText("를 골라 주세요.")}
                     </p>
                 ) : null}
 
@@ -107,11 +109,11 @@ export default function InstallHelpSheet({
                     {isInAppBrowser ? (
                         <Patch onClick={onCopy} tone="cream" small>
                             <i className={`fa-solid ${copied ? "fa-check" : "fa-copy"} text-[13px]`} aria-hidden="true" />
-                            {copied ? "앱 주소를 복사했어요" : "앱 주소 복사하기"}
+                            {labelText(copied ? "앱 주소를 복사했어요" : "앱 주소 복사하기")}
                         </Patch>
                     ) : null}
                     <Patch onClick={onClose} small>
-                        확인했어요<i className="fa-solid fa-paw text-[13px]" aria-hidden="true" />
+                        {labelText("확인했어요")}<i className="fa-solid fa-paw text-[13px]" aria-hidden="true" />
                     </Patch>
                 </div>
             </section>

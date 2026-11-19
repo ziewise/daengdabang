@@ -56,6 +56,7 @@ type Props = {
 };
 
 export default function ReviewWriteModal({ onClose, product, onSubmitted, ratingWords }: Props) {
+    const { menuLabel: labelText } = useI18n();
     const { productName } = useI18n();
     const ctx = PREVIEW_WRITE_CONTEXT;
     const fitQ = fitQuestionFor(product.category);
@@ -230,15 +231,15 @@ export default function ReviewWriteModal({ onClose, product, onSubmitted, rating
         <div className="rvm-overlay" onClick={(event) => { if (event.target === event.currentTarget) requestClose(); }}>
             <div className="rvm" role="dialog" aria-modal="true" aria-labelledby={`${baseId}-title`} data-step={step}>
                 <span className="rvm-grip" aria-hidden="true" />
-                <button ref={closeRef} type="button" className="rvm-close" onClick={requestClose} aria-label="닫기">
+                <button ref={closeRef} type="button" className="rvm-close" onClick={requestClose} aria-label={labelText("닫기")}>
                     <i className="fa-solid fa-xmark" aria-hidden="true" />
                 </button>
 
                 {step === "done" && submitted ? (
                     <div className="rvm-done">
                         <p className="rvm-kicker">THANK YOU</p>
-                        <h2 id={`${baseId}-title`}>소중한 후기 <em>고마워요!</em></h2>
-                        <p className="rvm-done-sub">{pet.name}의 이야기가 다른 보호자에게 큰 도움이 될 거예요.</p>
+                        <h2 id={`${baseId}-title`}>{labelText("소중한 후기")} <em>{labelText("고마워요!")}</em></h2>
+                        <p className="rvm-done-sub">{pet.name}{labelText("의 이야기가 다른 보호자에게 큰 도움이 될 거예요.")}</p>
 
                         {/* 올라간 후기 미리보기 */}
                         <div className="rvm-done-card">
@@ -250,7 +251,7 @@ export default function ReviewWriteModal({ onClose, product, onSubmitted, rating
                                 <p className="rvm-done-card-head">
                                     <CrayonStars value={submitted.rating} size={15} />
                                     <b>{ratingWords[submitted.rating]}</b>
-                                    {submitted.media.length > 0 && <span>사진 {submitted.media.length}장</span>}
+                                    {submitted.media.length > 0 && <span>{labelText("사진")} {submitted.media.length}{labelText("장")}</span>}
                                 </p>
                                 <p className="rvm-done-card-body">{submitted.body}</p>
                             </div>
@@ -259,11 +260,11 @@ export default function ReviewWriteModal({ onClose, product, onSubmitted, rating
                         <p className="rvm-done-point">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img src={`${UI}policy-reward-192.webp`} alt="" width={28} height={28} />
-                            <b>+{ctx.rewardPoints.toLocaleString()}원</b> 적립 예정 <span>마이페이지 · 적립금에서 확인</span>
+                            <b>+{ctx.rewardPoints.toLocaleString()}{labelText("원")}</b> {labelText("적립 예정")} <span>{labelText("마이페이지 · 적립금에서 확인")}</span>
                         </p>
-                        <p className="rvm-preview-note"><i className="fa-solid fa-flask" aria-hidden="true" /> 미리보기 — 서버 연결 전이라 실제로 저장되지 않아요</p>
+                        <p className="rvm-preview-note"><i className="fa-solid fa-flask" aria-hidden="true" /> {labelText("미리보기 — 서버 연결 전이라 실제로 저장되지 않아요")}</p>
                         <div className="rvm-done-actions">
-                            <button type="button" className="rvm-ghost" onClick={onClose}>닫기</button>
+                            <button type="button" className="rvm-ghost" onClick={onClose}>{labelText("닫기")}</button>
                             <button
                                 type="button"
                                 className="rvm-submit"
@@ -272,7 +273,7 @@ export default function ReviewWriteModal({ onClose, product, onSubmitted, rating
                                     window.setTimeout(() => document.querySelector("[data-own-reviews] .rvc")?.scrollIntoView({ behavior: "smooth", block: "center" }), 80);
                                 }}
                             >
-                                내 후기 보기 <i className="fa-solid fa-arrow-down" aria-hidden="true" />
+                                {labelText("내 후기 보기")} <i className="fa-solid fa-arrow-down" aria-hidden="true" />
                             </button>
                         </div>
                     </div>
@@ -286,21 +287,21 @@ export default function ReviewWriteModal({ onClose, product, onSubmitted, rating
                             </span>
                             <div className="rvm-head-text">
                                 <p className="rvm-kicker">WRITE A REVIEW</p>
-                                <h2 id={`${baseId}-title`}>후기 쓰기</h2>
+                                <h2 id={`${baseId}-title`}>{labelText("후기 쓰기")}</h2>
                                 <p className="rvm-product" title={name}>{name}</p>
                                 <ul className="rvm-meta">
                                     <li data-kind="option"><i className="fa-solid fa-tag" aria-hidden="true" />{ctx.option}</li>
-                                    <li><i className="fa-solid fa-truck" aria-hidden="true" />{shortDate(ctx.deliveredAt)} 배송 완료</li>
-                                    <li data-kind="dday" data-soon={left <= 14 ? "" : undefined}><i className="fa-regular fa-calendar" aria-hidden="true" />{shortDate(ctx.deadline)}까지 · D-{left}</li>
+                                    <li><i className="fa-solid fa-truck" aria-hidden="true" />{shortDate(ctx.deliveredAt)} {labelText("배송 완료")}</li>
+                                    <li data-kind="dday" data-soon={left <= 14 ? "" : undefined}><i className="fa-regular fa-calendar" aria-hidden="true" />{shortDate(ctx.deadline)}{labelText("까지 · D-")}{left}</li>
                                 </ul>
                             </div>
                         </header>
 
                         <div className="rvm-body" id={`${baseId}-panel`}>
-                            <p className="rvm-hello">{withJosa(pet.name)} 함께 써 본 이야기를 들려주세요.</p>
+                            <p className="rvm-hello">{withJosa(pet.name)} {labelText("함께 써 본 이야기를 들려주세요.")}</p>
 
                             {/* 후기 종류 */}
-                            <div className="rvm-types" role="tablist" aria-label="후기 종류">
+                            <div className="rvm-types" role="tablist" aria-label={labelText("후기 종류")}>
                                 {([
                                     ["text", "일반 후기", "글로만 남겨요", "menu-daily-community-128.webp"],
                                     ["photo", "포토 후기", "사진과 함께 남겨요", "find-showcase-256.webp"],
@@ -321,7 +322,7 @@ export default function ReviewWriteModal({ onClose, product, onSubmitted, rating
                                             <b>{label}</b>
                                             <small>{sub}</small>
                                         </span>
-                                        <span className="rvm-type-point">+{ctx.rewardPoints.toLocaleString()}원</span>
+                                        <span className="rvm-type-point">+{ctx.rewardPoints.toLocaleString()}{labelText("원")}</span>
                                         <span className="rvm-type-check" aria-hidden="true"><i className="fa-solid fa-check" /></span>
                                     </button>
                                 ))}
@@ -329,8 +330,8 @@ export default function ReviewWriteModal({ onClose, product, onSubmitted, rating
 
                             {/* ① 별점 */}
                             <section className="rvm-block rvm-rating" data-done={blocks.rating ? "" : undefined}>
-                                <h3>{numberBadge(blocks.rating)} 상품은 어떠셨나요? <span className="rvm-req">필수</span></h3>
-                                <div className="rvm-stars" role="radiogroup" aria-label="별점" onMouseLeave={() => setHover(0)}>
+                                <h3>{numberBadge(blocks.rating)} {labelText("상품은 어떠셨나요?")} <span className="rvm-req">{labelText("필수")}</span></h3>
+                                <div className="rvm-stars" role="radiogroup" aria-label={labelText("별점")} onMouseLeave={() => setHover(0)}>
                                     {[1, 2, 3, 4, 5].map((value) => (
                                         <button
                                             key={value}
@@ -348,13 +349,13 @@ export default function ReviewWriteModal({ onClose, product, onSubmitted, rating
                                     ))}
                                 </div>
                                 <p className="rvm-star-word" data-empty={shownRating ? undefined : ""} aria-live="polite">
-                                    {shownRating ? <>{ratingWords[shownRating]} <span>{shownRating}점</span></> : "별을 눌러 골라 주세요"}
+                                    {shownRating ? <>{ratingWords[shownRating]} <span>{shownRating}{labelText("점")}</span></> : "별을 눌러 골라 주세요"}
                                 </p>
                             </section>
 
                             {/* ② 짧은 평가 */}
                             <section className="rvm-block" data-done={blocks.fit ? "" : undefined}>
-                                <h3>{numberBadge(blocks.fit)} {fitQ.question} <span className="rvm-opt-label">선택</span></h3>
+                                <h3>{numberBadge(blocks.fit)} {fitQ.question} <span className="rvm-opt-label">{labelText("선택")}</span></h3>
                                 <div className="rvm-fit" role="radiogroup" aria-label={fitQ.question}>
                                     {fitQ.options.map((option) => (
                                         <button
@@ -376,10 +377,10 @@ export default function ReviewWriteModal({ onClose, product, onSubmitted, rating
                             {/* ③ 이야기 */}
                             <section className="rvm-block" data-done={blocks.text ? "" : undefined}>
                                 <label className="rvm-label" htmlFor={`${baseId}-body`}>
-                                    {numberBadge(blocks.text)} 자세한 이야기 <span className="rvm-req">필수</span>
+                                    {numberBadge(blocks.text)} {labelText("자세한 이야기")} <span className="rvm-req">{labelText("필수")}</span>
                                 </label>
-                                <div className="rvm-prompts" aria-label="쓰기 도움">
-                                    <span>이런 이야기면 좋아요</span>
+                                <div className="rvm-prompts" aria-label={labelText("쓰기 도움")}>
+                                    <span>{labelText("이런 이야기면 좋아요")}</span>
                                     {WRITING_PROMPTS.map((prompt) => (
                                         <button key={prompt.label} type="button" onClick={() => addPrompt(prompt.starter)}>
                                             <i className="fa-solid fa-plus" aria-hidden="true" />{prompt.label}
@@ -401,7 +402,7 @@ export default function ReviewWriteModal({ onClose, product, onSubmitted, rating
                                             <i style={{ width: `${Math.min(100, (100 * textLength) / MIN_TEXT)}%` }} />
                                         </span>
                                         <span className="rvm-counter" aria-live="polite">
-                                            {blocks.text ? <><i className="fa-solid fa-check" aria-hidden="true" /> 좋아요!</> : `${MIN_TEXT - textLength}자 더`}
+                                            {blocks.text ? <><i className="fa-solid fa-check" aria-hidden="true" /> {labelText("좋아요!")}</> : `${MIN_TEXT - textLength}자 더`}
                                             <span>{body.length.toLocaleString()} / {MAX_TEXT.toLocaleString()}</span>
                                         </span>
                                     </div>
@@ -412,7 +413,7 @@ export default function ReviewWriteModal({ onClose, product, onSubmitted, rating
                             {tab === "photo" && (
                                 <section className="rvm-block" data-done={blocks.photo ? "" : undefined}>
                                     <h3>
-                                        {numberBadge(blocks.photo)} 사진 <span className="rvm-req">1장 이상</span>
+                                        {numberBadge(blocks.photo)} {labelText("사진")} <span className="rvm-req">{labelText("1장 이상")}</span>
                                         <span className="rvm-photo-count">{photos.length} / {MAX_PHOTOS}</span>
                                     </h3>
                                     {photos.length === 0 ? (
@@ -427,8 +428,8 @@ export default function ReviewWriteModal({ onClose, product, onSubmitted, rating
                                         >
                                             {/* eslint-disable-next-line @next/next/no-img-element */}
                                             <img src={`${UI}find-showcase-256.webp`} alt="" width={76} height={76} />
-                                            <b>{dragging ? "여기에 놓아 주세요" : "사진을 골라 주세요"}</b>
-                                            <small>눌러서 고르거나 끌어다 놓기 · 최대 {MAX_PHOTOS}장 · 한 장 {MAX_MB}MB까지</small>
+                                            <b>{labelText(dragging ? "여기에 놓아 주세요" : "사진을 골라 주세요")}</b>
+                                            <small>{labelText("눌러서 고르거나 끌어다 놓기 · 최대")} {MAX_PHOTOS}{labelText("장 · 한 장")} {MAX_MB}{labelText("MB까지")}</small>
                                         </button>
                                     ) : (
                                         <ul
@@ -442,7 +443,7 @@ export default function ReviewWriteModal({ onClose, product, onSubmitted, rating
                                                 <li key={photo.id} className="rvm-photo" data-loading={photo.progress < 100 ? "" : undefined}>
                                                     {/* eslint-disable-next-line @next/next/no-img-element */}
                                                     <img src={photo.url} alt={`올린 사진 ${index + 1}`} />
-                                                    {index === 0 && <span className="rvm-photo-main">대표</span>}
+                                                    {index === 0 && <span className="rvm-photo-main">{labelText("대표")}</span>}
                                                     {photo.progress < 100 ? (
                                                         <span className="rvm-photo-bar" aria-label={`올리는 중 ${photo.progress}%`}><i style={{ width: `${photo.progress}%` }} /></span>
                                                     ) : (
@@ -465,7 +466,7 @@ export default function ReviewWriteModal({ onClose, product, onSubmitted, rating
                                                     {index === 0 ? (
                                                         <button type="button" className="rvm-add" onClick={() => fileRef.current?.click()}>
                                                             <i className="fa-solid fa-plus" aria-hidden="true" />
-                                                            <small>{MAX_PHOTOS - photos.length}장 더</small>
+                                                            <small>{MAX_PHOTOS - photos.length}{labelText("장 더")}</small>
                                                         </button>
                                                     ) : (
                                                         <span className="rvm-slot" aria-hidden="true" />
@@ -480,33 +481,33 @@ export default function ReviewWriteModal({ onClose, product, onSubmitted, rating
                                     <div className="rvm-video" hidden data-phase="2" />
                                     <p className="rvm-privacy">
                                         <i className="fa-solid fa-shield-heart" aria-hidden="true" />
-                                        <span>사람 얼굴 · 주소 · 연락처가 보이는 사진은 올리지 말아 주세요. 첫 번째 사진이 대표 사진이 돼요.</span>
+                                        <span>{labelText("사람 얼굴 · 주소 · 연락처가 보이는 사진은 올리지 말아 주세요. 첫 번째 사진이 대표 사진이 돼요.")}</span>
                                     </p>
                                 </section>
                             )}
                             {tab === "text" && photos.length > 0 && (
                                 <p className="rvm-tab-note">
-                                    <i className="fa-regular fa-image" aria-hidden="true" /> 고른 사진 {photos.length}장은 <b>포토 후기</b>를 고르면 함께 올라가요.
+                                    <i className="fa-regular fa-image" aria-hidden="true" /> {labelText("고른 사진")} {photos.length}{labelText("장은")} <b>{labelText("포토 후기")}</b>{labelText("를 고르면 함께 올라가요.")}
                                 </p>
                             )}
 
                             {/* ⑤ 우리 아이 정보 */}
                             <section className="rvm-block" data-done="">
-                                <h3>{numberBadge(true)} 우리 아이 정보 <span className="rvm-opt-label">다른 보호자가 사이즈를 고를 때 참고해요</span></h3>
+                                <h3>{numberBadge(true)} {labelText("우리 아이 정보")} <span className="rvm-opt-label">{labelText("다른 보호자가 사이즈를 고를 때 참고해요")}</span></h3>
                                 <div className="rvm-pet" data-edit={petEdit ? "" : undefined}>
                                     <span className="rvm-pet-avatar" aria-hidden="true">{pet.name.slice(0, 1)}<i className="fa-solid fa-paw" /></span>
                                     {petEdit ? (
                                         <div className="rvm-pet-fields">
                                             <label>
-                                                <span>견종</span>
+                                                <span>{labelText("견종")}</span>
                                                 <input value={pet.breed} onChange={(event) => setPet({ ...pet, breed: event.target.value })} maxLength={20} />
                                             </label>
                                             <label>
-                                                <span>몸무게(kg)</span>
+                                                <span>{labelText("몸무게(kg)")}</span>
                                                 <input inputMode="decimal" value={String(pet.weightKg)} onChange={(event) => setPet({ ...pet, weightKg: Number(event.target.value.replace(/[^0-9.]/g, "")) || 0 })} />
                                             </label>
                                             <label>
-                                                <span>고른 사이즈</span>
+                                                <span>{labelText("고른 사이즈")}</span>
                                                 <select value={pet.size} onChange={(event) => setPet({ ...pet, size: event.target.value })}>
                                                     {SIZES.map((size) => <option key={size}>{size}</option>)}
                                                 </select>
@@ -518,21 +519,21 @@ export default function ReviewWriteModal({ onClose, product, onSubmitted, rating
                                             <ul>
                                                 <li>{pet.breed}</li>
                                                 <li>{pet.weightKg}kg</li>
-                                                <li>{pet.size} 사이즈</li>
+                                                <li>{pet.size} {labelText("사이즈")}</li>
                                             </ul>
                                         </div>
                                     )}
                                     <button type="button" className="rvm-pet-edit" onClick={() => setPetEdit((value) => !value)}>
-                                        {petEdit ? <><i className="fa-solid fa-check" aria-hidden="true" /> 다 고쳤어요</> : <><i className="fa-solid fa-pen" aria-hidden="true" /> 고치기</>}
+                                        {petEdit ? <><i className="fa-solid fa-check" aria-hidden="true" /> {labelText("다 고쳤어요")}</> : <><i className="fa-solid fa-pen" aria-hidden="true" /> {labelText("고치기")}</>}
                                     </button>
                                 </div>
-                                {!petEdit && <p className="rvm-pet-from">펫 프로필에서 가져왔어요. 후기에는 이름 · 견종 · 몸무게만 보여요.</p>}
+                                {!petEdit && <p className="rvm-pet-from">{labelText("펫 프로필에서 가져왔어요. 후기에는 이름 · 견종 · 몸무게만 보여요.")}</p>}
                             </section>
                         </div>
 
                         {/* 아래 — 남은 할 일 · 등록 */}
                         <footer className="rvm-foot">
-                            <ul className="rvm-checks" aria-label="등록 전 확인">
+                            <ul className="rvm-checks" aria-label={labelText("등록 전 확인")}>
                                 {checks.map((check) => (
                                     <li key={check.key} data-done={check.done ? "" : undefined}>
                                         <i className={`fa-solid ${check.done ? "fa-circle-check" : "fa-circle"}`} aria-hidden="true" />
@@ -545,7 +546,7 @@ export default function ReviewWriteModal({ onClose, product, onSubmitted, rating
                                     <>
                                         {/* eslint-disable-next-line @next/next/no-img-element */}
                                         <img src={`${UI}policy-reward-192.webp`} alt="" width={22} height={22} />
-                                        등록하고 {ctx.rewardPoints.toLocaleString()}원 받기
+                                        {labelText("등록하고")} {ctx.rewardPoints.toLocaleString()}{labelText("원 받기")}
                                     </>
                                 ) : uploading ? "사진을 올리는 중이에요" : `${checks.filter((check) => !check.done).length}가지만 더 채워 주세요`}
                             </button>
@@ -557,11 +558,11 @@ export default function ReviewWriteModal({ onClose, product, onSubmitted, rating
                                 <div className="rvm-confirm-card">
                                     {/* eslint-disable-next-line @next/next/no-img-element */}
                                     <img src={`${UI}daily-web-record-384.webp`} alt="" width={72} height={72} />
-                                    <p id={`${baseId}-confirm`} className="rvm-confirm-title">후기 쓰기를 그만둘까요?</p>
-                                    <p>지금 닫으면 쓴 내용과 고른 사진이 사라져요.</p>
+                                    <p id={`${baseId}-confirm`} className="rvm-confirm-title">{labelText("후기 쓰기를 그만둘까요?")}</p>
+                                    <p>{labelText("지금 닫으면 쓴 내용과 고른 사진이 사라져요.")}</p>
                                     <div>
-                                        <button type="button" className="rvm-ghost" onClick={onClose}>그만 쓰기</button>
-                                        <button type="button" className="rvm-submit" autoFocus onClick={() => setStep("write")}>계속 쓰기</button>
+                                        <button type="button" className="rvm-ghost" onClick={onClose}>{labelText("그만 쓰기")}</button>
+                                        <button type="button" className="rvm-submit" autoFocus onClick={() => setStep("write")}>{labelText("계속 쓰기")}</button>
                                     </div>
                                 </div>
                             </div>

@@ -1,3 +1,4 @@
+import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
 import { Suspense } from "react";
 import Image from "next/image";
 import type { Metadata } from "next";
@@ -17,10 +18,10 @@ export default function ChatPage() {
         <Suspense fallback={(
             // 불러오는 중 — 앱은 원래 글씨(wl-app), 웹은 3D 그림 + 해요체 쿠션(wl-card, daily-web.css data-web-loading) · 2026-10-26
             <div className="mx-auto max-w-[1280px] px-4 py-10 text-sm font-black" data-web-loading>
-                <span className="wl-app">챗봇을 불러오는 중입니다.</span>
+                <span className="wl-app"><LocalizedMenuLabel label={"챗봇을 불러오는 중입니다."} /></span>
                 <span className="hidden wl-card" role="status">
                     <Image src="/images/ui/caretalk-web-128.webp" alt="" width={64} height={64} aria-hidden="true" />
-                    <span>챗봇을 불러오고 있어요</span>
+                    <span><LocalizedMenuLabel label={"챗봇을 불러오고 있어요"} /></span>
                 </span>
             </div>
         )}>

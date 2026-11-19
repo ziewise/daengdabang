@@ -61,7 +61,7 @@ function card(overrides = {}) {
         // 2026-10-21: 카드용 크림 사진 고르기(카드 사진이 없으면 대표 사진) — 시험에서는 대표 사진 그대로
         "@/lib/catalog/card-image": { productCardImage: product => product.image },
         "@/lib/store": { useStore: () => ({ toggleWishlist: id => wished.push(id), isWished: () => false }) },
-        "@/lib/i18n": { useI18n: () => ({ locale: "ko", t: key => key, productName: p => p.name, formatPrice: String }) },
+        "@/lib/i18n": { useI18n: () => ({ locale: "ko", t: key => key, productName: p => p.name, optionName: (_, name) => name, formatPrice: String }) },
         "@/components/main/best.module.css": {},
         "@/components/products/VideoBrandOverlay": () => null,
         "@/components/products/ProductColorImage": "img",

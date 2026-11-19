@@ -45,7 +45,7 @@ test("all MY information destinations are real static pages with the common side
         const page = await source(path);
         assert.match(page, /MypageSectionLayout/);
         assert.match(page, /MypageLoginGate/);
-        assert.match(page, /eyebrow="MY 정보"/);
+        assert.match(page, /eyebrow=(?:"MY 정보"|\{labelText\("MY 정보"\)\})/);
     }
     const layout = await source("components/mypage/MypageSectionLayout.tsx");
     assert.match(layout, /<MypageSidebar \/>/);

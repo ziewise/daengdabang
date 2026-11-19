@@ -11,6 +11,7 @@
  *   4. 사업자 정보 (한국 쇼핑몰 법적 필수)
  *   5. 법적 링크 + 카피라이트
  */
+import { useI18n } from "@/lib/i18n";
 import Link from "@/components/site/IntentLink";
 import BrandLogo from "@/components/header/BrandLogo";
 import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
@@ -33,6 +34,7 @@ const SOCIAL_TONES: Record<string, string> = {
 };
 
 export default function Footer({ web = false }: { web?: boolean }) {
+    const { menuLabel: labelText } = useI18n();
     const webScreen = useWebScreen();
     if (web || webScreen) return <FooterWeb />;
     return (
@@ -45,7 +47,7 @@ export default function Footer({ web = false }: { web?: boolean }) {
                         <BrandLogo className="mb-1.5" />
                         <p className="text-xs md:text-sm text-neutral-600 leading-relaxed max-w-md">
                             <LocalizedText
-                                ko={<>우리 댕댕이의 매일을 더 특별하게 — <strong className="font-bold">큐레이션 펫 쇼핑몰</strong></>}
+                                ko={<>{labelText("우리 댕댕이의 매일을 더 특별하게 —")} <strong className="font-bold">{labelText("큐레이션 펫 쇼핑몰")}</strong></>}
                                 en={<>Make every day better for your dog — <strong className="font-bold">curated pet shopping</strong></>}
                             />
                         </p>
@@ -75,7 +77,7 @@ export default function Footer({ web = false }: { web?: boolean }) {
                             </p>
                             <p className="text-[11px] text-neutral-500 leading-snug">
                                 <LocalizedText
-                                    ko={<>신상품·할인 소식을<br />가장 먼저 받아보세요</>}
+                                    ko={<>{labelText("신상품·할인 소식을")}<br />{labelText("가장 먼저 받아보세요")}</>}
                                     en={<>New arrivals and deals,<br />sent first</>}
                                 />
                             </p>
@@ -99,7 +101,7 @@ export default function Footer({ web = false }: { web?: boolean }) {
                         {/* 3) 시간 + 메일 (2줄) */}
                         <p className="text-[10px] text-neutral-500 leading-snug whitespace-nowrap md:border-l md:border-neutral-200/70 md:pl-5">
                             <LocalizedText
-                                ko={<>평일 10:00~18:00 · 주말 휴무<br /><CloudflareSafeEmail email={BUSINESS_INFO.customerServiceEmail} /></>}
+                                ko={<>{labelText("평일 10:00~18:00 · 주말 휴무")}<br /><CloudflareSafeEmail email={BUSINESS_INFO.customerServiceEmail} /></>}
                                 en={<>Weekdays 10:00-18:00 · Closed weekends<br /><CloudflareSafeEmail email={BUSINESS_INFO.customerServiceEmail} /></>}
                             />
                         </p>
@@ -118,13 +120,13 @@ export default function Footer({ web = false }: { web?: boolean }) {
                 {/* 3. 사업자 정보 (한국 쇼핑몰 법적 필수) */}
                 <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-x-5 gap-y-1 text-[10px] md:text-[11px] text-neutral-500">
                     {[
-                        [<LocalizedText key="company" ko="상호" en="Company" />, BUSINESS_INFO.companyName],
-                        [<LocalizedText key="ceo" ko="대표자" en="Representative" />, BUSINESS_INFO.representative],
+                        [<LocalizedText key="company" ko="상호" en="Company" />, labelText(BUSINESS_INFO.companyName)],
+                        [<LocalizedText key="ceo" ko="대표자" en="Representative" />, labelText(BUSINESS_INFO.representative)],
                         [<LocalizedText key="biz" ko="사업자등록번호" en="Business No." />, BUSINESS_INFO.businessNumber],
-                        [<LocalizedText key="mail" ko="통신판매업신고" en="Mail-order registration" />, BUSINESS_INFO.mailOrderNumber],
-                        [<LocalizedText key="addr" ko="주소" en="Address" />, BUSINESS_INFO.address],
+                        [<LocalizedText key="mail" ko="통신판매업신고" en="Mail-order registration" />, labelText(BUSINESS_INFO.mailOrderNumber)],
+                        [<LocalizedText key="addr" ko="주소" en="Address" />, labelText(BUSINESS_INFO.address)],
                         [<LocalizedText key="host" ko="호스팅 제공자" en="Hosting provider" />, BUSINESS_INFO.hostingProvider],
-                        [<LocalizedText key="privacy" ko="개인정보 관리책임자" en="Privacy officer" />, BUSINESS_INFO.privacyOfficer],
+                        [<LocalizedText key="privacy" ko="개인정보 관리책임자" en="Privacy officer" />, labelText(BUSINESS_INFO.privacyOfficer)],
                         [<LocalizedText key="partner" ko="입점 / 제휴 문의" en="Partner inquiries" />, <CloudflareSafeEmail key="partner-email" email={BUSINESS_INFO.partnerEmail} />],
                     ].map(([k, v], index) => (
                         <div key={index}>
@@ -162,12 +164,13 @@ export default function Footer({ web = false }: { web?: boolean }) {
 }
 
 function SnsBtn({ channel }: { channel: SocialChannel }) {
+    const { menuLabel } = useI18n();
     return (
         <a
             href={channel.href}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={`댕다방 공식 ${channel.label} ${channel.handle}`}
+            aria-label={`${menuLabel("댕다방 공식")} ${channel.label} ${channel.handle}`}
             className={`w-9 h-9 rounded-full flex items-center justify-center text-white bg-gradient-to-br ${SOCIAL_TONES[channel.key] || "from-indigo-500 to-purple-600"} hover:scale-105 transition`}
         >
             <i className={`${channel.iconClassName} text-sm`} aria-hidden="true" />

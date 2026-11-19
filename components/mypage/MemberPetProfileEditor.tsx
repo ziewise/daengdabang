@@ -7,6 +7,7 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { FormEvent, useCallback, useId, useRef, useState } from "react";
 import { focusLater, PetProfileModal, PetProfileWebFields, usePetModalHost } from "@/components/mypage/PetProfileModal";
 import {
@@ -36,6 +37,7 @@ type Props = {
 };
 
 export default function MemberPetProfileEditor({ pet, initiallyOpen = false }: Props) {
+    const { menuLabel: labelText } = useI18n();
     const { user, upsertPet } = useAuth();
     const breedListId = useId();
     const [open, setOpen] = useState(initiallyOpen);
@@ -174,7 +176,7 @@ export default function MemberPetProfileEditor({ pet, initiallyOpen = false }: P
                 data-member-pet-edit-open
             >
                 <i className="fa-solid fa-pen text-xs" />
-                정보 수정
+                {labelText("정보 수정")}
             </button>
     );
 
@@ -184,20 +186,20 @@ export default function MemberPetProfileEditor({ pet, initiallyOpen = false }: P
     const fields = (
         <>
             <label>
-                <span className="mb-1 block text-xs font-black text-neutral-500">이름</span>
+                <span className="mb-1 block text-xs font-black text-neutral-500">{labelText("이름")}</span>
                 <input value={pet.name} className="input bg-neutral-100 text-neutral-500" readOnly disabled />
-                <span className="mt-1 block text-[11px] font-bold leading-5 text-neutral-500">중복 프로필 방지를 위해 이름은 이 화면에서 변경하지 않습니다.</span>
+                <span className="mt-1 block text-[11px] font-bold leading-5 text-neutral-500">{labelText("중복 프로필 방지를 위해 이름은 이 화면에서 변경하지 않습니다.")}</span>
             </label>
 
             <label>
-                <span className="mb-1 block text-xs font-black text-neutral-500">견종</span>
+                <span className="mb-1 block text-xs font-black text-neutral-500">{labelText("견종")}</span>
                 <input
                     value={breed}
                     onChange={(event) => setBreed(event.target.value)}
                     className="input"
                     list={breedListId}
                     maxLength={100}
-                    placeholder="견종을 입력하거나 목록에서 선택"
+                    placeholder={labelText("견종을 입력하거나 목록에서 선택")}
                 />
                 <datalist id={breedListId}>
                     {PET_BREEDS.map((item) => <option key={item.id} value={item.ko}>{item.en}</option>)}
@@ -214,19 +216,19 @@ export default function MemberPetProfileEditor({ pet, initiallyOpen = false }: P
 
             <div className="grid gap-3 sm:grid-cols-2">
                 <label>
-                    <span className="mb-1 block text-xs font-black text-neutral-500">크기</span>
+                    <span className="mb-1 block text-xs font-black text-neutral-500">{labelText("크기")}</span>
                     <select value={size} onChange={(event) => setSize(event.target.value as PetProfile["size"])} className="input">
-                        <option value="small">소형</option>
-                        <option value="medium">중형</option>
-                        <option value="large">대형</option>
+                        <option value="small">{labelText("소형")}</option>
+                        <option value="medium">{labelText("중형")}</option>
+                        <option value="large">{labelText("대형")}</option>
                     </select>
                 </label>
                 <label>
-                    <span className="mb-1 block text-xs font-black text-neutral-500">나이</span>
-                    <input value={age} onChange={(event) => setAge(event.target.value)} className="input" maxLength={80} placeholder="예: 3살" />
+                    <span className="mb-1 block text-xs font-black text-neutral-500">{labelText("나이")}</span>
+                    <input value={age} onChange={(event) => setAge(event.target.value)} className="input" maxLength={80} placeholder={labelText("예: 3살")} />
                 </label>
                 <label>
-                    <span className="mb-1 block text-xs font-black text-neutral-500">현재 체중 (kg)</span>
+                    <span className="mb-1 block text-xs font-black text-neutral-500">{labelText("현재 체중 (kg)")}</span>
                     <input
                         type="number"
                         min="0.1"
@@ -236,41 +238,41 @@ export default function MemberPetProfileEditor({ pet, initiallyOpen = false }: P
                         value={weightKg}
                         onChange={(event) => setWeightKg(event.target.value)}
                         className="input"
-                        placeholder="직접 확인한 체중"
+                        placeholder={labelText("직접 확인한 체중")}
                     />
                     {weightEstimate && (
                         <span className="mt-1 block text-[11px] font-black leading-5 text-amber-700">
-                            예상 {weightEstimate.minKg}~{weightEstimate.maxKg}kg · 확인 필요
+                            {labelText("예상")} {weightEstimate.minKg}~{weightEstimate.maxKg}{labelText("kg · 확인 필요")}
                         </span>
                     )}
                 </label>
                 <label>
-                    <span className="mb-1 block text-xs font-black text-neutral-500">성별</span>
+                    <span className="mb-1 block text-xs font-black text-neutral-500">{labelText("성별")}</span>
                     <select value={sex} onChange={(event) => setSex(event.target.value as NonNullable<PetProfile["sex"]>)} className="input">
-                        <option value="unknown">선택 안 함</option>
-                        <option value="female">암컷</option>
-                        <option value="male">수컷</option>
+                        <option value="unknown">{labelText("선택 안 함")}</option>
+                        <option value="female">{labelText("암컷")}</option>
+                        <option value="male">{labelText("수컷")}</option>
                     </select>
-                    <span className="mt-1 block text-[11px] font-bold leading-5 text-neutral-500">사진으로 성별을 추정하지 않습니다.</span>
+                    <span className="mt-1 block text-[11px] font-bold leading-5 text-neutral-500">{labelText("사진으로 성별을 추정하지 않습니다.")}</span>
                 </label>
                 <label>
-                    <span className="mb-1 block text-xs font-black text-neutral-500">모질 길이</span>
+                    <span className="mb-1 block text-xs font-black text-neutral-500">{labelText("모질 길이")}</span>
                     <select value={coat} onChange={(event) => setCoat(event.target.value as PetProfile["coat"])} className="input">
-                        <option value="short">단모</option>
-                        <option value="medium">중모</option>
-                        <option value="long">장모</option>
+                        <option value="short">{labelText("단모")}</option>
+                        <option value="medium">{labelText("중모")}</option>
+                        <option value="long">{labelText("장모")}</option>
                     </select>
                 </label>
                 <label>
-                    <span className="mb-1 block text-xs font-black text-neutral-500">털 색상</span>
-                    <input value={coatColor} onChange={(event) => setCoatColor(event.target.value)} className="input" maxLength={80} placeholder="예: 크림, 검정·갈색" />
+                    <span className="mb-1 block text-xs font-black text-neutral-500">{labelText("털 색상")}</span>
+                    <input value={coatColor} onChange={(event) => setCoatColor(event.target.value)} className="input" maxLength={80} placeholder={labelText("예: 크림, 검정·갈색")} />
                 </label>
                 <label className="sm:col-span-2">
-                    <span className="mb-1 block text-xs font-black text-neutral-500">활동량</span>
+                    <span className="mb-1 block text-xs font-black text-neutral-500">{labelText("활동량")}</span>
                     <select value={activity} onChange={(event) => setActivity(event.target.value as PetProfile["activity"])} className="input">
-                        <option value="low">차분한 편</option>
-                        <option value="normal">보통 활동량</option>
-                        <option value="high">활동량 많음</option>
+                        <option value="low">{labelText("차분한 편")}</option>
+                        <option value="normal">{labelText("보통 활동량")}</option>
+                        <option value="high">{labelText("활동량 많음")}</option>
                     </select>
                 </label>
             </div>
@@ -337,7 +339,7 @@ export default function MemberPetProfileEditor({ pet, initiallyOpen = false }: P
                         onWeightKg={setWeightKg}
                         weightPlaceholder="직접 확인한 체중"
                         weightHint={weightEstimate && (
-                            <span className="ddb-pf-help is-warn">예상 {weightEstimate.minKg}~{weightEstimate.maxKg}kg · 확인 필요</span>
+                            <span className="ddb-pf-help is-warn">{labelText("예상")} {weightEstimate.minKg}~{weightEstimate.maxKg}{labelText("kg · 확인 필요")}</span>
                         )}
                         sex={sex}
                         onSex={setSex}
@@ -360,9 +362,9 @@ export default function MemberPetProfileEditor({ pet, initiallyOpen = false }: P
         <form onSubmit={submit} className="mt-3 grid gap-3 rounded-lg border border-indigo-200 bg-white p-3" data-member-pet-editor>
             <div className="flex items-start justify-between gap-3">
                 <div>
-                    <p className="text-xs font-black text-indigo-700">회원 프로필 수정</p>
+                    <p className="text-xs font-black text-indigo-700">{labelText("회원 프로필 수정")}</p>
                     <p className="mt-1 text-[11px] font-bold leading-5 text-neutral-500">
-                        사진 분석값은 후보입니다. 직접 확인한 정보로 고쳐 주세요.
+                        {labelText("사진 분석값은 후보입니다. 직접 확인한 정보로 고쳐 주세요.")}
                     </p>
                 </div>
                 <button
@@ -370,7 +372,7 @@ export default function MemberPetProfileEditor({ pet, initiallyOpen = false }: P
                     onClick={() => setOpen(false)}
                     className="rounded-md px-2 py-1 text-xs font-black text-neutral-500 hover:bg-neutral-100"
                 >
-                    닫기
+                    {labelText("닫기")}
                 </button>
             </div>
 

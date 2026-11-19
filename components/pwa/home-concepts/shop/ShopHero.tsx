@@ -13,6 +13,7 @@
  *  - 산책 친구는 히어로 위로 오지 않음(충돌 회피 표시) · 히어로가 화면에 크게 보이는 동안은 숨었다가 내려가면 나타남
  */
 
+import { useI18n } from "@/lib/i18n";
 import Link from "@/components/app-shell/AppLink";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { fallbackHeroWeather, getHeroSeason, normalizeHeroWeather, seasonLabel, timeBucketLabel, type HeroContext, type HeroWeather } from "@/lib/hero-assets";
@@ -69,6 +70,7 @@ const contextOf = (w?: HeroWeather, basis?: Date | null): HeroContext => {
 };
 
 export default function ShopHero() {
+    const { locale, menuLabel: labelText } = useI18n();
     const stored = useSyncExternalStore(subscribeRegion, readRegion, () => null);
     const ready = stored !== null;
     const region = stored ?? HERO_AUTO_REGION_ID;
@@ -132,15 +134,16 @@ export default function ShopHero() {
     // 견종 얼굴 배지(지름 약 70px) — 1280×720 원본(장당 1.9MB) 대신 가운데를 자른 240px 배지 영상(장당 약 100KB, 2026-10-26 앱 묶음 줄이기).
     // 원본은 웹 홈(HeroSection)이 그대로 씀. 새 파일: public/images/breeds/badge/<견종>-240.mp4
     const breedVideo = context ? media?.(pickHeroBreedVideo(context.weather, context.timeBucket).replace(/^\/images\/breeds\/([\w-]+)\.mp4$/, "/images/breeds/badge/$1-240.mp4")) : undefined;
-    const summary = heroWeatherSummary(report, "ko");
-    const regionName = region === HERO_AUTO_REGION_ID ? "현재 위치" : KR_REGIONS.find((r) => r.id === region)?.name ?? "현재 위치";
+    const summary = heroWeatherSummary(report, locale);
+    const selectedRegion = KR_REGIONS.find((r) => r.id === region);
+    const regionName = selectedRegion ? (locale === "en" ? selectedRegion.nameEn : selectedRegion.name) : labelText("현재 위치");
 
     return (
         // data-pet-companion-avoid: 산책 친구(협업자 충돌 회피)가 히어로(제목 · 영상 · 날씨 칩) 위로는 오지 않게
-        <section ref={heroRef} aria-label="오늘의 댕다방" className="relative" data-pet-companion-avoid="true">
+        <section ref={heroRef} aria-label={labelText("오늘의 댕다방")} className="relative" data-pet-companion-avoid="true">
             {/* 브랜드 문구 — 페이지 맨 위(제목 테이프 대신) */}
             <h1 className="ah-display text-[25px] leading-[1.18]">
-                매일이 더 특별한<br /><span className="text-[#ef5f8f]">댕댕이의 일상</span>
+                {labelText("매일이 더 특별한")}<br /><span className="text-[#ef5f8f]">{labelText("댕댕이의 일상")}</span>
             </h1>
 
             {/* 폴라로이드 영상 — 위에 글자 없음 · 세로 영상을 정사각으로 — 아래쪽(워터마크 쪽)과 빈 하늘을 잘라 강아지가 있는 가운데를 보여 줌 */}
@@ -149,7 +152,7 @@ export default function ShopHero() {
                 <div className="relative aspect-square overflow-hidden rounded-[3px] bg-[#f3ede6]">
                     {video ? <InViewVideo key={video} src={video} poster="/images/ui/shop-hero-poster.webp" onError={heroVideoSource.onError} muted loop playsInline preload="auto" aria-hidden="true"
                         className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: "center 70%" }} />
-                        : <img src="/images/ui/shop-hero-poster.webp" alt="산책하는 강아지" className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: "center 70%" }} />}
+                        : <img src="/images/ui/shop-hero-poster.webp" alt={labelText("산책하는 강아지")} className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: "center 70%" }} />}
                 </div>
                 {/* 사진 설명 자리 — 왼쪽 끝: 지역 고르기 / 오른쪽 끝: 지역 · 온도 + 계절 시간 */}
                 <div className="mt-2.5 flex items-center justify-between gap-1.5">
@@ -157,25 +160,25 @@ export default function ShopHero() {
                         className="shp-chip is-btn ah-light inline-flex shrink-0 items-center gap-1"><i aria-hidden="true" className="fa-solid fa-location-dot text-[9px]" />{regionName}<i aria-hidden="true" className="fa-solid fa-chevron-down text-[8px]" /></button>
                     <span className="flex min-w-0 items-center justify-end gap-1.5">
                         {summary ? <span className="shp-chip ah-light truncate">{summary}</span> : null}
-                        <span className="shp-chip ah-light shrink-0">{context ? `${seasonLabel(context.season, "ko")} ${timeBucketLabel(context.timeBucket, "ko")}` : "오늘의 산책"}</span>
+                        <span className="shp-chip ah-light shrink-0">{context ? `${seasonLabel(context.season, locale)} ${timeBucketLabel(context.timeBucket, locale)}` : labelText("오늘의 산책")}</span>
                     </span>
                 </div>
 
                 {/* 견종 얼굴 배지 — 모서리 스티커 · 말풍선 */}
-                <Link href="/app/sticker/lab/" aria-label="저를 콕 눌러 분석하기 — 연구소로" onClick={() => haptic("light")}
+                <Link href="/app/sticker/lab/" aria-label={labelText("저를 콕 눌러 분석하기 — 연구소로")} onClick={() => haptic("light")}
                     className="shp-badge absolute -right-2.5 bottom-[4.2rem] z-10 block h-[4.4rem] w-[4.4rem] rounded-full">
                     {breedVideo ? <InViewVideo key={breedVideo} src={breedVideo} poster="/images/breeds/badge/poodle-480.webp" muted loop playsInline preload="metadata" aria-hidden="true" className="h-full w-full rounded-full object-cover" /> : null}
-                    <span aria-hidden="true" className={`shp-cue ah-light ${cue ? "is-on" : ""}`}>저를 <b className="font-normal text-[#ef5f8f]">콕</b> 눌러 분석하기!</span>
+                    <span aria-hidden="true" className={`shp-cue ah-light ${cue ? "is-on" : ""}`}>{labelText("저를")} <b className="font-normal text-[#ef5f8f]">{labelText("콕")}</b> {labelText("눌러 분석하기!")}</span>
                 </Link>
             </div>
 
             {/* 지역 고르기 — 아래에서 올라오는 속지 */}
-            <Sheet open={regionOpen} onClose={() => setRegionOpen(false)} label="날씨 지역 고르기" title="어느 동네 날씨로 볼까요?">
+            <Sheet open={regionOpen} onClose={() => setRegionOpen(false)} label={labelText("날씨 지역 고르기")} title={labelText("어느 동네 날씨로 볼까요?")}>
                 <div className="grid grid-cols-3 gap-2 pb-2">
-                    {[{ id: HERO_AUTO_REGION_ID, name: "현재 위치" }, ...KR_REGIONS].map((r) => (
+                    {[{ id: HERO_AUTO_REGION_ID, name: "현재 위치", nameEn: "Current location" }, ...KR_REGIONS].map((r) => (
                         <button key={r.id} type="button" aria-pressed={region === r.id}
                             onClick={() => { haptic("light"); writeRegion(r.id); setRegionOpen(false); }}
-                            className={`shp-region ah-light rounded-full py-2 text-[13px] ${region === r.id ? "is-on" : ""}`}>{r.name}</button>
+                            className={`shp-region ah-light rounded-full py-2 text-[13px] ${region === r.id ? "is-on" : ""}`}>{locale === "en" ? r.nameEn : r.name}</button>
                     ))}
                 </div>
             </Sheet>

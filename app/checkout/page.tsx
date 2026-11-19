@@ -165,6 +165,7 @@ function safePaymentError(error: unknown, locale: "ko" | "en") {
 }
 
 export default function CheckoutPage() {
+    const { menuLabel: labelText } = useI18n();
     const cart = useCart();
     const { user } = useAuth();
     const { t, locale, formatPrice, productName } = useI18n();
@@ -193,6 +194,7 @@ export default function CheckoutPage() {
     // 결제 모드가 바뀐 것을 알았을 때 배송 견적(= 화면 안내 모드)을 다시 받는 순번
     const [quoteRefresh, setQuoteRefresh] = useState(0);
     const [paymentMethod, setPaymentMethod] = useState<CheckoutPaymentMethod>("card");
+    const [cashReceiptType, setCashReceiptType] = useState<"소득공제" | "지출증빙">("소득공제");
     const [submitting, setSubmitting] = useState(false);
     const [nativePaymentUrl, setNativePaymentUrl] = useState("");
     const [paymentError, setPaymentError] = useState("");
@@ -502,7 +504,7 @@ export default function CheckoutPage() {
             if (isNativeAppRuntime()) {
                 const url = nativePaymentLaunchUrl({
                     clientKey: order.clientKey, customerKey: order.customerKey,
-                    orderId: order.orderId, orderName: order.orderName, amount: order.amount, paymentMethod,
+                    orderId: order.orderId, orderName: order.orderName, amount: order.amount, paymentMethod, cashReceiptType,
                 });
                 await Browser.open({ url });
                 setNativePaymentUrl(url);
@@ -528,7 +530,7 @@ export default function CheckoutPage() {
                 await payment.requestPayment({
                     ...commonRequest,
                     method: "TRANSFER",
-                    transfer: { useEscrow: false },
+                    transfer: { useEscrow: false, cashReceipt: { type: cashReceiptType } },
                 });
             } else if (sdkMethod === "MOBILE_PHONE") {
                 await payment.requestPayment({ ...commonRequest, method: "MOBILE_PHONE" });
@@ -792,6 +794,14 @@ export default function CheckoutPage() {
                                 );
                             })}
                         </div>
+                        {paymentMethod === "transfer" && <div className="mt-3 rounded-xl bg-pink-50 p-4">
+                            <label className="block font-bold">{labelText("현금영수증 용도")}
+                                <select className="input mt-2 text-base" value={cashReceiptType} onChange={(event) => setCashReceiptType(event.target.value as "소득공제" | "지출증빙")}>
+                                    <option value="소득공제">{labelText("개인 소득공제")}</option><option value="지출증빙">{labelText("사업자 지출증빙")}</option>
+                                </select>
+                            </label>
+                            <p className="mt-2 text-sm">{labelText("휴대폰번호 또는 사업자등록번호는 토스 결제창에서 입력해 주세요. 발급된 영수증은 주문 내역에서 확인할 수 있어요.")}</p>
+                        </div>}
                         {paymentMethod === "card" && (
                             <div className="mt-3 rounded-xl border border-sky-200 bg-sky-50 px-3 py-3 text-xs font-bold leading-5 text-sky-900">
                                 <p className="font-black">
@@ -800,7 +810,7 @@ export default function CheckoutPage() {
                                 </p>
                                 <p className="mt-1 text-sky-800">
                                     {locale === "en"
-                                        ? "Choose a supported issuer, including KB Kookmin, in the Toss window. Depending on the issuer and device, an app-card or issuer authentication screen may open instead of direct card-number entry. Daengdabang does not directly collect or store card details."
+                                        ? "Choose a supported issuer, including KB Kookmin, in the Toss window. Depending on the issuer and device, an app-card or issuer authentication screen may open instead of direct card-number entry. 댕다방 does not directly collect or store card details."
                                         : "토스 결제창에서 KB국민카드(국민)를 포함한 카드사를 선택해 인증합니다. 카드사와 기기에 따라 앱카드·ISP/안심클릭 등이 열리며 카드번호 직접 입력 화면이 항상 나오지는 않습니다. 댕다방은 카드정보를 직접 수집하거나 저장하지 않습니다."}
                                 </p>
                             </div>
@@ -816,11 +826,11 @@ export default function CheckoutPage() {
                                 />
                                 <span className="text-[11px] font-bold leading-5 text-neutral-700">
                                     {locale === "en" ? "I agree to the required Toss Payments terms for direct wallet payment: " : "간편결제에 필요한 토스페이먼츠 약관에 동의합니다: "}
-                                    <a href="https://pages.tosspayments.com/terms/user" target="_blank" rel="noreferrer" className="co-terms-link font-black text-indigo-700 underline">전자금융거래 약관</a>
+                                    <a href="https://pages.tosspayments.com/terms/user" target="_blank" rel="noreferrer" className="co-terms-link font-black text-indigo-700 underline">{labelText("전자금융거래 약관")}</a>
                                     {" · "}
-                                    <a href="https://pages.tosspayments.com/terms/privacy/consent1" target="_blank" rel="noreferrer" className="co-terms-link font-black text-indigo-700 underline">개인정보 수집·이용</a>
+                                    <a href="https://pages.tosspayments.com/terms/privacy/consent1" target="_blank" rel="noreferrer" className="co-terms-link font-black text-indigo-700 underline">{labelText("개인정보 수집·이용")}</a>
                                     {" · "}
-                                    <a href="https://pages.tosspayments.com/terms/privacy/consent2" target="_blank" rel="noreferrer" className="co-terms-link font-black text-indigo-700 underline">제3자 제공</a>
+                                    <a href="https://pages.tosspayments.com/terms/privacy/consent2" target="_blank" rel="noreferrer" className="co-terms-link font-black text-indigo-700 underline">{labelText("제3자 제공")}</a>
                                 </span>
                             </label>
                         )}
@@ -833,7 +843,7 @@ export default function CheckoutPage() {
                         <span className="co-sum-ring"><span><Image src="/images/ui/header-cart-128.webp" alt="" width={48} height={48} /></span></span>
                         <div>
                             <p className="co-sum-kicker">MY ORDER</p>
-                            <p className="co-sum-title">{locale === "en" ? <>Items <b>{lines.length}</b></> : <>담은 상품 <b>{lines.length}</b>개</>}</p>
+                            <p className="co-sum-title">{locale === "en" ? <>Items <b>{lines.length}</b></> : <>{labelText("담은 상품")} <b>{lines.length}</b>{labelText("개")}</>}</p>
                         </div>
                     </div>
                     <h2 className="text-lg font-black text-neutral-950">{t("orderedProducts")}</h2>

@@ -10,6 +10,7 @@
  * 꾸밈 CSS 는 app/daily-web.css 의 dw-book* (웹 data-daily-web 범위). 앱의 /my-pet 은 앱 리포트 화면이라 이 화면은 웹 전용.
  */
 
+import { useI18n } from "@/lib/i18n";
 import { useEffect, useRef, useState } from "react";
 // 웹/앱 문구 갈림(웹은 해요체, 2026-10-26)
 import { useWebScreen } from "@/hooks/useWebScreen";
@@ -68,6 +69,7 @@ function petFacts(pet: PetProfile) {
 }
 
 export default function MyPetHub() {
+    const { menuLabel: labelText } = useI18n();
     const { hydrated, user } = useAuth();
     // 웹 화면인가(웹은 해요체 문구)
     const webScreen = useWebScreen();
@@ -139,10 +141,10 @@ export default function MyPetHub() {
         return (
             // 불러오는 중 — 앱은 원래 회색 글씨(wl-app), 웹은 3D 그림 + 해요체 쿠션(wl-card, daily-web.css data-web-loading)
             <main className="mx-auto grid min-h-[50vh] w-full max-w-[1280px] place-items-center px-4 py-10 text-sm font-black text-neutral-500" data-daily-web data-web-loading>
-                <span className="wl-app">우리 아이 기록을 불러오는 중입니다.</span>
+                <span className="wl-app">{labelText("우리 아이 기록을 불러오는 중입니다.")}</span>
                 <span className="hidden wl-card" role="status">
                     <Image src="/images/ui/menu-daily-mypet-128.webp" alt="" width={64} height={64} aria-hidden="true" />
-                    <span>우리 아이 기록을 불러오고 있어요</span>
+                    <span>{labelText("우리 아이 기록을 불러오고 있어요")}</span>
                 </span>
             </main>
         );
@@ -155,9 +157,9 @@ export default function MyPetHub() {
                     <span className="dw-gate-art" aria-hidden="true">
                         <Image src="/images/ui/daily-hero-mypet-384.webp" alt="" width={170} height={170} priority />
                     </span>
-                    <h1 className="ddb-crayon-title dw-h2">우리 아이 기록은 로그인 후 볼 수 있어요</h1>
-                    <p className="dw-sub">선택한 우리 아이의 주간 사진 분석과 변화 기록을 회원 계정에 안전하게 연결합니다.</p>
-                    <Link href="/auth/login/?redirect=%2Fmy-pet" className="ddb-crayon-link dw-pill dw-pill-main mt-6">로그인하기</Link>
+                    <h1 className="ddb-crayon-title dw-h2">{labelText("우리 아이 기록은 로그인 후 볼 수 있어요")}</h1>
+                    <p className="dw-sub">{labelText("선택한 우리 아이의 주간 사진 분석과 변화 기록을 회원 계정에 안전하게 연결합니다.")}</p>
+                    <Link href="/auth/login/?redirect=%2Fmy-pet" className="ddb-crayon-link dw-pill dw-pill-main mt-6">{labelText("로그인하기")}</Link>
                 </div>
             </main>
         );
@@ -170,9 +172,9 @@ export default function MyPetHub() {
                     <span className="dw-gate-art" aria-hidden="true">
                         <Image src="/images/ui/daily-care-256.webp" alt="" width={150} height={150} priority />
                     </span>
-                    <h1 className="ddb-crayon-title dw-h2">먼저 우리 아이를 등록해 주세요</h1>
-                    <p className="dw-sub">프로필이 생기면 주간 사진 분석과 건강 관찰 기록이 이곳에 차곡차곡 쌓입니다.</p>
-                    <Link href="/mypage/?profile=required#pet-profiles" className="ddb-crayon-link dw-pill dw-pill-main mt-6">반려견 등록하기</Link>
+                    <h1 className="ddb-crayon-title dw-h2">{labelText("먼저 우리 아이를 등록해 주세요")}</h1>
+                    <p className="dw-sub">{labelText("프로필이 생기면 주간 사진 분석과 건강 관찰 기록이 이곳에 차곡차곡 쌓입니다.")}</p>
+                    <Link href="/mypage/?profile=required#pet-profiles" className="ddb-crayon-link dw-pill dw-pill-main mt-6">{labelText("반려견 등록하기")}</Link>
                 </div>
             </main>
         );
@@ -194,8 +196,8 @@ export default function MyPetHub() {
                 <CrayonDoodle kind="heart" className="dw-doodle-c" />
                 <CrayonDoodle kind="bone" className="dw-doodle-d" />
                 <p className="ddb-crayon-kicker dw-kicker">MY PET RECORD</p>
-                <h1 className="ddb-crayon-title ddb-crayon-underline dw-book-title">{pet.name}의 기록</h1>
-                <p className="dw-sub">매주 한 쪽씩, {pet.name}의 모습이 그림책으로 차곡차곡 쌓여요.</p>
+                <h1 className="ddb-crayon-title ddb-crayon-underline dw-book-title">{pet.name}{labelText("의 기록")}</h1>
+                <p className="dw-sub">{labelText("매주 한 쪽씩,")} {pet.name}{labelText("의 모습이 그림책으로 차곡차곡 쌓여요.")}</p>
             </header>
 
             <section id="health-report" className="scroll-mt-28" aria-labelledby="health-report-title">
@@ -212,7 +214,7 @@ export default function MyPetHub() {
                         {/* 왼쪽 쪽 — 이 책의 주인공 */}
                         <div className="dw-book-page dw-book-left">
                             <CrayonDoodle kind="heart" className="dw-page-doodle is-left" />
-                            <p className="dw-hand dw-hand-pink">이 책의 주인공</p>
+                            <p className="dw-hand dw-hand-pink">{labelText("이 책의 주인공")}</p>
                             <div className="dw-book-hero">
                                 <div className="dw-book-ring">
                                     <div>
@@ -230,7 +232,7 @@ export default function MyPetHub() {
                                 </div>
                             </div>
 
-                            <p className="dw-hand dw-hand-pink mt-7">주인공을 소개해요</p>
+                            <p className="dw-hand dw-hand-pink mt-7">{labelText("주인공을 소개해요")}</p>
                             <dl className="dw-book-facts">
                                 {petFacts(pet).map((fact) => (
                                     <div key={fact.key}>
@@ -244,14 +246,14 @@ export default function MyPetHub() {
                             </dl>
 
                             <div className="dw-book-switch">
-                                {switchablePets.length > 1 && <p className="dw-book-switch-label">다른 아이 그림책</p>}
+                                {switchablePets.length > 1 && <p className="dw-book-switch-label">{labelText("다른 아이 그림책")}</p>}
                                 <div className="flex flex-wrap gap-2">
                                     {switchablePets.length > 1 && switchablePets.map((item) => (
                                         <button key={item.apiProfileId} type="button" onClick={() => { setSelectedPetId(item.apiProfileId); setOpenedRecordId(undefined); }} className={`dw-book-pill ${item.apiProfileId === pet.apiProfileId ? "is-on" : ""}`} aria-pressed={item.apiProfileId === pet.apiProfileId}>
                                             <i className="fa-solid fa-paw" aria-hidden="true" />{item.name}
                                         </button>
                                     ))}
-                                    <Link href="/mypage/#pet-profiles" className="dw-book-pill is-edit"><i className="fa-solid fa-pen" aria-hidden="true" />프로필 고치기</Link>
+                                    <Link href="/mypage/#pet-profiles" className="dw-book-pill is-edit"><i className="fa-solid fa-pen" aria-hidden="true" />{labelText("프로필 고치기")}</Link>
                                 </div>
                             </div>
                             <span className="dw-book-no is-left" aria-hidden="true">1</span>
@@ -263,15 +265,15 @@ export default function MyPetHub() {
                             {weeklyLoading ? (
                                 <div className="dw-book-blank">
                                     <CrayonDoodle kind="paw" className="dw-book-blank-paw" />
-                                    <p className="dw-hand dw-hand-sky">그림책을 펼치는 중이에요</p>
-                                    <p className="mt-1 text-sm font-bold text-neutral-500">{webScreen ? "주간 사진 기록을 불러오고 있어요." : "주간 사진 기록을 불러오는 중입니다."}</p>
+                                    <p className="dw-hand dw-hand-sky">{labelText("그림책을 펼치는 중이에요")}</p>
+                                    <p className="mt-1 text-sm font-bold text-neutral-500">{labelText(webScreen ? "주간 사진 기록을 불러오고 있어요." : "주간 사진 기록을 불러오는 중입니다.")}</p>
                                 </div>
                             ) : openedWeekly ? (
                                 <>
                                     <div className="flex flex-wrap items-center justify-between gap-2">
-                                        <p className="dw-hand dw-hand-sky">{formatShortDate(openedWeekly.analyzedAt)} 이야기{openedIndex === 0 ? " · 최근" : ""}</p>
+                                        <p className="dw-hand dw-hand-sky">{formatShortDate(openedWeekly.analyzedAt)} {labelText("이야기")}{openedIndex === 0 ? " · 최근" : ""}</p>
                                         <span className="dw-book-chips">
-                                            <span className="is-sky">{openedWeekly.viewCount}방향</span>
+                                            <span className="is-sky">{openedWeekly.viewCount}{labelText("방향")}</span>
                                             {openedWeekly.photoQualityLabel && <span className="is-yellow">{openedWeekly.photoQualityLabel}</span>}
                                         </span>
                                     </div>
@@ -289,39 +291,39 @@ export default function MyPetHub() {
                                         <p className="dw-book-compare-head">{openedWeekly.comparison.headline}</p>
                                         {openedWeekly.comparison.status === "ready" ? (
                                             <ul className="dw-book-compare-list">
-                                                {openedWeekly.comparison.newObservations.slice(0, 2).map((item) => <li key={item}><i className="fa-solid fa-wand-magic-sparkles text-orange-500" aria-hidden="true" /><span>새로 확인: {item}</span></li>)}
-                                                {openedWeekly.comparison.commonObservations.slice(0, 2).map((item) => <li key={item}><i className="fa-solid fa-equals text-teal-600" aria-hidden="true" /><span>공통 확인: {item}</span></li>)}
+                                                {openedWeekly.comparison.newObservations.slice(0, 2).map((item) => <li key={item}><i className="fa-solid fa-wand-magic-sparkles text-orange-500" aria-hidden="true" /><span>{labelText("새로 확인:")} {item}</span></li>)}
+                                                {openedWeekly.comparison.commonObservations.slice(0, 2).map((item) => <li key={item}><i className="fa-solid fa-equals text-teal-600" aria-hidden="true" /><span>{labelText("공통 확인:")} {item}</span></li>)}
                                             </ul>
-                                        ) : <p className="mt-1 text-xs font-bold leading-5 text-neutral-500">다음 주 같은 방향 사진이 쌓이면 변화 여부를 단정하지 않고 확인된 항목만 비교합니다.</p>}
+                                        ) : <p className="mt-1 text-xs font-bold leading-5 text-neutral-500">{labelText("다음 주 같은 방향 사진이 쌓이면 변화 여부를 단정하지 않고 확인된 항목만 비교합니다.")}</p>}
                                     </div>
-                                    <p className="dw-book-when">{formatDate(openedWeekly.analyzedAt)} 기록</p>
+                                    <p className="dw-book-when">{formatDate(openedWeekly.analyzedAt)} {labelText("기록")}</p>
                                 </>
                             ) : (
                                 <div className="dw-book-blank">
                                     <Image src="/images/ui/daily-checkin-256.webp" alt="" width={110} height={110} aria-hidden="true" className="mx-auto" />
-                                    <p className="dw-hand dw-hand-sky mt-2">아직 비어 있는 쪽이에요</p>
-                                    <p className="mt-1 text-sm font-black text-neutral-800">실시간 카메라로 이번 주 첫 사진을 남겨 보세요.</p>
-                                    <p className="mt-1 text-xs font-bold leading-5 text-neutral-500">첫 주간 분석은 비교 기준이 되고, 다음 기록부터 이전 주와 나란히 표시됩니다.</p>
+                                    <p className="dw-hand dw-hand-sky mt-2">{labelText("아직 비어 있는 쪽이에요")}</p>
+                                    <p className="mt-1 text-sm font-black text-neutral-800">{labelText("실시간 카메라로 이번 주 첫 사진을 남겨 보세요.")}</p>
+                                    <p className="mt-1 text-xs font-bold leading-5 text-neutral-500">{labelText("첫 주간 분석은 비교 기준이 되고, 다음 기록부터 이전 주와 나란히 표시됩니다.")}</p>
                                 </div>
                             )}
                             <span className="dw-book-no is-right" aria-hidden="true">{openedWeekly ? pageNumber(openedIndex) : 2}</span>
                         </div>
                     </div>
                 </div>
-                <p className="dw-book-fine">이 리포트는 사진에서 확인된 관찰 항목을 정리하며, 촬영 조건에 따라 달라질 수 있고 수의학적 진단을 대신하지 않습니다.</p>
+                <p className="dw-book-fine">{labelText("이 리포트는 사진에서 확인된 관찰 항목을 정리하며, 촬영 조건에 따라 달라질 수 있고 수의학적 진단을 대신하지 않습니다.")}</p>
 
                 {/* 지난 쪽 모아보기 — 누르면 그림책에 펼침. 그림책 바로 아래(2026-10-23 사용자: 촬영 구역보다 위) */}
                 {weeklyHistory.length > 0 && (
                     <div className="dw-pages" data-weekly-photo-history>
                         <div className="dw-pages-head">
-                            <h3 className="ddb-crayon-title ddb-crayon-underline dw-pages-title">주간 사진 히스토리</h3>
-                            <span className="dw-hand dw-hand-soft">지난 쪽을 누르면 그림책에 펼쳐져요 · 최근 {weeklyHistory.length}회</span>
+                            <h3 className="ddb-crayon-title ddb-crayon-underline dw-pages-title">{labelText("주간 사진 히스토리")}</h3>
+                            <span className="dw-hand dw-hand-soft">{labelText("지난 쪽을 누르면 그림책에 펼쳐져요 · 최근")} {weeklyHistory.length}{labelText("회")}</span>
                         </div>
                         <ol className="dw-pages-list">
                             {weeklyHistory.map((item, index) => (
                                 <li key={item.id}>
                                     <button type="button" onClick={() => openPage(item.id)} className={`dw-page-card ${PAGE_TINTS[index % PAGE_TINTS.length]} ${item.id === openedWeekly?.id ? "is-open" : ""}`} aria-pressed={item.id === openedWeekly?.id}>
-                                        <span className="dw-page-no">{pageNumber(index)}쪽</span>
+                                        <span className="dw-page-no">{pageNumber(index)}{labelText("쪽")}</span>
                                         <span className="dw-page-date">{index === 0 ? "최근 · " : ""}{formatShortDate(item.analyzedAt)}</span>
                                         <strong className="dw-page-title">{item.title || "주간 사진 분석"}</strong>
                                         <span className="dw-page-views" aria-label={`${item.viewCount}방향 촬영`}>
@@ -346,10 +348,10 @@ export default function MyPetHub() {
                         </div>
                     </div>
                     <div className="min-w-0">
-                        <p className="ddb-crayon-kicker dw-kicker">AI 주간 사진 변화 리포트</p>
-                        <h2 id="health-report-title" className="ddb-crayon-title dw-cam-title">찰칵! 이번 주 {pet.name}의 모습을 담아 볼까요?</h2>
-                        <p className="dw-cam-sub">새로 촬영한 사진은 선택한 {pet.name}의 주간 기록으로만 저장되며, 최초 등록 사진을 덮어쓰지 않습니다.</p>
-                        <ol className="dw-cam-steps" aria-label="촬영 방향 순서">
+                        <p className="ddb-crayon-kicker dw-kicker">{labelText("AI 주간 사진 변화 리포트")}</p>
+                        <h2 id="health-report-title" className="ddb-crayon-title dw-cam-title">{labelText("찰칵! 이번 주")} {pet.name}{labelText("의 모습을 담아 볼까요?")}</h2>
+                        <p className="dw-cam-sub">{labelText("새로 촬영한 사진은 선택한")} {pet.name}{labelText("의 주간 기록으로만 저장되며, 최초 등록 사진을 덮어쓰지 않습니다.")}</p>
+                        <ol className="dw-cam-steps" aria-label={labelText("촬영 방향 순서")}>
                             {PETLENS_PHOTO_VIEWS.map((view, index) => (
                                 <li key={view.id}>
                                     <span aria-hidden="true"><Image src={VIEW_ART[view.id]} alt="" width={72} height={72} /></span>
@@ -374,7 +376,7 @@ export default function MyPetHub() {
                                     }}
                                 />
                             ) : (
-                                <Link href="/auth/login/?redirect=%2Fmy-pet" className="ddb-crayon-link dw-pill dw-pill-main">다시 로그인하고 사진 남기기</Link>
+                                <Link href="/auth/login/?redirect=%2Fmy-pet" className="ddb-crayon-link dw-pill dw-pill-main">{labelText("다시 로그인하고 사진 남기기")}</Link>
                             )}
                         </div>
                     </div>
@@ -390,7 +392,7 @@ export default function MyPetHub() {
             <section className="dw-appendix" aria-labelledby="dw-appendix-title">
                 <div className="dw-appendix-head">
                     <p className="ddb-crayon-kicker dw-kicker">MORE CARE</p>
-                    <h2 id="dw-appendix-title" className="ddb-crayon-title ddb-crayon-underline dw-pages-title">{pet.name}의 기록과 함께 써 보세요</h2>
+                    <h2 id="dw-appendix-title" className="ddb-crayon-title ddb-crayon-underline dw-pages-title">{pet.name}{labelText("의 기록과 함께 써 보세요")}</h2>
                 </div>
                 <div className="dw-rounds">
                     {[
@@ -400,15 +402,15 @@ export default function MyPetHub() {
                     ].map((item) => (
                         <Link key={item.href} href={item.href} className={`dw-round ${item.tint}`}>
                             <span className="dw-round-art" aria-hidden="true"><Image src={item.art} alt="" width={120} height={120} /></span>
-                            <strong className="dw-round-title">{item.title}</strong>
-                            <span className="dw-round-body">{item.body}</span>
+                            <strong className="dw-round-title">{labelText(item.title)}</strong>
+                            <span className="dw-round-body">{labelText(item.body)}</span>
                             <span className="dw-round-go">{item.go} <i className="fa-solid fa-arrow-right text-[10px]" aria-hidden="true" /></span>
                         </Link>
                     ))}
                 </div>
                 <p className="dw-appendix-note">
                     <i className="fa-solid fa-circle-info" aria-hidden="true" />
-                    <span><strong id="independent-observation-title">행동·소리 분석은 등록한 우리 아이와 별개예요.</strong> 궁금한 강아지의 행동·소리 영상을 관찰하는 독립 기능이며, 주간 사진 변화 기록과 섞이지 않습니다. <Link href="/pet-lens/?mode=observation#observation" className="dw-appendix-note-link">행동·소리 분석 열기</Link></span>
+                    <span><strong id="independent-observation-title">{labelText("행동·소리 분석은 등록한 우리 아이와 별개예요.")}</strong> {labelText("궁금한 강아지의 행동·소리 영상을 관찰하는 독립 기능이며, 주간 사진 변화 기록과 섞이지 않습니다.")} <Link href="/pet-lens/?mode=observation#observation" className="dw-appendix-note-link">{labelText("행동·소리 분석 열기")}</Link></span>
                 </p>
             </section>
         </main>

@@ -5,19 +5,21 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import MypageSectionLayout, { MypageLoginGate } from "@/components/mypage/MypageSectionLayout";
 import { HealthSummary } from "@/components/mypage/MypageAiSummary";
 import { useAuth } from "@/lib/store";
 
 export default function MypageHealthSummaryPage() {
+    const { menuLabel: labelText } = useI18n();
     const { user } = useAuth();
     if (!user) return <MypageLoginGate redirect="/mypage/health/" />;
 
     return (
         <MypageSectionLayout
-            eyebrow="우리 아이 AI"
-            title="건강 기록"
-            description="주간 사진 건강 체크 결과와 지난주와 달라진 점, 이번 주 돌봄 할 일을 정리했어요."
+            eyebrow={labelText("우리 아이 AI")}
+            title={labelText("건강 기록")}
+            description={labelText("주간 사진 건강 체크 결과와 지난주와 달라진 점, 이번 주 돌봄 할 일을 정리했어요.")}
         >
             <HealthSummary />
         </MypageSectionLayout>

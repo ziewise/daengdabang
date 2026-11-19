@@ -1,3 +1,4 @@
+import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
 type Props = {
     en?: boolean;
     compact?: boolean;
@@ -9,7 +10,7 @@ type Props = {
  * The visible lettering is decorative; assistive technology receives one stable label.
  */
 export default function DaengLabCoinMark({ en = false, compact = false, className = "" }: Props) {
-    const accessibleLabel = en ? "DaengDaBang Research Lab coin" : "댕다방 연구소 코인";
+    const accessibleLabel = en ? "댕다방 Research Lab coin" : "댕다방 연구소 코인";
 
     return (
         <span
@@ -21,13 +22,13 @@ export default function DaengLabCoinMark({ en = false, compact = false, classNam
             <span className="ddb-daenglab-coin-brand" aria-hidden="true">
                 {en ? (
                     <>
-                        <span className="ddb-daenglab-coin-brand--teal">DaengDaBang</span>
+                        <span className="ddb-daenglab-coin-brand--teal">댕다방</span>
                         <span className="ddb-daenglab-coin-brand--coral">Lab</span>
                     </>
                 ) : (
                     <>
                         <span className="ddb-daenglab-coin-brand--teal">댕다방</span>
-                        <span className="ddb-daenglab-coin-brand--coral">연구소</span>
+                        <span className="ddb-daenglab-coin-brand--coral"><LocalizedMenuLabel label={"연구소"} /></span>
                     </>
                 )}
             </span>

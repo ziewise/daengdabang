@@ -1,5 +1,7 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
+import { walkingBuddyName } from "@/lib/pet-companion-copy";
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
@@ -43,6 +45,8 @@ function isHiddenRoute(pathname: string | null) {
 }
 
 export default function PetCompanionGate({ appMode = false }: { appMode?: boolean }) {
+    const { locale } = useI18n();
+    const english = locale === "en";
     const pathname = usePathname();
     const heroActive = isHeroRoute(pathname);
     const { state, hydrated } = useStore();
@@ -280,8 +284,11 @@ export default function PetCompanionGate({ appMode = false }: { appMode?: boolea
         }
         : baseSettings;
     const companionEnabled = effectiveSettings?.enabled ?? true;
-    const settingsLaunchLabel = "산책 친구 설정 열기";
-    const homeLaunchLabel = companionEnabled
+    const settingsLaunchLabel = english ? "Open walking buddy settings" : "산책 친구 설정 열기";
+    const buddy = walkingBuddyName(effectiveSettings?.activePetName || (english ? "your walking buddy" : "산책 친구"), locale);
+    const homeLaunchLabel = english
+        ? (companionEnabled ? `Send ${buddy} home` : `Take ${buddy} for a walk`)
+        : companionEnabled
         ? `${effectiveSettings?.activePetName || "산책 친구"} 집으로 보내기`
         : `${effectiveSettings?.activePetName || "산책 친구"} 다시 부르기`;
 
@@ -355,7 +362,7 @@ export default function PetCompanionGate({ appMode = false }: { appMode?: boolea
                     onFocus={() => requestControlGuide("home")}
                     aria-label={homeLaunchLabel}
                     // 마우스를 올리면 왼쪽에 이름 말풍선 — 강아지를 집에 들여보낼 때 하는 말 “하우스”(2026-10-20 사용자). 집에 있을 땐 "집에서 쉬는 중" 말풍선이 이미 있어 생략
-                    data-header-tip={companionEnabled ? "“하우스”" : undefined}
+                    data-header-tip={companionEnabled ? (english ? "Time for home!" : "“하우스”") : undefined}
                     aria-pressed={!companionEnabled}
                     aria-hidden={floatingControlsHidden ? "true" : undefined}
                     inert={floatingControlsHidden ? true : undefined}
@@ -374,7 +381,7 @@ export default function PetCompanionGate({ appMode = false }: { appMode?: boolea
                     data-buybar={buybar ? "true" : "false"}
                 >
                     {!companionEnabled && !homeTransition && (
-                        <span className={styles.homeBark} role="status">집에서 쉬는 중 · 누르면 돌아와요</span>
+                        <span className={styles.homeBark} role="status">{english ? "Resting at home · Tap to walk again" : "집에서 쉬는 중 · 누르면 돌아와요"}</span>
                     )}
                     <span className={styles.dogHouseIcon} aria-hidden="true">
                         <span className={styles.dogHouseRoof} />
@@ -393,7 +400,7 @@ export default function PetCompanionGate({ appMode = false }: { appMode?: boolea
                 onFocus={() => requestControlGuide("settings")}
                 aria-label={settingsLaunchLabel}
                 // 마우스를 올리면 왼쪽에 이름 말풍선(2026-10-20 사용자)
-                data-header-tip="산책 친구 설정"
+                data-header-tip={english ? "Walking buddy settings" : "산책 친구 설정"}
                 aria-haspopup="dialog"
                 aria-hidden={floatingControlsHidden ? "true" : undefined}
                 inert={floatingControlsHidden ? true : undefined}

@@ -27,7 +27,7 @@ test("desktop and mobile navigation expose daeng showcase as a primary direct li
     assert.ok(dailyMenuStart >= 0 && dailyMenuEnd > dailyMenuStart);
     assert.ok(desktopLink > dailyMenuEnd && desktopLink < nextDropdown);
     assert.match(header, /className=\{`\$\{headerStyles\.desktopNavItem\}[^`]+`\}/);
-    assert.match(header, />\s*댕자랑\s*<\/Link>/);
+    assert.match(header, />\s*\{menuLabel\("댕자랑"\)\}\s*<\/Link>/);
     assert.match(mobile, /<MobileLink href="\/daeng-showcase\/" icon="fa-images"[^>]+crayon tone="coral">/);
     assert.equal((header.match(/href="\/daeng-showcase\/"/g) || []).length, 1);
     assert.equal((mobile.match(/href="\/daeng-showcase\/"/g) || []).length, 1);

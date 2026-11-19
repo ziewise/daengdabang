@@ -144,7 +144,7 @@ test("mobile shoppers can always return to the dedicated app home", () => {
     assert.match(appHomeButton, /data-installed-app-home-button/);
     assert.match(appHomeButton, /href="\/app\/"/);
     // 2026-10-18: 로고 옆 "앱 홈" 알약 → 펫렌즈 왼쪽 "앱 설치" 그림 아이콘(가는 곳 /app/ 은 그대로, 지금은 설치 안내 페이지)
-    assert.match(appHomeButton, /<span className="sr-only">앱 설치 안내<\/span>/);
+    assert.match(appHomeButton, /<span className="sr-only">\{labelText\("앱 설치 안내"\)\}<\/span>/);
     assert.match(appHomeButton, /md:hidden/);
     assert.doesNotMatch(appHomeButton, /\bfixed\b/);
     assert.match(header, /<BrandLogo\b[^>]*\bmobileEmphasis\b[^>]*\bmobileIntegrated\b[^>]*\/>/);
@@ -173,7 +173,8 @@ test("native store package removes install prompts while the web PWA keeps them"
     assert.match(installButton, /!isReady \|\| isNativeApp \|\| isStandalone/);
     assert.match(nativeBridge, /NATIVE_ROUTE_PREFIXES/);
     assert.match(nativeBridge, /Browser\.open/);
-    assert.match(nativeBridge, /Haptics\.impact/);
+    assert.match(nativeBridge, /import \{ haptic \} from "@\/lib\/haptics"/);
+    assert.match(read("../lib/haptics.ts"), /Haptics\.impact/);
     assert.match(nativeBridge, /networkStatusChange/);
     assert.match(read("../components/header/MobilePanel.tsx"), /www\.daengdabang\.com\/products\//);
     assert.match(capacitorConfig, /appId: "com\.daengdabang\.app"/);

@@ -1,10 +1,12 @@
 "use client";
+import { useI18n } from "@/lib/i18n";
 import { useEffect, useState } from "react";
 import { Browser } from "@capacitor/browser";
 import { isNativeAppRuntime } from "@/lib/native-runtime";
 import { commerceApi, commerceUrl } from "@/lib/commerce-api";
 
 export default function SocialPhoneRegistration() {
+    const { menuLabel: labelText } = useI18n();
     const [phone, setPhone] = useState<{ masked_phone?: string; provider?: string }>();
     const [message, setMessage] = useState(""); const [busy, setBusy] = useState(false);
     useEffect(() => {
@@ -29,9 +31,9 @@ export default function SocialPhoneRegistration() {
             else window.location.href = commerceUrl(response.auth_url);
         } catch (e) { setMessage((e as Error).message); setBusy(false); }
     };
-    return <li className="rounded-xl border border-neutral-100 p-4"><b>휴대폰 번호</b><p className="my-2 text-sm">{phone?.masked_phone || "등록 전"}{phone?.provider ? ` · ${phone.provider === "kakao" ? "카카오" : "네이버"} 계정에서 확인` : ""}</p>
-        <div className="flex flex-wrap gap-2"><button disabled={busy} type="button" onClick={() => void start("kakao")} className="rounded-full bg-[#fee500] px-4 py-2 text-sm font-bold">카카오로 번호 {phone?.masked_phone ? "변경" : "등록"}</button><button disabled={busy} type="button" onClick={() => void start("naver")} className="rounded-full bg-[#03c75a] px-4 py-2 text-sm font-bold text-white">네이버로 번호 {phone?.masked_phone ? "변경" : "등록"}</button></div>
-        <p className="mt-3 text-xs leading-5 text-neutral-500">별도 문자 인증 없이 소셜계정에서 제공하는 번호를 등록해요. 해당 계정의 번호 제공 동의가 필요하며, 법정 본인확인 서비스와는 달라요.</p>
+    return <li className="rounded-xl border border-neutral-100 p-4"><b>{labelText("휴대폰 번호")}</b><p className="my-2 text-sm">{phone?.masked_phone || "등록 전"}{phone?.provider ? ` · ${phone.provider === "kakao" ? "카카오" : "네이버"} 계정에서 확인` : ""}</p>
+        <div className="flex flex-wrap gap-2"><button disabled={busy} type="button" onClick={() => void start("kakao")} className="rounded-full bg-[#fee500] px-4 py-2 text-sm font-bold">{labelText("카카오로 번호")} {labelText(phone?.masked_phone ? "변경" : "등록")}</button><button disabled={busy} type="button" onClick={() => void start("naver")} className="rounded-full bg-[#03c75a] px-4 py-2 text-sm font-bold text-white">{labelText("네이버로 번호")} {labelText(phone?.masked_phone ? "변경" : "등록")}</button></div>
+        <p className="mt-3 text-xs leading-5 text-neutral-500">{labelText("별도 문자 인증 없이 소셜계정에서 제공하는 번호를 등록해요. 해당 계정의 번호 제공 동의가 필요하며, 법정 본인확인 서비스와는 달라요.")}</p>
         {message && <p role="status" className="mt-2 text-sm">{message}</p>}
     </li>;
 }

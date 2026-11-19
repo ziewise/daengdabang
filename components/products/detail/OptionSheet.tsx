@@ -21,6 +21,7 @@ import ProductColorImage from "@/components/products/ProductColorImage";
 import { useRouter } from "next/navigation";
 import type { CatalogProduct } from "@/lib/catalog";
 import { optionPurchaseState, productPurchaseState, purchaseStateLabel } from "@/lib/catalog/inventory";
+import RestockButton from "./RestockButton";
 import { useLiveInventoryProduct } from "@/lib/catalog/live-inventory";
 import { useAuth, useCart } from "@/lib/store";
 import { useI18n } from "@/lib/i18n";
@@ -49,7 +50,7 @@ export default function OptionSheet({ product, open, mode, initialColorIdx = nul
     const router = useRouter();
     const { addToCart } = useCart();
     const { user } = useAuth();
-    const { t, locale, formatPrice, productName } = useI18n();
+    const { t, locale, formatPrice, productName, optionName } = useI18n();
     const colors = p.colors ?? [];
     const sizes = p.sizes ?? [];
     const hasColors = colors.length > 0;
@@ -150,7 +151,7 @@ export default function OptionSheet({ product, open, mode, initialColorIdx = nul
     const samePick = (a: Pick, ci: number, si: number) => a.colorIdx === ci && a.sizeIdx === si;
     // 누적 라벨 — "색상 · 사이즈"(있는 옵션만)
     const optionLabel = (ci: number, si: number) =>
-        [hasColors ? colors[ci]?.name : null, hasSizes ? sizes[si]?.name : null].filter(Boolean).join(" · ");
+        [hasColors ? colors[ci]?.name : null, hasSizes ? sizes[si]?.name : null].filter(Boolean).map(name => optionName(p.folder, name ?? "")).join(" · ");
     const addLabel = t("add");
 
     const addPick = () => {
@@ -251,7 +252,7 @@ export default function OptionSheet({ product, open, mode, initialColorIdx = nul
                     <div className="flex gap-3 sm:block">
                         <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-lg border border-neutral-200 bg-white sm:mb-3 sm:aspect-square sm:h-auto sm:w-full">
                             {previewImage ? (
-                                <ProductColorImage src={previewImage} color={selectedColor} alt={selectedColor ? `${displayName} · ${selectedColor.name}` : displayName} sizes="(max-width: 640px) 96px, 360px" className="object-contain" />
+                                <ProductColorImage src={previewImage} color={selectedColor} alt={selectedColor ? `${displayName} · ${optionName(p.folder, selectedColor.name)}` : displayName} sizes="(max-width: 640px) 96px, 360px" className="object-contain" />
                             ) : (
                                 <div className="flex h-full items-center justify-center text-3xl text-neutral-300">
                                     <i className={`fa-solid ${p.icon}`} />
@@ -270,7 +271,7 @@ export default function OptionSheet({ product, open, mode, initialColorIdx = nul
                             <p className="mb-1.5 block text-xs font-black text-neutral-500" data-option-title>
                                 {optionTitle(1)} <span className="text-rose-500">({t("optionRequired")})</span>
                                 {colorIdx != null && (
-                                    <span className="text-neutral-900"> · {colors[colorIdx]?.name}</span>
+                                    <span className="text-neutral-900"> · {optionName(p.folder, colors[colorIdx]?.name)}</span>
                                 )}
                             </p>
                             <div className="flex flex-wrap gap-1.5 sm:gap-2">
@@ -282,7 +283,7 @@ export default function OptionSheet({ product, open, mode, initialColorIdx = nul
                                         key={`${c.name}-${i}`}
                                         type="button"
                                         onClick={() => setColorIdx(i)}
-                                        disabled={!colorState.purchasable}
+                                        disabled={!colorState.purchasable && colorState.state !== "sold_out"}
                                         aria-label={[c.name, colorStatus].filter(Boolean).join(" · ")}
                                         aria-current={i === colorIdx}
                                         title={[c.name, colorStatus].filter(Boolean).join(" · ")}
@@ -292,7 +293,7 @@ export default function OptionSheet({ product, open, mode, initialColorIdx = nul
                                                 : "ring-1 ring-neutral-300 hover:ring-indigo-300"
                                         }`}
                                     >
-                                        <ProductColorImage src={c.chip || c.image} color={c} alt={c.name} sizes="36px" className="object-cover" />
+                                        <ProductColorImage src={c.chip || c.image} color={c} alt={optionName(p.folder, c.name)} sizes="36px" className="object-cover" />
                                         {!colorState.purchasable && <span aria-hidden="true" className="absolute inset-0 flex items-center justify-center bg-white/50 font-black">×</span>}
                                     </button>
                                     );
@@ -326,7 +327,7 @@ export default function OptionSheet({ product, open, mode, initialColorIdx = nul
                                 >
                                     {sizeIdx != null ? (
                                         <span className="min-w-0 truncate">
-                                            {sizes[sizeIdx]?.name}
+                                            {optionName(p.folder, sizes[sizeIdx]?.name)}
                                             {sizes[sizeIdx]?.delta ? ` (${sizes[sizeIdx].delta > 0 ? "+" : "−"}${formatPrice(Math.abs(sizes[sizeIdx].delta))})` : ""}
                                         </span>
                                     ) : (
@@ -353,7 +354,7 @@ export default function OptionSheet({ product, open, mode, initialColorIdx = nul
                                                 type="button"
                                                 role="option"
                                                 aria-selected={sizeIdx === i}
-                                                disabled={!sizeState.purchasable}
+                                                disabled={!sizeState.purchasable && sizeState.state !== "sold_out"}
                                                 data-size-option={i}
                                                 onClick={() => {
                                                     setSizeIdx(i);
@@ -364,7 +365,7 @@ export default function OptionSheet({ product, open, mode, initialColorIdx = nul
                                                 }`}
                                             >
                                                 <span className="min-w-0">
-                                                    {s.name}
+                                                    {optionName(p.folder, s.name)}
                                                     {s.delta ? ` (${s.delta > 0 ? "+" : "−"}${formatPrice(Math.abs(s.delta))})` : ""}
                                                 </span>
                                                 {sizeStatus && (
@@ -380,6 +381,7 @@ export default function OptionSheet({ product, open, mode, initialColorIdx = nul
                         </div>
                     )}
 
+                    {selectionComplete && selectedState.state === "sold_out" && <RestockButton product={p} color={colorIdx != null ? colors[colorIdx]?.name : ""} size={sizeIdx != null ? sizes[sizeIdx]?.name : ""} className="mt-3 w-full" />}
                     {selectionComplete && purchaseStateLabel(selectedState, locale) && (
                         <p role="status" data-inventory-state={selectedState.state} className="mt-3 rounded-lg bg-amber-50 p-3 text-sm font-bold text-amber-900">
                             {purchaseStateLabel(selectedState, locale)}
@@ -469,7 +471,7 @@ export default function OptionSheet({ product, open, mode, initialColorIdx = nul
                         className="mt-3 h-12 w-full rounded-md bg-indigo-600 text-base font-black text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-neutral-300 disabled:hover:bg-neutral-300"
                     >
                         {!canConfirm
-                            ? blockedState ? purchaseStateLabel(blockedState, locale) : !summaryState.purchasable ? purchaseStateLabel(summaryState, locale) : t("chooseOption")
+                            ? blockedState ? purchaseStateLabel(blockedState, locale) || (locale === "en" ? "Unavailable" : "일시 구매 불가") : !summaryState.purchasable ? purchaseStateLabel(summaryState, locale) || (locale === "en" ? "Unavailable" : "일시 구매 불가") : t("chooseOption")
                             : mode === "buy"
                               ? (locale === "en" ? "Buy now" : "구매하기")
                               : t("addToCart")}

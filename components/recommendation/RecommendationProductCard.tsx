@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import Link from "next/link";
 import type { MouseEvent } from "react";
 import ProductCard from "@/components/products/ProductCard";
@@ -28,6 +29,7 @@ export default function RecommendationProductCard({
     onReasonOpened?: (productId: string) => void;
     onHide?: (productId: string) => void;
 }) {
+    const { menuLabel: labelText } = useI18n();
     const captureProductClick = (event: MouseEvent<HTMLDivElement>) => {
         const target = event.target;
         if (!(target instanceof Element)) return;
@@ -52,10 +54,10 @@ export default function RecommendationProductCard({
                     }}
                 >
                     <summary className="cursor-pointer list-none text-indigo-700 hover:underline">
-                        왜 추천했나요? <i className="fa-solid fa-chevron-down ml-1 text-[9px]" aria-hidden="true" />
+                        {labelText("왜 추천했나요?")} <i className="fa-solid fa-chevron-down ml-1 text-[9px]" aria-hidden="true" />
                     </summary>
                     <div className="mt-2 border-t border-indigo-100 pt-2">
-                        <p>사용한 정보</p>
+                        <p>{labelText("사용한 정보")}</p>
                         <ul className="mt-1 list-inside list-disc">
                             {item.sourceGroups.map((source) => (
                                 <li key={source}>{SOURCE_LABEL[source]}</li>
@@ -66,7 +68,7 @@ export default function RecommendationProductCard({
                         ))}
                         {RECOMMENDATION_FEATURE_FLAGS.preferences ? (
                             <Link href="/mypage/recommendations/" className="mt-2 inline-flex font-black text-indigo-700 hover:underline">
-                                추천 데이터 관리
+                                {labelText("추천 데이터 관리")}
                             </Link>
                         ) : null}
                     </div>
@@ -77,7 +79,7 @@ export default function RecommendationProductCard({
                         className="mt-2 text-[11px] font-black text-neutral-500 hover:text-neutral-950 hover:underline"
                         onClick={() => onHide(item.product.id)}
                     >
-                        관심 없음
+                        {labelText("관심 없음")}
                     </button>
                 ) : null}
             </div>

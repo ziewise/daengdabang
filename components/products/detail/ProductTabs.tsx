@@ -8,6 +8,7 @@ import type { CatalogProduct } from "@/lib/catalog";
 import { useI18n } from "@/lib/i18n";
 import { openChatWidget } from "@/lib/chat-widget-events";
 import ProductDeliveryReturnPolicy from "@/components/products/detail/ProductDeliveryReturnPolicy";
+import { englishDetailSections } from "@/lib/catalog/english-detail-sections";
 import { getProductDetailContent } from "@/lib/catalog/product-detail-content";
 // 후기 탭(2026-11-17 사용자 "하나의 후기 탭에서 나눠지게") — 댕다방 구매 후기(PurchaseReviews) | 네이버 스토어 후기(ReviewContent)
 // 10-25 크레파스 시안(ProductOwnReviews)은 개발 서버 + ?rvpreview=1 + 웹 화면에서만 — 배포 빌드에는 안 보임
@@ -24,7 +25,7 @@ interface Props {
 
 export default function ProductTabs({ product: p }: Props) {
     const [active, setActive] = useState<SectionKey>("detail");
-    const { t, locale } = useI18n();
+    const { t, locale, productName, optionName } = useI18n();
     const previewMode = useReviewPreview();
     const webScreen = useWebScreen();
     const ownPreview = previewMode !== "off" && webScreen && locale !== "en";
@@ -69,9 +70,9 @@ export default function ProductTabs({ product: p }: Props) {
                     <h2 className="text-sm font-bold">{locale === "en" ? "Choose a color or season" : "색상·시즌별 옵션 보기"}</h2>
                     <p className="mt-2 text-xs leading-5 text-neutral-500">{locale === "en" ? "Each version keeps its own size options, price and stock." : "각 상품의 기존 색상·사이즈·가격·재고를 그대로 확인하고 선택할 수 있어요."}</p>
                     <div className="mt-3 grid gap-2 sm:grid-cols-2">{p.reviewGroup.variants.map(variant => <Link key={variant.folder} href={`/product/${variant.folder}/`} aria-current={variant.folder === p.folder ? "page" : undefined} className={`rounded-lg border p-3 text-xs leading-5 ${variant.folder === p.folder ? "border-indigo-300 bg-indigo-50" : "border-neutral-200 bg-white hover:border-indigo-300"}`}>
-                        <span className="block font-bold">{variant.name}</span>
+                        <span className="block font-bold">{productName(variant)}</span>
                         {/* 색상 이름마다 span(웹은 알약 · 앱은 지금처럼 " · " 로 이어 보임) */}
-                        {variant.colors.length > 0 && <span className="mt-1 block text-neutral-500" data-pd-variant-colors="">{variant.colors.map((color, index) => <span key={color}>{index > 0 && <i aria-hidden="true" data-sep=""> · </i>}<span data-chip="">{color}</span></span>)}</span>}
+                        {variant.colors.length > 0 && <span className="mt-1 block text-neutral-500" data-pd-variant-colors="">{variant.colors.map((color, index) => <span key={color}>{index > 0 && <i aria-hidden="true" data-sep=""> · </i>}<span data-chip="">{optionName(variant.folder, color)}</span></span>)}</span>}
                     </Link>)}</div>
                 </section>
             )}
@@ -115,7 +116,7 @@ export default function ProductTabs({ product: p }: Props) {
                 {/* 출처 고르기 — 댕다방 구매 후기 | 네이버 댕다방 스토어 후기(출처를 섞지 않고 두 갈래로) */}
                 <div className="rvw-switch" role="tablist" aria-label={locale === "en" ? "Review source" : "후기 출처"} data-review-switch="">
                     <button type="button" role="tab" aria-selected={reviewView === "own"} onClick={() => pickReviewView("own")}>
-                        {locale === "en" ? "Daengdabang reviews" : "댕다방 구매 후기"} {ownCount !== undefined && <b>{ownCount.toLocaleString(numberLocale)}</b>}
+                        {locale === "en" ? "댕다방 reviews" : "댕다방 구매 후기"} {ownCount !== undefined && <b>{ownCount.toLocaleString(numberLocale)}</b>}
                     </button>
                     <button type="button" role="tab" aria-selected={reviewView === "external"} onClick={() => pickReviewView("external")}>
                         {locale === "en" ? "Naver store reviews" : "네이버 스토어 후기"} {reviewBadge && <b>{reviewBadge}</b>}
@@ -133,7 +134,7 @@ export default function ProductTabs({ product: p }: Props) {
                     {!!p.relatedExternalReviewProducts?.length && <aside className="mx-auto mt-6 max-w-3xl rounded-xl border border-neutral-200 p-5" aria-label={locale === "en" ? "Other seasons' store reviews" : "다른 시즌 상품의 네이버 댕다방 스토어 후기"}>
                         <h3 className="text-sm font-bold">{locale === "en" ? "Other seasons' store reviews" : "다른 시즌 상품의 네이버 댕다방 스토어 후기"}</h3>
                         <p className="mt-2 text-xs leading-5 text-neutral-500">{locale === "en" ? "These source products may differ in design or specifications. Their reviews are kept separate from this product's ratings and summary." : "디자인·사양이 다를 수 있는 다른 시즌 상품의 후기입니다. 이 상품의 평점·리뷰 수·요약에는 합산하지 않습니다."}</p>
-                        <div className="mt-3 space-y-2">{p.relatedExternalReviewProducts.map(source => <Link key={source.folder} href={`/product/${source.folder}/#tab-review`} className="block rounded-lg border border-neutral-200 px-3 py-2 text-xs leading-5 hover:border-indigo-400">{source.name} · {locale === "en" ? "View source reviews" : "원래 상품의 스토어 후기 보기"} →</Link>)}</div>
+                        <div className="mt-3 space-y-2">{p.relatedExternalReviewProducts.map(source => <Link key={source.folder} href={`/product/${source.folder}/#tab-review`} className="block rounded-lg border border-neutral-200 px-3 py-2 text-xs leading-5 hover:border-indigo-400">{productName(source)} · {locale === "en" ? "View source reviews" : "원래 상품의 스토어 후기 보기"} →</Link>)}</div>
                     </aside>}
                 </div>
             </section>
@@ -157,11 +158,16 @@ function SectionTitle({ title, badge, tone, art, kicker }: { title: string; badg
 }
 
 function DetailContent({ product: p }: { product: CatalogProduct }) {
+    const { menuLabel: labelText } = useI18n();
     const [expanded, setExpanded] = useState(false);
-    const { t, productName } = useI18n();
+    const { t, productName, locale, englishProduct } = useI18n();
     const details = p.details ?? [];
     const supplierOriginal = p.supplierCatalogSource === "jsk_approved_account" && Boolean(p.supplierGoodsNo);
-    const content = supplierOriginal ? undefined : getProductDetailContent(p.folder);
+    const original = supplierOriginal ? undefined : getProductDetailContent(p.folder);
+    const translation = locale === "en" ? englishProduct(p.folder) : undefined;
+    const content = original && locale === "en"
+        ? englishDetailSections(original, translation?.description || "")
+        : original;
     const displayName = productName(p);
     const heroImage = p.image ?? details[0] ?? "";
     const specifications = content?.specifications ?? content?.specs ?? [];
@@ -198,7 +204,7 @@ function DetailContent({ product: p }: { product: CatalogProduct }) {
         const remainingDetails = details.filter((_, index) => !usedVisualIndices.has(index));
 
         return (
-            <article className="mx-auto max-w-5xl overflow-hidden bg-white" data-product-detail-copy data-visual-story>
+            <article lang={locale} className="mx-auto max-w-5xl overflow-hidden bg-white" data-product-detail-copy data-visual-story>
                 <header className="grid min-h-[520px] md:grid-cols-[1.08fr_0.92fr]">
                     <div className="flex min-h-[360px] items-center justify-center bg-neutral-100 p-6 md:min-h-[520px] md:p-10">
                         <Image
@@ -221,7 +227,7 @@ function DetailContent({ product: p }: { product: CatalogProduct }) {
                             rel="noreferrer"
                             className="mt-8 inline-flex w-fit items-center gap-2 border-b border-white/60 pb-1 text-xs font-black text-white transition hover:border-white"
                         >
-                            {content.sourceLabel ?? "제조사 공식 상품 정보"} 원문
+                            {locale === "en" ? "Manufacturer’s original guide" : <>{content.sourceLabel ?? "제조사 공식 상품 정보"} {labelText("원문")}</>}
                             <i className="fa-solid fa-arrow-up-right-from-square text-[10px]" aria-hidden="true" />
                         </a>
                     </div>
@@ -229,17 +235,17 @@ function DetailContent({ product: p }: { product: CatalogProduct }) {
 
                 <section className="px-5 py-12 text-white md:px-10 md:py-16" style={{ backgroundColor: theme.dark }}>
                     <div className="mx-auto mb-10 flex w-fit items-center gap-1 rounded-full bg-white/80 p-1 text-[11px] font-black text-neutral-700 md:text-sm">
-                        <span className="rounded-full bg-white px-4 py-2 shadow-sm">핵심 기능</span>
-                        <span className="px-4 py-2">사이즈·소재</span>
-                        <span className="px-4 py-2">사용·관리</span>
+                        <span className="rounded-full bg-white px-4 py-2 shadow-sm">{labelText("핵심 기능")}</span>
+                        <span className="px-4 py-2">{labelText("사이즈·소재")}</span>
+                        <span className="px-4 py-2">{labelText("사용·관리")}</span>
                     </div>
                     <p className="text-center text-xs font-black tracking-[0.22em]" style={{ color: theme.accent }}>FEATURES</p>
-                    <h4 className="mt-3 text-center text-3xl font-black tracking-tight md:text-4xl">사진으로 보는 제품의 핵심</h4>
+                    <h4 className="mt-3 text-center text-3xl font-black tracking-tight md:text-4xl">{labelText("사진으로 보는 제품의 핵심")}</h4>
 
                     {featureVisuals.length > 0 && (
                         <div className="mt-10 grid gap-3 md:mt-14 md:grid-cols-2">
                             {featureVisuals.map((src, index) => {
-                                const label = p.detailImageLabels?.[src] ?? `제조사 공식 제품 이미지 ${index + 1}`;
+                                const label = locale === "en" ? "Manufacturer photo " + (index + 1) : p.detailImageLabels?.[src] ?? `제조사 공식 제품 이미지 ${index + 1}`;
                                 return (
                                     <figure key={src} className="overflow-hidden bg-white/10">
                                         <Image
@@ -274,10 +280,10 @@ function DetailContent({ product: p }: { product: CatalogProduct }) {
                 <section className="px-6 py-12 md:px-12 md:py-16" style={{ backgroundColor: theme.paper }}>
                     <p className="text-xs font-black tracking-[0.2em]" style={{ color: theme.dark }}>PRODUCT DETAILS</p>
                     <div className="mt-5 grid gap-10 md:grid-cols-2 md:gap-14">
-                        {specifications.length > 0 && <EditorialList title="사이즈·사양" items={specifications} accent={theme.accent} />}
-                        {content.composition && content.composition.length > 0 && <EditorialList title="소재·성분" items={content.composition} accent={theme.accent} />}
-                        {content.usage && content.usage.length > 0 && <EditorialList title="사용·급여 방법" items={content.usage} accent={theme.accent} />}
-                        {careItems.length > 0 && <EditorialList title="관리 방법" items={careItems} accent={theme.accent} />}
+                        {specifications.length > 0 && <EditorialList title={labelText("사이즈·사양")} items={specifications} accent={theme.accent} />}
+                        {content.composition && content.composition.length > 0 && <EditorialList title={labelText("소재·성분")} items={content.composition} accent={theme.accent} />}
+                        {content.usage && content.usage.length > 0 && <EditorialList title={labelText("사용·급여 방법")} items={content.usage} accent={theme.accent} />}
+                        {careItems.length > 0 && <EditorialList title={labelText("관리 방법")} items={careItems} accent={theme.accent} />}
                     </div>
                 </section>
 
@@ -302,7 +308,7 @@ function DetailContent({ product: p }: { product: CatalogProduct }) {
                     <section className="px-6 py-10 text-neutral-950 md:px-12" style={{ backgroundColor: theme.warning }}>
                         <div className="flex items-center gap-3">
                             <i className="fa-solid fa-triangle-exclamation" aria-hidden="true" />
-                            <h4 className="text-lg font-black">사용 전 확인해 주세요</h4>
+                            <h4 className="text-lg font-black">{labelText("사용 전 확인해 주세요")}</h4>
                         </div>
                         <ul className="mt-4 grid gap-2 pl-5 text-sm font-bold leading-7 md:grid-cols-2 md:gap-x-10">
                             {cautionItems.map((item) => <li key={item} className="list-disc break-keep">{item}</li>)}
@@ -314,10 +320,11 @@ function DetailContent({ product: p }: { product: CatalogProduct }) {
     }
 
     return (
-        <div className="relative mx-auto max-w-3xl">
+        <div lang={locale} data-product-detail-copy="" className="relative mx-auto max-w-3xl">
             <div className={`relative overflow-hidden transition-all ${expanded ? "max-h-none" : "max-h-[820px]"}`}>
                 <div className="flex flex-col gap-2">
-                    {details.map((src, index) => (
+                    {translation && <p className="whitespace-pre-wrap break-words px-4 py-6 text-sm leading-7">{translation.description}</p>}
+                    {(locale === "en" ? expanded ? details : (p.image ? [p.image] : []) : details).map((src, index) => (
                         <Image
                             key={src}
                             src={src}
@@ -344,7 +351,7 @@ function DetailContent({ product: p }: { product: CatalogProduct }) {
                     onClick={() => setExpanded((value) => !value)}
                     className="inline-flex h-11 items-center gap-2 rounded-md border border-neutral-200 bg-white px-5 text-sm font-black shadow-sm transition hover:border-indigo-300 hover:text-indigo-700"
                 >
-                    {expanded ? t("fold") : t("moreDetail")}
+                    {expanded ? t("fold") : locale === "en" ? "View original product images (Korean)" : t("moreDetail")}
                     <i className={`fa-solid ${expanded ? "fa-chevron-up" : "fa-chevron-down"} text-[10px]`} />
                 </button>
             </div>}
@@ -391,7 +398,9 @@ function AppDetailFold({ children }: { children: ReactNode }) {
 }
 
 function SupplierDetailContent({ product: p }: { product: CatalogProduct }) {
-    const { t } = useI18n();
+    const { t, locale, productName, englishProduct } = useI18n();
+    const [originalsOpen, setOriginalsOpen] = useState(false);
+    const english = locale === "en" ? englishProduct(p.folder) : undefined;
     const details = p.details ?? [];
 
     if (details.length === 0 && !p.supplierDetailText) {
@@ -400,17 +409,22 @@ function SupplierDetailContent({ product: p }: { product: CatalogProduct }) {
 
     return (
         <article
+            lang={locale}
             className="mx-auto max-w-[860px] bg-white"
             data-supplier-original-detail={p.supplierGoodsNo}
         >
-            {details.map((src, index) => {
+            {english && <div className="whitespace-pre-wrap break-words px-4 py-6 text-sm leading-7">{english.description}</div>}
+            {locale === "en" && details.length > 0 && <button type="button" aria-expanded={originalsOpen}
+                className="mb-4 inline-flex h-11 items-center gap-2 rounded-md border border-neutral-200 bg-white px-5 text-sm font-black shadow-sm transition"
+                onClick={() => setOriginalsOpen(value => !value)}>{originalsOpen ? t("fold") : "View original product images (Korean)"}</button>}
+            {(locale === "en" && !originalsOpen ? (p.image ? [p.image] : []) : details).map((src, index) => {
                 // Match metadata by source URL without sorting or adding other assets.
                 const metadata = p.supplierDetailImages?.find((image) => image.src === src);
                 const width = metadata?.width;
                 const height = metadata?.height;
                 const knownDimensions = Number.isInteger(width) && Number.isInteger(height)
                     && Number(width) > 0 && Number(height) > 0;
-                const alt = metadata?.alt ?? `${p.name} 상세정보 ${index + 1}`;
+                const alt = locale === "en" ? productName(p) + " · " + (index + 1) : metadata?.alt ?? `${p.name} 상세정보 ${index + 1}`;
 
                 return knownDimensions ? (
                     <Image
@@ -428,7 +442,7 @@ function SupplierDetailContent({ product: p }: { product: CatalogProduct }) {
                     <img key={`${index}:${src}`} src={src} alt={alt} loading="lazy" className="block h-auto w-full" />
                 );
             })}
-            {p.supplierDetailText && (
+            {locale !== "en" && p.supplierDetailText && (
                 <div className="whitespace-pre-wrap break-words px-4 py-6 text-sm leading-7">{p.supplierDetailText}</div>
             )}
         </article>

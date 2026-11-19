@@ -12,6 +12,7 @@
  *   (components/pwa/home-concepts/pages/StickerSocialFinish). 앱 화면인 것이 확인된 뒤에만 바꿔 그림(미리 만든 HTML 은 그대로).
  */
 
+import { useI18n } from "@/lib/i18n";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -69,6 +70,7 @@ function providerFromJwt(token: string): SocialProvider | undefined {
 }
 
 export default function SocialCallbackPage() {
+    const { menuLabel: labelText } = useI18n();
     const router = useRouter();
     const { hydrated, login, updateMemberEmail, user } = useAuth();
     const [error, setError] = useState("");
@@ -192,10 +194,9 @@ export default function SocialCallbackPage() {
     if (pendingVerification) {
         return (
             <main className="mx-auto max-w-lg px-4 py-10 sm:py-16">
-                <h1 className="text-2xl font-black text-neutral-950">간편가입 이메일 인증</h1>
+                <h1 className="text-2xl font-black text-neutral-950">{labelText("간편가입 이메일 인증")}</h1>
                 <p className="mt-2 text-sm font-bold leading-6 text-neutral-600">
-                    계정 가입은 완료되었습니다. 이메일 인증을 마치면 신규 가입 혜택 20C를 받을 수 있어요.
-                    간편가입에서 임시 이메일이 생성된 경우 실제 사용하는 이메일을 입력해 주세요.
+                    {labelText("계정 가입은 완료되었습니다. 이메일 인증을 마치면 신규 가입 혜택 20C를 받을 수 있어요.\n                    간편가입에서 임시 이메일이 생성된 경우 실제 사용하는 이메일을 입력해 주세요.")}
                 </p>
                 <div className="mt-5">
                     <SignupEmailVerification
@@ -219,25 +220,25 @@ export default function SocialCallbackPage() {
                         <img src="/images/ui/header-login-128.webp" alt="" width={84} height={84} />
                     </span>
                     <span className="sxw-kicker">SIGNING IN</span>
-                    <h1>로그인하고 있어요</h1>
-                    <p>계정 정보를 불러오는 중이에요. 잠시만 기다려 주세요.</p>
+                    <h1>{labelText("로그인하고 있어요")}</h1>
+                    <p>{labelText("계정 정보를 불러오는 중이에요. 잠시만 기다려 주세요.")}</p>
                     <span className="sxw-wait-dots" aria-hidden="true"><i /><i /><i /></span>
                 </div>
             )}
             <div className="surface p-6">
                 <h1 className="text-2xl font-black text-neutral-950">
-                    {error ? "간편로그인 실패" : "간편로그인 처리 중"}
+                    {labelText(error ? "간편로그인 실패" : "간편로그인 처리 중")}
                 </h1>
                 {error ? (
                     <>
                         <p className="mt-3 text-sm font-bold leading-6 text-neutral-600">{error}</p>
                         <Link href="/auth/login" className="btn btn-primary mt-5">
-                            로그인으로 돌아가기
+                            {labelText("로그인으로 돌아가기")}
                         </Link>
                     </>
                 ) : (
                     <p className="mt-3 text-sm font-bold leading-6 text-neutral-600">
-                        계정 정보를 불러오고 있습니다.
+                        {labelText("계정 정보를 불러오고 있습니다.")}
                     </p>
                 )}
             </div>

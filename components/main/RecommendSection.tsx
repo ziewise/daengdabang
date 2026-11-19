@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import Image from "next/image";
 import Link from "next/link";
 import RecommendationPetSelector from "@/components/recommendation/RecommendationPetSelector";
@@ -15,6 +16,7 @@ import { editorialRecommendationItems, runMemberRecommendation } from "@/lib/cat
 import { useAuth } from "@/lib/store";
 
 export default function RecommendSection() {
+    const { locale, menuLabel: labelText } = useI18n();
     const { user, hydrated } = useAuth();
     const personalizationEnabled = recommendationPersonalizationEnabled(
         RECOMMENDATION_FEATURE_FLAGS,
@@ -50,7 +52,7 @@ export default function RecommendSection() {
             : preferences.enabled
                 ? personalizedResult?.mode ?? "editorial_fallback"
                 : "disabled";
-    const petName = selectedPet?.name?.trim() || "우리 아이";
+    const petName = selectedPet?.name?.trim() || (locale === "en" ? "your dog" : "우리 아이");
     const analyticsMode = preferences?.enabled
         ? personalizedResult?.mode ?? "editorial_fallback"
         : preferences ? "disabled" : "editorial_fallback";
@@ -88,16 +90,16 @@ export default function RecommendSection() {
                         {/* 제목 — 다른 메인 구역(핫픽 · 대표 브랜드 · 신상품)과 같은 모양: 짧은 이름 + 아래 회색 한 줄(2026-10-23 사용자) */}
                         <h2 className="mb-1.5 text-2xl font-black tracking-tight md:text-3xl">
                             {personalizationEnabled && selectedPet && preferences?.enabled
-                                ? `${petName}를 위한 추천`
-                                : "댕다방 추천 셀렉트"}
+                                ? (locale === "en" ? `Picks for ${petName}` : `${petName}를 위한 추천`)
+                                : labelText("댕다방 추천 셀렉트")}
                         </h2>
                         {!personalizationEnabled ? (
                             <p className="text-sm text-neutral-500">
-                                현재는 회원 정보를 사용하지 않는 댕다방 편집 추천을 보여드려요.
+                                {labelText("현재는 회원 정보를 사용하지 않는 댕다방 편집 추천을 보여드려요.")}
                             </p>
                         ) : !selectedPet ? (
                             <p className="text-sm text-neutral-500">
-                                반려견 프로필을 등록하면 체형·활동량·관심 케어를 반영할 수 있어요.
+                                {labelText("반려견 프로필을 등록하면 체형·활동량·관심 케어를 반영할 수 있어요.")}
                             </p>
                         ) : !preferences ? (
                             <p className="text-sm text-neutral-500">
@@ -105,13 +107,13 @@ export default function RecommendSection() {
                             </p>
                         ) : !preferences.enabled ? (
                             <p className="text-sm text-neutral-500">
-                                맞춤 추천이 꺼져 있어 회원 정보가 아닌 편집 추천만 보여드려요.
+                                {labelText("맞춤 추천이 꺼져 있어 회원 정보가 아닌 편집 추천만 보여드려요.")}
                             </p>
                         ) : (
                             <p className="text-sm text-neutral-500">
-                                {personalizedResult?.mode === "personalized"
+                                {labelText(personalizedResult?.mode === "personalized"
                                     ? "등록한 프로필과 사용에 동의한 펫렌즈 케어 신호를 함께 반영했어요."
-                                    : "등록한 체형·활동량·관심 케어 프로필만 반영했어요."}
+                                    : "등록한 체형·활동량·관심 케어 프로필만 반영했어요.")}
                             </p>
                         )}
                     </div>
@@ -130,12 +132,12 @@ export default function RecommendSection() {
                             // ddb-more-pill — 웹에서는 흰 입체 쿠션 "더 보기" 알약(2026-10-24, app/globals.css)
                             className="ddb-more-pill inline-flex items-center gap-1.5 rounded-full bg-[#fffaf1] px-5 py-2.5 text-xs text-[#d9577f] shadow-[0_0_0_2.5px_#f3d9b8] transition [font-family:var(--font-jua),var(--font-wanted-sans),sans-serif] hover:shadow-[0_0_0_2.5px_#f7a8bf] md:text-sm"
                         >
-                            {personalizationEnabled && !selectedPet ? "프로필 등록하기" : "추천 전체 보기"}
+                            {labelText(personalizationEnabled && !selectedPet ? "프로필 등록하기" : "추천 전체 보기")}
                             <i className="fa-solid fa-arrow-right text-[10px]" />
                         </Link>
                         {personalizationEnabled && preferences && !preferences.enabled ? (
                             <Link href="/mypage/recommendations/" className="text-xs font-black text-indigo-700 hover:underline">
-                                맞춤 추천 켜기
+                                {labelText("맞춤 추천 켜기")}
                             </Link>
                         ) : null}
                     </div>
@@ -173,21 +175,21 @@ export default function RecommendSection() {
                 ) : baseItems.length > 0 ? (
                     <RecommendEmptyCard
                         art="/images/ui/hotpick-life-128.webp"
-                        title="이 추천 묶음의 상품을 모두 숨겼어요."
-                        body="숨긴 상품을 다시 보거나 전체 상품에서 직접 골라 보세요."
+                        title={labelText("이 추천 묶음의 상품을 모두 숨겼어요.")}
+                        body={labelText("숨긴 상품을 다시 보거나 전체 상품에서 직접 골라 보세요.")}
                     >
                         <button type="button" className={EMPTY_ACTION_CLASS} onClick={recommendationAnalytics.resetHidden}>
-                            숨긴 상품 다시 보기 <i className="fa-solid fa-rotate-left text-[11px]" aria-hidden="true" />
+                            {labelText("숨긴 상품 다시 보기")} <i className="fa-solid fa-rotate-left text-[11px]" aria-hidden="true" />
                         </button>
                     </RecommendEmptyCard>
                 ) : (
                     <RecommendEmptyCard
                         art="/images/ui/web-no-match-192.webp"
-                        title="현재 안전 기준을 통과한 맞춤 상품이 없어요."
-                        body="추천할 상품을 꼼꼼히 살펴보는 중이에요. 그동안 전체 상품에서 직접 둘러봐 주세요."
+                        title={labelText("현재 안전 기준을 통과한 맞춤 상품이 없어요.")}
+                        body={labelText("추천할 상품을 꼼꼼히 살펴보는 중이에요. 그동안 전체 상품에서 직접 둘러봐 주세요.")}
                     >
                         <Link href="/products/" className={EMPTY_ACTION_CLASS}>
-                            전체 상품 직접 보기 <i className="fa-solid fa-arrow-right text-[11px]" aria-hidden="true" />
+                            {labelText("전체 상품 직접 보기")} <i className="fa-solid fa-arrow-right text-[11px]" aria-hidden="true" />
                         </Link>
                     </RecommendEmptyCard>
                 )}

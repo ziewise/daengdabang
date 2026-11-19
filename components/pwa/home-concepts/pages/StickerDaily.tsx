@@ -20,6 +20,7 @@
  *   관리자 공개 설정(혜택 · 동네 돌봄 · 운영 기준 숨김) · 웹과 같은 이용 기록(trackStorefrontEvent).
  */
 
+import { useI18n } from "@/lib/i18n";
 import { appLoginHref } from "@/components/app-shell/appTabs";
 import { hasShareableAiRecord } from "@/components/growth/GrowthHub";
 import { copyText } from "@/components/growth/GrowthShareCard";
@@ -78,6 +79,7 @@ function interestErrorMessage(error: unknown): string {
 }
 
 export default function StickerDaily() {
+    const { menuLabel: labelText } = useI18n();
     const [session, setSession] = useDemoSession();
     const initialTab = useInitialTab(TABS.length);
     const member = session === "member";
@@ -348,7 +350,7 @@ export default function StickerDaily() {
                         member ? (
                             <>
                                 <div className="flex items-center justify-between">
-                                    <span className="ah-display st-marker text-[15px]">이번 주 출근 스티커</span>
+                                    <span className="ah-display st-marker text-[15px]">{labelText("이번 주 출근 스티커")}</span>
                                     <CoinChip ref={coinRef} coins={today.coins} />
                                 </div>
                                 <ol className="mt-3 grid grid-cols-7 gap-1">
@@ -359,8 +361,8 @@ export default function StickerDaily() {
                                             <li key={d.ko} className="flex flex-col items-center gap-1">
                                                 {isToday && !on ? (
                                                     // 웹 AttendanceStampCard 처럼 불러오기 전 · 붙이는 중에는 잠김
-                                                    <button type="button" onClick={(e) => stamp(e.currentTarget, e.timeStamp)} disabled={!today.ready || today.claiming} aria-label="오늘 출근 스티커 붙이기" className="st-slot is-today grid aspect-square w-full place-items-center rounded-full disabled:opacity-60">
-                                                        <span className="ah-display text-[10px] text-[#e0557f]">붙이기</span>
+                                                    <button type="button" onClick={(e) => stamp(e.currentTarget, e.timeStamp)} disabled={!today.ready || today.claiming} aria-label={labelText("오늘 출근 스티커 붙이기")} className="st-slot is-today grid aspect-square w-full place-items-center rounded-full disabled:opacity-60">
+                                                        <span className="ah-display text-[10px] text-[#e0557f]">{labelText("붙이기")}</span>
                                                     </button>
                                                 ) : (
                                                     <span className={`relative grid aspect-square w-full place-items-center rounded-full ${on ? "" : "st-slot"}`}>
@@ -379,7 +381,7 @@ export default function StickerDaily() {
                                 {today.error ? (
                                     <div role="alert" className="st-postit mt-3 px-3 py-2.5" style={{ background: "#ffd6e2", rotate: "-0.6deg" }}>
                                         <p className="ah-light text-[12px] leading-snug">{today.error}</p>
-                                        <Patch tone="cream" small onClick={today.reload} disabled={today.loading} className="mt-2">다시 시도</Patch>
+                                        <Patch tone="cream" small onClick={today.reload} disabled={today.loading} className="mt-2">{labelText("다시 시도")}</Patch>
                                     </div>
                                 ) : null}
 
@@ -392,9 +394,9 @@ export default function StickerDaily() {
                                         { label: "오늘 산책", value: today.done.walk_20 ? "20분 완료" : "기록 전", helper: today.done.walk_20 ? "오늘의 산책 XP가 반영됐어요" : "무리하지 않는 범위에서 시작하세요", icon: "fa-person-walking", tone: "#e3efff", ink: "#3d74c9" },
                                     ].map((m, i) => (
                                         <div key={m.label} className="dl-metric rounded-[12px] px-3 pb-2.5 pt-2.5" style={{ background: m.tone, rotate: `${[-0.6, 0.5, 0.5, -0.6][i]}deg` }}>
-                                            <span className="ah-light flex items-center gap-1.5 text-[11px]" style={{ color: m.ink }}><i aria-hidden="true" className={`fa-solid ${m.icon} text-[10px]`} />{m.label}</span>
+                                            <span className="ah-light flex items-center gap-1.5 text-[11px]" style={{ color: m.ink }}><i aria-hidden="true" className={`fa-solid ${m.icon} text-[10px]`} />{labelText(m.label)}</span>
                                             <span className="ah-display mt-0.5 block text-[18px] leading-tight">{m.value}</span>
-                                            <span className="ah-light block text-[10.5px] leading-snug" style={{ color: TEXT_SOFT }}>{m.helper}</span>
+                                            <span className="ah-light block text-[10.5px] leading-snug" style={{ color: TEXT_SOFT }}>{labelText(m.helper)}</span>
                                         </div>
                                     ))}
                                 </div>
@@ -404,28 +406,28 @@ export default function StickerDaily() {
                                     <InkStamp rot={-10} className="h-[4.6rem] w-[4.6rem] text-[12px]">LEVEL<br />{today.level}</InkStamp>
                                     <div className="min-w-0 flex-1">
                                         <p className="ah-display text-[16px]">{levelName}</p>
-                                        <p className="ah-light text-[12px]" style={{ color: TEXT_SOFT }}>다음 레벨까지 {Math.max(0, today.nextLevelXp - today.xp)}XP</p>
+                                        <p className="ah-light text-[12px]" style={{ color: TEXT_SOFT }}>{labelText("다음 레벨까지")} {Math.max(0, today.nextLevelXp - today.xp)}XP</p>
                                         <span className="mt-2 block h-3 overflow-hidden rounded-full bg-[#f5ece6]">
                                             <span className="block h-full rounded-full transition-[width] duration-700" style={{ width: `${xpPct}%`, background: "linear-gradient(90deg, rgba(255,214,228,.95), rgba(255,236,150,.95))" }} />
                                         </span>
-                                        <p className="ah-light mt-1 flex justify-between text-[11px]" style={{ color: TEXT_SOFT }}><span>{today.xp} XP · 연속 {today.streak}일</span><span>다음 레벨 {today.nextLevelXp} XP</span></p>
+                                        <p className="ah-light mt-1 flex justify-between text-[11px]" style={{ color: TEXT_SOFT }}><span>{today.xp} {labelText("XP · 연속")} {today.streak}{labelText("일")}</span><span>{labelText("다음 레벨")} {today.nextLevelXp} XP</span></p>
                                     </div>
                                 </div>
                                 {/* 최근 건강 변화 · AI 추천 — 운영 대시보드와 같은 문구 */}
                                 <div className="mt-3 grid grid-cols-2 gap-2">
                                     <div className="dl-note rounded-[10px] px-3 py-2.5">
-                                        <span className="ah-light block text-[10.5px]" style={{ color: TEXT_SOFT }}>최근 건강 변화</span>
+                                        <span className="ah-light block text-[10.5px]" style={{ color: TEXT_SOFT }}>{labelText("최근 건강 변화")}</span>
                                         {/* 웹 MemberAiDashboard 와 같음: 반려견 분석 결과의 상태 문구(없으면 "첫 분석을 기다리고 있어요") */}
                                         <span className="ah-display mt-0.5 block text-[12.5px] leading-snug">{analysisStatus(pet?.rawAnalysis)}</span>
                                     </div>
                                     <Link href={recommendHref} className="dl-note dl-press rounded-[10px] px-3 py-2.5">
-                                        <span className="ah-light block text-[10.5px]" style={{ color: TEXT_SOFT }}>AI 추천</span>
+                                        <span className="ah-light block text-[10.5px]" style={{ color: TEXT_SOFT }}>{labelText("AI 추천")}</span>
                                         <span className="ah-display mt-0.5 block text-[12.5px] leading-snug text-[#c4567a]">{recommend}</span>
                                     </Link>
                                 </div>
 
                                 {/* 오늘 해야 할 일 — 포스트잇 네 장(사진 건강 분석은 연구소로) · 톡 하면 바로 완료(완료 도장 · 떠오르는 +XP/+코인) */}
-                                <SectionLabel className="mt-6" icon="fa-pen">오늘 해야 할 일 <span className="ah-light text-[12px]" style={{ color: TEXT_SOFT }}>{doneCount}/4</span></SectionLabel>
+                                <SectionLabel className="mt-6" icon="fa-pen">{labelText("오늘 해야 할 일")} <span className="ah-light text-[12px]" style={{ color: TEXT_SOFT }}>{doneCount}/4</span></SectionLabel>
                                 <div className="mt-3 grid grid-cols-2 gap-x-2.5 gap-y-3">
                                     {[
                                         { key: "stamp", icon: "fa-calendar-check", title: "출근도장", body: `하루 한 번 · ${today.dailyRewardCoins}코인`, done: today.stamped },
@@ -437,10 +439,10 @@ export default function StickerDaily() {
                                             className={`st-postit dl-todo relative block px-2 pb-2.5 pt-2 text-center ${x.done ? "is-done" : ""}`}
                                             style={{ background: ["#fff3a6", "#ffd6e2", "#d9ecff"][i], rotate: `${[-1, 0.8, 0.8][i]}deg` }}>
                                             <i aria-hidden="true" className={`fa-solid ${x.icon} text-[15px] text-[#e0557f]`} />
-                                            <span className={`ah-display mt-1 block text-[12.5px] ${x.done ? "st-strike" : ""}`}>{x.title}</span>
+                                            <span className={`ah-display mt-1 block text-[12.5px] ${x.done ? "st-strike" : ""}`}>{labelText(x.title)}</span>
                                             <span className="ah-light block text-[10.5px] leading-tight">{x.done ? "완료했어요" : x.body}</span>
-                                            {!x.done ? <span className="ah-display mt-1.5 inline-block rounded-full bg-white/85 px-2 py-0.5 text-[10.5px] text-[#e0557f]">톡 해서 완료</span> : null}
-                                            {x.done ? <InkStamp rot={-14} className="hc-slam absolute -right-1 -top-2 bg-white/70 text-[10.5px]">완료</InkStamp> : null}
+                                            {!x.done ? <span className="ah-display mt-1.5 inline-block rounded-full bg-white/85 px-2 py-0.5 text-[10.5px] text-[#e0557f]">{labelText("톡 해서 완료")}</span> : null}
+                                            {x.done ? <InkStamp rot={-14} className="hc-slam absolute -right-1 -top-2 bg-white/70 text-[10.5px]">{labelText("완료")}</InkStamp> : null}
                                             {gain?.key === x.key ? <span key={gain.n} aria-hidden="true" className="dl-gain ah-display">{gain.text}</span> : null}
                                         </button>
                                     ))}
@@ -449,33 +451,33 @@ export default function StickerDaily() {
                                     <Link href={petLensProfileHref(pet?.apiProfileId)} aria-label={`사진 건강 분석 ${analyzedToday ? "완료" : "하러 가기"}`}
                                         className={`st-postit dl-todo relative block px-2 pb-2.5 pt-2 text-center ${analyzedToday ? "is-done" : ""}`} style={{ background: "#dcf3e6", rotate: "-0.8deg" }}>
                                         <i aria-hidden="true" className="fa-solid fa-camera text-[15px] text-[#1f9e75]" />
-                                        <span className={`ah-display mt-1 block text-[12.5px] ${analyzedToday ? "st-strike" : ""}`}>사진 건강 분석</span>
-                                        <span className="ah-light block text-[10.5px] leading-tight">{analyzedToday ? "완료했어요" : "연구소에서 네 방향 사진"}</span>
-                                        {!analyzedToday ? <span className="ah-display mt-1.5 inline-block rounded-full bg-white/85 px-2 py-0.5 text-[10.5px] text-[#1f9e75]">톡 해서 하러 가기</span> : null}
-                                        {analyzedToday ? <InkStamp rot={-14} color="#1f9e75" className="hc-slam absolute -right-1 -top-2 bg-white/70 text-[10.5px]">완료</InkStamp> : null}
+                                        <span className={`ah-display mt-1 block text-[12.5px] ${analyzedToday ? "st-strike" : ""}`}>{labelText("사진 건강 분석")}</span>
+                                        <span className="ah-light block text-[10.5px] leading-tight">{labelText(analyzedToday ? "완료했어요" : "연구소에서 네 방향 사진")}</span>
+                                        {!analyzedToday ? <span className="ah-display mt-1.5 inline-block rounded-full bg-white/85 px-2 py-0.5 text-[10.5px] text-[#1f9e75]">{labelText("톡 해서 하러 가기")}</span> : null}
+                                        {analyzedToday ? <InkStamp rot={-14} color="#1f9e75" className="hc-slam absolute -right-1 -top-2 bg-white/70 text-[10.5px]">{labelText("완료")}</InkStamp> : null}
                                     </Link>
                                 </div>
-                                {doneCount >= 4 ? <p className="ah-display hc-pop mt-3 text-center text-[13px] text-[#ea4c7c]">오늘 할 일 끝! 내일 새 스티커까지 {untilTomorrow(now)}</p> : null}
+                                {doneCount >= 4 ? <p className="ah-display hc-pop mt-3 text-center text-[13px] text-[#ea4c7c]">{labelText("오늘 할 일 끝! 내일 새 스티커까지")} {untilTomorrow(now)}</p> : null}
 
                                 {/* 안전 공유 — 건강 상세는 빼고 돌봄 습관만(운영 문구) */}
                                 <div className="dl-share relative mt-6 rounded-[1.1rem] px-4 pb-4 pt-5">
                                     <Tape className="-top-2 left-1/2 h-4 w-16 -translate-x-1/2" color="rgba(170,230,200,.9)" style={{ rotate: "2deg" }} />
-                                    <span className="ah-display inline-block rounded-full bg-[#dcf3e6] px-2 py-0.5 text-[10.5px] text-[#1f7a59]"><i aria-hidden="true" className="fa-solid fa-lock mr-1 text-[9px]" />개인정보 없는 공유</span>
-                                    <span className="ah-display mt-1.5 block text-[15px]">건강 상세는 빼고, 돌봄 습관만 나눠요</span>
-                                    <p className="ah-light mt-1 text-[11.5px] leading-relaxed" style={{ color: TEXT_SOFT }}>공유 문구에는 반려견 이름·사진·증상·AI 건강 결과가 들어가지 않습니다. 링크에는 유입 경로를 확인하는 캠페인 값만 붙어요.</p>
+                                    <span className="ah-display inline-block rounded-full bg-[#dcf3e6] px-2 py-0.5 text-[10.5px] text-[#1f7a59]"><i aria-hidden="true" className="fa-solid fa-lock mr-1 text-[9px]" />{labelText("개인정보 없는 공유")}</span>
+                                    <span className="ah-display mt-1.5 block text-[15px]">{labelText("건강 상세는 빼고, 돌봄 습관만 나눠요")}</span>
+                                    <p className="ah-light mt-1 text-[11.5px] leading-relaxed" style={{ color: TEXT_SOFT }}>{labelText("공유 문구에는 반려견 이름·사진·증상·AI 건강 결과가 들어가지 않습니다. 링크에는 유입 경로를 확인하는 캠페인 값만 붙어요.")}</p>
                                     <div className="mt-3 grid gap-2.5">
                                         {/* 공유할 AI 기록이 있을 때만 공유, 없으면 기록 만들러 — 웹 GrowthShareCard 와 같음 */}
                                         {canShareAiRecord ? (
-                                            <Patch tone="mint" small disabled={shareBusy !== null} onClick={() => void share("care_result")}>AI 기록 안전 공유<i aria-hidden="true" className="fa-solid fa-wand-magic-sparkles text-[11px]" /></Patch>
+                                            <Patch tone="mint" small disabled={shareBusy !== null} onClick={() => void share("care_result")}>{labelText("AI 기록 안전 공유")}<i aria-hidden="true" className="fa-solid fa-wand-magic-sparkles text-[11px]" /></Patch>
                                         ) : (
-                                            <Patch tone="mint" small href="/pet-lens/">AI 기록 만들고 공유<i aria-hidden="true" className="fa-solid fa-camera-retro text-[11px]" /></Patch>
+                                            <Patch tone="mint" small href="/pet-lens/">{labelText("AI 기록 만들고 공유")}<i aria-hidden="true" className="fa-solid fa-camera-retro text-[11px]" /></Patch>
                                         )}
-                                        <Patch tone="butter" small disabled={shareBusy !== null} onClick={() => void share("friend_invite")}>친구에게 보물광산 초대<i aria-hidden="true" className="fa-solid fa-paper-plane text-[11px]" /></Patch>
+                                        <Patch tone="butter" small disabled={shareBusy !== null} onClick={() => void share("friend_invite")}>{labelText("친구에게 보물광산 초대")}<i aria-hidden="true" className="fa-solid fa-paper-plane text-[11px]" /></Patch>
                                     </div>
                                     {shareNote ? <p role="status" className="ah-light mt-2 text-center text-[11.5px] text-[#1f7a59]">{shareNote}</p> : null}
                                     {/* 자동 복사가 막혔을 때 직접 복사할 링크 — 웹 GrowthShareCard fallbackUrl 과 같음 */}
                                     {shareFallback ? (
-                                        <input aria-label="직접 복사할 보물광산 링크" readOnly value={shareFallback} onFocus={(e) => e.currentTarget.select()}
+                                        <input aria-label={labelText("직접 복사할 보물광산 링크")} readOnly value={shareFallback} onFocus={(e) => e.currentTarget.select()}
                                             className="ah-light mt-2 h-9 w-full rounded-[10px] bg-white px-3 text-[11.5px] shadow-[inset_0_0_0_1.5px_#dcefe4] outline-none" />
                                     ) : null}
                                 </div>
@@ -483,14 +485,14 @@ export default function StickerDaily() {
                         ) : (
                             <>
                                 <LoginInvite redirect={REDIRECT} />
-                                <SectionLabel className="mt-7" icon="fa-paw">매일 댕생활은 이렇게 이어져요</SectionLabel>
+                                <SectionLabel className="mt-7" icon="fa-paw">{labelText("매일 댕생활은 이렇게 이어져요")}</SectionLabel>
                                 <ol className="mt-3 space-y-2.5">
                                     {GUEST_STEPS.map((s, i) => (
                                         <li key={s.label} className="st-place flex items-start gap-3" style={{ ["--d" as string]: `${200 + i * 120}ms`, ["--r" as string]: "0deg" }}>
-                                            <InkStamp rot={[-8, 6, -4][i]} color={["#e0557f", "#1f9e75", "#5a7fe0"][i]} className="h-11 w-11 shrink-0 text-[13px]">{s.label}</InkStamp>
+                                            <InkStamp rot={[-8, 6, -4][i]} color={["#e0557f", "#1f9e75", "#5a7fe0"][i]} className="h-11 w-11 shrink-0 text-[13px]">{labelText(s.label)}</InkStamp>
                                             <span>
-                                                <span className="ah-display block text-[15px]">{s.title}</span>
-                                                <span className="ah-light block text-[12.5px]" style={{ color: TEXT_SOFT }}>{s.body}</span>
+                                                <span className="ah-display block text-[15px]">{labelText(s.title)}</span>
+                                                <span className="ah-light block text-[12.5px]" style={{ color: TEXT_SOFT }}>{labelText(s.body)}</span>
                                             </span>
                                         </li>
                                     ))}
@@ -505,8 +507,8 @@ export default function StickerDaily() {
                             {/* 준비 중인 혜택 — 관리자가 숨기면(웹 GrowthHub visibility.programs) 그리지 않음. 굿즈 공모전 안내는 웹처럼 그대로 */}
                             {visibility.programs ? (
                                 <>
-                                    <span className="ah-display st-marker text-[15px]">준비 중인 혜택</span>
-                                    <p className="ah-light mt-1 text-[12px]" style={{ color: TEXT_SOFT }}>관심을 남기면 열릴 때 가장 먼저 알려 드려요 · 결제 없음</p>
+                                    <span className="ah-display st-marker text-[15px]">{labelText("준비 중인 혜택")}</span>
+                                    <p className="ah-light mt-1 text-[12px]" style={{ color: TEXT_SOFT }}>{labelText("관심을 남기면 열릴 때 가장 먼저 알려 드려요 · 결제 없음")}</p>
                                     <div className="mt-4 grid grid-cols-2 gap-x-2.5 gap-y-4">
                                         {GROWTH_PROGRAM_CARDS.map((c, i) => {
                                             const on = c.interestOptions.some((o) => interest[o.programId]);
@@ -516,17 +518,17 @@ export default function StickerDaily() {
                                                     <Tape className="-top-2 left-1/2 h-3.5 w-10 -translate-x-1/2" color="rgba(255,255,255,.7)" />
                                                     {/* 혜택 그림 스티커 — 누르면 카드와 함께 살짝 통통 */}
                                                     <Image src={CARD_IMAGES[c.id]} alt="" width={80} height={80} className="dl-art -ml-0.5 h-[2.5rem] w-[2.5rem]" style={{ rotate: `${[-6, 5, -4, 6][i]}deg` }} />
-                                                    <span className="ah-display mt-2.5 block text-[13px] leading-snug">{c.title}</span>
-                                                    <span className="ah-light block text-[11px]">{c.status}</span>
-                                                    <span className="ah-display mt-2 inline-flex items-center gap-1 text-[11px] text-[#e0557f]">톡 해서 자세히 <i aria-hidden="true" className="fa-solid fa-chevron-right text-[8px]" /></span>
-                                                    {on ? <InkStamp rot={-14} className="hc-slam absolute -right-1 top-1 text-[11px]">신청<br />완료</InkStamp> : null}
+                                                    <span className="ah-display mt-2.5 block text-[13px] leading-snug">{labelText(c.title)}</span>
+                                                    <span className="ah-light block text-[11px]">{labelText(c.status)}</span>
+                                                    <span className="ah-display mt-2 inline-flex items-center gap-1 text-[11px] text-[#e0557f]">{labelText("톡 해서 자세히")} <i aria-hidden="true" className="fa-solid fa-chevron-right text-[8px]" /></span>
+                                                    {on ? <InkStamp rot={-14} className="hc-slam absolute -right-1 top-1 text-[11px]">{labelText("신청")}<br />{labelText("완료")}</InkStamp> : null}
                                                 </button>
                                             );
                                         })}
                                     </div>
                                     {/* 등록 상태 불러오기 실패 — 웹 GrowthPrograms 와 같은 안내 문구(분홍 메모) */}
                                     {member && interestLoadFailed ? (
-                                        <p role="alert" className="st-postit ah-light mt-4 px-3 py-2.5 text-[12px] leading-snug" style={{ background: "#ffd6e2", rotate: "0.6deg" }}>관심등록 상태를 불러오지 못했어요. 새 등록은 중복 없이 안전하게 처리됩니다.</p>
+                                        <p role="alert" className="st-postit ah-light mt-4 px-3 py-2.5 text-[12px] leading-snug" style={{ background: "#ffd6e2", rotate: "0.6deg" }}>{labelText("관심등록 상태를 불러오지 못했어요. 새 등록은 중복 없이 안전하게 처리됩니다.")}</p>
                                     ) : null}
                                 </>
                             ) : null}
@@ -535,8 +537,8 @@ export default function StickerDaily() {
                                 {/* 굿즈 그림 스티커(텀블러 · 키링 · 강아지 인형) */}
                                 <Image src="/images/ui/stickers/goods-contest.webp" alt="" width={96} height={96} className="dl-art -my-1.5 h-12 w-12 shrink-0" style={{ rotate: "-6deg" }} />
                                 <span className="min-w-0 flex-1">
-                                    <span className="ah-display block text-[14px]">굿즈 500명 공모전</span>
-                                    <span className="ah-light block text-[11.5px]" style={{ color: TEXT_SOFT }}>댕다방에서 참여해요{goodsDday !== null ? ` · D-${goodsDday}` : ""}</span>
+                                    <span className="ah-display block text-[14px]">{labelText("굿즈 500명 공모전")}</span>
+                                    <span className="ah-light block text-[11.5px]" style={{ color: TEXT_SOFT }}>{labelText("댕다방에서 참여해요")}{goodsDday !== null ? ` · D-${goodsDday}` : ""}</span>
                                 </span>
                                 <i aria-hidden="true" className="fa-solid fa-chevron-right text-[10px] text-[#c9b4a8]" />
                             </Link>
@@ -548,8 +550,8 @@ export default function StickerDaily() {
                         <>
                             {/* 확장 계획 — 산책길 지도: 왼쪽 정류장 스티커(운영 중 = 민트 발바닥 · 준비 = 점선 빈 칸) 사이를 발자국이 이어 주고,
                                 오른쪽 종이 카드에 상태를 마스킹테이프 이름표로 붙임 */}
-                            <span className="ah-display st-marker text-[15px]">댕다방이 넓혀 가는 길</span>
-                            <p className="ah-light mt-1 text-[12px]" style={{ color: TEXT_SOFT }}>한 걸음씩 산책하듯 넓혀 가요</p>
+                            <span className="ah-display st-marker text-[15px]">{labelText("댕다방이 넓혀 가는 길")}</span>
+                            <p className="ah-light mt-1 text-[12px]" style={{ color: TEXT_SOFT }}>{labelText("한 걸음씩 산책하듯 넓혀 가요")}</p>
                             <ol className="mt-5">
                                 {EXPANSION_CARDS.map((c, i) => {
                                     // 댕자랑 → 댕다방 화면 · 멤버십(#growth-programs) → 혜택 쪽 · 그 밖은 원래 주소
@@ -574,12 +576,12 @@ export default function StickerDaily() {
                                             <div className={`gd-card relative mb-5 rounded-[14px] bg-white px-3.5 pb-3 pt-4 ${live ? "is-live" : ""}`} style={{ rotate: `${[-0.6, 0.5, -0.4, 0.6][i]}deg` }}>
                                                 <span className={`st-tape ah-display absolute -top-2.5 left-3 px-2.5 py-0.5 text-[10.5px] ${live ? "text-[#1f7a59]" : "text-[#8a6a58]"}`}
                                                     style={{ background: live ? "rgba(170,230,200,.9)" : "rgba(255,226,170,.85)", rotate: `${[-3, 2, -2, 3][i]}deg` }}>
-                                                    {c.status}
+                                                    {labelText(c.status)}
                                                 </span>
-                                                <p className="ah-display text-[15px] leading-snug">{c.title}</p>
-                                                <p className="ah-light mt-1 line-clamp-2 text-[12.5px] leading-relaxed" style={{ color: TEXT_SOFT }}>{c.description}</p>
+                                                <p className="ah-display text-[15px] leading-snug">{labelText(c.title)}</p>
+                                                <p className="ah-light mt-1 line-clamp-2 text-[12.5px] leading-relaxed" style={{ color: TEXT_SOFT }}>{labelText(c.description)}</p>
                                                 <Link href={href} className="gd-go ah-display mt-2 inline-flex items-center gap-1 rounded-full bg-[#fff0f4] px-3 py-1 text-[11.5px] text-[#e0557f]">
-                                                    {c.cta} <i aria-hidden="true" className="fa-solid fa-chevron-right text-[8px]" />
+                                                    {labelText(c.cta)} <i aria-hidden="true" className="fa-solid fa-chevron-right text-[8px]" />
                                                 </Link>
                                             </div>
                                         </li>
@@ -592,7 +594,7 @@ export default function StickerDaily() {
                             {visibility.policy ? (
                                 <div className="gd-letter relative mt-4 rounded-[1.2rem] px-4 pb-4 pt-6">
                                     <Tape className="-top-2 left-1/2 h-5 w-20 -translate-x-1/2" color="repeating-linear-gradient(90deg, rgba(255,200,215,.85) 0 8px, rgba(255,226,234,.85) 8px 16px)" style={{ rotate: "-2deg" }} />
-                                    <span className="ah-display st-marker text-[15px]">안심하고 이용하세요</span>
+                                    <span className="ah-display st-marker text-[15px]">{labelText("안심하고 이용하세요")}</span>
                                     <ul className="mt-3 space-y-2">
                                         {POLICIES.map((p, i) => {
                                             const on = openPolicy === i;
@@ -603,10 +605,10 @@ export default function StickerDaily() {
                                                         className={`gd-row w-full rounded-[14px] px-2.5 py-2 text-left ${on ? "is-open" : ""}`} style={{ ["--seal" as string]: seal }}>
                                                         <span className="flex items-center gap-3">
                                                             <Image src={POLICY_IMAGES[i]} alt="" width={88} height={88} className="gd-seal h-10 w-10 shrink-0" />
-                                                            <span className="ah-display flex-1 text-[14px] leading-snug">{p.title}</span>
+                                                            <span className="ah-display flex-1 text-[14px] leading-snug">{labelText(p.title)}</span>
                                                             <i aria-hidden="true" className={`fa-solid fa-chevron-down text-[11px] text-[#c9a99c] transition-transform ${on ? "rotate-180" : ""}`} />
                                                         </span>
-                                                        <span className="dt-fold ah-light block pl-12 text-[12.5px] leading-relaxed" style={{ color: TEXT_SOFT }} data-open={on}>{p.body}</span>
+                                                        <span className="dt-fold ah-light block pl-12 text-[12.5px] leading-relaxed" style={{ color: TEXT_SOFT }} data-open={on}>{labelText(p.body)}</span>
                                                     </button>
                                                 </li>
                                             );
@@ -614,15 +616,15 @@ export default function StickerDaily() {
                                     </ul>
                                     <p className="ah-display mt-3 flex items-center justify-end gap-1.5 text-[12.5px] text-[#c4567a]">
                                         {/* 개인정보처리방침 — 웹 GrowthPolicySummary 끝의 링크와 같은 자리 */}
-                                        <Link href="/privacy/" className="ah-display mr-auto text-[11px] text-[#9c8f88] underline underline-offset-2">개인정보처리방침</Link>
-                                        댕다방 드림 <i aria-hidden="true" className="fa-solid fa-paw text-[11px]" />
+                                        <Link href="/privacy/" className="ah-display mr-auto text-[11px] text-[#9c8f88] underline underline-offset-2">{labelText("개인정보처리방침")}</Link>
+                                        {labelText("댕다방 드림")} <i aria-hidden="true" className="fa-solid fa-paw text-[11px]" />
                                     </p>
                                 </div>
                             ) : null}
                         </>
                     ) : null}
                 </DiaryBody>
-                <p className="ah-light mt-3 text-center text-[11.5px]" style={{ color: TEXT_SOFT }}>속지를 옆으로 밀면 다음 쪽으로 넘어가요</p>
+                <p className="ah-light mt-3 text-center text-[11.5px]" style={{ color: TEXT_SOFT }}>{labelText("속지를 옆으로 밀면 다음 쪽으로 넘어가요")}</p>
             </div>
             {/* 혜택 메모 팝업 — 누른 카드 자리에서 펼쳐짐, 바깥을 누르면 카드로 접힘 */}
             {openCard ? (
@@ -646,7 +648,7 @@ export default function StickerDaily() {
                                         </span>
                                         {/* 영문 꼬리표(c.eyebrow · MEMBERSHIP BETA 등)는 앱에서 쓰지 않음 — 다른 화면의 영문 꼬리표 숨김과 같게(2026-10-17 화면 점검) */}
                                         <div className="min-w-0 pt-1.5">
-                                            <p className="bn-in ah-display text-[21px] leading-snug" style={{ ["--d" as string]: "200ms" }}><span className="st-marker">{c.title}</span></p>
+                                            <p className="bn-in ah-display text-[21px] leading-snug" style={{ ["--d" as string]: "200ms" }}><span className="st-marker">{labelText(c.title)}</span></p>
                                         </div>
                                     </div>
                                 </div>
@@ -655,16 +657,16 @@ export default function StickerDaily() {
                                 <div className="bn-paper relative px-5 pb-2 pt-4">
                                     {/* 상태 도장 — 머리와 종이 경계에 걸쳐 찍힘(물결 가장자리에 잘리지 않게 종이 쪽에) */}
                                     <div className="relative z-[1] -mt-9 mb-1 flex justify-end pr-1">
-                                        <InkStamp rot={8} color={ink} className="bn-stamp bg-white/80 text-[10.5px] leading-tight">{c.status}</InkStamp>
+                                        <InkStamp rot={8} color={ink} className="bn-stamp bg-white/80 text-[10.5px] leading-tight">{labelText(c.status)}</InkStamp>
                                     </div>
-                                    <p className="bn-in ah-light text-[14px] leading-[1.75]" style={{ ["--d" as string]: "260ms" }}>{c.description}</p>
+                                    <p className="bn-in ah-light text-[14px] leading-[1.75]" style={{ ["--d" as string]: "260ms" }}>{labelText(c.description)}</p>
                                     <ul className="mt-2">
                                         {c.details.map((d, k) => (
                                             <li key={d} className="bn-in flex items-start gap-2 py-1.5" style={{ ["--d" as string]: `${320 + k * 90}ms` }}>
                                                 <svg viewBox="0 0 28 28" className="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true">
                                                     <path d="M7 14 L12 19 L23 6" fill="none" stroke="#ea4c7c" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="st-check" style={{ animationDelay: `${520 + k * 160}ms` }} />
                                                 </svg>
-                                                <span className="ah-light text-[13px] leading-snug">{d}</span>
+                                                <span className="ah-light text-[13px] leading-snug">{labelText(d)}</span>
                                             </li>
                                         ))}
                                     </ul>
@@ -673,7 +675,7 @@ export default function StickerDaily() {
                                     {c.existingFeature && visibility.localCare ? (
                                         <Link href="/app/sticker/care/" className="bn-in st-postit mt-3 flex items-center gap-2 px-3 py-2.5 text-[13px] text-[#1f7a59]" style={{ background: "#d9f2e4", rotate: "-1deg", ["--d" as string]: "620ms" }}>
                                             <i aria-hidden="true" className="fa-solid fa-location-dot" />
-                                            <span className="ah-display flex-1">지금 바로 {c.existingFeature.label}</span>
+                                            <span className="ah-display flex-1">{labelText("지금 바로")} {c.existingFeature.label}</span>
                                             <i aria-hidden="true" className="fa-solid fa-chevron-right text-[10px]" />
                                         </Link>
                                     ) : null}
@@ -687,37 +689,37 @@ export default function StickerDaily() {
                                                     <path d="M5 6 Q4 4 7 4 L22 5 Q24 5 24 8 L23 22 Q23 24 20 24 L6 23 Q4 23 4 20 Z" fill={consent ? "#ffe1ea" : "#fff"} stroke={consent ? "#ea4c7c" : "#c9b4a8"} strokeWidth="1.8" strokeLinejoin="round" />
                                                     {consent ? <path d="M7 14 L12 19 L23 6" fill="none" stroke="#ea4c7c" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="st-check" /> : null}
                                                 </svg>
-                                                <span className="ah-light text-[12px] leading-snug"><b className="ah-display text-[#e0557f]">(필수)</b> 선택한 프로그램의 준비·모집 소식을 회원 계정에 등록된 이메일로 받는 데 동의합니다.</span>
+                                                <span className="ah-light text-[12px] leading-snug"><b className="ah-display text-[#e0557f]">{labelText("(필수)")}</b> {labelText("선택한 프로그램의 준비·모집 소식을 회원 계정에 등록된 이메일로 받는 데 동의합니다.")}</span>
                                             </button>
                                             <button type="button" onClick={() => setConsentMore((v) => !v)} className="ah-light mt-1.5 inline-flex items-center gap-1 text-[11.5px] text-[#9c8f88]">
-                                                <i aria-hidden="true" className={`fa-solid fa-chevron-down text-[9px] transition-transform ${consentMore ? "rotate-180" : ""}`} />수집 · 이용 안내 {consentMore ? "접기" : "보기"}
+                                                <i aria-hidden="true" className={`fa-solid fa-chevron-down text-[9px] transition-transform ${consentMore ? "rotate-180" : ""}`} />{labelText("수집 · 이용 안내")} {labelText(consentMore ? "접기" : "보기")}
                                             </button>
                                             <dl className="dt-fold ah-light rounded-[10px] bg-[#faf5f1] px-3 text-[11px] leading-relaxed text-[#7a6a63]" data-open={consentMore}>
-                                                <div className="pt-2"><dt className="ah-display inline">수집·연계 항목</dt><dd className="inline"> · 회원 식별번호, 선택 프로그램, 동의 버전·상태·시각. 실제 안내 시 회원 계정 이메일을 연결해 사용하며 관심등록 파일에는 이메일을 복사 저장하지 않습니다.</dd></div>
-                                                <div><dt className="ah-display inline">이용 목적</dt><dd className="inline"> · 프로그램 수요 확인 및 준비·모집 소식 이메일 안내</dd></div>
-                                                <div><dt className="ah-display inline">보유 기간</dt><dd className="inline"> · 관심등록 취소 시 즉시 삭제 또는 회원 탈퇴 시까지</dd></div>
-                                                <div className="pb-2"><dt className="ah-display inline">거부 안내</dt><dd className="inline"> · 동의를 거부할 수 있으며 관심등록만 제한됩니다. 쇼핑과 기본 돌봄 기능에는 영향이 없습니다.</dd></div>
+                                                <div className="pt-2"><dt className="ah-display inline">{labelText("수집·연계 항목")}</dt><dd className="inline"> {labelText("· 회원 식별번호, 선택 프로그램, 동의 버전·상태·시각. 실제 안내 시 회원 계정 이메일을 연결해 사용하며 관심등록 파일에는 이메일을 복사 저장하지 않습니다.")}</dd></div>
+                                                <div><dt className="ah-display inline">{labelText("이용 목적")}</dt><dd className="inline"> {labelText("· 프로그램 수요 확인 및 준비·모집 소식 이메일 안내")}</dd></div>
+                                                <div><dt className="ah-display inline">{labelText("보유 기간")}</dt><dd className="inline"> {labelText("· 관심등록 취소 시 즉시 삭제 또는 회원 탈퇴 시까지")}</dd></div>
+                                                <div className="pb-2"><dt className="ah-display inline">{labelText("거부 안내")}</dt><dd className="inline"> {labelText("· 동의를 거부할 수 있으며 관심등록만 제한됩니다. 쇼핑과 기본 돌봄 기능에는 영향이 없습니다.")}</dd></div>
                                             </dl>
                                             {/* 개인정보처리방침 — 웹 GrowthPrograms 동의 칸 아래와 같은 문구(웹처럼 접지 않고 늘 보임) */}
-                                            <p className="ah-light mt-1.5 text-[11px] text-[#7a6a63]">자세한 내용은 <Link href="/privacy/" className="ah-display text-[#c4456f] underline underline-offset-2">개인정보처리방침</Link>에서 확인할 수 있습니다.</p>
-                                            {consentErr ? <p className="ah-display hc-pop mt-1.5 text-[12px] text-[#e0557f]">소식을 받으려면 위 동의 칸에 체크해 주세요</p> : null}
+                                            <p className="ah-light mt-1.5 text-[11px] text-[#7a6a63]">{labelText("자세한 내용은")} <Link href="/privacy/" className="ah-display text-[#c4456f] underline underline-offset-2">{labelText("개인정보처리방침")}</Link>{labelText("에서 확인할 수 있습니다.")}</p>
+                                            {consentErr ? <p className="ah-display hc-pop mt-1.5 text-[12px] text-[#e0557f]">{labelText("소식을 받으려면 위 동의 칸에 체크해 주세요")}</p> : null}
 
                                             <div className="mt-3 space-y-2.5">
                                                 {c.interestOptions.map((o) => {
                                                     // 등록 상태를 불러오기 전 — 웹 GrowthPrograms 처럼 "등록 상태 확인 중"(버튼 대신)
                                                     if (!interestReady) {
-                                                        return <span key={o.programId} className="ah-display grid h-11 place-items-center rounded-full bg-[#faf5f1] text-[11px] text-[#9c8f88]">등록 상태 확인 중</span>;
+                                                        return <span key={o.programId} className="ah-display grid h-11 place-items-center rounded-full bg-[#faf5f1] text-[11px] text-[#9c8f88]">{labelText("등록 상태 확인 중")}</span>;
                                                     }
                                                     const on = Boolean(interest[o.programId]);
                                                     return on ? (
                                                         <div key={o.programId} className="bn-done flex items-center gap-2.5 rounded-[14px] px-3 py-2.5">
-                                                            <InkStamp rot={-10} className="hc-slam shrink-0 bg-white/70 text-[11px]">신청<br />완료</InkStamp>
-                                                            <span className="ah-light flex-1 text-[12px] leading-snug" style={{ color: TEXT_SOFT }}><b className="ah-display" style={{ color: TEXT }}>{o.label}</b><br />소식이 나오면 이메일로 알려 드려요</span>
+                                                            <InkStamp rot={-10} className="hc-slam shrink-0 bg-white/70 text-[11px]">{labelText("신청")}<br />{labelText("완료")}</InkStamp>
+                                                            <span className="ah-light flex-1 text-[12px] leading-snug" style={{ color: TEXT_SOFT }}><b className="ah-display" style={{ color: TEXT }}>{labelText(o.label)}</b><br />{labelText("소식이 나오면 이메일로 알려 드려요")}</span>
                                                             {/* 처리 중엔 잠금 — 웹 GrowthPrograms(취소 중 · 저장 중 disabled)와 같음 */}
-                                                            <button type="button" onClick={() => toggleInterest(o.programId)} disabled={interestBusy} className="ah-display rounded-full bg-white px-2.5 py-1 text-[11.5px] text-[#9c8f88] disabled:opacity-60">취소</button>
+                                                            <button type="button" onClick={() => toggleInterest(o.programId)} disabled={interestBusy} className="ah-display rounded-full bg-white px-2.5 py-1 text-[11.5px] text-[#9c8f88] disabled:opacity-60">{labelText("취소")}</button>
                                                         </div>
                                                     ) : (
-                                                        <Patch key={o.programId} onClick={() => toggleInterest(o.programId)} disabled={interestBusy} small><span className="relative">{o.label}</span><i aria-hidden="true" className="fa-solid fa-envelope relative text-[12px]" /></Patch>
+                                                        <Patch key={o.programId} onClick={() => toggleInterest(o.programId)} disabled={interestBusy} small><span className="relative">{labelText(o.label)}</span><i aria-hidden="true" className="fa-solid fa-envelope relative text-[12px]" /></Patch>
                                                     );
                                                 })}
                                             </div>
@@ -725,15 +727,15 @@ export default function StickerDaily() {
                                             {interestErr ? (
                                                 <p role="alert" className="st-postit ah-light mt-3 px-3 py-2.5 text-[12px] leading-snug" style={{ background: "#ffd6e2", rotate: "-0.6deg" }}>
                                                     {interestErr}
-                                                    {interestErr.includes("로그인") ? <Link href={appLoginHref("/app/sticker/daily/?tab=1")} className="ah-display ml-1.5 text-[#c4456f] underline underline-offset-2">다시 로그인</Link> : null}
+                                                    {interestErr.includes("로그인") ? <Link href={appLoginHref("/app/sticker/daily/?tab=1")} className="ah-display ml-1.5 text-[#c4456f] underline underline-offset-2">{labelText("다시 로그인")}</Link> : null}
                                                 </p>
                                             ) : null}
                                         </>
                                     ) : (
-                                        <Patch href={appLoginHref(`${REDIRECT}?tab=1`)} className="mt-4"><span className="relative">로그인하고 소식 받기</span><i aria-hidden="true" className="fa-solid fa-paw relative text-[14px] text-white/90" /></Patch>
+                                        <Patch href={appLoginHref(`${REDIRECT}?tab=1`)} className="mt-4"><span className="relative">{labelText("로그인하고 소식 받기")}</span><i aria-hidden="true" className="fa-solid fa-paw relative text-[14px] text-white/90" /></Patch>
                                     )}
                                     <p className="ah-light mt-3 flex items-center justify-center gap-1.5 text-[11px]" style={{ color: TEXT_SOFT }}>
-                                        <i aria-hidden="true" className="fa-solid fa-paw text-[9px] text-[#f4a9bd]" />관심등록은 소식 알림용 · 신청비나 결제는 없어요<i aria-hidden="true" className="fa-solid fa-paw text-[9px] text-[#f4a9bd]" />
+                                        <i aria-hidden="true" className="fa-solid fa-paw text-[9px] text-[#f4a9bd]" />{labelText("관심등록은 소식 알림용 · 신청비나 결제는 없어요")}<i aria-hidden="true" className="fa-solid fa-paw text-[9px] text-[#f4a9bd]" />
                                     </p>
                                 </div>
                             </div>

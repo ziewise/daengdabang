@@ -152,7 +152,7 @@ test("both chat surfaces preserve research metadata and render compact verified 
     assert.doesNotMatch(extras, /근거 부족|확인 가능한 웹 출처 없음/);
     assert.match(extras, /웹 확인 시각/);
     assert.match(extras, /근거 기준/);
-    assert.match(extras, /aria-label="답변에 인용된 웹 출처"/);
+    assert.match(extras, /aria-label=\{copy\("답변에 인용된 웹 출처"\)\}/);
     assert.match(extras, /group-open:rotate-180/);
     assert.match(extras, /parsed\.protocol !== "https:"/);
     assert.match(extras, /parsed\.username \|\| parsed\.password/);

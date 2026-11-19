@@ -9,12 +9,14 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import Link from "next/link";
 import { useState, type KeyboardEvent, type MouseEvent } from "react";
 
 export type DeckScene = { slug: string; label: string; art: string; tone: string; line: string; count: number };
 
 export default function SceneDeck({ scenes }: { scenes: DeckScene[] }) {
+    const { menuLabel: labelText } = useI18n();
     const [front, setFront] = useState(0);
     const total = scenes.length;
     const next = () => setFront((value) => (value + 1) % total);
@@ -58,26 +60,26 @@ export default function SceneDeck({ scenes }: { scenes: DeckScene[] }) {
                                 <img src={`/images/ui/${scene.art}`} alt="" />
                             </span>
                             <span className="bsw-scene-text">
-                                <b>{scene.label}</b>
-                                <small>{scene.line}</small>
+                                <b>{labelText(scene.label)}</b>
+                                <small>{labelText(scene.line)}</small>
                                 <Link href={`/category/${scene.slug}`} className="bsw-scene-go" tabIndex={pos === 0 ? 0 : -1}>
-                                    상품 {scene.count}개 보기<i className="fa-solid fa-arrow-right" aria-hidden="true" />
+                                    {labelText("상품")} {scene.count}{labelText("개 보기")}<i className="fa-solid fa-arrow-right" aria-hidden="true" />
                                 </Link>
                             </span>
-                            <span className="bsw-scene-tap" aria-hidden="true"><i className="fa-solid fa-hand-pointer" />눌러서 다음 장면</span>
+                            <span className="bsw-scene-tap" aria-hidden="true"><i className="fa-solid fa-hand-pointer" />{labelText("눌러서 다음 장면")}</span>
                         </div>
                     );
                 })}
             </div>
             {/* 휴대폰 — 지금 몇 번째 · 점 · 이전/다음 */}
             <div className="bsw-deck-nav">
-                <button type="button" onClick={prev} aria-label="이전 장면"><i className="fa-solid fa-chevron-left" aria-hidden="true" /></button>
+                <button type="button" onClick={prev} aria-label={labelText("이전 장면")}><i className="fa-solid fa-chevron-left" aria-hidden="true" /></button>
                 <span className="bsw-deck-dots" aria-label={`${front + 1}번째 장면 / 전체 ${total}`}>
                     {scenes.map((scene, index) => (
                         <i key={scene.slug} className={index === front ? "is-on" : ""} data-tone={scene.tone} />
                     ))}
                 </span>
-                <button type="button" onClick={next} aria-label="다음 장면"><i className="fa-solid fa-chevron-right" aria-hidden="true" /></button>
+                <button type="button" onClick={next} aria-label={labelText("다음 장면")}><i className="fa-solid fa-chevron-right" aria-hidden="true" /></button>
             </div>
         </div>
     );

@@ -1,3 +1,4 @@
+import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
 import Link from "next/link";
 
 const ACTIONS = [
@@ -57,16 +58,16 @@ export default function AiQuickActions() {
             <div className="mx-auto max-w-[1400px] px-4 sm:px-6">
                 <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
                     <div>
-                        <p className="ddb-crayon-kicker text-xs">DAENGDABANG AI</p>
+                        <p className="ddb-crayon-kicker text-xs">댕다방 AI</p>
                         <h2 id="ai-quick-actions-title" className="ddb-crayon-title mt-2 text-3xl md:text-4xl">
-                            <span className="ddb-crayon-underline">우리 아이를 위한 AI 바로가기</span>
+                            <span className="ddb-crayon-underline"><LocalizedMenuLabel label={"우리 아이를 위한 AI 바로가기"} /></span>
                         </h2>
                         <p className="mt-2 text-sm font-bold text-neutral-600">
-                            사진·소리·행동 기록을 한곳에 모아 다음 돌봄으로 이어가세요.
+                            <LocalizedMenuLabel label={"사진·소리·행동 기록을 한곳에 모아 다음 돌봄으로 이어가세요."} />
                         </p>
                     </div>
                     <Link href="/pet-lens/" className="ddb-crayon-link rounded-full px-4 py-2 text-sm">
-                        지금 무료로 시작하기 <i className="fa-solid fa-arrow-right ml-1 text-xs" aria-hidden="true" />
+                        <LocalizedMenuLabel label={"지금 무료로 시작하기"} /> <i className="fa-solid fa-arrow-right ml-1 text-xs" aria-hidden="true" />
                     </Link>
                 </div>
 

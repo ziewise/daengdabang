@@ -219,6 +219,7 @@ export const maskPhone = (phone: string) => {
 export type GuestOrderStatus = "paid" | "preparing" | "shipping" | "delivered" | "cancel_requested" | "cancelled" | "returned";
 
 export type GuestOrder = {
+    cashReceipt?: import("./toss-cash-receipt").CashReceipt;
     orderNumber: string;
     orderedAt: string;
     status: GuestOrderStatus;

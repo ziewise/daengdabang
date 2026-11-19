@@ -66,7 +66,8 @@ async function publish(directory) {
     const upgrade = JSON.parse(await readFile(file('upgrade-check.json'), 'utf8'));
     const certificate = process.env.DDB_ANDROID_CERT_SHA256;
     verifyAndroidReleaseEvidence(plan, metadata, upgrade, await readFile(file('package.txt'), 'utf8'), await readFile(file('signature.txt'), 'utf8'), certificate);
-    if (!(await readFile(file('window.xml'), 'utf8')).includes('댕다방에 오신 걸 환영해요')
+    const homeWindow = await readFile(file('window.xml'), 'utf8');
+    if (!['댕다방에 오신 걸 환영해요', 'Welcome to 댕다방'].some(greeting => homeWindow.includes(greeting))
         || !(await readFile(file('update-install.txt'), 'utf8')).includes('Success')) throw new Error('Android launch or update evidence is missing');
     if (!await isCurrentMain()) return summary('A newer main commit exists. This APK will not replace the latest release; the queued main build will publish it.');
     const published = androidReleases(await releases()).find(release => !release.draft && !release.prerelease);

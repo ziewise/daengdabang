@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { useCallback, useEffect, useRef, useState, type PointerEvent, type RefObject } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -20,6 +21,7 @@ import {
 import { DdbApiError, loadDaengLabWallet, type DaengLabWallet } from "@/lib/customer-api";
 import { useAuth, type PetProfile } from "@/lib/store";
 import { currentPetLensOrientation, usePetLensMediaCapture } from "@/hooks/usePetLensMediaCapture";
+import MediaPermissionActions from "@/components/media/MediaPermissionActions";
 import PetLensObservationResult from "@/components/petlens/PetLensObservationResult";
 import PetLensObservationFollowUp from "@/components/petlens/PetLensObservationFollowUp";
 import PetLensObservationHistory from "@/components/petlens/PetLensObservationHistory";
@@ -201,6 +203,7 @@ type Props = {
 };
 
 export default function PetLensObservationExperience({ pet, petProfileId, accessToken, variant = "page", initialJobStatus }: Props) {
+    const { menuLabel: labelText } = useI18n();
     const { logout, user } = useAuth();
     const {
         videoRef,
@@ -211,6 +214,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
         clipUrl,
         durationSeconds,
         error: captureError,
+        permissionDenied,
         videoDevices,
         audioDevices,
         selectedVideoDeviceId,
@@ -1093,7 +1097,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
             return;
         }
         clearTargetSelection();
-        void startCamera({ orientation: previewOrientation });
+        return startCamera({ orientation: previewOrientation });
     };
 
     const handleSelectRecordedVideo = () => {
@@ -1131,13 +1135,13 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                             suffixClassName="text-[11px] font-black leading-tight text-indigo-700"
                         />
                         <h2 className="mt-1 text-xl font-black text-neutral-950">
-                            {result.quality.targetStatus === "ambiguous"
+                            {labelText(result.quality.targetStatus === "ambiguous"
                                 ? "분석 대상을 구분하지 못한 관찰 결과"
-                                : "영상 속 분석 대상의 짧은 관찰 결과"}
+                                : "영상 속 분석 대상의 짧은 관찰 결과")}
                         </h2>
                     </div>
                     <button type="button" onClick={resetAll} className="btn btn-secondary min-h-10 px-4 text-xs">
-                        <i className="fa-solid fa-video mr-1.5 text-[10px]" /> 새로 관찰
+                        <i className="fa-solid fa-video mr-1.5 text-[10px]" /> {labelText("새로 관찰")}
                     </button>
                 </div>
                 {result.daengLabCoinRefunded ? (
@@ -1152,17 +1156,17 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                         </span>
                         <div>
                             <p className="text-sm font-black">
-                                분석 비용 <DaengLabCoinMark compact className="mx-0.5" /> {resultRefundAmount}C 전액 환급 완료
+                                {labelText("분석 비용")} <DaengLabCoinMark compact className="mx-0.5" /> {resultRefundAmount}{labelText("C 전액 환급 완료")}
                             </p>
                             <p className="mt-1 text-xs font-bold leading-5 text-emerald-800">
-                                {refundReason} 정확하지 않은 그래프를 만들지 않고 코인을 다시 돌려드렸어요.
+                                {refundReason} {labelText("정확하지 않은 그래프를 만들지 않고 코인을 다시 돌려드렸어요.")}
                                 {typeof currentCoinBalance === "number" ? ` 현재 잔액은 ${currentCoinBalance}C예요.` : ""}
                             </p>
                         </div>
                     </div>
                 ) : typeof currentCoinBalance === "number" ? (
                     <div className="rounded-xl border border-indigo-100 bg-indigo-50 px-3 py-2 text-xs font-black text-indigo-800" role="status">
-                        <DaengLabCoinMark compact className="mr-0.5" /> {resultCoinCost}C 사용 · 현재 {currentCoinBalance}C
+                        <DaengLabCoinMark compact className="mr-0.5" /> {resultCoinCost}{labelText("C 사용 · 현재")} {currentCoinBalance}C
                     </div>
                 ) : null}
                 <PetLensObservationResult result={result} />
@@ -1175,7 +1179,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                         onUnauthorized={logout}
                     />
                 )}
-                <AppFold label="보호자 답변 메모 남기기" foldKey="memo">
+                <AppFold label={labelText("보호자 답변 메모 남기기")} foldKey="memo">
                 <PetLensObservationFollowUp
                     result={result}
                     requestId={resultRequestId}
@@ -1236,7 +1240,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                             {phase === "recording" ? `${pet.name} 관찰 녹화 중` : `${pet.name} 촬영 준비`}
                         </p>
                         <p className="truncate text-[10px] font-bold text-white/65">
-                            {previewOrientation === "portrait" ? "세로 화면" : "가로 화면"} · {selectedCameraLabel}
+                            {labelText(previewOrientation === "portrait" ? "세로 화면" : "가로 화면")} · {selectedCameraLabel}
                         </p>
                     </div>
                     <div className="flex shrink-0 items-center gap-2">
@@ -1265,7 +1269,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                             aria-label={phase === "recording" ? "촬영 중단" : "촬영 화면 닫기"}
                         >
                             <i className="fa-solid fa-xmark" aria-hidden="true" />
-                            <span>{phase === "recording" ? "중단" : "닫기"}</span>
+                            <span>{labelText(phase === "recording" ? "중단" : "닫기")}</span>
                         </button>
                     </div>
                 </div>
@@ -1299,24 +1303,24 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                         aria-live={phase === "requesting" ? "polite" : undefined}
                     >
                         {/* 웹 연구소 페이지 전용 꾸밈(lab-web.css) — 15초 고리 · 권장 칩 */}
-                        <span className="lab-vf-timer hidden" aria-hidden="true"><span>{PET_OBSERVATION_RECORDING_SECONDS}초</span></span>
-                        <span className="lab-vf-chip hidden" aria-hidden="true"><i />권장 {PET_OBSERVATION_RECORDING_SECONDS}초 · 카메라 + 마이크</span>
+                        <span className="lab-vf-timer hidden" aria-hidden="true"><span>{PET_OBSERVATION_RECORDING_SECONDS}{labelText("초")}</span></span>
+                        <span className="lab-vf-chip hidden" aria-hidden="true"><i />{labelText("권장")} {PET_OBSERVATION_RECORDING_SECONDS}{labelText("초 · 카메라 + 마이크")}</span>
                         <div>
                             <Image src="/images/ui/lab-video-160.webp" alt="" width={84} height={84} className="lab-vf-art hidden" aria-hidden="true" />
                             <i className="lab-vf-icon fa-solid fa-camera text-3xl text-white/70" aria-hidden="true" />
                             <p className="mt-3 text-sm font-black">
-                                {phase === "requesting" ? "카메라·마이크 권한을 기다리는 중" : "카메라를 연결하면 여기에 미리보기가 나와요"}
+                                {labelText(phase === "requesting" ? "카메라·마이크 권한을 기다리는 중" : "카메라를 연결하면 여기에 미리보기가 나와요")}
                             </p>
-                            <p className="mt-1 text-[11px] font-bold text-white/60">강아지 옆면과 가슴 움직임이 함께 보이게 해주세요.</p>
+                            <p className="mt-1 text-[11px] font-bold text-white/60">{labelText("강아지 옆면과 가슴 움직임이 함께 보이게 해주세요.")}</p>
                         </div>
                     </div>
                 )}
                 {phase === "recording" && (
                     <div className="absolute inset-x-3 top-3 flex items-center justify-between rounded-full bg-black/65 px-4 py-2 text-white" role="status" aria-live="polite">
                         <span className="inline-flex items-center gap-2 text-xs font-black">
-                            <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-rose-500" /> 녹화 중
+                            <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-rose-500" /> {labelText("녹화 중")}
                         </span>
-                        <span className="shrink-0 whitespace-nowrap text-sm font-black">{secondsLeft}초</span>
+                        <span className="shrink-0 whitespace-nowrap text-sm font-black">{secondsLeft}{labelText("초")}</span>
                     </div>
                 )}
                 {captureSource === "live_camera" && (phase === "preview" || phase === "recording") && (
@@ -1343,7 +1347,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                     <>
                         <div className="pointer-events-none absolute inset-x-3 top-3 rounded-2xl bg-black/60 px-3 py-2 text-white shadow-sm" data-daenglab-target-anchor-guide>
                             <p className="text-xs font-black">
-                                {targetSelectionReady ? "분석할 아이 지정 완료" : "혼자만 보이면 콕 없이 분석해도 돼요"}
+                                {labelText(targetSelectionReady ? "분석할 아이 지정 완료" : "혼자만 보이면 콕 없이 분석해도 돼요")}
                             </p>
                             <p className="mt-0.5 text-[10px] font-bold leading-4 text-white/75">
                                 {targetAnchor
@@ -1362,7 +1366,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                             >
                                 <span className="absolute -inset-3 rounded-full border-2 border-white/90 bg-rose-500/25 shadow-[0_0_0_9999px_rgba(15,23,42,0.08)]" />
                                 <span className="relative grid h-9 w-9 place-items-center rounded-full bg-rose-500 text-[10px] font-black text-white shadow-lg ring-4 ring-white/90">
-                                    콕
+                                    {labelText("콕")}
                                 </span>
                             </div>
                         )}
@@ -1376,11 +1380,10 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                 >
                     <p className="text-xs font-black">
                         <i className="fa-solid fa-microchip mr-2 text-cyan-700" aria-hidden="true" />
-                        온디바이스 스캔 완료 · 전송 최적화
+                        {labelText("온디바이스 스캔 완료 · 전송 최적화")}
                     </p>
                     <p className="mt-1 text-[10px] font-bold leading-4 text-cyan-900">
-                        기기에서 촬영 품질을 먼저 확인했고, 15초 영상을 약 {liveClipMegabytes}MB로 줄였습니다.
-                        분석 버튼을 누를 때만 최종 행동·소리·건강 신호 분석을 위해 서버로 전송합니다.
+                        {labelText("기기에서 촬영 품질을 먼저 확인했고, 15초 영상을 약")} {liveClipMegabytes}{labelText("MB로 줄였습니다.\n                        분석 버튼을 누를 때만 최종 행동·소리·건강 신호 분석을 위해 서버로 전송합니다.")}
                     </p>
                 </div>
             )}
@@ -1399,7 +1402,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                         data-petlens-connect-camera
                         aria-describedby="daenglab-observation-consent-description"
                     >
-                        <i className="fa-solid fa-camera mr-2 text-xs" /> 카메라·마이크 연결
+                        <i className="fa-solid fa-camera mr-2 text-xs" /> {labelText("카메라·마이크 연결")}
                     </button>
                 )}
                 {phase === "requesting" && (
@@ -1412,7 +1415,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                             data-petlens-camera-requesting
                         >
                             <i className="fa-solid fa-circle-notch fa-spin mr-2 text-xs" />
-                            카메라·마이크 연결 중
+                            {labelText("카메라·마이크 연결 중")}
                         </button>
                         <button
                             type="button"
@@ -1420,7 +1423,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                             className="btn btn-secondary min-h-12 justify-center"
                             data-petlens-cancel-camera-request
                         >
-                            연결 취소
+                            {labelText("연결 취소")}
                         </button>
                     </>
                 )}
@@ -1435,9 +1438,9 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                             data-petlens-start-observation
                         >
                             {onDeviceScanStatus === "scanning" ? (
-                                <><i className="fa-solid fa-circle-notch fa-spin mr-2 text-xs" /> 기기에서 촬영 환경 확인 중</>
+                                <><i className="fa-solid fa-circle-notch fa-spin mr-2 text-xs" /> {labelText("기기에서 촬영 환경 확인 중")}</>
                             ) : (
-                                <><i className="fa-solid fa-circle-dot mr-2 text-xs" /> {PET_OBSERVATION_RECORDING_SECONDS}초 관찰 시작</>
+                                <><i className="fa-solid fa-circle-dot mr-2 text-xs" /> {PET_OBSERVATION_RECORDING_SECONDS}{labelText("초 관찰 시작")}</>
                             )}
                         </button>
                         <button
@@ -1446,7 +1449,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                             className="btn btn-secondary min-h-12 justify-center"
                             data-petlens-disconnect-camera
                         >
-                            연결 끊기
+                            {labelText("연결 끊기")}
                         </button>
                     </>
                 )}
@@ -1457,7 +1460,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                         onClick={() => cancelCapture("촬영을 중단했습니다. 다시 연결해 주세요.")}
                         className="btn btn-secondary min-h-12 justify-center"
                     >
-                        촬영 중단
+                        {labelText("촬영 중단")}
                     </button>
                 )}
                 {phase === "recorded" && (
@@ -1471,15 +1474,15 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                             data-petlens-analyze-observation
                         >
                             {analyzing ? (
-                                <><i className="fa-solid fa-circle-notch fa-spin mr-2 text-xs" /> 행동·소리·건강 신호 분석 중</>
+                                <><i className="fa-solid fa-circle-notch fa-spin mr-2 text-xs" /> {labelText("행동·소리·건강 신호 분석 중")}</>
                             ) : targetSelectionReady ? (
-                                <><i className="fa-solid fa-wave-square mr-2 text-xs" /> 이 영상 분석하기 · {analysisCoinCost}C</>
+                                <><i className="fa-solid fa-wave-square mr-2 text-xs" /> {labelText("이 영상 분석하기 ·")} {analysisCoinCost}C</>
                             ) : (
-                                <><i className="fa-solid fa-wave-square mr-2 text-xs" /> 혼자 보이면 콕 없이 분석하기 · {analysisCoinCost}C</>
+                                <><i className="fa-solid fa-wave-square mr-2 text-xs" /> {labelText("혼자 보이면 콕 없이 분석하기 ·")} {analysisCoinCost}C</>
                             )}
                         </button>
                         <button type="button" disabled={analyzing} onClick={resetCapture} className="btn btn-secondary min-h-12 justify-center">
-                            다시 촬영
+                            {labelText("다시 촬영")}
                         </button>
                     </>
                 )}
@@ -1493,7 +1496,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                             data-petlens-select-recorded-video
                             aria-describedby="daenglab-observation-consent-description"
                         >
-                            <i className="fa-solid fa-file-video mr-2 text-xs" /> 촬영한 영상 선택
+                            <i className="fa-solid fa-file-video mr-2 text-xs" /> {labelText("촬영한 영상 선택")}
                         </button>
                         <input
                             ref={fileInputRef}
@@ -1552,12 +1555,10 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                             <i className="fa-solid fa-shield-halved" />
                         </span>
                         <h2 id="daenglab-consent-prompt-title" className="mt-4 text-lg font-black text-neutral-950">
-                            먼저 아래 동의 항목을 확인해 주세요
+                            {labelText("먼저 아래 동의 항목을 확인해 주세요")}
                         </h2>
                         <p id="daenglab-consent-prompt-description" className="mt-2 text-sm font-bold leading-6 text-neutral-600">
-                            카메라·마이크 연결이나 촬영한 영상 선택 전에 아래의 영상·음성 분석 동의가 필요합니다.
-                            촬영·선택한 영상과 음성은 대기·분석 중 암호화해 임시 보관할 수 있으며,
-                            완료·취소·임시 보관기간 만료 시 삭제됩니다.
+                            {labelText("카메라·마이크 연결이나 촬영한 영상 선택 전에 아래의 영상·음성 분석 동의가 필요합니다.\n                            촬영·선택한 영상과 음성은 대기·분석 중 암호화해 임시 보관할 수 있으며,\n                            완료·취소·임시 보관기간 만료 시 삭제됩니다.")}
                         </p>
                         <div className="mt-5 grid gap-2">
                             <button
@@ -1566,14 +1567,14 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                                 className="btn btn-primary min-h-12 w-full justify-center"
                                 data-dialog-initial-focus
                             >
-                                동의 항목 확인하기
+                                {labelText("동의 항목 확인하기")}
                             </button>
                             <button
                                 type="button"
                                 onClick={closeConsentPrompt}
                                 className="btn btn-secondary min-h-12 w-full justify-center text-xs"
                             >
-                                닫기
+                                {labelText("닫기")}
                             </button>
                         </div>
                     </div>
@@ -1601,14 +1602,13 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                             <i className="fa-solid fa-envelope-open-text" />
                         </span>
                         <p id="daenglab-deferred-choice-title" className="mt-4 text-xs font-black tracking-[0.16em] text-indigo-700">
-                            분석 완료 알림
+                            {labelText("분석 완료 알림")}
                         </p>
                         <h2 id="daenglab-deferred-choice-description" className="mt-2 break-keep text-lg font-black leading-7 text-neutral-950 sm:text-xl">
-                            분석이 평소보다 오래 걸리고 있어요. 완료되면 가입 이메일로 알려드릴까요?
+                            {labelText("분석이 평소보다 오래 걸리고 있어요. 완료되면 가입 이메일로 알려드릴까요?")}
                         </h2>
                         <p id="daenglab-deferred-choice-consequence" className="mt-3 text-xs font-bold leading-5 text-neutral-600">
-                            선택하는 동안에도 분석은 자동으로 계속됩니다. ‘아니오, 분석 취소’를 선택하면 진행 중인 분석을 취소하고
-                            임시 보관 중인 영상·음성을 삭제하며, 사용한 코인은 환급 처리됩니다.
+                            {labelText("선택하는 동안에도 분석은 자동으로 계속됩니다. ‘아니오, 분석 취소’를 선택하면 진행 중인 분석을 취소하고\n                            임시 보관 중인 영상·음성을 삭제하며, 사용한 코인은 환급 처리됩니다.")}
                         </p>
                         {deferredChoiceError && (
                             <p className="mt-3 rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-xs font-bold leading-5 text-rose-700" role="alert">
@@ -1624,7 +1624,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                                 data-dialog-initial-focus
                             >
                                 {deferredChoiceBusy === "email" && <i className="fa-solid fa-circle-notch fa-spin mr-2" aria-hidden="true" />}
-                                예, 이메일 알림
+                                {labelText("예, 이메일 알림")}
                             </button>
                             <button
                                 type="button"
@@ -1633,7 +1633,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                                 className="btn btn-secondary min-h-12 w-full justify-center disabled:cursor-wait disabled:opacity-60"
                             >
                                 {deferredChoiceBusy === "cancel" && <i className="fa-solid fa-circle-notch fa-spin mr-2" aria-hidden="true" />}
-                                아니오, 분석 취소
+                                {labelText("아니오, 분석 취소")}
                             </button>
                         </div>
                     </div>
@@ -1650,7 +1650,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                             suffixClassName="text-sm font-black leading-tight text-neutral-950"
                         />
                         <div className="mt-1 flex flex-wrap items-center gap-2">
-                            <p className="text-[11px] font-black text-indigo-700">PC·모바일 카메라 + 마이크</p>
+                            <p className="text-[11px] font-black text-indigo-700">{labelText("PC·모바일 카메라 + 마이크")}</p>
                             <span
                                 className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-black ${
                                     engineState === "ready"
@@ -1667,58 +1667,56 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                             </span>
                         </div>
                         <h2 className="mt-1 text-lg font-black text-neutral-950">
-                            권장 {PET_OBSERVATION_RECORDING_SECONDS}초 동안 대상 강아지만 구분해 관찰해요
+                            {labelText("권장")} {PET_OBSERVATION_RECORDING_SECONDS}{labelText("초 동안 대상 강아지만 구분해 관찰해요")}
                         </h2>
                         <p className="mt-1 text-xs font-bold leading-5 text-neutral-600">
-                            사람·고양이·다른 강아지·재생음은 근거에서 제외하고, 대상견의 발성 주체가 확인된 경우에만 맥락 번역 후보를 만듭니다.
+                            {labelText("사람·고양이·다른 강아지·재생음은 근거에서 제외하고, 대상견의 발성 주체가 확인된 경우에만 맥락 번역 후보를 만듭니다.")}
                         </p>
                     </div>
                 </div>
-                <AppFold label="촬영 방법 보기" foldKey="guide">
+                <AppFold label={labelText("촬영 방법 보기")} foldKey="guide">
                 <p
                     className="mt-4 rounded-xl border border-white/90 bg-white/75 px-3.5 py-3 text-xs font-bold leading-5 text-neutral-600 shadow-sm"
                     data-daenglab-service-description
                 >
-                    댕다방 연구소는 카메라 영상과 포함 음성을 함께 분석해,
-                    영상 속 분석 대상을 먼저 구분한 뒤 그 강아지의 행동·소리·건강 관찰 신호와 가능한 맥락을 정리합니다.
+                    {labelText("댕다방 연구소는 카메라 영상과 포함 음성을 함께 분석해,\n                    영상 속 분석 대상을 먼저 구분한 뒤 그 강아지의 행동·소리·건강 관찰 신호와 가능한 맥락을 정리합니다.")}
                 </p>
                 <div
                     className="mt-3 grid grid-cols-3 gap-2"
                     data-daenglab-observation-limits
                 >
                     <div className="rounded-xl bg-indigo-700 px-2.5 py-2 text-center text-white">
-                        <span className="block text-[9px] font-black text-indigo-100">권장 촬영</span>
-                        <strong className="mt-0.5 block whitespace-nowrap text-sm font-black">{PET_OBSERVATION_RECORDING_SECONDS}초</strong>
+                        <span className="block text-[9px] font-black text-indigo-100">{labelText("권장 촬영")}</span>
+                        <strong className="mt-0.5 block whitespace-nowrap text-sm font-black">{PET_OBSERVATION_RECORDING_SECONDS}{labelText("초")}</strong>
                     </div>
                     <div className="rounded-xl bg-white px-2.5 py-2 text-center text-neutral-800 shadow-sm">
-                        <span className="block text-[9px] font-black text-neutral-400">허용 길이</span>
+                        <span className="block text-[9px] font-black text-neutral-400">{labelText("허용 길이")}</span>
                         <strong className="mt-0.5 block whitespace-nowrap text-sm font-black">
-                            {PET_OBSERVATION_MIN_DURATION_SECONDS}~{PET_OBSERVATION_MAX_DURATION_SECONDS}초
+                            {PET_OBSERVATION_MIN_DURATION_SECONDS}~{PET_OBSERVATION_MAX_DURATION_SECONDS}{labelText("초")}
                         </strong>
                     </div>
                     <div className="rounded-xl bg-white px-2.5 py-2 text-center text-neutral-800 shadow-sm">
-                        <span className="block text-[9px] font-black text-neutral-400">최대 용량</span>
+                        <span className="block text-[9px] font-black text-neutral-400">{labelText("최대 용량")}</span>
                         <strong className="mt-0.5 block whitespace-nowrap text-sm font-black">{PET_OBSERVATION_MAX_FILE_MB}MB</strong>
                     </div>
                 </div>
                 <p className="mt-2 text-[10px] font-bold leading-4 text-neutral-500">
-                    분석할 강아지를 화면 중앙에 두고 입·전신·목줄이나 털색 특징이 계속 보이게 담아주세요.
-                    실시간 촬영은 기기에서 밝기·움직임·마이크 신호를 먼저 확인하고 저용량으로 녹화합니다.
+                    {labelText("분석할 강아지를 화면 중앙에 두고 입·전신·목줄이나 털색 특징이 계속 보이게 담아주세요.\n                    실시간 촬영은 기기에서 밝기·움직임·마이크 신호를 먼저 확인하고 저용량으로 녹화합니다.")}
                 </p>
                 <p className="mt-2 rounded-xl border border-sky-100 bg-sky-50 px-3 py-2 text-[10px] font-bold leading-4 text-sky-900" data-daenglab-on-device-policy>
                     <i className="fa-solid fa-microchip mr-1.5 text-sky-700" aria-hidden="true" />
-                    온디바이스 스캔은 촬영 품질과 전송량을 줄이는 1차 검사입니다. 행동 의미와 건강 신호의 최종 판정은 정확도를 위해 분석 버튼을 누른 뒤 서버에서 수행합니다.
+                    {labelText("온디바이스 스캔은 촬영 품질과 전송량을 줄이는 1차 검사입니다. 행동 의미와 건강 신호의 최종 판정은 정확도를 위해 분석 버튼을 누른 뒤 서버에서 수행합니다.")}
                 </p>
                 <p className="mt-2 rounded-xl border border-cyan-100 bg-cyan-50 px-3 py-2 text-[10px] font-black leading-4 text-cyan-900">
-                    여러 강아지가 함께 있으면 아래 메모에 “화면 왼쪽 빨간 목줄 갈색 푸들”처럼 분석할 아이의 위치와 특징을 적어 주세요. 구분이 불확실하면 억지 결과를 만들지 않고 코인을 돌려드려요.
+                    {labelText("여러 강아지가 함께 있으면 아래 메모에 “화면 왼쪽 빨간 목줄 갈색 푸들”처럼 분석할 아이의 위치와 특징을 적어 주세요. 구분이 불확실하면 억지 결과를 만들지 않고 코인을 돌려드려요.")}
                 </p>
                 </AppFold>
             </div>
 
             {engineState === "unavailable" && (
                 <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3" role="alert" data-daenglab-observation-engine-warning>
-                    <p className="text-xs font-bold leading-5 text-amber-950">지금은 행동·소리·건강 신호 분석 연결을 확인하지 못했어요. 촬영 전에 다시 확인해 주세요.</p>
-                    <button type="button" onClick={() => void refreshEngine()} className="btn btn-secondary min-h-9 shrink-0 px-3 text-[11px]">다시 확인</button>
+                    <p className="text-xs font-bold leading-5 text-amber-950">{labelText("지금은 행동·소리·건강 신호 분석 연결을 확인하지 못했어요. 촬영 전에 다시 확인해 주세요.")}</p>
+                    <button type="button" onClick={() => void refreshEngine()} className="btn btn-secondary min-h-9 shrink-0 px-3 text-[11px]">{labelText("다시 확인")}</button>
                 </div>
             )}
 
@@ -1730,16 +1728,16 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                     <div className="flex items-center gap-3">
                         <DaengLabCoinMark compact className="text-xs" />
                         <div>
-                            <p className="text-xs font-black text-neutral-950">댕다방 연구소 행동·소리·건강 신호 분석 1회 {analysisCoinCost}C</p>
-                            <p className="mt-0.5 text-[10px] font-bold text-neutral-500">분석 실패·반려견 미검출·고객용 후보 0건 결과는 자동 환급</p>
+                            <p className="text-xs font-black text-neutral-950">{labelText("댕다방 연구소 행동·소리·건강 신호 분석 1회")} {analysisCoinCost}C</p>
+                            <p className="mt-0.5 text-[10px] font-bold text-neutral-500">{labelText("분석 실패·반려견 미검출·고객용 후보 0건 결과는 자동 환급")}</p>
                         </div>
                     </div>
                     {walletLoading ? (
-                        <span className="text-xs font-bold text-neutral-500"><i className="fa-solid fa-circle-notch fa-spin mr-1.5" />잔액 확인 중</span>
+                        <span className="text-xs font-bold text-neutral-500"><i className="fa-solid fa-circle-notch fa-spin mr-1.5" />{labelText("잔액 확인 중")}</span>
                     ) : wallet ? (
                         <div className="text-right">
                             <strong className="block text-lg font-black text-indigo-700">{wallet.daengLabCoins}C</strong>
-                            <span className="text-[10px] font-bold text-neutral-500">분석 가능 {wallet.analysesAvailable}회</span>
+                            <span className="text-[10px] font-bold text-neutral-500">{labelText("분석 가능")} {wallet.analysesAvailable}{labelText("회")}</span>
                         </div>
                     ) : null}
                 </div>
@@ -1751,14 +1749,14 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                                 : `코인이 부족해요. 적립금 ${wallet.pointConversionUnit.toLocaleString("ko-KR")}P를 ${wallet.coinConversionUnit}C로 바꿀 수 있어요.`}
                         </span>
                         <Link href="/mypage#daenglab-wallet" className="shrink-0 rounded-full bg-white px-3 py-1.5 text-[11px] font-black text-indigo-700 shadow-sm">
-                            전환하러 가기
+                            {labelText("전환하러 가기")}
                         </Link>
                     </div>
                 )}
                 {walletError && (
                     <p className="mt-3 text-[11px] font-bold text-rose-700">
                         {walletError}
-                        <button type="button" onClick={() => void refreshWallet()} className="ml-2 underline">다시 확인</button>
+                        <button type="button" onClick={() => void refreshWallet()} className="ml-2 underline">{labelText("다시 확인")}</button>
                     </p>
                 )}
             </div>
@@ -1772,10 +1770,9 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
             </AppFold>
 
             <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4" data-petlens-emergency-preflight>
-                <p className="text-xs font-black text-rose-900">이럴 때는 촬영보다 병원 연락이 먼저예요</p>
+                <p className="text-xs font-black text-rose-900">{labelText("이럴 때는 촬영보다 병원 연락이 먼저예요")}</p>
                 <p className="mt-1 text-[11px] font-bold leading-5 text-rose-800">
-                    숨을 매우 힘들게 쉼, 입 벌린 호흡·푸르거나 회색 잇몸, 쓰러짐·의식 저하, 계속되는 발작,
-                    심한 출혈, 갑자기 부푼 배와 헛구역질, 열사병·중독 의심이 있으면 즉시 응급 동물병원에 연락하세요.
+                    {labelText("숨을 매우 힘들게 쉼, 입 벌린 호흡·푸르거나 회색 잇몸, 쓰러짐·의식 저하, 계속되는 발작,\n                    심한 출혈, 갑자기 부푼 배와 헛구역질, 열사병·중독 의심이 있으면 즉시 응급 동물병원에 연락하세요.")}
                 </p>
             </div>
 
@@ -1790,14 +1787,14 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
 
             <div className={`lab-obs-pair grid gap-4 ${compact ? "" : "lg:grid-cols-[minmax(0,1.2fr)_minmax(280px,.8fr)]"}`}>
                 <div className="lab-obs-capture grid gap-3">
-                    <span className="lab-pane-head hidden" aria-hidden="true"><b>1</b>{PET_OBSERVATION_RECORDING_SECONDS}초 촬영</span>
+                    <span className="lab-pane-head hidden" aria-hidden="true"><b>1</b>{PET_OBSERVATION_RECORDING_SECONDS}{labelText("초 촬영")}</span>
                     {captureStageInViewport}
                     {/* 웹 연구소 페이지 전용 — 촬영 조건 · 비용 알약(아래 긴 안내 글 대신) · 분석 연결 상태 */}
                     <ul className="lab-obs-facts hidden">
-                        <li>권장 <b>{PET_OBSERVATION_RECORDING_SECONDS}초</b></li>
-                        <li>허용 <b>{PET_OBSERVATION_MIN_DURATION_SECONDS}~{PET_OBSERVATION_MAX_DURATION_SECONDS}초</b></li>
-                        <li>최대 <b>{PET_OBSERVATION_MAX_FILE_MB}MB</b> · WebM · MP4 · MOV</li>
-                        <li>1회 <b>{analysisCoinCost}C</b> · 실패 시 자동 환급</li>
+                        <li>{labelText("권장")} <b>{PET_OBSERVATION_RECORDING_SECONDS}{labelText("초")}</b></li>
+                        <li>{labelText("허용")} <b>{PET_OBSERVATION_MIN_DURATION_SECONDS}~{PET_OBSERVATION_MAX_DURATION_SECONDS}{labelText("초")}</b></li>
+                        <li>{labelText("최대")} <b>{PET_OBSERVATION_MAX_FILE_MB}MB</b> · WebM · MP4 · MOV</li>
+                        <li>{labelText("1회")} <b>{analysisCoinCost}C</b> {labelText("· 실패 시 자동 환급")}</li>
                         <li className={`is-engine is-${engineState}`}>
                             <i className={`fa-solid ${engineReady ? "fa-circle-check" : engineState === "checking" ? "fa-circle-notch fa-spin" : "fa-triangle-exclamation"}`} aria-hidden="true" />
                             {engineReady ? "분석 연결됨" : engineState === "checking" ? "분석 연결 확인 중" : "분석 연결 점검 중"}
@@ -1809,13 +1806,13 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                         role="status"
                         aria-live="polite"
                     >
-                        현재 {previewOrientation === "portrait" ? "세로" : "가로"} 화면용 미리보기예요.
+                        {labelText("현재")} {labelText(previewOrientation === "portrait" ? "세로" : "가로")} {labelText("화면용 미리보기예요.")}
                         {captureOrientationStatus === "matched"
                             ? " 녹화 원본 비율도 같은 방향으로 확인됐어요."
                             : captureOrientationStatus === "preview_only"
                                 ? " 브라우저가 원본 비율 전환을 확인해 주지 않아 녹화본은 다른 비율일 수 있어요."
                                 : " 카메라가 연결되면 녹화 원본 비율도 함께 확인해요."}
-                        {" "}휴대폰을 돌리면 미리보기 비율도 자동으로 전환되며, 촬영을 시작한 뒤에는 한 방향으로 안정적으로 유지해 주세요.
+                        {" "}{labelText("휴대폰을 돌리면 미리보기 비율도 자동으로 전환되며, 촬영을 시작한 뒤에는 한 방향으로 안정적으로 유지해 주세요.")}
                     </p>
 
                     {(phase === "preview" || phase === "recording") && (
@@ -1832,7 +1829,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                                 <div className="mt-3 grid gap-2 sm:grid-cols-2" data-petlens-device-controls>
                                     {videoDevices.length > 1 && (
                                         <label className="grid gap-1 text-[10px] font-black text-neutral-600">
-                                            카메라 선택
+                                            {labelText("카메라 선택")}
                                             <select
                                                 value={selectedVideoDeviceId}
                                                 onChange={(event) => void startCamera({
@@ -1842,7 +1839,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                                                 className="input min-h-10 w-full text-xs"
                                                 data-petlens-video-device
                                             >
-                                                <option value="">브라우저 자동 선택</option>
+                                                <option value="">{labelText("브라우저 자동 선택")}</option>
                                                 {videoDevices.map((device) => (
                                                     <option key={device.deviceId} value={device.deviceId}>{device.label}</option>
                                                 ))}
@@ -1851,7 +1848,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                                     )}
                                     {audioDevices.length > 1 && (
                                         <label className="grid gap-1 text-[10px] font-black text-neutral-600">
-                                            마이크 선택
+                                            {labelText("마이크 선택")}
                                             <select
                                                 value={selectedAudioDeviceId}
                                                 onChange={(event) => void startCamera({
@@ -1861,7 +1858,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                                                 className="input min-h-10 w-full text-xs"
                                                 data-petlens-audio-device
                                             >
-                                                <option value="">브라우저 자동 선택</option>
+                                                <option value="">{labelText("브라우저 자동 선택")}</option>
                                                 {audioDevices.map((device) => (
                                                     <option key={device.deviceId} value={device.deviceId}>{device.label}</option>
                                                 ))}
@@ -1875,7 +1872,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                                         data-petlens-switch-camera
                                     >
                                         <i className="fa-solid fa-rotate mr-1.5 text-[10px]" aria-hidden="true" />
-                                        {videoDevices.length > 1 ? "다음 카메라로 전환" : "전·후면 카메라 전환"}
+                                        {labelText(videoDevices.length > 1 ? "다음 카메라로 전환" : "전·후면 카메라 전환")}
                                     </button>
                                 </div>
                             )}
@@ -1887,6 +1884,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                             {captureError}
                         </p>
                     )}
+                    {captureError && permissionDenied && <MediaPermissionActions permissions={["camera", "microphone"]} onRetry={handleConnectCamera} />}
                     {analysisError && (
                         <p className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-xs font-bold leading-5 text-rose-700" role="alert">
                             {analysisError}
@@ -1901,7 +1899,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                         >
                             <p className="text-sm font-black">
                                 <i className="fa-solid fa-rotate-left mr-2" aria-hidden="true" />
-                                분석 비용 전액 환급 완료
+                                {labelText("분석 비용 전액 환급 완료")}
                             </p>
                             <p className="mt-1 text-xs font-bold leading-5 text-emerald-800">{refundNotice}</p>
                         </div>
@@ -1915,10 +1913,10 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                         >
                             <p className="text-sm font-black">
                                 <i className="fa-solid fa-circle-notch fa-spin mr-2" aria-hidden="true" />
-                                분석 요청을 안전하게 보내고 있어요
+                                {labelText("분석 요청을 안전하게 보내고 있어요")}
                             </p>
                             <p className="mt-1 text-xs font-bold leading-5 text-sky-800">
-                                영상과 소리를 확인할 준비를 하고 있습니다.
+                                {labelText("영상과 소리를 확인할 준비를 하고 있습니다.")}
                             </p>
                         </div>
                     )}
@@ -1931,7 +1929,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                         >
                             <p className="text-sm font-black">
                                 <i className="fa-solid fa-wand-magic-sparkles mr-2 text-indigo-600" aria-hidden="true" />
-                                분석은 자동으로 계속되고 있어요
+                                {labelText("분석은 자동으로 계속되고 있어요")}
                             </p>
                             <p className="mt-1 text-xs font-bold leading-5 text-indigo-800">
                                 {deferredNotice || "완료된 결과는 분석 기록에서 확인할 수 있습니다."}
@@ -1947,26 +1945,25 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                             : phase === "recording" ? `${PET_OBSERVATION_RECORDING_SECONDS}초 관찰 영상을 녹화하는 중입니다.` : ""}
                     </span>
                     <p className="lab-obs-note text-[11px] font-bold leading-5 text-neutral-500">
-                        연결 뒤 모바일 전·후면 카메라나 PC 웹캠·마이크가 여러 개면 직접 바꿀 수 있어요.
-                        실시간 촬영의 1차 품질 스캔은 기기 안에서만 처리하며 업로드 영상에는 적용하지 않습니다.{" "}
-                        실시간 촬영이 안 되는 브라우저에서는 {" "}
-                        <span className="whitespace-nowrap">{PET_OBSERVATION_MIN_DURATION_SECONDS}~{PET_OBSERVATION_MAX_DURATION_SECONDS}초</span>{" "}
-                        WebM·MP4·MOV 영상을 선택할 수 있으며 최대 {" "}
-                        <span className="whitespace-nowrap">{PET_OBSERVATION_MAX_FILE_MB}MB</span>입니다.
+                        {labelText("연결 뒤 모바일 전·후면 카메라나 PC 웹캠·마이크가 여러 개면 직접 바꿀 수 있어요.\n                        실시간 촬영의 1차 품질 스캔은 기기 안에서만 처리하며 업로드 영상에는 적용하지 않습니다.")}{" "}
+                        {labelText("실시간 촬영이 안 되는 브라우저에서는")} {" "}
+                        <span className="whitespace-nowrap">{PET_OBSERVATION_MIN_DURATION_SECONDS}~{PET_OBSERVATION_MAX_DURATION_SECONDS}{labelText("초")}</span>{" "}
+                        {labelText("WebM·MP4·MOV 영상을 선택할 수 있으며 최대")} {" "}
+                        <span className="whitespace-nowrap">{PET_OBSERVATION_MAX_FILE_MB}MB</span>{labelText("입니다.")}
                     </p>
                 </div>
 
                 <div className="lab-obs-info grid h-fit gap-4 rounded-2xl border border-neutral-200 bg-white p-4">
-                    <span className="lab-pane-head lab-pane-head-info hidden" aria-hidden="true"><b>2</b>촬영 상황 알려 주기</span>
+                    <span className="lab-pane-head lab-pane-head-info hidden" aria-hidden="true"><b>2</b>{labelText("촬영 상황 알려 주기")}</span>
                     <label className="lab-obs-situation-select">
-                        <span className="mb-1.5 block text-xs font-black text-neutral-600">촬영 당시 상황</span>
+                        <span className="mb-1.5 block text-xs font-black text-neutral-600">{labelText("촬영 당시 상황")}</span>
                         <select value={situation} onChange={(event) => setSituation(event.target.value as PetObservationSituation)} className="input w-full" disabled={busy}>
-                            {SITUATIONS.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}
+                            {SITUATIONS.map((item) => <option key={item.value} value={item.value}>{labelText(item.label)}</option>)}
                         </select>
                     </label>
                     {/* 웹 연구소 페이지 전용 — 같은 상황 고르기를 알약으로(기존 setSituation 그대로) */}
                     <div className="lab-obs-situations hidden">
-                        <span className="lab-obs-label" id="lab-obs-situation-label">촬영 당시 상황</span>
+                        <span className="lab-obs-label" id="lab-obs-situation-label">{labelText("촬영 당시 상황")}</span>
                         <div className="lab-obs-pills" role="group" aria-labelledby="lab-obs-situation-label">
                             {SITUATIONS.map((item) => (
                                 <button
@@ -1977,7 +1974,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                                     onClick={() => setSituation(item.value)}
                                     className={situation === item.value ? "is-on" : ""}
                                 >
-                                    {item.label}
+                                    {labelText(item.label)}
                                 </button>
                             ))}
                         </div>
@@ -1992,15 +1989,15 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                     >
                         <div className="flex flex-wrap items-start justify-between gap-2">
                             <div>
-                                <p className="text-xs font-black text-neutral-800">대상견 선택</p>
+                                <p className="text-xs font-black text-neutral-800">{labelText("대상견 선택")}</p>
                                 <p className="mt-1 text-[11px] font-bold leading-5 text-neutral-600">
-                                    혼자 보이면 선택 없이 분석해도 돼요. 여러 마리면 얼굴보다 가슴·몸통 중앙을 콕 찍어 주세요.
+                                    {labelText("혼자 보이면 선택 없이 분석해도 돼요. 여러 마리면 얼굴보다 가슴·몸통 중앙을 콕 찍어 주세요.")}
                                 </p>
                             </div>
                             <span className={`rounded-full px-2.5 py-1 text-[10px] font-black ${
                                 targetSelectionReady ? "bg-white text-emerald-700" : "bg-white text-amber-700"
                             }`}>
-                                {targetSelectionReady ? "지정됨" : "혼자면 생략 가능"}
+                                {labelText(targetSelectionReady ? "지정됨" : "혼자면 생략 가능")}
                             </span>
                         </div>
                         <p className="mt-2 text-[11px] font-bold leading-5 text-neutral-700" data-daenglab-target-anchor-summary>
@@ -2014,7 +2011,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                                 className="rounded-xl border border-white bg-white px-2 py-2 text-[10px] font-black text-neutral-700 shadow-sm disabled:opacity-50"
                                 data-daenglab-target-anchor-action
                             >
-                                왼쪽 몸통
+                                {labelText("왼쪽 몸통")}
                             </button>
                             <button
                                 type="button"
@@ -2023,7 +2020,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                                 className="rounded-xl border border-white bg-white px-2 py-2 text-[10px] font-black text-neutral-700 shadow-sm disabled:opacity-50"
                                 data-daenglab-target-anchor-action
                             >
-                                가운데 몸통
+                                {labelText("가운데 몸통")}
                             </button>
                             <button
                                 type="button"
@@ -2032,7 +2029,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                                 className="rounded-xl border border-white bg-white px-2 py-2 text-[10px] font-black text-neutral-700 shadow-sm disabled:opacity-50"
                                 data-daenglab-target-anchor-action
                             >
-                                오른쪽 몸통
+                                {labelText("오른쪽 몸통")}
                             </button>
                         </div>
                         <div className="mt-2 grid gap-1.5 sm:grid-cols-2">
@@ -2043,7 +2040,7 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                                 className="rounded-xl border border-emerald-500 bg-emerald-600 px-3 py-2 text-[11px] font-black text-white shadow-sm disabled:opacity-50"
                                 data-daenglab-single-dog-auto
                             >
-                                한 마리만 보여요 · 콕 없이 분석
+                                {labelText("한 마리만 보여요 · 콕 없이 분석")}
                             </button>
                             <button
                                 type="button"
@@ -2052,17 +2049,17 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                                 className="rounded-xl border border-neutral-100 bg-white px-3 py-2 text-[11px] font-black text-neutral-500 shadow-sm disabled:opacity-40"
                                 data-daenglab-clear-target-anchor
                             >
-                                대상 지정 다시 하기
+                                {labelText("대상 지정 다시 하기")}
                             </button>
                         </div>
                     </div>
                     <label>
-                        <span className="mb-1.5 block text-xs font-black text-neutral-600">분석할 아이 구분 · 직전에 있었던 일</span>
+                        <span className="mb-1.5 block text-xs font-black text-neutral-600">{labelText("분석할 아이 구분 · 직전에 있었던 일")}</span>
                         <textarea
                             value={note}
                             onChange={(event) => setNote(event.target.value.slice(0, 300))}
                             className="input min-h-24 w-full resize-y py-3"
-                            placeholder="예: 화면 왼쪽 빨간 목줄의 갈색 푸들이 대상이에요. 초인종 뒤 짖기 시작했어요."
+                            placeholder={labelText("예: 화면 왼쪽 빨간 목줄의 갈색 푸들이 대상이에요. 초인종 뒤 짖기 시작했어요.")}
                             disabled={busy}
                         />
                         <span className="mt-1 block text-right text-[10px] font-bold text-neutral-400">{note.length}/300</span>
@@ -2077,16 +2074,12 @@ export default function PetLensObservationExperience({ pet, petProfileId, access
                             className="mt-0.5 h-4 w-4 shrink-0"
                         />
                         <span id="daenglab-observation-consent-description" className="text-[11px] font-bold leading-5 text-neutral-700">
-                            촬영한 영상·음성과 반려견 정보가 보안 연결로 전송되고, 대기·분석 중 암호화되어 임시 보관되는 데 동의합니다.
-                            여러 강아지가 함께 보이면 선택한 반려견의 등록 사진 최대 2장과 털색을 대상 구분에만 함께 참고합니다.
-                            원본은 분석 완료·취소·임시 보관기간 만료 시 삭제되며, 요청을 보낸 뒤 브라우저에서도 비웁니다.{" "}
-                            <Link href="/privacy#overseas" className="underline underline-offset-2">개인정보 처리 자세히 보기</Link>
+                            {labelText("촬영한 영상·음성과 반려견 정보가 보안 연결로 전송되고, 대기·분석 중 암호화되어 임시 보관되는 데 동의합니다.\n                            여러 강아지가 함께 보이면 선택한 반려견의 등록 사진 최대 2장과 털색을 대상 구분에만 함께 참고합니다.\n                            원본은 분석 완료·취소·임시 보관기간 만료 시 삭제되며, 요청을 보낸 뒤 브라우저에서도 비웁니다.")}{" "}
+                            <Link href="/privacy#overseas" className="underline underline-offset-2">{labelText("개인정보 처리 자세히 보기")}</Link>
                         </span>
                     </label>
                     <div className="lab-obs-fine rounded-xl bg-neutral-50 p-3 text-[10px] font-bold leading-5 text-neutral-500">
-                        사람의 얼굴·대화와 집 안 개인정보가 담기지 않게 촬영해 주세요. 사람·고양이·다른 강아지가 함께 있으면 분리를 시도하지만, 주체가 불확실한 신호는 결과에서 제외합니다.
-                        이 기능은 진단이 아니며 영상 추론 결과는 제품 추천에 직접 자동 반영되지 않습니다.
-                        영양식 비교는 등록 프로필과 보호자가 선택한 활동 맥락을 기준으로만 제공됩니다.
+                        {labelText("사람의 얼굴·대화와 집 안 개인정보가 담기지 않게 촬영해 주세요. 사람·고양이·다른 강아지가 함께 있으면 분리를 시도하지만, 주체가 불확실한 신호는 결과에서 제외합니다.\n                        이 기능은 진단이 아니며 영상 추론 결과는 제품 추천에 직접 자동 반영되지 않습니다.\n                        영양식 비교는 등록 프로필과 보호자가 선택한 활동 맥락을 기준으로만 제공됩니다.")}
                     </div>
                 </div>
             </div>

@@ -15,6 +15,7 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import Image from "next/image";
 import { useCallback, useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
@@ -53,6 +54,7 @@ export default function PurchaseConfirmModal({
     onConfirm?: () => Promise<void>;
     onClose: () => void;
 }) {
+    const { menuLabel: labelText } = useI18n();
     const [phase, setPhase] = useState<Phase>("ready");
     const titleId = useId();
     const closeRef = useRef<HTMLButtonElement>(null);
@@ -97,42 +99,42 @@ export default function PurchaseConfirmModal({
                     </span>
                     <div className="ddb-pf-titles">
                         <p className="ddb-pf-kicker">PURCHASE CONFIRM</p>
-                        <h2 id={titleId}><span className="ddb-pf-name">{done ? "구매가 확정되었어요" : "구매 확정"}</span></h2>
-                        <p className="ddb-pf-sub">{done ? "이용해 주셔서 고마워요. 우리 아이와 즐거운 시간 보내세요!" : "상품을 잘 받으셨나요? 확인하셨다면 구매를 확정해 주세요."}</p>
+                        <h2 id={titleId}><span className="ddb-pf-name">{labelText(done ? "구매가 확정되었어요" : "구매 확정")}</span></h2>
+                        <p className="ddb-pf-sub">{labelText(done ? "이용해 주셔서 고마워요. 우리 아이와 즐거운 시간 보내세요!" : "상품을 잘 받으셨나요? 확인하셨다면 구매를 확정해 주세요.")}</p>
                     </div>
-                    <button ref={closeRef} type="button" className="ddb-pf-close" onClick={close} aria-label="구매 확정 닫기">
+                    <button ref={closeRef} type="button" className="ddb-pf-close" onClick={close} aria-label={labelText("구매 확정 닫기")}>
                         <i className="fa-solid fa-xmark" aria-hidden="true" />
                     </button>
                 </header>
 
                 <div className="ddb-pf-body">
-                    {preview && <p className="ddb-oc-preview"><i className="fa-solid fa-eye" aria-hidden="true" />미리보기 · 실제로 확정되지 않아요</p>}
+                    {preview && <p className="ddb-oc-preview"><i className="fa-solid fa-eye" aria-hidden="true" />{labelText("미리보기 · 실제로 확정되지 않아요")}</p>}
 
                     {/* 주문 표 */}
-                    <section className="ddb-oh-ticket" aria-label="확정할 주문">
+                    <section className="ddb-oh-ticket" aria-label={labelText("확정할 주문")}>
                         <span className="ddb-oh-thumb" aria-hidden="true">
                             {order.image ? <Image src={order.image} alt="" width={72} height={72} /> : <i className="fa-solid fa-box-open" />}
                         </span>
                         <div className="ddb-oh-info">
-                            <p className="ddb-oh-tag">{done ? "확정된 주문" : "이 주문을 확정해요"}</p>
+                            <p className="ddb-oh-tag">{labelText(done ? "확정된 주문" : "이 주문을 확정해요")}</p>
                             <strong>{order.orderName}</strong>
                             <span className="ddb-oh-meta">{order.dateLabel} · {order.amountLabel}</span>
                         </div>
                         <div className="ddb-oh-side">
                             <span className="ddb-oh-status">{done ? "구매 확정" : order.statusLabel}</span>
-                            <span className="ddb-oh-no"><em>주문번호</em>{order.orderId}</span>
+                            <span className="ddb-oh-no"><em>{labelText("주문번호")}</em>{order.orderId}</span>
                         </div>
                     </section>
 
                     {/* 상품 목록 */}
-                    <ul className="ddb-oc-lines" aria-label="주문 상품">
+                    <ul className="ddb-oc-lines" aria-label={labelText("주문 상품")}>
                         {lines.map((line, index) => (
                             <li key={`${line.name}-${line.option ?? ""}-${index}`}>
                                 <span className="ddb-oc-thumb" aria-hidden="true">
                                     {line.image ? <Image src={line.image} alt="" width={52} height={52} /> : <i className="fa-solid fa-box-open" />}
                                 </span>
                                 <span className="ddb-oc-name"><b>{line.name}</b>{line.option ? <small>{line.option}</small> : null}</span>
-                                <em>{line.qty}개</em>
+                                <em>{line.qty}{labelText("개")}</em>
                             </li>
                         ))}
                     </ul>
@@ -143,8 +145,8 @@ export default function PurchaseConfirmModal({
                             {/* eslint-disable-next-line @next/next/no-img-element -- 작은 3D 그림 */}
                             <img src="/images/ui/web-cs-step-refund-done-256.webp" alt="" aria-hidden="true" />
                             <div>
-                                <h3>구매 확정 완료</h3>
-                                <p>{rewardPoints ? `적립금 ${rewardPoints.toLocaleString("ko-KR")}P가 지급되었어요. ` : ""}확정한 주문은 주문 내역에서 언제든 다시 볼 수 있어요.</p>
+                                <h3>{labelText("구매 확정 완료")}</h3>
+                                <p>{rewardPoints ? `적립금 ${rewardPoints.toLocaleString("ko-KR")}P가 지급되었어요. ` : ""}{labelText("확정한 주문은 주문 내역에서 언제든 다시 볼 수 있어요.")}</p>
                             </div>
                         </section>
                     ) : (
@@ -153,24 +155,24 @@ export default function PurchaseConfirmModal({
                             {/* eslint-disable-next-line @next/next/no-img-element -- 작은 3D 그림 */}
                             <img src="/images/ui/policy-reward-192.webp" alt="" aria-hidden="true" />
                             <div>
-                                <h3>확정 전에 확인해 주세요</h3>
+                                <h3>{labelText("확정 전에 확인해 주세요")}</h3>
                                 <p>
-                                    구매를 확정하면 교환 · 반품 접수가 어려워요. 상품 상태와 구성품을 한 번 더 확인해 주세요.
+                                    {labelText("구매를 확정하면 교환 · 반품 접수가 어려워요. 상품 상태와 구성품을 한 번 더 확인해 주세요.")}
                                     {rewardPoints ? ` 확정하면 적립금 ${rewardPoints.toLocaleString("ko-KR")}P를 드려요.` : ""}
                                 </p>
                             </div>
                         </section>
                     )}
-                    {phase === "error" && <p className="ddb-oc-error" role="alert"><i className="fa-solid fa-circle-exclamation" aria-hidden="true" />구매 확정을 마치지 못했어요. 잠시 뒤 다시 시도해 주세요.</p>}
+                    {phase === "error" && <p className="ddb-oc-error" role="alert"><i className="fa-solid fa-circle-exclamation" aria-hidden="true" />{labelText("구매 확정을 마치지 못했어요. 잠시 뒤 다시 시도해 주세요.")}</p>}
                 </div>
 
                 <footer className="ddb-pf-foot">
-                    <p className="ddb-pf-hint"><i className="fa-solid fa-paw" aria-hidden="true" />{done ? "후기를 남겨 주시면 다른 보호자에게 큰 도움이 돼요." : "확정 후에는 되돌릴 수 없어요."}</p>
+                    <p className="ddb-pf-hint"><i className="fa-solid fa-paw" aria-hidden="true" />{labelText(done ? "후기를 남겨 주시면 다른 보호자에게 큰 도움이 돼요." : "확정 후에는 되돌릴 수 없어요.")}</p>
                     {done ? (
-                        <button type="button" className="ddb-pf-save" onClick={onClose}>확인</button>
+                        <button type="button" className="ddb-pf-save" onClick={onClose}>{labelText("확인")}</button>
                     ) : (
                         <>
-                            <button type="button" className="ddb-pf-cancel" onClick={close} disabled={phase === "saving"}>닫기</button>
+                            <button type="button" className="ddb-pf-cancel" onClick={close} disabled={phase === "saving"}>{labelText("닫기")}</button>
                             <button type="button" className="ddb-pf-save" onClick={confirm} disabled={phase === "saving"}>
                                 <i className="fa-solid fa-circle-check" aria-hidden="true" />{phase === "saving" ? "확정하는 중…" : phase === "error" ? "다시 시도하기" : "구매 확정하기"}
                             </button>

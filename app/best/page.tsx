@@ -6,6 +6,7 @@
  * 그 전까지는 판매 순위가 아니라는 안내를 늘 함께 보여 준다. 제품군마다 카드 다섯 장: 1~3위 + 같은 제품군 추천 2개(2026-10-22 사용자).
  * 꾸밈 CSS 는 app/globals.css 의 .ddb-hotpick-page(웹 크레파스 결).
  */
+import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
 import type { Metadata } from "next";
 import { HOT_PICK_GROUPS, pickHotPickRecommended, pickHotPickTopThree } from "@/lib/catalog/hot-picks";
 import LocalizedText from "@/components/i18n/LocalizedText";
@@ -42,13 +43,13 @@ export default function BestPage() {
             <header className="ddb-hotpick-head">
                 <div className="ddb-pl-head">
                     <div className="ddb-pl-titlebox">
-                        <LocalizedText as="h1" ko="댕다방 핫픽" en="DaengDaBang Hot Picks" className="ddb-pl-title" />
-                        <span className="ddb-pl-count">제품군 {groups.length}곳 · 1~3위 + 추천</span>
+                        <LocalizedText as="h1" ko="댕다방 핫픽" en="댕다방 Hot Picks" className="ddb-pl-title" />
+                        <span className="ddb-pl-count"><LocalizedMenuLabel label={"제품군"} /> {groups.length}<LocalizedMenuLabel label={"곳 · 1~3위 + 추천"} /></span>
                     </div>
                 </div>
                 <p className="ddb-hotpick-note">
                     <i className="fa-solid fa-circle-info" aria-hidden="true" />
-                    지금은 판매 집계 연결 전이라 운영자가 고른 임시 순서이며, 판매량 순위가 아닙니다.
+                    <LocalizedMenuLabel label={"지금은 판매 집계 연결 전이라 운영자가 고른 임시 순서이며, 판매량 순위가 아닙니다."} />
                 </p>
             </header>
 
@@ -60,19 +61,19 @@ export default function BestPage() {
                             <Image src={group.icon} alt="" width={40} height={40} aria-hidden="true" />
                             <LocalizedText as="h2" ko={group.ko} en={group.en} className="ddb-hotpick-group-title" />
                             <Link href={`/category/${group.slug}`} className="ddb-hotpick-more">
-                                전체 보기 <i className="fa-solid fa-arrow-right text-[9px]" aria-hidden="true" />
+                                <LocalizedMenuLabel label={"전체 보기"} /> <i className="fa-solid fa-arrow-right text-[9px]" aria-hidden="true" />
                             </Link>
                         </div>
                         <ol className="ddb-hotpick-row">
                             {top.map((product, index) => (
                                 <li key={product.id} className="ddb-hotpick-item">
-                                    <span className={`ddb-hotpick-rank ${RANK_CLASS[index]}`}>{index + 1}위</span>
+                                    <span className={`ddb-hotpick-rank ${RANK_CLASS[index]}`}>{index + 1}<LocalizedMenuLabel label={"위"} /></span>
                                     <ProductCard product={product} rankStyle="off" />
                                 </li>
                             ))}
                             {picks.map((product) => (
                                 <li key={product.id} className="ddb-hotpick-item">
-                                    <span className="ddb-hotpick-rank is-pick">추천</span>
+                                    <span className="ddb-hotpick-rank is-pick"><LocalizedMenuLabel label={"추천"} /></span>
                                     <ProductCard product={product} rankStyle="off" />
                                 </li>
                             ))}

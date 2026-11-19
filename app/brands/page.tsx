@@ -1,3 +1,4 @@
+import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { CATALOG, CATEGORY_LABEL, listBrands } from "@/lib/catalog";
@@ -41,7 +42,7 @@ export default function BrandsPage() {
     return (
         <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-6" data-shop-web="brands">
             <p className="text-sm font-black text-indigo-700">BRANDS</p>
-            <h1 className="mt-2 text-3xl font-black tracking-tight text-neutral-950 md:text-4xl">브랜드</h1>
+            <h1 className="mt-2 text-3xl font-black tracking-tight text-neutral-950 md:text-4xl"><LocalizedMenuLabel label={"브랜드"} /></h1>
             <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {brands.map((brand) => {
                     const visual = brandStyle(brand.slug, brand.en);
@@ -61,7 +62,7 @@ export default function BrandsPage() {
                                     </span>
                                 </div>
                                 <div className="min-w-0 flex-1">
-                                    <h2 className="truncate text-lg font-black text-neutral-950">{brand.ko || brand.en}</h2>
+                                    <h2 className="truncate text-lg font-black text-neutral-950"><LocalizedMenuLabel label={brand.ko || brand.en} english={brand.en} /></h2>
                                     <p className="mt-1 truncate text-xs font-black uppercase text-neutral-500">{brand.en}</p>
                                 </div>
                                 <span className="flex h-9 min-w-9 shrink-0 items-center justify-center rounded-full bg-neutral-100 px-2 text-sm font-black text-neutral-700 transition group-hover:bg-neutral-950 group-hover:text-white">

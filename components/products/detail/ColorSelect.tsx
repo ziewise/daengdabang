@@ -8,10 +8,12 @@
  * 각각 배치해, 모바일에서 이미지와 색상 선택이 한 화면에 보이게 한다(위아래로 오갈 필요 없음).
  */
 
+import { useI18n } from "@/lib/i18n";
 import ProductColorImage from "@/components/products/ProductColorImage";
 import type { ProductColor } from "@/lib/catalog";
 
 interface Props {
+    folder?: string;
     colors: ProductColor[];
     /** 선택 색상 인덱스(null=미선택) */
     colorIdx: number | null;
@@ -19,28 +21,29 @@ interface Props {
     className?: string;
 }
 
-export default function ColorSelect({ colors, colorIdx, onColorChange, className = "" }: Props) {
+export default function ColorSelect({ folder = "", colors, colorIdx, onColorChange, className = "" }: Props) {
+    const { locale, optionName } = useI18n();
     if (colors.length === 0) return null;
     return (
         <div data-pet-guide-target="color" className={`pd-colors rounded-lg border border-neutral-200 bg-neutral-50 p-4 ${className}`}>
             {/* 웹 전용 머리(K5 민트 띠 — 꾸밈은 app/product-detail-web.css) */}
-            <p className="hidden pd-colors-head" aria-hidden="true"><span>COLOR</span>색상 고르기 <b>{colors.length}</b></p>
+            <p className="hidden pd-colors-head" aria-hidden="true"><span>COLOR</span>{locale === "en" ? "Choose a color" : "색상 고르기"} <b>{colors.length}</b></p>
             <div className="flex flex-wrap gap-2">
                 {colors.map((c, i) => (
                     <button
                         key={`${c.name}-${i}`}
                         type="button"
                         onClick={() => onColorChange?.(i)}
-                        aria-label={c.name}
+                        aria-label={optionName(folder, c.name)}
                         aria-current={i === colorIdx}
-                        title={c.name}
+                        title={optionName(folder, c.name)}
                         className={`pd-chip relative h-11 w-11 overflow-hidden rounded-full transition ${
                             i === colorIdx
                                 ? "ring-2 ring-indigo-600 ring-offset-2"
                                 : "ring-1 ring-neutral-300 hover:ring-indigo-300"
                         }`}
                     >
-                        <ProductColorImage src={c.chip || c.image} color={c} alt={c.name} sizes="44px" className="object-cover" />
+                        <ProductColorImage src={c.chip || c.image} color={c} alt={optionName(folder, c.name)} sizes="44px" className="object-cover" />
                     </button>
                 ))}
             </div>

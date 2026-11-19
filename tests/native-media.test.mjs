@@ -31,3 +31,8 @@ test("native media preserves offline, absolute and inline resources", () => {
         assert.equal(nativeMediaUrl(value), value);
     }
 });
+
+test("social preview art uses the public share URL in the native app", () => {
+    assert.equal(nativeMediaUrl("/images/og-ai-platform-20260804-1200x630.png"),
+        "https://www.daengdabang.com/images/og-ai-platform-20260804-1200x630.png");
+});

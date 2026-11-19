@@ -7,21 +7,23 @@
  * 상품 자료는 이미 앱 안 쇼핑 화면이 쓰는 같은 자료(lib/catalog) — 서버에서 페이지를 받지 않아 빠르다.
  * 상품을 못 찾으면(없어진 상품 · 잘못된 주소) 앱 쇼핑 첫 화면으로 가는 안내만.
  */
+import { useI18n } from "@/lib/i18n";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import ProductDetailClient from "@/app/(shop)/product/[slug]/ProductDetailClient";
 import { findProduct } from "@/lib/shop";
 
 export default function AppProductDetail() {
+    const { menuLabel: labelText } = useI18n();
     const slug = (useSearchParams().get("p") || "").trim();
     const product = slug ? findProduct(slug) : undefined;
 
     if (!product) {
         return (
             <div className="mx-auto max-w-md px-6 py-16 text-center">
-                <p className="text-base font-bold text-neutral-700">상품을 찾지 못했어요.</p>
+                <p className="text-base font-bold text-neutral-700">{labelText("상품을 찾지 못했어요.")}</p>
                 <Link href="/app/sticker/shop/" className="mt-4 inline-block rounded-full bg-neutral-900 px-5 py-2.5 text-sm font-bold text-white">
-                    쇼핑으로 가기
+                    {labelText("쇼핑으로 가기")}
                 </Link>
             </div>
         );

@@ -7,6 +7,7 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
@@ -22,6 +23,7 @@ interface Props {
 }
 
 export default function PasswordChangeModal({ open, onClose }: Props) {
+    const { menuLabel: labelText } = useI18n();
     const { user, logout } = useAuth();
     const router = useRouter();
     const [current, setCurrent] = useState("");
@@ -110,13 +112,13 @@ export default function PasswordChangeModal({ open, onClose }: Props) {
                 <header className="flex items-center justify-between px-6 pt-5 pb-3 border-b border-neutral-100">
                     <h2 id="pw-modal-title" className="text-base font-extrabold flex items-center gap-2">
                         <i className="fa-solid fa-lock text-aurora-indigo" />
-                        비밀번호 변경
+                        {labelText("비밀번호 변경")}
                     </h2>
                     <button
                         type="button"
                         onClick={close}
                         className="w-9 h-9 rounded-full hover:bg-neutral-100 flex items-center justify-center"
-                        aria-label="닫기"
+                        aria-label={labelText("닫기")}
                     >
                         <i className="fa-solid fa-xmark" />
                     </button>
@@ -127,34 +129,34 @@ export default function PasswordChangeModal({ open, onClose }: Props) {
                         <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-success/15 text-success flex items-center justify-center text-2xl">
                             <i className="fa-solid fa-check" />
                         </div>
-                        <h3 className="text-base font-extrabold mb-1">비밀번호가 변경됐어요</h3>
+                        <h3 className="text-base font-extrabold mb-1">{labelText("비밀번호가 변경됐어요")}</h3>
                         <p className="text-xs text-neutral-500">
-                            보안을 위해 모든 세션을 종료하고 로그인 화면으로 이동합니다.
+                            {labelText("보안을 위해 모든 세션을 종료하고 로그인 화면으로 이동합니다.")}
                         </p>
                     </div>
                 ) : (
                     <form onSubmit={submit} className="px-6 py-5 space-y-3.5">
                         <Field
-                            label="현재 비밀번호"
+                            label={labelText("현재 비밀번호")}
                             value={current}
                             onChange={setCurrent}
-                            placeholder="현재 사용 중인 비밀번호"
+                            placeholder={labelText("현재 사용 중인 비밀번호")}
                             autoComplete="current-password"
                         />
                         <div className="h-px bg-neutral-100" />
                         <Field
-                            label="새 비밀번호"
+                            label={labelText("새 비밀번호")}
                             value={next}
                             onChange={setNext}
-                            placeholder="영문·숫자·특수문자 조합 8자 이상"
+                            placeholder={labelText("영문·숫자·특수문자 조합 8자 이상")}
                             autoComplete="new-password"
                             hint="추측 어려운 비밀번호일수록 좋아요"
                         />
                         <Field
-                            label="새 비밀번호 확인"
+                            label={labelText("새 비밀번호 확인")}
                             value={confirm}
                             onChange={setConfirm}
-                            placeholder="새 비밀번호 재입력"
+                            placeholder={labelText("새 비밀번호 재입력")}
                             autoComplete="new-password"
                         />
 
@@ -172,14 +174,14 @@ export default function PasswordChangeModal({ open, onClose }: Props) {
                                 disabled={submitting}
                                 className="py-3 rounded-xl bg-white border-2 border-neutral-200 hover:border-aurora-indigo text-foreground text-sm font-extrabold transition"
                             >
-                                취소
+                                {labelText("취소")}
                             </button>
                             <button
                                 type="submit"
                                 disabled={submitting}
                                 className="py-3 rounded-xl bg-gradient-to-r from-aurora-blue to-aurora-indigo text-white text-sm font-extrabold hover:opacity-90 transition disabled:cursor-not-allowed disabled:opacity-50"
                             >
-                                {submitting ? "변경 중…" : "변경하기"}
+                                {labelText(submitting ? "변경 중…" : "변경하기")}
                             </button>
                         </div>
 

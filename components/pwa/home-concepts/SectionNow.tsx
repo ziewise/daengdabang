@@ -10,6 +10,7 @@
  *  오류가 나면 분홍 메모 + "다시 시도"(웹 MemberAiDashboard 와 같음), 출근 버튼은 불러오기 전 · 찍는 중 잠김(웹 AttendanceStampCard 와 같음).
  */
 
+import { useI18n } from "@/lib/i18n";
 import { appLoginHref, appSignupHref } from "@/components/app-shell/appTabs";
 import Link from "@/components/app-shell/AppLink";
 import type { ReactNode, Ref } from "react";
@@ -38,6 +39,7 @@ export default function SectionNow({ cover, member, today, days, past, now, onSt
     onStamp: () => void; stampRef?: Ref<HTMLButtonElement>; signupRedirect: string;
     base?: string; // 시안 화면 주소 앞부분(예: /app/sticker) — 있으면 그 시안의 화면으로 이동
 }) {
+    const { menuLabel: labelText } = useI18n();
     const c = cover;
     const hrefOf = base ? `${base}/${c.key}/` : c.href;
     // 실제 데이터(배포 전 연결 2026-10-16) — 반려견 이름 · 진행 중인 댕주제 · 최근 주간 기록
@@ -50,13 +52,13 @@ export default function SectionNow({ cover, member, today, days, past, now, onSt
         return (
             <>
                 <Panel>
-                    <p className="ah-display text-[17px]" style={{ color: TEXT }}>로그인하고 오늘부터 출근해요</p>
-                    <p className="ah-light mt-1 text-[12.5px]" style={{ color: TEXT_SOFT }}>하루 한 번 출근도장을 찍으면 {today.dailyRewardCoins}코인, 오늘 할 일을 하면 XP가 쌓여요</p>
+                    <p className="ah-display text-[17px]" style={{ color: TEXT }}>{labelText("로그인하고 오늘부터 출근해요")}</p>
+                    <p className="ah-light mt-1 text-[12.5px]" style={{ color: TEXT_SOFT }}>{labelText("하루 한 번 출근도장을 찍으면")} {today.dailyRewardCoins}{labelText("코인, 오늘 할 일을 하면 XP가 쌓여요")}</p>
                 </Panel>
                 {/* 로그인 뒤 출근 화면으로 — 웹은 /treasure-mine/ 으로 돌아가고, 그 앱 화면이 매일 댕생활 */}
-                <Patch href={appLoginHref("/app/sticker/daily/")} className="mt-3"><span className="relative">로그인하고 출근하기</span><i aria-hidden="true" className="fa-solid fa-paw relative text-[14px] text-white/90" /></Patch>
+                <Patch href={appLoginHref("/app/sticker/daily/")} className="mt-3"><span className="relative">{labelText("로그인하고 출근하기")}</span><i aria-hidden="true" className="fa-solid fa-paw relative text-[14px] text-white/90" /></Patch>
                 <Link href={appSignupHref(signupRedirect)} className="ah-display mt-3 block text-center text-[13px]" style={{ color: "#ea4c7c" }}>
-                    처음이에요 · 가입하면 {SIGNUP_BONUS_COINS}코인 선물
+                    {labelText("처음이에요 · 가입하면")} {SIGNUP_BONUS_COINS}{labelText("코인 선물")}
                 </Link>
             </>
         );
@@ -66,8 +68,8 @@ export default function SectionNow({ cover, member, today, days, past, now, onSt
             <>
                 <Panel>
                     <div className="flex items-center justify-between">
-                        <span className="ah-display text-[14px]" style={{ color: TEXT }}>이번 주 출근도장</span>
-                        {member ? <span className="ah-display flex items-center gap-1 text-[12px] text-[#f2701f]"><i aria-hidden="true" className="fa-solid fa-fire text-[10px]" />{today.streak}일 연속</span> : null}
+                        <span className="ah-display text-[14px]" style={{ color: TEXT }}>{labelText("이번 주 출근도장")}</span>
+                        {member ? <span className="ah-display flex items-center gap-1 text-[12px] text-[#f2701f]"><i aria-hidden="true" className="fa-solid fa-fire text-[10px]" />{today.streak}{labelText("일 연속")}</span> : null}
                     </div>
                     <div className="mt-2.5"><PawWeek days={days} past={past} claimed={today.stamped} size={30} /></div>
                 </Panel>
@@ -75,14 +77,14 @@ export default function SectionNow({ cover, member, today, days, past, now, onSt
                 {today.error ? (
                     <div role="alert" className="st-postit mt-3 px-3 py-2.5" style={{ background: "#ffd6e2", rotate: "-0.6deg" }}>
                         <p className="ah-light text-[12px] leading-snug" style={{ color: TEXT }}>{today.error}</p>
-                        <Patch tone="cream" small onClick={today.reload} disabled={today.loading} className="mt-2">다시 시도</Patch>
+                        <Patch tone="cream" small onClick={today.reload} disabled={today.loading} className="mt-2">{labelText("다시 시도")}</Patch>
                     </div>
                 ) : null}
                 {!today.stamped ? (
                     // 웹 AttendanceStampCard 처럼 불러오기 전 · 찍는 중에는 누를 수 없음
                     <Patch ref={stampRef} onClick={onStamp} disabled={!today.ready || today.claiming} className="mt-3">
-                        <span className="relative">오늘 출근도장 찍기</span>
-                        <span className="ah-light relative rounded-full bg-white/25 px-2 py-0.5 text-[12px]">+{today.dailyRewardCoins} 코인</span>
+                        <span className="relative">{labelText("오늘 출근도장 찍기")}</span>
+                        <span className="ah-light relative rounded-full bg-white/25 px-2 py-0.5 text-[12px]">+{today.dailyRewardCoins} {labelText("코인")}</span>
                     </Patch>
                 ) : (
                     <ul className="mt-3 space-y-2">
@@ -102,10 +104,10 @@ export default function SectionNow({ cover, member, today, days, past, now, onSt
                                 </li>
                             );
                         })}
-                        {today.allDone ? <li className="ah-display text-center text-[13px] text-[#1f5f99]">오늘 돌봄 완료! 내일 새 도장까지 {untilTomorrow(now)}</li> : null}
+                        {today.allDone ? <li className="ah-display text-center text-[13px] text-[#1f5f99]">{labelText("오늘 돌봄 완료! 내일 새 도장까지")} {untilTomorrow(now)}</li> : null}
                     </ul>
                 )}
-                <MoreLink href={hrefOf} ink={c.tone.ink}>매일 댕생활 전체 보기</MoreLink>
+                <MoreLink href={hrefOf} ink={c.tone.ink}>{labelText("매일 댕생활 전체 보기")}</MoreLink>
             </>
         );
     }
@@ -113,20 +115,20 @@ export default function SectionNow({ cover, member, today, days, past, now, onSt
         return (
             <>
                 <Panel>
-                    <p className="ah-light text-[12.5px]" style={{ color: TEXT_SOFT }}>누구나 구경할 수 있어요</p>
-                    <p className="ah-display mt-1 text-[24px]" style={{ color: "#e0285f" }}>오늘의 댕자랑</p>
+                    <p className="ah-light text-[12.5px]" style={{ color: TEXT_SOFT }}>{labelText("누구나 구경할 수 있어요")}</p>
+                    <p className="ah-display mt-1 text-[24px]" style={{ color: "#e0285f" }}>{labelText("오늘의 댕자랑")}</p>
                 </Panel>
                 {/* 진행 중인 댕주제 — 실제(loadShowcaseTopic). 없으면 칸을 그리지 않음 */}
                 {topic.topic ? (
                     <Panel className="mt-2.5">
                         <div className="flex items-center justify-between">
-                            <span className="ah-light text-[12.5px]" style={{ color: TEXT_SOFT }}>오늘의 댕주제</span>
+                            <span className="ah-light text-[12.5px]" style={{ color: TEXT_SOFT }}>{labelText("오늘의 댕주제")}</span>
                             {topic.dday !== null ? <span className="ah-display rounded-full bg-[#ffe1ea] px-2 py-0.5 text-[12px] text-[#e0285f]">D-{topic.dday}</span> : null}
                         </div>
                         <p className="ah-display mt-1 text-[17px]" style={{ color: TEXT }}>&lsquo;{topic.topic.title}&rsquo;</p>
                     </Panel>
                 ) : null}
-                <Patch href={hrefOf} className="mt-3"><span className="relative">댕자랑 구경하기</span><i aria-hidden="true" className="fa-solid fa-paw relative text-[14px] text-white/90" /></Patch>
+                <Patch href={hrefOf} className="mt-3"><span className="relative">{labelText("댕자랑 구경하기")}</span><i aria-hidden="true" className="fa-solid fa-paw relative text-[14px] text-white/90" /></Patch>
             </>
         );
     }
@@ -138,11 +140,11 @@ export default function SectionNow({ cover, member, today, days, past, now, onSt
                 <p className="ah-light mt-1.5 text-[12.5px]" style={{ color: TEXT_SOFT }}>{member ? (latest ? `${latest.weekKey} 기록` : "매주 같은 방향으로 찍으면 달라진 점을 비교해 줘요") : "매주 남기면 달라진 점을 비교해 줘요"}</p>
             </Panel>
             <Panel className="mt-2.5 flex items-center justify-between">
-                <span className="ah-display text-[14px]" style={{ color: TEXT }}>행동·소리 분석</span>
+                <span className="ah-display text-[14px]" style={{ color: TEXT }}>{labelText("행동·소리 분석")}</span>
                 <span className="ah-light text-[12.5px]" style={{ color: "#8f5e12" }}>{member ? `${today.analysisCoinCost}코인 · ${Math.floor(today.coins / Math.max(1, today.analysisCoinCost))}회 가능` : `가입하면 ${SIGNUP_BONUS_COINS}코인`}</span>
             </Panel>
-            <Patch href={member ? "/my-pet/" : hrefOf} className="mt-3"><span className="relative">{member ? "이번 주 사진 남기기" : "예시 결과 보기"}</span></Patch>
-            <MoreLink href={hrefOf} ink={c.tone.ink}>댕다방 연구소 가기</MoreLink>
+            <Patch href={member ? "/my-pet/" : hrefOf} className="mt-3"><span className="relative">{labelText(member ? "이번 주 사진 남기기" : "예시 결과 보기")}</span></Patch>
+            <MoreLink href={hrefOf} ink={c.tone.ink}>{labelText("댕다방 연구소 가기")}</MoreLink>
         </>
     );
 }

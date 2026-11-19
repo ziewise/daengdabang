@@ -40,11 +40,12 @@ export function exactReviewRows<T extends ReviewRow>(row: T, rows: readonly T[])
     return url ? rows.filter(source => reviewSourceUrl(source.externalReviewUrl) === url) : [];
 }
 
-export function reviewSellerLabel(value: unknown): string {
+export function reviewSellerLabel(value: unknown, english = false): string {
     const url = reviewSourceUrl(value);
-    if (!url) return "외부 판매점";
+    if (!url) return english ? "External retailer" : "외부 판매점";
     const slug = new URL(url).pathname.split('/')[1];
     // 2026-10-26 사용자: 이름은 '네이버 댕다방 스토어', 판매자 표기 (주)내츄럴랩스는 그대로(스토어 회사 이름이 바뀌면 여기만)
+    if (english) return slug === "daengdabang" ? "댕다방 on Naver · Sold by Natural Labs Co., Ltd." : "Naver " + slug;
     return slug === 'daengdabang' ? '네이버 댕다방 스토어 · 판매자 (주)내츄럴랩스' : `네이버 ${slug}`;
 }
 

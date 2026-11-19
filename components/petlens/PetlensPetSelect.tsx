@@ -8,6 +8,7 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import type { PetProfile } from "@/lib/types";
 
 interface Props {
@@ -16,11 +17,12 @@ interface Props {
 }
 
 export default function PetlensPetSelect({ pets, onSelect }: Props) {
+    const { menuLabel: labelText } = useI18n();
     return (
         <>
-            <h3 className="text-lg font-extrabold mb-1.5">어떤 댕댕이의 펫렌즈를 진행할까요?</h3>
+            <h3 className="text-lg font-extrabold mb-1.5">{labelText("어떤 댕댕이의 펫렌즈를 진행할까요?")}</h3>
             <p className="text-xs text-neutral-500 mb-5">
-                선택하면 분석 결과가 해당 댕댕이의 펫렌즈 기록에 연결되어 맞춤 추천에 반영돼요.
+                {labelText("선택하면 분석 결과가 해당 댕댕이의 펫렌즈 기록에 연결되어 맞춤 추천에 반영돼요.")}
             </p>
 
             {/* 등록된 펫 카드 리스트 */}
@@ -60,7 +62,7 @@ export default function PetlensPetSelect({ pets, onSelect }: Props) {
                 className="w-full p-3 rounded-2xl border-2 border-dashed border-neutral-200 text-neutral-500 hover:border-aurora-indigo hover:text-aurora-indigo hover:bg-aurora-indigo/[0.04] transition text-xs font-bold"
             >
                 <i className="fa-solid fa-circle-question mr-1.5" />
-                연결 없이 분석만 진행 (펫 프로필 연결 X)
+                {labelText("연결 없이 분석만 진행 (펫 프로필 연결 X)")}
             </button>
         </>
     );

@@ -10,6 +10,7 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import MypageInquiryLink from "@/components/mypage/MypageInquiryLink";
@@ -29,6 +30,7 @@ type Props = {
 
 /** 켜기 단추(스위치) — 기존 체크 상자와 같은 값 */
 function Switch({ checked, disabled, label, onChange, tone = "mint" }: { checked: boolean; disabled: boolean; label: string; onChange: (next: boolean) => void; tone?: "mint" | "pink" }) {
+    const { menuLabel: labelText } = useI18n();
     return (
         <button
             type="button"
@@ -41,7 +43,7 @@ function Switch({ checked, disabled, label, onChange, tone = "mint" }: { checked
             onClick={() => onChange(!checked)}
         >
             <span className="rw-switch-track" aria-hidden="true"><span /></span>
-            <span className="rw-switch-text">{checked ? "켜짐" : "꺼짐"}</span>
+            <span className="rw-switch-text">{labelText(checked ? "켜짐" : "꺼짐")}</span>
         </button>
     );
 }
@@ -78,6 +80,7 @@ const INGREDIENTS = [
 ];
 
 export default function RecommendationWebView({ preferences, disabled, saving, pets, analysisHref, onSave }: Props) {
+    const { menuLabel: labelText } = useI18n();
     const on = preferences.enabled;
     const used = {
         profile: on && preferences.profileSignalsEnabled,
@@ -105,15 +108,15 @@ export default function RecommendationWebView({ preferences, disabled, saving, p
                         <Switch
                             checked={on}
                             disabled={disabled}
-                            label="맞춤 추천 전체"
+                            label={labelText("맞춤 추천 전체")}
                             tone="pink"
                             onChange={(next) => onSave({ enabled: next }, next ? "맞춤 추천을 켰습니다." : "맞춤 추천을 껐습니다.")}
                         />
-                        <span>맞춤 추천 전체 · 끄면 아래 선택과 관계없이 회원 정보를 쓰지 않아요</span>
+                        <span>{labelText("맞춤 추천 전체 · 끄면 아래 선택과 관계없이 회원 정보를 쓰지 않아요")}</span>
                     </div>
                 </div>
                 {/* 추천 재료 흐름 */}
-                <div className="rw-flow" aria-label="지금 추천에 쓰는 재료">
+                <div className="rw-flow" aria-label={labelText("지금 추천에 쓰는 재료")}>
                     <ol>
                         {INGREDIENTS.map((item, index) => (
                             <li key={item.key} data-tone={item.tone} className={used[item.key] ? "is-on" : ""}>
@@ -122,7 +125,7 @@ export default function RecommendationWebView({ preferences, disabled, saving, p
                                     {/* eslint-disable-next-line @next/next/no-img-element -- 작은 3D 그림 */}
                                     <img src={item.art} alt="" aria-hidden="true" />
                                 </span>
-                                <small>{item.title}</small>
+                                <small>{labelText(item.title)}</small>
                                 <em>{used[item.key] ? "쓰는 중" : item.key === "behavior" ? "준비 중" : "안 씀"}</em>
                             </li>
                         ))}
@@ -139,8 +142,8 @@ export default function RecommendationWebView({ preferences, disabled, saving, p
                 <header className="rw-sec-head">
                     <span className="rw-no">1</span>
                     <div>
-                        <h2 id="rw-ing-title">추천에 쓸 재료 고르기</h2>
-                        <p>켠 재료만 추천에 써요. 언제든 끄면 바로 빠져요.</p>
+                        <h2 id="rw-ing-title">{labelText("추천에 쓸 재료 고르기")}</h2>
+                        <p>{labelText("켠 재료만 추천에 써요. 언제든 끄면 바로 빠져요.")}</p>
                     </div>
                 </header>
                 <div className="rw-cards">
@@ -153,17 +156,17 @@ export default function RecommendationWebView({ preferences, disabled, saving, p
                                         {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                                         <img src={item.art} alt="" aria-hidden="true" />
                                     </span>
-                                    {item.key === "behavior" && <span className="rw-soon">준비 중</span>}
+                                    {item.key === "behavior" && <span className="rw-soon">{labelText("준비 중")}</span>}
                                 </div>
                                 <p className="rw-card-kicker">{item.kicker}</p>
-                                <h3>{item.title}</h3>
-                                <p className="rw-card-desc">{item.desc}</p>
-                                <ul className="rw-chips" aria-label="쓰는 정보">
+                                <h3>{labelText(item.title)}</h3>
+                                <p className="rw-card-desc">{labelText(item.desc)}</p>
+                                <ul className="rw-chips" aria-label={labelText("쓰는 정보")}>
                                     {item.chips.map((chip) => <li key={chip}>{chip}</li>)}
                                 </ul>
                                 <div className="rw-card-foot">
                                     {item.key === "behavior" ? (
-                                        <span className="rw-off">꺼짐 · 아직 사용하지 않아요</span>
+                                        <span className="rw-off">{labelText("꺼짐 · 아직 사용하지 않아요")}</span>
                                     ) : (
                                         <Switch
                                             checked={checked}
@@ -177,7 +180,7 @@ export default function RecommendationWebView({ preferences, disabled, saving, p
                                             )}
                                         />
                                     )}
-                                    {!on && item.key !== "behavior" && <span className="rw-paused">전체가 꺼져 있어 쓰지 않아요</span>}
+                                    {!on && item.key !== "behavior" && <span className="rw-paused">{labelText("전체가 꺼져 있어 쓰지 않아요")}</span>}
                                 </div>
                             </article>
                         );
@@ -190,12 +193,12 @@ export default function RecommendationWebView({ preferences, disabled, saving, p
                 <header className="rw-sec-head">
                     <span className="rw-no">2</span>
                     <div>
-                        <h2 id="rw-pet-title">먼저 추천받을 아이</h2>
-                        <p>홈과 전체 추천에서 먼저 보여줄 반려견이에요. 최근 분석 시각으로 자동으로 바뀌지 않아요.</p>
+                        <h2 id="rw-pet-title">{labelText("먼저 추천받을 아이")}</h2>
+                        <p>{labelText("홈과 전체 추천에서 먼저 보여줄 반려견이에요. 최근 분석 시각으로 자동으로 바뀌지 않아요.")}</p>
                     </div>
                 </header>
                 {pets.length > 0 ? (
-                    <div className="rw-pets" role="radiogroup" aria-label="기본 추천 반려견">
+                    <div className="rw-pets" role="radiogroup" aria-label={labelText("기본 추천 반려견")}>
                         {pets.map((pet) => {
                             const active = pet.apiProfileId === selectedId;
                             return (
@@ -216,7 +219,7 @@ export default function RecommendationWebView({ preferences, disabled, saving, p
                                         <b>{pet.name || "우리 아이"}</b>
                                         {pet.breed && <small>{pet.breed}</small>}
                                     </span>
-                                    <span className="rw-pet-mark" aria-hidden="true">{active ? <><i className="fa-solid fa-check" />기본</> : "고르기"}</span>
+                                    <span className="rw-pet-mark" aria-hidden="true">{active ? <><i className="fa-solid fa-check" />{labelText("기본")}</> : "고르기"}</span>
                                 </button>
                             );
                         })}
@@ -225,8 +228,8 @@ export default function RecommendationWebView({ preferences, disabled, saving, p
                     <div className="rw-empty">
                         {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                         <img src="/images/ui/stickers/my-pets.webp" alt="" aria-hidden="true" />
-                        <span>서버에 저장된 반려견 프로필이 없습니다.</span>
-                        <Link href="/mypage/#pet-profiles">프로필 등록하기</Link>
+                        <span>{labelText("서버에 저장된 반려견 프로필이 없습니다.")}</span>
+                        <Link href="/mypage/#pet-profiles">{labelText("프로필 등록하기")}</Link>
                     </div>
                 )}
             </section>
@@ -236,13 +239,13 @@ export default function RecommendationWebView({ preferences, disabled, saving, p
                 <header className="rw-sec-head">
                     <span className="rw-no">3</span>
                     <div>
-                        <h2 id="rw-data-title">내 데이터 확인 · 관리</h2>
-                        <p>추천 화면에서는 원문을 보여주지 않습니다. 각 화면에서 직접 확인하거나 수정할 수 있어요.</p>
+                        <h2 id="rw-data-title">{labelText("내 데이터 확인 · 관리")}</h2>
+                        <p>{labelText("추천 화면에서는 원문을 보여주지 않습니다. 각 화면에서 직접 확인하거나 수정할 수 있어요.")}</p>
                     </div>
                 </header>
                 <div className="rw-tiles">
-                    <Tile href="/mypage/#pet-profiles" art="/images/ui/stickers/my-pets.webp" title="반려견 프로필 수정" sub="체형 · 활동량 · 관심사" tone="mint" go="inside" />
-                    <Tile href={analysisHref} art="/images/ui/header-petlens-128.webp" title="분석 기록 확인" sub="펫렌즈 · 행동 분석 요약" tone="lav" go="inside" />
+                    <Tile href="/mypage/#pet-profiles" art="/images/ui/stickers/my-pets.webp" title={labelText("반려견 프로필 수정")} sub="체형 · 활동량 · 관심사" tone="mint" go="inside" />
+                    <Tile href={analysisHref} art="/images/ui/header-petlens-128.webp" title={labelText("분석 기록 확인")} sub="펫렌즈 · 행동 분석 요약" tone="lav" go="inside" />
                     <MypageInquiryLink
                         href="/inquiry/?category=other#inquiry-form"
                         className="rw-tile"
@@ -258,11 +261,11 @@ export default function RecommendationWebView({ preferences, disabled, saving, p
                             hint: "처리 결과는 입력한 이메일로 알려 드려요.",
                         }}
                     >
-                        <TileInner art="/images/ui/lab-summary-256.webp" title="분석 결과 삭제 요청" sub="이 창에서 바로 요청" />
+                        <TileInner art="/images/ui/lab-summary-256.webp" title={labelText("분석 결과 삭제 요청")} sub="이 창에서 바로 요청" />
                     </MypageInquiryLink>
-                    <Tile href="/privacy/" art="/images/ui/policy-info-192.webp" title="개인정보 처리 안내" sub="추천에 쓰는 정보 기준" tone="sky" />
+                    <Tile href="/privacy/" art="/images/ui/policy-info-192.webp" title={labelText("개인정보 처리 안내")} sub="추천에 쓰는 정보 기준" tone="sky" />
                 </div>
-                <p className="rw-consent"><i className="fa-solid fa-shield-heart" aria-hidden="true" />동의 기준: {preferences.consentVersion}</p>
+                <p className="rw-consent"><i className="fa-solid fa-shield-heart" aria-hidden="true" />{labelText("동의 기준:")} {preferences.consentVersion}</p>
             </section>
         </div>
     );

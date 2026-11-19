@@ -171,6 +171,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     return (
         <html
             lang="ko"
+            data-scroll-behavior="smooth"
             className="h-full antialiased"
             suppressHydrationWarning
         >

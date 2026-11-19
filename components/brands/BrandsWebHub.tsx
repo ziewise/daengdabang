@@ -12,6 +12,7 @@
  * 웹에서만 보임(기본 hidden, app/brands-web.css 가 웹에서 켬) — 앱은 기존 목록 그대로. 상태 없음(서버에서 그림).
  */
 
+import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
 import Image from "next/image";
 import Link from "next/link";
 import type { BrandVisual } from "@/lib/brand-visual";
@@ -58,14 +59,14 @@ export default function BrandsWebHub({ brands, productTotal, categoryTabs }: Pro
                 <div className="bwh-hero-text">
                     <p className="bwh-kicker">OUR BRANDS</p>
                     <h1>
-                        댕다방이 고른 브랜드 <em>{brands.length}곳</em>
+                        <LocalizedMenuLabel label={"댕다방이 고른 브랜드"} /> <em>{brands.length}<LocalizedMenuLabel label={"곳"} /></em>
                     </h1>
-                    <p className="bwh-lead">우리 아이의 하루에 꼭 맞는지 살펴보고 고른 브랜드예요. 무엇을 만드는 브랜드인지 선반별로 모아 두었어요.</p>
+                    <p className="bwh-lead"><LocalizedMenuLabel label={"우리 아이의 하루에 꼭 맞는지 살펴보고 고른 브랜드예요. 무엇을 만드는 브랜드인지 선반별로 모아 두었어요."} /></p>
                     <ul className="bwh-stats">
-                        <li><i className="fa-solid fa-tags" aria-hidden="true" /> 브랜드 <b>{brands.length}</b></li>
-                        <li><i className="fa-solid fa-box-open" aria-hidden="true" /> 상품 <b>{productTotal}</b></li>
+                        <li><i className="fa-solid fa-tags" aria-hidden="true" /> <LocalizedMenuLabel label={"브랜드"} /> <b>{brands.length}</b></li>
+                        <li><i className="fa-solid fa-box-open" aria-hidden="true" /> <LocalizedMenuLabel label={"상품"} /> <b>{productTotal}</b></li>
                         <li>
-                            <Link href="/brand-story/"><i className="fa-solid fa-heart" aria-hidden="true" /> 고르는 기준 보기</Link>
+                            <Link href="/brand-story/"><i className="fa-solid fa-heart" aria-hidden="true" /> <LocalizedMenuLabel label={"고르는 기준 보기"} /></Link>
                         </li>
                     </ul>
                 </div>
@@ -85,8 +86,8 @@ export default function BrandsWebHub({ brands, productTotal, categoryTabs }: Pro
                         <header className="bwh-shelf-head">
                             <Image src={`/images/ui/${look.art}`} alt="" width={64} height={64} />
                             <span>
-                                <h2 id={`bwh-shelf-${shelf.slug}`}>{shelf.label}</h2>
-                                <small>{look.line}</small>
+                                <h2 id={`bwh-shelf-${shelf.slug}`}><LocalizedMenuLabel label={shelf.label} /></h2>
+                                <small><LocalizedMenuLabel label={look.line} /></small>
                             </span>
                             <b className="bwh-shelf-count">{shelf.brands.length}</b>
                         </header>
@@ -95,7 +96,7 @@ export default function BrandsWebHub({ brands, productTotal, categoryTabs }: Pro
                                 <li key={brand.slug}>
                                     <Link href={`/brand/${brand.slug}`} className="bwh-card" style={{ ["--b-bg" as string]: brand.visual.bg, ["--b-fg" as string]: brand.visual.fg, ["--b-line" as string]: brand.visual.line }}>
                                         <span className="bwh-card-plate">{brand.visual.label ?? brand.en}</span>
-                                        <span className="bwh-card-name">{brand.ko || brand.en}</span>
+                                        <span className="bwh-card-name"><LocalizedMenuLabel label={brand.ko || brand.en} english={brand.en} /></span>
                                         <span className="bwh-card-count">{brand.count}</span>
                                     </Link>
                                 </li>

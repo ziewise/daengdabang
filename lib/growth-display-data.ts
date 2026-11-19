@@ -59,7 +59,7 @@ export const EXPANSION_CARDS: readonly ExpansionCard[] = [
     },
     {
         step: "04",
-        eyebrow: "DAENGDABANG STANDARD",
+        eyebrow: "댕다방 STANDARD",
         title: "생활 기본템과 멤버십",
         status: "기획 검토 중",
         statusTone: "border-amber-200 bg-amber-50 text-amber-900",

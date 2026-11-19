@@ -11,6 +11,7 @@
  * 꾸밈은 app/lab-web.css 7부(웹 data-lab-web 범위). 앱에서는 AppShell 이 앱 건강 변화 리포트 화면으로 보냄.
  */
 
+import { useI18n } from "@/lib/i18n";
 import { useEffect, useState } from "react";
 // 웹/앱 문구 갈림(웹은 해요체, 2026-10-26)
 import { useWebScreen } from "@/hooks/useWebScreen";
@@ -42,6 +43,7 @@ function Marks({ items, kind }: { items: string[]; kind: "new" | "same" | "gone"
 
 // 변화 일기 카드 한 장 — 왼쪽 칸: 제목 · 비교 한 줄 · 새로/계속/안 보임(비교 전이면 사진에서 본 것) · 방향 점, 오른쪽 칸: 케어
 function DiaryCard({ record, index }: { record: WeeklyPhotoAnalysisRecord; index: number }) {
+    const { menuLabel: labelText } = useI18n();
     const isNow = index === 0;
     const compared = record.comparison.status === "ready";
     return (
@@ -64,12 +66,12 @@ function DiaryCard({ record, index }: { record: WeeklyPhotoAnalysisRecord; index
                     <span className="hr-dots" aria-hidden="true">
                         {PETLENS_PHOTO_VIEWS.map((view) => <i key={view.id} className={record.viewIds.includes(view.id) ? "is-on" : ""} />)}
                     </span>
-                    {record.viewCount}방향{record.photoQualityLabel ? ` · ${record.photoQualityLabel}` : ""}
+                    {record.viewCount}{labelText("방향")}{record.photoQualityLabel ? ` · ${record.photoQualityLabel}` : ""}
                 </p>
             </div>
             {record.careActions.length > 0 && (
                 <div>
-                    <p className="hr-care-head">{isNow ? "이번 주 케어" : "그 주의 케어"}</p>
+                    <p className="hr-care-head">{labelText(isNow ? "이번 주 케어" : "그 주의 케어")}</p>
                     <ul className="hr-marks"><Marks items={record.careActions} kind="care" /></ul>
                 </div>
             )}
@@ -78,6 +80,7 @@ function DiaryCard({ record, index }: { record: WeeklyPhotoAnalysisRecord; index
 }
 
 export default function HealthReport() {
+    const { menuLabel: labelText } = useI18n();
     const { hydrated, user } = useAuth();
     // 웹 화면인가(웹은 해요체 문구)
     const webScreen = useWebScreen();
@@ -128,10 +131,10 @@ export default function HealthReport() {
         return (
             // 불러오는 중 — 앱은 원래 회색 글씨(wl-app), 웹은 3D 그림 + 해요체 쿠션(wl-card, daily-web.css data-web-loading)
             <main className="mx-auto grid min-h-[50vh] w-full max-w-[1280px] place-items-center px-4 py-10 text-sm font-black text-neutral-500" data-daily-web data-lab-web data-web-loading>
-                <span className="wl-app">건강 변화 리포트를 불러오는 중입니다.</span>
+                <span className="wl-app">{labelText("건강 변화 리포트를 불러오는 중입니다.")}</span>
                 <span className="hidden wl-card" role="status">
                     <Image src="/images/ui/menu-lab-report-128.webp" alt="" width={64} height={64} aria-hidden="true" />
-                    <span>건강 변화 리포트를 불러오고 있어요</span>
+                    <span>{labelText("건강 변화 리포트를 불러오고 있어요")}</span>
                 </span>
             </main>
         );
@@ -145,10 +148,10 @@ export default function HealthReport() {
                     <span className="dw-gate-art" aria-hidden="true">
                         <Image src="/images/ui/menu-lab-report-128.webp" alt="" width={150} height={150} priority />
                     </span>
-                    <h1 className="ddb-crayon-title dw-h2">{user ? "먼저 우리 아이를 등록해 주세요" : "건강 변화 리포트는 로그인 후 볼 수 있어요"}</h1>
-                    <p className="dw-sub">{user ? "프로필이 생기면 매주 찍은 사진의 변화가 이곳에 이어져요." : "매주 찍은 우리 아이 사진을 이어서, 무엇이 달라졌는지 정리해 드려요."}</p>
+                    <h1 className="ddb-crayon-title dw-h2">{labelText(user ? "먼저 우리 아이를 등록해 주세요" : "건강 변화 리포트는 로그인 후 볼 수 있어요")}</h1>
+                    <p className="dw-sub">{labelText(user ? "프로필이 생기면 매주 찍은 사진의 변화가 이곳에 이어져요." : "매주 찍은 우리 아이 사진을 이어서, 무엇이 달라졌는지 정리해 드려요.")}</p>
                     <Link href={user ? "/mypage/?profile=required#pet-profiles" : "/auth/login/?redirect=%2Fhealth-report"} className="ddb-crayon-link dw-pill dw-pill-main mt-6">
-                        {user ? "반려견 등록하기" : "로그인하기"}
+                        {labelText(user ? "반려견 등록하기" : "로그인하기")}
                     </Link>
                 </div>
             </main>
@@ -165,11 +168,11 @@ export default function HealthReport() {
             {/* 머리 판 — 이름표 · 제목 · 설명 · 아이 고르기(견종 그림 알약) · 리포트 그림 고리 */}
             <section className="dw-csheet is-mint hr-hero ddb-hero-band" aria-labelledby="hr-title">
                 <div className="min-w-0">
-                    <p className="ddb-crayon-kicker dw-kicker">DAENGDABANG LAB · HEALTH REPORT</p>
-                    <h1 id="hr-title" className="hr-title">{pet.name}의 <span className="ddb-crayon-underline">건강 변화 리포트</span></h1>
-                    <p className="hr-lead">매주 찍은 네 방향 사진을 이어서, 무엇이 새로 보이고 무엇이 그대로인지 정리했어요. 진단이 아니라 사진으로 본 변화예요.</p>
+                    <p className="ddb-crayon-kicker dw-kicker">댕다방 LAB · HEALTH REPORT</p>
+                    <h1 id="hr-title" className="hr-title">{pet.name}{labelText("의")} <span className="ddb-crayon-underline">{labelText("건강 변화 리포트")}</span></h1>
+                    <p className="hr-lead">{labelText("매주 찍은 네 방향 사진을 이어서, 무엇이 새로 보이고 무엇이 그대로인지 정리했어요. 진단이 아니라 사진으로 본 변화예요.")}</p>
                     {switchablePets.length > 1 && (
-                        <div className="hr-pets" role="group" aria-label="리포트를 볼 반려견">
+                        <div className="hr-pets" role="group" aria-label={labelText("리포트를 볼 반려견")}>
                             {switchablePets.map((item) => {
                                 const active = item.apiProfileId === pet.apiProfileId;
                                 const art = `${BREED_ART_ROOT}/${getPetBreedVisual(resolvePetBreedId(item.breed || "")).assetId}-poster.webp`;
@@ -194,12 +197,12 @@ export default function HealthReport() {
 
             {/* 변화 일기 — 최근 주가 맨 위 */}
             <section className="hr-diary-wrap" aria-labelledby="hr-diary-title">
-                <h2 id="hr-diary-title" className="hr-h2">변화 일기</h2>
-                <ul className="hr-legend" aria-label="점 색 안내">
-                    <li className="is-new">새로 보인 것</li>
-                    <li className="is-same">계속 보이는 것</li>
-                    <li className="is-gone">이번엔 안 보인 것</li>
-                    <li className="is-care">케어</li>
+                <h2 id="hr-diary-title" className="hr-h2">{labelText("변화 일기")}</h2>
+                <ul className="hr-legend" aria-label={labelText("점 색 안내")}>
+                    <li className="is-new">{labelText("새로 보인 것")}</li>
+                    <li className="is-same">{labelText("계속 보이는 것")}</li>
+                    <li className="is-gone">{labelText("이번엔 안 보인 것")}</li>
+                    <li className="is-care">{labelText("케어")}</li>
                 </ul>
 
                 {weeklyState.error && weeklyState.profileId === petProfileId && (
@@ -207,15 +210,15 @@ export default function HealthReport() {
                 )}
 
                 {loading ? (
-                    <p className="hr-note" role="status">{pet.name}의 주간 기록을 불러오는 중이에요.</p>
+                    <p className="hr-note" role="status">{pet.name}{labelText("의 주간 기록을 불러오는 중이에요.")}</p>
                 ) : records.length === 0 ? (
                     // 아직 기록 없음 — 우리 아이 기록의 이번 주 촬영으로
                     <div className="hr-empty">
                         <Image src="/images/ui/mypet-shutter-384.webp" alt="" width={120} height={120} aria-hidden="true" />
                         <div>
-                            <h3>아직 주간 사진 기록이 없어요</h3>
-                            <p>우리 아이 기록에서 이번 주 네 방향 사진을 찍으면, 여기에서 주마다 달라진 점을 이어 볼 수 있어요.</p>
-                            <Link href={`/my-pet/?profile=${pet.apiProfileId}#weekly-camera`} className="hr-link">이번 주 사진 찍으러 가기 →</Link>
+                            <h3>{labelText("아직 주간 사진 기록이 없어요")}</h3>
+                            <p>{labelText("우리 아이 기록에서 이번 주 네 방향 사진을 찍으면, 여기에서 주마다 달라진 점을 이어 볼 수 있어요.")}</p>
+                            <Link href={`/my-pet/?profile=${pet.apiProfileId}#weekly-camera`} className="hr-link">{labelText("이번 주 사진 찍으러 가기 →")}</Link>
                         </div>
                     </div>
                 ) : (
@@ -224,7 +227,7 @@ export default function HealthReport() {
                             <li key={record.id} className={`hr-entry ${index === 0 ? "is-now" : ""}`}>
                                 <p className="hr-when">
                                     <b>{shortDate(record.analyzedAt)}</b>
-                                    <small>{pageNumber(index)}쪽{index === 0 ? " · 최근" : ""}</small>
+                                    <small>{pageNumber(index)}{labelText("쪽")}{index === 0 ? " · 최근" : ""}</small>
                                 </p>
                                 <span className="hr-rail" aria-hidden="true"><i /></span>
                                 <DiaryCard record={record} index={index} />
@@ -234,13 +237,13 @@ export default function HealthReport() {
                 )}
 
                 {records.length === 1 && (
-                    <p className="hr-note">다음 주에 한 번 더 찍으면, 지난주와 비교한 변화가 여기에 이어져요.</p>
+                    <p className="hr-note">{labelText("다음 주에 한 번 더 찍으면, 지난주와 비교한 변화가 여기에 이어져요.")}</p>
                 )}
 
                 {/* 아래 링크 — 이번 주 촬영만(지난 쪽은 이 리포트가 같은 최근 8주를 이미 모두 보여 줌, 2026-10-23 사용자) */}
                 {records.length > 0 && (
                     <div className="hr-links">
-                        <Link href={`/my-pet/?profile=${pet.apiProfileId}#weekly-camera`} className="hr-link">이번 주 사진 찍으러 가기 →</Link>
+                        <Link href={`/my-pet/?profile=${pet.apiProfileId}#weekly-camera`} className="hr-link">{labelText("이번 주 사진 찍으러 가기 →")}</Link>
                     </div>
                 )}
             </section>

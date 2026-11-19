@@ -103,12 +103,13 @@ test("local photo/result cache stays device-private, versioned, bounded, and rea
 });
 
 test("native projects bind the same digest to NNAPI and Core ML providers", async () => {
-    const [android, androidActivity, androidBuild, ios, project, bridge, nativePrepare] = await Promise.all([
+    const [android, androidActivity, androidBuild, ios, project, iosRuntime, bridge, nativePrepare] = await Promise.all([
         source("android/app/src/main/java/com/daengdabang/app/OnDeviceTryOnPlugin.java"),
         source("android/app/src/main/java/com/daengdabang/app/MainActivity.java"),
         source("android/app/build.gradle"),
         source("ios/App/App/OnDeviceTryOnPlugin.swift"),
         source("ios/App/App.xcodeproj/project.pbxproj"),
+        source("ios/App/OnnxRuntime/Package.swift"),
         source("lib/on-device-tryon-native.ts"),
         source("scripts/prepare-native-web.mjs"),
     ]);
@@ -131,8 +132,9 @@ test("native projects bind the same digest to NNAPI and Core ML providers", asyn
     assert.match(ios, /appendCoreMLExecutionProvider/);
     assert.match(ios, /modelDigest/);
     assert.match(ios, /CGImageSourceCreateThumbnailAtIndex/);
-    assert.match(project, /onnxruntime-swift-package-manager/);
-    assert.match(project, /1\.24\.2/);
+    assert.match(project, /relativePath = OnnxRuntime/);
+    assert.match(iosRuntime, /pod-archive-onnxruntime-c-1\.24\.2\.zip/);
+    assert.match(iosRuntime, /f7100a992d2a8135168c8afd831e6a58b465349101982aa58b3e11d36e600b54/);
     assert.match(bridge, /registerPlugin<OnDeviceTryOnPlugin>/);
     assert.match(nativePrepare, /"ai\/tryon"/);
 });
@@ -169,9 +171,10 @@ test("native validation publishes an installable Android test APK", async () => 
         "the final screenshot must be captured after the rendered DOM check",
     );
     // 2026-10-18: 앱 시작(/app/index.html) 뒤 새 앱 홈(/app/home-1/)으로 가므로 확인 기준도 새 앱 홈
-    assert.match(webviewCheck, /expectedText = "댕다방에 오신 걸 환영해요"/);
+    assert.match(webviewCheck, /ko: "댕다방에 오신 걸 환영해요", en: "Welcome to 댕다방"/);
+    assert.match(webviewCheck, /lastState\.text\.includes\(homeGreetings\[lastState\.locale\]\)/);
     assert.match(webviewCheck, /expectedPath = "\/app\/home-1\/"/);
-    assert.match(webviewCheck, /lastState\.text\.includes\(expectedText\)/);
+    assert.match(webviewCheck, /locale: document\.documentElement\.lang/);
     assert.match(startupCheck, /adb exec-out screencap -p/);
     assert.match(startupCheck, /adb logcat -d -v threadtime --pid="\$app_pid"/);
     assert.match(startupCheck, /FATAL EXCEPTION/);

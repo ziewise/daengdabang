@@ -1,3 +1,4 @@
+import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -28,13 +29,12 @@ export default function CommerceCommunityExpansion() {
                 <header className="dw-section-head">
                     <p className="ddb-crayon-kicker dw-kicker">CARE TO COMMUNITY</p>
                     <h2 id="community-commerce-roadmap-title" className="ddb-crayon-title dw-h2 break-keep">
-                        돌봄 기록이 <span className="ddb-crayon-underline">좋은 발견</span>으로 이어지도록
+                        <LocalizedMenuLabel label={"돌봄 기록이"} /> <span className="ddb-crayon-underline"><LocalizedMenuLabel label={"좋은 발견"} /></span><LocalizedMenuLabel label={"으로 이어지도록"} />
                     </h2>
                     <p className="dw-sub">
-                        혼자 쓰는 AI 도구를 넘어, 서로의 경험에서 배우고 좋은 브랜드를 함께 발견하는 댕다방을 만들고 있어요.
-                        지금 이용할 수 있는 기능은 바로 연결하고, 준비 단계는 약속보다 진행 상태를 먼저 알려드립니다.
+                        <LocalizedMenuLabel label={"혼자 쓰는 AI 도구를 넘어, 서로의 경험에서 배우고 좋은 브랜드를 함께 발견하는 댕다방을 만들고 있어요.\n                        지금 이용할 수 있는 기능은 바로 연결하고, 준비 단계는 약속보다 진행 상태를 먼저 알려드립니다."} />
                     </p>
-                    <span className="dw-chip dw-chip-plain mt-4">운영 기능과 준비 기능을 구분해 안내해요</span>
+                    <span className="dw-chip dw-chip-plain mt-4"><LocalizedMenuLabel label={"운영 기능과 준비 기능을 구분해 안내해요"} /></span>
                 </header>
 
                 <ol className="dw-expansion-list grid gap-4 md:grid-cols-2 xl:grid-cols-4" aria-label="커뮤니티·콘텐츠·브랜드·기본템 확장 계획">
@@ -48,29 +48,29 @@ export default function CommerceCommunityExpansion() {
                                     </span>
                                     <div className="min-w-0">
                                         <p className="dw-eyebrow">{card.eyebrow}</p>
-                                        <h3 className="ddb-crayon-title dw-h3 break-keep">{card.title}</h3>
+                                        <h3 className="ddb-crayon-title dw-h3 break-keep"><LocalizedMenuLabel label={card.title} /></h3>
                                         <div className="mt-2 flex flex-wrap gap-1.5">
-                                            <span className={`rounded-full border px-2.5 py-1 text-[11px] font-black ${card.statusTone}`}>{card.status}</span>
+                                            <span className={`rounded-full border px-2.5 py-1 text-[11px] font-black ${card.statusTone}`}><LocalizedMenuLabel label={card.status} /></span>
                                             {card.activeFeature ? (
                                                 <span className="rounded-full border border-emerald-200 bg-white px-2.5 py-1 text-[11px] font-black text-emerald-800">
-                                                    {card.activeFeature}
+                                                    <LocalizedMenuLabel label={card.activeFeature} />
                                                 </span>
                                             ) : null}
                                         </div>
                                     </div>
                                 </div>
 
-                                <p className="dw-card-body break-keep">{card.description}</p>
+                                <p className="dw-card-body break-keep"><LocalizedMenuLabel label={card.description} /></p>
                                 <p className="dw-note break-keep">
                                     <i className="fa-solid fa-circle-info mr-1.5" aria-hidden="true" />
-                                    {card.guardrail}
+                                    <LocalizedMenuLabel label={card.guardrail} />
                                 </p>
 
                                 <Link
                                     href={card.href}
                                     className="ddb-motion-lift dw-pill dw-pill-sm dw-xcard-cta motion-reduce:transform-none motion-reduce:transition-none"
                                 >
-                                    {card.cta}
+                                    <LocalizedMenuLabel label={card.cta} />
                                     <i className="fa-solid fa-arrow-right ml-2 text-[10px] transition group-hover:translate-x-0.5 motion-reduce:transform-none motion-reduce:transition-none" aria-hidden="true" />
                                 </Link>
                             </article>
@@ -80,7 +80,7 @@ export default function CommerceCommunityExpansion() {
 
                 <p className="dw-banner-note">
                     <i className="fa-solid fa-shield-heart mt-0.5 shrink-0" aria-hidden="true" />
-                    준비 중인 기능은 일정·가격·혜택이 확정될 때 다시 안내하며, 관심등록만으로 구매나 유료 멤버십이 시작되지 않습니다.
+                    <LocalizedMenuLabel label={"준비 중인 기능은 일정·가격·혜택이 확정될 때 다시 안내하며, 관심등록만으로 구매나 유료 멤버십이 시작되지 않습니다."} />
                 </p>
             </div>
         </section>

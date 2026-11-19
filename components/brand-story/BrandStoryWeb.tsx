@@ -14,6 +14,7 @@
  *  ⑨ 마무리: 댕다방 강아지 · 큰 제목 · 알약 셋
  * 서버에서 그림(상태 없음). 링크는 모두 기존 페이지.
  */
+import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
 import Image from "next/image";
 import Link from "next/link";
 import { CATALOG, CATEGORY_LABEL, listBrands, type CategorySlug } from "@/lib/catalog";
@@ -60,24 +61,24 @@ export default function BrandStoryWeb() {
             {/* ① 머리 판 */}
             <section className="bsw-hero" aria-labelledby="bsw-title">
                 <div className="bsw-hero-text">
-                    <p className="bsw-kicker">DAENGDABANG BRAND STORY</p>
+                    <p className="bsw-kicker">댕다방 BRAND STORY</p>
                     <h1 id="bsw-title" className="bsw-hero-title">
                         {/* 2026-10-25 문구 교체(사용자 제공 문안) */}
-                        <span>좋은 하루는,</span>
-                        <span className="is-sub">우리 아이를 이해하는</span>
-                        <span className="is-sub"><em className="bsw-hl">선택</em>부터.</span>
+                        <span><LocalizedMenuLabel label={"좋은 하루는,"} /></span>
+                        <span className="is-sub"><LocalizedMenuLabel label={"우리 아이를 이해하는"} /></span>
+                        <span className="is-sub"><em className="bsw-hl"><LocalizedMenuLabel label={"선택"} /></em><LocalizedMenuLabel label={"부터."} /></span>
                     </h1>
-                    <p className="bsw-hero-lead">댕다방은 반려견의 일상과 특성을 먼저 생각하는 펫 큐레이션 쇼핑몰입니다. 신중하게 고른 상품과 AI 맞춤 안내를 통해, 보호자가 선택의 이유를 이해하고 우리 아이에게 맞는 제품을 고를 수 있도록 돕습니다.</p>
+                    <p className="bsw-hero-lead"><LocalizedMenuLabel label={"댕다방은 반려견의 일상과 특성을 먼저 생각하는 펫 큐레이션 쇼핑몰입니다. 신중하게 고른 상품과 AI 맞춤 안내를 통해, 보호자가 선택의 이유를 이해하고 우리 아이에게 맞는 제품을 고를 수 있도록 돕습니다."} /></p>
                     <div className="bsw-actions">
-                        <Link href="/products" className="bsw-pill is-pink">댕다방 셀렉션 둘러보기<i className="fa-solid fa-arrow-right" aria-hidden="true" /></Link>
-                        <a href="#bsw-standard" className="bsw-pill">댕다방의 선택 기준</a>
+                        <Link href="/products" className="bsw-pill is-pink"><LocalizedMenuLabel label={"댕다방 셀렉션 둘러보기"} /><i className="fa-solid fa-arrow-right" aria-hidden="true" /></Link>
+                        <a href="#bsw-standard" className="bsw-pill"><LocalizedMenuLabel label={"댕다방의 선택 기준"} /></a>
                     </div>
                     <ul className="bsw-scene-chips" aria-label="댕다방이 살피는 다섯 장면">
                         {SCENES.map((scene) => (
                             <li key={scene.slug} data-tone={scene.tone}>
                                 {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                                 <img src={`${UI}${scene.art}`} alt="" aria-hidden="true" />
-                                {CATEGORY_LABEL[scene.slug].split("/")[0]}
+                                <LocalizedMenuLabel label={CATEGORY_LABEL[scene.slug].split("/")[0]} />
                             </li>
                         ))}
                     </ul>
@@ -109,22 +110,22 @@ export default function BrandStoryWeb() {
                 <li data-tone="pink">
                     {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                     <img src={`${UI}shop-menu-all-128.webp`} alt="" aria-hidden="true" />
-                    <span><b>{CATALOG.length.toLocaleString("ko-KR")}<small>개</small></b>고른 상품</span>
+                    <span><b>{CATALOG.length.toLocaleString("ko-KR")}<small><LocalizedMenuLabel label={"개"} /></small></b><LocalizedMenuLabel label={"고른 상품"} /></span>
                 </li>
                 <li data-tone="sky">
                     {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                     <img src={`${UI}shop-menu-brand-128.webp`} alt="" aria-hidden="true" />
-                    <span><b>{brandCount}<small>곳</small></b>함께하는 브랜드</span>
+                    <span><b>{brandCount}<small><LocalizedMenuLabel label={"곳"} /></small></b><LocalizedMenuLabel label={"함께하는 브랜드"} /></span>
                 </li>
                 <li data-tone="mint">
                     {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                     <img src={`${UI}stickers/home-care.webp`} alt="" aria-hidden="true" />
-                    <span><b>5<small>가지</small></b>생활 장면</span>
+                    <span><b>5<small><LocalizedMenuLabel label={"가지"} /></small></b><LocalizedMenuLabel label={"생활 장면"} /></span>
                 </li>
                 <li data-tone="yellow">
                     {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                     <img src={`${UI}find-basics-256.webp`} alt="" aria-hidden="true" />
-                    <span><b>4<small>가지</small></b>선택 기준</span>
+                    <span><b>4<small><LocalizedMenuLabel label={"가지"} /></small></b><LocalizedMenuLabel label={"선택 기준"} /></span>
                 </li>
             </ul>
 
@@ -133,7 +134,7 @@ export default function BrandStoryWeb() {
                 <div className="bsw-bubble-wrap">
                     <blockquote className="bsw-bubble">
                         <span className="bsw-bubble-mark" aria-hidden="true">“</span>
-                        우리 아이에게도<br /><em className="bsw-hl">잘 맞을까?</em>
+                        <LocalizedMenuLabel label={"우리 아이에게도"} /><br /><em className="bsw-hl"><LocalizedMenuLabel label={"잘 맞을까?"} /></em>
                     </blockquote>
                     {/* 2026-10-25 그림 교체 — 밥그릇 앞에서 고민하는 푸들(크레파스, 자체 보라 테두리라 틀 없음) */}
                     {/* eslint-disable-next-line @next/next/no-img-element -- 크레파스 그림 */}
@@ -141,10 +142,10 @@ export default function BrandStoryWeb() {
                 </div>
                 <div className="bsw-question-copy">
                     <p className="bsw-kicker">THE FIRST QUESTION</p>
-                    <h2 id="bsw-q-title" className="bsw-h2">무엇을 더 팔까보다,<br />무엇이 정말 필요할까.</h2>
-                    <p className="bsw-lead-strong">반려견을 위한 상품은 많아졌지만, 우리 아이에게 꼭 맞는 제품을 고르는 일은 여전히 어렵습니다. 비슷한 상품과 넘쳐나는 정보 속에서 보호자의 고민은 깊어집니다.</p>
-                    <p>댕다방은 바로 그 고민에서 시작했습니다. 상품의 수보다 선택의 이유를 중요하게 생각하며, 산책과 식사, 휴식과 놀이처럼 반려견의 일상에 꼭 필요한 제품을 세심하게 살핍니다.</p>
-                    <p>편하게 둘러보고, 충분히 비교하고, 궁금한 점은 물어볼 수 있는 곳. 서두르지 않고 우리 아이에게 맞는 선택을 할 수 있도록 돕는 것, 그것이 댕다방이 만들어가고 싶은 쇼핑 경험입니다.</p>
+                    <h2 id="bsw-q-title" className="bsw-h2"><LocalizedMenuLabel label={"무엇을 더 팔까보다,"} /><br /><LocalizedMenuLabel label={"무엇이 정말 필요할까."} /></h2>
+                    <p className="bsw-lead-strong"><LocalizedMenuLabel label={"반려견을 위한 상품은 많아졌지만, 우리 아이에게 꼭 맞는 제품을 고르는 일은 여전히 어렵습니다. 비슷한 상품과 넘쳐나는 정보 속에서 보호자의 고민은 깊어집니다."} /></p>
+                    <p><LocalizedMenuLabel label={"댕다방은 바로 그 고민에서 시작했습니다. 상품의 수보다 선택의 이유를 중요하게 생각하며, 산책과 식사, 휴식과 놀이처럼 반려견의 일상에 꼭 필요한 제품을 세심하게 살핍니다."} /></p>
+                    <p><LocalizedMenuLabel label={"편하게 둘러보고, 충분히 비교하고, 궁금한 점은 물어볼 수 있는 곳. 서두르지 않고 우리 아이에게 맞는 선택을 할 수 있도록 돕는 것, 그것이 댕다방이 만들어가고 싶은 쇼핑 경험입니다."} /></p>
                 </div>
             </section>
 
@@ -154,8 +155,8 @@ export default function BrandStoryWeb() {
             <section className="bsw-section" aria-labelledby="bsw-scenes-title">
                 <div className="bsw-head">
                     <p className="bsw-kicker">EVERYDAY SCENES</p>
-                    <h2 id="bsw-scenes-title" className="bsw-h2">우리 아이의 하루에 필요한 <em className="bsw-hl">모든 것</em></h2>
-                    <p>산책과 식사부터 휴식, 놀이, 케어까지.<br />반려견의 일상에 필요한 제품을 하나씩 살펴보세요.</p>
+                    <h2 id="bsw-scenes-title" className="bsw-h2"><LocalizedMenuLabel label={"우리 아이의 하루에 필요한"} /> <em className="bsw-hl"><LocalizedMenuLabel label={"모든 것"} /></em></h2>
+                    <p><LocalizedMenuLabel label={"산책과 식사부터 휴식, 놀이, 케어까지."} /><br /><LocalizedMenuLabel label={"반려견의 일상에 필요한 제품을 하나씩 살펴보세요."} /></p>
                 </div>
                 {/* PC 다섯 칸 · 휴대폰 겹친 카드(눌러서 한 장씩) */}
                 <SceneDeck
@@ -175,9 +176,9 @@ export default function BrandStoryWeb() {
                 <div className="bsw-head is-row">
                     <div>
                         <p className="bsw-kicker">OUR STANDARD</p>
-                        <h2 id="bsw-std-title" className="bsw-h2">댕다방이 상품을 고르는 <em className="bsw-hl">네 가지 기준</em></h2>
+                        <h2 id="bsw-std-title" className="bsw-h2"><LocalizedMenuLabel label={"댕다방이 상품을 고르는"} /> <em className="bsw-hl"><LocalizedMenuLabel label={"네 가지 기준"} /></em></h2>
                     </div>
-                    <p>좋아 보이는 상품을 소개하는 데 그치지 않고, 반려견에게 왜 필요한지, 안심하고 사용할 수 있는지까지 세심하게 살핍니다.</p>
+                    <p><LocalizedMenuLabel label={"좋아 보이는 상품을 소개하는 데 그치지 않고, 반려견에게 왜 필요한지, 안심하고 사용할 수 있는지까지 세심하게 살핍니다."} /></p>
                 </div>
                 <div className="bsw-principles">
                     {PRINCIPLES.map((item, index) => (
@@ -187,8 +188,8 @@ export default function BrandStoryWeb() {
                                 {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                                 <img src={`${UI}${item.art}`} alt="" />
                             </span>
-                            <h3>{item.title}</h3>
-                            <p>{item.body}</p>
+                            <h3><LocalizedMenuLabel label={item.title} /></h3>
+                            <p><LocalizedMenuLabel label={item.body} /></p>
                         </article>
                     ))}
                 </div>
@@ -198,8 +199,8 @@ export default function BrandStoryWeb() {
             <section className="bsw-flow" aria-labelledby="bsw-flow-title">
                 <div className="bsw-flow-intro">
                     <p className="bsw-kicker">CURATION, STEP BY STEP</p>
-                    <h2 id="bsw-flow-title" className="bsw-h2">시장의 흐름을 읽고,<br /><em className="bsw-hl">우리 아이의 하루</em>에 맞춰 고릅니다.</h2>
-                    <p>새로운 트렌드와 검색량은 필요한 제품을 발견하는 단서가 됩니다. 하지만 인기가 곧 좋은 선택을 뜻하지는 않습니다. 보호자의 실제 고민과 제품의 쓰임을 살피고, 비교와 검토를 거쳐 소개합니다.</p>
+                    <h2 id="bsw-flow-title" className="bsw-h2"><LocalizedMenuLabel label={"시장의 흐름을 읽고,"} /><br /><em className="bsw-hl"><LocalizedMenuLabel label={"우리 아이의 하루"} /></em><LocalizedMenuLabel label={"에 맞춰 고릅니다."} /></h2>
+                    <p><LocalizedMenuLabel label={"새로운 트렌드와 검색량은 필요한 제품을 발견하는 단서가 됩니다. 하지만 인기가 곧 좋은 선택을 뜻하지는 않습니다. 보호자의 실제 고민과 제품의 쓰임을 살피고, 비교와 검토를 거쳐 소개합니다."} /></p>
                 </div>
                 <ol className="bsw-steps">
                     {FLOW.map((step, index) => (
@@ -209,8 +210,8 @@ export default function BrandStoryWeb() {
                                 <img src={`${UI}${step.art}`} alt="" />
                                 <b>{index + 1}</b>
                             </span>
-                            <h3>{step.title}</h3>
-                            <p>{step.body}</p>
+                            <h3><LocalizedMenuLabel label={step.title} /></h3>
+                            <p><LocalizedMenuLabel label={step.body} /></p>
                         </li>
                     ))}
                 </ol>
@@ -225,24 +226,24 @@ export default function BrandStoryWeb() {
                 </div>
                 <div className="bsw-tech-copy">
                     <p className="bsw-kicker">TECHNOLOGY WITH CARE</p>
-                    <h2 id="bsw-tech-title" className="bsw-h2">기술은 정답이 아니라,<br />우리 아이를 <em className="bsw-hl">더 잘 살피는</em> 도구입니다.</h2>
-                    <p>펫렌즈와 케어톡은 사진과 보호자가 알려준 정보를 바탕으로, 우리 아이를 이해하는 데 필요한 단서와 정보를 정리합니다. AI가 반려견의 상태를 단정하거나 전문가의 판단을 대신하지는 않습니다.</p>
-                    <p>답을 서두르기보다 확인해야 할 부분을 함께 살피고, 보호자가 더 신중하게 선택할 수 있도록 돕습니다.</p>
+                    <h2 id="bsw-tech-title" className="bsw-h2"><LocalizedMenuLabel label={"기술은 정답이 아니라,"} /><br /><LocalizedMenuLabel label={"우리 아이를"} /> <em className="bsw-hl"><LocalizedMenuLabel label={"더 잘 살피는"} /></em> <LocalizedMenuLabel label={"도구입니다."} /></h2>
+                    <p><LocalizedMenuLabel label={"펫렌즈와 케어톡은 사진과 보호자가 알려준 정보를 바탕으로, 우리 아이를 이해하는 데 필요한 단서와 정보를 정리합니다. AI가 반려견의 상태를 단정하거나 전문가의 판단을 대신하지는 않습니다."} /></p>
+                    <p><LocalizedMenuLabel label={"답을 서두르기보다 확인해야 할 부분을 함께 살피고, 보호자가 더 신중하게 선택할 수 있도록 돕습니다."} /></p>
                     <div className="bsw-tools">
                         <Link href="/pet-lens" className="bsw-tool" data-tone="lav">
                             {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                             <img src={`${UI}pet-lens-v2-256.webp`} alt="" aria-hidden="true" />
-                            <span><b>펫렌즈</b><small>사진으로 외형 · 체형 · 털 상태 살펴보기</small></span>
+                            <span><b><LocalizedMenuLabel label={"펫렌즈"} /></b><small><LocalizedMenuLabel label={"사진으로 외형 · 체형 · 털 상태 살펴보기"} /></small></span>
                             <i className="fa-solid fa-arrow-right" aria-hidden="true" />
                         </Link>
                         <Link href="/chat" className="bsw-tool" data-tone="pink">
                             {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                             <img src={`${UI}caretalk-web-128.webp`} alt="" aria-hidden="true" />
-                            <span><b>케어톡</b><small>우리 아이에 대한 궁금증을 편하게 물어보기</small></span>
+                            <span><b><LocalizedMenuLabel label={"케어톡"} english="AI Chat" /></b><small><LocalizedMenuLabel label={"우리 아이에 대한 궁금증을 편하게 물어보기"} /></small></span>
                             <i className="fa-solid fa-arrow-right" aria-hidden="true" />
                         </Link>
                     </div>
-                    <p className="bsw-note"><i className="fa-solid fa-shield-heart" aria-hidden="true" />AI가 제공하는 정보는 참고용입니다. 건강 이상이 의심될 때는 수의사와 상담해 주세요.</p>
+                    <p className="bsw-note"><i className="fa-solid fa-shield-heart" aria-hidden="true" /><LocalizedMenuLabel label={"AI가 제공하는 정보는 참고용입니다. 건강 이상이 의심될 때는 수의사와 상담해 주세요."} /></p>
                 </div>
             </section>
 
@@ -250,16 +251,16 @@ export default function BrandStoryWeb() {
             <section className="bsw-promise" aria-labelledby="bsw-promise-title">
                 <div className="bsw-head">
                     <p className="bsw-kicker">OUR PROMISE</p>
-                    <h2 id="bsw-promise-title" className="bsw-h2">잘 고른다는 믿음에,<br /><em className="bsw-hl">책임</em>으로 답하겠습니다.</h2>
+                    <h2 id="bsw-promise-title" className="bsw-h2"><LocalizedMenuLabel label={"잘 고른다는 믿음에,"} /><br /><em className="bsw-hl"><LocalizedMenuLabel label={"책임"} /></em><LocalizedMenuLabel label={"으로 답하겠습니다."} /></h2>
                 </div>
                 <div className="bsw-promises">
                     {PROMISES.map((item, index) => (
                         <article key={item.title} data-tone={item.tone}>
                             <span className="bsw-promise-top">
-                                <b>약속 {index + 1}</b>
+                                <b><LocalizedMenuLabel label={"약속"} /> {index + 1}</b>
                             </span>
-                            <h3>{item.title}</h3>
-                            <p>{item.body}</p>
+                            <h3><LocalizedMenuLabel label={item.title} /></h3>
+                            <p><LocalizedMenuLabel label={item.body} /></p>
                         </article>
                     ))}
                 </div>
@@ -270,14 +271,14 @@ export default function BrandStoryWeb() {
                 {/* eslint-disable-next-line @next/next/no-img-element -- 크레파스 그림 */}
                 <img className="bsw-close-art" src={`${UI}brand-story-close-448.webp`} alt="" aria-hidden="true" />
                 <div>
-                    <p className="bsw-kicker">오늘도 우리 아이의 하루를 한 번 더 생각하는 마음으로.</p>
-                    <h2 id="bsw-close-title" className="bsw-h2">더 좋은 선택이,<br />우리 아이의 <em className="bsw-hl">좋은 하루</em>가 되도록.</h2>
+                    <p className="bsw-kicker"><LocalizedMenuLabel label={"오늘도 우리 아이의 하루를 한 번 더 생각하는 마음으로."} /></p>
+                    <h2 id="bsw-close-title" className="bsw-h2"><LocalizedMenuLabel label={"더 좋은 선택이,"} /><br /><LocalizedMenuLabel label={"우리 아이의"} /> <em className="bsw-hl"><LocalizedMenuLabel label={"좋은 하루"} /></em><LocalizedMenuLabel label={"가 되도록."} /></h2>
                 </div>
                 <div className="bsw-close-actions">
-                    <Link href="/products" className="bsw-pill is-pink">상품 둘러보기<i className="fa-solid fa-arrow-right" aria-hidden="true" /></Link>
+                    <Link href="/products" className="bsw-pill is-pink"><LocalizedMenuLabel label={"상품 둘러보기"} /><i className="fa-solid fa-arrow-right" aria-hidden="true" /></Link>
                     {/* 입점·제휴 — 페이지 이동 없이 입점 문의와 같은 양식 창(2026-10-25 사용자 요청) */}
-                    <BizFormButton mode="partnership" className="bsw-pill">입점·제휴 제안하기</BizFormButton>
-                    <Link href="/faq" className="bsw-pill is-soft">고객센터</Link>
+                    <BizFormButton mode="partnership" className="bsw-pill"><LocalizedMenuLabel label={"입점·제휴 제안하기"} /></BizFormButton>
+                    <Link href="/faq" className="bsw-pill is-soft"><LocalizedMenuLabel label={"고객센터"} /></Link>
                 </div>
             </section>
         </div>

@@ -1,3 +1,6 @@
+"use client";
+
+import { useI18n } from "@/lib/i18n";
 /**
  * ReviewsWebHero — 웹 외부 판매점 후기 페이지(/reviews) 머리 판 · 후기 한마디 · 2026-10-25
  * ---------------------------------------------------------------------
@@ -23,6 +26,9 @@ function splitTheme(theme: string): [string, string] {
 }
 
 export default function ReviewsWebHero({ products, sourceNote }: { products: CatalogProduct[]; sourceNote: string }) {
+    const { menuLabel: labelText } = useI18n();
+    const { menuLabel, productName, locale } = useI18n();
+    const en = locale === "en";
     const totalReviews = products.reduce((sum, product) => sum + (product.externalReviewCount ?? 0), 0);
     // 후기 수로 가중한 평균 별점(평균이 있는 상품만)
     const rated = products.filter((product) => typeof product.externalReviewAverage === "number" && (product.externalReviewCount ?? 0) > 0);
@@ -50,12 +56,12 @@ export default function ReviewsWebHero({ products, sourceNote }: { products: Cat
             <header className="rv-hero ddb-hero-band">
                 <span className="rv-hero-text">
                     <span className="rv-kicker">REVIEWS</span>
-                    <h1 className="rv-title"><small>네이버 댕다방 스토어</small>후기 많은 상품</h1>
-                    <p className="rv-lead">다른 판매점에서 먼저 써 본 보호자들의 이야기가 많은 상품을 모았어요.</p>
+                    <h1 className="rv-title"><small>{menuLabel("네이버 댕다방 스토어")}</small>{menuLabel("후기 많은 상품")}</h1>
+                    <p className="rv-lead">{menuLabel("다른 판매점에서 먼저 써 본 보호자들의 이야기가 많은 상품을 모았어요.")}</p>
                     <span className="rv-stats">
-                        <span><i className="fa-solid fa-box-open" aria-hidden="true" />상품 <b>{products.length}</b>개</span>
-                        <span><i className="fa-solid fa-comment-dots" aria-hidden="true" />후기 <b>{totalReviews.toLocaleString("ko-KR")}</b>개</span>
-                        {average !== null && <span><i className="fa-solid fa-star" aria-hidden="true" />평균 <b>{average.toFixed(1)}</b></span>}
+                        <span><i className="fa-solid fa-box-open" aria-hidden="true" />{menuLabel("상품")} <b>{products.length}</b>{labelText(en ? "" : "개")}</span>
+                        <span><i className="fa-solid fa-comment-dots" aria-hidden="true" />{menuLabel("후기")} <b>{totalReviews.toLocaleString("ko-KR")}</b>{labelText(en ? "" : "개")}</span>
+                        {average !== null && <span><i className="fa-solid fa-star" aria-hidden="true" />{menuLabel("평균")} <b>{average.toFixed(1)}</b></span>}
                     </span>
                 </span>
                 <span className="rv-hero-art" aria-hidden="true">
@@ -65,16 +71,16 @@ export default function ReviewsWebHero({ products, sourceNote }: { products: Cat
             </header>
 
             {/* 출처 안내 — 원래 문구 그대로 */}
-            <p className="rv-source"><i className="fa-solid fa-circle-info" aria-hidden="true" /><span>{sourceNote}</span></p>
+            <p className="rv-source"><i className="fa-solid fa-circle-info" aria-hidden="true" /><span>{menuLabel(sourceNote)}</span></p>
 
             {themes.length > 0 && (
-                <section className="rv-themes" aria-label="자주 나온 이야기">
-                    <p className="rv-sec-t">자주 나온 이야기</p>
+                <section className="rv-themes" aria-label={menuLabel("자주 나온 이야기")}>
+                    <p className="rv-sec-t">{menuLabel("자주 나온 이야기")}</p>
                     <div>
                         {themes.map(([theme, count]) => {
                             const [head, value] = splitTheme(theme);
                             return (
-                                <span key={theme}>{head && <em>{head}</em>}{value}<small>{count}</small></span>
+                                <span key={theme}>{head && <em>{menuLabel(head)}</em>}{menuLabel(value)}<small>{count}</small></span>
                             );
                         })}
                     </div>
@@ -82,35 +88,35 @@ export default function ReviewsWebHero({ products, sourceNote }: { products: Cat
             )}
 
             {quotes.length > 0 && (
-                <section className="rv-quotes" aria-label="후기 한마디">
-                    <p className="rv-sec-t">후기 한마디</p>
+                <section className="rv-quotes" aria-label={menuLabel("후기 한마디")}>
+                    <p className="rv-sec-t">{menuLabel("후기 한마디")}</p>
                     <div>
                         {quotes.map(({ product, snippet }, index) => (
                             <Link key={product.id} href={productHref(product)} className="rv-quote" data-tone={["yellow", "pink", "sky"][index]}>
                                 <span className="rv-quote-top">
-                                    <span className="rv-stars" aria-label={`별점 ${snippet.rating ?? product.externalReviewAverage ?? ""}`}>
+                                    <span className="rv-stars" aria-label={`${menuLabel("별점")} ${snippet.rating ?? product.externalReviewAverage ?? ""}`}>
                                         {Array.from({ length: 5 }, (_, star) => <i key={star} className={`fa-solid fa-star${star < Math.round(Number(snippet.rating ?? product.externalReviewAverage ?? 5)) ? "" : " is-off"}`} aria-hidden="true" />)}
                                     </span>
-                                    <small>후기 {product.externalReviewCount}개</small>
+                                    <small>{menuLabel("후기")} {product.externalReviewCount}{labelText(en ? "" : "개")}</small>
                                 </span>
                                 <q>{snippet.text}</q>
                                 <span className="rv-quote-p">
                                     {/* eslint-disable-next-line @next/next/no-img-element -- 상품 사진 */}
                                     <img src={product.image} alt="" aria-hidden="true" />
-                                    <b>{product.name}</b>
+                                    <b>{productName(product)}</b>
                                     <i className="fa-solid fa-chevron-right" aria-hidden="true" />
                                 </span>
                             </Link>
                         ))}
                     </div>
-                    <p className="rv-quote-note">네이버 댕다방 스토어 후기 원문 일부예요. 이 사이트에서 직접 구매한 후기와는 따로 보여 드려요.</p>
+                    <p className="rv-quote-note">{menuLabel("네이버 댕다방 스토어 후기 원문 일부예요. 이 사이트에서 직접 구매한 후기와는 따로 보여 드려요.")}</p>
                 </section>
             )}
 
             <div className="rv-list-h">
                 <span aria-hidden="true"><i className="fa-solid fa-ranking-star" /></span>
-                <h2>후기 많은 순</h2>
-                <em>{products.length}개</em>
+                <h2>{menuLabel("후기 많은 순")}</h2>
+                <em>{products.length}{labelText(en ? "" : "개")}</em>
             </div>
         </div>
     );

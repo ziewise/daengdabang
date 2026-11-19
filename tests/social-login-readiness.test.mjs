@@ -26,6 +26,7 @@ function render({ apiReady = true, enabled = null, checked = false, ...props } =
         if (id === '@/lib/customer-api') return { socialLoginHref: (provider, returnTo) => `https://api.daengdabang.com/api/v1/auth/social/${provider}/start?${new URLSearchParams({return_to:returnTo,mode:'login'})}`, startSocialLogin: (...args) => { starts.push(args); return true; } };
         if (id === '@/lib/ddb-api-base') return { PRODUCTION_DDB_API_BASE: 'https://api.daengdabang.com' };
         if (id === '@/lib/signup-email-verification') return { clearSignupEmailResume: () => resume.push('clear'), saveSignupEmailResume: () => resume.push('save') };
+        if (id === '@/lib/i18n') return { useI18n: () => ({ locale: 'ko', menuLabel: text => text }) };
         throw new Error(`Unexpected import: ${id}`);
     } });
     const tree = loaded.exports.default({ mode: 'login', returnTo: '/checkout', ...props });

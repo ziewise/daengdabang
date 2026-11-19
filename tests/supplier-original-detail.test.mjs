@@ -1,3 +1,4 @@
+import * as englishDetail from "../lib/catalog/english-detail-sections.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
@@ -67,7 +68,8 @@ function renderDetails(product, content) {
     const { default: ProductTabs } = loadModule("components/products/detail/ProductTabs.tsx", {
         './ProductReviewPanel': () => React.createElement('div', { 'data-review-panel': true }),
         "next/image": imageStub,
-        "@/lib/i18n": { useI18n: () => ({ t: (key) => key, productName: (p) => p.name, locale: "ko" }) },
+        "@/lib/catalog/english-detail-sections": englishDetail,
+        "@/lib/i18n": { useI18n: () => ({ t: (key) => key, productName: (p) => p.name, locale: "ko", menuLabel: text => text, englishProduct: () => undefined, optionName: (_folder, value) => value }) },
         "@/lib/chat-widget-events": { openChatWidget() {} },
         "@/components/products/detail/ProductDeliveryReturnPolicy": () => React.createElement("div", { "data-store-policy": true }),
         "@/lib/catalog/product-detail-content": { getProductDetailContent(folder) { lookups.push(folder); return content; } },

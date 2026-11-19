@@ -13,6 +13,7 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import Link from "next/link";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -42,6 +43,7 @@ type Props = {
 };
 
 export default function HealthDiaryModal({ pet, petId, token, openRecordId, onClose }: Props) {
+    const { menuLabel: labelText } = useI18n();
     const titleId = useId();
     const closeRef = useRef<HTMLButtonElement>(null);
     const bodyRef = useRef<HTMLDivElement>(null);
@@ -109,8 +111,8 @@ export default function HealthDiaryModal({ pet, petId, token, openRecordId, onCl
                     </span>
                     <div className="ddb-pf-titles">
                         <p className="ddb-pf-kicker">HEALTH DIARY</p>
-                        <h2 id={titleId}><span className="ddb-pf-name">{pet.name}</span>의 건강 일기</h2>
-                        <p className="ddb-pf-sub">주간 사진 건강 체크를 한 주씩 모았어요. 기록을 누르면 자세히 볼 수 있어요.</p>
+                        <h2 id={titleId}><span className="ddb-pf-name">{pet.name}</span>{labelText("의 건강 일기")}</h2>
+                        <p className="ddb-pf-sub">{labelText("주간 사진 건강 체크를 한 주씩 모았어요. 기록을 누르면 자세히 볼 수 있어요.")}</p>
                     </div>
                     <button ref={closeRef} type="button" className="ddb-pf-close" onClick={close} aria-label={`${pet.name}의 건강 일기 닫기`}>
                         <i className="fa-solid fa-xmark" aria-hidden="true" />
@@ -119,21 +121,21 @@ export default function HealthDiaryModal({ pet, petId, token, openRecordId, onCl
 
                 <div className="ddb-pf-body" ref={bodyRef}>
                     {!ready ? (
-                        <div className="ddb-dy-state" aria-live="polite"><i className="fa-solid fa-paw fa-bounce" aria-hidden="true" />건강 일기를 펼치는 중이에요</div>
+                        <div className="ddb-dy-state" aria-live="polite"><i className="fa-solid fa-paw fa-bounce" aria-hidden="true" />{labelText("건강 일기를 펼치는 중이에요")}</div>
                     ) : loaded.error ? (
                         <div className="ddb-dy-state">
                             {loaded.error}
-                            <button type="button" className="ddb-pf-cancel" onClick={() => setRetry((n) => n + 1)}>다시 불러오기</button>
+                            <button type="button" className="ddb-pf-cancel" onClick={() => setRetry((n) => n + 1)}>{labelText("다시 불러오기")}</button>
                         </div>
                     ) : !latest ? (
-                        <div className="ddb-dy-state">아직 주간 사진 기록이 없어요. 이번 주 사진을 올리면 첫 장이 시작돼요.</div>
+                        <div className="ddb-dy-state">{labelText("아직 주간 사진 기록이 없어요. 이번 주 사진을 올리면 첫 장이 시작돼요.")}</div>
                     ) : (
                         <>
                             {/* 요약 칸 셋 */}
                             <dl className="ddb-dy-stats">
-                                <div data-tone="mint"><dt>쌓인 기록</dt><dd><b>{records.length}</b>주</dd></div>
-                                <div data-tone="yellow"><dt>첫 기록</dt><dd>{first ? kstParts(first.analyzedAt).short : "—"}</dd></div>
-                                <div data-tone="pink"><dt>최근 상태</dt><dd>{latest.statusLabel || "기록 완료"}</dd></div>
+                                <div data-tone="mint"><dt>{labelText("쌓인 기록")}</dt><dd><b>{records.length}</b>{labelText("주")}</dd></div>
+                                <div data-tone="yellow"><dt>{labelText("첫 기록")}</dt><dd>{first ? kstParts(first.analyzedAt).short : "—"}</dd></div>
+                                <div data-tone="pink"><dt>{labelText("최근 상태")}</dt><dd>{latest.statusLabel || "기록 완료"}</dd></div>
                             </dl>
 
                             {/* 타임라인 */}
@@ -155,7 +157,7 @@ export default function HealthDiaryModal({ pet, petId, token, openRecordId, onCl
                                             <article className="ddb-dy-card">
                                                 <button type="button" className="ddb-dy-top" onClick={() => toggle(record, index)} aria-expanded={open}>
                                                     <span className="ddb-dy-meta">
-                                                        {index === 0 && <em className="ddb-dy-new">최근</em>}
+                                                        {index === 0 && <em className="ddb-dy-new">{labelText("최근")}</em>}
                                                         {record.statusLabel && <span className="ddb-dy-chip">{record.statusLabel}</span>}
                                                         <span className="ddb-dy-date">{date.full}</span>
                                                     </span>
@@ -167,38 +169,38 @@ export default function HealthDiaryModal({ pet, petId, token, openRecordId, onCl
                                                     </span>
                                                     <strong className="ddb-dy-title">{record.title || "주간 사진 기록"}</strong>
                                                     {record.description && <span className="ddb-dy-desc">{record.description}</span>}
-                                                    <span className="ddb-dy-more">{open ? "접기" : "자세히"} <i className={`fa-solid fa-chevron-${open ? "up" : "down"}`} aria-hidden="true" /></span>
+                                                    <span className="ddb-dy-more">{labelText(open ? "접기" : "자세히")} <i className={`fa-solid fa-chevron-${open ? "up" : "down"}`} aria-hidden="true" /></span>
                                                 </button>
 
                                                 {open && (
                                                     <div className="ddb-dy-detail">
                                                         {lines.length > 0 && (
                                                             <section>
-                                                                <h3><span>✓</span>이번 주 관찰</h3>
+                                                                <h3><span>✓</span>{labelText("이번 주 관찰")}</h3>
                                                                 <ul className="ddb-dy-checks">{lines.slice(0, 6).map((line) => <li key={line}>{line}</li>)}</ul>
                                                             </section>
                                                         )}
                                                         <section>
-                                                            <h3><span>↔</span>지난주와 비교</h3>
+                                                            <h3><span>↔</span>{labelText("지난주와 비교")}</h3>
                                                             {cmp.status === "ready" ? (
                                                                 <>
                                                                     {cmp.headline && <p className="ddb-dy-quote">{cmp.headline}</p>}
                                                                     <div className="ddb-dy-groups">
                                                                         {groups.map((group) => (
                                                                             <div key={group.label} data-tone={group.tone}>
-                                                                                <p>{group.label}</p>
+                                                                                <p>{labelText(group.label)}</p>
                                                                                 {group.items.slice(0, 3).map((item) => <span key={item}>{item}</span>)}
                                                                             </div>
                                                                         ))}
                                                                     </div>
                                                                 </>
                                                             ) : (
-                                                                <p className="ddb-dy-soft">비교할 지난주 기록이 없거나 근거가 부족해요. 같은 각도로 계속 찍으면 달라진 점을 정리해 드려요.</p>
+                                                                <p className="ddb-dy-soft">{labelText("비교할 지난주 기록이 없거나 근거가 부족해요. 같은 각도로 계속 찍으면 달라진 점을 정리해 드려요.")}</p>
                                                             )}
                                                         </section>
                                                         {record.careActions.length > 0 && (
                                                             <section>
-                                                                <h3><span>♥</span>돌봄 할 일</h3>
+                                                                <h3><span>♥</span>{labelText("돌봄 할 일")}</h3>
                                                                 <ol className="ddb-dy-todos">{record.careActions.slice(0, 4).map((action, n) => <li key={action}><b>{n + 1}</b>{action}</li>)}</ol>
                                                             </section>
                                                         )}
@@ -209,16 +211,16 @@ export default function HealthDiaryModal({ pet, petId, token, openRecordId, onCl
                                     );
                                 })}
                             </ol>
-                            {records.length >= 12 && <p className="ddb-dy-soft ddb-dy-end">최근 12주 기록까지 보여 드려요.</p>}
+                            {records.length >= 12 && <p className="ddb-dy-soft ddb-dy-end">{labelText("최근 12주 기록까지 보여 드려요.")}</p>}
                         </>
                     )}
                 </div>
 
                 <footer className="ddb-pf-foot">
-                    <p className="ddb-pf-hint"><i className="fa-solid fa-paw" aria-hidden="true" />새 기록은 우리 아이 기록에서 사진을 올리면 쌓여요.</p>
-                    <button type="button" className="ddb-pf-cancel" onClick={close}>닫기</button>
+                    <p className="ddb-pf-hint"><i className="fa-solid fa-paw" aria-hidden="true" />{labelText("새 기록은 우리 아이 기록에서 사진을 올리면 쌓여요.")}</p>
+                    <button type="button" className="ddb-pf-cancel" onClick={close}>{labelText("닫기")}</button>
                     <Link href="/my-pet" className="ddb-pf-save" onClick={close}>
-                        <i className="fa-solid fa-camera" aria-hidden="true" />이번 주 사진 올리러 가기
+                        <i className="fa-solid fa-camera" aria-hidden="true" />{labelText("이번 주 사진 올리러 가기")}
                     </Link>
                 </footer>
             </div>

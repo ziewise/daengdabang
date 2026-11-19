@@ -1,5 +1,6 @@
 "use client";
 
+import { useCareTalkCopy } from "@/hooks/useCareTalkCopy";
 import Link from "next/link";
 import {
     ChangeEvent,
@@ -334,6 +335,7 @@ export function GenerationReferencePhotoButton({
     disabled?: boolean;
     compact?: boolean;
 }) {
+    const copy = useCareTalkCopy();
     const unavailable = disabled || controller.isUploading;
     const inputRef = useRef<HTMLInputElement>(null);
     const openPicker = () => {
@@ -363,8 +365,8 @@ export function GenerationReferencePhotoButton({
                 onClick={openPicker}
                 disabled={unavailable}
                 className={`inline-flex shrink-0 items-center justify-center rounded-xl border-2 border-indigo-300 bg-white text-indigo-700 transition hover:border-indigo-500 hover:bg-indigo-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:cursor-not-allowed disabled:opacity-45 ${compact ? "h-10 w-10" : "h-12 w-12"}`}
-                aria-label={controller.atCapacity ? "참고사진은 최대 2장까지 첨부됨" : "생성용 참고사진 첨부"}
-                title={controller.atCapacity ? "참고사진은 최대 2장까지 첨부할 수 있어요" : "참고사진 첨부"}
+                aria-label={controller.atCapacity ? copy("참고사진은 최대 2장까지 첨부됨") : copy("생성용 참고사진 첨부")}
+                title={controller.atCapacity ? copy("참고사진은 최대 2장까지 첨부할 수 있어요") : copy("참고사진 첨부")}
                 data-generation-reference-button
             >
                 <i className="fa-solid fa-image text-sm" aria-hidden="true" />
@@ -380,10 +382,11 @@ export function GenerationReferenceTray({
     controller: GenerationReferenceController;
     compact?: boolean;
 }) {
+    const copy = useCareTalkCopy();
     return (
         <div className={`mb-2 space-y-2 ${compact ? "text-xs" : "text-[13px]"}`} data-generation-reference-tray>
             {controller.items.length ? (
-                <div className="flex flex-wrap gap-2" aria-label="첨부한 생성용 참고사진">
+                <div className="flex flex-wrap gap-2" aria-label={copy("첨부한 생성용 참고사진")}>
                     {controller.items.map((item) => (
                         <div
                             key={item.localId}
@@ -394,18 +397,18 @@ export function GenerationReferenceTray({
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                                 src={item.previewUrl}
-                                alt="첨부한 참고사진 미리보기"
+                                alt={copy("첨부한 참고사진 미리보기")}
                                 className={`${compact ? "h-10 w-10" : "h-12 w-12"} shrink-0 rounded-lg object-cover`}
                             />
                             <div className="min-w-0">
                                 <label className="block">
-                                    <span className="sr-only">참고사진 용도</span>
+                                    <span className="sr-only">{copy("참고사진 용도")}</span>
                                     <select
                                         value={item.kind}
                                         onChange={(event) => controller.changeKind(item.localId, event.target.value as GenerationReferenceKind)}
                                         disabled={item.status === "uploading"}
                                         className="min-h-10 max-w-[112px] rounded-md border border-neutral-200 bg-white px-1.5 py-1 font-black text-neutral-800 outline-none focus:border-indigo-500"
-                                        aria-label="참고사진 용도"
+                                        aria-label={copy("참고사진 용도")}
                                     >
                                         {GENERATION_REFERENCE_KINDS.map((kind) => (
                                             <option key={kind} value={kind}>{KIND_LABELS[kind]}</option>
@@ -421,17 +424,17 @@ export function GenerationReferenceTray({
                                     </div>
                                 ) : item.status === "error" ? (
                                     <div className="mt-1 max-w-[190px] text-rose-700">
-                                        <p className="font-bold leading-4" role="alert">{item.error}</p>
+                                        <p className="font-bold leading-4" role="alert">{copy(item.error || "")}</p>
                                         <button
                                             type="button"
                                             onClick={() => controller.retry(item.localId)}
                                             className="mt-0.5 inline-flex min-h-10 items-center font-black underline underline-offset-2"
                                         >
-                                            다시 시도
+                                            {copy("다시 시도")}
                                         </button>
                                     </div>
                                 ) : (
-                                    <span className="mt-1 block font-black text-emerald-700">첨부 완료</span>
+                                    <span className="mt-1 block font-black text-emerald-700">{copy("첨부 완료")}</span>
                                 )}
                             </div>
                             <button
@@ -439,7 +442,7 @@ export function GenerationReferenceTray({
                                 onClick={() => controller.remove(item.localId)}
                                 className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-neutral-500 hover:bg-rose-50 hover:text-rose-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-rose-600"
                                 aria-label={`${KIND_LABELS[item.kind]} 참고사진 삭제`}
-                                title="참고사진 삭제"
+                                title={copy("참고사진 삭제")}
                             >
                                 <i className="fa-solid fa-xmark" aria-hidden="true" />
                             </button>
@@ -449,16 +452,16 @@ export function GenerationReferenceTray({
             ) : null}
             {controller.notice ? (
                 <div className="flex flex-wrap items-center gap-2 rounded-lg bg-amber-50 px-2.5 py-2 font-bold leading-5 text-amber-900" role="status">
-                    <span>{controller.notice}</span>
+                    <span>{copy(controller.notice)}</span>
                     {controller.loginRequired ? (
                         <Link href="/auth/login?redirect=%2Fchat" className="font-black text-indigo-700 underline underline-offset-2">
-                            로그인하기
+                            {copy("로그인하기")}
                         </Link>
                     ) : null}
                 </div>
             ) : null}
             <p className="px-0.5 text-[13px] font-bold leading-5 text-neutral-600" data-generation-reference-privacy-notice>
-                첨부한 사진은 생성 요청 처리에만 사용되며, 24시간이 지나면 만료되고 정기적으로 삭제됩니다.
+                {copy("첨부한 사진은 생성 요청 처리에만 사용되며, 24시간이 지나면 만료되고 정기적으로 삭제됩니다.")}
             </p>
         </div>
     );

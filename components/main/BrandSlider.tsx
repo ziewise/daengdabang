@@ -8,6 +8,7 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "@/components/site/IntentLink";
 import Image from "next/image";
@@ -53,6 +54,7 @@ const AUTO_INTERVAL = 4500;
 const RESUME_DELAY = 5000;
 
 export default function BrandSlider() {
+    const { menuLabel } = useI18n();
     const [idx, setIdx] = useState(0);
     const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
     const resumeRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -94,10 +96,10 @@ export default function BrandSlider() {
             <div className="max-w-[1400px] mx-auto px-6">
                 <div className="mb-6 md:mb-8">
                     <h2 className="text-2xl md:text-3xl font-black tracking-tight mb-1.5">
-                        대표 브랜드
+                        {menuLabel("대표 브랜드")}
                     </h2>
                     <p className="text-sm text-neutral-500">
-                        댕다방이 자신있게 큐레이션하는 정식 수입 브랜드
+                        {menuLabel("댕다방이 자신있게 큐레이션하는 정식 수입 브랜드")}
                     </p>
                 </div>
 
@@ -111,7 +113,7 @@ export default function BrandSlider() {
                         >
                             <Image
                                 src={s.image}
-                                alt={`${s.brandName} - ${s.desc}`}
+                                alt={`${s.brandName} - ${menuLabel(s.desc)}`}
                                 fill
                                 sizes="(max-width: 768px) 100vw, 1400px"
                                 priority={i === 0}
@@ -141,7 +143,7 @@ export default function BrandSlider() {
                             {current.brandName}
                         </h3>
                         <p className="text-[11px] md:text-[15px] text-white/90 mb-2.5 md:mb-4 max-w-md drop-shadow line-clamp-2 md:line-clamp-none">
-                            {current.desc}
+                            {menuLabel(current.desc)}
                         </p>
                         <Link
                             href={current.href}
@@ -149,7 +151,7 @@ export default function BrandSlider() {
                             data-brand-cta=""
                             className="inline-flex items-center gap-1.5 md:gap-2 px-3 md:px-5 py-1.5 md:py-2.5 rounded-full bg-white text-neutral-900! text-[11px] md:text-sm font-extrabold hover:bg-neutral-100 shadow-md transition"
                         >
-                            {current.cta}
+                            {menuLabel(current.cta)}
                             <i className="fa-solid fa-arrow-right text-[10px] md:text-xs" />
                         </Link>
                     </div>

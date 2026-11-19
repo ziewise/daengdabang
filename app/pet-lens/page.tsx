@@ -1,3 +1,4 @@
+import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import Image from "next/image";
@@ -17,10 +18,10 @@ export default function PetLensPage() {
         <Suspense fallback={(
             // 불러오는 중 — 앱은 원래 글씨(wl-app), 웹은 3D 그림 쿠션(wl-card, daily-web.css data-web-loading) · 2026-10-26
             <main className="p-8 text-center" role="status" data-web-loading>
-                <span className="wl-app">연구소를 불러오고 있어요.</span>
+                <span className="wl-app"><LocalizedMenuLabel label={"연구소를 불러오고 있어요."} /></span>
                 <span className="hidden wl-card">
                     <Image src="/images/ui/pet-lens-128.webp" alt="" width={64} height={64} aria-hidden="true" />
-                    <span>연구소를 불러오고 있어요</span>
+                    <span><LocalizedMenuLabel label={"연구소를 불러오고 있어요"} /></span>
                 </span>
             </main>
         )}>

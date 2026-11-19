@@ -1,5 +1,7 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
+import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
 import Image from "next/image";
 import { memo, useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
@@ -88,8 +90,8 @@ export const PostPhoto = memo(function PostPhoto({ src, sizes, className = "", e
         {loaded !== key ? <span className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 bg-[#fff3e8] text-[#9b7467]" role="status">
             <Image src="/images/ui/stickers/caretalk-photo.webp" alt="" width={40} height={40} className="h-10 w-10" />
             {failed === key ? <button type="button" className="ah-light rounded-full bg-white px-2.5 py-1.5 text-[11px]"
-                onClick={event => { event.stopPropagation(); setAttempt(value => value + 1); }}>사진 다시 불러오기</button>
-                : <span className="ah-light text-[11px]">사진을 불러오고 있어요</span>}
+                onClick={event => { event.stopPropagation(); setAttempt(value => value + 1); }}><LocalizedMenuLabel label={"사진 다시 불러오기"} /></button>
+                : <span className="ah-light text-[11px]"><LocalizedMenuLabel label={"사진을 불러오고 있어요"} /></span>}
         </span> : null}
     </>;
 });
@@ -101,6 +103,7 @@ export function AuthorDot({ name, size = "h-9 w-9 text-[14px]" }: { name: string
 
 /** 아래에서 올라오는 다이어리 속지 — 바깥 · 닫기 · Esc 로 닫힘, 열린 동안 뒤 화면 스크롤 잠금 */
 export function Sheet({ open, onClose, title, children, label }: { open: boolean; onClose: () => void; title?: ReactNode; children: ReactNode; label: string }) {
+    const { menuLabel: labelText } = useI18n();
     const [mounted, setMounted] = useState(false);
     useEffect(() => {
         if (!open) return;
@@ -118,14 +121,14 @@ export function Sheet({ open, onClose, title, children, label }: { open: boolean
     if (!mounted || !open) return null;
     return createPortal(
         <div className="fixed inset-0 z-[2400]" role="dialog" aria-modal="true" aria-label={label}>
-            <button type="button" tabIndex={-1} aria-label="닫기" className="sp-dim absolute inset-0 bg-[#3a2f2c]/35 backdrop-blur-[4px]" onClick={onClose} />
+            <button type="button" tabIndex={-1} aria-label={labelText("닫기")} className="sp-dim absolute inset-0 bg-[#3a2f2c]/35 backdrop-blur-[4px]" onClick={onClose} />
             <section className="sp-sheet absolute inset-x-0 bottom-0 mx-auto flex max-h-[92dvh] max-w-xl flex-col rounded-t-[28px]" style={{ color: TEXT }}>
                 <div className="flex h-8 shrink-0 items-center justify-center">
                     <span aria-hidden="true" className="st-tape block h-3.5 w-16" style={{ background: "repeating-linear-gradient(90deg, rgba(255,200,215,.9) 0 7px, rgba(255,226,234,.9) 7px 14px)", rotate: "-2deg" }} />
                 </div>
                 <div className="flex items-center gap-2 px-5 pb-2">
                     <div className="min-w-0 flex-1">{title}</div>
-                    <button type="button" onClick={onClose} aria-label="닫기" className="sp-close grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white text-[#c4567a]"><i aria-hidden="true" className="fa-solid fa-xmark" /></button>
+                    <button type="button" onClick={onClose} aria-label={labelText("닫기")} className="sp-close grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white text-[#c4567a]"><i aria-hidden="true" className="fa-solid fa-xmark" /></button>
                 </div>
                 <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 pb-[calc(20px+env(safe-area-inset-bottom,0px))]">{children}</div>
             </section>

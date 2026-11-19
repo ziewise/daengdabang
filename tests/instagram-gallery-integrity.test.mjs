@@ -28,6 +28,7 @@ function loadModule(path, dependencies = {}) {
 const channels = loadModule("lib/social-channels.ts");
 const { default: InstaSection } = loadModule("components/main/InstaSection.tsx", {
     "@/lib/social-channels": channels,
+    "@/components/i18n/LocalizedMenuLabel": ({ label }) => label,
     "next/image": (props) => {
         const imageProps = { ...props };
         delete imageProps.fill;

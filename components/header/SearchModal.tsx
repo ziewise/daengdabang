@@ -39,6 +39,9 @@ export default function SearchModal({ open, onClose, placeholder }: Props) {
     const [recent, setRecent] = useState<string[]>([]);
     const [term, setTerm] = useState("");
     const inputRef = useRef<HTMLInputElement>(null);
+    const composing = useRef(false);
+    const closeRef = useRef(onClose);
+    useEffect(() => { closeRef.current = onClose; }, [onClose]);
     const { t, locale, formatPrice, productName, menuLabel } = useI18n();
     // 휴대폰 폭(480px 이하)이면 안내 문구를 짧게 — 입력칸 글자 16px(아이폰 확대 막기, 2026-11-17)로 긴 예시 문구가 잘려서
     // (이 창은 브라우저에서만 그려짐 — Header 가 ssr:false 로 불러옴)
@@ -53,23 +56,30 @@ export default function SearchModal({ open, onClose, placeholder }: Props) {
     // 열림 → body 스크롤 잠금 + Escape 닫기 + autofocus + 최근 검색어 reload
     useEffect(() => {
         if (!open) return;
+        composing.current = false;
+        const previousOverflow = document.body.style.overflow;
+        const input = inputRef.current;
         document.body.style.overflow = "hidden";
         // eslint-disable-next-line react-hooks/set-state-in-effect
         setRecent(searchRecent.list());
-        setTimeout(() => inputRef.current?.focus(), 50);
-        const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+        const timer = window.setTimeout(() => input?.focus(), 50);
+        const onKey = (e: KeyboardEvent) => e.key === "Escape" && !e.isComposing && closeRef.current();
         document.addEventListener("keydown", onKey);
         return () => {
-            document.body.style.overflow = "";
+            composing.current = false;
+            window.clearTimeout(timer);
+            input?.blur();
+            document.body.style.overflow = previousOverflow;
             document.removeEventListener("keydown", onKey);
+            window.dispatchEvent(new Event("ddb-keyboard-refresh"));
         };
-    }, [open, onClose]);
+    }, [open]);
 
     /** 실시간 검색 — term 변화에 따라 매칭 결과 */
     const results = useMemo(() => {
         const q = term.trim();
         if (!q) return [];
-        return searchCatalog(q);
+        return searchCatalog(q, productName);
     }, [term]);
     const previewResults = results.slice(0, PREVIEW_LIMIT);
     const hasQuery = term.trim().length > 0;
@@ -88,6 +98,7 @@ export default function SearchModal({ open, onClose, placeholder }: Props) {
     const goSearch = (q: string) => {
         const t = q.trim();
         if (!t) return;
+        inputRef.current?.blur();
         searchRecent.add(t);
         onClose();
         // 웹은 검색 결과 페이지(/search, 2026-10-23 사용자 결정), 앱은 지금처럼 상품 목록에서
@@ -100,6 +111,7 @@ export default function SearchModal({ open, onClose, placeholder }: Props) {
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
+        if (composing.current) return;
         goSearch(term);
     };
 
@@ -147,6 +159,11 @@ export default function SearchModal({ open, onClose, placeholder }: Props) {
                                 : (locale === "en" ? "Search products (e.g. harness, food, Ruffwear)" : "어떤 상품을 찾으세요? (예: 하네스, 사료, 러프웨어)"))}
                             enterKeyHint="search"
                             aria-label={t("search")}
+                            onCompositionStart={() => { composing.current = true; }}
+                            onCompositionEnd={() => { composing.current = false; }}
+                            onKeyDown={(event) => {
+                                if (event.key === "Enter" && (composing.current || event.nativeEvent.isComposing || event.keyCode === 229)) event.preventDefault();
+                            }}
                             className="sm-input w-full pl-12 pr-28 h-12 bg-neutral-50 border-2 border-transparent rounded-xl text-sm font-medium focus:outline-none focus:border-aurora-indigo focus:bg-white transition"
                         />
                         {/* 검색 단추 — 빈 칸이면 꺼짐(goSearch 도 빈 칸은 무시). 휴대폰은 돋보기 동그라미, 넓은 화면은 "검색" 글자 알약
@@ -198,7 +215,7 @@ export default function SearchModal({ open, onClose, placeholder }: Props) {
                                             <li key={p.id}>
                                                 <button
                                                     type="button"
-                                                    onClick={() => goSearch(p.name)}
+                                                    onClick={() => goSearch(productName(p))}
                                                     data-pet-product="true"
                                                     data-pet-name={productName(p)}
                                                     data-pet-category={p.category}

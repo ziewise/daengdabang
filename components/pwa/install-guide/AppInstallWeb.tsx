@@ -12,6 +12,7 @@
  * 꾸밈: app/app-install-web.css(.aiw-*)
  */
 
+import { useI18n } from "@/lib/i18n";
 import Image from "next/image";
 import type { RefObject } from "react";
 import { useEffect } from "react";
@@ -27,12 +28,13 @@ const platformTitle = (platform: Platform) =>
 
 /** 카카오톡 · 네이버 · 인스타그램 안 — 기본 브라우저로 먼저 */
 function InAppNote({ hint }: { hint: string }) {
+    const { locale, menuLabel: labelText } = useI18n();
     return (
         <p className="aiw-note">
             <i className="fa-solid fa-circle-info" aria-hidden="true" />
             <span>
-                <b>먼저 기본 브라우저로 열어 주세요</b>
-                카카오톡 · 네이버 · 인스타그램 안에서는 설치 메뉴가 보이지 않을 수 있어요. 메뉴에서 <em>{hint}</em>를 골라 주세요.
+                <b>{labelText("먼저 기본 브라우저로 열어 주세요")}</b>
+                {locale === "en" ? <>The install option may be hidden in KakaoTalk, Naver or Instagram. From the menu, choose <em>{labelText(hint)}</em>.</> : <>카카오톡 · 네이버 · 인스타그램 안에서는 설치 메뉴가 보이지 않을 수 있어요. 메뉴에서 <em>{hint}</em>를 골라 주세요.</>}
             </span>
         </p>
     );
@@ -40,13 +42,14 @@ function InAppNote({ hint }: { hint: string }) {
 
 /** 설치 순서 — 분홍 동그라미 번호 + 아이콘 + 한 줄 */
 export function InstallWebSteps({ platform }: { platform: Platform }) {
+    const { locale } = useI18n();
     return (
         <ol className="aiw-steps">
             {STEPS[platform].map((step, index) => (
                 <li key={index}>
                     <span className="aiw-step-no" aria-hidden="true">{index + 1}</span>
                     <i className={`fa-solid ${step.icon}`} aria-hidden="true" />
-                    <span className="aiw-step-text">{step.text}</span>
+                    <span className="aiw-step-text">{locale === "en" ? step.en : step.text}</span>
                 </li>
             ))}
         </ol>
@@ -55,15 +58,16 @@ export function InstallWebSteps({ platform }: { platform: Platform }) {
 
 /** 앱 화면 미리보기 — 흰 휴대폰 틀 세 개(휴대폰에서는 옆으로 밀어 보기) */
 function InstallWebPreview() {
+    const { locale, menuLabel: labelText } = useI18n();
     const media = useShopMedia();
     return (
-        <div className="aiw-phones" aria-label="앱 화면 미리보기">
+        <div className="aiw-phones" aria-label={labelText("앱 화면 미리보기")}>
             {PREVIEWS.map((preview, index) => (
                 <figure key={preview.label} className="aiw-phone" data-pos={index}>
                     <span className="aiw-phone-screen">
-                        {media ? <Image src={media(preview.src) ?? preview.src} alt={`앱 ${preview.label} 화면`} fill sizes="180px" className="object-cover object-top" /> : null}
+                        {media ? <Image src={media(locale === "en" ? preview.enSrc : preview.src) ?? (locale === "en" ? preview.enSrc : preview.src)} alt={locale === "en" ? `${labelText(preview.label)} app screen` : `앱 ${preview.label} 화면`} fill sizes="180px" className="object-cover object-top" /> : null}
                     </span>
-                    <figcaption>{preview.label}</figcaption>
+                    <figcaption>{labelText(preview.label)}</figcaption>
                 </figure>
             ))}
         </div>
@@ -82,6 +86,7 @@ type PageProps = {
 
 /** /app/ 페이지 본문(웹) */
 export function InstallWebPage({ showInstall, isStandalone, isInAppBrowser, platform, installLabel, onInstall }: PageProps) {
+    const { locale, menuLabel: labelText } = useI18n();
     return (
         <div className="aiw" data-app-install-web>
             {/* ① 머리 판 — 소개 · 설치 단추 | 앱 화면 미리보기 */}
@@ -90,25 +95,23 @@ export function InstallWebPage({ showInstall, isStandalone, isInAppBrowser, plat
                     <span className="aiw-icon">
                         <Image src="/images/pwa/icon-v2-192x192.png" alt="" width={72} height={72} priority />
                     </span>
-                    <p className="aiw-kicker">DAENGDABANG APP</p>
+                    <p className="aiw-kicker">{labelText("댕다방 APP")}</p>
                     <h1 id="app-install-title">
-                        앱에서 <em>더 편하게</em>
-                        <br />
-                        즐겨보세요
+                        {locale === "en" ? <>Enjoy <em>댕다방</em><br />in the app</> : <>앱에서 <em>더 편하게</em><br />즐겨보세요</>}
                     </h1>
-                    <p className="aiw-lead">안드로이드는 최신 앱 설치·업데이트, 아이폰은 홈 화면에 추가해서 편하게 이용하세요.</p>
-                    <ul className="aiw-chips" aria-label="앱 설치 특징">
-                        <li><i className="fa-solid fa-store-slash" aria-hidden="true" /> 앱 스토어 없이</li>
-                        <li><i className="fa-solid fa-house" aria-hidden="true" /> 홈 화면에서 바로</li>
-                        <li><i className="fa-solid fa-user-check" aria-hidden="true" /> 웹과 같은 계정</li>
+                    <p className="aiw-lead">{labelText("안드로이드는 최신 앱 설치·업데이트, 아이폰은 홈 화면에 추가해서 편하게 이용하세요.")}</p>
+                    <ul className="aiw-chips" aria-label={labelText("앱 설치 특징")}>
+                        <li><i className="fa-solid fa-store-slash" aria-hidden="true" /> {labelText("앱 스토어 없이")}</li>
+                        <li><i className="fa-solid fa-house" aria-hidden="true" /> {labelText("홈 화면에서 바로")}</li>
+                        <li><i className="fa-solid fa-user-check" aria-hidden="true" /> {labelText("웹과 같은 계정")}</li>
                     </ul>
                     {showInstall ? (
                         platform === "android" ? <AndroidApkInstall /> : isStandalone ? (
-                            <p className="aiw-installed"><i className="fa-solid fa-circle-check" aria-hidden="true" /> 홈 화면 앱으로 실행 중이에요</p>
+                            <p className="aiw-installed"><i className="fa-solid fa-circle-check" aria-hidden="true" /> {labelText("홈 화면 앱으로 실행 중이에요")}</p>
                         ) : (
                             <button type="button" className="aiw-install" onClick={onInstall}>
                                 <i className="fa-solid fa-mobile-screen-button" aria-hidden="true" />
-                                {installLabel}
+                                {labelText(installLabel)}
                             </button>
                         )
                     ) : null}
@@ -123,7 +126,7 @@ export function InstallWebPage({ showInstall, isStandalone, isInAppBrowser, plat
                     <section className="aiw-card" data-tone="mint" aria-labelledby="app-install-steps">
                         <header className="aiw-card-head">
                             <p className="aiw-kicker">HOW TO INSTALL</p>
-                            <h2 id="app-install-steps">{platformTitle(platform)}</h2>
+                            <h2 id="app-install-steps">{labelText(platformTitle(platform))}</h2>
                         </header>
                         {isInAppBrowser ? <InAppNote hint={platform === "ios" ? "Safari로 열기" : "삼성 인터넷 또는 Chrome으로 열기"} /> : null}
                         <InstallWebSteps platform={platform} />
@@ -134,14 +137,14 @@ export function InstallWebPage({ showInstall, isStandalone, isInAppBrowser, plat
                 <section className="aiw-card" data-tone="pink" aria-labelledby="app-install-benefits">
                     <header className="aiw-card-head">
                         <p className="aiw-kicker">WHY APP</p>
-                        <h2 id="app-install-benefits">앱에서는 이렇게 좋아요</h2>
+                        <h2 id="app-install-benefits">{labelText("앱에서는 이렇게 좋아요")}</h2>
                     </header>
                     <ul className="aiw-benefits">
                         {BENEFITS.map((benefit, index) => (
                             <li key={benefit.title} data-tone={index}>
                                 <Image src={benefit.icon} alt="" width={64} height={64} />
-                                <b>{benefit.title}</b>
-                                <span>{benefit.desc}</span>
+                                <b>{labelText(benefit.title)}</b>
+                                <span>{labelText(benefit.desc)}</span>
                             </li>
                         ))}
                     </ul>
@@ -164,6 +167,7 @@ type SheetProps = {
 
 /** 설치 방법 창(웹) — 휴대폰은 아래에서 올라오는 판, 넓은 화면은 가운데 창 */
 export function InstallWebSheet({ title, platform, isInAppBrowser, browserHint, copied, onCopy, onClose, closeRef }: SheetProps) {
+    const { locale, menuLabel: labelText } = useI18n();
     // 창이 열리면 닫기 단추에 초점(예전 창과 같은 동작)
     useEffect(() => {
         closeRef.current?.focus();
@@ -171,9 +175,9 @@ export function InstallWebSheet({ title, platform, isInAppBrowser, browserHint, 
 
     return (
         <div className="aiw-sheet-wrap" data-app-install-web>
-            <button type="button" className="aiw-dim" onClick={onClose} aria-label="설치 안내 닫기" />
+            <button type="button" className="aiw-dim" onClick={onClose} aria-label={labelText("설치 안내 닫기")} />
             <section className="aiw-sheet" role="dialog" aria-modal="true" aria-labelledby="pwa-install-title">
-                <button ref={closeRef} type="button" onClick={onClose} className="aiw-close" aria-label="닫기">
+                <button ref={closeRef} type="button" onClick={onClose} className="aiw-close" aria-label={labelText("닫기")}>
                     <i className="fa-solid fa-xmark" aria-hidden="true" />
                 </button>
                 <header className="aiw-sheet-head">
@@ -182,13 +186,13 @@ export function InstallWebSheet({ title, platform, isInAppBrowser, browserHint, 
                     </span>
                     <div>
                         <p className="aiw-kicker">ADD TO HOME</p>
-                        <h2 id="pwa-install-title">{title}</h2>
-                        <p className="aiw-sheet-sub">한 번 추가하면 홈 화면에서 바로 열려요</p>
+                        <h2 id="pwa-install-title">{labelText(title)}</h2>
+                        <p className="aiw-sheet-sub">{labelText("한 번 추가하면 홈 화면에서 바로 열려요")}</p>
                     </div>
                 </header>
                 {isInAppBrowser ? <InAppNote hint={browserHint} /> : null}
                 <div className="aiw-sheet-steps">
-                    <p className="aiw-sheet-steps-title"><i className="fa-solid fa-mobile-screen-button" aria-hidden="true" /> {platformTitle(platform)}</p>
+                    <p className="aiw-sheet-steps-title"><i className="fa-solid fa-mobile-screen-button" aria-hidden="true" /> {labelText(platformTitle(platform))}</p>
                     <InstallWebSteps platform={platform} />
                 </div>
                 <div className="aiw-sheet-actions">
@@ -196,11 +200,11 @@ export function InstallWebSheet({ title, platform, isInAppBrowser, browserHint, 
                     {isInAppBrowser ? (
                         <button type="button" className="aiw-ghost" onClick={onCopy}>
                             <i className={`fa-solid ${copied ? "fa-check" : "fa-copy"}`} aria-hidden="true" />
-                            {copied ? "앱 주소를 복사했어요" : "앱 주소 복사하기"}
+                            {labelText(copied ? "앱 주소를 복사했어요" : "앱 주소 복사하기")}
                         </button>
                     ) : null}
                     <button type="button" className="aiw-install" onClick={onClose}>
-                        확인했어요 <i className="fa-solid fa-paw" aria-hidden="true" />
+                        {labelText("확인했어요")} <i className="fa-solid fa-paw" aria-hidden="true" />
                     </button>
                 </div>
             </section>

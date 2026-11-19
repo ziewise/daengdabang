@@ -225,7 +225,7 @@ export default function HotPickSection() {
             <div className="mx-auto max-w-[1400px] px-6">
                 {/* 제목 — 다른 섹션과 같은 모양 */}
                 <div className="mb-6 md:mb-8">
-                    <h2 className="mb-1.5 text-2xl font-black tracking-tight md:text-3xl">{locale === "en" ? "DaengDaBang Hot Picks" : "댕다방 핫픽"}</h2>
+                    <h2 className="mb-1.5 text-2xl font-black tracking-tight md:text-3xl">{locale === "en" ? "댕다방 Hot Picks" : "댕다방 핫픽"}</h2>
                     <p className="text-sm text-neutral-500">{locale === "en" ? "Best-loved items right now" : "요즘 가장 사랑받는 인기 상품"}</p>
                 </div>
 

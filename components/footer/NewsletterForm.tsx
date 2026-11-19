@@ -13,6 +13,7 @@ import { isInternalSocialEmail } from "@/lib/member-account-display";
 import { useAuth } from "@/lib/store";
 
 export default function NewsletterForm() {
+    const { menuLabel: labelText } = useI18n();
     const { locale } = useI18n();
     const { hydrated, user } = useAuth();
     const [consentChecked, setConsentChecked] = useState(false);
@@ -72,13 +73,13 @@ export default function NewsletterForm() {
     };
 
     return (
-        <form onSubmit={submit} className="w-full max-w-[360px]" aria-label="댕다방 뉴스레터 구독">
+        <form onSubmit={submit} className="w-full max-w-[360px]" aria-label={labelText("댕다방 뉴스레터 구독")}>
             <div className="flex gap-1.5 rounded-full border border-neutral-200 bg-white p-1">
                 <input
                     type="email"
                     value={user.email}
                     readOnly
-                    aria-label="구독 이메일"
+                    aria-label={labelText("구독 이메일")}
                     className="min-w-0 flex-1 bg-transparent px-3.5 text-xs font-bold outline-none"
                 />
                 <button
@@ -97,7 +98,7 @@ export default function NewsletterForm() {
                         onChange={(event) => setConsentChecked(event.target.checked)}
                         className="mt-0.5"
                     />
-                    이벤트·신상품 등 마케팅 이메일 수신에 동의합니다. 언제든 철회할 수 있습니다.
+                    {labelText("이벤트·신상품 등 마케팅 이메일 수신에 동의합니다. 언제든 철회할 수 있습니다.")}
                 </label>
             )}
             {message && <p className="mt-1.5 text-[10px] font-bold text-neutral-600" role="status">{message}</p>}

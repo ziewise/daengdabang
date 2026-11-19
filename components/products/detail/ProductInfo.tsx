@@ -10,7 +10,7 @@ import { reviewSellerLabel } from "@/lib/catalog/review-groups";
  *   → 수량·색상·누적은 시트에서 확정(위/아래 동작 통일, 스크롤 위치와 무관하게 옵션 선택 가능).
  * - 메인 액션 버튼이 스크롤로 화면을 벗어나면 하단 고정 바를 띄운다(상세/리뷰까지 내려가도 구매 가능).
  * - 2026-11-17 품절(모든 옵션 품절 · 상품 품절): 장바구니 · 바로 구매 대신 [일시품절](누를 수 없음) + [재입고 알림].
- *   재입고 알림 신청 · 발송은 서버(협업자)가 만들 예정 — 지금은 버튼만(data-restock-alert, 누르면 "곧 열려요" 안내).
+ *   재입고 알림은 협업자 기능 RestockButton(로그인 확인 · 신청 창 · 이메일 · 마이페이지)을 우리 단추 모양으로 씀(2026-11-19 병합).
  */
 
 import { useEffect, useRef, useState } from "react";
@@ -32,6 +32,7 @@ import { daengLabCoinsForUnitPrice } from "@/lib/daenglab-rewards";
 import DaengLabCoinMark from "@/components/petlens/DaengLabCoinMark";
 import ProductShareActions from "./ProductShareActions";
 import OptionSheet from "./OptionSheet";
+import RestockButton from "./RestockButton";
 import ColorSelect from "./ColorSelect";
 import PurchaseEvidenceCard from "./PurchaseEvidenceCard";
 import ReturnPolicyDialogLink from "@/components/policy/ReturnPolicyDialogLink";
@@ -47,6 +48,7 @@ interface Props {
 }
 
 export default function ProductInfo({ product, colorIdx = null, onColorChange, onTryOn }: Props) {
+    const { menuLabel: labelText } = useI18n();
     const p = useLiveInventoryProduct(product);
     const { toggleWishlist, isWished } = useStore();
     const { user } = useAuth();
@@ -72,9 +74,6 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
     const [sheetMode, setSheetMode] = useState<null | "cart" | "buy">(null);
     // 품절 — 담기 · 구매 대신 일시품절 + 재입고 알림(판매 중지 · 재고 확인 필요는 지금처럼 누를 수 없는 담기 · 구매)
     const soldOut = purchaseState.state === "sold_out";
-    // 재입고 알림 — 서버 기능 전까지는 안내만(사용자 11-17 "우선 버튼만")
-    const [restockNote, setRestockNote] = useState(false);
-    const askRestock = () => setRestockNote(true);
     const [toast, setToast] = useState(false);
     const [twinStat, setTwinStat] = useState<TwinProductStat | null>(null);
 
@@ -168,14 +167,14 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
 
                 {(p.externalReviewCount ?? 0) > 0 && (
                     <div className="pd-review-line flex flex-wrap items-center gap-2 text-sm">
-                        <span className="text-xs text-neutral-500">{locale === "en" ? "Naver Daengdabang store reviews" : "네이버 댕다방 스토어 후기"}</span>
+                        <span className="text-xs text-neutral-500">{locale === "en" ? "댕다방 store on Naver reviews" : "네이버 댕다방 스토어 후기"}</span>
                         <i className="fa-solid fa-star text-amber-400" />
                         <span className="font-black">{p.externalReviewAverage?.toFixed(1) ?? '—'}</span>
                         <span className="text-neutral-300">|</span>
                         <a href="#tab-review" className="font-bold text-neutral-600 hover:text-indigo-600">
                             {p.externalReviewCount?.toLocaleString(locale === "en" ? "en-US" : "ko-KR")} {locale === "en" ? "reviews" : "개 후기"}
                         </a>
-                        <span className="basis-full text-xs leading-5 text-neutral-500">{reviewSellerLabel(p.externalReviewUrl)}. {locale === "en" ? "Separate from this site's purchase reviews." : "자사몰 구매 후기와 별개입니다."}</span>
+                        <span className="basis-full text-xs leading-5 text-neutral-500">{reviewSellerLabel(p.externalReviewUrl, locale === "en")}. {locale === "en" ? "Separate from this site's purchase reviews." : "자사몰 구매 후기와 별개입니다."}</span>
                     </div>
                 )}
 
@@ -264,7 +263,7 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
                                     </a>
                                 ) : (
                                     <ReturnPolicyDialogLink
-                                        label="배송·반품 안내"
+                                        label={labelText("배송·반품 안내")}
                                         className="ml-2 font-black text-indigo-700 underline underline-offset-2"
                                     />
                                 )}
@@ -274,7 +273,7 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
                 </ul>
 
                 <PurchaseEvidenceCard product={p} />
-                {!purchaseState.purchasable && (
+                {!purchaseState.purchasable && purchaseState.state !== "unknown" && (
                     <div data-inventory-state={purchaseState.state} className="pd-stock rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm">
                         <p className="font-bold text-amber-950">{purchaseStateLabel(purchaseState, locale) || (locale === "en" ? "Availability varies by option." : "옵션별 판매 상태를 선택창에서 확인해 주세요.")}</p>
                         {!purchaseState.purchasable && <button type="button" onClick={() => setSheetMode("cart")} className="mt-2 text-xs font-black underline">{locale === "en" ? "View option status" : "옵션별 재고 보기"}</button>}
@@ -282,7 +281,7 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
                 )}
 
                 {/* 색상 — PC(lg+)는 여기(우측 구매정보), 모바일은 이미지 바로 아래(ProductDetailClient)에서 표시 */}
-                <ColorSelect
+                <ColorSelect folder={p.folder}
                     colors={colors}
                     colorIdx={colorIdx}
                     onColorChange={onColorChange}
@@ -346,16 +345,13 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
                                 <i className="fa-solid fa-box-open shrink-0 text-sm" aria-hidden="true" />
                                 <span className="break-keep whitespace-normal text-center leading-tight">{locale === "en" ? "Sold out" : "일시품절"}</span>
                             </button>
-                            {/* 품절 ② 재입고 알림 — 구매 단추 자리 · 모양 */}
-                            <button
-                                type="button"
-                                onClick={askRestock}
-                                data-restock-alert=""
-                                className="pd-buy flex h-14 min-w-0 items-center justify-center gap-1.5 rounded-md bg-indigo-600 px-1 text-base font-black text-white transition hover:bg-indigo-700"
+                            {/* 품절 ② 재입고 알림 — 구매 단추 자리 · 모양, 신청은 협업자 기능(RestockButton: 로그인 확인 · 신청 창 · 이메일 · 마이페이지) */}
+                            <RestockButton
+                                product={p}
+                                buttonClassName="pd-buy flex h-14 min-w-0 items-center justify-center gap-1.5 rounded-md bg-indigo-600 px-1 text-base font-black text-white transition hover:bg-indigo-700 [&>span]:break-keep [&>span]:whitespace-normal [&>span]:text-center [&>span]:leading-tight"
                             >
                                 <i className="fa-solid fa-bell shrink-0 text-sm" aria-hidden="true" />
-                                <span className="break-keep whitespace-normal text-center leading-tight">{locale === "en" ? "Notify me" : "재입고 알림"}</span>
-                            </button>
+                            </RestockButton>
                         </>
                     ) : (
                         <>
@@ -375,17 +371,11 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
                             className="pd-buy flex h-14 min-w-0 items-center justify-center gap-1.5 rounded-md bg-indigo-600 px-1 text-base font-black text-white transition hover:bg-indigo-700"
                         >
                             <i className="fa-solid fa-credit-card shrink-0 text-sm" />
-                            <span className="break-keep whitespace-normal text-center leading-tight">{locale === "en" ? "Buy now" : "바로 구매"}</span>
+                            <span className="break-keep whitespace-normal text-center leading-tight">{!purchaseState.purchasable ? purchaseStateLabel(purchaseState, locale) || (locale === "en" ? "Unavailable" : "일시 구매 불가") : locale === "en" ? "Buy now" : "바로 구매"}</span>
                         </button>
                         </>
                     )}
                 </div>
-                {/* 재입고 알림 안내 — 서버 기능이 열리기 전까지 */}
-                {soldOut && restockNote && (
-                    <p role="status" data-restock-note="" className="pd-restock-note -mt-1 rounded-lg bg-indigo-50 px-3 py-2 text-xs font-bold text-indigo-700">
-                        {locale === "en" ? "Restock alerts are coming soon." : "재입고 알림은 곧 열려요. 조금만 기다려 주세요."}
-                    </p>
-                )}
             </div>
 
             {/* 스크롤 추적 하단 고정 바 — 버튼을 누르면 옵션 시트가 열린다 */}
@@ -422,15 +412,12 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
                             >
                                 {locale === "en" ? "Sold out" : "일시품절"}
                             </button>
-                            <button
-                                type="button"
-                                onClick={() => { askRestock(); actionRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }); }}
-                                data-restock-alert=""
-                                className="pd-bar-buy h-11 shrink-0 rounded-md bg-indigo-600 px-4 text-sm font-black text-white transition hover:bg-indigo-700 sm:px-6"
+                            <RestockButton
+                                product={p}
+                                buttonClassName="pd-bar-buy inline-flex h-11 shrink-0 items-center gap-1 rounded-md bg-indigo-600 px-4 text-sm font-black text-white transition hover:bg-indigo-700 sm:gap-1.5 sm:px-6"
                             >
-                                <i className="fa-solid fa-bell text-xs sm:mr-1.5" aria-hidden="true" />
-                                <span className="ml-1 sm:ml-0">{locale === "en" ? "Notify me" : "재입고 알림"}</span>
-                            </button>
+                                <i className="fa-solid fa-bell text-xs" aria-hidden="true" />
+                            </RestockButton>
                         </>
                     ) : (
                         <>
@@ -450,7 +437,7 @@ export default function ProductInfo({ product, colorIdx = null, onColorChange, o
                             data-pet-guide-target="product-actions"
                             className="pd-bar-buy h-11 shrink-0 rounded-md bg-indigo-600 px-4 text-sm font-black text-white transition hover:bg-indigo-700 sm:px-6"
                         >
-                            {locale === "en" ? "Buy now" : "바로 구매"}
+                            {!purchaseState.purchasable ? purchaseStateLabel(purchaseState, locale) || (locale === "en" ? "Unavailable" : "일시 구매 불가") : locale === "en" ? "Buy now" : "바로 구매"}
                         </button>
                         </>
                     )}

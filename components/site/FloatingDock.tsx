@@ -26,6 +26,7 @@
  */
 "use client";
 
+import { useCareTalkCopy } from "@/hooks/useCareTalkCopy";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import dynamic from "next/dynamic";
@@ -41,6 +42,7 @@ function isHeroRoute(pathname: string | null) {
 }
 
 export default function FloatingDock() {
+    const copy = useCareTalkCopy();
     const pathname = usePathname();
     const heroRouteActive = isHeroRoute(pathname);
     const [shown, setShown] = useState(false);
@@ -153,7 +155,7 @@ export default function FloatingDock() {
                         <button type="button" onClick={() => openChatWidget()}
                             className={`${chatStyles.trigger} ddb-header-tip ddb-tip-left flex h-14 w-14 items-center justify-center rounded-full text-white`}
                             data-chat-open="false" data-pet-guide-target="chatbot" data-mobile-chat-trigger
-                            aria-expanded={false} aria-label="채팅 열기" data-header-tip="케어톡">
+                            aria-expanded={false} aria-label={copy("채팅 열기")} data-header-tip="케어톡">
                             <i className="fa-solid fa-comments text-lg" aria-hidden="true" />
                         </button>
                     </div>

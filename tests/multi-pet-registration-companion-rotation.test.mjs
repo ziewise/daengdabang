@@ -69,7 +69,7 @@ test("registered companion dogs rotate one at a time without persisting timed ch
     assert.doesNotMatch(timedRotation, /writeLocalCompanionSettings|onSettingsChange|savePetProfileSmart|upsertPet/);
 
     assert.match(layer, /displayBreedId = visualBreedId \|\| runtimeSettings\.breedId/);
-    assert.match(layer, /\{runtimeSettings\.activePetName\}<\/span>/);
+    assert.match(layer, /\{buddyName\}<\/span>/);
     assert.match(layer, /key=\{runtimePetKey\}[\s\S]*?breedId=\{displayBreedId\}/);
 });
 

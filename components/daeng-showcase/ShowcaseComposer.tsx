@@ -7,6 +7,7 @@
  * 꾸밈: app/showcase-compose-web.css(.scm-* 창 · .scl-* 페이지 단추 카드)
  */
 
+import { useI18n } from "@/lib/i18n";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
@@ -49,6 +50,7 @@ export default function ShowcaseComposer({
     open = false,
     onClose,
 }: ShowcaseComposerProps) {
+    const { menuLabel: labelText } = useI18n();
     const fileInputRef = useRef<HTMLInputElement>(null);
     const closeRef = useRef<HTMLButtonElement>(null);
     const previewUrlRef = useRef("");
@@ -191,10 +193,10 @@ export default function ShowcaseComposer({
             <header className="scm-head">
                 <div className="scm-head-text">
                     <p className="ddb-crayon-kicker scm-kicker">SHARE TODAY</p>
-                    <h2 id="showcase-composer-title" className="scm-title">오늘의 <em>한 장</em> 올리기</h2>
+                    <h2 id="showcase-composer-title" className="scm-title">{labelText("오늘의")} <em>{labelText("한 장")}</em> {labelText("올리기")}</h2>
                 </div>
-                <span className="scm-badge"><i className="fa-solid fa-earth-asia" aria-hidden="true" />회원 공개</span>
-                <button ref={closeRef} type="button" className="scm-close" onClick={closeDialog} aria-label="올리기 창 닫기" disabled={submitting}>
+                <span className="scm-badge"><i className="fa-solid fa-earth-asia" aria-hidden="true" />{labelText("회원 공개")}</span>
+                <button ref={closeRef} type="button" className="scm-close" onClick={closeDialog} aria-label={labelText("올리기 창 닫기")} disabled={submitting}>
                     <i className="fa-solid fa-xmark" aria-hidden="true" />
                 </button>
             </header>
@@ -202,17 +204,17 @@ export default function ShowcaseComposer({
             {/* 몸통 — 사진 | 이야기 · 이름 · 반려견 · 주제 */}
             <div className="scm-body">
                 <div className="scm-photo-col">
-                    <label htmlFor="showcase-photo" className="sr-only">사진 1장</label>
+                    <label htmlFor="showcase-photo" className="sr-only">{labelText("사진 1장")}</label>
                     <div className={previewUrl ? "scm-photo has-photo" : "scm-photo"}>
                         {previewUrl ? (
                             <>
                                 {/* eslint-disable-next-line @next/next/no-img-element -- local object URL preview cannot use the static image loader. */}
-                                <img src={previewUrl} alt="올릴 사진 미리보기" className="scm-photo-img" />
-                                <button type="button" onClick={clearPhoto} className="scm-photo-x" aria-label="선택한 사진 지우기" disabled={submitting}>
+                                <img src={previewUrl} alt={labelText("올릴 사진 미리보기")} className="scm-photo-img" />
+                                <button type="button" onClick={clearPhoto} className="scm-photo-x" aria-label={labelText("선택한 사진 지우기")} disabled={submitting}>
                                     <i className="fa-solid fa-xmark" aria-hidden="true" />
                                 </button>
                                 <button type="button" onClick={() => fileInputRef.current?.click()} className="scm-repick" disabled={submitting}>
-                                    <i className="fa-solid fa-rotate" aria-hidden="true" />다른 사진 선택
+                                    <i className="fa-solid fa-rotate" aria-hidden="true" />{labelText("다른 사진 선택")}
                                 </button>
                             </>
                         ) : (
@@ -221,8 +223,8 @@ export default function ShowcaseComposer({
                                     {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                                     <img src="/images/ui/mypet-shutter-384.webp" alt="" width={84} height={84} />
                                 </span>
-                                <span className="scm-drop-pill"><i className="fa-solid fa-image" aria-hidden="true" />사진 고르기</span>
-                                <span className="scm-drop-note">JPG · PNG · WebP · 최대 8MB</span>
+                                <span className="scm-drop-pill"><i className="fa-solid fa-image" aria-hidden="true" />{labelText("사진 고르기")}</span>
+                                <span className="scm-drop-note">{labelText("JPG · PNG · WebP · 최대 8MB")}</span>
                             </label>
                         )}
                     </div>
@@ -245,7 +247,7 @@ export default function ShowcaseComposer({
 
                 <div className="scm-fields">
                     <div className="scm-field">
-                        <label htmlFor="showcase-caption" className="scm-label">오늘의 이야기</label>
+                        <label htmlFor="showcase-caption" className="scm-label">{labelText("오늘의 이야기")}</label>
                         <div className="scm-text-wrap">
                             <textarea
                                 id="showcase-caption"
@@ -255,7 +257,7 @@ export default function ShowcaseComposer({
                                 minLength={2}
                                 maxLength={500}
                                 required
-                                placeholder="산책에서 만난 작은 순간, 귀여운 표정, 함께 기억하고 싶은 오늘을 적어 주세요."
+                                placeholder={labelText("산책에서 만난 작은 순간, 귀여운 표정, 함께 기억하고 싶은 오늘을 적어 주세요.")}
                                 className="scm-input scm-textarea"
                                 disabled={submitting}
                             />
@@ -265,7 +267,7 @@ export default function ShowcaseComposer({
 
                     <div className="scm-two">
                         <div className="scm-field">
-                            <label htmlFor="showcase-display-name" className="scm-label">피드에 보일 이름</label>
+                            <label htmlFor="showcase-display-name" className="scm-label">{labelText("피드에 보일 이름")}</label>
                             <input
                                 id="showcase-display-name"
                                 value={displayName}
@@ -278,7 +280,7 @@ export default function ShowcaseComposer({
                             />
                         </div>
                         <div className="scm-field">
-                            <label htmlFor="showcase-pet" className="scm-label">함께 나온 반려견 <span className="scm-opt">선택</span></label>
+                            <label htmlFor="showcase-pet" className="scm-label">{labelText("함께 나온 반려견")} <span className="scm-opt">{labelText("선택")}</span></label>
                             <select
                                 id="showcase-pet"
                                 value={petProfileId}
@@ -286,7 +288,7 @@ export default function ShowcaseComposer({
                                 className="scm-input scm-select"
                                 disabled={submitting}
                             >
-                                <option value="">표시하지 않기</option>
+                                <option value="">{labelText("표시하지 않기")}</option>
                                 {pets.map((pet) => (
                                     <option key={pet.id} value={pet.id}>{pet.name}{pet.breed ? ` · ${pet.breed}` : ""}</option>
                                 ))}
@@ -296,8 +298,8 @@ export default function ShowcaseComposer({
 
                     {/* 오늘의 댕주제 — 한 줄 켜고 끄기(끄면 일반 댕자랑) */}
                     {topic ? (
-                        <label className={joinTopic ? "scm-topic is-on" : "scm-topic"} title="선택하면 이 글이 현재 주제와 함께 표시돼요. 체크를 풀어 일반 댕자랑으로 올릴 수도 있습니다.">
-                            <span className="scm-topic-text"><b>#{topic.title}</b> 주제로 올리기</span>
+                        <label className={joinTopic ? "scm-topic is-on" : "scm-topic"} title={labelText("선택하면 이 글이 현재 주제와 함께 표시돼요. 체크를 풀어 일반 댕자랑으로 올릴 수도 있습니다.")}>
+                            <span className="scm-topic-text"><b>#{topic.title}</b> {labelText("주제로 올리기")}</span>
                             <input
                                 type="checkbox"
                                 checked={joinTopic}
@@ -324,13 +326,12 @@ export default function ShowcaseComposer({
                                 required
                                 disabled={submitting}
                             />
-                            <span>피드 공개에 동의해요 <strong className="scm-tag is-must">필수</strong></span>
+                            <span>{labelText("피드 공개에 동의해요")} <strong className="scm-tag is-must">{labelText("필수")}</strong></span>
                         </label>
                         <details className="scm-more">
-                            <summary>자세히</summary>
+                            <summary>{labelText("자세히")}</summary>
                             <p>
-                                선택한 사진과 글, 공개 이름, 선택한 반려견 이름·견종이 누구나 보는 댕자랑 피드에 게시되는 것에 동의합니다.
-                                직접 촬영했거나 게시 권한이 있는 사진만 사용하고, 사람 얼굴·연락처 등 개인정보가 보이는 사진은 올리지 않겠습니다. <Link href="/privacy/" className="scm-link">개인정보처리방침</Link>
+                                {labelText("선택한 사진과 글, 공개 이름, 선택한 반려견 이름·견종이 누구나 보는 댕자랑 피드에 게시되는 것에 동의합니다.\n                                직접 촬영했거나 게시 권한이 있는 사진만 사용하고, 사람 얼굴·연락처 등 개인정보가 보이는 사진은 올리지 않겠습니다.")} <Link href="/privacy/" className="scm-link">{labelText("개인정보처리방침")}</Link>
                             </p>
                         </details>
                     </div>
@@ -343,11 +344,11 @@ export default function ShowcaseComposer({
                                 className="scm-check"
                                 disabled={submitting}
                             />
-                            <span>공식 SNS 소개에도 동의해요 <strong className="scm-tag is-opt">선택 · 기본 해제</strong></span>
+                            <span>{labelText("공식 SNS 소개에도 동의해요")} <strong className="scm-tag is-opt">{labelText("선택 · 기본 해제")}</strong></span>
                         </label>
                         <details className="scm-more">
-                            <summary>자세히</summary>
-                            <p>운영자 검수 후 댕다방 공식 Instagram·Threads·Naver Blog에 이 게시물을 소개하는 데 동의합니다. 선택하지 않아도 피드 게시에는 영향이 없습니다.</p>
+                            <summary>{labelText("자세히")}</summary>
+                            <p>{labelText("운영자 검수 후 댕다방 공식 Instagram·Threads·Naver Blog에 이 게시물을 소개하는 데 동의합니다. 선택하지 않아도 피드 게시에는 영향이 없습니다.")}</p>
                         </details>
                     </div>
                 </div>
@@ -356,7 +357,7 @@ export default function ShowcaseComposer({
                     {submitting ? (
                         <div className="scm-progress" aria-label={`사진 올리는 중 ${progress}%`}>
                             <div><span style={{ width: `${progress}%` }} /></div>
-                            <p>안전하게 사진을 준비하는 중 · {progress}%</p>
+                            <p>{labelText("안전하게 사진을 준비하는 중 ·")} {progress}%</p>
                         </div>
                     ) : null}
                     <p className={error ? "scm-status is-error" : "scm-status"} role="status" aria-live="polite">
@@ -364,7 +365,7 @@ export default function ShowcaseComposer({
                     </p>
                     <button type="submit" className="scm-submit" disabled={submitting}>
                         <i className={`fa-solid ${submitting ? "fa-spinner fa-spin" : "fa-paw"}`} aria-hidden="true" />
-                        {submitting ? "댕자랑 올리는 중" : "오늘의 댕자랑 공개하기"}
+                        {labelText(submitting ? "댕자랑 올리는 중" : "오늘의 댕자랑 공개하기")}
                     </button>
                 </div>
             </footer>

@@ -15,6 +15,10 @@ public class MainActivity extends BridgeActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         try {
+            // Register lightweight bridges before Capacitor exports plugin
+            // headers to the WebView. Late registration hides them from JS.
+            registerPlugin(LocationSettingsPlugin.class);
+            registerPlugin(MediaPermissionsPlugin.class);
             super.onCreate(savedInstanceState);
         } catch (RuntimeException | LinkageError startupError) {
             Log.e(TAG, "The native shell could not start; opening the web app fallback.", startupError);

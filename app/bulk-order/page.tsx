@@ -1,3 +1,4 @@
+import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
 import type { Metadata } from "next";
 import Link from "next/link";
 import BusinessInquiryPanel from "@/components/contact/BusinessInquiryPanel";
@@ -36,13 +37,13 @@ export default function BulkOrderPage() {
                     <div>
                         <p className="text-xs font-black tracking-[0.24em] text-orange-300">BULK ORDER</p>
                         <h1 className="mt-4 text-3xl font-black leading-tight tracking-[-0.035em] sm:text-5xl">
-                            여러 아이를 위한 주문도<br className="hidden sm:block" /> 한 건처럼 세심하게.
+                            <LocalizedMenuLabel label={"여러 아이를 위한 주문도"} /><br className="hidden sm:block" /> <LocalizedMenuLabel label={"한 건처럼 세심하게."} />
                         </h1>
                         <p className="mt-5 max-w-2xl text-sm font-bold leading-7 text-neutral-300 sm:text-base sm:leading-8">
-                            기업·기관·단체의 대량 구매는 상품과 수량만으로 끝나지 않습니다. 사용 목적, 예산, 일정과 배송 조건을 함께 살펴 가능한 범위를 안내드립니다.
+                            <LocalizedMenuLabel label={"기업·기관·단체의 대량 구매는 상품과 수량만으로 끝나지 않습니다. 사용 목적, 예산, 일정과 배송 조건을 함께 살펴 가능한 범위를 안내드립니다."} />
                         </p>
                         <a href="#bulk-order-form" style={{ color: "#171717" }} className="mt-7 inline-flex min-h-11 items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-black transition hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
-                            상담 내용 작성하기 <i className="fa-solid fa-arrow-down text-xs" aria-hidden="true" />
+                            <LocalizedMenuLabel label={"상담 내용 작성하기"} /> <i className="fa-solid fa-arrow-down text-xs" aria-hidden="true" />
                         </a>
                     </div>
                     <aside className="rounded-3xl border border-white/15 bg-white/10 p-5 backdrop-blur">
@@ -59,7 +60,7 @@ export default function BulkOrderPage() {
 
             <section className="mt-12" aria-labelledby="bulk-use-title">
                 <p className="text-xs font-black tracking-[0.2em] text-aurora-indigo">FOR TEAMS &amp; GROUPS</p>
-                <h2 id="bulk-use-title" className="mt-2 text-2xl font-black tracking-tight text-foreground sm:text-3xl">목적에 맞춰 함께 확인합니다</h2>
+                <h2 id="bulk-use-title" className="mt-2 text-2xl font-black tracking-tight text-foreground sm:text-3xl"><LocalizedMenuLabel label={"목적에 맞춰 함께 확인합니다"} /></h2>
                 <div className="mt-6 grid gap-4 md:grid-cols-3">
                     {useCases.map(([icon, title, body]) => (
                         <article key={title} className="rounded-3xl border border-white/70 bg-white/75 p-6 shadow-card backdrop-blur">
@@ -92,7 +93,7 @@ export default function BulkOrderPage() {
             </div>
 
             <p className="mt-6 text-center text-sm font-bold text-neutral-500">
-                일반 주문·배송 문의는 <Link href="/inquiry" className="font-black text-aurora-indigo underline underline-offset-2">1:1 문의</Link>를 이용해 주세요.
+                <LocalizedMenuLabel label={"일반 주문·배송 문의는"} /> <Link href="/inquiry" className="font-black text-aurora-indigo underline underline-offset-2"><LocalizedMenuLabel label={"1:1 문의"} /></Link><LocalizedMenuLabel label={"를 이용해 주세요."} />
             </p>
         </div>
     );

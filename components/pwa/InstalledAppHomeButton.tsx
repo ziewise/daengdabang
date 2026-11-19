@@ -1,5 +1,7 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
+
 /**
  * 헤더 "앱 설치" 동그라미 아이콘 (모바일 웹 · 설치 전) — 누르면 앱 설치 안내 페이지(/app/)
  * ---------------------------------------------------------------------
@@ -104,6 +106,7 @@ export function useAppInstallBubble(media: string) {
 }
 
 export default function InstalledAppHomeButton() {
+    const { locale, menuLabel: labelText } = useI18n();
     // 모바일(768px 미만)에서만 말풍선 — 시간 · 조건은 useAppInstallBubble
     const { bubble, onAppRoute, markVisited: goInstallGuide, hideToday } = useAppInstallBubble("(max-width: 767px)");
 
@@ -117,19 +120,19 @@ export default function InstalledAppHomeButton() {
                 data-installed-app-home-button
                 onClick={goInstallGuide}
                 className="group relative inline-flex h-[42px] w-[42px] shrink-0 items-center justify-center transition hover:-translate-y-px focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-400 md:hidden"
-                aria-label="댕다방 앱 설치 안내"
+                aria-label={labelText("댕다방 앱 설치 안내")}
             >
                 {/* 앱 설치 아이콘 — 원형 배지 그림(자체 원/테두리 포함, 사용자 3D 그림) */}
                 <Image src="/images/ui/header-app-install.webp" alt="" fill sizes="42px" className="object-contain" />
-                <span className="sr-only">앱 설치 안내</span>
+                <span className="sr-only">{labelText("앱 설치 안내")}</span>
             </Link>
             {bubble ? (
                 <span role="status" className={`ddb-aib ${bubble === "out" ? "is-out" : ""}`}>
                     <Link href="/app/" onClick={goInstallGuide} className="ddb-aib-text">
-                        <b>댕다방,</b> 앱에서 더 편하게 즐겨보세요 🐾
+                        <b>댕다방</b>{locale === "en" ? " is even handier in the app 🐾" : ", 앱에서 더 편하게 즐겨보세요 🐾"}
                     </Link>
                     <button type="button" onClick={hideToday} className="ddb-aib-hide">
-                        오늘 안 보기 <span aria-hidden="true">×</span>
+                        {labelText("오늘 안 보기")} <span aria-hidden="true">×</span>
                     </button>
                 </span>
             ) : null}

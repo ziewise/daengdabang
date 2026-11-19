@@ -73,8 +73,8 @@ test("clicking the dog opens a compact home-or-settings dialog on desktop and mo
     assert.match(layer, /data-pet-companion-quick-actions/);
     assert.match(layer, /data-pet-companion-dialog/);
     assert.match(layer, /role="dialog"[\s\S]{0,100}aria-modal="true"/);
-    assert.match(layer, /data-pet-quick-action="home"[\s\S]{0,180}집으로 보내기/);
-    assert.match(layer, /data-pet-quick-action="settings"[\s\S]{0,180}설정하기/);
+    assert.match(layer, /data-pet-quick-action="home"[^>]*>\s*<span[^>]*>[^<]*<\/span>\s*<span>\{petCopy\("집으로 보내기"\)/);
+    assert.match(layer, /data-pet-quick-action="settings"[\s\S]*?<span>\{petCopy\("설정하기"\)/);
     assert.match(layer, /const sendCompanionHome = \(\) => \{[\s\S]{0,100}onHomeRequest\(\)/);
     assert.match(layer, /if \(!drag\.moved\) \{[\s\S]{0,100}setQuickActionsOpen\(false\)/);
     assert.match(layer, /클릭해서 빠른 메뉴 열기/);

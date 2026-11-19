@@ -21,7 +21,7 @@ export default function BestSection() {
                 <div className="mb-6 flex flex-col gap-3 md:mb-8 md:flex-row md:items-end md:justify-between">
                     <div>
                         <h2 className="text-2xl md:text-3xl font-black tracking-tight mb-1.5">
-                            {locale === "en" ? "DaengDaBang Curated Picks" : "댕다방 추천 셀렉트"}
+                            {locale === "en" ? "댕다방 Curated Picks" : "댕다방 추천 셀렉트"}
                         </h2>
                         <p className="text-sm text-neutral-500">
                             {locale === "en" ? "Editorial picks based on product purpose and brand fit" : "상품 용도와 브랜드 구성을 살펴 고른 편집 추천"}

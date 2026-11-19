@@ -13,6 +13,7 @@
  * 꾸밈 CSS 는 app/daily-web.css 의 "하루 원판" 묶음.
  */
 
+import { useI18n } from "@/lib/i18n";
 import { useCallback, useEffect, useState, type CSSProperties } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -115,6 +116,7 @@ type Slot =
     | { kind: "analysis" };
 
 export default function MemberAiDashboard({ variant = "home" }: Props) {
+    const { menuLabel: labelText } = useI18n();
     const { hydrated, user } = useAuth();
     const [attendance, setAttendance] = useState<DaengLabAttendance | null>(null);
     const [engagement, setEngagement] = useState<DaengLabEngagement | null>(null);
@@ -208,9 +210,9 @@ export default function MemberAiDashboard({ variant = "home" }: Props) {
             <div className="mx-auto w-full max-w-[900px] px-4 py-16 text-center md:px-6">
                 <div className="ddb-crayon-paper rounded-[32px] border p-8 md:p-12">
                     <span className="ddb-crayon-icon mx-auto grid h-16 w-16 place-items-center rounded-3xl text-2xl" data-crayon-tone="coral"><i className="fa-solid fa-paw" /></span>
-                    <h1 className="ddb-crayon-title mt-5 text-4xl">로그인하고 오늘의 챌린지를 시작하세요</h1>
-                    <p className="mt-3 text-sm font-bold leading-6 text-neutral-600">출근도장과 XP, 코인 보상은 회원 계정에 안전하게 저장됩니다.</p>
-                    <Link href="/auth/login/?redirect=%2Ftreasure-mine%2F" className="btn btn-primary ddb-attention-cta mt-6">로그인하기</Link>
+                    <h1 className="ddb-crayon-title mt-5 text-4xl">{labelText("로그인하고 오늘의 챌린지를 시작하세요")}</h1>
+                    <p className="mt-3 text-sm font-bold leading-6 text-neutral-600">{labelText("출근도장과 XP, 코인 보상은 회원 계정에 안전하게 저장됩니다.")}</p>
+                    <Link href="/auth/login/?redirect=%2Ftreasure-mine%2F" className="btn btn-primary ddb-attention-cta mt-6">{labelText("로그인하기")}</Link>
                 </div>
             </div>
         );
@@ -284,7 +286,7 @@ export default function MemberAiDashboard({ variant = "home" }: Props) {
 
                 {/* 아이가 둘 이상이면 고르기 */}
                 {pets.length > 1 ? (
-                    <div className="dw-dial-pets" role="tablist" aria-label="보물광산에서 볼 강아지 선택" data-treasure-pet-selector>
+                    <div className="dw-dial-pets" role="tablist" aria-label={labelText("보물광산에서 볼 강아지 선택")} data-treasure-pet-selector>
                         {pets.map((candidate, index) => {
                             const key = dashboardPetKey(candidate, index);
                             const active = candidate === pet;
@@ -335,31 +337,31 @@ export default function MemberAiDashboard({ variant = "home" }: Props) {
                                     ) : (
                                         <span className="dw-dial-pet" style={{ backgroundImage: `url("${breedArt}")` } as CSSProperties} aria-hidden="true" />
                                     )}
-                                    <small>오늘 루틴</small>
+                                    <small>{labelText("오늘 루틴")}</small>
                                     <b>{careScore === null ? "—" : careScore}</b>
-                                    <small>{completedRoutineCount}/{slots.length} 완료</small>
+                                    <small>{completedRoutineCount}/{slots.length} {labelText("완료")}</small>
                                 </>
                             )}
                         />
                         )}
-                        {ready ? <p className="dw-dial-hint">조각을 눌러 보세요</p> : null}
+                        {ready ? <p className="dw-dial-hint">{labelText("조각을 눌러 보세요")}</p> : null}
                     </div>
 
                     <div className="dw-csheet is-pink dw-tlogin dw-dial-card" aria-live="polite">
                         {!ready ? (
                             <div className="dw-dial-card-in">
                                 <i className={`fa-solid ${loading ? "fa-circle-notch fa-spin" : "fa-paw"} text-3xl text-pink-300`} aria-hidden="true" />
-                                <p className="dw-tlogin-body">{loading ? "오늘의 보물을 준비하는 중이에요" : "오늘의 보물을 불러오지 못했어요. 잠시 뒤 다시 불러와 주세요."}</p>
-                                {!loading && <button type="button" onClick={() => void refresh()} className="ddb-motion-lift dw-pill dw-pill-sm mt-3">다시 불러오기</button>}
+                                <p className="dw-tlogin-body">{labelText(loading ? "오늘의 보물을 준비하는 중이에요" : "오늘의 보물을 불러오지 못했어요. 잠시 뒤 다시 불러와 주세요.")}</p>
+                                {!loading && <button type="button" onClick={() => void refresh()} className="ddb-motion-lift dw-pill dw-pill-sm mt-3">{labelText("다시 불러오기")}</button>}
                             </div>
                         ) : (
                             <div key={selected} className="dw-dial-card-in">
-                                <p className="ddb-crayon-kicker dw-kicker">지금 할 일 · {selected + 1}/{slots.length}</p>
+                                <p className="ddb-crayon-kicker dw-kicker">{labelText("지금 할 일 ·")} {selected + 1}/{slots.length}</p>
                                 <span className="dw-rring dw-tlogin-ring" aria-hidden="true"><span><Image src={slotArt} alt="" width={96} height={96} /></span></span>
                                 {slot.kind === "attendance" ? (
                                     <>
-                                        <h3 className="dw-tlogin-title">출근 도장 찍기</h3>
-                                        <p className="dw-tlogin-body">하루 한 번 도장을 찍으면 코인 {attendance!.dailyRewardDaengLabCoins}개가 지갑에 바로 들어와요.</p>
+                                        <h3 className="dw-tlogin-title">{labelText("출근 도장 찍기")}</h3>
+                                        <p className="dw-tlogin-body">{labelText("하루 한 번 도장을 찍으면 코인")} {attendance!.dailyRewardDaengLabCoins}{labelText("개가 지갑에 바로 들어와요.")}</p>
                                     </>
                                 ) : slot.kind === "task" ? (
                                     <>
@@ -368,22 +370,22 @@ export default function MemberAiDashboard({ variant = "home" }: Props) {
                                     </>
                                 ) : (
                                     <>
-                                        <h3 className="dw-tlogin-title">사진 건강 분석</h3>
-                                        <p className="dw-tlogin-body">{analyzedToday ? "오늘 사진 분석을 마쳤어요. 결과는 우리 아이 기록에서 볼 수 있어요." : "정면 · 옆 · 뒤 사진으로 지난 기록과 달라진 점을 살펴봐요."}</p>
+                                        <h3 className="dw-tlogin-title">{labelText("사진 건강 분석")}</h3>
+                                        <p className="dw-tlogin-body">{labelText(analyzedToday ? "오늘 사진 분석을 마쳤어요. 결과는 우리 아이 기록에서 볼 수 있어요." : "정면 · 옆 · 뒤 사진으로 지난 기록과 달라진 점을 살펴봐요.")}</p>
                                     </>
                                 )}
                                 <div className="mt-auto grid w-full gap-2 pt-4">
                                     {slot.kind === "attendance" ? (
                                         attendance!.claimedToday
-                                            ? <span className="dw-pill dw-pill-sm dw-dial-done"><i className="fa-solid fa-check mr-1.5" aria-hidden="true" />오늘 출근 완료</span>
+                                            ? <span className="dw-pill dw-pill-sm dw-dial-done"><i className="fa-solid fa-check mr-1.5" aria-hidden="true" />{labelText("오늘 출근 완료")}</span>
                                             : <button type="button" onClick={() => void onStamp()} disabled={claiming || loading} className="ddb-crayon-link ddb-attention-cta dw-pill dw-pill-main dw-pill-sm">{claiming ? "꾹…" : `도장 꾹! 코인 ${attendance!.dailyRewardDaengLabCoins}개 받기`}</button>
                                     ) : slot.kind === "task" ? (
                                         slot.completed
-                                            ? <span className="dw-pill dw-pill-sm dw-dial-done"><i className="fa-solid fa-check mr-1.5" aria-hidden="true" />완료 · +{slot.xp}XP</span>
+                                            ? <span className="dw-pill dw-pill-sm dw-dial-done"><i className="fa-solid fa-check mr-1.5" aria-hidden="true" />{labelText("완료 · +")}{slot.xp}XP</span>
                                             : <button type="button" onClick={() => void onTask(slot.taskId)} disabled={savingTask !== null} className="ddb-crayon-link ddb-attention-cta dw-pill dw-pill-main dw-pill-sm">{savingTask === slot.taskId ? "저장 중…" : `했어요 · +${slot.xp}XP`}</button>
                                     ) : (
                                         <Link href={petLensProfileHref(pet?.apiProfileId)} className="ddb-crayon-link ddb-attention-cta dw-pill dw-pill-main dw-pill-sm">
-                                            <i className={`fa-solid ${analyzedToday ? "fa-check" : "fa-camera"} mr-1.5`} aria-hidden="true" />{analyzedToday ? "사진 분석 다시 보기" : "사진 찍으러 가기"}
+                                            <i className={`fa-solid ${analyzedToday ? "fa-check" : "fa-camera"} mr-1.5`} aria-hidden="true" />{labelText(analyzedToday ? "사진 분석 다시 보기" : "사진 찍으러 가기")}
                                         </Link>
                                     )}
                                 </div>
@@ -401,15 +403,15 @@ export default function MemberAiDashboard({ variant = "home" }: Props) {
                         <div className="dw-dial-week-head">
                             <div>
                                 <p className="ddb-crayon-kicker dw-kicker">THIS WEEK</p>
-                                <h3 className="dw-tlogin-title">이번 주 출석 {engagement?.weeklyAttendanceProgress || 0}/{engagement?.weeklyAttendanceTarget || 7}</h3>
+                                <h3 className="dw-tlogin-title">{labelText("이번 주 출석")} {engagement?.weeklyAttendanceProgress || 0}/{engagement?.weeklyAttendanceTarget || 7}</h3>
                             </div>
                             <div className="dw-dial-chips">
-                                <span className="dw-chip">{attendance?.currentStreak || 0}일 연속 출근</span>
+                                <span className="dw-chip">{attendance?.currentStreak || 0}{labelText("일 연속 출근")}</span>
                                 <span className="dw-chip">{attendance ? `${attendance.wallet.daengLabCoins.toLocaleString("ko-KR")}C 보유` : "지갑 확인 중"}</span>
-                                <span className="dw-chip">하루 도장 코인 {attendance?.dailyRewardDaengLabCoins ?? 2}개</span>
+                                <span className="dw-chip">{labelText("하루 도장 코인")} {attendance?.dailyRewardDaengLabCoins ?? 2}{labelText("개")}</span>
                             </div>
                         </div>
-                        <ol className="dw-dsteps" aria-label="최근 7일 출근도장">
+                        <ol className="dw-dsteps" aria-label={labelText("최근 7일 출근도장")}>
                             {(attendance?.recentDays || []).map((day, index) => {
                                 const isToday = day.businessDate === today;
                                 const dayName = weekday(day.businessDate);
@@ -424,18 +426,18 @@ export default function MemberAiDashboard({ variant = "home" }: Props) {
                                             </span>
                                         ) : isToday && attendance && !attendance.claimedToday ? (
                                             <button type="button" onClick={() => void onStamp()} disabled={claiming || loading} className="dw-dstep-art dw-dial-slot" aria-label={`오늘 출근 도장 찍고 코인 ${attendance.dailyRewardDaengLabCoins}개 받기`}>
-                                                <span>{claiming ? "꾹…" : "붙이기"}</span>
+                                                <span>{labelText(claiming ? "꾹…" : "붙이기")}</span>
                                             </button>
                                         ) : (
                                             <span className="dw-dstep-art dw-dial-empty" aria-hidden="true" />
                                         )}
                                         <span className="dw-dstep-title">{isToday ? "오늘" : dayName}</span>
-                                        <span className="sr-only">{day.claimed ? "도장 찍음" : "도장 없음"}</span>
+                                        <span className="sr-only">{labelText(day.claimed ? "도장 찍음" : "도장 없음")}</span>
                                     </li>
                                 );
                             })}
                         </ol>
-                        <p className="dw-dial-rule"><i className="fa-solid fa-shield-heart" aria-hidden="true" /> 도장 날짜와 보상은 한국 시간 기준으로 서버가 확인하며, 같은 날 여러 번 눌러도 한 번만 지급됩니다. 원판 테두리의 루틴 점수는 의료 점수가 아닌 오늘 돌봄 완료율이에요.</p>
+                        <p className="dw-dial-rule"><i className="fa-solid fa-shield-heart" aria-hidden="true" /> {labelText("도장 날짜와 보상은 한국 시간 기준으로 서버가 확인하며, 같은 날 여러 번 눌러도 한 번만 지급됩니다. 원판 테두리의 루틴 점수는 의료 점수가 아닌 오늘 돌봄 완료율이에요.")}</p>
                     </div>
 
                     <div className="dw-csheet is-lav dw-dial-level">
@@ -443,20 +445,20 @@ export default function MemberAiDashboard({ variant = "home" }: Props) {
                             <span className="dw-rring" aria-hidden="true"><span><Image src="/images/ui/daily-hero-treasure-384.webp" alt="" width={72} height={72} /></span></span>
                             <div>
                                 <p className="ddb-crayon-kicker dw-kicker">LEVEL {engagement?.level || 1}</p>
-                                <h3 className="dw-tlogin-title">{(engagement?.level || 1) < 3 ? "건강 새싹" : "우리 아이 지킴이"}</h3>
+                                <h3 className="dw-tlogin-title">{labelText((engagement?.level || 1) < 3 ? "건강 새싹" : "우리 아이 지킴이")}</h3>
                             </div>
                         </div>
                         <div className="dw-dial-meter"><span style={{ width: `${levelProgress}%` }} /></div>
-                        <div className="dw-dial-xp"><span>{engagement?.xp || 0} XP</span><span>다음 레벨 {engagement?.nextLevelXp || 100} XP</span></div>
+                        <div className="dw-dial-xp"><span>{engagement?.xp || 0} XP</span><span>{labelText("다음 레벨")} {engagement?.nextLevelXp || 100} XP</span></div>
                         <dl className="dw-dial-facts">
-                            <div><dt>최근 건강 변화</dt><dd>{analysisStatus(pet?.rawAnalysis)}</dd></div>
-                            <div><dt>이번 달 AI 체크</dt><dd>{engagement?.monthlyAnalysisProgress || 0}/{engagement?.monthlyAnalysisTarget || 5}</dd></div>
+                            <div><dt>{labelText("최근 건강 변화")}</dt><dd>{analysisStatus(pet?.rawAnalysis)}</dd></div>
+                            <div><dt>{labelText("이번 달 AI 체크")}</dt><dd>{engagement?.monthlyAnalysisProgress || 0}/{engagement?.monthlyAnalysisTarget || 5}</dd></div>
                             <div>
-                                <dt>AI 추천</dt>
+                                <dt>{labelText("AI 추천")}</dt>
                                 <dd><Link href={pet ? (variant === "home" ? "#recommend" : "/#recommend") : "/mypage/?profile=required#pet-profiles"} className="ddb-motion-lift dw-dial-link">{pet ? recommendationCopy(pet.concerns || []) : "프로필 등록 후 맞춤 추천 받기"} <i className="fa-solid fa-arrow-right text-[10px]" aria-hidden="true" /></Link></dd>
                             </div>
                         </dl>
-                        <Link href="/my-pet/" className="ddb-motion-lift dw-pill dw-pill-sm mt-4">우리 아이 기록 보기</Link>
+                        <Link href="/my-pet/" className="ddb-motion-lift dw-pill dw-pill-sm mt-4">{labelText("우리 아이 기록 보기")}</Link>
                     </div>
                 </div>
                 ) : null}
@@ -464,7 +466,7 @@ export default function MemberAiDashboard({ variant = "home" }: Props) {
                 {error && (
                     <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-xs font-bold text-rose-800">
                         <span role="alert">{error}</span>
-                        <button type="button" onClick={() => void refresh()} className="font-black underline">다시 시도</button>
+                        <button type="button" onClick={() => void refresh()} className="font-black underline">{labelText("다시 시도")}</button>
                     </div>
                 )}
             </div>
@@ -473,5 +475,6 @@ export default function MemberAiDashboard({ variant = "home" }: Props) {
 }
 
 function DashboardLoading() {
-    return <div className="mx-auto grid min-h-[50vh] w-full max-w-[1280px] place-items-center px-4 py-12 text-sm font-black text-neutral-500"><i className="fa-solid fa-circle-notch fa-spin mr-2" />AI 챌린지를 불러오는 중입니다.</div>;
+    const { menuLabel: labelText } = useI18n();
+    return <div className="mx-auto grid min-h-[50vh] w-full max-w-[1280px] place-items-center px-4 py-12 text-sm font-black text-neutral-500"><i className="fa-solid fa-circle-notch fa-spin mr-2" />{labelText("AI 챌린지를 불러오는 중입니다.")}</div>;
 }

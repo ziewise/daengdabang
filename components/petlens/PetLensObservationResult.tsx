@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { useId, useState, type CSSProperties } from "react";
 import type {
     PetObservationCandidate,
@@ -255,6 +256,7 @@ function InferenceGroupLinePanel({
     urgency: PetObservationUrgencyLevel;
     durationSeconds?: number;
 }) {
+    const { menuLabel: labelText } = useI18n();
     const graphId = useId().replace(/:/g, "");
 
     if (items.length === 0) {
@@ -274,12 +276,12 @@ function InferenceGroupLinePanel({
                         <div className="flex flex-wrap items-center gap-2">
                             <h4 className="text-sm font-black text-neutral-900">{config.title}</h4>
                             <span className="rounded-full bg-emerald-50 px-2 py-1 text-[9px] font-black text-emerald-700">
-                                뚜렷한 신호 없음
+                                {labelText("뚜렷한 신호 없음")}
                             </span>
                         </div>
                         <p className="mt-1 text-xs font-bold leading-5 text-neutral-600">{config.empty}</p>
                         <p className="mt-1 text-[10px] font-bold leading-4 text-neutral-400">
-                            표시할 신호가 없어 차트는 생략했어요.
+                            {labelText("표시할 신호가 없어 차트는 생략했어요.")}
                         </p>
                     </div>
                 </div>
@@ -382,7 +384,7 @@ function InferenceGroupLinePanel({
                     </p>
                 </div>
                 <span className={`rounded-full px-2.5 py-1.5 text-[11px] font-black ${config.badge}`}>
-                    {timelineSeries.length > 0 ? "가로 시간 · 세로 지지도" : "전체 후보 요약"}
+                    {labelText(timelineSeries.length > 0 ? "가로 시간 · 세로 지지도" : "전체 후보 요약")}
                 </span>
             </div>
 
@@ -410,7 +412,7 @@ function InferenceGroupLinePanel({
                                 fontWeight="900"
                                 fill="#334155"
                             >
-                                영상 근거 지지도(%)
+                                {labelText("영상 근거 지지도(%)")}
                             </text>
                             {INFERENCE_GRAPH_TICKS.map((tick) => {
                                 const y = mobileYForPercentage(tick);
@@ -459,7 +461,7 @@ function InferenceGroupLinePanel({
                                             fontWeight="800"
                                             fill="#64748b"
                                         >
-                                            {tick.toFixed(tick % 1 === 0 ? 0 : 1)}초
+                                            {tick.toFixed(tick % 1 === 0 ? 0 : 1)}{labelText("초")}
                                         </text>
                                     </g>
                                 );
@@ -566,7 +568,7 @@ function InferenceGroupLinePanel({
                                 fill="#475569"
                                 data-inference-axis="x"
                             >
-                                관찰 시간
+                                {labelText("관찰 시간")}
                             </text>
                         </svg>
                     </div>
@@ -619,7 +621,7 @@ function InferenceGroupLinePanel({
                                 transform={`rotate(-90 17 ${INFERENCE_CHART_TOP + plotHeight / 2})`}
                                 data-inference-axis="y"
                             >
-                                영상 근거 지지도 (%)
+                                {labelText("영상 근거 지지도 (%)")}
                             </text>
 
                             {[0, timelineDuration / 2, timelineDuration].map((tick, index) => {
@@ -643,7 +645,7 @@ function InferenceGroupLinePanel({
                                             fontWeight="800"
                                             fill="#64748b"
                                         >
-                                            {tick.toFixed(tick % 1 === 0 ? 0 : 1)}초
+                                            {tick.toFixed(tick % 1 === 0 ? 0 : 1)}{labelText("초")}
                                         </text>
                                     </g>
                                 );
@@ -752,7 +754,7 @@ function InferenceGroupLinePanel({
                                 fill="#475569"
                                 data-inference-axis="x"
                             >
-                                관찰 시간
+                                {labelText("관찰 시간")}
                             </text>
                         </svg>
                     </div>
@@ -766,9 +768,9 @@ function InferenceGroupLinePanel({
                             <i className="fa-solid fa-list-check text-xs" />
                         </span>
                         <div className="min-w-0">
-                            <p className="text-xs font-black text-neutral-800">시간별 그래프는 생략했어요</p>
+                            <p className="text-xs font-black text-neutral-800">{labelText("시간별 그래프는 생략했어요")}</p>
                             <p className="mt-1 text-[11px] font-bold leading-5 text-neutral-500">
-                                시간 좌표가 없는 결과라 임의의 빈 차트를 만들지 않고, 아래 후보 요약만 보여드려요.
+                                {labelText("시간 좌표가 없는 결과라 임의의 빈 차트를 만들지 않고, 아래 후보 요약만 보여드려요.")}
                             </p>
                         </div>
                     </div>
@@ -793,7 +795,7 @@ function InferenceGroupLinePanel({
                                     {series.item.label}
                                     {series.timeline.length === 1 && (
                                         <span className="ml-1.5 inline-flex rounded-full bg-white px-1.5 py-0.5 align-middle text-[9px] font-black text-neutral-500">
-                                            한 시점 포착
+                                            {labelText("한 시점 포착")}
                                         </span>
                                     )}
                                 </span>
@@ -810,19 +812,19 @@ function InferenceGroupLinePanel({
                     className="mt-2 rounded-xl border border-dashed border-neutral-200 bg-neutral-50 px-3 py-2 text-xs font-bold leading-5 text-neutral-500"
                     data-daenglab-inference-missing-timeline={config.kind}
                 >
-                    시간좌표가 없는 후보 {numericPointsWithoutTimeline.length}개는 임의의 선을 만들지 않고 아래 결과표에만 표시해요.
+                    {labelText("시간좌표가 없는 후보")} {numericPointsWithoutTimeline.length}{labelText("개는 임의의 선을 만들지 않고 아래 결과표에만 표시해요.")}
                 </p>
             )}
             {timelineSeries.length > 0 && (
                 <p className="mt-3 text-xs font-bold leading-5 text-neutral-600">
-                    2개 이상은 실제 확인 시점을 선으로 연결하고, 한 시점만 확인되면 가짜 추세 없이 짧은 선과 점으로 표시해요. 큰 점과 %는 가장 강하게 포착된 시점이에요.
+                    {labelText("2개 이상은 실제 확인 시점을 선으로 연결하고, 한 시점만 확인되면 가짜 추세 없이 짧은 선과 점으로 표시해요. 큰 점과 %는 가장 강하게 포착된 시점이에요.")}
                 </p>
             )}
             <div
                 className="mt-3 rounded-xl border border-neutral-200 bg-neutral-50/70 px-3.5 py-3"
                 data-daenglab-inference-comment={config.kind}
             >
-                <p className={`text-xs font-black ${config.accent}`}>한 줄 설명</p>
+                <p className={`text-xs font-black ${config.accent}`}>{labelText("한 줄 설명")}</p>
                 <p className="mt-1 [overflow-wrap:anywhere] text-[13px] font-bold leading-6 text-neutral-700">
                     {interpretationComment}
                 </p>
@@ -835,9 +837,9 @@ function InferenceGroupLinePanel({
 
             {legacyPoints.length > 0 && (
                 <div className="mt-3 rounded-xl border border-neutral-200 bg-neutral-50/70 p-3.5" data-daenglab-inference-legacy={config.kind}>
-                    <p className="text-[10px] font-black text-neutral-600">구간만 제공된 이전 분석</p>
+                    <p className="text-[10px] font-black text-neutral-600">{labelText("구간만 제공된 이전 분석")}</p>
                     <p className="mt-1 text-[10px] font-bold leading-4 text-neutral-500">
-                        과거 결과는 원본 영상이 없어 임의의 시간선을 만들지 않고 당시 전체 신뢰도 구간만 표시해요.
+                        {labelText("과거 결과는 원본 영상이 없어 임의의 시간선을 만들지 않고 당시 전체 신뢰도 구간만 표시해요.")}
                     </p>
                     <div className="mt-3 grid gap-2 sm:grid-cols-2">
                         {legacyPoints.map((point) => (
@@ -864,9 +866,9 @@ function InferenceGroupLinePanel({
                     }`}
                     data-daenglab-health-nutrition-guidance
                 >
-                    {hasPriorityHealthSignal
+                    {labelText(hasPriorityHealthSignal
                         ? "긴급 또는 당일 확인 신호가 있으면 영양식 추천보다 건강 관리 안내와 동물병원 문의를 먼저 확인해 주세요."
-                        : "영양식은 관찰 신호와 강아지 프로필·알레르기·기저질환을 함께 확인한 뒤 참고용으로 제안해야 합니다."}
+                        : "영양식은 관찰 신호와 강아지 프로필·알레르기·기저질환을 함께 확인한 뒤 참고용으로 제안해야 합니다.")}
                 </div>
             )}
 
@@ -945,11 +947,11 @@ function InferenceGroupLinePanel({
                     </caption>
                     <thead className="bg-neutral-50 text-[10px] font-black text-neutral-500">
                         <tr>
-                            <th className="w-14 px-3 py-2.5 text-center">순위</th>
-                            <th className="min-w-44 px-3 py-2.5">추론 후보</th>
-                            <th className="w-28 px-3 py-2.5">신뢰도</th>
-                            <th className="min-w-64 px-3 py-2.5">관찰 근거</th>
-                            <th className="w-24 px-3 py-2.5">상태</th>
+                            <th className="w-14 px-3 py-2.5 text-center">{labelText("순위")}</th>
+                            <th className="min-w-44 px-3 py-2.5">{labelText("추론 후보")}</th>
+                            <th className="w-28 px-3 py-2.5">{labelText("신뢰도")}</th>
+                            <th className="min-w-64 px-3 py-2.5">{labelText("관찰 근거")}</th>
+                            <th className="w-24 px-3 py-2.5">{labelText("상태")}</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-neutral-100 text-[11px] font-bold text-neutral-700">
@@ -975,10 +977,10 @@ function InferenceGroupLinePanel({
                                     <td className="px-3 py-3 font-black leading-5 text-neutral-900">{point.item.label}</td>
                                     <td className="px-3 py-3">
                                         {point.percentage === null ? (
-                                            <span className="text-neutral-500">구간형 결과</span>
+                                            <span className="text-neutral-500">{labelText("구간형 결과")}</span>
                                         ) : (
                                             <span className={`whitespace-nowrap rounded-lg px-2.5 py-1.5 font-black ${config.confidenceBadge}`}>
-                                                추론 {point.percentage}%
+                                                {labelText("추론")} {point.percentage}%
                                             </span>
                                         )}
                                     </td>
@@ -1015,6 +1017,7 @@ function InferenceGroupLinePanel({
 }
 
 function TargetAmbiguousHoldReport({ result }: { result: PetObservationResult }) {
+    const { menuLabel: labelText } = useI18n();
     const refundAmount = result.daengLabCoinRefundAmount ?? result.daengLabCoinCost;
     const dogCountLabel = result.quality.visibleDogCount > 1
         ? `${result.quality.visibleDogCount}마리 이상 확인`
@@ -1039,13 +1042,12 @@ function TargetAmbiguousHoldReport({ result }: { result: PetObservationResult })
         >
             <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_280px]">
                 <div className="min-w-0">
-                    <p className="text-xs font-black tracking-[0.1em] text-amber-700">분석 보류 리포트</p>
+                    <p className="text-xs font-black tracking-[0.1em] text-amber-700">{labelText("분석 보류 리포트")}</p>
                     <h3 id="daenglab-target-hold-title" className="mt-1 text-xl font-black leading-7 text-neutral-950">
-                        여러 아이가 함께 보여 정확하지 않은 그래프는 만들지 않았어요
+                        {labelText("여러 아이가 함께 보여 정확하지 않은 그래프는 만들지 않았어요")}
                     </h3>
                     <p className="mt-2 text-sm font-bold leading-6 text-neutral-700">
-                        행동·소리·건강 그래프가 비어 있는 것이 아니라, 어느 강아지의 신호인지 확실히 구분하지 못해
-                        대상견 분석을 안전하게 보류한 상태예요.
+                        {labelText("행동·소리·건강 그래프가 비어 있는 것이 아니라, 어느 강아지의 신호인지 확실히 구분하지 못해\n                        대상견 분석을 안전하게 보류한 상태예요.")}
                     </p>
                     <div className="mt-4 grid gap-2 sm:grid-cols-2">
                         {[
@@ -1065,9 +1067,9 @@ function TargetAmbiguousHoldReport({ result }: { result: PetObservationResult })
                 <div
                     className="rounded-2xl border border-dashed border-amber-300 bg-white/70 p-3"
                     data-daenglab-abstained-timeline
-                    aria-label="대상견 구분 실패로 보류된 흐릿한 타임라인"
+                    aria-label={labelText("대상견 구분 실패로 보류된 흐릿한 타임라인")}
                 >
-                    <p className="text-[10px] font-black text-amber-700">흐릿한 타임라인</p>
+                    <p className="text-[10px] font-black text-amber-700">{labelText("흐릿한 타임라인")}</p>
                     <div className="relative mt-3 h-36 overflow-hidden rounded-xl bg-amber-50">
                         <div className="absolute inset-0 opacity-70 [background-image:repeating-linear-gradient(135deg,rgba(245,158,11,0.16)_0,rgba(245,158,11,0.16)_10px,transparent_10px,transparent_20px)]" />
                         <div className="absolute inset-x-5 top-1/2 h-1 -translate-y-1/2 rounded-full bg-amber-200" />
@@ -1081,18 +1083,18 @@ function TargetAmbiguousHoldReport({ result }: { result: PetObservationResult })
                         ))}
                         <div className="absolute inset-0 grid place-items-center px-5 text-center">
                             <p className="rounded-full bg-white/90 px-3 py-2 text-[11px] font-black leading-5 text-amber-900 shadow-sm">
-                                대상견을 고정하지 못한 구간
+                                {labelText("대상견을 고정하지 못한 구간")}
                             </p>
                         </div>
                     </div>
                     <p className="mt-2 text-[11px] font-bold leading-5 text-amber-800">
-                        정확하지 않은 수치선 대신 보류 상태만 표시해요.
+                        {labelText("정확하지 않은 수치선 대신 보류 상태만 표시해요.")}
                     </p>
                 </div>
             </div>
 
             <div className="mt-4 rounded-2xl border border-sky-200 bg-sky-50 p-3" data-daenglab-target-retake-guide>
-                <p className="text-xs font-black text-sky-900">다시 찍으면 더 잘 분석돼요</p>
+                <p className="text-xs font-black text-sky-900">{labelText("다시 찍으면 더 잘 분석돼요")}</p>
                 <ol className="mt-2 grid gap-1.5 text-xs font-bold leading-5 text-sky-800">
                     {retakeTips.slice(0, 4).map((tip, index) => (
                         <li key={tip} className="flex gap-2">
@@ -1105,7 +1107,7 @@ function TargetAmbiguousHoldReport({ result }: { result: PetObservationResult })
 
             {result.daengLabCoinRefunded && (
                 <p className="mt-3 rounded-2xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs font-black leading-5 text-emerald-800" data-daenglab-target-hold-refund>
-                    댕다방 연구소 코인은 전액 환급됐어요. 정확하지 않은 분석에는 비용을 쓰지 않습니다.
+                    {labelText("댕다방 연구소 코인은 전액 환급됐어요. 정확하지 않은 분석에는 비용을 쓰지 않습니다.")}
                 </p>
             )}
         </section>
@@ -1122,6 +1124,7 @@ function strongestInferenceItem(items: InferenceDisplayItem[]) {
 }
 
 function OverallObservationSummary({ result }: { result: PetObservationResult }) {
+    const { menuLabel: labelText } = useI18n();
     const highPriority = result.urgency.level === "emergency" || result.urgency.level === "same_day";
     const highlights = [
         { label: "행동", item: strongestInferenceItem(result.behaviorCandidates), className: "bg-indigo-50 text-indigo-700" },
@@ -1150,10 +1153,10 @@ function OverallObservationSummary({ result }: { result: PetObservationResult })
                 </span>
                 <div className="min-w-0">
                     <p className={`text-[10px] font-black tracking-[0.12em] ${highPriority ? "text-rose-600" : "text-indigo-600"}`}>
-                        펫렌즈 전체 총평
+                        {labelText("펫렌즈 전체 총평")}
                     </p>
                     <h2 className="mt-1 text-lg font-black leading-7 text-neutral-950 sm:text-xl">
-                        {highPriority ? "먼저 확인해야 할 신호가 있어요" : "영상 전체를 한눈에 보면"}
+                        {labelText(highPriority ? "먼저 확인해야 할 신호가 있어요" : "영상 전체를 한눈에 보면")}
                     </h2>
                 </div>
             </div>
@@ -1162,7 +1165,7 @@ function OverallObservationSummary({ result }: { result: PetObservationResult })
             </p>
             {highlights.length > 0 && (
                 <div className="mt-4 border-t border-neutral-900/5 pt-3" data-daenglab-overall-summary-highlights>
-                    <p className="text-[10px] font-black text-neutral-400">분야별 핵심 관찰</p>
+                    <p className="text-[10px] font-black text-neutral-400">{labelText("분야별 핵심 관찰")}</p>
                     <ul className="mt-2 flex flex-wrap gap-2">
                         {highlights.map((highlight) => (
                             <li
@@ -1182,6 +1185,7 @@ function OverallObservationSummary({ result }: { result: PetObservationResult })
 }
 
 function InferenceConfidenceOverview({ result }: { result: PetObservationResult }) {
+    const { menuLabel: labelText } = useI18n();
     const qualityLabel = result.quality.level === "good"
         ? "관찰 품질 양호"
         : result.quality.level === "limited"
@@ -1212,37 +1216,37 @@ function InferenceConfidenceOverview({ result }: { result: PetObservationResult 
                             ? `${Number.isInteger(result.durationSeconds) ? result.durationSeconds : result.durationSeconds.toFixed(1)}초 관찰 흐름`
                             : "관찰 흐름"}
                     </p>
-                    <h3 className="mt-1 text-xl font-black text-neutral-950">시간별 행동·소리·건강 관찰</h3>
+                    <h3 className="mt-1 text-xl font-black text-neutral-950">{labelText("시간별 행동·소리·건강 관찰")}</h3>
                 </div>
                 <span className="rounded-full border border-white bg-white/90 px-3 py-1.5 text-[11px] font-black text-neutral-600 shadow-sm">
-                    최고 지점 표시
+                    {labelText("최고 지점 표시")}
                 </span>
             </div>
             <p className="mt-2 max-w-3xl text-[13px] font-bold leading-6 text-neutral-600">
-                각 %는 정답률이나 진단 확률이 아니라, 그 시점의 영상·소리 근거가 후보를 얼마나 뒷받침하는지 보여줍니다.
+                {labelText("각 %는 정답률이나 진단 확률이 아니라, 그 시점의 영상·소리 근거가 후보를 얼마나 뒷받침하는지 보여줍니다.")}
             </p>
 
             <div
                 className="mt-4 rounded-2xl border border-white/90 bg-white/85 p-3.5 shadow-sm"
                 data-daenglab-overall-inference-state
             >
-                <p className="text-[10px] font-black text-neutral-400">분석 범위</p>
+                <p className="text-[10px] font-black text-neutral-400">{labelText("분석 범위")}</p>
                 <div className="mt-2 grid gap-2 sm:grid-cols-2">
                     <div className={`rounded-xl bg-gradient-to-br px-3 py-2.5 text-white ${
                         highPriority ? "from-rose-600 to-rose-700" : "from-indigo-600 to-indigo-700"
                     }`}>
                         <p className={`text-[9px] font-black ${highPriority ? "text-rose-100" : "text-indigo-100"}`}>
-                            우선 확인 상태
+                            {labelText("우선 확인 상태")}
                         </p>
                         <p className="mt-1 text-xs font-black">
                             {URGENCY_LABEL[result.urgency.level]}
                         </p>
                     </div>
                     <div className="rounded-xl bg-neutral-100 px-3 py-2.5 text-neutral-700">
-                        <p className="text-[9px] font-black text-neutral-500">촬영·분석 상태</p>
+                        <p className="text-[9px] font-black text-neutral-500">{labelText("촬영·분석 상태")}</p>
                         <p className="mt-1 text-xs font-black">{qualityLabel}</p>
                         <p className="mt-1 text-[9px] font-bold text-neutral-500">
-                            행동 {groupedItems.behavior.length} · 소리 {groupedItems.sound.length} · 건강 {groupedItems.health.length} · 확인 {groupedItems.priority.length}
+                            {labelText("행동")} {groupedItems.behavior.length} {labelText("· 소리")} {groupedItems.sound.length} {labelText("· 건강")} {groupedItems.health.length} {labelText("· 확인")} {groupedItems.priority.length}
                         </p>
                     </div>
                 </div>
@@ -1279,6 +1283,7 @@ function CandidateCards({
     observations: PetObservationResult["observations"];
     ranked?: boolean;
 }) {
+    const { menuLabel: labelText } = useI18n();
     return (
         <div className="grid gap-3 sm:grid-cols-2">
             {items.map((item, itemIndex) => (
@@ -1287,10 +1292,10 @@ function CandidateCards({
                         <div className="min-w-0">
                             {ranked && (
                                 <span className="mb-1 inline-flex rounded-full bg-cyan-600 px-2 py-0.5 text-[9px] font-black text-white">
-                                    {itemIndex + 1}순위
+                                    {itemIndex + 1}{labelText("순위")}
                                 </span>
                             )}
-                            <p className="break-words text-sm font-black leading-6 text-neutral-950">{item.label}</p>
+                            <p className="break-words text-sm font-black leading-6 text-neutral-950">{labelText(item.label)}</p>
                         </div>
                         <span className="shrink-0 rounded-full bg-indigo-50 px-2.5 py-1 text-[10px] font-black text-indigo-700">
                             {typeof item.confidenceScore === "number"
@@ -1301,14 +1306,14 @@ function CandidateCards({
                     <ul className="mt-3 grid gap-1.5 text-xs font-bold leading-5 text-neutral-600">
                         {item.evidence.map((index) => observations[index] && (
                             <li key={index} className="flex gap-2">
-                                <span className="shrink-0 whitespace-nowrap font-black text-indigo-600">{observations[index].timeSeconds.toFixed(1)}초</span>
+                                <span className="shrink-0 whitespace-nowrap font-black text-indigo-600">{observations[index].timeSeconds.toFixed(1)}{labelText("초")}</span>
                                 <span>{observations[index].description}</span>
                             </li>
                         ))}
                     </ul>
                     {item.otherPossibility && (
                         <p className="mt-3 rounded-xl bg-neutral-50 px-3 py-2 text-[11px] font-bold leading-5 text-neutral-600">
-                            다른 가능성: {item.otherPossibility}
+                            {labelText("다른 가능성:")} {item.otherPossibility}
                         </p>
                     )}
                 </article>
@@ -1318,6 +1323,7 @@ function CandidateCards({
 }
 
 function TargetAttributionPanel({ result }: { result: PetObservationResult }) {
+    const { menuLabel: labelText } = useI18n();
     const isLegacy = result.analysisContractVersion < 2;
     const targetIdentified = result.quality.targetStatus === "identified";
     const targetVocalizations = result.observations
@@ -1348,9 +1354,9 @@ function TargetAttributionPanel({ result }: { result: PetObservationResult }) {
                 className="rounded-2xl border border-neutral-200 bg-neutral-50 p-4"
                 data-daenglab-target-attribution="legacy"
             >
-                <p className="text-xs font-black text-neutral-800">이전 분석 결과</p>
+                <p className="text-xs font-black text-neutral-800">{labelText("이전 분석 결과")}</p>
                 <p className="mt-1 text-[11px] font-bold leading-5 text-neutral-600">
-                    이 결과에는 행동·발성 주체를 나눈 정보가 없어, 영상 속 특정 강아지와 등록 반려견이 같다고 단정하지 않습니다.
+                    {labelText("이 결과에는 행동·발성 주체를 나눈 정보가 없어, 영상 속 특정 강아지와 등록 반려견이 같다고 단정하지 않습니다.")}
                 </p>
             </section>
         );
@@ -1370,7 +1376,7 @@ function TargetAttributionPanel({ result }: { result: PetObservationResult }) {
                     <p className={`text-[10px] font-black tracking-[0.1em] ${
                         targetIdentified ? "text-emerald-700" : "text-amber-800"
                     }`}>
-                        분석 대상 분리
+                        {labelText("분석 대상 분리")}
                     </p>
                     <h3 className="mt-1 break-words text-lg font-black leading-7 text-neutral-950">
                         {targetIdentified
@@ -1382,7 +1388,7 @@ function TargetAttributionPanel({ result }: { result: PetObservationResult }) {
                 </div>
                 {targetIdentified && (
                     <span className="shrink-0 rounded-full bg-white px-3 py-1.5 text-[10px] font-black text-emerald-800 shadow-sm">
-                        대상 구분 근거 {Math.round(result.quality.targetConfidenceScore * 100)}%
+                        {labelText("대상 구분 근거")} {Math.round(result.quality.targetConfidenceScore * 100)}%
                     </span>
                 )}
             </div>
@@ -1398,31 +1404,31 @@ function TargetAttributionPanel({ result }: { result: PetObservationResult }) {
             )}
 
             <p className="mt-3 text-xs font-bold leading-5 text-neutral-700">
-                {targetIdentified
+                {labelText(targetIdentified
                     ? "아래 행동·발성·건강 후보에는 이 대상으로 귀속된 근거만 사용했어요."
-                    : "잘못된 귀속을 피하려고 행동·짖음 맥락·건강 후보를 만들지 않았어요. 구분 가능한 영상으로 다시 촬영해 주세요."}
+                    : "잘못된 귀속을 피하려고 행동·짖음 맥락·건강 후보를 만들지 않았어요. 구분 가능한 영상으로 다시 촬영해 주세요.")}
             </p>
             {result.quality.attributionReason && (
                 <p className="mt-2 text-[11px] font-bold leading-5 text-neutral-500">
-                    구분 근거: {result.quality.attributionReason}
+                    {labelText("구분 근거:")} {result.quality.attributionReason}
                 </p>
             )}
 
             {targetVocalizations.length > 0 && (
                 <div className="mt-4 border-t border-emerald-200/70 pt-3">
-                    <p className="text-[10px] font-black text-emerald-800">대상 강아지 발성으로 분리된 시점</p>
+                    <p className="text-[10px] font-black text-emerald-800">{labelText("대상 강아지 발성으로 분리된 시점")}</p>
                     <div className="mt-2 flex flex-wrap gap-1.5">
                         {targetVocalizations.map((item) => (
                             <span
                                 key={`${item.timeSeconds}-${item.vocalizationKind}-${item.description}`}
                                 className="whitespace-nowrap rounded-full bg-white px-2.5 py-1 text-[10px] font-black text-cyan-800 shadow-sm"
                             >
-                                {item.timeSeconds.toFixed(1)}초 · {VOCALIZATION_KIND_LABEL[item.vocalizationKind]}
+                                {item.timeSeconds.toFixed(1)}{labelText("초 ·")} {VOCALIZATION_KIND_LABEL[item.vocalizationKind]}
                             </span>
                         ))}
                         {omittedVocalizationCount > 0 && (
                             <span className="rounded-full bg-white px-2.5 py-1 text-[10px] font-black text-neutral-600">
-                                +{omittedVocalizationCount}개 시점
+                                +{omittedVocalizationCount}{labelText("개 시점")}
                             </span>
                         )}
                     </div>
@@ -1431,7 +1437,7 @@ function TargetAttributionPanel({ result }: { result: PetObservationResult }) {
 
             {result.quality.interferenceSources.length > 0 && (
                 <p className="mt-3 text-[10px] font-bold leading-5 text-neutral-500">
-                    대상견 근거에서 제외한 소리: {result.quality.interferenceSources.map((source) => INTERFERENCE_LABEL[source]).join(" · ")}
+                    {labelText("대상견 근거에서 제외한 소리:")} {result.quality.interferenceSources.map((source) => INTERFERENCE_LABEL[source]).join(" · ")}
                 </p>
             )}
         </section>
@@ -1439,6 +1445,7 @@ function TargetAttributionPanel({ result }: { result: PetObservationResult }) {
 }
 
 function BarkContextTranslator({ result }: { result: PetObservationResult }) {
+    const { menuLabel: labelText } = useI18n();
     const isLegacy = result.analysisContractVersion < 2;
     if (isLegacy && result.barkContextCandidates.length === 0) return null;
 
@@ -1461,15 +1468,15 @@ function BarkContextTranslator({ result }: { result: PetObservationResult }) {
         >
             <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                    <p className="text-[10px] font-black tracking-[0.1em] text-cyan-700">맥락 번역</p>
-                    <h3 className="mt-1 text-lg font-black text-neutral-950">짖음·발성 맥락 번역 후보</h3>
+                    <p className="text-[10px] font-black tracking-[0.1em] text-cyan-700">{labelText("맥락 번역")}</p>
+                    <h3 className="mt-1 text-lg font-black text-neutral-950">{labelText("짖음·발성 맥락 번역 후보")}</h3>
                 </div>
                 <span className="rounded-full bg-white px-3 py-1.5 text-[10px] font-black text-cyan-800 shadow-sm">
-                    사람 문장 번역 아님
+                    {labelText("사람 문장 번역 아님")}
                 </span>
             </div>
             <p className="mt-2 text-[11px] font-bold leading-5 text-neutral-600">
-                발성 종류와 같은 시점의 자세·움직임·주변 자극을 묶어 “왜 그랬을 가능성이 큰지”를 최대 세 가지로 보여줘요.
+                {labelText("발성 종류와 같은 시점의 자세·움직임·주변 자극을 묶어 “왜 그랬을 가능성이 큰지”를 최대 세 가지로 보여줘요.")}
             </p>
             {translated ? (
                 <div className="mt-4">
@@ -1486,7 +1493,7 @@ function BarkContextTranslator({ result }: { result: PetObservationResult }) {
             )}
             {isLegacy && (
                 <p className="mt-3 text-[10px] font-bold text-neutral-500">
-                    이전 결과라 발성 주체 분리 정보가 없습니다. 새 분석부터 대상견 귀속이 확인된 경우에만 후보를 표시합니다.
+                    {labelText("이전 결과라 발성 주체 분리 정보가 없습니다. 새 분석부터 대상견 귀속이 확인된 경우에만 후보를 표시합니다.")}
                 </p>
             )}
         </section>
@@ -1500,6 +1507,7 @@ function UrgencyGuidance({
     result: PetObservationResult;
     highPriority: boolean;
 }) {
+    const { menuLabel: labelText } = useI18n();
     return (
         <section
             className={`rounded-2xl border p-4 sm:p-5 ${URGENCY_STYLE[result.urgency.level]}`}
@@ -1512,10 +1520,10 @@ function UrgencyGuidance({
                     {URGENCY_LABEL[result.urgency.level]}
                 </span>
                 <span className="rounded-full bg-white/80 px-2.5 py-1 text-[11px] font-black">
-                    영상·소리 통합 관찰
+                    {labelText("영상·소리 통합 관찰")}
                 </span>
                 <span className="rounded-full bg-white/80 px-2.5 py-1 text-[11px] font-black">
-                    원본 영상 미저장
+                    {labelText("원본 영상 미저장")}
                 </span>
             </div>
             <h3 className="mt-3 text-lg font-black leading-7">{result.urgency.headline}</h3>
@@ -1537,17 +1545,18 @@ function UrgencyGuidance({
                     rel="noreferrer"
                     className="mt-4 inline-flex min-h-11 items-center justify-center rounded-xl bg-rose-700 px-4 text-sm font-black text-white"
                 >
-                    네이버지도에서 가까운 24시 동물병원 찾기
+                    {labelText("네이버지도에서 가까운 24시 동물병원 찾기")}
                 </a>
             )}
             <p className="mt-4 border-t border-current/15 pt-3 text-[10px] font-bold leading-4 opacity-75">
-                건강 신호는 평소 상태와 비교해 확인해 주세요. 걱정되는 변화가 지속되거나 심해지면 동물병원에 문의해 주세요.
+                {labelText("건강 신호는 평소 상태와 비교해 확인해 주세요. 걱정되는 변화가 지속되거나 심해지면 동물병원에 문의해 주세요.")}
             </p>
         </section>
     );
 }
 
 export default function PetLensObservationResult({ result }: { result: PetObservationResult }) {
+    const { menuLabel: labelText } = useI18n();
     const highPriorityUrgency = (
         result.urgency.level === "emergency"
         || result.urgency.level === "same_day"
@@ -1567,7 +1576,7 @@ export default function PetLensObservationResult({ result }: { result: PetObserv
             <OverallObservationSummary result={result} />
             <TargetAttributionPanel result={result} />
             <BarkContextTranslator result={result} />
-            <AppResultFold label="시간별 그래프 보기" foldKey="flow" defaultOpen={appTargetAmbiguous}>
+            <AppResultFold label={labelText("시간별 그래프 보기")} foldKey="flow" defaultOpen={appTargetAmbiguous}>
             <InferenceConfidenceOverview result={result} />
             </AppResultFold>
 
@@ -1585,18 +1594,18 @@ export default function PetLensObservationResult({ result }: { result: PetObserv
                     </span>
                     <div>
                         <p className="text-xs font-black leading-5 text-sky-950">
-                            원본 영상·음성은 필요한 동안만 암호화해 임시 보관합니다.
+                            {labelText("원본 영상·음성은 필요한 동안만 암호화해 임시 보관합니다.")}
                         </p>
                         <p className="mt-1 text-[11px] font-bold leading-5 text-sky-800">
-                            분석 완료·취소·임시 보관기간 만료 시 원본을 삭제하고, 이후에는 분석 결과만 보관합니다.
+                            {labelText("분석 완료·취소·임시 보관기간 만료 시 원본을 삭제하고, 이후에는 분석 결과만 보관합니다.")}
                         </p>
                     </div>
                 </div>
             </section>
 
-            <AppResultFold label="관찰 근거 자세히 보기" foldKey="evidence">
+            <AppResultFold label={labelText("관찰 근거 자세히 보기")} foldKey="evidence">
             <section className="rounded-2xl border border-neutral-200 bg-white p-4" data-petlens-observation-quality>
-                <p className="text-xs font-black text-neutral-500">촬영 품질</p>
+                <p className="text-xs font-black text-neutral-500">{labelText("촬영 품질")}</p>
                 <div className="mt-3 flex flex-wrap gap-2 text-[11px] font-black">
                     <span className="rounded-full bg-neutral-100 px-3 py-1.5">
                         {!result.quality.dogVisible
@@ -1606,15 +1615,15 @@ export default function PetLensObservationResult({ result }: { result: PetObserv
                                 : "강아지 수 확인 어려움"}
                     </span>
                     <span className="rounded-full bg-neutral-100 px-3 py-1.5">
-                        소리 {result.quality.audioAvailable ? "확인" : "확인 어려움"}
+                        {labelText("소리")} {labelText(result.quality.audioAvailable ? "확인" : "확인 어려움")}
                     </span>
                     <span className="rounded-full bg-neutral-100 px-3 py-1.5">
-                        대상견 발성 {result.quality.vocalizationDetected ? "주체 확인" : result.quality.targetVocalizationStatus === "possible" ? "주체 불명확" : "미포착"}
+                        {labelText("대상견 발성")} {result.quality.vocalizationDetected ? "주체 확인" : result.quality.targetVocalizationStatus === "possible" ? "주체 불명확" : "미포착"}
                         {result.quality.barkDetected ? " · 짖음 포함" : ""}
                     </span>
                     {result.analysisContractVersion >= 2 && (
                         <span className="rounded-full bg-neutral-100 px-3 py-1.5">
-                            대상 {result.quality.targetStatus === "identified" ? "구분됨" : result.quality.targetStatus === "ambiguous" ? "구분 어려움" : "미확인"}
+                            {labelText("대상")} {result.quality.targetStatus === "identified" ? "구분됨" : result.quality.targetStatus === "ambiguous" ? "구분 어려움" : "미확인"}
                         </span>
                     )}
                 </div>
@@ -1626,18 +1635,18 @@ export default function PetLensObservationResult({ result }: { result: PetObserv
             {result.observations.length > 0 && (
                 <section className="rounded-2xl border border-neutral-200 bg-white p-4" data-petlens-observation-evidence>
                     <div className="mb-3">
-                        <p className="text-xs font-black text-neutral-500">영상에서 포착된 관찰 근거</p>
-                        <p className="mt-1 text-[11px] font-bold text-neutral-400">화면·소리에서 잡힌 내용과 자동 분석 확신도를 함께 표시합니다.</p>
+                        <p className="text-xs font-black text-neutral-500">{labelText("영상에서 포착된 관찰 근거")}</p>
+                        <p className="mt-1 text-[11px] font-bold text-neutral-400">{labelText("화면·소리에서 잡힌 내용과 자동 분석 확신도를 함께 표시합니다.")}</p>
                     </div>
                     <ol className="grid gap-2">
                         {result.observations.map((item, index) => (
                             <li key={`${item.timeSeconds}-${item.description}`} className="flex gap-3 rounded-xl bg-neutral-50 p-3">
                                 <span className="mt-0.5 shrink-0 whitespace-nowrap rounded-full bg-white px-2 py-1 text-[10px] font-black text-indigo-700">
-                                    {item.timeSeconds.toFixed(1)}초
+                                    {item.timeSeconds.toFixed(1)}{labelText("초")}
                                 </span>
                                 <div>
                                     <p className="text-[10px] font-black text-neutral-400">
-                                        관찰 {index + 1} · {MODALITY_LABEL[item.modality]} · {SOURCE_LABEL[item.source]} · 확신 {item.confidence === "high" ? "높음" : item.confidence === "medium" ? "중간" : "낮음"}
+                                        {labelText("관찰")} {index + 1} · {MODALITY_LABEL[item.modality]} · {SOURCE_LABEL[item.source]} {labelText("· 확신")} {item.confidence === "high" ? "높음" : item.confidence === "medium" ? "중간" : "낮음"}
                                     </p>
                                     <p className="mt-0.5 text-xs font-bold leading-5 text-neutral-700">{item.description}</p>
                                 </div>
@@ -1649,7 +1658,7 @@ export default function PetLensObservationResult({ result }: { result: PetObserv
 
             {result.behaviorCandidates.length > 0 && (
                 <section data-petlens-observation-behavior>
-                    <p className="mb-3 text-sm font-black text-neutral-950">행동 패턴 후보</p>
+                    <p className="mb-3 text-sm font-black text-neutral-950">{labelText("행동 패턴 후보")}</p>
                     <CandidateCards items={result.behaviorCandidates} observations={result.observations} />
                 </section>
             )}
@@ -1657,8 +1666,8 @@ export default function PetLensObservationResult({ result }: { result: PetObserv
 
             {result.symptomSignals.length > 0 && (
                 <section className="rounded-2xl border border-amber-200 bg-amber-50/70 p-4" data-petlens-observation-symptoms>
-                    <p className="text-sm font-black text-amber-950">증상으로 이어질 수 있어 확인할 신호</p>
-                    <p className="mt-1 text-[11px] font-bold leading-5 text-amber-800">질병 진단이 아니라 영상에서 보이거나 들린 신호입니다.</p>
+                    <p className="text-sm font-black text-amber-950">{labelText("증상으로 이어질 수 있어 확인할 신호")}</p>
+                    <p className="mt-1 text-[11px] font-bold leading-5 text-amber-800">{labelText("질병 진단이 아니라 영상에서 보이거나 들린 신호입니다.")}</p>
                     <div className="mt-3 grid gap-2">
                         {result.symptomSignals.map((signal) => (
                             <article key={`${signal.label}-${signal.evidence.join("-")}`} className="rounded-xl bg-white/80 p-3">
@@ -1666,7 +1675,7 @@ export default function PetLensObservationResult({ result }: { result: PetObserv
                                     <p className="text-xs font-black text-neutral-900">{signal.label}</p>
                                     <div className="flex flex-wrap gap-1.5">
                                         <span className="rounded-full bg-neutral-100 px-2.5 py-1 text-[10px] font-black text-neutral-700">
-                                            확신 {signal.confidence === "medium" ? "중간" : "낮음"}
+                                            {labelText("확신")} {labelText(signal.confidence === "medium" ? "중간" : "낮음")}
                                         </span>
                                         <span className="rounded-full bg-amber-100 px-2.5 py-1 text-[10px] font-black text-amber-900">
                                             {URGENCY_LABEL[signal.action]}
@@ -1676,7 +1685,7 @@ export default function PetLensObservationResult({ result }: { result: PetObserv
                                 <ul className="mt-2 grid gap-1 text-[11px] font-bold leading-5 text-neutral-600">
                                     {signal.evidence.map((index) => result.observations[index] && (
                                         <li key={index}>
-                                            <span className="mr-1.5 inline-block whitespace-nowrap font-black text-amber-800">{result.observations[index].timeSeconds.toFixed(1)}초</span>
+                                            <span className="mr-1.5 inline-block whitespace-nowrap font-black text-amber-800">{result.observations[index].timeSeconds.toFixed(1)}{labelText("초")}</span>
                                             {result.observations[index].description}
                                         </li>
                                     ))}
@@ -1694,13 +1703,13 @@ export default function PetLensObservationResult({ result }: { result: PetObserv
                 aria-expanded={webDetailsOpen}
                 onClick={() => setWebDetailsOpen((open) => !open)}
             >
-                <span>{webDetailsOpen ? "근거 접기" : "근거 자세히 보기"} · 관찰 {result.observations.length}개 · 분야별 그래프 · 결과표</span>
+                <span>{labelText(webDetailsOpen ? "근거 접기" : "근거 자세히 보기")} {labelText("· 관찰")} {result.observations.length}{labelText("개 · 분야별 그래프 · 결과표")}</span>
                 <i className={`fa-solid ${webDetailsOpen ? "fa-chevron-up" : "fa-chevron-down"}`} aria-hidden="true" />
             </button>
 
             {result.retakeGuidance.length > 0 && (
                 <section className="rounded-2xl border border-sky-200 bg-sky-50 p-4" data-petlens-observation-retake>
-                    <p className="mb-2 text-xs font-black text-sky-900">다시 촬영하면 좋아지는 점</p>
+                    <p className="mb-2 text-xs font-black text-sky-900">{labelText("다시 촬영하면 좋아지는 점")}</p>
                     <p className="text-xs font-bold leading-5 text-sky-800">{result.retakeGuidance.join(" · ")}</p>
                 </section>
             )}

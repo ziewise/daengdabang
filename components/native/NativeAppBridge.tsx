@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { App } from "@capacitor/app";
 import { Browser } from "@capacitor/browser";
 import { Capacitor } from "@capacitor/core";
-import { Haptics, ImpactStyle } from "@capacitor/haptics";
+import { haptic } from "@/lib/haptics";
 import { Network } from "@capacitor/network";
 import { SplashScreen } from "@capacitor/splash-screen";
 
@@ -106,7 +106,7 @@ export default function NativeAppBridge() {
                 && (isBundledNativeRoute(url.pathname) || isAppShellRoutedRoute(url.pathname))
                 && anchor.dataset.nativeExternal === undefined;
 
-            void Haptics.impact({ style: ImpactStyle.Light }).catch(() => undefined);
+            haptic();
             if (staysInApp) return;
 
             event.preventDefault();

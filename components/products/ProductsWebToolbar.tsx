@@ -12,6 +12,7 @@
  * 이 줄은 CSS 로 숨김(globals.css "웹 상품 목록 머리 줄"). 값 · 바꾸는 함수는 ProductsClient 의 것을 그대로 받음.
  */
 import { useEffect, useId, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
+import ProductSearchForm from "@/components/search/ProductSearchForm";
 
 export type ToolbarOption = { value: string; label: string };
 
@@ -133,17 +134,11 @@ export default function ProductsWebToolbar({ heading, countLabel, query, onQuery
             </div>
             {/* 오른쪽: 검색 · 카테고리 · 정렬 흰 알약(좁은 화면은 검색이 윗줄, 두 버튼이 아랫줄) */}
             <div className="ddb-pl-tools">
-                <label className="ddb-pl-search">
+                <ProductSearchForm className="ddb-pl-search" value={query} onSearch={onQuery} label={searchLabel} placeholder={searchPlaceholder}>
                     {/* 헤더 검색과 같은 3D 돋보기 그림 */}
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src="/images/ui/header-search-128.webp" alt="" aria-hidden="true" width={30} height={30} />
-                    <input
-                        value={query}
-                        onChange={(event) => onQuery(event.target.value)}
-                        placeholder={searchPlaceholder}
-                        aria-label={searchLabel}
-                    />
-                </label>
+                </ProductSearchForm>
                 <CrayonSelect label={filter.label} value={filter.value} options={filter.options} placeholder={filter.placeholder} onChange={filter.onChange} />
                 <CrayonSelect label={sort.label} value={sort.value} options={sort.options} onChange={sort.onChange} alignRight />
             </div>

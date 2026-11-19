@@ -9,11 +9,13 @@
  * 캡션 복사 버튼은 불필요해 제거(아이콘만으로 의미 전달 충분).
  */
 
+import { useI18n } from "@/lib/i18n";
 import { useMemo, useState } from "react";
 import type { CatalogProduct } from "@/lib/catalog";
 import { productHref } from "@/lib/shop";
 
 export default function ProductShareActions({ product }: { product: CatalogProduct }) {
+    const { menuLabel: labelText } = useI18n();
     // 링크 복사 직후 잠깐 체크 아이콘으로 바꿔 "복사됨"을 알린다
     const [copied, setCopied] = useState(false);
     const href = productHref(product);
@@ -58,13 +60,13 @@ export default function ProductShareActions({ product }: { product: CatalogProdu
                 type="button"
                 onClick={copyLink}
                 className={btn}
-                aria-label="링크 복사"
+                aria-label={labelText("링크 복사")}
                 title={copied ? "복사됨!" : "링크 복사"}
             >
                 <i className={`fa-solid ${copied ? "fa-check text-emerald-600" : "fa-link"}`} />
             </button>
             {/* 공유 — 네이티브 공유 시트 / 폴백 링크 복사 */}
-            <button type="button" onClick={share} className={btn} aria-label="공유" title="공유">
+            <button type="button" onClick={share} className={btn} aria-label={labelText("공유")} title={labelText("공유")}>
                 <i className="fa-solid fa-share-nodes" />
             </button>
         </div>

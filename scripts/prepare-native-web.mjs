@@ -50,11 +50,11 @@ const bundledDirectories = [
 ];
 
 const bundledFiles = [
+    "data/showcase-official-captions.en.json",
     "apple-icon.png",
     "icon.png",
     "manifest.webmanifest",
     "images/logo-black-poodle-v2.png",
-    "images/og-ai-platform-20260804-1200x630.png",
     "images/wordmark.png",
     // PC 로그인 영상(auth/login 화면이 묶음에 들어가 있어 참조 검사에 걸림) — 워터마크 지운 1.9MB 새 영상(2026-10-28)
     // 예전 videos/login.mp4(2.5MB)는 뺌 → 앱 묶음 0.6MB 감소
@@ -194,6 +194,12 @@ async function removeWebOnlyOnnxRuntimeMedia() {
 const nativeExcludedFiles = [
     // 예전 원티드 산스 한 덩어리(1.26MB) — 지금은 fonts/wanted/ 세 조각을 씀(app/globals.css), 원본 보관용
     "fonts/WantedSansVariable.woff2",
+    // The native UI loads the glyph-verified startup, common-NN and extra
+    // slices. These previous full and combined files have no runtime references.
+    "fonts/NanumSquareRoundB.woff2",
+    "fonts/NanumSquareRoundR.woff2",
+    ...["Cafe24Ssurround", "NanumSquareRoundB", "NanumSquareRoundR"].flatMap(family =>
+        ["common", "ui"].map(group => `fonts/app-subsets/${family}-${group}.woff2`)),
     // 연구소 상징 원본 PNG(1.92MB) — 화면은 daengdabang-research-lab-symbol-nav.webp 만 씀
     "images/brand/daengdabang-research-lab-symbol.png",
     // 견종 얼굴 영상 원본(장당 1.9MB) — 웹 홈 전용. 앱 쇼핑 홈 배지는 images/breeds/badge/*-240.mp4

@@ -159,7 +159,7 @@ test("checkout opens the Toss SDK only for a server-created order in the server'
     assert.match(success, /isTossConfirmationPendingError\(error\)/);
     assert.match(success, /setView\(\{ kind: "pending", retryHref: callbackPath \}\)/);
     assert.match(success, /결제 상태 확인 중/);
-    assert.match(success, /<a href=\{view\.retryHref\}[^>]*>동일 결제 다시 확인<\/a>/);
+    assert.match(success, /<a href=\{view\.retryHref\}[^>]*>\{labelText\("동일 결제 다시 확인"\)\}<\/a>/);
     assert.match(success, /status: confirmation\.status,/);
     assert.doesNotMatch(success, /trackTwinOrderAttribution|creditPurchase|daenglab\/wallet/);
     assert.doesNotMatch(failure, /removePaidLines|clearCart|addOrder/);

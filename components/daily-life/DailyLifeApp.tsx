@@ -16,6 +16,7 @@
  * 머리 문구는 관리자 화면에서 바꾸는 content.hero 를 그대로 쓴다. 주소 끝 #구역 이름으로 들어오면 그 탭 · 구역을 연다.
  */
 
+import { useI18n } from "@/lib/i18n";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
 import { hasShareableAiRecord } from "@/components/growth/GrowthHub";
@@ -43,6 +44,7 @@ const PAGE_TABS: PageTab[] = [
 ];
 
 export default function DailyLifeApp() {
+    const { menuLabel: labelText } = useI18n();
     const { hydrated, user } = useAuth();
     const [content, setContent] = useState(DEFAULT_GROWTH_HUB_CONTENT);
     const [contentReady, setContentReady] = useState(false);
@@ -183,7 +185,7 @@ export default function DailyLifeApp() {
                     </span>
                     <div className="pv-hero-copy absolute inset-x-4 bottom-4 text-white">
                         <p className="pv-kicker text-white/70">{hero.kicker}</p>
-                        <h1 id="treasure-mine-title" className="mt-1 font-['Cafe24Ssurround',var(--font-wanted-sans)] text-[30px] leading-none tracking-[-0.03em]">매일 댕생활</h1>
+                        <h1 id="treasure-mine-title" className="mt-1 font-['Cafe24Ssurround',var(--font-wanted-sans)] text-[30px] leading-none tracking-[-0.03em]">{labelText("매일 댕생활")}</h1>
                         <p className="mt-2 text-[13.5px] font-medium leading-snug text-white/90">
                             {hero.titlePrefix} <b className="font-extrabold text-white">{hero.titleHighlight}</b>{hero.titleSuffix}
                         </p>
@@ -194,7 +196,7 @@ export default function DailyLifeApp() {
                 {/* ── 페이지 안 탭 — 아이폰식 분할 버튼, 상단바 밑에 붙어 따라온다 ── */}
                 <div ref={sentinelRef} aria-hidden="true" />
                 <div className="sticky z-[980] -mx-4 mt-4 px-4 pb-3 pt-2" style={{ top: "calc(var(--app-topbar-h, 56px) + var(--app-subbar-h, 0px))", background: "linear-gradient(180deg, rgba(250,247,244,0.97) 75%, rgba(250,247,244,0))" }}>
-                    <nav className="relative grid rounded-[16px] bg-[rgba(31,26,24,0.06)] p-1" style={{ gridTemplateColumns: `repeat(${tabs.length}, minmax(0, 1fr))` }} role="tablist" aria-label="매일 댕생활 구역">
+                    <nav className="relative grid rounded-[16px] bg-[rgba(31,26,24,0.06)] p-1" style={{ gridTemplateColumns: `repeat(${tabs.length}, minmax(0, 1fr))` }} role="tablist" aria-label={labelText("매일 댕생활 구역")}>
                         {/* 고른 탭 흰 판 — 스프링처럼 미끄러짐 */}
                         <span
                             className="absolute bottom-1 top-1 rounded-[12px] bg-white shadow-[0_1px_2px_rgba(31,26,24,.08),0_6px_14px_-6px_rgba(31,26,24,.22)] transition-[left] duration-500 ease-[cubic-bezier(.22,1.2,.36,1)]"

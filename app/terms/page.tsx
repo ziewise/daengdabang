@@ -1,3 +1,4 @@
+import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
 import type { Metadata } from "next";
 import LegalWebHero from "@/components/legal/LegalWebHero";
 import { BUSINESS_INFO, LEGAL_UPDATED_AT } from "@/lib/legal";
@@ -298,9 +299,9 @@ export default function TermsPage() {
             {/* 웹 머리 판 · 문서 탭 · 한눈에 보기(2026-10-25, 앱은 숨김) — 아래 법률 문구는 그대로 */}
             <LegalWebHero kind="terms" updatedAt={LEGAL_UPDATED_AT} />
             <p className="text-sm font-black text-indigo-700">Legal</p>
-            <h1 className="mt-2 text-3xl font-black tracking-tight text-neutral-950">이용약관</h1>
+            <h1 className="mt-2 text-3xl font-black tracking-tight text-neutral-950"><LocalizedMenuLabel label={"이용약관"} /></h1>
             <p className="mt-3 text-sm font-bold leading-6 text-neutral-600">
-                시행일: {LEGAL_UPDATED_AT}.
+                <LocalizedMenuLabel label={"시행일:"} /> {LEGAL_UPDATED_AT}.
             </p>
             <nav
                 aria-label="이용약관 목차"
@@ -308,7 +309,7 @@ export default function TermsPage() {
             >
                 {sections.map((section, index) => (
                     <a key={section.title} href={`#terms-${index + 1}`} className="hover:text-indigo-700">
-                        {section.title}
+                        <LocalizedMenuLabel label={section.title} />
                     </a>
                 ))}
             </nav>
@@ -319,7 +320,7 @@ export default function TermsPage() {
                         id={`terms-${index + 1}`}
                         className="scroll-mt-24 border-t border-neutral-200 pt-5"
                     >
-                        <h2 className="text-lg font-black text-neutral-950">{section.title}</h2>
+                        <h2 className="text-lg font-black text-neutral-950"><LocalizedMenuLabel label={section.title} /></h2>
                         <div className="mt-2 grid gap-2 text-sm font-bold leading-7 text-neutral-600">
                             {section.body.split("\n").map((line, lineIndex, lines) => {
                                 const marker = buildSectionMarkers(index, lines.length)[lineIndex];
@@ -336,10 +337,13 @@ export default function TermsPage() {
                                         {marker ? (
                                             <span className="font-black text-indigo-700">
                                                 <span aria-hidden="true">{marker.visible}</span>
-                                                <span className="sr-only">{marker.spoken}</span>
+                                                <span className="sr-only"><LocalizedMenuLabel label={marker.spoken} english={marker.kind === "clause" ? `Paragraph ${marker.spoken.match(/\d+/)?.[0]}` : `Item ${marker.spoken.match(/\d+/)?.[0]}`} /></span>
                                             </span>
                                         ) : null}
-                                        <span>{line}</span>
+                                        <span>{section.title === "사업자 정보" && line.includes(": ") ? <>
+                                                    <LocalizedMenuLabel label={line.slice(0, line.indexOf(": "))} />{": "}
+                                                    <LocalizedMenuLabel label={line.slice(line.indexOf(": ") + 2)} />
+                                                </> : <LocalizedMenuLabel label={line} />}</span>
                                     </p>
                                 );
                             })}

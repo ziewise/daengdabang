@@ -1,5 +1,7 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
+
 /**
  * 원래 시안 3(/app/mockup-c, ClassicHome)의 그림체를 그대로 옮긴 공통 부품 — 홈 새 시안 1·2·3 전용 (로컬 시안, 배포 X)
  * ---------------------------------------------------------------------
@@ -115,6 +117,7 @@ export function Poodle({ className = "" }: { className?: string }) {
 export function CoverArt({ cover, lines, className = "", children, sizes = "45vw" }: {
     cover: Cover; lines?: readonly [string, string]; className?: string; children?: ReactNode; sizes?: string;
 }) {
+    const { locale, menuLabel: labelText } = useI18n();
     const l = lines ?? cover.lines;
     return (
         <span className={`relative block aspect-[51/100] w-full overflow-hidden [container-type:inline-size] ${className}`}>
@@ -122,12 +125,12 @@ export function CoverArt({ cover, lines, className = "", children, sizes = "45vw
             <Image src={cover.imgSm} alt="" fill sizes={sizes} loading="eager" className="object-cover" />
             <span className="absolute flex -translate-x-1/2 -translate-y-1/2 flex-col items-center text-center" style={{ left: `${cover.cloud.x}%`, top: `${cover.cloud.y}%` }}>
                 {cover.heads.map((h) => (
-                    <span key={h.t} className="ah-display block whitespace-nowrap leading-[1.08] tracking-[-0.03em]" style={{ color: h.c, fontSize: `${cover.cloud.size}cqw` }}>{h.t}</span>
+                    <span key={h.t} className="ah-display block whitespace-nowrap leading-[1.08] tracking-[-0.03em]" style={{ color: h.c, fontSize: `${cover.cloud.size}cqw` }}>{locale === "en" && cover.key === "show" ? "Show" : labelText(h.t)}</span>
                 ))}
             </span>
             <span className="absolute inset-x-[4%] bottom-0 flex h-[20%] flex-col items-center justify-center text-center">
                 <i aria-hidden="true" className="fa-solid fa-paw" style={{ color: cover.paw, fontSize: "7.5cqw" }} />
-                <span className="ah-card-desc mt-[2cqw] block whitespace-nowrap">{l[0]}<br />{l[1]}</span>
+                <span className="ah-card-desc mt-[2cqw] block whitespace-nowrap">{labelText(l[0])}<br />{labelText(l[1])}</span>
             </span>
             {children}
         </span>
@@ -136,13 +139,14 @@ export function CoverArt({ cover, lines, className = "", children, sizes = "45vw
 
 /** 카드 그림 윗부분만 창문처럼 — 구름 제목은 그림 기준 위치 그대로(카드 높이 = 폭 ÷ 0.51) */
 export function CoverWindow({ cover, className = "" }: { cover: Cover; className?: string }) {
+    const { locale, menuLabel: labelText } = useI18n();
     return (
         <span className={`absolute inset-0 overflow-hidden [container-type:inline-size] ${className}`}>
             <span className="cw-img bt-img absolute inset-x-0 top-0 block aspect-[51/100]">
                 <Image src={cover.img} alt="" fill sizes="45vw" className="object-cover" />
                 <span className="absolute flex -translate-x-1/2 -translate-y-1/2 flex-col items-center text-center" style={{ left: `${cover.cloud.x}%`, top: `${cover.cloud.y}%` }}>
                     {cover.heads.map((h) => (
-                        <span key={h.t} className="ah-display block whitespace-nowrap leading-[1.08] tracking-[-0.03em]" style={{ color: h.c, fontSize: `${cover.cloud.size}cqw` }}>{h.t}</span>
+                        <span key={h.t} className="ah-display block whitespace-nowrap leading-[1.08] tracking-[-0.03em]" style={{ color: h.c, fontSize: `${cover.cloud.size}cqw` }}>{locale === "en" && cover.key === "show" ? "Show" : labelText(h.t)}</span>
                     ))}
                 </span>
             </span>

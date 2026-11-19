@@ -7,6 +7,8 @@
  * → 뼈다귀 응원 · 공유 · 신고/삭제 → 보호자(프로필 · 팔로우). 기능 · 문구는 그대로, 꾸밈은 app/daily-web.css "댕자랑" 묶음.
  */
 
+import ShowcaseCaption from "@/components/daeng-showcase/ShowcaseCaption";
+import { useI18n } from "@/lib/i18n";
 import { useCallback, useEffect, useRef, useState } from "react";
 // 카드를 누르면 크게 보기 창(2026-10-25 웹)
 import ShowcasePostDialog from "./ShowcasePostDialog";
@@ -16,6 +18,7 @@ import { useWebConfirm } from "@/components/site/useWebConfirm";
 // 웹/앱 문구 갈림(웹은 해요체, 2026-10-26)
 import { useWebScreen } from "@/hooks/useWebScreen";
 import {
+    showcaseDisplayName,
     deleteShowcasePost,
     reportShowcasePost,
     setShowcaseBone,
@@ -51,9 +54,6 @@ type ShowcaseCardProps = {
     onNotice: (message: string, error?: boolean) => void;
 };
 
-function formatCreatedAt(value: string) {
-    return formatShowcaseDate(value);
-}
 
 export default function ShowcaseCard({
     post,
@@ -68,6 +68,9 @@ export default function ShowcaseCard({
     onDeleted,
     onNotice,
 }: ShowcaseCardProps) {
+    const { locale, menuLabel: labelText } = useI18n();
+    const authorName = showcaseDisplayName(post.author.displayName, labelText);
+    const photoName = post.pet?.name || authorName;
     const [busy, setBusy] = useState<"follow" | "bone" | "delete" | "report" | "">("");
     const [reportOpen, setReportOpen] = useState(false);
     const [reportReason, setReportReason] = useState<ShowcaseReportReason>("spam");
@@ -237,10 +240,10 @@ export default function ShowcaseCard({
             {/* 사진 — 카드 위를 꽉 채우는 둥근 사각(얇은 흰 테), 주제 참여 글은 사진 위에 주제 표시 */}
             <div className="dw-sc-photo">
                 {/* 사진을 누르면 크게 보기 창 */}
-                <button type="button" className="dw-sc-frame dw-sc-open" onClick={() => setDetailOpen(true)} aria-haspopup="dialog" aria-label={`${post.pet?.name || post.author.displayName}의 댕자랑 크게 보기`}>
+                <button type="button" className="dw-sc-frame dw-sc-open" onClick={() => setDetailOpen(true)} aria-haspopup="dialog" aria-label={locale === "en" ? `Open showcase photo by ${photoName}` : `${post.pet?.name || post.author.displayName}의 댕자랑 크게 보기`}>
                     <ShowcaseThumbnail
                         src={post.imageUrl}
-                        alt={`${post.pet?.name || post.author.displayName}의 댕자랑 사진`}
+                        alt={locale === "en" ? `Showcase photo by ${photoName}` : `${post.pet?.name || post.author.displayName}의 댕자랑 사진`}
                         width={post.imageWidth}
                         height={post.imageHeight}
                         loading="lazy"
@@ -269,7 +272,7 @@ export default function ShowcaseCard({
                         if (!window.getSelection()?.toString()) setDetailOpen(true);
                     }}
                 >
-                    {post.caption}
+                    <ShowcaseCaption authorId={post.author.authorId} text={post.caption} />
                 </p>
                 {captionOverflows ? (
                     <button
@@ -279,7 +282,7 @@ export default function ShowcaseCard({
                         onClick={() => setCaptionExpanded((value) => !value)}
                         className="dw-sc-more"
                     >
-                        {captionExpanded ? "접기" : "더보기"}
+                        {labelText(captionExpanded ? "접기" : "더보기")}
                         <i className={`fa-solid ${captionExpanded ? "fa-chevron-up" : "fa-chevron-down"} text-[9px]`} aria-hidden="true" />
                     </button>
                 ) : null}
@@ -295,17 +298,17 @@ export default function ShowcaseCard({
                     className={`dw-sc-bone ${post.bonedByMe ? "is-on" : ""}`}
                 >
                     <i className="fa-solid fa-bone" aria-hidden="true" />
-                    응원 {post.boneCount.toLocaleString("ko-KR")}
+                    {labelText("응원")} {post.boneCount.toLocaleString("ko-KR")}
                 </button>
-                <button type="button" onClick={() => onShare(post)} className="dw-sc-mini" aria-label={`${post.author.displayName}의 댕자랑 공유`}>
+                <button type="button" onClick={() => onShare(post)} className="dw-sc-mini" aria-label={locale === "en" ? `Share the showcase post by ${authorName}` : `${post.author.displayName}의 댕자랑 공유`}>
                     <i className="fa-solid fa-share-nodes" aria-hidden="true" />
                 </button>
                 {post.canDelete ? (
-                    <button type="button" onClick={removePost} disabled={busy === "delete"} className="dw-sc-mini is-text" aria-label="이 댕자랑 삭제">
-                        {busy === "delete" ? "삭제 중" : "삭제"}
+                    <button type="button" onClick={removePost} disabled={busy === "delete"} className="dw-sc-mini is-text" aria-label={labelText("이 댕자랑 삭제")}>
+                        {labelText(busy === "delete" ? "삭제 중" : "삭제")}
                     </button>
                 ) : (
-                    <button type="button" onClick={openReport} className="dw-sc-mini" aria-label="이 댕자랑 신고">
+                    <button type="button" onClick={openReport} className="dw-sc-mini" aria-label={labelText("이 댕자랑 신고")}>
                         <i className="fa-regular fa-flag" aria-hidden="true" />
                     </button>
                 )}
@@ -313,14 +316,14 @@ export default function ShowcaseCard({
 
             {/* 보호자 — 누르면 프로필, 오른쪽 팔로우 */}
             <div className="dw-sc-author">
-                <button type="button" onClick={() => onOpenAuthor(post.author.authorId)} className="dw-sc-author-btn" aria-label={`${post.author.displayName} 프로필 보기`}>
+                <button type="button" onClick={() => onOpenAuthor(post.author.authorId)} className="dw-sc-author-btn" aria-label={locale === "en" ? `View the profile of ${authorName}` : `${post.author.displayName} 프로필 보기`}>
                     <span className="dw-sc-avatar" aria-hidden="true">{post.author.displayName.slice(0, 1)}</span>
                     <span className="min-w-0">
                         <h3 className="dw-sc-author-name">
-                            {post.author.displayName}
-                            {post.author.isMe ? <span className="dw-sc-me">나</span> : null}
+                            {authorName}
+                            {post.author.isMe ? <span className="dw-sc-me">{labelText("나")}</span> : null}
                         </h3>
-                        <span className="dw-sc-author-meta">팔로워 {post.author.followerCount.toLocaleString("ko-KR")}명 · {formatCreatedAt(post.createdAt)}</span>
+                        <span className="dw-sc-author-meta">{locale === "en" ? `${post.author.followerCount.toLocaleString("en-US")} ${post.author.followerCount === 1 ? "follower" : "followers"} ·` : `팔로워 ${post.author.followerCount.toLocaleString("ko-KR")}명 ·`} {formatShowcaseDate(post.createdAt, locale)}</span>
                     </span>
                 </button>
                 {!post.author.isMe ? (
@@ -331,7 +334,7 @@ export default function ShowcaseCard({
                         aria-pressed={post.author.followedByMe}
                         className={`dw-sc-follow ${post.author.followedByMe ? "is-on" : ""}`}
                     >
-                        {busy === "follow" ? "처리 중" : post.author.followedByMe ? "팔로잉" : "팔로우"}
+                        {labelText(busy === "follow" ? "처리 중" : post.author.followedByMe ? "팔로잉" : "팔로우")}
                     </button>
                 ) : null}
             </div>
@@ -343,7 +346,7 @@ export default function ShowcaseCard({
                 open={detailOpen}
                 onClose={closeDetail}
                 busy={busy}
-                createdLabel={formatCreatedAt(post.createdAt)}
+                createdLabel={formatShowcaseDate(post.createdAt, locale)}
                 onBone={toggleBone}
                 onFollow={toggleFollow}
                 onShare={() => {
@@ -373,28 +376,28 @@ export default function ShowcaseCard({
                         <div className="flex items-start justify-between gap-4">
                             <div>
                                 <p className="ddb-crayon-kicker text-[10px]">SAFE COMMUNITY</p>
-                                <h4 id={`report-title-${post.postId}`} className="ddb-crayon-title mt-1 text-2xl text-neutral-950">게시물 신고</h4>
+                                <h4 id={`report-title-${post.postId}`} className="ddb-crayon-title mt-1 text-2xl text-neutral-950">{labelText("게시물 신고")}</h4>
                             </div>
-                            <button type="button" onClick={() => setReportOpen(false)} disabled={busy === "report"} className="grid h-9 w-9 place-items-center rounded-full bg-neutral-100 text-neutral-600" aria-label="신고 창 닫기" data-showcase-report-close>
+                            <button type="button" onClick={() => setReportOpen(false)} disabled={busy === "report"} className="grid h-9 w-9 place-items-center rounded-full bg-neutral-100 text-neutral-600" aria-label={labelText("신고 창 닫기")} data-showcase-report-close>
                                 <i className="fa-solid fa-xmark" aria-hidden="true" />
                             </button>
                         </div>
-                        <label htmlFor={`report-reason-${post.postId}`} className="mt-5 block text-xs font-black text-neutral-700">신고 이유</label>
+                        <label htmlFor={`report-reason-${post.postId}`} className="mt-5 block text-xs font-black text-neutral-700">{labelText("신고 이유")}</label>
                         <select id={`report-reason-${post.postId}`} value={reportReason} onChange={(event) => setReportReason(event.target.value as ShowcaseReportReason)} className="input mt-2" disabled={busy === "report"}>
                             {REPORT_REASONS.map((reason) => <option key={reason.value} value={reason.value}>{reason.label}</option>)}
                         </select>
-                        <label htmlFor={`report-detail-${post.postId}`} className="mt-4 block text-xs font-black text-neutral-700">상세 내용 <span className="font-bold text-neutral-400">선택</span></label>
+                        <label htmlFor={`report-detail-${post.postId}`} className="mt-4 block text-xs font-black text-neutral-700">{labelText("상세 내용")} <span className="font-bold text-neutral-400">{labelText("선택")}</span></label>
                         <textarea id={`report-detail-${post.postId}`} value={reportDetail} onChange={(event) => setReportDetail(event.target.value.slice(0, 300))} rows={4} maxLength={300} className="input mt-2 resize-y py-3" disabled={busy === "report"} />
                         <p className="mt-2 text-[10px] font-bold text-neutral-500" data-showcase-report-hint>
-                            {webScreen ? "신고는 운영자만 확인하고, 작성자에게 신고자 정보는 공개되지 않아요." : "신고는 운영자 확인용이며 작성자에게 신고자 정보가 공개되지 않습니다."}
+                            {labelText(webScreen ? "신고는 운영자만 확인하고, 작성자에게 신고자 정보는 공개되지 않아요." : "신고는 운영자 확인용이며 작성자에게 신고자 정보가 공개되지 않습니다.")}
                         </p>
                         <p className="mt-3 text-xs font-bold text-red-700" role="alert" data-showcase-report-error>{reportError}</p>
                         <button type="submit" disabled={busy === "report"} className="mt-4 min-h-11 w-full rounded-full bg-neutral-900 px-5 text-sm font-black text-white disabled:opacity-50" data-showcase-report-submit>
-                            {busy === "report" ? "접수 중" : "신고 접수"}
+                            {labelText(busy === "report" ? "접수 중" : "신고 접수")}
                         </button>
                         {/* 웹 전용 취소(흰 알약) — 기존 닫기와 같은 동작, 앱은 hidden 그대로 */}
                         <button type="button" onClick={() => setReportOpen(false)} disabled={busy === "report"} className="hidden" data-showcase-report-cancel>
-                            취소
+                            {labelText("취소")}
                         </button>
                     </form>
                 </div>

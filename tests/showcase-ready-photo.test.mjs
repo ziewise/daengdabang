@@ -13,6 +13,8 @@ const code = ts.transpileModule(readFileSync("components/pwa/home-concepts/show-
     compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, jsx: ts.JsxEmit.ReactJSX, esModuleInterop: true },
 }).outputText;
 vm.runInNewContext(code, { exports, require: name => {
+    if (name === "@/lib/i18n") return { useI18n: () => ({ locale: "ko", menuLabel: text => text }) };
+    if (name === "@/components/i18n/LocalizedMenuLabel") return ({ label }) => label;
     if (name === "@/lib/showcase-image") return { showcaseThumbnailUrl: url => `${url}?size=card`, showcasePhotoRetryUrl: url => url };
     if (name === "./kit") return { TEXT: "#000" };
     if (name === "next/image") return { default: props => createElement("img", props), __esModule: true };

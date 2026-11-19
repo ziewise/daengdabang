@@ -7,6 +7,7 @@
  *   가운데 제목 · 해요체 설명(useWebScreen 으로 웹에서만)을 더함. 꾸밈은 app/auth-web.css "이메일 확인 화면". 앱 글 · 모양 그대로.
  */
 
+import { useI18n } from "@/lib/i18n";
 import { FormEvent, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -233,6 +234,7 @@ async function buildPetLensViewSheet(views: PetPhotoCaptures) {
 }
 
 export default function SignupPage() {
+    const { menuLabel: labelText } = useI18n();
     const router = useRouter();
     const { login, updateMemberEmail, user } = useAuth();
     const redirect = useSyncExternalStore(subscribeToLocation, getClientRedirect, getServerRedirect);
@@ -886,17 +888,17 @@ export default function SignupPage() {
                         {/* 웹 전용 머리 — 3D 확인 그림 · 손글씨 꼬리표(hidden, 웹 CSS에서만 보임) */}
                         <NextImage className="hidden su-verify-art" src="/images/ui/cs-check-160.webp" alt="" width={96} height={96} priority />
                         <p className="hidden su-kicker">EMAIL CHECKED</p>
-                        <h1 className="su-title text-2xl font-black tracking-tight text-neutral-950">이메일 확인 완료</h1>
+                        <h1 className="su-title text-2xl font-black tracking-tight text-neutral-950">{labelText("이메일 확인 완료")}</h1>
                         <p className="mt-2 text-sm font-bold leading-6 text-neutral-600">
                             {/* 웹은 해요체 안내, 앱은 기존 글 그대로 */}
-                            {webScreen
+                            {labelText(webScreen
                                 ? "이메일 확인이 끝났어요! 안전하게 시작할 수 있도록 가입할 때 정한 비밀번호로 한 번 로그인해 주세요."
-                                : "이메일이 확인되었습니다. 안전하게 계정 이용을 시작하기 위해 가입 때 입력한 비밀번호로 로그인해 주세요."}
+                                : "이메일이 확인되었습니다. 안전하게 계정 이용을 시작하기 위해 가입 때 입력한 비밀번호로 로그인해 주세요.")}
                         </p>
                         {activationFinalizing ? (
                             <p role="status" className="mt-5 rounded-xl bg-indigo-50 px-4 py-3 text-sm font-black text-indigo-800" data-su-progress>
                                 <i className="fa-solid fa-circle-notch fa-spin mr-2" />
-                                {webScreen ? "계정과 우리 아이 프로필을 준비하고 있어요." : "계정과 반려견 프로필을 준비하고 있습니다."}
+                                {labelText(webScreen ? "계정과 우리 아이 프로필을 준비하고 있어요." : "계정과 반려견 프로필을 준비하고 있습니다.")}
                             </p>
                         ) : (
                             <form
@@ -912,7 +914,7 @@ export default function SignupPage() {
                                     </p>
                                 )}
                                 <label>
-                                    <span className="mb-1 block text-xs font-black text-neutral-500">가입 비밀번호</span>
+                                    <span className="mb-1 block text-xs font-black text-neutral-500">{labelText("가입 비밀번호")}</span>
                                     <input
                                         type="password"
                                         value={password}
@@ -925,7 +927,7 @@ export default function SignupPage() {
                                     />
                                 </label>
                                 <button type="submit" className="btn btn-primary w-full">
-                                    계정 이용 시작
+                                    {labelText("계정 이용 시작")}
                                 </button>
                             </form>
                         )}
@@ -938,12 +940,12 @@ export default function SignupPage() {
                     {/* 웹 전용 머리 — 3D 편지 그림 · 손글씨 꼬리표(hidden, 웹 CSS에서만 보임) */}
                     <NextImage className="hidden su-verify-art" src="/images/ui/lab-mail-160.webp" alt="" width={96} height={96} priority />
                     <p className="hidden su-kicker">CHECK YOUR EMAIL</p>
-                    <h1 className="su-title text-2xl font-black tracking-tight text-neutral-950">회원가입 이메일 확인</h1>
+                    <h1 className="su-title text-2xl font-black tracking-tight text-neutral-950">{labelText("회원가입 이메일 확인")}</h1>
                     <p className="mt-2 text-sm font-bold leading-6 text-neutral-600">
                         {/* 웹은 해요체 안내, 앱은 기존 글 그대로 */}
-                        {webScreen
+                        {labelText(webScreen
                             ? "가입한 이메일로 보낸 인증번호 6자리를 넣으면 계정이 열려요. 확인 전에는 로그인 정보나 프로필을 저장하지 않아요."
-                            : "이메일 확인을 마쳐야 계정 이용이 시작됩니다. 확인 전에는 로그인 정보나 회원 프로필을 저장하지 않습니다."}
+                            : "이메일 확인을 마쳐야 계정 이용이 시작됩니다. 확인 전에는 로그인 정보나 회원 프로필을 저장하지 않습니다.")}
                     </p>
                     <div className="mt-5">
                         <SignupEmailVerification
@@ -959,9 +961,9 @@ export default function SignupPage() {
 
         return (
             <main className="mx-auto max-w-lg px-4 py-10 sm:py-16" data-signup-web="verify">
-                <h1 className="su-title text-2xl font-black tracking-tight text-neutral-950">회원가입 이메일 인증</h1>
+                <h1 className="su-title text-2xl font-black tracking-tight text-neutral-950">{labelText("회원가입 이메일 인증")}</h1>
                 <p className="mt-2 text-sm font-bold leading-6 text-neutral-600">
-                    계정 가입은 완료되었습니다. 가입 이메일로 자동 발송된 6자리 인증번호를 확인하면 신규 가입 혜택 20C를 받을 수 있어요.
+                    {labelText("계정 가입은 완료되었습니다. 가입 이메일로 자동 발송된 6자리 인증번호를 확인하면 신규 가입 혜택 20C를 받을 수 있어요.")}
                 </p>
                 <div className="mt-5">
                     <SignupEmailVerification
@@ -981,9 +983,9 @@ export default function SignupPage() {
             <span className="hidden su-ring dw-rring" aria-hidden="true">
                 <span><NextImage src="/images/ui/logo-poodle-384.webp" alt="" width={120} height={120} priority /></span>
             </span>
-            <p className="hidden su-kicker">JOIN DAENGDABANG</p>
-            <h1 className="su-title text-3xl font-black tracking-tight text-neutral-950">회원가입</h1>
-            <p className="hidden su-lead">우리 아이 정보를 함께 등록하면 꼭 맞는 상품과 돌봄을 추천해 드려요.</p>
+            <p className="hidden su-kicker">JOIN 댕다방</p>
+            <h1 className="su-title text-3xl font-black tracking-tight text-neutral-950">{labelText("회원가입")}</h1>
+            <p className="hidden su-lead">{labelText("우리 아이 정보를 함께 등록하면 꼭 맞는 상품과 돌봄을 추천해 드려요.")}</p>
             <section
                 className="mt-4 rounded-2xl border border-indigo-100 bg-gradient-to-r from-cyan-50 via-rose-50 to-amber-50 px-4 py-3"
                 aria-labelledby="signup-daenglab-bonus-title"
@@ -992,14 +994,14 @@ export default function SignupPage() {
                 <div className="flex flex-wrap items-center gap-2">
                     <DaengLabCoinMark compact />
                     <p id="signup-daenglab-bonus-title" className="text-sm font-black text-neutral-950">
-                        신규 가입 혜택 · 20C
+                        {labelText("신규 가입 혜택 · 20C")}
                     </p>
                     <span className="rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-black text-indigo-700 shadow-sm">
-                        행동·소리 분석 2회
+                        {labelText("행동·소리 분석 2회")}
                     </span>
                 </div>
                 <p className="mt-2 text-[11px] font-bold leading-5 text-neutral-600">
-                    가입 이메일 인증 완료 후 자동 지급됩니다. 반복 가입 등 부정 수령이 확인되면 코인이 회수되거나 이용이 제한될 수 있습니다.
+                    {labelText("가입 이메일 인증 완료 후 자동 지급됩니다. 반복 가입 등 부정 수령이 확인되면 코인이 회수되거나 이용이 제한될 수 있습니다.")}
                 </p>
             </section>
             <section
@@ -1007,9 +1009,9 @@ export default function SignupPage() {
                 data-signup-required-agreements
             >
                 <div>
-                    <h2 className="text-sm font-black text-neutral-950">약관 및 개인정보 동의</h2>
+                    <h2 className="text-sm font-black text-neutral-950">{labelText("약관 및 개인정보 동의")}</h2>
                     <p className="mt-1 text-xs font-bold leading-5 text-neutral-500">
-                        두 가지 필수 동의와 보안 확인 후 가입 방법을 선택해 주세요.
+                        {labelText("두 가지 필수 동의와 보안 확인 후 가입 방법을 선택해 주세요.")}
                     </p>
                 </div>
 
@@ -1024,12 +1026,12 @@ export default function SignupPage() {
                         <span>
                             <b className="font-black text-neutral-950">{SIGNUP_TERMS_AGREEMENT.title}</b>{" "}
                             <Link href={SIGNUP_TERMS_AGREEMENT.href} className="font-black text-indigo-700">
-                                전체보기
+                                {labelText("전체보기")}
                             </Link>
                         </span>
                     </label>
                     <details className="pl-7 text-xs font-bold text-neutral-600">
-                        <summary className="cursor-pointer">주요 내용 보기</summary>
+                        <summary className="cursor-pointer">{labelText("주요 내용 보기")}</summary>
                         <ul className="mt-2 grid gap-1 leading-5">
                             {SIGNUP_TERMS_AGREEMENT.summary.map((item) => (
                                 <li key={item} className="list-disc">
@@ -1051,20 +1053,20 @@ export default function SignupPage() {
                         <span>
                             <b className="font-black text-neutral-950">{SIGNUP_REQUIRED_PRIVACY_CONSENT.title}</b>{" "}
                             <Link href={SIGNUP_REQUIRED_PRIVACY_CONSENT.href} className="font-black text-indigo-700">
-                                처리방침 보기
+                                {labelText("처리방침 보기")}
                             </Link>
                         </span>
                     </label>
                     <details className="text-xs font-bold text-neutral-600">
-                        <summary className="ml-7 cursor-pointer">수집 항목·이용 목적·보유기간 보기</summary>
+                        <summary className="ml-7 cursor-pointer">{labelText("수집 항목·이용 목적·보유기간 보기")}</summary>
                         <p className="pl-7 text-xs font-bold leading-5 text-neutral-600">
                             {SIGNUP_REQUIRED_PRIVACY_CONSENT.intro}
                         </p>
                         <div className="ml-7 overflow-hidden rounded-md border border-neutral-200 bg-white text-xs font-bold text-neutral-600">
                             <div className="grid grid-cols-[1fr_1.2fr_1.3fr] bg-neutral-100 text-[11px] font-black text-neutral-500">
-                                <span className="border-r border-neutral-200 px-2 py-2">수집 항목</span>
-                                <span className="border-r border-neutral-200 px-2 py-2">이용 목적</span>
-                                <span className="px-2 py-2">보유 및 이용기간</span>
+                                <span className="border-r border-neutral-200 px-2 py-2">{labelText("수집 항목")}</span>
+                                <span className="border-r border-neutral-200 px-2 py-2">{labelText("이용 목적")}</span>
+                                <span className="px-2 py-2">{labelText("보유 및 이용기간")}</span>
                             </div>
                             {SIGNUP_REQUIRED_PRIVACY_CONSENT.rows.map((row) => (
                                 <div key={row.item} className="grid grid-cols-[1fr_1.2fr_1.3fr] border-t border-neutral-100">
@@ -1097,7 +1099,7 @@ export default function SignupPage() {
             <form onSubmit={submit} className="surface mt-6 grid gap-4 p-5">
                 {apiReady === false && (
                     <p className="rounded-md bg-amber-50 px-3 py-2 text-sm font-bold leading-6 text-amber-800">
-                        지금은 회원가입 준비 중입니다. 잠시 후 다시 이용해 주세요.
+                        {labelText("지금은 회원가입 준비 중입니다. 잠시 후 다시 이용해 주세요.")}
                     </p>
                 )}
                 {error && (
@@ -1107,16 +1109,16 @@ export default function SignupPage() {
                 )}
                 <div className="grid gap-4 md:grid-cols-2" data-pet-guide-target="signup-account">
                     <label>
-                        <span className="mb-1 block text-xs font-black text-neutral-500">이름</span>
+                        <span className="mb-1 block text-xs font-black text-neutral-500">{labelText("이름")}</span>
                         <input value={name} onChange={(event) => setName(event.target.value)} className="input" required autoComplete="name" />
                     </label>
                     <label>
-                        <span className="mb-1 block text-xs font-black text-neutral-500">이메일</span>
+                        <span className="mb-1 block text-xs font-black text-neutral-500">{labelText("이메일")}</span>
                         <input type="email" value={email} onChange={(event) => setEmail(event.target.value)} className="input" required autoComplete="email" />
                     </label>
                 </div>
                 <label>
-                    <span className="mb-1 block text-xs font-black text-neutral-500">비밀번호</span>
+                    <span className="mb-1 block text-xs font-black text-neutral-500">{labelText("비밀번호")}</span>
                     <input
                         type="password"
                         value={password}
@@ -1125,13 +1127,13 @@ export default function SignupPage() {
                         minLength={8}
                         maxLength={72}
                         autoComplete="new-password"
-                        placeholder="8자 이상·최대 72바이트"
+                        placeholder={labelText("8자 이상·최대 72바이트")}
                     />
                 </label>
                 <div className="su-pet grid gap-4 rounded-lg border border-neutral-200 bg-neutral-50 p-4">
                     <div className="grid gap-4 md:grid-cols-[260px_1fr]">
                         <div className="block" data-pet-guide-target="signup-pet-photo" data-petlens-multiview-upload>
-                            <span className="mb-1 block text-xs font-black text-neutral-500">사진</span>
+                            <span className="mb-1 block text-xs font-black text-neutral-500">{labelText("사진")}</span>
                             <div className="grid grid-cols-2 gap-2">
                                 {PET_PHOTO_VIEWS.map((view) => {
                                     const photo = petPhotoViews[view.id];
@@ -1165,30 +1167,30 @@ export default function SignupPage() {
                                 })}
                             </div>
                             <span className="mt-2 block text-[11px] font-bold leading-5 text-neutral-500">
-                                모바일에서는 카메라가 바로 열립니다. 정면은 대표 사진으로 쓰고, 좌·우·뒷면까지 찍으면 네 방향 사진을 함께 비교해 견종·체형·털색 후보를 더 꼼꼼히 확인합니다.
+                                {labelText("모바일에서는 카메라가 바로 열립니다. 정면은 대표 사진으로 쓰고, 좌·우·뒷면까지 찍으면 네 방향 사진을 함께 비교해 견종·체형·털색 후보를 더 꼼꼼히 확인합니다.")}
                             </span>
-                            {photoLoading && <span className="mt-2 block text-xs font-black text-indigo-700">사진 분석 중</span>}
+                            {photoLoading && <span className="mt-2 block text-xs font-black text-indigo-700">{labelText("사진 분석 중")}</span>}
                             {photoError && <span className="mt-2 block text-xs font-black text-rose-600">{photoError}</span>}
                         </div>
                         <div className="grid gap-4 md:grid-cols-2">
                             <label>
-                                <span className="mb-1 block text-xs font-black text-neutral-500">반려견 이름</span>
+                                <span className="mb-1 block text-xs font-black text-neutral-500">{labelText("반려견 이름")}</span>
                                 <input value={petName} onChange={(event) => setPetName(event.target.value)} className="input" />
                             </label>
                             <label>
-                                <span className="mb-1 block text-xs font-black text-neutral-500">나이</span>
+                                <span className="mb-1 block text-xs font-black text-neutral-500">{labelText("나이")}</span>
                                 <input value={petAge} onChange={(event) => setPetAge(event.target.value)} className="input" />
-                                <span className="mt-1 block text-[11px] font-bold leading-5 text-neutral-500">사진으로 나이를 확정하지 않습니다. 직접 입력해 주세요.</span>
+                                <span className="mt-1 block text-[11px] font-bold leading-5 text-neutral-500">{labelText("사진으로 나이를 확정하지 않습니다. 직접 입력해 주세요.")}</span>
                             </label>
                             <label className="md:col-span-2" data-pet-guide-target="signup-breed">
-                                <span className="mb-1 block text-xs font-black text-neutral-500">견종 캐릭터</span>
+                                <span className="mb-1 block text-xs font-black text-neutral-500">{labelText("견종 캐릭터")}</span>
                                 <select
                                     value={petBreedId}
                                     onChange={(event) => selectBreed(event.target.value)}
                                     className="input"
                                 >
-                                    <option value="">사진 분석 결과 확인 또는 직접 선택</option>
-                                    <option value={CUSTOM_BREED_OPTION}>목록 외 견종 · 믹스견 직접 입력</option>
+                                    <option value="">{labelText("사진 분석 결과 확인 또는 직접 선택")}</option>
+                                    <option value={CUSTOM_BREED_OPTION}>{labelText("목록 외 견종 · 믹스견 직접 입력")}</option>
                                     {PET_BREEDS.map((breed) => (
                                         <option key={breed.id} value={breed.id}>
                                             {breed.ko} · {breed.en}
@@ -1201,7 +1203,7 @@ export default function SignupPage() {
                             </label>
                             {petBreedId === CUSTOM_BREED_OPTION && (
                                 <label className="md:col-span-2">
-                                    <span className="mb-1 block text-xs font-black text-neutral-500">실제 견종 또는 믹스견</span>
+                                    <span className="mb-1 block text-xs font-black text-neutral-500">{labelText("실제 견종 또는 믹스견")}</span>
                                     <input
                                         value={petBreedCustom}
                                         onChange={(event) => {
@@ -1210,12 +1212,12 @@ export default function SignupPage() {
                                         }}
                                         className="input"
                                         maxLength={100}
-                                        placeholder="예: 시바견, 골든두들, 믹스견"
+                                        placeholder={labelText("예: 시바견, 골든두들, 믹스견")}
                                         required
                                         data-petlens-custom-breed
                                     />
                                     <span className="mt-1 block text-[11px] font-bold leading-5 text-neutral-500">
-                                        캐릭터 120종에 없어도 회원 프로필에는 실제 견종명을 그대로 저장하며, 나중에 마이페이지에서 수정할 수 있습니다.
+                                        {labelText("캐릭터 120종에 없어도 회원 프로필에는 실제 견종명을 그대로 저장하며, 나중에 마이페이지에서 수정할 수 있습니다.")}
                                     </span>
                                 </label>
                             )}
@@ -1229,16 +1231,16 @@ export default function SignupPage() {
                                 </p>
                             )}
                             <label>
-                                <span className="mb-1 block text-xs font-black text-neutral-500">크기</span>
+                                <span className="mb-1 block text-xs font-black text-neutral-500">{labelText("크기")}</span>
                                 <select value={petSize} onChange={(event) => setPetSize(event.target.value as PetProfile["size"])} className="input">
-                                    <option value="small">소형</option>
-                                    <option value="medium">중형</option>
-                                    <option value="large">대형</option>
+                                    <option value="small">{labelText("소형")}</option>
+                                    <option value="medium">{labelText("중형")}</option>
+                                    <option value="large">{labelText("대형")}</option>
                                 </select>
-                                <span className="mt-1 block text-[11px] font-bold leading-5 text-neutral-500">사진 후보가 반영될 수 있으니 실제 크기로 확인해 주세요.</span>
+                                <span className="mt-1 block text-[11px] font-bold leading-5 text-neutral-500">{labelText("사진 후보가 반영될 수 있으니 실제 크기로 확인해 주세요.")}</span>
                             </label>
                             <label data-pet-guide-target="signup-weight">
-                                <span className="mb-1 block text-xs font-black text-neutral-500">현재 체중 (kg)</span>
+                                <span className="mb-1 block text-xs font-black text-neutral-500">{labelText("현재 체중 (kg)")}</span>
                                 <input
                                     type="number"
                                     min="0.1"
@@ -1248,26 +1250,26 @@ export default function SignupPage() {
                                     value={petWeightKg}
                                     onChange={(event) => setPetWeightKg(event.target.value)}
                                     className="input"
-                                    placeholder="직접 확인한 체중"
+                                    placeholder={labelText("직접 확인한 체중")}
                                 />
                                 {petWeightEstimate ? (
                                     <span className="mt-1 block text-[11px] font-black leading-5 text-amber-700">
-                                        예상 {petWeightEstimate.minKg}~{petWeightEstimate.maxKg}kg · 확인 필요
+                                        {labelText("예상")} {petWeightEstimate.minKg}~{petWeightEstimate.maxKg}{labelText("kg · 확인 필요")}
                                     </span>
                                 ) : (
-                                    <span className="mt-1 block text-[11px] font-bold leading-5 text-neutral-500">사진으로 실제 체중을 측정하지 않습니다.</span>
+                                    <span className="mt-1 block text-[11px] font-bold leading-5 text-neutral-500">{labelText("사진으로 실제 체중을 측정하지 않습니다.")}</span>
                                 )}
                             </label>
                             <label>
-                                <span className="mb-1 block text-xs font-black text-neutral-500">모질 길이</span>
+                                <span className="mb-1 block text-xs font-black text-neutral-500">{labelText("모질 길이")}</span>
                                 <select value={petCoat} onChange={(event) => setPetCoat(event.target.value as PetProfile["coat"])} className="input">
-                                    <option value="short">단모</option>
-                                    <option value="medium">중모</option>
-                                    <option value="long">장모</option>
+                                    <option value="short">{labelText("단모")}</option>
+                                    <option value="medium">{labelText("중모")}</option>
+                                    <option value="long">{labelText("장모")}</option>
                                 </select>
                             </label>
                             <label>
-                                <span className="mb-1 block text-xs font-black text-neutral-500">털 색상</span>
+                                <span className="mb-1 block text-xs font-black text-neutral-500">{labelText("털 색상")}</span>
                                 <input
                                     value={petCoatColor}
                                     onChange={(event) => {
@@ -1276,33 +1278,33 @@ export default function SignupPage() {
                                     }}
                                     className="input"
                                     maxLength={80}
-                                    placeholder="예: 크림, 검정·갈색"
+                                    placeholder={labelText("예: 크림, 검정·갈색")}
                                 />
                                 {petCoatColorSource === "ai" && (
-                                    <span className="mt-1 block text-[11px] font-black leading-5 text-amber-700">사진 분석 후보 · 확인 필요</span>
+                                    <span className="mt-1 block text-[11px] font-black leading-5 text-amber-700">{labelText("사진 분석 후보 · 확인 필요")}</span>
                                 )}
                             </label>
                             <label>
-                                <span className="mb-1 block text-xs font-black text-neutral-500">성별</span>
+                                <span className="mb-1 block text-xs font-black text-neutral-500">{labelText("성별")}</span>
                                 <select value={petSex} onChange={(event) => setPetSex(event.target.value as NonNullable<PetProfile["sex"]>)} className="input">
-                                    <option value="unknown">선택 안 함</option>
-                                    <option value="female">암컷</option>
-                                    <option value="male">수컷</option>
+                                    <option value="unknown">{labelText("선택 안 함")}</option>
+                                    <option value="female">{labelText("암컷")}</option>
+                                    <option value="male">{labelText("수컷")}</option>
                                 </select>
-                                <span className="mt-1 block text-[11px] font-bold leading-5 text-neutral-500">사진으로 성별을 추정하지 않습니다.</span>
+                                <span className="mt-1 block text-[11px] font-bold leading-5 text-neutral-500">{labelText("사진으로 성별을 추정하지 않습니다.")}</span>
                             </label>
                             <label>
-                                <span className="mb-1 block text-xs font-black text-neutral-500">활동량</span>
+                                <span className="mb-1 block text-xs font-black text-neutral-500">{labelText("활동량")}</span>
                                 <select value={petActivity} onChange={(event) => setPetActivity(event.target.value as PetProfile["activity"])} className="input">
-                                    <option value="low">차분한 편</option>
-                                    <option value="normal">보통 활동량</option>
-                                    <option value="high">활동량 많음</option>
+                                    <option value="low">{labelText("차분한 편")}</option>
+                                    <option value="normal">{labelText("보통 활동량")}</option>
+                                    <option value="high">{labelText("활동량 많음")}</option>
                                 </select>
                             </label>
                         </div>
                     </div>
                     <div>
-                        <span className="mb-2 block text-xs font-black text-neutral-500">관심 케어</span>
+                        <span className="mb-2 block text-xs font-black text-neutral-500">{labelText("관심 케어")}</span>
                         <div className="flex flex-wrap gap-2">
                             {CONCERN_OPTIONS.map((concern) => {
                                 const checked = petConcerns.includes(concern);
@@ -1348,13 +1350,13 @@ export default function SignupPage() {
                         {SIGNUP_PETLENS_PRIVACY_CONSENT.rows.map((row) => (
                             <div key={row.item} className="grid gap-1 p-3">
                                 <p>
-                                    <b className="text-neutral-950">수집 항목:</b> {row.item}
+                                    <b className="text-neutral-950">{labelText("수집 항목:")}</b> {row.item}
                                 </p>
                                 <p>
-                                    <b className="text-neutral-950">이용 목적:</b> {row.purpose}
+                                    <b className="text-neutral-950">{labelText("이용 목적:")}</b> {row.purpose}
                                 </p>
                                 <p>
-                                    <b className="text-neutral-950">보유기간:</b> {row.retention}
+                                    <b className="text-neutral-950">{labelText("보유기간:")}</b> {row.retention}
                                 </p>
                             </div>
                         ))}
@@ -1370,13 +1372,13 @@ export default function SignupPage() {
                     disabled={photoLoading || loading || apiReady !== true || !signupSecurityReady}
                 >
                     <i className="fa-solid fa-user-plus text-xs" />
-                    {loading ? "가입 처리 중" : "가입하고 이메일 인증"}
+                    {labelText(loading ? "가입 처리 중" : "가입하고 이메일 인증")}
                 </button>
             </form>
             <p className="su-login mt-5 text-center text-sm font-bold text-neutral-600">
-                이미 계정이 있다면{" "}
+                {labelText("이미 계정이 있다면")}{" "}
                 <Link href="/auth/login" className="font-black text-indigo-700">
-                    로그인
+                    {labelText("로그인")}
                 </Link>
             </p>
         </main>

@@ -12,8 +12,10 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import Link from "next/link";
 import Image from "next/image";
+import CashReceiptCard from "@/components/checkout/CashReceiptCard";
 import { useState, useSyncExternalStore, type FormEvent } from "react";
 import "@/app/guest-web.css";
 import "@/app/mypage-web.css";
@@ -52,6 +54,7 @@ const dateText = (iso: string) => {
 };
 
 export default function GuestOrderLookup() {
+    const { menuLabel: labelText } = useI18n();
     const ready = useSyncExternalStore(noop, guestOrderEnabled, () => process.env.NEXT_PUBLIC_GUEST_ORDER !== "0");
     const [orderNumber, setOrderNumber] = useState("");
     const [password, setPassword] = useState("");
@@ -89,8 +92,8 @@ export default function GuestOrderLookup() {
             <section className="gw-hero" aria-labelledby="gw-lookup-title">
                 <span>
                     <span className="gw-kicker">GUEST ORDER</span>
-                    <h1 id="gw-lookup-title">비회원 <span className="gw-hl">주문 조회</span></h1>
-                    <p>가입 없이 주문했다면 주문번호와 주문 조회 비밀번호로 배송 상황을 확인하고, 취소 · 교환 · 반품 · 문의를 할 수 있어요.</p>
+                    <h1 id="gw-lookup-title">{labelText("비회원")} <span className="gw-hl">{labelText("주문 조회")}</span></h1>
+                    <p>{labelText("가입 없이 주문했다면 주문번호와 주문 조회 비밀번호로 배송 상황을 확인하고, 취소 · 교환 · 반품 · 문의를 할 수 있어요.")}</p>
                 </span>
                 {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                 <img src={`${UI}web-cs-step-ship-256.webp`} alt="" aria-hidden="true" />
@@ -106,46 +109,46 @@ export default function GuestOrderLookup() {
                 <>
                     <section className="gw-card" data-tone="sky" aria-labelledby="gw-lookup-form-title">
                         <h2 id="gw-lookup-form-title" className="gw-card-h">
-                            <span aria-hidden="true"><i className="fa-solid fa-magnifying-glass" /></span>주문 찾기
-                            {!ready && <em className="gw-tag"><i className="fa-solid fa-plug" aria-hidden="true" />조회 연동 준비 중</em>}
+                            <span aria-hidden="true"><i className="fa-solid fa-magnifying-glass" /></span>{labelText("주문 찾기")}
+                            {!ready && <em className="gw-tag"><i className="fa-solid fa-plug" aria-hidden="true" />{labelText("조회 연동 준비 중")}</em>}
                         </h2>
                         {!ready && (
-                            <p className="gw-msg is-warn"><i className="fa-solid fa-circle-info" aria-hidden="true" />비회원 주문 조회는 곧 열려요. 지금은 1:1 문의에 주문번호를 남겨 주시면 확인해 드려요.</p>
+                            <p className="gw-msg is-warn"><i className="fa-solid fa-circle-info" aria-hidden="true" />{labelText("비회원 주문 조회는 곧 열려요. 지금은 1:1 문의에 주문번호를 남겨 주시면 확인해 드려요.")}</p>
                         )}
                         <form className="gw-form-grid" onSubmit={submit} noValidate>
                             <label className="gw-field">
-                                <span>주문번호 <small>주문 완료 화면에서 확인해 주세요</small></span>
+                                <span>{labelText("주문번호")} <small>{labelText("주문 완료 화면에서 확인해 주세요")}</small></span>
                                 <span className="gw-inwrap">
                                     <i className="fa-solid fa-receipt" aria-hidden="true" />
-                                    <input className="gw-in" value={orderNumber} onChange={(event) => { setOrderNumber(event.target.value.toUpperCase()); setError(null); }} placeholder="예: DDB-20261025-1042" autoComplete="off" disabled={!ready || loading} aria-invalid={error?.tone === "error"} />
+                                    <input className="gw-in" value={orderNumber} onChange={(event) => { setOrderNumber(event.target.value.toUpperCase()); setError(null); }} placeholder={labelText("예: DDB-20261025-1042")} autoComplete="off" disabled={!ready || loading} aria-invalid={error?.tone === "error"} />
                                 </span>
                             </label>
                             <label className="gw-field">
-                                <span>주문 조회 비밀번호</span>
+                                <span>{labelText("주문 조회 비밀번호")}</span>
                                 <span className="gw-inwrap">
                                     <i className="fa-solid fa-key" aria-hidden="true" />
-                                    <input className="gw-in" type={show ? "text" : "password"} value={password} onChange={(event) => { setPassword(event.target.value); setError(null); }} placeholder="주문할 때 정한 비밀번호" autoComplete="off" disabled={!ready || loading} aria-invalid={error?.tone === "error"} />
+                                    <input className="gw-in" type={show ? "text" : "password"} value={password} onChange={(event) => { setPassword(event.target.value); setError(null); }} placeholder={labelText("주문할 때 정한 비밀번호")} autoComplete="off" disabled={!ready || loading} aria-invalid={error?.tone === "error"} />
                                     <button type="button" className="gw-eye" onClick={() => setShow((value) => !value)} aria-label={show ? "비밀번호 숨기기" : "비밀번호 보기"} aria-pressed={show}>
                                         <i className={show ? "fa-solid fa-eye-slash" : "fa-solid fa-eye"} aria-hidden="true" />
                                     </button>
                                 </span>
                             </label>
                             <button type="submit" className="gw-go" disabled={!ready || loading}>
-                                {loading ? <><i className="fa-solid fa-circle-notch fa-spin" aria-hidden="true" />찾는 중</> : <>조회하기<i className="fa-solid fa-arrow-right" aria-hidden="true" /></>}
+                                {loading ? <><i className="fa-solid fa-circle-notch fa-spin" aria-hidden="true" />{labelText("찾는 중")}</> : <>{labelText("조회하기")}<i className="fa-solid fa-arrow-right" aria-hidden="true" /></>}
                             </button>
                         </form>
                         {error && <p className={`gw-msg is-${error.tone}`} role="alert"><i className="fa-solid fa-circle-exclamation" aria-hidden="true" />{error.text}</p>}
                     </section>
 
-                    <section className="gw-helps" aria-label="도움말">
+                    <section className="gw-helps" aria-label={labelText("도움말")}>
                         <div>
                             <i className="fa-solid fa-envelope-open-text" aria-hidden="true" />
-                            <span><b>주문번호를 모르겠어요</b><small>주문 완료 화면에서 안내한 번호를 확인해 주세요. 찾기 어려우면 1:1 문의로 도와드려요.</small></span>
+                            <span><b>{labelText("주문번호를 모르겠어요")}</b><small>{labelText("주문 완료 화면에서 안내한 번호를 확인해 주세요. 찾기 어려우면 1:1 문의로 도와드려요.")}</small></span>
                         </div>
                         <InquiryHelp />
                         <Link href="/auth/login?redirect=%2Fmypage%2Forders%2F">
                             <i className="fa-solid fa-user" aria-hidden="true" />
-                            <span><b>회원으로 주문했어요</b><small>로그인하면 마이페이지 주문 내역에서 바로 볼 수 있어요.</small></span>
+                            <span><b>{labelText("회원으로 주문했어요")}</b><small>{labelText("로그인하면 마이페이지 주문 내역에서 바로 볼 수 있어요.")}</small></span>
                         </Link>
                     </section>
                 </>
@@ -156,12 +159,13 @@ export default function GuestOrderLookup() {
 
 /** 비밀번호를 잊었을 때 — 1:1 문의 창 */
 function InquiryHelp() {
+    const { menuLabel: labelText } = useI18n();
     const [open, setOpen] = useState(false);
     return (
         <>
             <button type="button" onClick={() => setOpen(true)}>
                 <i className="fa-solid fa-key" aria-hidden="true" />
-                <span><b>비밀번호를 잊었어요</b><small>1:1 문의에 주문번호를 남기면 본인 확인 후 도와드려요.</small></span>
+                <span><b>{labelText("비밀번호를 잊었어요")}</b><small>{labelText("1:1 문의에 주문번호를 남기면 본인 확인 후 도와드려요.")}</small></span>
             </button>
             {open && (
                 <OrderHelpModal
@@ -184,6 +188,7 @@ function InquiryHelp() {
 
 /** 조회 결과 */
 function OrderResult({ order, token, onBack }: { order: GuestOrder; token: string; onBack: () => void }) {
+    const { menuLabel: labelText } = useI18n();
     const status = STATUS[order.status] || { label: "결제 확인 중", tone: "gray", step: -1 };
     const [modal, setModal] = useState<"inquiry" | "return" | null>(null);
     const ticket = {
@@ -201,11 +206,11 @@ function OrderResult({ order, token, onBack }: { order: GuestOrder; token: strin
             <section className="gw-card" aria-labelledby="gw-order-title" data-guest-order-result>
                 <div className="gw-order-top">
                     <span className="gw-order-no">
-                        <small>주문번호 · {dateText(order.orderedAt)}</small>
+                        <small>{labelText("주문번호 ·")} {dateText(order.orderedAt)}</small>
                         <b id="gw-order-title">{order.orderNumber}</b>
                     </span>
                     <span className="gw-status" data-tone={status.tone}><i className="fa-solid fa-circle" style={{ fontSize: 7 }} aria-hidden="true" />{status.label}</span>
-                    <button type="button" className="gw-pill" onClick={onBack}><i className="fa-solid fa-magnifying-glass" aria-hidden="true" />다른 주문 조회</button>
+                    <button type="button" className="gw-pill" onClick={onBack}><i className="fa-solid fa-magnifying-glass" aria-hidden="true" />{labelText("다른 주문 조회")}</button>
                 </div>
 
                 {status.step >= 0 && (
@@ -215,7 +220,7 @@ function OrderResult({ order, token, onBack }: { order: GuestOrder; token: strin
                             return (
                                 <li key={step.label} className={state} aria-current={state === "is-now" ? "step" : undefined}>
                                     <b aria-hidden="true"><i className={`fa-solid ${state === "is-done" ? "fa-check" : step.icon}`} /></b>
-                                    <span>{step.label}</span>
+                                    <span>{labelText(step.label)}</span>
                                 </li>
                             );
                         })}
@@ -224,10 +229,10 @@ function OrderResult({ order, token, onBack }: { order: GuestOrder; token: strin
                 {status.step < 0 && <p className="gw-msg is-info"><i className="fa-solid fa-circle-info" aria-hidden="true" />{order.status === "cancel_requested" ? "취소 요청을 받았어요. 처리 상태는 이 화면에서 다시 조회할 수 있고, 환불은 결제 수단으로 진행돼요." : `${status.label} 상태예요.`}</p>}
 
                 {order.tracking && (
-                    <p className="gw-shipline"><i className="fa-solid fa-truck-fast" aria-hidden="true" /><b>{order.tracking.carrier}</b>송장 {order.tracking.number}</p>
+                    <p className="gw-shipline"><i className="fa-solid fa-truck-fast" aria-hidden="true" /><b>{order.tracking.carrier}</b>{labelText("송장")} {order.tracking.number}</p>
                 )}
 
-                <ul className="gw-items" aria-label="주문 상품">
+                <ul className="gw-items" aria-label={labelText("주문 상품")}>
                     {order.lines.map((line) => (
                         <li key={`${line.name}-${line.option ?? ""}`}>
                             <span className="gw-thumb" aria-hidden="true">
@@ -241,51 +246,52 @@ function OrderResult({ order, token, onBack }: { order: GuestOrder; token: strin
 
                 <div className="gw-two">
                     <div className="gw-box" data-tone="lav">
-                        <h3><i className="fa-solid fa-credit-card" aria-hidden="true" />결제 정보</h3>
+                        <h3><i className="fa-solid fa-credit-card" aria-hidden="true" />{labelText("결제 정보")}</h3>
                         <dl>
-                            <div><dt>상품 금액</dt><dd>{won(order.itemsTotal)}</dd></div>
-                            <div><dt>배송비</dt><dd>{order.shippingFee ? won(order.shippingFee) : "무료"}</dd></div>
-                            <div><dt>결제 수단</dt><dd>{order.paymentMethod}</dd></div>
-                            <div className="is-total"><dt>총 결제</dt><dd>{won(order.totalPaid)}</dd></div>
+                            <div><dt>{labelText("상품 금액")}</dt><dd>{won(order.itemsTotal)}</dd></div>
+                            <div><dt>{labelText("배송비")}</dt><dd>{order.shippingFee ? won(order.shippingFee) : "무료"}</dd></div>
+                            <div><dt>{labelText("결제 수단")}</dt><dd>{order.paymentMethod}</dd></div>
+                            <div className="is-total"><dt>{labelText("총 결제")}</dt><dd>{won(order.totalPaid)}</dd></div>
                         </dl>
+                        <CashReceiptCard receipt={order.cashReceipt} />
                     </div>
                     <div className="gw-box" data-tone="mint">
-                        <h3><i className="fa-solid fa-location-dot" aria-hidden="true" />배송 정보</h3>
+                        <h3><i className="fa-solid fa-location-dot" aria-hidden="true" />{labelText("배송 정보")}</h3>
                         <dl>
-                            <div><dt>받는 분</dt><dd>{order.delivery.recipientName}</dd></div>
-                            <div><dt>연락처</dt><dd>{order.delivery.maskedPhone}</dd></div>
-                            <div><dt>주소</dt><dd>{order.delivery.address}</dd></div>
-                            {order.delivery.requestNote && <div><dt>요청</dt><dd>{order.delivery.requestNote}</dd></div>}
+                            <div><dt>{labelText("받는 분")}</dt><dd>{order.delivery.recipientName}</dd></div>
+                            <div><dt>{labelText("연락처")}</dt><dd>{order.delivery.maskedPhone}</dd></div>
+                            <div><dt>{labelText("주소")}</dt><dd>{order.delivery.address}</dd></div>
+                            {order.delivery.requestNote && <div><dt>{labelText("요청")}</dt><dd>{order.delivery.requestNote}</dd></div>}
                         </dl>
                     </div>
                 </div>
 
                 <CommerceOrderActions orderId={order.orderNumber} guestToken={token} />
-                <div className="gw-acts" aria-label="할 수 있는 일">
+                <div className="gw-acts" aria-label={labelText("할 수 있는 일")}>
                     {order.tracking?.url ? (
                         <a href={order.tracking.url} target="_blank" rel="noopener noreferrer">
                             {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
-                            <img src={`${UI}web-cs-step-ship-256.webp`} alt="" aria-hidden="true" />배송 조회<small>택배사 화면</small>
+                            <img src={`${UI}web-cs-step-ship-256.webp`} alt="" aria-hidden="true" />{labelText("배송 조회")}<small>{labelText("택배사 화면")}</small>
                         </a>
                     ) : (
                         <button type="button" disabled>
                             {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
-                            <img src={`${UI}web-cs-step-ship-256.webp`} alt="" aria-hidden="true" />배송 조회<small>{order.tracking ? "송장 번호로 확인" : "발송 뒤에 열려요"}</small>
+                            <img src={`${UI}web-cs-step-ship-256.webp`} alt="" aria-hidden="true" />{labelText("배송 조회")}<small>{labelText(order.tracking ? "송장 번호로 확인" : "발송 뒤에 열려요")}</small>
                         </button>
                     )}
                     <button type="button" onClick={() => setModal("inquiry")}>
                         {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
-                        <img src={`${UI}web-cs-inquiry-160.webp`} alt="" aria-hidden="true" />1:1 문의<small>이 주문으로 문의</small>
+                        <img src={`${UI}web-cs-inquiry-160.webp`} alt="" aria-hidden="true" />{labelText("1:1 문의")}<small>{labelText("이 주문으로 문의")}</small>
                     </button>
                 </div>
 
             </section>
 
-            <section className="gw-join" aria-label="회원가입 안내">
+            <section className="gw-join" aria-label={labelText("회원가입 안내")}>
                 {/* eslint-disable-next-line @next/next/no-img-element -- 3D 그림 */}
                 <img src={`${UI}goods-pay-ready-256.webp`} alt="" aria-hidden="true" />
-                <span><b>다음엔 회원으로 주문해 보세요</b><small>주문 내역이 마이페이지에 모이고, 가입 혜택 코인 20C도 받아요.</small></span>
-                <Link href="/auth/signup" className="gw-pill is-lav">회원가입<i className="fa-solid fa-arrow-right" aria-hidden="true" /></Link>
+                <span><b>{labelText("다음엔 회원으로 주문해 보세요")}</b><small>{labelText("주문 내역이 마이페이지에 모이고, 가입 혜택 코인 20C도 받아요.")}</small></span>
+                <Link href="/auth/signup" className="gw-pill is-lav">{labelText("회원가입")}<i className="fa-solid fa-arrow-right" aria-hidden="true" /></Link>
             </section>
 
             {modal && (

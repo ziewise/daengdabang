@@ -51,7 +51,7 @@ export default function ProductCard({
 }: Props) {
     const p = useLiveInventoryProduct(product);
     const { toggleWishlist, isWished } = useStore();   // 운영 사이트 위시리스트
-    const { locale, t, productName, formatPrice } = useI18n();
+    const { locale, t, productName, formatPrice, optionName } = useI18n();
     const wished = isWished(p.id);
     const effectiveRank = rank ?? getBestRank(p);
     const shouldShowNew = showNewBadge ?? isNewProduct(p);
@@ -107,7 +107,7 @@ export default function ProductCard({
                         <ProductColorImage
                             src={thumbnail}
                             color={selectedColor}
-                            alt={selectedColor ? `${displayName} · ${selectedColor.name}` : displayName}
+                            alt={selectedColor ? `${displayName} · ${optionName(p.folder, selectedColor.name)}` : displayName}
                             sizes="(max-width: 640px) 160px, (max-width: 768px) 200px, 230px"
                             className="object-contain opacity-100"
                         />
@@ -185,9 +185,9 @@ export default function ProductCard({
                             <button
                                 key={`${color.name}-${idx}`}
                                 type="button"
-                                aria-label={`${color.name} ${locale === "en" ? "preview" : "미리보기"}`}
+                                aria-label={`${optionName(p.folder, color.name)} ${locale === "en" ? "preview" : "미리보기"}`}
                                 aria-pressed={idx === colorIdx}
-                                title={color.name}
+                                title={optionName(p.folder, color.name)}
                                 onClick={() => {
                                     previewColor();
                                     setColorIdx(current => current === idx ? null : idx);
@@ -245,11 +245,11 @@ export default function ProductCard({
                     <div className="flex min-h-8 flex-wrap items-center justify-end gap-x-1 mt-1.5 text-[10px] md:text-[11px] text-neutral-500">
                         {(p.externalReviewCount ?? 0) > 0 && (
                             <>
-                                <span>{locale === "en" ? "Naver Daengdabang store reviews" : "네이버 댕다방 스토어 후기"}</span>
+                                <span>{locale === "en" ? "댕다방 store on Naver reviews" : "네이버 댕다방 스토어 후기"}</span>
                                 <i className="fa-solid fa-star text-amber-400" />
                                 <span className="font-bold text-neutral-700">{p.externalReviewAverage?.toFixed(1) ?? '—'}</span>
                                 <span className="text-neutral-400">({p.externalReviewCount})</span>
-                                <span className="basis-full text-right">{reviewSellerLabel(p.externalReviewUrl)}</span>
+                                <span className="basis-full text-right">{reviewSellerLabel(p.externalReviewUrl, locale === "en")}</span>
                             </>
                         )}
                     </div>

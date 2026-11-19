@@ -46,12 +46,13 @@ export default function ProductDeliveryReturnPolicy() {
 }
 
 function PolicyKo() {
+    const { menuLabel: labelText } = useI18n();
     const [open, setOpen] = useState(false);
     return (
         <section id="delivery-return-policy" className="mx-auto mt-10 max-w-3xl scroll-mt-32 rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm md:p-7" data-policy-open={open ? "true" : "false"}>
-            <h3 className="text-xl font-black text-neutral-950" data-pd-band="mint" data-pd-art="return" data-pd-kicker="DELIVERY · RETURN">배송 및 반품/교환 안내</h3>
+            <h3 className="text-xl font-black text-neutral-950" data-pd-band="mint" data-pd-art="return" data-pd-kicker="DELIVERY · RETURN">{labelText("배송 및 반품/교환 안내")}</h3>
             {/* 웹 전용 — 한눈에 보기 네 칸(앱은 hidden 그대로) */}
-            <ul className="pd-policy-facts hidden" aria-label="배송 · 반품 한눈에 보기">
+            <ul className="pd-policy-facts hidden" aria-label={labelText("배송 · 반품 한눈에 보기")}>
                 {FACTS.map((fact) => (
                     <li key={fact.label}>
                         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -73,7 +74,7 @@ function PolicyKo() {
                 aria-controls="delivery-return-policy-full"
                 onClick={() => setOpen((value) => !value)}
             >
-                {open ? "전체 안내 접기" : "반품 · 교환 전체 안내 펼치기"}
+                {labelText(open ? "전체 안내 접기" : "반품 · 교환 전체 안내 펼치기")}
                 <i className={`fa-solid ${open ? "fa-chevron-up" : "fa-chevron-down"}`} aria-hidden="true" />
             </button>
         </section>

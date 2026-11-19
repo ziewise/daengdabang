@@ -12,6 +12,7 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { useCallback, useEffect, useRef, useState, type ReactNode, type RefObject } from "react";
 import { createPortal } from "react-dom";
 import BusinessInquiryPanel, { type BusinessInquiryMode } from "./BusinessInquiryPanel";
@@ -106,6 +107,7 @@ export function BizFormDialog({
 
 /** children = 페이지가 넘겨준 기존 양식(<BusinessInquiryPanel mode=…/>) — 앱은 펼쳐서, 웹은 창 안에 그림 */
 export default function BizFormModal({ mode, formId, children }: { mode: BusinessInquiryMode; formId: string; children: ReactNode }) {
+    const { menuLabel: labelText } = useI18n();
     const webScreen = useWebScreen();
     // 주소 끝이 #formId 로 들어오면 처음부터 열림(웹 화면이 붙은 뒤에만 창이 그려짐)
     const [open, setOpen] = useState(() => typeof window !== "undefined" && window.location.hash === `#${formId}`);
@@ -143,11 +145,11 @@ export default function BizFormModal({ mode, formId, children }: { mode: Busines
                 <img className="bzm-launch-art" src={`/images/ui/${look.art}`} alt="" aria-hidden="true" />
                 <div className="bzm-launch-text">
                     <p className="bzm-kicker">{look.kicker}</p>
-                    <h2 id={`${formId}-launch-title`}>{look.title}</h2>
-                    <p>{look.body}</p>
+                    <h2 id={`${formId}-launch-title`}>{labelText(look.title)}</h2>
+                    <p>{labelText(look.body)}</p>
                 </div>
                 <button ref={openerRef} type="button" className="bzm-launch-btn" onClick={() => setOpen(true)} aria-haspopup="dialog" aria-expanded={open}>
-                    {look.button}
+                    {labelText(look.button)}
                     <i className="fa-solid fa-pen" aria-hidden="true" />
                 </button>
             </section>

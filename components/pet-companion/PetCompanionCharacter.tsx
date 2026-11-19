@@ -1,5 +1,6 @@
 "use client";
 
+import LocalizedMenuLabel from "@/components/i18n/LocalizedMenuLabel";
 import { useEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from "react";
 import { isNativeAppRuntime } from "@/lib/native-runtime";
 import {
@@ -183,7 +184,7 @@ export default function PetCompanionCharacter({
             <span className={styles.recommendFx} data-part="recommend-fx">
                 <span className={`${styles.sparkle} ${styles.sparkleA}`}>✦</span>
                 <span className={`${styles.sparkle} ${styles.sparkleB}`}>✦</span>
-                <span className={styles.pickBadge}><span>🐾</span>댕픽!</span>
+                <span className={styles.pickBadge}><span>🐾</span><LocalizedMenuLabel label="댕픽!" /></span>
             </span>
         </span>
     );

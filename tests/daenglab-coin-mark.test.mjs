@@ -1,3 +1,4 @@
+import { koreanMarkup } from "./helpers/korean-markup.mjs";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
@@ -5,7 +6,7 @@ import test from "node:test";
 const root = new URL("../", import.meta.url);
 
 async function source(path) {
-    return readFile(new URL(path, root), "utf8");
+    return readFile(new URL(path, root), "utf8").then(koreanMarkup);
 }
 
 test("DaengDaBang Research Lab coin uses one accessible crayon signature across customer surfaces", async () => {
@@ -47,9 +48,9 @@ test("customer-facing research lab name replaces the legacy wordmark without ren
         assert.match(surface, /댕다방 연구소/);
         assert.doesNotMatch(surface, /댕랩/);
     }
-    assert.match(title, /DaengDaBang Research Lab/);
+    assert.match(title, /댕다방 Research Lab/);
     assert.doesNotMatch(title, /"DaengLab"/);
-    assert.match(launcher, /Open DaengDaBang Research Lab Behavior and Sound Analysis/);
+    assert.match(launcher, /Open 댕다방 Research Lab Behavior and Sound Analysis/);
     assert.match(wallet, /data-daenglab-wallet/);
     assert.match(privacy, /daenglab-observation-privacy-20260806-v3/);
 });

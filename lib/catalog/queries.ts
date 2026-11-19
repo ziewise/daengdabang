@@ -1,3 +1,4 @@
+import englishNames from "./storefront-english-names.json";
 import { CATALOG } from "./runtime-data";
 import { SUBCATEGORY_LABEL } from "./labels";
 import type { CatalogProduct, CategorySlug, PromoSlug, SortKey, SubcategorySlug } from "./types";
@@ -96,7 +97,7 @@ function isFoodSearchResult(product: CatalogProduct): boolean {
     );
 }
 
-export function searchCatalog(query: string): CatalogProduct[] {
+export function searchCatalog(query: string, localizedName?: (product: CatalogProduct) => string): CatalogProduct[] {
     const tokens = query
         .trim()
         .split(/\s+/)
@@ -109,6 +110,8 @@ export function searchCatalog(query: string): CatalogProduct[] {
         const haystack = normalize(
             [
                 product.name,
+                localizedName?.(product),
+                (englishNames as Record<string, string>)[product.folder ?? ""],
                 product.brandKo,
                 product.brandEn,
                 product.raw.useMain,

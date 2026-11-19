@@ -11,18 +11,20 @@
  *  - SectionLabel: 형광펜 밑줄 소제목 + 점선
  */
 
+import { useI18n } from "@/lib/i18n";
 import { useEffect, useRef, type ReactNode } from "react";
 import { haptic } from "./gestures";
 
 /** 색인 탭 */
 export function DiaryTabs({ tabs, active, onPick, compact = false }: { tabs: { label: string; color: string }[]; active: number; onPick: (i: number) => void; compact?: boolean }) {
+    const { menuLabel: labelText } = useI18n();
     // compact — 탭이 6칸 이상이라 한 줄에 안 들어갈 때 좁은 탭(글자 · 안쪽 여백만 줄임, 2026-10-28)
     return (
-        <div className={`relative z-[1] -mb-[3px] flex pl-8 pr-2 ${compact ? "gap-1" : "gap-1.5"}`} role="tablist" aria-label="쪽 고르기">
+        <div className={`relative z-[1] -mb-[3px] flex pl-8 pr-2 ${compact ? "gap-1" : "gap-1.5"}`} role="tablist" aria-label={labelText("쪽 고르기")}>
             {tabs.map((t, i) => (
                 <button key={t.label} type="button" role="tab" aria-selected={active === i} onClick={() => { if (i !== active) { haptic("light"); onPick(i); } }}
                     className={`dt-tab ah-display whitespace-nowrap ${active === i ? "is-on" : ""} ${compact ? "is-compact" : ""}`} style={{ ["--c" as string]: t.color }}>
-                    {t.label}
+                    {labelText(t.label)}
                 </button>
             ))}
         </div>
@@ -91,6 +93,7 @@ export function BoneBurst({ x, y }: { x: number; y: number }) {
 
 /** 포스트잇 알림 — 탭바 위에 잠깐 */
 export function NoteToast({ text, onDone }: { text: string; onDone: () => void }) {
+    const { menuLabel: labelText } = useI18n();
     useEffect(() => {
         const id = window.setTimeout(onDone, 2200);
         return () => window.clearTimeout(id);
@@ -98,7 +101,7 @@ export function NoteToast({ text, onDone }: { text: string; onDone: () => void }
     return (
         <div role="status" className="note-toast st-postit ah-display fixed left-1/2 z-[2300] max-w-[86vw] -translate-x-1/2 px-4 py-2.5 text-[13.5px]"
             style={{ bottom: "calc(var(--app-tabbar-h, 88px) + 10px)", background: "#fff3a6" }}>
-            {text}
+            {labelText(text)}
         </div>
     );
 }

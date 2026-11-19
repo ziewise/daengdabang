@@ -1,11 +1,16 @@
 "use client";
 
+import { useCareTalkCopy } from "@/hooks/useCareTalkCopy";
 import { FormEvent, useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
 import PlaceMapLinks, { PlaceAddressLink } from "@/components/site/PlaceMapLinks";
 import { placeMapLinks } from "@/lib/place-map-links";
 import { localVetQuery, needsVetHoursCheck } from "@/lib/local-vet-query";
 import { ddbApiBase } from "@/lib/customer-api";
+import { locationFailureMessage } from "@/lib/location-feedback";
+import { isNativeAppRuntime } from "@/lib/native-runtime";
+import { currentPosition, locationError, type LocationRecovery } from "@/lib/current-location";
+import LocationRecoveryActions from "@/components/location/LocationRecoveryActions";
 import type {
     ShopChatCta,
     ShopChatGeneration,
@@ -46,6 +51,7 @@ function CareTalkGenerationExecution({
     request?: { message: string; references: ShopChatReferenceInput[] };
     accessToken?: string;
 }) {
+    const copy = useCareTalkCopy();
     const [job, setJob] = useState<CareTalkGenerationJob | null>(null);
     const [pending, setPending] = useState(false);
     const [error, setError] = useState("");
@@ -97,10 +103,10 @@ function CareTalkGenerationExecution({
         <div className="mt-3 border-t border-violet-200 pt-3">
             {asset ? (
                 asset.mimeType.startsWith("video/") ? (
-                    <video src={asset.objectUrl} controls playsInline className="w-full rounded-lg" aria-label="케어톡 생성 영상" />
+                    <video src={asset.objectUrl} controls playsInline className="w-full rounded-lg" aria-label={copy("케어톡 생성 영상")} />
                 ) : (
                     // eslint-disable-next-line @next/next/no-img-element -- authenticated blob URL cannot use the static image optimizer.
-                    <img src={asset.objectUrl} alt="케어톡 생성 결과" className="w-full rounded-lg" />
+                    <img src={asset.objectUrl} alt={copy("케어톡 생성 결과")} className="w-full rounded-lg" />
                 )
             ) : (
                 <button
@@ -110,7 +116,7 @@ function CareTalkGenerationExecution({
                     className="min-h-10 rounded-lg bg-violet-700 px-4 text-xs font-black text-white disabled:cursor-not-allowed disabled:opacity-45"
                 >
                     <i className={`fa-solid ${pending ? "fa-spinner fa-spin" : "fa-wand-magic-sparkles"} mr-2`} aria-hidden="true" />
-                    {!accessToken ? "로그인 후 실제 제작" : pending ? `제작 중${job?.progressPercent != null ? ` · ${job.progressPercent}%` : "…"}` : "실제 제작 시작"}
+                    {!accessToken ? copy("로그인 후 실제 제작") : pending ? `제작 중${job?.progressPercent != null ? ` · ${job.progressPercent}%` : "…"}` : copy("실제 제작 시작")}
                 </button>
             )}
             {error && <p className="mt-2 text-[11px] font-bold leading-4 text-amber-800" role="alert">{error}</p>}
@@ -153,7 +159,7 @@ type LocalCareSearchState =
     | { status: "idle" }
     | { status: "loading"; category: LocalCareCategory; label: string; message: string; fallbackUrl: string }
     | { status: "done"; category: LocalCareCategory; label: string; places: LocalCarePlace[]; fallbackUrl: string; requiresOpeningHoursVerification: boolean }
-    | { status: "error"; category: LocalCareCategory; label: string; message: string; fallbackUrl: string };
+    | { status: "error"; category: LocalCareCategory; label: string; query: string; message: string; fallbackUrl: string; recovery: LocationRecovery };
 
 function buildNaverMapUrl(...parts: Array<string | undefined>) {
     const searchText = parts
@@ -265,6 +271,7 @@ function ResearchEvidence({
     research,
     compact,
 }: Pick<ChatResponseExtrasProps, "sources" | "research" | "compact">) {
+    const copy = useCareTalkCopy();
     const visibleSources = (sources ?? []).reduce<Array<{
         source: ShopChatSource;
         citationNumber: number;
@@ -306,8 +313,8 @@ function ResearchEvidence({
                     <i className="fa-solid fa-link text-sky-600" aria-hidden="true" />
                     <span>
                         {visibleSources.length
-                            ? `${isInsufficient ? "참고한 자료" : "확인한 출처"} ${visibleSources.length}개`
-                            : "출처 링크 없는 일반 안내"}
+                            ? `${isInsufficient ? copy("참고한 자료") : copy("확인한 출처")} ${visibleSources.length}개`
+                            : copy("출처 링크 없는 일반 안내")}
                     </span>
                 </span>
                 <span className="flex shrink-0 items-center gap-1.5 text-[10px] font-extrabold text-sky-700">
@@ -319,7 +326,7 @@ function ResearchEvidence({
                 </span>
             </summary>
             {visibleSources.length ? (
-                <ol className="mt-2 space-y-1.5 border-t border-sky-100 pt-2" aria-label="답변에 인용된 웹 출처">
+                <ol className="mt-2 space-y-1.5 border-t border-sky-100 pt-2" aria-label={copy("답변에 인용된 웹 출처")}>
                 {visibleSources.map(({ source, citationNumber, href, hostname }) => {
                     const sourceDate = formatEvidenceDate(source.publishedAt || source.retrievedAt);
                     return (
@@ -331,11 +338,11 @@ function ResearchEvidence({
                                 className="font-extrabold text-sky-900 underline decoration-sky-300 underline-offset-2 hover:text-sky-700"
                             >
                                 [{citationNumber}] {source.name}
-                                <span className="sr-only"> 새 창에서 열기</span>
+                                <span className="sr-only"> {copy("새 창에서 열기")}</span>
                             </a>
                             <span className="ml-1.5 text-[10px] font-bold text-neutral-500">
                                 {hostname}
-                                {sourceDate ? ` · ${source.publishedAt ? "게시" : "확인"} ${sourceDate}` : ""}
+                                {sourceDate ? ` · ${source.publishedAt ? copy("게시") : copy("확인")} ${sourceDate}` : ""}
                             </span>
                         </li>
                     );
@@ -471,6 +478,7 @@ function FollowUpBundleForm({
     compact?: boolean;
     enabled: boolean;
 }) {
+    const copy = useCareTalkCopy();
     const [expanded, setExpanded] = useState(false);
     const [answers, setAnswers] = useState<Record<string, string>>({});
     const [submittedCount, setSubmittedCount] = useState(0);
@@ -533,18 +541,18 @@ function FollowUpBundleForm({
                 >
                     <span className="block text-[14px] font-extrabold leading-[1.35] text-sky-950">
                         <i className="fa-solid fa-pencil mr-1.5 text-sky-600" aria-hidden="true" />
-                        추가정보 한 번에 입력
+                        {copy("추가정보 한 번에 입력")}
                     </span>
                     <span className="mt-1 block text-[13px] font-semibold leading-[1.45] text-sky-700">
-                        아는 내용만 적고 한 번에 보내세요.
+                        {copy("아는 내용만 적고 한 번에 보내세요.")}
                     </span>
                 </button>
             ) : (
                 <form id={formId} onSubmit={submitBundle} className="rounded-md border border-sky-200 bg-white p-2.5">
                     <div className="flex items-start justify-between gap-3">
                         <div>
-                            <p className="text-[14px] font-extrabold leading-[1.35] text-sky-950">추가정보 모아 보내기</p>
-                            <p className="mt-1 text-[13px] font-semibold leading-[1.45] text-neutral-600">모르는 항목은 비워도 괜찮아요.</p>
+                            <p className="text-[14px] font-extrabold leading-[1.35] text-sky-950">{copy("추가정보 모아 보내기")}</p>
+                            <p className="mt-1 text-[13px] font-semibold leading-[1.45] text-neutral-600">{copy("모르는 항목은 비워도 괜찮아요.")}</p>
                         </div>
                         <button
                             type="button"
@@ -554,7 +562,7 @@ function FollowUpBundleForm({
                             }}
                             className="shrink-0 rounded-full px-2 py-1 text-[12px] font-extrabold text-neutral-500 hover:bg-neutral-100 hover:text-neutral-800"
                         >
-                            접기
+                            {copy("접기")}
                         </button>
                     </div>
                     <div className={`mt-3 grid gap-2 ${compact ? "" : "sm:grid-cols-2"}`}>
@@ -582,7 +590,7 @@ function FollowUpBundleForm({
                         className="mt-3 w-full rounded-md bg-sky-700 px-3 py-2.5 text-[13px] font-extrabold leading-[1.35] text-white transition hover:bg-sky-800 disabled:cursor-not-allowed disabled:opacity-45"
                         disabled={!answeredEntries.length || submitting}
                     >
-                        {submitting ? "답변을 확인하고 있어요…" : "입력한 내용 한 번에 보내기"}
+                        {submitting ? copy("답변을 확인하고 있어요…") : copy("입력한 내용 한 번에 보내기")}
                     </button>
                 </form>
             )}
@@ -596,6 +604,7 @@ function ChoiceGroups({
     compact,
     followUpsEnabled = true,
 }: Pick<ChatResponseExtrasProps, "medical" | "onAsk" | "compact" | "followUpsEnabled">) {
+    const copy = useCareTalkCopy();
     const [customGroupTitle, setCustomGroupTitle] = useState<string | null>(null);
     const [customText, setCustomText] = useState("");
     const [answerSlot, setAnswerSlot] = useState<{ label: string; prompt: string } | null>(null);
@@ -677,7 +686,7 @@ function ChoiceGroups({
                             }}
                             className="mt-2 w-full rounded-md border border-dashed border-sky-300 bg-white/70 px-2.5 py-2 text-left text-[13px] font-extrabold leading-[1.45] text-sky-900 transition hover:bg-white"
                         >
-                            답이 없어요. 직접 적을게요
+                            {copy("답이 없어요. 직접 적을게요")}
                         </button>
                     ) : null}
                     {customGroupTitle === group.title ? (
@@ -690,8 +699,8 @@ function ChoiceGroups({
                                     value={customText}
                                     onChange={(event) => setCustomText(event.target.value)}
                                     className="min-w-0 flex-1 rounded-md border border-sky-200 bg-white px-2.5 py-2 text-[16px] font-semibold leading-[1.4] text-neutral-900 outline-none focus:border-sky-500"
-                                    placeholder={answerSlot?.prompt || "상황을 직접 입력"}
-                                    aria-label={answerSlot ? `${answerSlot.label} 답변 입력` : "객관식에 없는 답 직접 입력"}
+                                    placeholder={answerSlot?.prompt || copy("상황을 직접 입력")}
+                                    aria-label={answerSlot ? `${answerSlot.label} 답변 입력` : copy("객관식에 없는 답 직접 입력")}
                                     autoFocus
                                 />
                                 <button
@@ -699,7 +708,7 @@ function ChoiceGroups({
                                     className="shrink-0 rounded-md bg-sky-700 px-2.5 py-2 text-[12px] font-extrabold leading-[1.35] text-white disabled:opacity-50"
                                     disabled={!customText.trim()}
                                 >
-                                    답변 보내기
+                                    {copy("답변 보내기")}
                                 </button>
                             </div>
                         </form>
@@ -728,6 +737,7 @@ function LocalCareQuickActions({
     loadingCategory?: LocalCareCategory;
     veterinaryQuery: string;
 }) {
+    const copy = useCareTalkCopy();
     return (
         <div
             data-chat-local-care-actions
@@ -738,9 +748,9 @@ function LocalCareQuickActions({
                     <i className="fa-solid fa-map-location-dot" />
                 </span>
                 <div>
-                    <p className="text-sm font-black text-neutral-950">동네 돌봄을 한곳에서 찾아보세요</p>
+                    <p className="text-sm font-black text-neutral-950">{copy("동네 돌봄을 한곳에서 찾아보세요")}</p>
                     <p className="mt-1 text-[11px] font-bold leading-4 text-neutral-600">
-                        병원·미용·호텔·데이케어 모두 현재 위치에서 가까운 후보를 이 화면에 보여드려요.
+                        {copy("병원·미용·호텔·데이케어 모두 현재 위치에서 가까운 후보를 이 화면에 보여드려요.")}
                     </p>
                 </div>
             </div>
@@ -759,7 +769,7 @@ function LocalCareQuickActions({
                             />
                             <span>
                                 <span className="block">{item.label}</span>
-                                <span className="mt-0.5 block text-[10px] font-bold text-neutral-500">가까운 후보 보기</span>
+                                <span className="mt-0.5 block text-[10px] font-bold text-neutral-500">{copy("가까운 후보 보기")}</span>
                             </span>
                         </button>
                         <button
@@ -769,19 +779,20 @@ function LocalCareQuickActions({
                             aria-label={`${item.label} 네이버지도에서 바로 보기`}
                         >
                             <span aria-hidden="true" className="mr-1">N</span>
-                            지도 바로 보기
+                            {copy("지도 바로 보기")}
                         </button>
                     </div>
                 ))}
             </div>
             <p className="mt-2 text-[10px] font-bold leading-4 text-neutral-500">
-                영업·진료·예약 가능 여부는 방문 전에 해당 업체에 확인해 주세요.
+                {copy("영업·진료·예약 가능 여부는 방문 전에 해당 업체에 확인해 주세요.")}
             </p>
         </div>
     );
 }
 
-function LocalCareSearchResults({ state }: { state: LocalCareSearchState }) {
+function LocalCareSearchResults({ state, onRetry }: { state: LocalCareSearchState; onRetry: () => void }) {
+    const copy = useCareTalkCopy();
     if (state.status === "idle") return null;
     if (state.status === "loading") {
         return (
@@ -796,12 +807,13 @@ function LocalCareSearchResults({ state }: { state: LocalCareSearchState }) {
         return (
             <div className="mt-2 rounded-lg border border-amber-200 bg-amber-50 p-3 text-left">
                 <p className="text-xs font-black leading-5 text-amber-900">{state.message}</p>
+                <LocationRecoveryActions recovery={state.recovery} onRetry={onRetry} />
                 <button
                     type="button"
                     onClick={() => openExternal(state.fallbackUrl)}
                     className="mt-2 min-h-10 rounded-md bg-neutral-950 px-3 py-2 text-[11px] font-black text-white"
                 >
-                    네이버지도에서 직접 보기
+                    {copy("네이버지도에서 직접 보기")}
                 </button>
             </div>
         );
@@ -818,7 +830,7 @@ function LocalCareSearchResults({ state }: { state: LocalCareSearchState }) {
                     onClick={() => openExternal(state.fallbackUrl)}
                     className="mt-2 min-h-10 rounded-md bg-neutral-950 px-3 py-2 text-[11px] font-black text-white"
                 >
-                    네이버지도에서 직접 보기
+                    {copy("네이버지도에서 직접 보기")}
                 </button>
             </div>
         );
@@ -829,15 +841,15 @@ function LocalCareSearchResults({ state }: { state: LocalCareSearchState }) {
             <div className="flex flex-wrap items-center justify-between gap-1.5">
                 <p className="text-[11px] font-black text-indigo-800">{state.requiresOpeningHoursVerification ? `${state.label} 검색 · 운영시간 확인 필요` : `현재 위치 기준 가까운 ${state.label} 후보`}</p>
                 <span className="rounded-full bg-[#e9fff1] px-2 py-1 text-[10px] font-black text-[#087b39]">
-                    지도 선택 가능
+                    {copy("지도 선택 가능")}
                 </span>
             </div>
             {state.requiresOpeningHoursVerification ? (
                 <div className="rounded-md border border-amber-200 bg-amber-50 p-2 text-[11px] font-bold leading-5 text-amber-950">
                     {state.places.some(place => place.open24HoursVerified)
-                        ? "공개 운영시간에 24시간으로 등록된 병원을 먼저 표시합니다. 현재 진료·응급 수용 여부는 전화로 확인해 주세요."
-                        : "요청하신 시간에 진료하는 병원을 확인하지 못했어요. 아래는 운영시간이 미확인된 주변 동물병원 후보입니다."}
-                    <button type="button" onClick={() => openExternal(state.fallbackUrl)} className="mt-1 block underline">요청한 조건으로 네이버지도에서 확인</button>
+                        ? copy("공개 운영시간에 24시간으로 등록된 병원을 먼저 표시합니다. 현재 진료·응급 수용 여부는 전화로 확인해 주세요.")
+                        : copy("요청하신 시간에 진료하는 병원을 확인하지 못했어요. 아래는 운영시간이 미확인된 주변 동물병원 후보입니다.")}
+                    <button type="button" onClick={() => openExternal(state.fallbackUrl)} className="mt-1 block underline">{copy("요청한 조건으로 네이버지도에서 확인")}</button>
                 </div>
             ) : null}
             {[...state.places].sort((a, b) => state.requiresOpeningHoursVerification ? Number(b.open24HoursVerified) - Number(a.open24HoursVerified) : 0).map((place, index) => (
@@ -848,9 +860,9 @@ function LocalCareSearchResults({ state }: { state: LocalCareSearchState }) {
                         </span>
                         <div className="min-w-0 flex-1">
                             <p className="text-xs font-black leading-5 text-neutral-950">{place.name}</p>
-                            {state.requiresOpeningHoursVerification ? <p className="text-[11px] font-black text-amber-800">{place.open24HoursVerified ? "공개 운영시간: 24시간 · 현재 진료는 전화 확인" : "야간·24시간 진료 미확인"}</p> : null}
+                            {state.requiresOpeningHoursVerification ? <p className="text-[11px] font-black text-amber-800">{place.open24HoursVerified ? copy("공개 운영시간: 24시간 · 현재 진료는 전화 확인") : copy("야간·24시간 진료 미확인")}</p> : null}
                             <p className="mt-0.5 text-[10px] font-black text-indigo-700">
-                                {place.source === "naver" ? "네이버 지역검색 결과" : "공개 위치 데이터 결과"}
+                                {place.source === "naver" ? copy("네이버 지역검색 결과") : copy("공개 위치 데이터 결과")}
                             </p>
                             <p className="mt-0.5 text-[11px] font-bold leading-4 text-neutral-600">
                                 {formatDistance(place.distanceMeters)}
@@ -873,7 +885,7 @@ function LocalCareSearchResults({ state }: { state: LocalCareSearchState }) {
                                 href={`tel:${place.phone}`}
                                 className="inline-flex min-h-9 items-center rounded-full border border-neutral-200 bg-white px-2.5 py-1 text-[11px] font-black text-neutral-700"
                             >
-                                전화하기
+                                {copy("전화하기")}
                             </a>
                         ) : null}
                     </div>
@@ -881,8 +893,8 @@ function LocalCareSearchResults({ state }: { state: LocalCareSearchState }) {
             ))}
             <p className="text-[10px] font-bold leading-4 text-neutral-500">
                 주소나 지도 이름을 누르고 검색 결과에서 업체를 선택하면 상세 정보를 볼 수 있어요. 결과가 없으면 다른 지도를 선택해 주세요. 위치 보기는 공개 데이터의 좌표를 표시합니다. {state.category === "veterinary"
-                    ? "실제 진료 가능 여부와 야간·응급 운영은 전화로 확인해 주세요."
-                    : "실제 영업·예약 가능 여부와 반려견 이용 조건은 업체에 확인해 주세요."}
+                    ? copy("실제 진료 가능 여부와 야간·응급 운영은 전화로 확인해 주세요.")
+                    : copy("실제 영업·예약 가능 여부와 반려견 이용 조건은 업체에 확인해 주세요.")}
             </p>
         </div>
     );
@@ -902,6 +914,7 @@ export default function ChatResponseExtras({
     onInternalNavigate,
     questionContext,
 }: ChatResponseExtrasProps) {
+    const copy = useCareTalkCopy();
     const [localCareSearch, setLocalCareSearch] = useState<LocalCareSearchState>({ status: "idle" });
     const widthClass = compact ? "max-w-[86%]" : "max-w-[82%]";
     const geoSearchCta = ctas?.find((cta) => cta.kind === "geo_vet_search");
@@ -921,35 +934,18 @@ export default function ChatResponseExtras({
         query: string;
     }) => {
         const fallbackUrl = buildNaverMapUrl(query);
-        if (!("geolocation" in navigator)) {
-            setLocalCareSearch({
-                status: "error",
-                category,
-                label,
-                message: "이 브라우저에서는 현재 위치를 읽을 수 없어요. 네이버지도에서 직접 확인해 주세요.",
-                fallbackUrl,
-            });
-            return;
-        }
-
         setLocalCareSearch({
             status: "loading",
             category,
             label,
-            message: `현재 위치 기준으로 가까운 ${label} 후보를 찾고 있어요.`,
+            message: `위치 허용 창이 뜨면 허용해 주세요. 이어서 가까운 ${label} 후보를 찾아드려요.`,
             fallbackUrl,
         });
         try {
-            const position = await new Promise<GeolocationPosition>((resolve, reject) => {
-                navigator.geolocation.getCurrentPosition(resolve, reject, {
-                    enableHighAccuracy: true,
-                    timeout: 7000,
-                    maximumAge: 60000,
-                });
-            });
+            const position = await currentPosition();
             const result = await fetchNearbyLocalCarePlaces(
-                position.coords.latitude,
-                position.coords.longitude,
+                position.latitude,
+                position.longitude,
                 category,
                 label,
                 query,
@@ -963,18 +959,16 @@ export default function ChatResponseExtras({
                 fallbackUrl: result.fallbackUrl,
             });
         } catch (error) {
-            const geolocationCode = typeof error === "object" && error !== null && "code" in error
-                ? Number((error as { code?: unknown }).code)
-                : undefined;
-            const message = geolocationCode === 1
-                ? "위치 권한이 거절됐어요. 브라우저의 사이트 설정에서 위치를 허용하거나 네이버지도에서 직접 확인해 주세요."
-                : `${label} 후보 검색이 잠시 불안정해요. 네이버지도에서 직접 확인해 주세요.`;
+            const failure = locationError(error);
+            const message = locationFailureMessage(failure.code, isNativeAppRuntime(), failure.recovery);
             setLocalCareSearch({
                 status: "error",
                 category,
                 label,
+                query,
                 message,
                 fallbackUrl,
+                recovery: failure.recovery,
             });
         }
     };
@@ -1009,22 +1003,22 @@ export default function ChatResponseExtras({
                 >
                     <div className="flex flex-wrap items-center gap-2">
                         <span className="rounded-full bg-white px-2.5 py-1 text-xs font-black text-violet-800">
-                            제작 요청
+                            {copy("제작 요청")}
                         </span>
                         <span className="text-xs font-black text-neutral-700">
                             {generation.status === "ready_for_generation"
-                                ? "제작 준비 완료"
+                                ? copy("제작 준비 완료")
                                 : generation.status === "blocked"
-                                    ? "요청 수정 필요"
+                                    ? copy("요청 수정 필요")
                                     : generation.status === "needs_information"
-                                        ? "추가 정보 필요"
+                                        ? copy("추가 정보 필요")
                                         : generation.status === "temporarily_unavailable"
-                                            ? "제작 연결 대기"
-                                            : "상태 확인 중"}
+                                            ? copy("제작 연결 대기")
+                                            : copy("상태 확인 중")}
                         </span>
                     </div>
                     <div className="mt-2 flex flex-wrap gap-1.5 text-[11px] font-extrabold text-violet-900">
-                        {generation.intent?.outputType ? <span>{generation.intent.outputType === "video" ? "영상" : "이미지"}</span> : null}
+                        {generation.intent?.outputType ? <span>{generation.intent.outputType === "video" ? copy("영상") : copy("이미지")}</span> : null}
                         {generation.intent?.purpose ? <span>· {generation.intent.purpose}</span> : null}
                         {generation.intent?.subject ? <span>· {generation.intent.subject}</span> : null}
                         {generation.intent?.durationSeconds ? <span>· {generation.intent.durationSeconds}초</span> : null}
@@ -1032,7 +1026,7 @@ export default function ChatResponseExtras({
                     </div>
                     {!generation.execution?.mediaGenerated ? (
                         <p className="mt-2 text-[11px] font-bold leading-4 text-neutral-600">
-                            아직 이미지나 영상 결과가 생성된 상태는 아니에요.
+                            {copy("아직 이미지나 영상 결과가 생성된 상태는 아니에요.")}
                         </p>
                     ) : null}
                     <CareTalkGenerationExecution
@@ -1050,7 +1044,9 @@ export default function ChatResponseExtras({
                         loadingCategory={localCareSearch.status === "loading" ? localCareSearch.category : undefined}
                         onFindLocalCare={(item) => void runLocalCareSearch(item)}
                     />
-                    <LocalCareSearchResults state={localCareSearch} />
+                    <LocalCareSearchResults state={localCareSearch} onRetry={() => {
+                        if (localCareSearch.status === "error") void runLocalCareSearch(localCareSearch);
+                    }} />
                 </div>
             ) : null}
 

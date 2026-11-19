@@ -50,11 +50,11 @@ while [ "$attempt" -lt 20 ]; do
     # A failed dump/pull is a retry, not proof that the app failed to open.
     if adb shell uiautomator dump /sdcard/ddb-release-window.xml > /dev/null \
         && adb pull /sdcard/ddb-release-window.xml "$artifact_dir/window.xml" > /dev/null; then
-        if grep -q '댕다방에 오신 걸 환영해요' "$artifact_dir/window.xml"; then break; fi
+        if grep -Eq '댕다방에 오신 걸 환영해요|Welcome to 댕다방' "$artifact_dir/window.xml"; then break; fi
     fi
     attempt=$((attempt + 1))
 done
-grep -q '댕다방에 오신 걸 환영해요' "$artifact_dir/window.xml"
+grep -Eq '댕다방에 오신 걸 환영해요|Welcome to 댕다방' "$artifact_dir/window.xml"
 app_pid="$(adb shell pidof "$package_name" | tr -d '\r')"
 test -n "$app_pid"
 adb logcat -d -v threadtime --pid="$app_pid" > "$artifact_dir/logcat.txt"

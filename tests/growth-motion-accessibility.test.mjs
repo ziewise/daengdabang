@@ -1,9 +1,10 @@
+import { koreanMarkup } from "./helpers/korean-markup.mjs";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 const root = new URL("../", import.meta.url);
-const source = (path) => readFile(new URL(path, root), "utf8");
+const source = (path) => readFile(new URL(path, root), "utf8").then(koreanMarkup);
 
 test("daily-life CTAs use restrained motion with complete reduced-motion coverage", async () => {
     const [css, hub, teaser, localCare, dashboard, share] = await Promise.all([

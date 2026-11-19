@@ -38,6 +38,7 @@ import { CrayonGrainFilter, PawTrail } from "@/components/daily/CrayonArt";
 import ShopListHero from "@/components/products/ShopListHero";
 // 웹 화면인가(앱 ddb-app-mode 가 아닌가) — 웹 전용 빈 결과 안내를 앱에 그리지 않으려고(2026-10-26)
 import { useWebScreen } from "@/hooks/useWebScreen";
+import ProductSearchForm from "@/components/search/ProductSearchForm";
 import "../shop-list-web.css";
 
 type Props = {
@@ -108,7 +109,7 @@ export default function ProductsClient({ initialCategory, title, variant }: Prop
     const [externalLoading, setExternalLoading] = useState(false);
     const [externalSearched, setExternalSearched] = useState(false);
     const [externalReveal, setExternalReveal] = useState({ scope: "", count: 30 });
-    const { t, locale, categoryLabel, subcategoryLabel, menuLabel } = useI18n();
+    const { t, locale, categoryLabel, subcategoryLabel, menuLabel, productName } = useI18n();
     const webScreen = useWebScreen();
 
     useEffect(() => {
@@ -134,13 +135,13 @@ export default function ProductsClient({ initialCategory, title, variant }: Prop
     }, [category]);
 
     const products = useMemo(() => {
-        let list = query.trim() ? searchCatalog(query) : CATALOG;
+        let list = query.trim() ? searchCatalog(query, productName) : CATALOG;
 
         if (category !== "all") list = list.filter((product) => product.category === category);
         if (subcategory !== "all") list = list.filter((product) => product.subcategory === subcategory);
 
         return applySort(list, sort);
-    }, [query, category, subcategory, sort]);
+    }, [query, category, subcategory, sort, productName]);
     const hasSearch = query.trim().length > 0;
     const referenceExternalRows = useMemo(() => {
         const anchor = externalProducts.find((product) => comparisonStatus(product) === "anchor");
@@ -304,7 +305,7 @@ export default function ProductsClient({ initialCategory, title, variant }: Prop
     // 카테고리를 골라 0개일 때, 전체로 보면 나오는 개수(검색 결과 페이지 · 웹 전체상품 검색의 빈 안내용 —
     // 제품군 페이지(initialCategory)는 카테고리가 고정이라 "전체로 보기"를 내지 않음)
     const hiddenByCategory = (isSearchPage || !initialCategory) && hasSearch && products.length === 0 && category !== "all"
-        ? searchCatalog(query).length
+        ? searchCatalog(query, productName).length
         : 0;
 
     // ── 웹 검색 결과 페이지(/search) ── 머리 판 → 발자국 → 댕다방 상품(카테고리 · 정렬) → 발자국 → 다른 판매처 가격 비교
@@ -327,9 +328,9 @@ export default function ProductsClient({ initialCategory, title, variant }: Prop
                             <div className="sr-head">
                                 <span className="sr-head-art" aria-hidden="true"><Image src="/images/ui/header-cart-128.webp" alt="" width={48} height={48} /></span>
                                 <div className="sr-head-text">
-                                    <p className="sr-head-kicker">DAENGDABANG PRODUCTS</p>
+                                    <p className="sr-head-kicker">댕다방 PRODUCTS</p>
                                     <h2 id="sr-own-title" className="sr-head-title">
-                                        {locale === "en" ? "DaengDaBang products" : "댕다방 상품"} <b>{countText(products.length)}</b>
+                                        {locale === "en" ? "댕다방 products" : "댕다방 상품"} <b>{countText(products.length)}</b>
                                     </h2>
                                 </div>
                                 <div className="sr-tools">
@@ -384,7 +385,7 @@ export default function ProductsClient({ initialCategory, title, variant }: Prop
                             <p className="sr-note">
                                 <i className="fa-solid fa-circle-info" aria-hidden="true" />
                                 {locale === "en"
-                                    ? "These are not DaengDaBang products. Tapping one opens the seller in a new tab. Final totals can change with options and shipping."
+                                    ? "These are not 댕다방 products. Tapping one opens the seller in a new tab. Final totals can change with options and shipping."
                                     : "댕다방 상품이 아니에요. 누르면 판매처가 새 창으로 열리고, 옵션과 배송비에 따라 결제금액은 달라질 수 있어요."}
                             </p>
                             {externalSection}
@@ -456,15 +457,7 @@ export default function ProductsClient({ initialCategory, title, variant }: Prop
             </header>
 
             <section className="surface mb-6 grid gap-3 p-4 md:grid-cols-[1.3fr_0.9fr_0.9fr_0.9fr]" data-products-filter>
-                <label className="block">
-                    <span className="mb-1 block text-xs font-black text-neutral-500">{t("search")}</span>
-                    <input
-                        value={query}
-                        onChange={(event) => setQuery(event.target.value)}
-                        className="input"
-                        placeholder={t("searchFieldPlaceholder")}
-                    />
-                </label>
+                <ProductSearchForm value={query} onSearch={setQuery} label={t("search")} placeholder={t("searchFieldPlaceholder")} />
                 <label className="block">
                     <span className="mb-1 block text-xs font-black text-neutral-500">{t("categoryFilter")}</span>
                     <select

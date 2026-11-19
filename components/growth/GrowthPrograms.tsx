@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -49,6 +50,7 @@ const PROGRAM_ART: Record<string, string> = {
 };
 
 export default function GrowthPrograms() {
+    const { menuLabel: labelText } = useI18n();
     const { hydrated, user } = useAuth();
     const [selectedProgram, setSelectedProgram] = useState<GrowthProgramId | null>(null);
     const [consent, setConsent] = useState(false);
@@ -191,16 +193,16 @@ export default function GrowthPrograms() {
                 <div className="dw-section-head flex flex-col items-center gap-4">
                     <div>
                         <p className="ddb-crayon-kicker dw-kicker">GROWTH PROGRAMS</p>
-                        <h2 id="growth-programs-title" className="ddb-crayon-title ddb-crayon-underline dw-h2">다음 보물은 함께 검증해요</h2>
+                        <h2 id="growth-programs-title" className="ddb-crayon-title ddb-crayon-underline dw-h2">{labelText("다음 보물은 함께 검증해요")}</h2>
                         <p className="dw-sub">
-                            아직 판매·예약 가능한 서비스가 아닙니다. 관심 수요를 확인한 뒤 운영 조건과 시작 일정을 별도로 안내하며, 등록은 이 화면에서 언제든 취소할 수 있어요.
+                            {labelText("아직 판매·예약 가능한 서비스가 아닙니다. 관심 수요를 확인한 뒤 운영 조건과 시작 일정을 별도로 안내하며, 등록은 이 화면에서 언제든 취소할 수 있어요.")}
                         </p>
                     </div>
                     <div
                         ref={preparationRef}
                         className={`ddb-treasure-prep-scene dw-prep w-fit${preparationMotionActive ? " ddb-treasure-prep-scene--animate" : ""}`}
                         data-treasure-preparing-visual
-                        aria-label="전 프로그램 준비 중"
+                        aria-label={labelText("전 프로그램 준비 중")}
                     >
                         {/* 준비 중 그림(꾸밈) — 사용자 그림 "프로그램준비중"(공구 · 발바닥 표), 흰 바탕 없이. 살짝 통통 + 노란 별 둘 반짝(2026-10-22) */}
                         <span className="ddb-treasure-prep-icons dw-prep-art" aria-hidden="true">
@@ -213,9 +215,9 @@ export default function GrowthPrograms() {
                             </svg>
                         </span>
                         <span className="min-w-0">
-                            <strong className="block text-xs font-black text-amber-950">전 프로그램 준비 중</strong>
+                            <strong className="block text-xs font-black text-amber-950">{labelText("전 프로그램 준비 중")}</strong>
                             <span className="mt-0.5 block text-[10px] font-bold leading-4 text-amber-800">
-                                광고·제휴 혜택은 검증을 마친 뒤 선택 기능으로 열어요.
+                                {labelText("광고·제휴 혜택은 검증을 마친 뒤 선택 기능으로 열어요.")}
                             </span>
                         </span>
                     </div>
@@ -225,20 +227,20 @@ export default function GrowthPrograms() {
                 <div className="mt-7 grid gap-4 dw-programs sm:grid-cols-2 xl:grid-cols-4">
                     {GROWTH_PROGRAM_CARDS.map((program, index) => (
                         <article key={program.id} className={`dw-program ${["dw-tint-pink", "dw-tint-sky", "dw-tint-mint", "dw-tint-yellow"][index % 4]} relative flex h-full flex-col items-center rounded-[30px] px-5 pb-6 pt-9 text-center`}>
-                            <span className="ddb-preparing-chip dw-soon">준비 중</span>
+                            <span className="ddb-preparing-chip dw-soon">{labelText("준비 중")}</span>
                             <span className="dw-pc-icon dw-pc-art" data-crayon-tone={program.tone}>
                                 <Image src={PROGRAM_ART[program.id]} alt="" width={104} height={104} aria-hidden="true" />
                             </span>
                             <p className="ddb-crayon-kicker dw-kicker mt-3">{program.eyebrow}</p>
-                            <h3 className="ddb-crayon-title dw-h3 mt-1">{program.title}</h3>
-                            <p className="mt-1.5 text-[12.5px] font-black text-[#5b45b0]">{program.status}</p>
+                            <h3 className="ddb-crayon-title dw-h3 mt-1">{labelText(program.title)}</h3>
+                            <p className="mt-1.5 text-[12.5px] font-black text-[#5b45b0]">{labelText(program.status)}</p>
 
-                            <p className="dw-card-body min-h-[44px]">{program.description}</p>
+                            <p className="dw-card-body min-h-[44px]">{labelText(program.description)}</p>
                             <ul className="dw-checks">
                                 {program.details.map((detail) => (
                                     <li key={detail}>
                                         <i className="fa-solid fa-check" aria-hidden="true" />
-                                        <span>{detail}</span>
+                                        <span>{labelText(detail)}</span>
                                     </li>
                                 ))}
                             </ul>
@@ -247,16 +249,16 @@ export default function GrowthPrograms() {
                                 <div className="dw-note mt-4">
                                     <Link href={program.existingFeature.href} className="inline-flex min-h-10 items-center gap-2 text-xs font-black text-sky-900 underline decoration-sky-300 underline-offset-4">
                                         <i className="fa-solid fa-location-crosshairs" aria-hidden="true" />
-                                        {program.existingFeature.label}
+                                        {labelText(program.existingFeature.label)}
                                     </Link>
-                                    <p className="mt-1 text-[10px] font-bold leading-4 text-sky-800">{program.existingFeature.helper}</p>
+                                    <p className="mt-1 text-[10px] font-bold leading-4 text-sky-800">{labelText(program.existingFeature.helper)}</p>
                                 </div>
                             ) : null}
 
                             <div className="mt-auto grid w-full gap-2 pt-5">
                                 {program.interestOptions.map((option) => {
                                     if (!hydrated) {
-                                        return <span key={option.programId} className="h-11 animate-pulse rounded-full bg-neutral-100" aria-label="회원 상태 확인 중" />;
+                                        return <span key={option.programId} className="h-11 animate-pulse rounded-full bg-neutral-100" aria-label={labelText("회원 상태 확인 중")} />;
                                     }
                                     if (!accessToken) {
                                         return (
@@ -265,12 +267,12 @@ export default function GrowthPrograms() {
                                                 href={LOGIN_HREF}
                                                 className="inline-flex min-h-11 items-center justify-center rounded-full border border-neutral-300 bg-white px-4 text-center text-xs font-black text-neutral-700 transition hover:border-indigo-400 hover:text-indigo-800"
                                             >
-                                                로그인 후 관심등록
+                                                {labelText("로그인 후 관심등록")}
                                             </Link>
                                         );
                                     }
                                     if (!registrationsReady) {
-                                        return <span key={option.programId} className="grid h-11 place-items-center rounded-full bg-neutral-100 text-[10px] font-black text-neutral-500">등록 상태 확인 중</span>;
+                                        return <span key={option.programId} className="grid h-11 place-items-center rounded-full bg-neutral-100 text-[10px] font-black text-neutral-500">{labelText("등록 상태 확인 중")}</span>;
                                     }
                                     const registered = registrations.some((item) => item.programId === option.programId);
                                     if (registered) {
@@ -282,7 +284,7 @@ export default function GrowthPrograms() {
                                                 onClick={() => void cancelRegistration(option.programId)}
                                                 className="inline-flex min-h-11 items-center justify-center rounded-full border border-rose-200 bg-rose-50 px-4 text-xs font-black text-rose-800 transition hover:bg-rose-100 disabled:cursor-wait disabled:opacity-60"
                                             >
-                                                {cancelling === option.programId ? <><i className="fa-solid fa-circle-notch fa-spin mr-2" aria-hidden="true" />취소 중…</> : "관심 등록 취소"}
+                                                {cancelling === option.programId ? <><i className="fa-solid fa-circle-notch fa-spin mr-2" aria-hidden="true" />{labelText("취소 중…")}</> : "관심 등록 취소"}
                                             </button>
                                         );
                                     }
@@ -295,7 +297,7 @@ export default function GrowthPrograms() {
                                             onClick={() => selectProgram(option.programId)}
                                             className="ddb-crayon-link inline-flex min-h-11 items-center justify-center rounded-full px-4 text-xs"
                                         >
-                                            {option.label}
+                                            {labelText(option.label)}
                                         </button>
                                     );
                                 })}
@@ -324,14 +326,14 @@ export default function GrowthPrograms() {
                                 </span>
                                 <p className="ddb-crayon-kicker mt-4 text-xs">INTEREST SAVED</p>
                                 <h3 ref={receiptHeadingRef} tabIndex={-1} className="ddb-crayon-title mt-1 text-2xl text-neutral-950 outline-none">
-                                    {receipt.alreadyRegistered ? "이미 관심을 남겨두셨어요" : "관심등록을 저장했어요"}
+                                    {labelText(receipt.alreadyRegistered ? "이미 관심을 남겨두셨어요" : "관심등록을 저장했어요")}
                                 </h3>
                                 <p className="mt-2 text-sm font-bold leading-6 text-neutral-600">
                                     {receipt.alreadyRegistered
                                         ? "중복 신청을 만들지 않고 기존 등록을 확인했습니다."
                                         : `${growthInterestLabel(receipt.programId)} 준비 소식이 확정되면 안내할게요.`}
                                 </p>
-                                <p className="mt-1 text-xs font-bold text-neutral-500">접수번호 {receipt.id} · 지금은 주문·예약·선정이 확정된 상태가 아닙니다.</p>
+                                <p className="mt-1 text-xs font-bold text-neutral-500">{labelText("접수번호")} {receipt.id} {labelText("· 지금은 주문·예약·선정이 확정된 상태가 아닙니다.")}</p>
                                 <button
                                     type="button"
                                     onClick={() => {
@@ -340,7 +342,7 @@ export default function GrowthPrograms() {
                                     }}
                                     className="mt-5 inline-flex min-h-11 items-center rounded-full border border-neutral-300 bg-white px-5 text-xs font-black text-neutral-700"
                                 >
-                                    닫기
+                                    {labelText("닫기")}
                                 </button>
                             </div>
                         ) : (
@@ -348,10 +350,10 @@ export default function GrowthPrograms() {
                                 <div>
                                     <p className="ddb-crayon-kicker text-xs">INTEREST CONSENT</p>
                                     <h3 ref={formHeadingRef} tabIndex={-1} className="ddb-crayon-title mt-1 text-2xl text-neutral-950 outline-none">
-                                        {growthInterestLabel(selectedProgram)}
+                                        {labelText(growthInterestLabel(selectedProgram))}
                                     </h3>
                                     <p className="mt-2 text-xs font-bold leading-5 text-neutral-600">
-                                        회원 계정으로만 접수합니다. 이름·이메일·건강정보·자유입력 메모는 이 화면에서 받지 않아요.
+                                        {labelText("회원 계정으로만 접수합니다. 이름·이메일·건강정보·자유입력 메모는 이 화면에서 받지 않아요.")}
                                     </p>
                                 </div>
 
@@ -365,24 +367,24 @@ export default function GrowthPrograms() {
                                             className="mt-1 h-4 w-4 shrink-0 accent-indigo-700"
                                         />
                                         <span>
-                                            <b className="text-neutral-950">(필수)</b> 선택한 프로그램의 준비·모집 소식을 회원 계정에 등록된 이메일로 받는 데 동의합니다.
+                                            <b className="text-neutral-950">{labelText("(필수)")}</b> {labelText("선택한 프로그램의 준비·모집 소식을 회원 계정에 등록된 이메일로 받는 데 동의합니다.")}
                                         </span>
                                     </label>
                                     <dl className="ml-7 mt-3 grid gap-1.5 border-t border-neutral-100 pt-3 text-xs leading-5 text-neutral-600">
-                                        <div><dt className="inline font-black text-neutral-800">수집·연계 항목</dt><dd className="inline"> · 회원 식별번호, 선택 프로그램, 동의 버전·상태·시각. 실제 안내 시 회원 계정 이메일을 연결해 사용하며 관심등록 파일에는 이메일을 복사 저장하지 않습니다.</dd></div>
-                                        <div><dt className="inline font-black text-neutral-800">이용 목적</dt><dd className="inline"> · 프로그램 수요 확인 및 준비·모집 소식 이메일 안내</dd></div>
-                                        <div><dt className="inline font-black text-neutral-800">보유 기간</dt><dd className="inline"> · 관심등록 취소 시 즉시 삭제 또는 회원 탈퇴 시까지</dd></div>
-                                        <div><dt className="inline font-black text-neutral-800">거부 안내</dt><dd className="inline"> · 동의를 거부할 수 있으며 관심등록만 제한됩니다. 쇼핑과 기본 돌봄 기능에는 영향이 없습니다.</dd></div>
+                                        <div><dt className="inline font-black text-neutral-800">{labelText("수집·연계 항목")}</dt><dd className="inline"> {labelText("· 회원 식별번호, 선택 프로그램, 동의 버전·상태·시각. 실제 안내 시 회원 계정 이메일을 연결해 사용하며 관심등록 파일에는 이메일을 복사 저장하지 않습니다.")}</dd></div>
+                                        <div><dt className="inline font-black text-neutral-800">{labelText("이용 목적")}</dt><dd className="inline"> {labelText("· 프로그램 수요 확인 및 준비·모집 소식 이메일 안내")}</dd></div>
+                                        <div><dt className="inline font-black text-neutral-800">{labelText("보유 기간")}</dt><dd className="inline"> {labelText("· 관심등록 취소 시 즉시 삭제 또는 회원 탈퇴 시까지")}</dd></div>
+                                        <div><dt className="inline font-black text-neutral-800">{labelText("거부 안내")}</dt><dd className="inline"> {labelText("· 동의를 거부할 수 있으며 관심등록만 제한됩니다. 쇼핑과 기본 돌봄 기능에는 영향이 없습니다.")}</dd></div>
                                     </dl>
                                     <p className="ml-7 mt-2 text-xs font-bold text-neutral-500">
-                                        자세한 내용은 {" "}<Link href="/privacy/" className="font-black text-indigo-700 underline underline-offset-2" data-web-privacy-link>개인정보처리방침</Link>에서 확인할 수 있습니다.
+                                        {labelText("자세한 내용은")} {" "}<Link href="/privacy/" className="font-black text-indigo-700 underline underline-offset-2" data-web-privacy-link>{labelText("개인정보처리방침")}</Link>{labelText("에서 확인할 수 있습니다.")}
                                     </p>
                                 </div>
 
                                 {error ? (
                                     <div role="alert" className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-bold leading-6 text-rose-900" data-web-notice="error">
                                         {error}
-                                        {error.includes("로그인") ? <Link href={LOGIN_HREF} className="ml-2 font-black underline">다시 로그인</Link> : null}
+                                        {error.includes("로그인") ? <Link href={LOGIN_HREF} className="ml-2 font-black underline">{labelText("다시 로그인")}</Link> : null}
                                     </div>
                                 ) : null}
 
@@ -393,14 +395,14 @@ export default function GrowthPrograms() {
                                         onClick={() => setSelectedProgram(null)}
                                         className="inline-flex min-h-11 items-center justify-center rounded-full border border-neutral-300 bg-white px-5 text-xs font-black text-neutral-700 disabled:opacity-50"
                                     >
-                                        취소
+                                        {labelText("취소")}
                                     </button>
                                     <button
                                         type="submit"
                                         disabled={submitting || !consent}
                                         className="ddb-crayon-link inline-flex min-h-11 items-center justify-center rounded-full px-6 text-xs disabled:cursor-not-allowed disabled:opacity-50"
                                     >
-                                        {submitting ? <><i className="fa-solid fa-circle-notch fa-spin mr-2" aria-hidden="true" />저장 중…</> : "관심등록 저장"}
+                                        {submitting ? <><i className="fa-solid fa-circle-notch fa-spin mr-2" aria-hidden="true" />{labelText("저장 중…")}</> : "관심등록 저장"}
                                     </button>
                                 </div>
                             </form>

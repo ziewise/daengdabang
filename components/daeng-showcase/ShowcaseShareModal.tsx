@@ -1,5 +1,7 @@
 "use client";
 
+import ShowcaseCaption from "@/components/daeng-showcase/ShowcaseCaption";
+import { useI18n } from "@/lib/i18n";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ShowcasePost, ShowcaseTopic } from "@/lib/daeng-showcase";
 import {
@@ -66,6 +68,7 @@ export default function ShowcaseShareModal({
     target: ShowcaseShareTarget | null;
     onClose: () => void;
 }) {
+    const { menuLabel: labelText } = useI18n();
     const closeButtonRef = useRef<HTMLButtonElement>(null);
     const [busy, setBusy] = useState<"native" | "copy" | "">("");
     const [notice, setNotice] = useState<ShareNotice | null>(null);
@@ -159,7 +162,7 @@ export default function ShowcaseShareModal({
                 <div className="flex items-start justify-between gap-4">
                     <div>
                         <p className="ddb-crayon-kicker text-[10px]">SAFE SHARE CARD</p>
-                        <h2 id="showcase-share-title" className="ddb-crayon-title mt-1 text-3xl text-neutral-950">댕자랑 공유카드</h2>
+                        <h2 id="showcase-share-title" className="ddb-crayon-title mt-1 text-3xl text-neutral-950">{labelText("댕자랑 공유카드")}</h2>
                     </div>
                     <button
                         ref={closeButtonRef}
@@ -167,14 +170,14 @@ export default function ShowcaseShareModal({
                         onClick={onClose}
                         disabled={Boolean(busy)}
                         className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-neutral-100 text-neutral-600 hover:bg-neutral-200"
-                        aria-label="공유카드 닫기"
+                        aria-label={labelText("공유카드 닫기")}
                     >
                         <i className="fa-solid fa-xmark" aria-hidden="true" />
                     </button>
                 </div>
 
                 <p id="showcase-share-description" className="mt-3 text-xs font-bold leading-5 text-neutral-600">
-                    버튼을 눌렀을 때만 기기의 공유 창을 열거나 링크를 복사합니다. 자동 게시나 외부 메시지 발송은 하지 않아요.
+                    {labelText("버튼을 눌렀을 때만 기기의 공유 창을 열거나 링크를 복사합니다. 자동 게시나 외부 메시지 발송은 하지 않아요.")}
                 </p>
 
                 <div className="mt-5 overflow-hidden rounded-[26px] border border-rose-200 bg-gradient-to-br from-rose-50 via-amber-50 to-cyan-50 shadow-sm">
@@ -183,7 +186,7 @@ export default function ShowcaseShareModal({
                             {/* eslint-disable-next-line @next/next/no-img-element -- deletion-aware API media is rendered as the selected public share preview. */}
                             <img
                                 src={target.post.imageUrl}
-                                alt="공유할 댕자랑 사진 미리보기"
+                                alt={labelText("공유할 댕자랑 사진 미리보기")}
                                 width={target.post.imageWidth}
                                 height={target.post.imageHeight}
                                 className="max-h-72 w-full bg-white/60 object-contain"
@@ -197,11 +200,11 @@ export default function ShowcaseShareModal({
                         </div>
                     )}
                     <div className="p-5">
-                        <p className="ddb-crayon-kicker text-[10px]">오늘의 댕주제 · 댕자랑</p>
+                        <p className="ddb-crayon-kicker text-[10px]">{labelText("오늘의 댕주제 · 댕자랑")}</p>
                         <h3 className="ddb-crayon-title mt-1 break-keep text-2xl text-neutral-950">{copy.title}</h3>
                         {/* 없는 색 이름(text-neutral-650) 대신 같은 결과인 text-inherit(앱 그대로) · 웹 색은 showcase-compose-web.css */}
                         <p className="mt-2 line-clamp-3 whitespace-pre-wrap break-words text-xs font-bold leading-5 text-inherit" data-web-soft-text>
-                            {target.kind === "post" ? target.post.caption : target.topic.prompt}
+                            {target.kind === "post" ? <ShowcaseCaption authorId={target.post.author.authorId} text={target.post.caption} /> : target.topic.prompt}
                         </p>
                     </div>
                 </div>
@@ -214,7 +217,7 @@ export default function ShowcaseShareModal({
                         className="ddb-crayon-link inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-5 text-sm font-black disabled:opacity-55"
                     >
                         <i className={`fa-solid ${busy === "native" ? "fa-spinner fa-spin" : "fa-arrow-up-from-bracket"}`} aria-hidden="true" />
-                        공유 창 열기
+                        {labelText("공유 창 열기")}
                     </button>
                     <button
                         type="button"
@@ -224,12 +227,12 @@ export default function ShowcaseShareModal({
                         data-showcase-share-copy // 웹은 흰 알약(showcase-compose-web.css)
                     >
                         <i className={`fa-solid ${busy === "copy" ? "fa-spinner fa-spin" : "fa-link"}`} aria-hidden="true" />
-                        링크 복사
+                        {labelText("링크 복사")}
                     </button>
                 </div>
 
                 <input
-                    aria-label="공유할 정확한 댕자랑 링크"
+                    aria-label={labelText("공유할 정확한 댕자랑 링크")}
                     readOnly
                     onFocus={(event) => event.currentTarget.select()}
                     value={shareUrl}

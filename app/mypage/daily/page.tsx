@@ -5,6 +5,7 @@
  */
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import MypageSectionLayout, { MypageLoginGate } from "@/components/mypage/MypageSectionLayout";
 import { DailySummary } from "@/components/mypage/MypageAiSummary";
 import { useAuth } from "@/lib/store";
@@ -12,14 +13,15 @@ import { useAuth } from "@/lib/store";
 import "../../daily-web.css";
 
 export default function MypageDailySummaryPage() {
+    const { menuLabel: labelText } = useI18n();
     const { user } = useAuth();
     if (!user) return <MypageLoginGate redirect="/mypage/daily/" />;
 
     return (
         <MypageSectionLayout
-            eyebrow="우리 아이 AI"
-            title="매일댕생활"
-            description="연속 출근 · 이번 주 도장 · 레벨과 오늘 돌봄 할 일을 한눈에 봐요."
+            eyebrow={labelText("우리 아이 AI")}
+            title={labelText("매일댕생활")}
+            description={labelText("연속 출근 · 이번 주 도장 · 레벨과 오늘 돌봄 할 일을 한눈에 봐요.")}
         >
             <DailySummary />
         </MypageSectionLayout>

@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { useEffect, useMemo, useRef } from "react";
 import "../outbound-web.css";
 import Image from "next/image";
@@ -29,6 +30,7 @@ function attributionMessageWeb(mode: "naver_nt" | "utm" | "referrer"): string {
 }
 
 export default function OutboundRedirectClient() {
+    const { menuLabel: labelText } = useI18n();
     const params = useSearchParams();
     const rawTarget = useMemo(() => safeOutboundTarget(params.get("to"), {
         productId: params.get("productId"), offerId: params.get("offerId"),
@@ -115,7 +117,7 @@ export default function OutboundRedirectClient() {
                 <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-[#f7f2e8]">
                     <Image
                         src="/images/brand/logo-black-poodle-v2-240.webp"
-                        alt="댕다방"
+                        alt={labelText("댕다방")}
                         width={76}
                         height={76}
                         className="h-20 w-20 object-contain"
@@ -124,7 +126,7 @@ export default function OutboundRedirectClient() {
                 </div>
 
                 {/* 주소를 못 찾았을 때는 "이동하고 있어요" 대신 그 상황 제목(웹) */}
-                <h1 className="mt-5 text-2xl font-black text-neutral-950">{!target ? "상품 링크를 확인할 수 없어요" : "판매처로 이동하고 있어요"}</h1>
+                <h1 className="mt-5 text-2xl font-black text-neutral-950">{labelText(!target ? "상품 링크를 확인할 수 없어요" : "판매처로 이동하고 있어요")}</h1>
                 {target ? (
                     <>
                         <p className="mt-2 text-sm font-bold text-neutral-500">{host}</p>
@@ -150,21 +152,21 @@ export default function OutboundRedirectClient() {
                             />
                         </div>
                         <p className="mt-4 text-xs font-bold leading-5 text-neutral-500">
-                            이 클릭은 댕다방에 먼저 기록되며, 숨은 창이나 서버 대리 접속 없이 이 탭이 판매처 페이지로 직접 전환됩니다.
+                            {labelText("이 클릭은 댕다방에 먼저 기록되며, 숨은 창이나 서버 대리 접속 없이 이 탭이 판매처 페이지로 직접 전환됩니다.")}
                         </p>
                         <button
                             type="button"
                             onClick={visitNow}
                             className="mt-5 inline-flex h-11 items-center justify-center rounded-md bg-neutral-950 px-5 text-sm font-black text-white transition hover:bg-emerald-700"
                         >
-                            지금 판매처 방문하기
+                            {labelText("지금 판매처 방문하기")}
                         </button>
                     </>
                 ) : (
                     <>
-                        <p className="mt-3 text-sm font-bold text-neutral-600">상품 정보와 이동 주소가 일치하는지 확인하지 못했어요. 상품 검색에서 다시 찾아 주세요.</p>
+                        <p className="mt-3 text-sm font-bold text-neutral-600">{labelText("상품 정보와 이동 주소가 일치하는지 확인하지 못했어요. 상품 검색에서 다시 찾아 주세요.")}</p>
                         <Link href="/products" className="mt-5 inline-flex h-11 items-center justify-center rounded-md bg-neutral-950 px-5 text-sm font-black text-white">
-                            상품 검색으로 돌아가기
+                            {labelText("상품 검색으로 돌아가기")}
                         </Link>
                     </>
                 )}

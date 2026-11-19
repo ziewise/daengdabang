@@ -11,6 +11,10 @@ export const SHOWCASE_OFFICIAL_CHANNEL_CONSENT_VERSION = "ddb-showcase-official-
 export const SHOWCASE_MAX_UPLOAD_BYTES = 8 * 1024 * 1024;
 export const SHOWCASE_ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"] as const;
 
+export function showcaseDisplayName(name: string, translate: (value: string) => string): string {
+    return name === "댕다방 운영팀 · 공식" ? translate(name) : name;
+}
+
 export type ShowcaseFeedScope = "all" | "following";
 export type ShowcaseReportReason = "spam" | "privacy" | "abuse" | "copyright" | "other";
 

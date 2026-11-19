@@ -12,7 +12,8 @@ const appSkin = await readFile(new URL("../components/app-shell/appShopSkin.ts",
 
 test("search button submits the existing search form and is off while empty", () => {
     assert.match(modal, /<form onSubmit=\{submit\} className="relative" role="search">/);
-    assert.match(modal, /const submit = \(e: React\.FormEvent\) => \{\s*e\.preventDefault\(\);\s*goSearch\(term\);/);
+    // 2026-11-19 병합 — 협업자의 한글 조합 중 Enter 막기(composing)가 앞에 붙음, 제출은 그대로 goSearch
+    assert.match(modal, /const submit = \(e: React\.FormEvent\) => \{\s*e\.preventDefault\(\);\s*if \(composing\.current\) return;\s*goSearch\(term\);/);
     assert.match(modal, /type="submit"\s*disabled=\{!term\.trim\(\)\}\s*data-search-submit=""/);
     assert.match(modal, /enterKeyHint="search"/);
     // 앱 닫기 단추 꾸밈(form > button[aria-label])과 겹치지 않게 — 검색 단추에는 aria-label 대신 글자
