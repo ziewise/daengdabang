@@ -52,11 +52,14 @@ const dot = (iso: string) => {
 
 export default function PurchaseReviews({
     productId,
+    folder,
     active: activeFromTabs,
     hidden = false,
     onSummary,
 }: {
     productId: string;
+    // 상품 폴더 — 옵션 영어 이름 찾기(optionName 은 폴더 기준, 상품 번호로는 못 찾음)
+    folder?: string;
     active?: boolean;
     hidden?: boolean;
     onSummary?: (summary: Summary) => void;
@@ -248,7 +251,7 @@ export default function PurchaseReviews({
             ) : count > 0 && (
                 <ul className="rvw-list">
                     {result.items.map((review, index) => (
-                        <ReviewCard key={review.id} review={review} tone={index % 3} tr={tr} en={en} option={review.option ? optionName(productId, review.option) : tr("기본", "Standard")} onHelpful={() => void helpful(review)} onReport={() => void report(review)} />
+                        <ReviewCard key={review.id} review={review} tone={index % 3} tr={tr} en={en} option={review.option ? optionName(folder ?? productId, review.option) : tr("기본", "Standard")} onHelpful={() => void helpful(review)} onReport={() => void report(review)} />
                     ))}
                     {result.items.length === 0 && (
                         <li className="rvw-none">

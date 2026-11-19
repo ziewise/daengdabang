@@ -126,7 +126,7 @@ export default function ProductTabs({ product: p }: Props) {
                 {ownPreview ? (
                     reviewView === "own" && <ProductOwnReviews product={p} empty={previewMode === "empty"} />
                 ) : (
-                    <PurchaseReviews productId={p.id} active={reviewsNear} hidden={reviewView !== "own"} onSummary={onOwnSummary} />
+                    <PurchaseReviews productId={p.id} folder={p.folder} active={reviewsNear} hidden={reviewView !== "own"} onSummary={onOwnSummary} />
                 )}
                 {/* 네이버 스토어 후기 — 늘 그려 두고(검색 · 다른 시즌 후기 링크 유지) 댕다방 쪽을 보는 동안만 숨김 */}
                 <div data-store-reviews="" hidden={reviewView !== "external"}>
