@@ -43,7 +43,8 @@ test("the Twilight Gray Brush Guard keeps its historical size guide, photos and 
     const original = english.rw_jsk_1000000031;
     const update = english.rw_jsk_1000001129;
     assert.equal(new URL(original.detailSource.url).pathname, "/products/brush-guard-3080");
-    assert.equal(new URL(update.detailSource.url).pathname, "/products/brush-guard");
+    assert.equal(update.detailSource.url, "https://ruffwear.co.uk/products/brush-guard");
+    assert.match(update.description, /Approach and Palisades/);
     assert.match(original.description, /43–56 cm/);
     assert.match(original.description, /Web Master Pro/);
     assert.ok(original.detailSource.references.some(ref => /3080/.test(ref.title)));
