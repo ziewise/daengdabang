@@ -621,6 +621,7 @@ export type ShopChatChoiceGroup = {
 };
 
 export type ShopChatCta = {
+    placeQuery?: string;
     kind: "geo_vet_search" | "external_link" | "internal_link" | "prompt";
     label: string;
     url?: string;
@@ -1578,13 +1579,14 @@ function normalizeCtas(value: unknown): ShopChatCta[] {
             prompt: typeof record.prompt === "string" ? record.prompt : undefined,
             helperText: typeof record.helperText === "string" ? record.helperText : undefined,
             icon: typeof record.icon === "string" ? record.icon : undefined,
+            placeQuery: typeof record.placeQuery === "string" ? record.placeQuery : undefined,
         }];
     });
 }
 
 function normalizeLocationRequestCtas(value: unknown): ShopChatCta[] {
     const record = asRecord(value);
-    if (!record || record.mode !== "nearby_vet") return [];
+    if (!record || (record.mode !== "nearby_vet" && record.mode !== "nearby_pet_care")) return [];
     const query = typeof record.query === "string" && record.query.trim()
         ? record.query.trim()
         : "동물병원";
@@ -1603,7 +1605,8 @@ function normalizeLocationRequestCtas(value: unknown): ShopChatCta[] {
     ];
     candidates.push({
         kind: "external_link",
-        label: placeQuery ? `${placeQuery} 네이버지도에서 보기` : "네이버지도에서 직접 찾기",
+        label: typeof record.mapLabel === "string" ? record.mapLabel : placeQuery ? `${placeQuery} 네이버지도에서 보기` : "네이버지도에서 직접 찾기",
+        placeQuery,
         url: buildNaverMapSearchUrl(placeQuery, query),
         helperText: "출발 전에 영업 여부와 진료 가능 여부를 전화로 확인해 주세요.",
         icon: "fa-map-location-dot",
@@ -2271,7 +2274,7 @@ function normalizeShopChatApiAnswer(
     const locationRequest = asRecord(data.locationRequest);
     const locationRequestCtas = normalizeLocationRequestCtas(locationRequest);
     const normalizedApiCtas = normalizeCtas(data.ctas);
-    const ctas = locationRequest?.mode === "nearby_vet"
+    const ctas = locationRequest?.mode === "nearby_vet" || locationRequest?.mode === "nearby_pet_care"
         ? mergeShopChatCtas(
             locationRequestCtas,
             normalizedApiCtas.filter((cta) => cta.kind !== "geo_vet_search" && cta.kind !== "external_link"),

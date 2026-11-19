@@ -29,10 +29,10 @@ export default function ChatProductCards({ products = [], externalProducts = [] 
     externalProducts?: ChatExternalProduct[];
 }) {
     const copy = useCareTalkCopy();
-    const { locale, productName } = useI18n();
+    const { locale, productName, formatPrice } = useI18n();
     const own = products.slice(0, 3).map((product) => ({
         id: product.id, title: product.name, thumbnail: chatProductImage(productCardImage(product)), // 카드용 크림 사진 우선(2026-10-21)
-        priceText: product.priceText || (product.price > 0 ? `${product.price.toLocaleString("ko-KR")}원` : "가격 확인 필요"),
+        priceText: locale === "en" ? (product.price > 0 ? formatPrice(product.price) : copy("가격 확인 필요")) : product.priceText || (product.price > 0 ? `${product.price.toLocaleString("ko-KR")}원` : "가격 확인 필요"),
         href: productHref(product), sourceName: "댕다방", external: false,
     }));
     const cards = [...own, ...externalProducts.slice(0, 3).map((product) => ({ ...product, external: true }))];

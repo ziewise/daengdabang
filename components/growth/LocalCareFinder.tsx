@@ -1,5 +1,6 @@
 "use client";
 
+import { useCareTalkCopy } from "@/hooks/useCareTalkCopy";
 import { useI18n } from "@/lib/i18n";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
@@ -20,6 +21,7 @@ export type LocalCarePlace = {
     name: string;
     address: string;
     phone?: string;
+    source?: string;
     distanceMeters?: number | null;
     mapUrl: string;
     lat?: number;
@@ -61,6 +63,7 @@ export function safePlaces(value: unknown, category: CategoryOption): LocalCareP
             name,
             address,
             phone: phone || undefined,
+            source: typeof place.source === "string" ? place.source : undefined,
             distanceMeters,
             lat: typeof place.lat === "number" ? place.lat : undefined,
             lon: typeof place.lon === "number" ? place.lon : undefined,
@@ -71,6 +74,7 @@ export function safePlaces(value: unknown, category: CategoryOption): LocalCareP
 
 export default function LocalCareFinder() {
     const { menuLabel: labelText } = useI18n();
+    const copy = useCareTalkCopy();
     const [selectedCategory, setSelectedCategory] = useState<LocalCareCategory>("veterinary");
     const [coordinates, setCoordinates] = useState<Coordinates | null>(null);
     const [searchState, setSearchState] = useState<SearchState>({ status: "idle" });
@@ -250,8 +254,9 @@ export default function LocalCareFinder() {
                                                     <div className="flex items-center gap-2">
                                                         <span className="dw-place-no shrink-0">{index + 1}</span>
                                                         <h4 className="dw-place-name truncate">{place.name}</h4>
-                                                        <span className="dw-place-dist shrink-0">{formatDistance(place.distanceMeters)}</span>
+                                                        <span className="dw-place-dist shrink-0">{copy(formatDistance(place.distanceMeters))}</span>
                                                     </div>
+                                                    {place.source === "semas" ? <a href="https://www.data.go.kr/data/15083033/fileData.do" target="_blank" rel="noopener noreferrer" className="text-[10px] font-bold text-neutral-500 underline">{copy("소상공인시장진흥공단 상가정보")}</a> : null}
                                                     <p className="dw-place-addr mt-1 text-[11px] font-bold leading-5 text-neutral-500"><PlaceAddressLink place={place} /></p>
                                                 </div>
                                                 <div className="dw-place-links flex flex-wrap gap-2 sm:pl-0">

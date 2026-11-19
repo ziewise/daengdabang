@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { useCareTalkCopy } from "@/hooks/useCareTalkCopy";
 import { FormEvent, useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
@@ -151,7 +152,7 @@ type LocalCarePlace = {
     lat: number;
     lon: number;
     mapUrl: string;
-    source?: "naver" | "openstreetmap";
+    source?: "naver" | "openstreetmap" | "semas";
     mapProvider: "kakao";
 };
 
@@ -199,8 +200,8 @@ const NON_EVIDENCE_RESEARCH_MODES = new Set([
     "location-permission-required",
 ]);
 
-const LOCAL_PET_CARE_SERVICE_RE = /(동물\s*(?:병원|변원)|24시\s*(?:동물\s*)?병원|응급\s*(?:동물\s*)?병원|반려견\s*미용|강아지\s*미용|애견\s*미용|펫\s*미용|미용실|반려견\s*호텔|강아지\s*호텔|애견\s*호텔|펫\s*호텔|데이\s*케어|데이케이|반려견\s*유치원|강아지\s*유치원|애견\s*유치원)/i;
-const LOCAL_PET_CARE_LOCATION_RE = /(현재\s*위치|가까운|근처|주변|인근|동네|지역|찾아?\s*줘|찾아?\s*주세요|어디|위치|지도|후보)/i;
+const LOCAL_PET_CARE_SERVICE_RE = /(동물\s*(?:병원|변원)|24시\s*(?:동물\s*)?병원|응급\s*(?:동물\s*)?병원|반려견\s*미용|강아지\s*미용|애견\s*미용|펫\s*미용|미용실|반려견\s*호텔|강아지\s*호텔|애견\s*호텔|펫\s*호텔|데이\s*케어|데이케이|반려견\s*유치원|강아지\s*유치원|애견\s*유치원|\b(?:vets?|veterinarians?|veterinary\s+(?:clinics?|hospitals?)|animal\s+hospitals?|groomers?|grooming\s+salons?|pet\s+hotels?|(?:dog|pet)\s+(?:boarding|day\s*care)|kennels?)\b)/i;
+const LOCAL_PET_CARE_LOCATION_RE = /(현재\s*위치|가까운|근처|주변|인근|동네|지역|찾아?\s*줘|찾아?\s*주세요|어디|위치|지도|후보|\b(?:near(?:by|est)?|close\s+to|local|find|locate|where|around|in\s+my\s+area)\b)/i;
 const LOCAL_CARE_FALLBACK_ANSWER_RE = /(확인\s*가능한\s*웹\s*출처|근거\s*부족|제한\s*시간\s*안에[\s\S]{0,80}확인하지\s*못|위치와\s*운영\s*여부를\s*확인하지\s*못|지역과[\s\S]{0,60}다시\s*(?:적어|알려))/i;
 const LOCAL_CARE_SAFETY_ANSWER_RE = /(?:지금\s*바로|즉시)[\s\S]{0,50}(?:병원|연락|이동)/i;
 const LOCAL_CARE_INTERNAL_FALLBACK_PATTERNS = [
@@ -272,6 +273,7 @@ function ResearchEvidence({
     compact,
 }: Pick<ChatResponseExtrasProps, "sources" | "research" | "compact">) {
     const copy = useCareTalkCopy();
+    const { locale } = useI18n();
     const visibleSources = (sources ?? []).reduce<Array<{
         source: ShopChatSource;
         citationNumber: number;
@@ -313,12 +315,12 @@ function ResearchEvidence({
                     <i className="fa-solid fa-link text-sky-600" aria-hidden="true" />
                     <span>
                         {visibleSources.length
-                            ? `${isInsufficient ? copy("참고한 자료") : copy("확인한 출처")} ${visibleSources.length}개`
+                            ? `${isInsufficient ? copy("참고한 자료") : copy("확인한 출처")} ${visibleSources.length}${locale === "ko" ? "개" : ""}`
                             : copy("출처 링크 없는 일반 안내")}
                     </span>
                 </span>
                 <span className="flex shrink-0 items-center gap-1.5 text-[10px] font-extrabold text-sky-700">
-                    {researchFreshnessLabel(research?.freshnessStatus, Boolean(visibleSources.length))}
+                    {copy(researchFreshnessLabel(research?.freshnessStatus, Boolean(visibleSources.length)))}
                     <i
                         className="fa-solid fa-chevron-down text-[9px] transition-transform group-open:rotate-180"
                         aria-hidden="true"
@@ -351,9 +353,9 @@ function ResearchEvidence({
             ) : null}
             {searchedAt || freshAsOf ? (
                 <p className="mt-2 text-[10px] font-bold text-neutral-500">
-                    {searchedAt ? `웹 확인 시각 ${searchedAt}` : ""}
+                    {searchedAt ? `${copy("웹 확인 시각")} ${searchedAt}` : ""}
                     {searchedAt && freshAsOf ? " · " : ""}
-                    {freshAsOf ? `근거 기준 ${freshAsOf}` : ""}
+                    {freshAsOf ? `${copy("근거 기준")} ${freshAsOf}` : ""}
                 </p>
             ) : null}
         </details>
@@ -382,7 +384,7 @@ async function fetchNearbyLocalCarePlaces(
     query: string,
 ) {
     const result = await fetchDaengDaBangLocalCarePlaces(latitude, longitude, category, label, query);
-    if (result?.places.length) return result;
+    if (result && (result.places.length || result.status === "ready")) return result;
     throw new Error(result?.message || `현재 확인 가능한 ${label} 후보가 없습니다.`);
 }
 
@@ -449,7 +451,7 @@ async function fetchDaengDaBangLocalCarePlaces(
                 ? place.distanceMeters
                 : distanceMeters({ latitude, longitude }, { latitude: lat, longitude: lon }),
             mapUrl: placeMapLinks({ name, address: String(place.address || "").trim() }).kakao,
-            source: place.source === "naver" ? "naver" : "openstreetmap",
+            source: place.source === "semas" ? "semas" : place.source === "naver" ? "naver" : "openstreetmap",
             mapProvider: "kakao",
         }];
     });
@@ -460,6 +462,7 @@ async function fetchDaengDaBangLocalCarePlaces(
             ? "일부 검색 공급자가 불안정해 확인된 후보만 표시합니다."
             : "";
     return {
+        status: data.status,
         fallbackUrl: safeNaverMapFallback(data.fallbackMapUrl, query),
         requiresOpeningHoursVerification: category === "veterinary" && (data.requiresOpeningHoursVerification === true || needsVetHoursCheck(query)),
         places,
@@ -738,6 +741,7 @@ function LocalCareQuickActions({
     veterinaryQuery: string;
 }) {
     const copy = useCareTalkCopy();
+    const { locale } = useI18n();
     return (
         <div
             data-chat-local-care-actions
@@ -768,7 +772,7 @@ function LocalCareQuickActions({
                                 aria-hidden="true"
                             />
                             <span>
-                                <span className="block">{item.label}</span>
+                                <span className="block">{copy(item.label)}</span>
                                 <span className="mt-0.5 block text-[10px] font-bold text-neutral-500">{copy("가까운 후보 보기")}</span>
                             </span>
                         </button>
@@ -776,7 +780,7 @@ function LocalCareQuickActions({
                             type="button"
                             onClick={() => openExternal(buildNaverMapUrl(item.query))}
                             className="flex min-h-8 w-full items-center justify-center border-t border-indigo-50 bg-[#f8fff9] px-2 text-[10px] font-black text-[#087b39] hover:bg-[#ecfff0]"
-                            aria-label={`${item.label} 네이버지도에서 바로 보기`}
+                            aria-label={locale === "en" ? `Open ${copy(item.label)} in Naver Map` : `${item.label} 네이버지도에서 바로 보기`}
                         >
                             <span aria-hidden="true" className="mr-1">N</span>
                             {copy("지도 바로 보기")}
@@ -793,6 +797,7 @@ function LocalCareQuickActions({
 
 function LocalCareSearchResults({ state, onRetry }: { state: LocalCareSearchState; onRetry: () => void }) {
     const copy = useCareTalkCopy();
+    const { locale } = useI18n();
     if (state.status === "idle") return null;
     if (state.status === "loading") {
         return (
@@ -806,7 +811,7 @@ function LocalCareSearchResults({ state, onRetry }: { state: LocalCareSearchStat
     if (state.status === "error") {
         return (
             <div className="mt-2 rounded-lg border border-amber-200 bg-amber-50 p-3 text-left">
-                <p className="text-xs font-black leading-5 text-amber-900">{state.message}</p>
+                <p className="text-xs font-black leading-5 text-amber-900">{copy(state.message)}</p>
                 <LocationRecoveryActions recovery={state.recovery} onRetry={onRetry} />
                 <button
                     type="button"
@@ -823,7 +828,7 @@ function LocalCareSearchResults({ state, onRetry }: { state: LocalCareSearchStat
         return (
             <div className="mt-2 rounded-lg border border-amber-200 bg-amber-50 p-3 text-left">
                 <p className="text-xs font-black leading-5 text-amber-900">
-                    가까운 {state.label} 후보를 찾지 못했어요. 네이버지도에서 주변 업체를 바로 확인해 주세요.
+                    {locale === "en" ? `No nearby results for ${copy(state.label).toLowerCase()}. Try searching Naver Map.` : `가까운 ${state.label} 후보를 찾지 못했어요. 네이버지도에서 주변 업체를 바로 확인해 주세요.`}
                 </p>
                 <button
                     type="button"
@@ -839,7 +844,7 @@ function LocalCareSearchResults({ state, onRetry }: { state: LocalCareSearchStat
     return (
         <div className="mt-2 space-y-2 rounded-lg border border-indigo-100 bg-white p-2.5 text-left shadow-sm">
             <div className="flex flex-wrap items-center justify-between gap-1.5">
-                <p className="text-[11px] font-black text-indigo-800">{state.requiresOpeningHoursVerification ? `${state.label} 검색 · 운영시간 확인 필요` : `현재 위치 기준 가까운 ${state.label} 후보`}</p>
+                <p className="text-[11px] font-black text-indigo-800">{locale === "en" ? `${copy(state.label)} near you${state.requiresOpeningHoursVerification ? " · Call to confirm hours" : ""}` : state.requiresOpeningHoursVerification ? `${state.label} 검색 · 운영시간 확인 필요` : `현재 위치 기준 가까운 ${state.label} 후보`}</p>
                 <span className="rounded-full bg-[#e9fff1] px-2 py-1 text-[10px] font-black text-[#087b39]">
                     {copy("지도 선택 가능")}
                 </span>
@@ -862,7 +867,7 @@ function LocalCareSearchResults({ state, onRetry }: { state: LocalCareSearchStat
                             <p className="text-xs font-black leading-5 text-neutral-950">{place.name}</p>
                             {state.requiresOpeningHoursVerification ? <p className="text-[11px] font-black text-amber-800">{place.open24HoursVerified ? copy("공개 운영시간: 24시간 · 현재 진료는 전화 확인") : copy("야간·24시간 진료 미확인")}</p> : null}
                             <p className="mt-0.5 text-[10px] font-black text-indigo-700">
-                                {place.source === "naver" ? copy("네이버 지역검색 결과") : copy("공개 위치 데이터 결과")}
+                                {place.source === "semas" ? <a href="https://www.data.go.kr/data/15083033/fileData.do" target="_blank" rel="noopener noreferrer" className="underline">{copy("소상공인시장진흥공단 상가정보")}</a> : place.source === "naver" ? copy("네이버 지역검색 결과") : copy("공개 위치 데이터 결과")}
                             </p>
                             <p className="mt-0.5 text-[11px] font-bold leading-4 text-neutral-600">
                                 {formatDistance(place.distanceMeters)}
@@ -874,7 +879,7 @@ function LocalCareSearchResults({ state, onRetry }: { state: LocalCareSearchStat
                                 </a>
                             ) : null}
                             {place.openingHours ? (
-                                <p className="mt-1 text-[10px] font-bold leading-4 text-neutral-500">영업시간 데이터: {place.openingHours}</p>
+                                <p className="mt-1 text-[10px] font-bold leading-4 text-neutral-500">{copy("영업시간")} · {place.openingHours}</p>
                             ) : null}
                         </div>
                     </div>
@@ -892,7 +897,7 @@ function LocalCareSearchResults({ state, onRetry }: { state: LocalCareSearchStat
                 </div>
             ))}
             <p className="text-[10px] font-bold leading-4 text-neutral-500">
-                주소나 지도 이름을 누르고 검색 결과에서 업체를 선택하면 상세 정보를 볼 수 있어요. 결과가 없으면 다른 지도를 선택해 주세요. 위치 보기는 공개 데이터의 좌표를 표시합니다. {state.category === "veterinary"
+                {copy("주소나 지도 이름을 누르고 검색 결과에서 업체를 선택하면 상세 정보를 볼 수 있어요. 결과가 없으면 다른 지도를 선택해 주세요. 위치 보기는 공개 데이터의 좌표를 표시합니다.")}{" "}{state.category === "veterinary"
                     ? copy("실제 진료 가능 여부와 야간·응급 운영은 전화로 확인해 주세요.")
                     : copy("실제 영업·예약 가능 여부와 반려견 이용 조건은 업체에 확인해 주세요.")}
             </p>
@@ -915,13 +920,14 @@ export default function ChatResponseExtras({
     questionContext,
 }: ChatResponseExtrasProps) {
     const copy = useCareTalkCopy();
+    const { locale } = useI18n();
     const [localCareSearch, setLocalCareSearch] = useState<LocalCareSearchState>({ status: "idle" });
     const widthClass = compact ? "max-w-[86%]" : "max-w-[82%]";
     const geoSearchCta = ctas?.find((cta) => cta.kind === "geo_vet_search");
     const localCareIntent = Boolean(geoSearchCta) || isLocalPetCarePrompt(questionContext);
     const visibleCtas = (ctas ?? []).filter((cta) => !localCareIntent || (
         cta.kind !== "geo_vet_search"
-        && !(cta.kind === "external_link" && cta.url?.startsWith("https://map.naver.com/p/search/"))
+        && !(cta.kind === "external_link" && cta.url?.startsWith("https://map.naver.com/p/search/") && !cta.placeQuery)
     ));
 
     const runLocalCareSearch = async ({
@@ -938,7 +944,7 @@ export default function ChatResponseExtras({
             status: "loading",
             category,
             label,
-            message: `위치 허용 창이 뜨면 허용해 주세요. 이어서 가까운 ${label} 후보를 찾아드려요.`,
+            message: locale === "en" ? `Allow location access to find nearby ${copy(label).toLowerCase()}.` : `위치 허용 창이 뜨면 허용해 주세요. 이어서 가까운 ${label} 후보를 찾아드려요.`,
             fallbackUrl,
         });
         try {
@@ -1057,9 +1063,9 @@ export default function ChatResponseExtras({
                             <>
                                 <i className={`fa-solid ${cta.icon || "fa-arrow-up-right-from-square"} text-indigo-600`} aria-hidden="true" />
                                 <span className="min-w-0 flex-1">
-                                    <span className="block">{cta.label}</span>
+                                    <span className="block">{copy(cta.label)}</span>
                                     {cta.helperText ? (
-                                        <span className="mt-0.5 block text-[10px] font-bold leading-4 text-neutral-500">{cta.helperText}</span>
+                                        <span className="mt-0.5 block text-[10px] font-bold leading-4 text-neutral-500">{copy(cta.helperText)}</span>
                                     ) : null}
                                 </span>
                                 {cta.kind === "internal_link" ? <i className="fa-solid fa-chevron-right text-[9px] text-indigo-500" aria-hidden="true" /> : null}
