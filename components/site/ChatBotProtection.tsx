@@ -48,5 +48,5 @@ export function useChatBotProtection(open: boolean, accessToken?: string) {
         title={copy("상담 보안 확인")} description={copy("자동으로 반복되는 요청을 막기 위한 확인이에요.")}
         unavailableMessage={copy("상담 보안 확인을 준비 중입니다. 잠시 후 다시 이용해 주세요.")}
         onTokenChange={onTokenChange} resetKey={resetKey} /> : null);
-    return { consume, refresh, clearToken, challenge, ready: authenticated || policy !== null || unavailable };
+    return { consume, refresh, clearToken, challenge, pending: !authenticated && !policy && !unavailable, ready: authenticated || policy !== null || unavailable };
 }

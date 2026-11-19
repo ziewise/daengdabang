@@ -121,6 +121,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
     const requestSequenceRef = useRef(0);
     const activeRequestRef = useRef<AbortController | null>(null);
     const activeQuestionRef = useRef("");
+    const waitingForSecurity = useRef<{ text: string; owner: string } | null>(null);
     const [requestNotice, setRequestNotice] = useState("");
     const [recovering, setRecovering] = useState(false);
     const [streamStage, setStreamStage] = useState<ShopChatStreamStage>("queued");
@@ -312,6 +313,11 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
         }
         if (recovering) { setRequestNotice("이전 요청의 답변을 기다리거나 먼저 멈춰 주세요."); return false; }
         if (!trimmed || inFlightRef.current) return false;
+        if (botProtection.pending) {
+            waitingForSecurity.current = { text: trimmed, owner: conversationOwnerKey };
+            setInput(trimmed);
+            return false;
+        }
         const security = botProtection.consume();
         if (!security.allowed) {
             setRequestNotice(security.message);
@@ -464,6 +470,20 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
         // ask uses the hydrated owner and current transcript; identity guard prevents a second send.
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hydrated, botProtection.ready, loading, initialQuestion]);
+
+    useEffect(() => {
+        const pending = waitingForSecurity.current;
+        if (!pending) return;
+        if (!open || pending.owner !== conversationOwnerKey || input.trim() !== pending.text) {
+            waitingForSecurity.current = null;
+            return;
+        }
+        if (!hydrated || botProtection.pending || loading) return;
+        waitingForSecurity.current = null;
+        void ask(pending.text);
+        // ask uses the current transcript and still enforces the security policy.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [open, conversationOwnerKey, input, hydrated, botProtection.pending, loading]);
 
     const submit = (event: FormEvent) => {
         event.preventDefault();
@@ -706,7 +726,7 @@ export default function ChatWidget({ isMobile = false, launcherHidden = false, o
                             ) : (
                                 <button
                                     type="submit"
-                                    disabled={loading || sessionComplete || generationReferences.isUploading || generationReferences.hasUploadErrors}
+                                    disabled={loading || sessionComplete || botProtection.pending || generationReferences.isUploading || generationReferences.hasUploadErrors}
                                     className={`${styles.sendButton} flex h-10 w-10 shrink-0 items-center justify-center disabled:opacity-50`}
                                     aria-label={copy("전송")}
                                 >

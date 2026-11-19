@@ -4,6 +4,7 @@ import { useI18n } from "@/lib/i18n";
 import { useCareTalkCopy } from "@/hooks/useCareTalkCopy";
 import { FormEvent, useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
+import { placeDisplayName } from "@/lib/place-labels";
 import PlaceMapLinks, { PlaceAddressLink } from "@/components/site/PlaceMapLinks";
 import { placeMapLinks } from "@/lib/place-map-links";
 import { localVetQuery, needsVetHoursCheck } from "@/lib/local-vet-query";
@@ -194,6 +195,7 @@ function formatDistance(meters: number) {
 
 const EVIDENCE_SEOUL_OFFSET_MS = 9 * 60 * 60 * 1000;
 const NON_EVIDENCE_RESEARCH_MODES = new Set([
+    "catalog",
     "none",
     "scope-guard",
     "map-search",
@@ -864,7 +866,7 @@ function LocalCareSearchResults({ state, onRetry }: { state: LocalCareSearchStat
                             {index + 1}
                         </span>
                         <div className="min-w-0 flex-1">
-                            <p className="text-xs font-black leading-5 text-neutral-950">{place.name}</p>
+                            <p className="text-xs font-black leading-5 text-neutral-950">{placeDisplayName(place.name, locale)}</p>
                             {state.requiresOpeningHoursVerification ? <p className="text-[11px] font-black text-amber-800">{place.open24HoursVerified ? copy("공개 운영시간: 24시간 · 현재 진료는 전화 확인") : copy("야간·24시간 진료 미확인")}</p> : null}
                             <p className="mt-0.5 text-[10px] font-black text-indigo-700">
                                 {place.source === "semas" ? <a href="https://www.data.go.kr/data/15083033/fileData.do" target="_blank" rel="noopener noreferrer" className="underline">{copy("소상공인시장진흥공단 상가정보")}</a> : place.source === "naver" ? copy("네이버 지역검색 결과") : copy("공개 위치 데이터 결과")}

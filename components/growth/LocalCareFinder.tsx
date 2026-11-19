@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { ddbApiBase } from "@/lib/customer-api";
 import { trackStorefrontEvent } from "@/lib/storefront-analytics";
+import { placeDisplayName } from "@/lib/place-labels";
 import PlaceMapLinks, { PlaceAddressLink } from "@/components/site/PlaceMapLinks";
 import { CATEGORIES, buildNaverMapUrl, type CategoryOption, type LocalCareCategory } from "@/lib/growth-display-data";
 export { CATEGORIES, buildNaverMapUrl, type CategoryOption, type LocalCareCategory } from "@/lib/growth-display-data";
@@ -73,7 +74,7 @@ export function safePlaces(value: unknown, category: CategoryOption): LocalCareP
 }
 
 export default function LocalCareFinder() {
-    const { menuLabel: labelText } = useI18n();
+    const { locale, menuLabel: labelText } = useI18n();
     const copy = useCareTalkCopy();
     const [selectedCategory, setSelectedCategory] = useState<LocalCareCategory>("veterinary");
     const [coordinates, setCoordinates] = useState<Coordinates | null>(null);
@@ -253,7 +254,7 @@ export default function LocalCareFinder() {
                                                 <div className="min-w-0">
                                                     <div className="flex items-center gap-2">
                                                         <span className="dw-place-no shrink-0">{index + 1}</span>
-                                                        <h4 className="dw-place-name truncate">{place.name}</h4>
+                                                        <h4 className="dw-place-name truncate">{placeDisplayName(place.name, locale)}</h4>
                                                         <span className="dw-place-dist shrink-0">{copy(formatDistance(place.distanceMeters))}</span>
                                                     </div>
                                                     {place.source === "semas" ? <a href="https://www.data.go.kr/data/15083033/fileData.do" target="_blank" rel="noopener noreferrer" className="text-[10px] font-bold text-neutral-500 underline">{copy("소상공인시장진흥공단 상가정보")}</a> : null}
