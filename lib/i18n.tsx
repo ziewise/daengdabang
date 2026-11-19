@@ -14,7 +14,12 @@ export type Locale = "ko" | "en";
 
 const STORAGE_KEY = "daengdabang.locale";
 
-type EnglishProduct = { name: string; description: string; options?: Record<string, string> };
+type EnglishProduct = {
+    name: string;
+    description: string;
+    options?: Record<string, string>;
+    detailSource?: import("./catalog/english-detail-sections").EnglishDetailSource;
+};
 type EnglishEdition = Record<string, EnglishProduct>;
 type NamedProduct = Pick<CatalogProduct, "name"> & Partial<Pick<CatalogProduct, "folder" | "brandEn" | "brandKo">>;
 const storefrontEnglishLabels: Readonly<Record<string, string>> = storefrontLabels;

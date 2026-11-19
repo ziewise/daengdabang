@@ -8,7 +8,7 @@ import type { CatalogProduct } from "@/lib/catalog";
 import { useI18n } from "@/lib/i18n";
 import { openChatWidget } from "@/lib/chat-widget-events";
 import ProductDeliveryReturnPolicy from "@/components/products/detail/ProductDeliveryReturnPolicy";
-import { englishDetailSections } from "@/lib/catalog/english-detail-sections";
+import { englishDetailPhotos, englishDetailSections } from "@/lib/catalog/english-detail-sections";
 import { getProductDetailContent } from "@/lib/catalog/product-detail-content";
 // 후기 탭(2026-11-17 사용자 "하나의 후기 탭에서 나눠지게") — 댕다방 구매 후기(PurchaseReviews) | 네이버 스토어 후기(ReviewContent)
 // 10-25 크레파스 시안(ProductOwnReviews)은 개발 서버 + ?rvpreview=1 + 웹 화면에서만 — 배포 빌드에는 안 보임
@@ -165,16 +165,21 @@ function DetailContent({ product: p }: { product: CatalogProduct }) {
     const supplierOriginal = p.supplierCatalogSource === "jsk_approved_account" && Boolean(p.supplierGoodsNo);
     const original = supplierOriginal ? undefined : getProductDetailContent(p.folder);
     const translation = locale === "en" ? englishProduct(p.folder) : undefined;
-    const content = original && locale === "en"
-        ? englishDetailSections(original, translation?.description || "")
+    const source = translation?.detailSource;
+    const isEnglish = locale === "en";
+    const storeEdited = !!source?.verifiedDescription && source.verifiedDescription !== translation?.description;
+    const sourceLink = source?.kind !== "supplier" && source?.url?.startsWith("https://") ? source.url : "";
+    const content = isEnglish
+        ? englishDetailSections({ summary: "", features: [], sourceUrl: sourceLink, sourceLabel: p.brandEn }, translation?.description ?? "")
         : original;
+    const englishPhotos = isEnglish ? englishDetailPhotos(p, source) : undefined;
     const displayName = productName(p);
     const heroImage = p.image ?? details[0] ?? "";
     const specifications = content?.specifications ?? content?.specs ?? [];
     const careItems = typeof content?.care === "string" ? [content.care] : (content?.care ?? []);
     const cautionItems = [...(content?.cautions ?? []), ...(content?.safety ? [content.safety] : [])];
 
-    if (supplierOriginal) {
+    if (supplierOriginal && !isEnglish) {
         return <SupplierDetailContent product={p} />;
     }
 
@@ -199,17 +204,19 @@ function DetailContent({ product: p }: { product: CatalogProduct }) {
         const visualIndices = (content.visualDetailIndices ?? details.map((_, index) => index))
             .filter((index) => index >= 0 && index < details.length)
             .slice(0, 6);
-        const featureVisuals = visualIndices.map((index) => details[index]);
+        const featureVisuals = englishPhotos?.images ?? visualIndices.map((index) => details[index]);
         const usedVisualIndices = new Set(visualIndices);
-        const remainingDetails = details.filter((_, index) => !usedVisualIndices.has(index));
+        const remainingDetails = isEnglish ? [] : details.filter((_, index) => !usedVisualIndices.has(index));
 
         return (
-            <article lang={locale} className="mx-auto max-w-5xl overflow-hidden bg-white" data-product-detail-copy data-visual-story>
+            <article lang={locale} className="mx-auto max-w-5xl overflow-hidden bg-white" data-product-detail-copy data-visual-story data-detail-source={source?.kind}>
+                {englishPhotos?.lead && <Image src={englishPhotos.lead} alt={displayName} width={860} height={500}
+                    sizes="(max-width: 860px) 100vw, 860px" className="mx-auto block h-auto w-full max-w-[860px]" priority />}
                 <header className="grid min-h-[520px] md:grid-cols-[1.08fr_0.92fr]">
                     <div className="flex min-h-[360px] items-center justify-center bg-neutral-100 p-6 md:min-h-[520px] md:p-10">
                         <Image
                             src={heroImage}
-                            alt={`${displayName} 제품 이미지`}
+                            alt={isEnglish ? displayName : `${displayName} 제품 이미지`}
                             width={1200}
                             height={1000}
                             sizes="(max-width: 768px) 100vw, 55vw"
@@ -218,22 +225,32 @@ function DetailContent({ product: p }: { product: CatalogProduct }) {
                         />
                     </div>
                     <div className="flex flex-col justify-center px-6 py-12 text-white md:px-12" style={{ backgroundColor: theme.dark }}>
-                        <p className="text-xs font-black tracking-[0.22em]" style={{ color: theme.accent }}>OFFICIAL PRODUCT GUIDE</p>
+                        <p className="text-xs font-black tracking-[0.22em]" style={{ color: theme.accent }}>{isEnglish && (!sourceLink || storeEdited) ? "PRODUCT GUIDE" : "OFFICIAL PRODUCT GUIDE"}</p>
                         <h3 className="mt-4 break-keep text-3xl font-black leading-tight tracking-tight md:text-5xl">{displayName}</h3>
                         <p className="mt-6 break-keep text-base font-bold leading-8 text-white/80 md:text-lg">{content.summary}</p>
-                        <a
+                        {isEnglish && sourceLink && source?.excerpt && <blockquote
+                            className="mt-5 border-l-2 border-white/50 pl-4 text-sm font-bold leading-6 text-white/90">
+                            “{source.excerpt}”
+                        </blockquote>}
+                        {content.sourceUrl && <a
                             href={content.sourceUrl}
                             target="_blank"
                             rel="noreferrer"
                             className="mt-8 inline-flex w-fit items-center gap-2 border-b border-white/60 pb-1 text-xs font-black text-white transition hover:border-white"
                         >
-                            {locale === "en" ? "Manufacturer’s original guide" : <>{content.sourceLabel ?? "제조사 공식 상품 정보"} {labelText("원문")}</>}
+                            {isEnglish ? (source?.kind === "manufacturer-model" ? "Manufacturer’s model guide" : "Manufacturer’s English guide") : <>{content.sourceLabel ?? "제조사 공식 상품 정보"} {labelText("원문")}</>}
                             <i className="fa-solid fa-arrow-up-right-from-square text-[10px]" aria-hidden="true" />
-                        </a>
+                        </a>}
+                        {isEnglish && sourceLink && source?.title && <p className="mt-2 text-xs font-bold text-white/80">{source.title}</p>}
+                        {isEnglish && source?.references?.filter(ref => ref.url.startsWith("https://")).map(ref => (
+                            <a key={ref.url} href={ref.url} target="_blank" rel="noreferrer"
+                                className="mt-3 w-fit border-b border-white/60 text-xs font-black text-white">{ref.title}</a>
+                        ))}
+                        {isEnglish && source?.kind === "supplier" && <p className="mt-6 text-xs font-bold text-white/80">From the product packaging or supplier listing</p>}
                     </div>
                 </header>
 
-                <section className="px-5 py-12 text-white md:px-10 md:py-16" style={{ backgroundColor: theme.dark }}>
+                {(featureVisuals.length > 0 || content.features.length > 0) && <section className="px-5 py-12 text-white md:px-10 md:py-16" style={{ backgroundColor: theme.dark }}>
                     <div className="mx-auto mb-10 flex w-fit items-center gap-1 rounded-full bg-white/80 p-1 text-[11px] font-black text-neutral-700 md:text-sm">
                         <span className="rounded-full bg-white px-4 py-2 shadow-sm">{labelText("핵심 기능")}</span>
                         <span className="px-4 py-2">{labelText("사이즈·소재")}</span>
@@ -245,7 +262,7 @@ function DetailContent({ product: p }: { product: CatalogProduct }) {
                     {featureVisuals.length > 0 && (
                         <div className="mt-10 grid gap-3 md:mt-14 md:grid-cols-2">
                             {featureVisuals.map((src, index) => {
-                                const label = locale === "en" ? "Manufacturer photo " + (index + 1) : p.detailImageLabels?.[src] ?? `제조사 공식 제품 이미지 ${index + 1}`;
+                                const label = isEnglish ? displayName + " · " + (index + 1) : p.detailImageLabels?.[src] ?? `제조사 공식 제품 이미지 ${index + 1}`;
                                 return (
                                     <figure key={src} className="overflow-hidden bg-white/10">
                                         <Image
@@ -258,7 +275,7 @@ function DetailContent({ product: p }: { product: CatalogProduct }) {
                                             priority={index === 0}
                                         />
                                         <figcaption className="border-t border-white/15 px-5 py-4 text-sm font-black text-white/90">
-                                            <span className="mr-2 text-[10px] tracking-[0.16em]" style={{ color: theme.accent }}>OFFICIAL {String(index + 1).padStart(2, "0")}</span>
+                                            <span className="mr-2 text-[10px] tracking-[0.16em]" style={{ color: theme.accent }}>{isEnglish ? "PHOTO" : "OFFICIAL"} {String(index + 1).padStart(2, "0")}</span>
                                             {label}
                                         </figcaption>
                                     </figure>
@@ -275,9 +292,9 @@ function DetailContent({ product: p }: { product: CatalogProduct }) {
                             </li>
                         ))}
                     </ol>
-                </section>
+                </section>}
 
-                <section className="px-6 py-12 md:px-12 md:py-16" style={{ backgroundColor: theme.paper }}>
+                {(specifications.length > 0 || !!content.composition?.length || !!content.usage?.length || careItems.length > 0) && <section className="px-6 py-12 md:px-12 md:py-16" style={{ backgroundColor: theme.paper }}>
                     <p className="text-xs font-black tracking-[0.2em]" style={{ color: theme.dark }}>PRODUCT DETAILS</p>
                     <div className="mt-5 grid gap-10 md:grid-cols-2 md:gap-14">
                         {specifications.length > 0 && <EditorialList title={labelText("사이즈·사양")} items={specifications} accent={theme.accent} />}
@@ -285,7 +302,7 @@ function DetailContent({ product: p }: { product: CatalogProduct }) {
                         {content.usage && content.usage.length > 0 && <EditorialList title={labelText("사용·급여 방법")} items={content.usage} accent={theme.accent} />}
                         {careItems.length > 0 && <EditorialList title={labelText("관리 방법")} items={careItems} accent={theme.accent} />}
                     </div>
-                </section>
+                </section>}
 
                 {remainingDetails.length > 0 && (
                     <section className="grid gap-1 bg-white md:grid-cols-2">
@@ -398,9 +415,7 @@ function AppDetailFold({ children }: { children: ReactNode }) {
 }
 
 function SupplierDetailContent({ product: p }: { product: CatalogProduct }) {
-    const { t, locale, productName, englishProduct } = useI18n();
-    const [originalsOpen, setOriginalsOpen] = useState(false);
-    const english = locale === "en" ? englishProduct(p.folder) : undefined;
+    const { t, locale } = useI18n();
     const details = p.details ?? [];
 
     if (details.length === 0 && !p.supplierDetailText) {
@@ -413,18 +428,14 @@ function SupplierDetailContent({ product: p }: { product: CatalogProduct }) {
             className="mx-auto max-w-[860px] bg-white"
             data-supplier-original-detail={p.supplierGoodsNo}
         >
-            {english && <div className="whitespace-pre-wrap break-words px-4 py-6 text-sm leading-7">{english.description}</div>}
-            {locale === "en" && details.length > 0 && <button type="button" aria-expanded={originalsOpen}
-                className="mb-4 inline-flex h-11 items-center gap-2 rounded-md border border-neutral-200 bg-white px-5 text-sm font-black shadow-sm transition"
-                onClick={() => setOriginalsOpen(value => !value)}>{originalsOpen ? t("fold") : "View original product images (Korean)"}</button>}
-            {(locale === "en" && !originalsOpen ? (p.image ? [p.image] : []) : details).map((src, index) => {
+            {details.map((src, index) => {
                 // Match metadata by source URL without sorting or adding other assets.
                 const metadata = p.supplierDetailImages?.find((image) => image.src === src);
                 const width = metadata?.width;
                 const height = metadata?.height;
                 const knownDimensions = Number.isInteger(width) && Number.isInteger(height)
                     && Number(width) > 0 && Number(height) > 0;
-                const alt = locale === "en" ? productName(p) + " · " + (index + 1) : metadata?.alt ?? `${p.name} 상세정보 ${index + 1}`;
+                const alt = metadata?.alt ?? `${p.name} 상세정보 ${index + 1}`;
 
                 return knownDimensions ? (
                     <Image
@@ -442,7 +453,7 @@ function SupplierDetailContent({ product: p }: { product: CatalogProduct }) {
                     <img key={`${index}:${src}`} src={src} alt={alt} loading="lazy" className="block h-auto w-full" />
                 );
             })}
-            {locale !== "en" && p.supplierDetailText && (
+            {p.supplierDetailText && (
                 <div className="whitespace-pre-wrap break-words px-4 py-6 text-sm leading-7">{p.supplierDetailText}</div>
             )}
         </article>

@@ -1,5 +1,24 @@
 import type { ProductDetailContent } from "./product-detail-content";
 
+export type EnglishDetailSource = {
+    kind: "manufacturer" | "manufacturer-model" | "supplier";
+    title: string;
+    url?: string;
+    leadImage?: string;
+    verifiedDescription?: string;
+    excerpt?: string;
+    references?: readonly { title: string; url: string }[];
+};
+
+export function englishDetailPhotos(product: {
+    image?: string; details?: readonly string[]; gallery?: readonly string[];
+}, source?: EnglishDetailSource) {
+    const details = product.details ?? [];
+    const lead = source?.leadImage && details.includes(source.leadImage) ? source.leadImage : undefined;
+    const images = [...new Set([...details.filter(path => /\/official-visual-[\w-]+\./i.test(path)), ...(product.gallery ?? [])])];
+    return { lead, images: images.filter(src => src !== lead && src !== product.image).slice(0, 6) };
+}
+
 const sections = {
     Features: "features", Specifications: "specifications", "Materials and ingredients": "composition",
     Use: "usage", Care: "care", "Important information": "cautions", Safety: "cautions",
