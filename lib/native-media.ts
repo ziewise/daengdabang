@@ -1,8 +1,8 @@
 const ORIGIN = "https://www.daengdabang.com";
 const BUNDLED = ["/images/ui/", "/images/brand/", "/images/breeds/", "/images/pwa/", "/fonts/", "/_next/", "/ai/",
     "/images/products/card/",
-    "/images/pet-companion/cute-v4-breeds/posters/",
-    "/images/logo-black-poodle-v2.png", "/images/wordmark.png"];
+    // 로고 원본 PNG 두 개는 앱 묶음에서 뺌(2026-11-19) — 혹시 남은 참조는 웹 주소로
+    "/images/pet-companion/cute-v4-breeds/posters/"];
 
 export function nativeMediaUrl(value: string): string {
     return value.startsWith("/") && !value.startsWith("//") && !BUNDLED.some(prefix => value.startsWith(prefix))

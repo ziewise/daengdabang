@@ -43,7 +43,7 @@ export default function Header() {
                 </button>
                 <Link href="/" className="flex min-w-0 shrink-0 items-center gap-1.5" aria-label="댕다방 홈">
                     <Image
-                        src="/images/logo-black-poodle-v2.png"
+                        src="/images/brand/logo-black-poodle-v2-240.webp"
                         alt=""
                         width={76}
                         height={76}
@@ -51,7 +51,7 @@ export default function Header() {
                         priority
                     />
                     <Image
-                        src="/images/wordmark.png"
+                        src="/images/brand/wordmark-360.webp"
                         alt="댕다방"
                         width={112}
                         height={32}

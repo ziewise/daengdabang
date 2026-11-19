@@ -83,7 +83,7 @@ export default function PrelaunchNotice() {
             onClick={(event) => { if (event.target === event.currentTarget) close(); }}>
             <div className={styles.card}>
                 <header className={styles.header}>
-                    <Image src="/images/wordmark.png" alt="댕다방" width={100} height={40} className={styles.wordmark} />
+                    <Image src="/images/brand/wordmark-360.webp" alt="댕다방" width={360} height={142} className={styles.wordmark} />
                     <button type="button" className={styles.close} onClick={close} aria-label={english ? "Close opening notice" : "오픈 안내 닫기"}>
                         <svg width="19" height="19" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" /></svg>
                     </button>
@@ -94,7 +94,7 @@ export default function PrelaunchNotice() {
                     <svg className={styles.sparkle} width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M16 2v28M2 16h28M6 6l20 20M26 6 6 26" stroke="currentColor" strokeWidth="3" strokeLinecap="round" /></svg>
                     <div className={styles.shopWindow}>
                         <div className={styles.awning} />
-                        <Image src="/images/logo-black-poodle-v2.png" alt="" width={200} height={200} className={styles.poodle} />
+                        <Image src="/images/brand/logo-black-poodle-v2-512.webp" alt="" width={512} height={512} className={styles.poodle} />
                         <span className={styles.windowSill} />
                     </div>
                     <span className={styles.littleHeart}>♡</span>

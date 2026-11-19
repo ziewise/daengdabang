@@ -54,8 +54,7 @@ const bundledFiles = [
     "apple-icon.png",
     "icon.png",
     "manifest.webmanifest",
-    "images/logo-black-poodle-v2.png",
-    "images/wordmark.png",
+    // 로고 원본 PNG 두 개(1.41MB · 0.32MB)는 뺌(2026-11-19) — 앱 화면은 images/brand 의 줄인 webp 를 씀, 웹 · 링크 미리보기용 원본은 그대로
     // PC 로그인 영상(auth/login 화면이 묶음에 들어가 있어 참조 검사에 걸림) — 워터마크 지운 1.9MB 새 영상(2026-10-28)
     // 예전 videos/login.mp4(2.5MB)는 뺌 → 앱 묶음 0.6MB 감소
     "videos/login-clean-v1.mp4",

@@ -147,7 +147,8 @@ export default function StickerLogin() {
                     {/* 머리 — 간결: 댕다방 글자 로고 + 한 줄(협업자 문구). 꾸밈 없이 입력칸에 눈이 가게 */}
                     {!checkoutRedirect ? (
                         <div className="flex flex-col items-center pb-1 pt-3 text-center">
-                            <Image src="/images/wordmark.png" alt={labelText("댕다방")} width={400} height={157} priority className="h-11 w-auto" />
+                            {/* 글자 로고 — 원본 PNG(316KB) 대신 줄인 webp(2026-11-19 앱 묶음 줄이기, 원본 파일은 그대로) */}
+                            <Image src="/images/brand/wordmark-360.webp" alt={labelText("댕다방")} width={360} height={142} priority className="h-11 w-auto" />
                             <p className="ah-light mt-3 text-[13px]" style={{ color: TEXT_SOFT }}>{labelText("우리 댕댕이의 매일이 특별해지는 곳")}</p>
                         </div>
                     ) : null}
