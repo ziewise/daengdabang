@@ -15,7 +15,7 @@ test("review tab is a single tab with a 댕다방 | 네이버 source switch", ()
     assert.match(tabs, /onClick=\{\(\) => pickReviewView\("own"\)\}/);
     assert.match(tabs, /onClick=\{\(\) => pickReviewView\("external"\)\}/);
     // 두 쪽 다 늘 그려 두고 숨김만 바꿈(불러온 내용 · 다른 시즌 링크 유지)
-    assert.match(tabs, /<PurchaseReviews productId=\{p\.id\} active=\{reviewsNear\} hidden=\{reviewView !== "own"\} onSummary=\{onOwnSummary\} \/>/);
+    assert.match(tabs, /<PurchaseReviews productId=\{p\.id\} folder=\{p\.folder\} active=\{reviewsNear\} hidden=\{reviewView !== "own"\} onSummary=\{onOwnSummary\} \/>/);
     assert.match(tabs, /<div data-store-reviews="" hidden=\{reviewView !== "external"\}>/);
     // 탭 숫자는 두 출처 후기 수의 합
     assert.match(tabs, /const totalReviews = externalCount \+ \(ownCount \?\? 0\);/);
