@@ -19,8 +19,8 @@ test("checkout uses one allowlisted payment-method contract", async () => {
     assert.match(paymentMethods, /isCheckoutPaymentMethodEnabled/);
     assert.match(paymentMethods, /return method !== "virtual_account";/);
     assert.match(paymentMethods, /checkoutPaymentMethodFromQuery/);
-    assert.match(paymentMethods, /isCheckoutPaymentMethod\(value\) && isCheckoutPaymentMethodEnabled\(value\) \? value : "card"/);
-    assert.match(paymentMethods, /const availableMethod = isCheckoutPaymentMethodEnabled\(method\) \? method : "card"/);
+    assert.match(paymentMethods, /isCheckoutPaymentMethod\(value\) && isCheckoutPaymentMethodEnabled\(value, naverPayEnabled\) \? value : "card"/);
+    assert.match(paymentMethods, /const availableMethod = checkoutPaymentMethodFromQuery\(method, naverPayEnabled\)/);
     assert.match(paymentMethods, /`\/checkout\?payment=\$\{encodeURIComponent\(availableMethod\)\}`/);
     assert.match(paymentMethods, /method === "toss_pay"\) return \{ flowMode: "DIRECT", easyPay: "TOSSPAY" \}/);
     assert.match(paymentMethods, /method === "naver_pay"\) return \{ flowMode: "DIRECT", easyPay: "NAVERPAY" \}/);
@@ -42,6 +42,7 @@ test("product and cart purchase actions preserve the selected method through log
     assert.match(simplePay, /토스페이로 주문서 이동/);
     assert.match(simplePay, /휴대폰 결제로 주문서 이동/);
     assert.match(simplePay, /네이버페이로 주문서 이동/);
+    assert.match(simplePay, /\{naverPayEnabled && <button[\s\S]*?data-quick-pay="naver_pay"/);
     assert.match(simplePay, /카카오페이로 주문서 이동/);
     // 2026-11-11 바로 구매는 바로 구매 전용 주문서(buy=now)로 — 결제수단은 그대로 넘김
     assert.match(optionSheet, /buyNowCheckoutHref\(preferredPayment\)/);
@@ -49,7 +50,7 @@ test("product and cart purchase actions preserve the selected method through log
     // 2026-11-17 사용자 "구매하기 페이지로 넘어가게" — 상품 구매 창은 구매하기 하나로 주문서 이동, 결제수단은 주문서에서 고름
     assert.match(optionSheet, /onClick=\{\(\) => confirm\("card"\)\}/);
     assert.doesNotMatch(optionSheet, /<SimplePayButtons/);
-    assert.match(cart, /checkoutHref\(preferredPayment\)/);
+    assert.match(cart, /checkoutHref\(preferredPayment, naverPayEnabled\)/);
     assert.match(cart, /encodeURIComponent\(nextCheckoutHref\)/);
     assert.match(cart, /onSelect=\{goCheckout\}/);
 });
@@ -84,8 +85,9 @@ test("checkout opens the Toss SDK only for a server-created order in the server'
     ]);
 
     assert.match(checkout, /CHECKOUT_PAYMENT_METHODS\.map/);
-    assert.match(checkout, /checkoutPaymentMethodFromQuery\(requestedMethod\)/);
-    assert.match(checkout, /isCheckoutPaymentMethodEnabled\(paymentMethod\)/);
+    assert.match(checkout, /checkoutPaymentMethodFromQuery\(requestedMethod, naverPayEnabled\)/);
+    assert.match(checkout, /isCheckoutPaymentMethodEnabled\(paymentMethod, availability\.naverPayEnabled\)/);
+    assert.match(checkout, /if \(method === "naver_pay" && !enabled\) return null/);
     assert.match(checkout, /data-payment-method=\{method\}/);
     assert.match(checkout, /data-payment-availability=\{enabled \? "enabled" : "review_required"\}/);
     assert.match(checkout, /disabled=\{!enabled\}/);
@@ -109,7 +111,7 @@ test("checkout opens the Toss SDK only for a server-created order in the server'
     assert.match(checkout, /order\.amount !== total/);
     assert.match(checkout, /amount: \{ currency: order\.currency, value: order\.amount \}/);
     assert.match(checkout, /method: "CARD"/);
-    assert.match(checkout, /card: tossCardOptions\(paymentMethod\)/);
+    assert.match(checkout, /card: tossCardOptions\(paymentMethod, availability\.naverPayEnabled\)/);
     assert.match(checkout, /method: "TRANSFER"/);
     assert.match(checkout, /method: "MOBILE_PHONE"/);
     assert.match(checkout, /successUrl: tossCallbackUrl\("\/checkout\/toss\/success\/"\)/);

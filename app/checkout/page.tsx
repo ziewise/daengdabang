@@ -78,6 +78,7 @@ import {
     type CheckoutDeliveryQuote,
 } from "@/lib/checkout-shipping";
 import { loadTossCheckoutAvailability } from "@/lib/toss-checkout-availability";
+import { useNaverPayEnabled } from "@/hooks/useNaverPayEnabled";
 import {
     CHECKOUT_PAYMENT_METHODS,
     checkoutPaymentMethodFromQuery,
@@ -193,7 +194,9 @@ export default function CheckoutPage() {
     } | null>(null);
     // 결제 모드가 바뀐 것을 알았을 때 배송 견적(= 화면 안내 모드)을 다시 받는 순번
     const [quoteRefresh, setQuoteRefresh] = useState(0);
-    const [paymentMethod, setPaymentMethod] = useState<CheckoutPaymentMethod>("card");
+    const naverPayEnabled = useNaverPayEnabled();
+    const [requestedMethod, setPaymentMethod] = useState<string | null>("card");
+    const paymentMethod = checkoutPaymentMethodFromQuery(requestedMethod, naverPayEnabled);
     const [cashReceiptType, setCashReceiptType] = useState<"소득공제" | "지출증빙">("소득공제");
     const [submitting, setSubmitting] = useState(false);
     const [nativePaymentUrl, setNativePaymentUrl] = useState("");
@@ -232,18 +235,17 @@ export default function CheckoutPage() {
     }, []);
 
     useEffect(() => {
-        const requestedMethod = new URLSearchParams(window.location.search).get("payment");
         // eslint-disable-next-line react-hooks/set-state-in-effect -- URL handoff is applied after hydration to avoid a server/client mismatch.
-        setPaymentMethod(checkoutPaymentMethodFromQuery(requestedMethod));
+        setPaymentMethod(new URLSearchParams(window.location.search).get("payment"));
     }, []);
 
     const accessToken = user?.apiAccessToken || getCustomerToken();
     const signedInForPayment = Boolean(user && accessToken);
-    const loginHref = `/auth/login?redirect=${encodeURIComponent(checkoutHref(paymentMethod))}`;
-    const signupHref = `/auth/signup?redirect=${encodeURIComponent(checkoutHref(paymentMethod))}`;
+    const loginHref = `/auth/login?redirect=${encodeURIComponent(checkoutHref(paymentMethod, naverPayEnabled))}`;
+    const signupHref = `/auth/signup?redirect=${encodeURIComponent(checkoutHref(paymentMethod, naverPayEnabled))}`;
     // 비회원 결제 — 로그인 안 했고 · 비회원을 골랐고 · 서버가 연결됐을 때만
     const guestCheckout = !signedInForPayment && guestMode && guestFeature;
-    const directEasyPay = tossCardOptions(paymentMethod).flowMode === "DIRECT";
+    const directEasyPay = tossCardOptions(paymentMethod, naverPayEnabled).flowMode === "DIRECT";
     const quoteRequestKey = accessToken
         ? `${accessToken}:${total}:${deliveryDraft.deliveryZone}:${quoteRefresh}`
         : "";
@@ -382,14 +384,6 @@ export default function CheckoutPage() {
     const submit = async (event: FormEvent) => {
         event.preventDefault();
         if (lines.length === 0 || submitting || inventoryBlocked) return;
-        if (!isCheckoutPaymentMethodEnabled(paymentMethod)) {
-            setPaymentMethod("card");
-            setDirectTermsAccepted(false);
-            setPaymentError(locale === "en"
-                ? "That payment method is not ready yet. Credit/debit card payment was selected instead."
-                : "해당 결제수단은 아직 준비 중입니다. 신용·체크카드로 다시 선택했습니다.");
-            return;
-        }
         if ((!user || !accessToken) && !guestCheckout) {
             setPaymentError(locale === "en"
                 ? "Sign in again before starting a payment."
@@ -401,9 +395,17 @@ export default function CheckoutPage() {
         setSubmitting(true);
         const availability = await loadTossCheckoutAvailability(accessToken || undefined);
         setSubmitting(false);
-        if (availability === "locked") {
+        if (availability.checkout === "locked") {
             setPaymentError("");
             setPrelaunchOpen(true);
+            return;
+        }
+        if (!isCheckoutPaymentMethodEnabled(paymentMethod, availability.naverPayEnabled)) {
+            setPaymentMethod("card");
+            setDirectTermsAccepted(false);
+            setPaymentError(locale === "en"
+                ? "This payment method is unavailable. Please choose another method."
+                : "해당 결제수단은 현재 사용할 수 없습니다. 다른 결제수단을 선택해 주세요.");
             return;
         }
         if (guestCheckout) {
@@ -525,7 +527,7 @@ export default function CheckoutPage() {
                 customerMobilePhone: order.delivery.phone,
             };
 
-            const sdkMethod = tossSdkPaymentMethod(paymentMethod);
+            const sdkMethod = tossSdkPaymentMethod(paymentMethod, availability.naverPayEnabled);
             if (sdkMethod === "TRANSFER") {
                 await payment.requestPayment({
                     ...commonRequest,
@@ -538,7 +540,7 @@ export default function CheckoutPage() {
                 await payment.requestPayment({
                     ...commonRequest,
                     method: "CARD",
-                    card: tossCardOptions(paymentMethod),
+                    card: tossCardOptions(paymentMethod, availability.naverPayEnabled),
                 });
             }
         } catch (error) {
@@ -757,8 +759,9 @@ export default function CheckoutPage() {
                         <legend id="checkout-payment-method-title" className="mb-3 block text-lg font-black text-neutral-950">{t("paymentMethod")}</legend>
                         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3" role="radiogroup" aria-label={t("paymentMethod")}>
                             {CHECKOUT_PAYMENT_METHODS.map((method) => {
+                                const enabled = isCheckoutPaymentMethodEnabled(method, naverPayEnabled);
+                                if (method === "naver_pay" && !enabled) return null;
                                 const copy = PAYMENT_OPTION_COPY[method];
-                                const enabled = isCheckoutPaymentMethodEnabled(method);
                                 const selected = enabled && paymentMethod === method;
                                 return (
                                     <button

@@ -204,14 +204,15 @@ test("a locked account gets the pre-launch notice and never creates an order or 
         source("lib/guest-order.ts"),
     ]);
     assert.match(availability, /\/api\/v1\/payments\/toss\/availability/);
-    assert.match(availability, /if \(!response\.ok\) return parseTossCheckoutAvailability\(response\.status, null\)/);
-    assert.match(availability, /catch \{\s*return "unknown";/);
+    assert.match(availability, /checkout: "unknown", naverPayEnabled: false/);
+    assert.match(availability, /if \(!response\.ok\) return unavailable/);
+    assert.match(availability, /catch \{\s*return unavailable;/);
     // customer-api is loaded in isolated test sandboxes that allow only known runtime imports.
     assert.match(api, /import type \{ TossPaidStatus, TossPaymentMode \} from "@\/lib\/toss-payment-mode"/);
     assert.doesNotMatch(api, /^import \{[^}]*\} from "@\/lib\/toss-payment-mode"/m);
     // Availability is checked before any member or guest order is created.
     const availabilityIndex = checkout.indexOf("await loadTossCheckoutAvailability(");
-    const lockedIndex = checkout.indexOf('if (availability === "locked")', availabilityIndex);
+    const lockedIndex = checkout.indexOf('if (availability.checkout === "locked")', availabilityIndex);
     const guestCreateIndex = checkout.indexOf("await createGuestTossOrder(");
     const memberCreateIndex = checkout.indexOf("await createTossTestOrder(");
     assert.ok(availabilityIndex > 0 && lockedIndex > availabilityIndex);
@@ -307,12 +308,12 @@ test("only uncertain confirmation responses remain in the same-payment retry sta
 });
 
 test("approved payment methods preserve selection and direct-wallet routing", () => {
-    for (const method of ["card", "transfer", "toss_pay", "phone", "naver_pay", "kakao_pay"]) {
+    for (const method of ["card", "transfer", "toss_pay", "phone", "kakao_pay"]) {
         assert.equal(isCheckoutPaymentMethodEnabled(method), true);
         assert.equal(checkoutPaymentMethodFromQuery(method), method);
         assert.equal(checkoutHref(method), `/checkout?payment=${method}`);
     }
-    for (const [method, easyPay] of [["toss_pay", "TOSSPAY"], ["naver_pay", "NAVERPAY"], ["kakao_pay", "KAKAOPAY"]]) {
+    for (const [method, easyPay] of [["toss_pay", "TOSSPAY"], ["kakao_pay", "KAKAOPAY"]]) {
         assert.equal(tossSdkPaymentMethod(method), "CARD");
         assert.deepEqual(tossCardOptions(method), { flowMode: "DIRECT", easyPay });
     }
@@ -324,6 +325,19 @@ test("approved payment methods preserve selection and direct-wallet routing", ()
     assert.equal(checkoutHref("virtual_account"), "/checkout?payment=card");
     assert.throws(() => tossSdkPaymentMethod("virtual_account"), /merchant review/);
     assert.throws(() => tossCardOptions("virtual_account"), /merchant review/);
+});
+
+test("Naver Pay stays hidden and unusable until the merchant enables it", () => {
+    assert.equal(isCheckoutPaymentMethodEnabled("naver_pay"), false);
+    assert.equal(checkoutPaymentMethodFromQuery("naver_pay"), "card");
+    assert.equal(checkoutHref("naver_pay"), "/checkout?payment=card");
+    assert.throws(() => tossSdkPaymentMethod("naver_pay"), /merchant review/);
+    assert.throws(() => tossCardOptions("naver_pay"), /merchant review/);
+    assert.equal(checkoutPaymentMethodFromQuery("naver_pay", true), "naver_pay");
+    assert.equal(checkoutHref("naver_pay", true), "/checkout?payment=naver_pay");
+    assert.equal(tossSdkPaymentMethod("naver_pay", true), "CARD");
+    assert.deepEqual(tossCardOptions("naver_pay", true), { flowMode: "DIRECT", easyPay: "NAVERPAY" });
+    assert.equal(isCheckoutPaymentMethodEnabled("virtual_account", true), false);
 });
 
 test("paid quantities are subtracted while newer quantities and other options remain", () => {

@@ -19,13 +19,14 @@ export type { QuickPaymentMethod } from "@/lib/payment-methods";
 
 type Props = {
     disabled?: boolean;
+    naverPayEnabled: boolean;
     onSelect: (method: QuickPaymentMethod) => void;
 };
 
 // 네 버튼 공통 — 같은 높이 · 둥근 알약 · 가운데 정렬
 const PILL = "flex h-12 min-w-0 items-center justify-center gap-1.5 rounded-full px-3 text-sm font-black transition disabled:cursor-not-allowed disabled:opacity-40";
 
-export default function SimplePayButtons({ disabled = false, onSelect }: Props) {
+export default function SimplePayButtons({ disabled = false, naverPayEnabled, onSelect }: Props) {
     const { locale } = useI18n();
 
     return (
@@ -66,7 +67,7 @@ export default function SimplePayButtons({ disabled = false, onSelect }: Props) 
                     <span className="break-keep text-center leading-tight">{locale === "en" ? "Mobile" : "휴대폰 결제"}</span>
                 </button>
                 {/* 네이버페이 — 네이버 초록 + 흰 원형 N 표시 */}
-                <button
+                {naverPayEnabled && <button
                     type="button"
                     onClick={() => onSelect("naver_pay")}
                     disabled={disabled}
@@ -76,7 +77,7 @@ export default function SimplePayButtons({ disabled = false, onSelect }: Props) 
                 >
                     <span aria-hidden="true" className="flex h-[18px] w-[18px] items-center justify-center rounded-full bg-white text-[10px] font-black leading-none text-[#03C75A]">N</span>
                     <span className="whitespace-nowrap">{locale === "en" ? "Pay" : "네이버페이"}</span>
-                </button>
+                </button>}
                 {/* 카카오페이 — 카카오 노랑 */}
                 <button
                     type="button"

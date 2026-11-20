@@ -13,7 +13,7 @@ test("cart leaves unavailable lines out of checkout instead of blocking every li
     assert.match(cart, /const unavailableLines = lines\.filter\(line => !line\.purchaseState\.purchasable\)/);
     // 결제 버튼 · 빠른 결제는 고른 상품이 있으면 열림(살 수 없는 상품 때문에 잠기지 않음)
     assert.match(cart, /disabled=\{selectedLines\.length === 0\}\n/);
-    assert.match(cart, /<SimplePayButtons disabled=\{selectedLines\.length === 0\} onSelect=\{goCheckout\} \/>/);
+    assert.match(cart, /<SimplePayButtons disabled=\{selectedLines\.length === 0\} naverPayEnabled=\{naverPayEnabled\} onSelect=\{goCheckout\} \/>/);
     assert.doesNotMatch(cart, /inventoryBlocked/);
     // 주문서로 가기 전에 살 수 없는 줄의 결제 표시를 끔(주문서의 막힘 검사는 그대로 둠)
     assert.match(cart, /lines\.filter\(line => line\.selectionBlocked\)\.forEach\(line => cart\.setSelected\(line\.product\.id, false, line\.color, line\.size\)\)/);

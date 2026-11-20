@@ -8,9 +8,12 @@
 import { ddbApiBase } from "@/lib/ddb-api-base";
 import { parseTossCheckoutAvailability, type TossCheckoutAvailability } from "@/lib/toss-payment-mode";
 
-export async function loadTossCheckoutAvailability(token?: string | null): Promise<TossCheckoutAvailability> {
+type CheckoutAvailability = { checkout: TossCheckoutAvailability; naverPayEnabled: boolean };
+const unavailable: CheckoutAvailability = { checkout: "unknown", naverPayEnabled: false };
+
+export async function loadTossCheckoutAvailability(token?: string | null): Promise<CheckoutAvailability> {
     const base = ddbApiBase().replace(/\/$/, "");
-    if (!base) return "unknown";
+    if (!base) return unavailable;
     try {
         const response = await fetch(`${base}/api/v1/payments/toss/availability`, {
             method: "GET",
@@ -20,9 +23,11 @@ export async function loadTossCheckoutAvailability(token?: string | null): Promi
                 ...(token ? { Authorization: `Bearer ${token}` } : {}),
             },
         });
-        if (!response.ok) return parseTossCheckoutAvailability(response.status, null);
-        return parseTossCheckoutAvailability(response.status, await response.json().catch(() => null));
+        if (!response.ok) return unavailable;
+        const body = await response.json();
+        const checkout = parseTossCheckoutAvailability(response.status, body);
+        return { checkout, naverPayEnabled: checkout !== "unknown" && body?.naverPayEnabled === true };
     } catch {
-        return "unknown";
+        return unavailable;
     }
 }

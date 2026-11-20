@@ -20,21 +20,22 @@ export function isCheckoutPaymentMethod(value: string | null): value is Checkout
     return Boolean(value && CHECKOUT_PAYMENT_METHODS.includes(value as CheckoutPaymentMethod));
 }
 
-export function isCheckoutPaymentMethodEnabled(method: CheckoutPaymentMethod) {
+export function isCheckoutPaymentMethodEnabled(method: CheckoutPaymentMethod, naverPayEnabled = false) {
+    if (method === "naver_pay") return naverPayEnabled;
     return method !== "virtual_account";
 }
 
-export function checkoutPaymentMethodFromQuery(value: string | null): CheckoutPaymentMethod {
-    return isCheckoutPaymentMethod(value) && isCheckoutPaymentMethodEnabled(value) ? value : "card";
+export function checkoutPaymentMethodFromQuery(value: string | null, naverPayEnabled = false): CheckoutPaymentMethod {
+    return isCheckoutPaymentMethod(value) && isCheckoutPaymentMethodEnabled(value, naverPayEnabled) ? value : "card";
 }
 
-export function checkoutHref(method: CheckoutPaymentMethod = "card") {
-    const availableMethod = isCheckoutPaymentMethodEnabled(method) ? method : "card";
+export function checkoutHref(method: CheckoutPaymentMethod = "card", naverPayEnabled = false) {
+    const availableMethod = checkoutPaymentMethodFromQuery(method, naverPayEnabled);
     return `/checkout?payment=${encodeURIComponent(availableMethod)}`;
 }
 
-export function tossSdkPaymentMethod(method: CheckoutPaymentMethod): TossSdkPaymentMethod {
-    if (!isCheckoutPaymentMethodEnabled(method)) {
+export function tossSdkPaymentMethod(method: CheckoutPaymentMethod, naverPayEnabled = false): TossSdkPaymentMethod {
+    if (!isCheckoutPaymentMethodEnabled(method, naverPayEnabled)) {
         throw new Error("This payment method is unavailable until merchant review and settlement setup are complete.");
     }
     if (method === "transfer") return "TRANSFER";
@@ -42,8 +43,8 @@ export function tossSdkPaymentMethod(method: CheckoutPaymentMethod): TossSdkPaym
     return "CARD";
 }
 
-export function tossCardOptions(method: CheckoutPaymentMethod): TossCardOptions {
-    if (!isCheckoutPaymentMethodEnabled(method)) {
+export function tossCardOptions(method: CheckoutPaymentMethod, naverPayEnabled = false): TossCardOptions {
+    if (!isCheckoutPaymentMethodEnabled(method, naverPayEnabled)) {
         throw new Error("This payment method is unavailable until merchant review and settlement setup are complete.");
     }
     if (method === "toss_pay") return { flowMode: "DIRECT", easyPay: "TOSSPAY" };

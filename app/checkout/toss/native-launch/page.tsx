@@ -4,15 +4,19 @@ import { useI18n } from "@/lib/i18n";
 import { useEffect, useRef, useState } from "react";
 import { loadTossPayments } from "@tosspayments/tosspayments-sdk";
 import { tossCardOptions, tossSdkPaymentMethod } from "@/lib/payment-methods";
+import { useNaverPayEnabled } from "@/hooks/useNaverPayEnabled";
+import { loadTossCheckoutAvailability } from "@/lib/toss-checkout-availability";
 import {
     nativePaymentCallbackUrl, nativePaymentReturnLink, parseNativePaymentRequest,
     type NativePaymentRequest,
 } from "@/lib/toss-native-payment";
 
 export default function NativePaymentLaunchPage() {
-    const { menuLabel: labelText } = useI18n();
+    const { menuLabel: labelText, locale } = useI18n();
     const initialized = useRef(false);
     const [request, setRequest] = useState<NativePaymentRequest | null | undefined>(undefined);
+    const naverPayEnabled = useNaverPayEnabled(request?.paymentMethod === "naver_pay");
+    const methodUnavailable = request?.paymentMethod === "naver_pay" && !naverPayEnabled;
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState("");
     useEffect(() => {
@@ -28,10 +32,13 @@ export default function NativePaymentLaunchPage() {
     }).toString()) : "daengdabang://checkout/";
 
     const pay = async () => {
-        if (!request || busy) return;
+        if (!request || busy || methodUnavailable) return;
         setBusy(true);
         setError("");
         try {
+            const approvedNaverPay = request.paymentMethod === "naver_pay" &&
+                (await loadTossCheckoutAvailability()).naverPayEnabled;
+            const method = tossSdkPaymentMethod(request.paymentMethod, approvedNaverPay);
             const payment = (await loadTossPayments(request.clientKey)).payment({ customerKey: request.customerKey });
             const common = {
                 orderId: request.orderId, orderName: request.orderName,
@@ -39,10 +46,9 @@ export default function NativePaymentLaunchPage() {
                 successUrl: nativePaymentCallbackUrl("success"), failUrl: nativePaymentCallbackUrl("fail"),
                 windowTarget: "self" as const,
             };
-            const method = tossSdkPaymentMethod(request.paymentMethod);
             if (method === "TRANSFER") await payment.requestPayment({ ...common, method, transfer: { useEscrow: false, cashReceipt: { type: request.cashReceiptType ?? "소득공제" } } });
             else if (method === "MOBILE_PHONE") await payment.requestPayment({ ...common, method });
-            else await payment.requestPayment({ ...common, method: "CARD", card: tossCardOptions(request.paymentMethod) });
+            else await payment.requestPayment({ ...common, method: "CARD", card: tossCardOptions(request.paymentMethod, approvedNaverPay) });
         } catch {
             setError("결제창을 열지 못했어요. 다시 시도하거나 앱으로 돌아가 주세요.");
             setBusy(false);
@@ -51,7 +57,7 @@ export default function NativePaymentLaunchPage() {
 
     return <main className="mx-auto max-w-md px-6 py-16 text-center">
         <h1 className="text-2xl font-black">{labelText("결제를 이어갈게요")}</h1>
-        {request && <>
+        {request && !methodUnavailable && <>
             <p className="mt-5 font-bold">{request.orderName}</p>
             <p className="mt-2 text-2xl font-black">{request.amount.toLocaleString("ko-KR")}{labelText("원")}</p>
             <p className="mt-4 text-sm leading-6 text-neutral-600">{labelText("인증을 마치면 댕다방 앱에서 주문 결과를 확인할 수 있어요.")}</p>
@@ -59,6 +65,9 @@ export default function NativePaymentLaunchPage() {
                 {labelText(busy ? "결제창 여는 중…" : "보안 결제창 열기")}
             </button>
         </>}
+        {methodUnavailable && <p role="status" className="mt-5 text-sm text-neutral-600">
+            {locale === "en" ? "Please return to the app to choose a payment method." : "앱으로 돌아가 결제수단을 선택해 주세요."}
+        </p>}
         {(error || request === null) && <p role="alert" className="mt-5 text-sm text-red-700">
             {error || "결제 정보를 불러오지 못했어요. 앱의 주문서에서 결제창을 다시 열어 주세요."}
         </p>}

@@ -23,6 +23,7 @@ import { useRouter } from "next/navigation";
 import { arrivalDateText, cartProducts, productHref } from "@/lib/shop";
 import { useAuth, useCart } from "@/lib/store";
 import { usePets } from "@/hooks/usePets";
+import { useNaverPayEnabled } from "@/hooks/useNaverPayEnabled";
 import { cartPetOptions } from "@/lib/pet-attribution";
 import SimplePayButtons from "@/components/shop/SimplePayButtons";
 import { useI18n } from "@/lib/i18n";
@@ -70,6 +71,7 @@ export default function CartPage() {
     const { menuLabel: labelText } = useI18n();
     const router = useRouter();
     const cart = useCart();
+    const naverPayEnabled = useNaverPayEnabled();
     const { user } = useAuth();
     const { pets: profilePets } = usePets();
     const { t, locale, formatPrice, productName } = useI18n();
@@ -96,7 +98,7 @@ export default function CartPage() {
         if (selectedLines.length === 0) return;
         // 구매할 수 없는 상품은 결제 대상 표시를 끄고 감 — 주문서는 결제 대상에 살 수 없는 상품이 남아 있으면 막으므로(몰래 빼지 않고 안내 후 뺌)
         lines.filter(line => line.selectionBlocked).forEach(line => cart.setSelected(line.product.id, false, line.color, line.size));
-        const nextCheckoutHref = checkoutHref(preferredPayment);
+        const nextCheckoutHref = checkoutHref(preferredPayment, naverPayEnabled);
         router.push(user ? nextCheckoutHref : `/auth/login?redirect=${encodeURIComponent(nextCheckoutHref)}`);
     };
 
@@ -427,7 +429,7 @@ export default function CartPage() {
                             : `${locale === "en" ? "Checkout" : "주문서 작성"} (${countText(selectedQuantity)})`}
                     </button>
                     {/* 빠른 결제수단 — 선택값을 주문서까지 보존 */}
-                    <SimplePayButtons disabled={selectedLines.length === 0} onSelect={goCheckout} />
+                    <SimplePayButtons disabled={selectedLines.length === 0} naverPayEnabled={naverPayEnabled} onSelect={goCheckout} />
                 </aside>
             </div>
             {/* 웹 확인 창(선택 삭제) — 열렸을 때만 body 에 붙음 */}
